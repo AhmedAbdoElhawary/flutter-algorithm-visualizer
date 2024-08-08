@@ -52,4 +52,24 @@ class GridNotifierCubit extends StateNotifier<GridNotifierState> {
     isTapDown = false;
   }
 
+  void onPointerMoveOnGrid(PointerMoveEvent event) {
+    final dx = event.localPosition.dx;
+    final dy = event.localPosition.dy;
+
+    final selectedColumn = (dx / state.gridSize).floor();
+    final selectedRow = (dy / state.gridSize).floor();
+
+    final index = selectedRow * state.columnCrossAxisCount + selectedColumn;
+
+    // to handle multi calls from listener widget
+    if (index == state.currentTappedIndex) return;
+
+    if (index >= 0 && index < state.gridData.length) {
+      final updatedGridData = List<bool>.from(state.gridData);
+      updatedGridData[index] = !updatedGridData[index];
+
+      state =
+          state.copyWith(gridData: updatedGridData, currentTappedIndex: index);
+    }
+  }
 }
