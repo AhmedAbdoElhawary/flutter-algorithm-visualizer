@@ -22,5 +22,6 @@ class StringsManager {
   static const String sorryForInconvenience = "Sorry for inconvenience";
   static const String cancel = "Cancel";
   static const String unknownPage = "Unknown page";
+  static const String notInitializeGridYet = "Not initialize grid yet.";
 
 }
