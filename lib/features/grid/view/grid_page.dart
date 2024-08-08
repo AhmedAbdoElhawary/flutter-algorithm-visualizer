@@ -1,7 +1,13 @@
+import 'package:algorithm_visualizer/core/resources/strings_manager.dart';
+import 'package:algorithm_visualizer/core/widgets/adaptive/text/adaptive_text.dart';
+import 'package:algorithm_visualizer/features/grid/view_model/grid_notifier.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-final appSettingsProvider = Provider<List<int>>((ref) => []);
+final gridNotifierProvider =
+    StateNotifierProvider<GridNotifierCubit, GridNotifierState>(
+  (ref) => GridNotifierCubit(),
+);
 
 class GridPage extends StatelessWidget {
   const GridPage({super.key});
@@ -15,25 +21,7 @@ class GridPage extends StatelessWidget {
       body: SafeArea(
         child: LayoutBuilder(
           builder: (BuildContext context, BoxConstraints constraints) {
-            const int numSquares = 20;
-
-            // it's square, so the height is the same of width. Size(value,value) => value
-            final double gridSize =
-                (constraints.maxWidth < constraints.maxHeight)
-                    ? constraints.maxWidth / numSquares
-                    : constraints.maxHeight / numSquares;
-
-            final columnCrossAxisCount =
-                (constraints.maxWidth / gridSize).floor();
-            final rowMainAxisCount = (constraints.maxHeight / gridSize).floor();
-
-            final count = columnCrossAxisCount * rowMainAxisCount;
-
-            return _BuildGridItems(
-              crossAxisCount: columnCrossAxisCount,
-              gridSize: gridSize,
-              count: count,
-            );
+            return _BuildLayout(constraints);
           },
         ),
       ),
@@ -41,20 +29,53 @@ class GridPage extends StatelessWidget {
   }
 }
 
-class _BuildGridItems extends ConsumerWidget {
-  const _BuildGridItems({
-    required this.crossAxisCount,
-    required this.gridSize,
-    required this.count,
-  });
+class _BuildLayout extends ConsumerStatefulWidget {
+  const _BuildLayout(this.constraints);
+  final BoxConstraints constraints;
 
-  final int crossAxisCount;
-  final double gridSize;
-  final int count;
+  @override
+  ConsumerState<_BuildLayout> createState() => _BuildLayoutState();
+}
+
+class _BuildLayoutState extends ConsumerState<_BuildLayout> {
+  @override
+  void initState() {
+    super.initState();
+    Future.microtask(() => _updateLayout());
+  }
+
+  @override
+  void didUpdateWidget(covariant _BuildLayout oldWidget) {
+    if (oldWidget.constraints != widget.constraints) {
+      Future.microtask(() => _updateLayout());
+    }
+    super.didUpdateWidget(oldWidget);
+  }
+
+  void _updateLayout() {
+    ref
+        .read(gridNotifierProvider.notifier)
+        .updateGridLayout(widget.constraints);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return const _BuildGridItems();
+  }
+}
+
+class _BuildGridItems extends ConsumerWidget {
+  const _BuildGridItems();
 
   @override
   Widget build(BuildContext context, ref) {
-    // ref.read(appSettingsProvider)..clear()..addAll(iterable);
+    final gridCount = ref.watchGridCount;
+    final watchColumnCrossAxisCount = ref.watchColumnCrossAxisCount;
+
+    if (gridCount == 0) {
+      return const Center(
+          child: MediumText(StringsManager.notInitializeGridYet));
+    }
     return Listener(
       onPointerDown: (event) {
         // _toggleColor(!isBlack);
@@ -68,22 +89,20 @@ class _BuildGridItems extends ConsumerWidget {
         physics: const NeverScrollableScrollPhysics(),
         shrinkWrap: true,
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: crossAxisCount,
+          crossAxisCount: watchColumnCrossAxisCount,
           childAspectRatio: 1.0, // Ensures squares
         ),
         itemBuilder: (context, index) {
-          return _Square(size: gridSize);
+          return const _Square();
         },
-        itemCount: count,
+        itemCount: gridCount,
       ),
     );
   }
 }
 
 class _Square extends StatefulWidget {
-  final double size;
-
-  const _Square({required this.size});
+  const _Square();
 
   @override
   _SquareState createState() => _SquareState();
@@ -117,11 +136,13 @@ class _SquareState extends State<_Square> {
           scale: isBlack ? 1.0 : 0.1,
           duration: const Duration(milliseconds: 700),
           curve: Curves.elasticOut,
-          child: Container(
-            width: widget.size,
-            height: widget.size,
-            color: isBlack ? Colors.black : Colors.transparent,
-          ),
+          child: Consumer(builder: (context, ref, _) {
+            return Container(
+              width: ref.watchGridSize,
+              height: ref.watchGridSize,
+              color: isBlack ? Colors.black : Colors.transparent,
+            );
+          }),
         ),
       ),
     );
