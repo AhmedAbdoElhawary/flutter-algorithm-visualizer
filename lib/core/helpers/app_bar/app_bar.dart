@@ -1,10 +1,9 @@
 import 'package:algorithm_visualizer/core/extensions/navigators.dart';
 import 'package:algorithm_visualizer/core/helpers/app_bar/back_button.dart';
-import 'package:algorithm_visualizer/core/helpers/svg_picture.dart';
-import 'package:algorithm_visualizer/core/resources/assets_manager.dart';
 import 'package:algorithm_visualizer/core/resources/color_manager.dart';
 import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
 import 'package:algorithm_visualizer/core/widgets/adaptive/text/adaptive_text.dart';
+import 'package:algorithm_visualizer/core/widgets/custom_widgets/custom_icon.dart';
 import 'package:flutter/material.dart';
 
 class CustomAppBar {
@@ -93,8 +92,7 @@ class AppBarCloseButton extends StatelessWidget {
           Navigator.maybePop(context); // will be helpful for PopScope
         }
       },
-      icon: const CustomAssetsSvg(IconsAssets.closeIcon,
-          size: secondAppBarIconSize),
+      icon: const CloseButtonIcon(),
     );
   }
 }
