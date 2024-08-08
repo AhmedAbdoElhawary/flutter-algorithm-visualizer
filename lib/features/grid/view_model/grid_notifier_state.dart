@@ -1,24 +1,24 @@
 part of 'grid_notifier.dart';
 
-final class GridNotifierInitial {
+final class GridNotifierState {
   final int columnCrossAxisCount;
   final int rowMainAxisCount;
   final int gridCount;
-  final int gridSize;
+  final double gridSize;
 
-  GridNotifierInitial({
-    required this.columnCrossAxisCount,
-    required this.rowMainAxisCount,
-    required this.gridCount,
-    required this.gridSize,
+  GridNotifierState({
+    this.columnCrossAxisCount = 0,
+    this.rowMainAxisCount = 0,
+    this.gridCount = 0,
+    this.gridSize = 0,
   });
-  GridNotifierInitial copyWith({
+  GridNotifierState copyWith({
     int? columnCrossAxisCount,
     int? rowMainAxisCount,
     int? gridCount,
-    int? gridSize,
+    double? gridSize,
   }) {
-    return GridNotifierInitial(
+    return GridNotifierState(
       columnCrossAxisCount: columnCrossAxisCount ?? this.columnCrossAxisCount,
       rowMainAxisCount: rowMainAxisCount ?? this.rowMainAxisCount,
       gridSize: gridSize ?? this.gridSize,
