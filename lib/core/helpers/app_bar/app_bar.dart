@@ -3,7 +3,6 @@ import 'package:algorithm_visualizer/core/helpers/app_bar/back_button.dart';
 import 'package:algorithm_visualizer/core/resources/color_manager.dart';
 import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
 import 'package:algorithm_visualizer/core/widgets/adaptive/text/adaptive_text.dart';
-import 'package:algorithm_visualizer/core/widgets/custom_widgets/custom_icon.dart';
 import 'package:flutter/material.dart';
 
 class CustomAppBar {
