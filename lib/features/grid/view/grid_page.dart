@@ -17,6 +17,18 @@ class GridPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Grid Page'),
+        actions: [
+          Consumer(
+            builder: (context, ref, _) {
+              return TextButton(
+                onPressed: () {
+                  ref.read(gridNotifierProvider.notifier).clearTheGrid();
+                },
+                child: const RegularText(StringsManager.clear),
+              );
+            },
+          )
+        ],
       ),
       body: SafeArea(
         child: LayoutBuilder(
@@ -69,22 +81,22 @@ class _BuildGridItems extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, ref) {
-    final gridCount = ref.watchGridCount;
-    final watchColumnCrossAxisCount = ref.watchColumnCrossAxisCount;
+    final gridCount =
+        ref.watch(gridNotifierProvider.select((it) => it.gridCount));
+    final watchColumnCrossAxisCount =
+        ref.watch(gridNotifierProvider.select((it) => it.columnCrossAxisCount));
 
     if (gridCount == 0) {
       return const Center(
           child: MediumText(StringsManager.notInitializeGridYet));
     }
+
+    final read = ref.read(gridNotifierProvider.notifier);
+
     return Listener(
-      onPointerDown: (event) {
-        // _toggleColor(!isBlack);
-      },
-      onPointerMove: (event) {
-        // print(
-        //     "LLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL ${event.localPosition},,,,$gridSize,,, ${crossAxisCount},,$mainAxisCount,,$count");
-        // _toggleColor(!isBlack);
-      },
+      onPointerDown: read.onPointerDownOnGrid,
+      onPointerMove: read.onPointerMoveOnGrid,
+      onPointerUp: read.onPointerUpOnGrid,
       child: GridView.builder(
         physics: const NeverScrollableScrollPhysics(),
         shrinkWrap: true,
@@ -93,7 +105,7 @@ class _BuildGridItems extends ConsumerWidget {
           childAspectRatio: 1.0, // Ensures squares
         ),
         itemBuilder: (context, index) {
-          return const _Square();
+          return _Square(index: index);
         },
         itemCount: gridCount,
       ),
@@ -101,113 +113,46 @@ class _BuildGridItems extends ConsumerWidget {
   }
 }
 
-class _Square extends StatefulWidget {
-  const _Square();
-
+class _Square extends ConsumerStatefulWidget {
+  const _Square({required this.index});
+  final int index;
   @override
   _SquareState createState() => _SquareState();
 }
 
-class _SquareState extends State<_Square> {
-  bool isBlack = false;
-
-  void _toggleColor(bool value) {
-    setState(() {
-      isBlack = value;
-    });
-  }
-
+class _SquareState extends ConsumerState<_Square> {
   @override
   Widget build(BuildContext context) {
-    return Listener(
-      onPointerDown: (event) {
-        _toggleColor(!isBlack);
-      },
-      // onPointerMove: (event) {
-      //   _toggleColor(!isBlack);
-      // },
-      child: Container(
-        decoration: BoxDecoration(
-          border: isBlack
-              ? null
-              : Border.all(color: Colors.grey.withOpacity(0.5), width: 0.5),
-        ),
-        child: AnimatedScale(
-          scale: isBlack ? 1.0 : 0.1,
-          duration: const Duration(milliseconds: 700),
-          curve: Curves.elasticOut,
-          child: Consumer(builder: (context, ref, _) {
+    final isSelected = ref
+        .watch(gridNotifierProvider.select((it) => it.gridData[widget.index]));
+
+    final isBlack = isSelected;
+
+    return Container(
+      decoration: BoxDecoration(
+        border: isBlack
+            ? Border.symmetric(
+                vertical:
+                    BorderSide(color: Colors.grey.withOpacity(0.5), width: 0.3))
+            : Border.all(color: Colors.grey.withOpacity(0.5), width: 0.5),
+      ),
+      child: AnimatedScale(
+        scale: isBlack ? 1.0 : 0.1,
+        duration: const Duration(milliseconds: 700),
+        curve: Curves.elasticOut,
+        child: Consumer(
+          builder: (context, ref, _) {
+            final size =
+                ref.watch(gridNotifierProvider.select((it) => it.gridSize));
+
             return Container(
-              width: ref.watchGridSize,
-              height: ref.watchGridSize,
+              width: size,
+              height: size,
               color: isBlack ? Colors.black : Colors.transparent,
             );
-          }),
+          },
         ),
       ),
     );
   }
 }
-
-// class _GridPage extends StatelessWidget {
-//   const _GridPage();
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(
-//         title: Text('Grid Page'),
-//       ),
-//       body: SafeArea(
-//         child: LayoutBuilder(
-//           builder: (BuildContext context, BoxConstraints constraints) {
-//             const int numSquares = 25;
-//
-//             // Calculate grid size based on the smaller dimension
-//             final gridSize = Size(constraints.maxWidth / numSquares,
-//                 constraints.maxHeight / numSquares*0.5);
-//
-//             return CustomPaint(
-//               size: Size.infinite, // Takes up all available space
-//               painter: GridPainter(
-//                 gridSize: gridSize, // Use the calculated grid size
-//                 gridColor:
-//                 Colors.grey.withOpacity(0.3), // Adjust grid color and opacity
-//               ),
-//               child: Container(),
-//             );
-//           },
-//         ),
-//       ),
-//     );
-//   }
-// }
-//
-// class GridPainter extends CustomPainter {
-//   final Size gridSize;
-//   final Color gridColor;
-//
-//   GridPainter({required this.gridSize, this.gridColor = Colors.grey});
-//
-//   @override
-//   void paint(Canvas canvas, Size size) {
-//     final paint = Paint()
-//       ..color = gridColor
-//       ..strokeWidth = 1;
-//     final squarePanting=  Paint()..color=Colors.purple.withOpacity(0.6);
-//     // Draw vertical lines
-//     for (double x = 0; x <= size.width; x += gridSize.width) {
-//       canvas.drawLine(Offset(x, 0), Offset(x, size.height), paint);
-//     }
-//
-//     // Draw horizontal lines
-//     for (double y = 0; y <= size.height; y += gridSize.height) {
-//       canvas.drawLine(Offset(0, y), Offset(size.width, y), paint);
-//     }    canvas.drawPaint(squarePanting);
-//
-//   }
-//
-//   @override
-//   bool shouldRepaint(covariant CustomPainter oldDelegate) {
-//     return false;
-//   }
-// }
