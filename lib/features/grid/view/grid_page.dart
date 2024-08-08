@@ -23,34 +23,58 @@ class GridPage extends StatelessWidget {
                     ? constraints.maxWidth / numSquares
                     : constraints.maxHeight / numSquares;
 
-            final crossAxisCount = (constraints.maxWidth / gridSize).floor();
-            final mainAxisCount = (constraints.maxHeight / gridSize).floor();
+            final columnCrossAxisCount =
+                (constraints.maxWidth / gridSize).floor();
+            final rowMainAxisCount = (constraints.maxHeight / gridSize).floor();
 
-            final count = crossAxisCount * mainAxisCount;
-            return Listener(
-              onPointerDown: (event) {
-                // _toggleColor(!isBlack);
-              },
-              onPointerMove: (event) {
-                // print(
-                //     "LLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL ${event.localPosition},,,,$gridSize,,, ${crossAxisCount},,$mainAxisCount,,$count");
-                // _toggleColor(!isBlack);
-              },
-              child: GridView.builder(
-                physics: const NeverScrollableScrollPhysics(),
-                shrinkWrap: true,
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: crossAxisCount,
-                  childAspectRatio: 1.0, // Ensures squares
-                ),
-                itemBuilder: (context, index) {
-                  return _Square(size: gridSize);
-                },
-                itemCount: count,
-              ),
+            final count = columnCrossAxisCount * rowMainAxisCount;
+
+            return _BuildGridItems(
+              crossAxisCount: columnCrossAxisCount,
+              gridSize: gridSize,
+              count: count,
             );
           },
         ),
+      ),
+    );
+  }
+}
+
+class _BuildGridItems extends ConsumerWidget {
+  const _BuildGridItems({
+    required this.crossAxisCount,
+    required this.gridSize,
+    required this.count,
+  });
+
+  final int crossAxisCount;
+  final double gridSize;
+  final int count;
+
+  @override
+  Widget build(BuildContext context, ref) {
+    // ref.read(appSettingsProvider)..clear()..addAll(iterable);
+    return Listener(
+      onPointerDown: (event) {
+        // _toggleColor(!isBlack);
+      },
+      onPointerMove: (event) {
+        // print(
+        //     "LLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL ${event.localPosition},,,,$gridSize,,, ${crossAxisCount},,$mainAxisCount,,$count");
+        // _toggleColor(!isBlack);
+      },
+      child: GridView.builder(
+        physics: const NeverScrollableScrollPhysics(),
+        shrinkWrap: true,
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: crossAxisCount,
+          childAspectRatio: 1.0, // Ensures squares
+        ),
+        itemBuilder: (context, index) {
+          return _Square(size: gridSize);
+        },
+        itemCount: count,
       ),
     );
   }
