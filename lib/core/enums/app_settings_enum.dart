@@ -1,0 +1,2 @@
+
+enum LanguagesEnum { english, arabic }
