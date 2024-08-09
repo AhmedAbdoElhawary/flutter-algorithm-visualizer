@@ -192,18 +192,22 @@ class _StartPointGrid extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer(builder: (context, ref, _) {
-      final size = ref.watch(gridNotifierProvider.select((it) => it.gridSize));
+    return Consumer(
+      builder: (context, ref, _) {
+        final size =
+            ref.watch(gridNotifierProvider.select((it) => it.gridSize));
 
-      return Container(
-        width: size,
-        height: size,
-        decoration: BoxDecoration(
-            color: ColorManager.yellow.withOpacity(.4), shape: BoxShape.circle),
-        // padding: REdgeInsets.all(2),
-        child: const FittedBox(child: Icon(Icons.arrow_forward)),
-      );
-    });
+        return Container(
+          width: size,
+          height: size,
+          decoration: BoxDecoration(
+              color: ColorManager.yellow.withOpacity(.4),
+              shape: BoxShape.circle),
+          // padding: REdgeInsets.all(2),
+          child: const FittedBox(child: Icon(Icons.arrow_forward)),
+        );
+      },
+    );
   }
 }
 
@@ -212,18 +216,21 @@ class _TargetPointGrid extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer(builder: (context, ref, _) {
-      final size = ref.watch(gridNotifierProvider.select((it) => it.gridSize));
+    return Consumer(
+      builder: (context, ref, _) {
+        final size =
+            ref.watch(gridNotifierProvider.select((it) => it.gridSize));
 
-      return Container(
-        width: size,
-        height: size,
-        decoration: BoxDecoration(
-            color: ColorManager.red.withOpacity(.4), shape: BoxShape.circle),
-        // padding: REdgeInsets.all(),
-        child: const FittedBox(child: Icon(Icons.control_point_rounded)),
-      );
-    });
+        return Container(
+          width: size,
+          height: size,
+          decoration: BoxDecoration(
+              color: ColorManager.red.withOpacity(.4), shape: BoxShape.circle),
+          // padding: REdgeInsets.all(),
+          child: const FittedBox(child: Icon(Icons.control_point_rounded)),
+        );
+      },
+    );
   }
 }
 
@@ -232,17 +239,20 @@ class _SearcherGrid extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer(builder: (context, ref, _) {
-      final size = ref.watch(gridNotifierProvider.select((it) => it.gridSize));
+    return Consumer(
+      builder: (context, ref, _) {
+        final size =
+            ref.watch(gridNotifierProvider.select((it) => it.gridSize));
 
-      return Container(
-        width: size,
-        height: size,
-        decoration: const BoxDecoration(color: ColorManager.orange),
-        // padding: REdgeInsets.all(2),
-        // child: const Icon(Icons.control_point_rounded),
-      );
-    });
+        return Container(
+          width: size,
+          height: size,
+          decoration: const BoxDecoration(color: ColorManager.orange),
+          // padding: REdgeInsets.all(2),
+          // child: const Icon(Icons.control_point_rounded),
+        );
+      },
+    );
   }
 }
 
@@ -251,14 +261,17 @@ class _DefaultGrid extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer(builder: (context, ref, _) {
-      final size = ref.watch(gridNotifierProvider.select((it) => it.gridSize));
+    return Consumer(
+      builder: (context, ref, _) {
+        final size =
+            ref.watch(gridNotifierProvider.select((it) => it.gridSize));
 
-      return Container(
-        width: size,
-        height: size,
-        decoration: const BoxDecoration(color: ColorManager.transparent),
-      );
-    });
+        return Container(
+          width: size,
+          height: size,
+          decoration: const BoxDecoration(color: ColorManager.transparent),
+        );
+      },
+    );
   }
 }
