@@ -121,7 +121,6 @@ class GridNotifierCubit extends StateNotifier<GridNotifierState> {
       } else if (currentGrid == GridStatus.empty) {
         updatedGridData[index] = GridStatus.wall;
       }
-      // = !updatedGridData[index];
 
       state =
           state.copyWith(gridData: updatedGridData, currentTappedIndex: index);

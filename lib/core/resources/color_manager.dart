@@ -92,6 +92,8 @@ abstract final class ColorManager {
   static const Color lightBlueWhiteD1 = Color.fromRGBO(243, 243, 246, 1.0);
   static const Color blackL3Blue = Color.fromRGBO(14, 14, 19, 1.0);
   static const Color blackBlue = Color.fromRGBO(0, 0, 5, 1.0);
+  static const Color darkPurple = Color.fromRGBO(66,8,99, 1.0);
+
   static const Color green = Color.fromRGBO(25, 189, 98, 1.0);
   static const Color purple = Color.fromRGBO(160, 4, 238, 1);
   static const Color purple2 = Color.fromRGBO(198, 0, 229, 1.0);
