@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -12,9 +14,8 @@ class GridNotifierCubit extends StateNotifier<GridNotifierState> {
     final screenWidth = constraints.maxWidth;
     final screenHeight = constraints.maxHeight;
 
-    final double gridSize = (screenWidth < screenHeight)
-        ? screenWidth / columnSquares
-        : screenHeight / columnSquares;
+    final double gridSize =
+        (screenWidth < screenHeight) ? screenWidth / columnSquares : screenHeight / columnSquares;
 
     final columnCrossAxisCount = (screenWidth / gridSize).floor();
     final rowMainAxisCount = (screenHeight / gridSize).floor();
@@ -40,8 +41,7 @@ class GridNotifierCubit extends StateNotifier<GridNotifierState> {
   }
 
   List<GridStatus> _addDefaultTwoPoints({required GridNotifierState addState}) {
-    final gridData =
-        List<GridStatus>.filled(addState.gridCount, GridStatus.empty);
+    final gridData = List<GridStatus>.filled(addState.gridCount, GridStatus.empty);
 
     final isHeightTaller = addState.screenHeight > addState.screenWidth;
 
@@ -59,11 +59,9 @@ class GridNotifierCubit extends StateNotifier<GridNotifierState> {
     final topRow = addState.rowMainAxisCount ~/ 8;
     final bottomRow = addState.rowMainAxisCount ~/ 1.2;
 
-    final topCenterIndex =
-        (topRow) * addState.columnCrossAxisCount + centerColumn;
+    final topCenterIndex = (topRow) * addState.columnCrossAxisCount + centerColumn;
 
-    final bottomCenterIndex =
-        (bottomRow) * addState.columnCrossAxisCount + centerColumn;
+    final bottomCenterIndex = (bottomRow) * addState.columnCrossAxisCount + centerColumn;
 
     gridStatus[topCenterIndex] = GridStatus.startPoint;
     gridStatus[bottomCenterIndex] = GridStatus.targetPoint;
@@ -79,10 +77,8 @@ class GridNotifierCubit extends StateNotifier<GridNotifierState> {
     final rightRow = addState.columnCrossAxisCount ~/ 1.2;
     final leftRow = addState.columnCrossAxisCount ~/ 8;
 
-    final leftCenterIndex =
-        centerRow * addState.columnCrossAxisCount + (leftRow);
-    final rightCenterIndex =
-        centerRow * addState.columnCrossAxisCount + (rightRow);
+    final leftCenterIndex = centerRow * addState.columnCrossAxisCount + (leftRow);
+    final rightCenterIndex = centerRow * addState.columnCrossAxisCount + (rightRow);
 
     gridStatus[leftCenterIndex] = GridStatus.startPoint;
     gridStatus[rightCenterIndex] = GridStatus.targetPoint;
@@ -122,8 +118,7 @@ class GridNotifierCubit extends StateNotifier<GridNotifierState> {
         updatedGridData[index] = GridStatus.wall;
       }
 
-      state =
-          state.copyWith(gridData: updatedGridData, currentTappedIndex: index);
+      state = state.copyWith(gridData: updatedGridData, currentTappedIndex: index);
     }
   }
 
@@ -138,5 +133,42 @@ class GridNotifierCubit extends StateNotifier<GridNotifierState> {
     final index = selectedRow * addState.columnCrossAxisCount + selectedColumn;
 
     return index;
+  }
+
+  void generateMaze() {
+    final gridData = List<GridStatus>.filled(state.gridCount, GridStatus.empty);
+    _recursiveDivision(gridData, 0, state.rowMainAxisCount, 0, state.columnCrossAxisCount);
+    state = state.copyWith(gridData: gridData);
+  }
+
+  void _recursiveDivision(List<GridStatus> gridData, int rowStart, int rowEnd, int colStart, int colEnd) {
+    if (rowEnd - rowStart <= 1 || colEnd - colStart <= 1) return;
+
+    bool horizontal = (rowEnd - rowStart > colEnd - colStart);
+    if (horizontal) {
+      int row = (rowStart + rowEnd) ~/ 2;
+      for (int col = colStart; col < colEnd; col++) {
+        gridData[row * state.columnCrossAxisCount + col] = GridStatus.wall;
+      }
+      _recursiveDivision(gridData, rowStart, row, colStart, colEnd);
+      _recursiveDivision(gridData, row + 1, rowEnd, colStart, colEnd);
+    } else {
+      int col = (colStart + colEnd) ~/ 2;
+      for (int row = rowStart; row < rowEnd; row++) {
+        gridData[row * state.columnCrossAxisCount + col] = GridStatus.wall;
+      }
+      _recursiveDivision(gridData, rowStart, rowEnd, colStart, col);
+      _recursiveDivision(gridData, rowStart, rowEnd, col + 1, colEnd);
+    }
+
+    // Add a passage through the wall
+    int passageIndex;
+    if (horizontal) {
+      passageIndex = Random().nextInt(colEnd - colStart) + colStart;
+      gridData[(rowStart + rowEnd) ~/ 2 * state.columnCrossAxisCount + passageIndex] = GridStatus.empty;
+    } else {
+      passageIndex = Random().nextInt(rowEnd - rowStart) + rowStart;
+      gridData[passageIndex * state.columnCrossAxisCount + (colStart + colEnd) ~/ 2] = GridStatus.empty;
+    }
   }
 }
