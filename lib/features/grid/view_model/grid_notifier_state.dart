@@ -1,14 +1,24 @@
 part of 'grid_notifier.dart';
 
+enum GridStatus {
+  empty,
+  wall,
+  startPoint,
+  targetPoint,
+  searcher,
+}
+
 final class GridNotifierState {
   final int columnCrossAxisCount;
   final int rowMainAxisCount;
   final int gridCount;
-  final double gridSize;
   final double screenWidth;
   final double screenHeight;
-  final List<bool> gridData;
+  final List<GridStatus> gridData;
   final int currentTappedIndex;
+
+  /// [gridSize] it's square, so the height is the same of width. Size(value,value) => value
+  final double gridSize;
 
   GridNotifierState({
     this.columnCrossAxisCount = 0,
@@ -28,7 +38,7 @@ final class GridNotifierState {
     double? gridSize,
     double? screenWidth,
     double? screenHeight,
-    List<bool>? gridData,
+    List<GridStatus>? gridData,
     int? currentTappedIndex,
   }) {
     return GridNotifierState(
