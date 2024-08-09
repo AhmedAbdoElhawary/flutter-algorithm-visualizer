@@ -7,8 +7,7 @@ class _SearcherGrid extends StatefulWidget {
   State<_SearcherGrid> createState() => _SearcherGridState();
 }
 
-class _SearcherGridState extends State<_SearcherGrid>
-    with SingleTickerProviderStateMixin {
+class _SearcherGridState extends State<_SearcherGrid> with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _scaleAnimation;
   late Animation<Color?> _colorAnimation;
@@ -17,13 +16,13 @@ class _SearcherGridState extends State<_SearcherGrid>
   final startColor = ColorManager.darkBlue;
   final mediumColor = ColorManager.mediumBlue;
   final finishedSearcherColor = ColorManager.finishedSearcherBlue;
+
   @override
   void initState() {
     super.initState();
 
     _controller = AnimationController(
-      duration:
-          const Duration(milliseconds: 1500), // Total duration of the animation
+      duration: const Duration(milliseconds: 1500), // Total duration of the animation
       vsync: this,
     );
 
@@ -40,11 +39,8 @@ class _SearcherGridState extends State<_SearcherGrid>
 
     // Define the color animation
     _colorAnimation = TweenSequence([
-      TweenSequenceItem(
-          tween: ColorTween(begin: startColor, end: mediumColor), weight: 40),
-      TweenSequenceItem(
-          tween: ColorTween(begin: mediumColor, end: finishedSearcherColor),
-          weight: 60),
+      TweenSequenceItem(tween: ColorTween(begin: startColor, end: mediumColor), weight: 40),
+      TweenSequenceItem(tween: ColorTween(begin: mediumColor, end: finishedSearcherColor), weight: 60),
     ]).animate(
       CurvedAnimation(
         parent: _controller,
@@ -85,11 +81,9 @@ class _SearcherGridState extends State<_SearcherGrid>
               height: size,
               decoration: BoxDecoration(
                 border: _thineVerticalBorder(),
-                borderRadius:
-                    BorderRadius.circular(_shapeAnimation.value * (size / 2)),
+                borderRadius: BorderRadius.circular(_shapeAnimation.value * (size / 2)),
                 color: _controller.value < 0.4
-                    ? Color.lerp(ColorManager.transparent, startColor,
-                        _controller.value / 0.4)
+                    ? Color.lerp(ColorManager.transparent, startColor, _controller.value / 0.4)
                     : _colorAnimation.value,
               ),
             ),
