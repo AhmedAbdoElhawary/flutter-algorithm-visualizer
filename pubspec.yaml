@@ -15,9 +15,10 @@ dependencies:
   get_it: ^7.6.7
   flutter_screenutil: ^5.9.1
   flutter_svg: ^2.0.10+1
-  riverpod: ^2.5.1
+  riverpod: ^2.5.1 # not used yet
   flutter_riverpod: ^2.5.1
   get_storage: ^2.1.1
+  animations: ^2.0.11 # not used yet
 
   cupertino_icons: ^1.0.6
 
