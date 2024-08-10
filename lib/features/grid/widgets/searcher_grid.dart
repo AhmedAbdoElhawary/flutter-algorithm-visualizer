@@ -22,7 +22,7 @@ class _SearcherGridState extends State<_SearcherGrid> with SingleTickerProviderS
     super.initState();
 
     _controller = AnimationController(
-      duration: const Duration(milliseconds: 1500), // Total duration of the animation
+      duration: const Duration(milliseconds: 1500),
       vsync: this,
     );
 
