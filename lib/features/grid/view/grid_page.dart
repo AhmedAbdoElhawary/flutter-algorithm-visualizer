@@ -8,17 +8,14 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 part '../widgets/searcher_grid.dart';
 
-final gridNotifierProvider =
-    StateNotifierProvider<GridNotifierCubit, GridNotifierState>(
+final gridNotifierProvider = StateNotifierProvider<GridNotifierCubit, GridNotifierState>(
   (ref) => GridNotifierCubit(),
 );
 
-Border _allBorder() =>
-    Border.all(color: ColorManager.dividerBlue, width: 0.5.r);
+Border _allBorder() => Border.all(color: ColorManager.dividerBlue, width: 0.5.r);
 
 Border _thineVerticalBorder() {
-  return Border.symmetric(
-      vertical: BorderSide(color: ColorManager.white, width: 0.5.r));
+  return Border.symmetric(vertical: BorderSide(color: ColorManager.white, width: 0.5.r));
 }
 
 class GridPage extends StatelessWidget {
@@ -28,8 +25,17 @@ class GridPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Grid Page'),
         actions: [
+          Consumer(
+            builder: (context, ref, _) {
+              return TextButton(
+                onPressed: () {
+                  ref.read(gridNotifierProvider.notifier).generateMaze();
+                },
+                child: const RegularText(StringsManager.generateMaze),
+              );
+            },
+          ),
           Consumer(
             builder: (context, ref, _) {
               return TextButton(
@@ -39,13 +45,13 @@ class GridPage extends StatelessWidget {
                 child: const RegularText(StringsManager.clear),
               );
             },
-          )
+          ),
         ],
       ),
       body: SafeArea(
         child: LayoutBuilder(
           builder: (BuildContext context, BoxConstraints constraints) {
-            return _BuildLayout(constraints);
+            return _BuildLayout(constraints.biggest);
           },
         ),
       ),
@@ -54,8 +60,8 @@ class GridPage extends StatelessWidget {
 }
 
 class _BuildLayout extends ConsumerStatefulWidget {
-  const _BuildLayout(this.constraints);
-  final BoxConstraints constraints;
+  const _BuildLayout(this.size);
+  final Size size;
 
   @override
   ConsumerState<_BuildLayout> createState() => _BuildLayoutState();
@@ -70,16 +76,14 @@ class _BuildLayoutState extends ConsumerState<_BuildLayout> {
 
   @override
   void didUpdateWidget(covariant _BuildLayout oldWidget) {
-    if (oldWidget.constraints != widget.constraints) {
+    if (oldWidget.size != widget.size) {
       Future.microtask(() => _updateLayout());
     }
     super.didUpdateWidget(oldWidget);
   }
 
   void _updateLayout() {
-    ref
-        .read(gridNotifierProvider.notifier)
-        .updateGridLayout(widget.constraints);
+    ref.read(gridNotifierProvider.notifier).updateGridLayout(widget.size);
   }
 
   @override
@@ -93,14 +97,11 @@ class _BuildGridItems extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, ref) {
-    final gridCount =
-        ref.watch(gridNotifierProvider.select((it) => it.gridCount));
-    final watchColumnCrossAxisCount =
-        ref.watch(gridNotifierProvider.select((it) => it.columnCrossAxisCount));
+    final gridCount = ref.watch(gridNotifierProvider.select((it) => it.gridCount));
+    final watchColumnCrossAxisCount = ref.watch(gridNotifierProvider.select((it) => it.columnCrossAxisCount));
 
     if (gridCount == 0) {
-      return const Center(
-          child: MediumText(StringsManager.notInitializeGridYet));
+      return const Center(child: MediumText(StringsManager.notInitializeGridYet));
     }
 
     final read = ref.read(gridNotifierProvider.notifier);
@@ -135,8 +136,7 @@ class _Square extends ConsumerStatefulWidget {
 class _SquareState extends ConsumerState<_Square> {
   @override
   Widget build(BuildContext context) {
-    final isSelected = ref
-        .watch(gridNotifierProvider.select((it) => it.gridData[widget.index]));
+    final isSelected = ref.watch(gridNotifierProvider.select((it) => it.gridData[widget.index]));
 
     final isColored = isSelected != GridStatus.empty;
 
@@ -146,7 +146,7 @@ class _SquareState extends ConsumerState<_Square> {
       ),
       child: AnimatedScale(
         scale: isColored ? 1.0 : 0.1,
-        duration: const Duration(milliseconds: 700),
+        duration: GridNotifierCubit.scaleAppearDurationForWall,
         curve: Curves.elasticOut,
         child: Builder(
           builder: (context) {
@@ -176,8 +176,7 @@ class _WallGrid extends StatelessWidget {
   Widget build(BuildContext context) {
     return Consumer(
       builder: (context, ref, _) {
-        final size =
-            ref.watch(gridNotifierProvider.select((it) => it.gridSize));
+        final size = ref.watch(gridNotifierProvider.select((it) => it.gridSize));
 
         return Container(
           width: size,
@@ -196,14 +195,13 @@ class _StartPointGrid extends StatelessWidget {
   Widget build(BuildContext context) {
     return Consumer(
       builder: (context, ref, _) {
-        final size =
-            ref.watch(gridNotifierProvider.select((it) => it.gridSize));
+        final size = ref.watch(gridNotifierProvider.select((it) => it.gridSize));
 
         return Container(
           width: size,
           height: size,
           decoration: const BoxDecoration(shape: BoxShape.circle),
-          child:  const FittedBox(
+          child: const FittedBox(
             child: CustomIcon(
               Icons.arrow_forward_ios_rounded,
               size: 50,
@@ -223,8 +221,7 @@ class _TargetPointGrid extends StatelessWidget {
   Widget build(BuildContext context) {
     return Consumer(
       builder: (context, ref, _) {
-        final size =
-            ref.watch(gridNotifierProvider.select((it) => it.gridSize));
+        final size = ref.watch(gridNotifierProvider.select((it) => it.gridSize));
 
         return Container(
           width: size,
@@ -273,8 +270,7 @@ class _DefaultGrid extends StatelessWidget {
   Widget build(BuildContext context) {
     return Consumer(
       builder: (context, ref, _) {
-        final size =
-            ref.watch(gridNotifierProvider.select((it) => it.gridSize));
+        final size = ref.watch(gridNotifierProvider.select((it) => it.gridSize));
 
         return Container(
           width: size,
