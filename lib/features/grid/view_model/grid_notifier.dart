@@ -161,7 +161,10 @@ class GridNotifierCubit extends StateNotifier<GridNotifierState> {
       int splitCol = Random().nextInt(colEnd - colStart - 1) + colStart + 1;
       for (int row = rowStart; row < rowEnd; row++) {
         if (row == rowStart || row == rowEnd - 1) continue; // Skip the boundary
-        gridData[row * state.columnCrossAxisCount + splitCol] = GridStatus.wall;
+        final index = row * state.columnCrossAxisCount + splitCol;
+        final grid = gridData[index];
+        if (grid == GridStatus.startPoint || grid == GridStatus.targetPoint) return;
+        gridData[index] = GridStatus.wall;
         state = state.copyWith(gridData: List<GridStatus>.from(gridData));
         await Future.delayed(const Duration(milliseconds: 10)); // Delay for animation
       }
@@ -176,7 +179,12 @@ class GridNotifierCubit extends StateNotifier<GridNotifierState> {
       int splitRow = Random().nextInt(rowEnd - rowStart - 1) + rowStart + 1;
       for (int col = colStart; col < colEnd; col++) {
         if (col == colStart || col == colEnd - 1) continue; // Skip the boundary
-        gridData[splitRow * state.columnCrossAxisCount + col] = GridStatus.wall;
+
+        final index = splitRow * state.columnCrossAxisCount + col;
+        final grid = gridData[index];
+        if (grid == GridStatus.startPoint || grid == GridStatus.targetPoint) return;
+        gridData[index] = GridStatus.wall;
+
         state = state.copyWith(gridData: List<GridStatus>.from(gridData));
         await Future.delayed(const Duration(milliseconds: 10)); // Delay for animation
       }
