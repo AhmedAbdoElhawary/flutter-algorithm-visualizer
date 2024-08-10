@@ -24,5 +24,6 @@ class StringsManager {
   static const String unknownPage = "Unknown page";
   static const String notInitializeGridYet = "Not initialize grid yet.";
   static const String clear = "Clear";
+  static const String generateMaze = "Generate maze";
 
 }
