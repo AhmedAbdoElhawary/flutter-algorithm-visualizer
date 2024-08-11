@@ -19,5 +19,11 @@ class StringsManager {
 
   static const String appName = "Algorithm Visualizer";
   static const String welcomeToApp = "Welcome to $appName";
+  static const String sorryForInconvenience = "Sorry for inconvenience";
+  static const String cancel = "Cancel";
+  static const String unknownPage = "Unknown page";
+  static const String notInitializeGridYet = "Not initialize grid yet.";
+  static const String clear = "Clear";
+  static const String generateMaze = "Generate maze";
 
 }
