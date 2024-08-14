@@ -10,9 +10,10 @@ class GridNotifierCubit extends StateNotifier<GridNotifierState> {
   final int columnSquares = 20;
   static const Duration scaleAppearDurationForWall = Duration(milliseconds: 700);
 
-  bool isTapDown = false;
+  int tapDownIndex = -1;
 
   void updateGridLayout(Size size) {
+    debugPrint("111111111 ----------------------> ${DateTime.now().second}");
     final screenWidth = size.width;
     final screenHeight = size.height;
 
@@ -36,6 +37,7 @@ class GridNotifierCubit extends StateNotifier<GridNotifierState> {
     final gridData = _addDefaultTwoPoints(addState: tempState);
 
     state = tempState.copyWith(gridData: gridData);
+    debugPrint("2222222222222 ----------------------> ${DateTime.now().second}");
 
     debugPrint("screen constraints updated ===========> "
         "width: $screenWidth,,"
@@ -96,28 +98,35 @@ class GridNotifierCubit extends StateNotifier<GridNotifierState> {
   }
 
   void onPointerDownOnGrid(PointerDownEvent event) {
-    isTapDown = true;
+    tapDownIndex = _getIndex(addState: state, localPosition: event.localPosition);
   }
 
   void onPointerUpOnGrid(PointerUpEvent event) {
-    isTapDown = false;
+    tapDownIndex = -1;
   }
 
   void onFingerMoveOnGrid(PointerMoveEvent event) {
-    final dx = event.localPosition.dx;
-    final dy = event.localPosition.dy;
-    final index = _getIndex(addState: state, screenHeight: dy, screenWidth: dx);
+    final index = _getIndex(addState: state, localPosition: event.localPosition);
 
-    // to handle multi calls from listener widget
+    /// to handle multi calls from listener widget
     if (index == state.currentTappedIndex) return;
 
     if (index >= 0 && index < state.gridData.length) {
       final updatedGridData = List<GridStatus>.from(state.gridData);
       final currentGrid = updatedGridData[index];
-      if (currentGrid == GridStatus.wall) {
-        updatedGridData[index] = GridStatus.empty;
+
+      if (updatedGridData[tapDownIndex] == GridStatus.startPoint) {
+        updatedGridData[tapDownIndex] = GridStatus.empty;
+        updatedGridData[index] = GridStatus.startPoint;
+        tapDownIndex = index;
+      } else if (updatedGridData[tapDownIndex] == GridStatus.targetPoint) {
+        updatedGridData[tapDownIndex] = GridStatus.empty;
+        updatedGridData[index] = GridStatus.targetPoint;
+        tapDownIndex = index;
       } else if (currentGrid == GridStatus.empty) {
         updatedGridData[index] = GridStatus.wall;
+      } else if (currentGrid == GridStatus.wall) {
+        updatedGridData[index] = GridStatus.empty;
       }
 
       state = state.copyWith(gridData: updatedGridData, currentTappedIndex: index);
@@ -126,9 +135,11 @@ class GridNotifierCubit extends StateNotifier<GridNotifierState> {
 
   int _getIndex({
     required GridNotifierState addState,
-    required double screenWidth,
-    required double screenHeight,
+    required Offset localPosition,
   }) {
+    final screenWidth = localPosition.dx;
+    final screenHeight = localPosition.dy;
+
     final selectedColumn = (screenWidth / addState.gridSize).floor();
     final selectedRow = (screenHeight / addState.gridSize).floor();
 
