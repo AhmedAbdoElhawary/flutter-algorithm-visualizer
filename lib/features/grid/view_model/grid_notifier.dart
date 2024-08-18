@@ -1,4 +1,5 @@
 import 'dart:collection';
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -200,17 +201,11 @@ class GridNotifierCubit extends StateNotifier<GridNotifierState> {
 
       for (final direction in directions) {
         final neighborIndex = currentIndex + direction;
+        if (!_isValidNeighbor(currentIndex, neighborIndex, direction, cross, gridData)) {
+          continue;
+        }
 
-        final isFirstLeftInRowIndex = neighborIndex % cross == 0;
-        final isEndRightInRowIndex = neighborIndex % (cross - 1) == 0;
-
-        if (direction == right && isFirstLeftInRowIndex) continue; // to avoid exist the boundaries
-        if (direction == left && isEndRightInRowIndex) continue; // to avoid exist the boundaries
-
-        if (neighborIndex >= 0 &&
-            neighborIndex < gridData.length &&
-            !visited.contains(neighborIndex) &&
-            gridData[neighborIndex] != GridStatus.wall) {
+        if (!visited.contains(neighborIndex)) {
           visited.add(neighborIndex);
           previous[neighborIndex] = currentIndex;
           queue.add(neighborIndex);
@@ -220,11 +215,87 @@ class GridNotifierCubit extends StateNotifier<GridNotifierState> {
       // for marking the current grid as visited
       if (gridData[currentIndex] != GridStatus.startPoint &&
           gridData[currentIndex] != GridStatus.targetPoint) {
-        gridData[currentIndex] = GridStatus.searcher;
+        gridData[currentIndex] = GridStatus.filledSearcher;
         state = state.copyWith(gridData: List<GridStatus>.from(gridData));
         await Future.delayed(drawSearcherDuration);
       }
     }
+  }
+
+  Future<void> performDijkstra() async {
+    final gridData = List<GridStatus>.from(state.gridData);
+    final startPointIndex = gridData.indexOf(GridStatus.startPoint);
+    final targetPointIndex = gridData.indexOf(GridStatus.targetPoint);
+
+    if (startPointIndex == -1 || targetPointIndex == -1) return;
+
+    final distance = List<double>.filled(gridData.length, double.infinity);
+    final previous = List<int?>.filled(gridData.length, null);
+    final visited = List<bool>.filled(gridData.length, false);
+    final cross = state.columnCrossAxisCount;
+
+    distance[startPointIndex] = 0;
+
+    // priority queue to get the minimum distance vertex
+    final pq = PriorityQueue<int>((a, b) => distance[a].compareTo(distance[b]));
+    pq.add(startPointIndex);
+
+    final directions = [
+      -cross, // up
+      cross, // down
+      -1, // left
+      1, // right
+    ];
+
+    while (pq.isNotEmpty) {
+      final currentIndex = pq.removeFirst();
+
+      // Mark the current node as visited
+      visited[currentIndex] = true;
+
+      // If we reached the target, we trace back the path
+      if (currentIndex == targetPointIndex) {
+        _tracePath(previous, currentIndex);
+        return;
+      }
+
+      for (final direction in directions) {
+        final neighborIndex = currentIndex + direction;
+
+        if (!_isValidNeighbor(currentIndex, neighborIndex, direction, cross, gridData)) {
+          continue;
+        }
+
+        final tentativeDistance = distance[currentIndex] + 1; // Assume weight of 1 for each move
+
+        if (tentativeDistance < distance[neighborIndex]) {
+          distance[neighborIndex] = tentativeDistance;
+          previous[neighborIndex] = currentIndex;
+          pq.add(neighborIndex);
+
+          // Visualize the search process
+          if (gridData[neighborIndex] != GridStatus.startPoint &&
+              gridData[neighborIndex] != GridStatus.targetPoint) {
+            gridData[neighborIndex] = GridStatus.filledSearcher;
+            state = state.copyWith(gridData: List<GridStatus>.from(gridData));
+            await Future.delayed(drawSearcherDuration);
+          }
+        }
+      }
+    }
+  }
+
+  bool _isValidNeighbor(
+      int currentIndex, int neighborIndex, int direction, int cross, List<GridStatus> gridData) {
+    final isFirstLeftInRowIndex = neighborIndex % cross == 0;
+    final isEndRightInRowIndex = neighborIndex % (cross - 1) == 0;
+
+    if (direction == 1 && isFirstLeftInRowIndex) return false; // avoid exiting the boundaries
+    if (direction == -1 && isEndRightInRowIndex) return false; // avoid exiting the boundaries
+
+    return neighborIndex >= 0 &&
+        neighborIndex < gridData.length &&
+        gridData[neighborIndex] != GridStatus.wall;
   }
 
   Future<void> _tracePath(List<int?> previous, int currentIndex) async {
