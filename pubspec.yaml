@@ -19,6 +19,7 @@ dependencies:
   flutter_riverpod: ^2.5.1
   get_storage: ^2.1.1
   animations: ^2.0.11 # not used yet
+  collection: ^1.18.0
 
   cupertino_icons: ^1.0.6
 
