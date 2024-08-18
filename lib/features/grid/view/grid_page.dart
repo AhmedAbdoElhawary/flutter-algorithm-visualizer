@@ -12,11 +12,17 @@ final gridNotifierProvider = StateNotifierProvider<GridNotifierCubit, GridNotifi
   (ref) => GridNotifierCubit(),
 );
 
-Border _allBorder() => Border.all(color: ColorManager.dividerBlue, width: 0.5.r);
+BorderSide _borderSide([bool isWhite = false]) =>
+    BorderSide(color: isWhite ? ColorManager.white : ColorManager.dividerBlue, width: isWhite ? 0.25.r : 1.r);
 
-Border _thineVerticalBorder() {
-  return Border.symmetric(vertical: BorderSide(color: ColorManager.white, width: 0.5.r));
-}
+BorderDirectional _allBorder() => BorderDirectional(top: _borderSide(), start: _borderSide());
+
+BorderDirectional _thineVerticalBorder() => BorderDirectional(
+      top: _borderSide(true),
+      start: _borderSide(true),
+      end: _borderSide(true),
+      bottom: _borderSide(true),
+    );
 
 class GridPage extends StatelessWidget {
   const GridPage({super.key});
@@ -39,6 +45,29 @@ class GridPage extends StatelessWidget {
           Consumer(
             builder: (context, ref, _) {
               return TextButton(
+                onPressed: () {
+                  ref.read(gridNotifierProvider.notifier).performDijkstra();
+                },
+                child: const RegularText("Dijkstra"),
+              );
+            },
+          ),
+          Consumer(
+            builder: (context, ref, _) {
+              return TextButton(
+                onPressed: () {
+                  ref.read(gridNotifierProvider.notifier).performBFS();
+                },
+                child: const RegularText("BFS"),
+              );
+            },
+          ),
+          Consumer(
+            builder: (context, ref, _) {
+              return TextButton(
+                onLongPress: () {
+                  ref.read(gridNotifierProvider.notifier).clearTheGrid(keepWall: true);
+                },
                 onPressed: () {
                   ref.read(gridNotifierProvider.notifier).clearTheGrid();
                 },
@@ -139,10 +168,13 @@ class _SquareState extends ConsumerState<_Square> {
     final isSelected = ref.watch(gridNotifierProvider.select((it) => it.gridData[widget.index]));
 
     final isColored = isSelected != GridStatus.empty;
+    final showBorder = isSelected != GridStatus.empty &&
+        isSelected != GridStatus.startPoint &&
+        isSelected != GridStatus.targetPoint;
 
     return Container(
       decoration: BoxDecoration(
-        border: isColored ? _thineVerticalBorder() : _allBorder(),
+        border: showBorder ? _thineVerticalBorder() : _allBorder(),
       ),
       child: AnimatedScale(
         scale: isColored ? 1.0 : 0.1,
@@ -159,12 +191,33 @@ class _SquareState extends ConsumerState<_Square> {
                 return const _TargetPointGrid();
               case GridStatus.searcher:
                 return const _SearcherGrid();
+              case GridStatus.path:
+                return const _PathGrid();
               default:
                 return const _DefaultGrid();
             }
           },
         ),
       ),
+    );
+  }
+}
+
+class _PathGrid extends StatelessWidget {
+  const _PathGrid();
+
+  @override
+  Widget build(BuildContext context) {
+    return Consumer(
+      builder: (context, ref, _) {
+        final size = ref.watch(gridNotifierProvider.select((it) => it.gridSize));
+
+        return Container(
+          width: size,
+          height: size,
+          decoration: const BoxDecoration(color: ColorManager.light2Yellow),
+        );
+      },
     );
   }
 }
