@@ -21,7 +21,7 @@ BorderDirectional _thineVerticalBorder() => BorderDirectional(
       top: _borderSide(true),
       start: _borderSide(true),
       end: _borderSide(true),
-      bottom:  _borderSide(true),
+      bottom: _borderSide(true),
     );
 
 class GridPage extends StatelessWidget {
@@ -32,6 +32,16 @@ class GridPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         actions: [
+          Consumer(
+            builder: (context, ref, _) {
+              return TextButton(
+                onPressed: () {
+                  ref.read(gridNotifierProvider.notifier).performDijkstra();
+                },
+                child: const RegularText("Start Dijkstra"),
+              );
+            },
+          ),
           Consumer(
             builder: (context, ref, _) {
               return TextButton(
