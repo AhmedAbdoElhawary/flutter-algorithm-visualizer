@@ -6,6 +6,7 @@ enum GridStatus {
   startPoint,
   targetPoint,
   searcher,
+  path,
 }
 
 final class GridNotifierState {
