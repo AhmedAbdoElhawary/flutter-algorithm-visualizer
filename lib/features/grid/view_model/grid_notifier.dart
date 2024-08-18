@@ -1,4 +1,5 @@
 import 'dart:collection';
+import 'dart:math';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -11,9 +12,10 @@ class GridNotifierCubit extends StateNotifier<GridNotifierState> {
   static const Duration scaleAppearDurationForWall = Duration(milliseconds: 700);
   static const Duration clearDuration = Duration(microseconds: 10);
   static const Duration drawFindingPathDuration = Duration(milliseconds: 2);
-  static const Duration drawSearcherDuration = Duration(milliseconds: 2);
+  static const Duration drawSearcherDuration = Duration(milliseconds: 5);
 
   int tapDownIndex = -1;
+  GridStatus tapDownGridStatus = GridStatus.empty;
 
   void updateGridLayout(Size size) {
     final screenWidth = size.width;
@@ -92,12 +94,14 @@ class GridNotifierCubit extends StateNotifier<GridNotifierState> {
     return gridStatus;
   }
 
-  Future<void> _clearTheGrid({required GridNotifierState addState}) async {
+  Future<void> _clearTheGrid({required GridNotifierState addState, bool keepWall = false}) async {
     final elements = addState.gridData;
 
     for (int i = 0; i < elements.length; i++) {
       final grid = addState.gridData[i];
+
       if (grid == GridStatus.targetPoint || grid == GridStatus.startPoint) continue;
+      if (grid == GridStatus.wall && keepWall) continue;
 
       addState.gridData[i] = GridStatus.empty;
       state = addState.copyWith(gridData: addState.gridData);
@@ -106,8 +110,8 @@ class GridNotifierCubit extends StateNotifier<GridNotifierState> {
     }
   }
 
-  void clearTheGrid() {
-    _clearTheGrid(addState: state);
+  void clearTheGrid({bool keepWall = false}) {
+    _clearTheGrid(addState: state, keepWall: keepWall);
 
     state = state.copyWith(currentTappedIndex: -1);
   }
@@ -131,11 +135,13 @@ class GridNotifierCubit extends StateNotifier<GridNotifierState> {
       final currentGrid = updatedGridData[index];
 
       if (updatedGridData[tapDownIndex] == GridStatus.startPoint) {
-        updatedGridData[tapDownIndex] = GridStatus.empty;
+        updatedGridData[tapDownIndex] = tapDownGridStatus;
+        tapDownGridStatus = updatedGridData[index];
         updatedGridData[index] = GridStatus.startPoint;
         tapDownIndex = index;
       } else if (updatedGridData[tapDownIndex] == GridStatus.targetPoint) {
-        updatedGridData[tapDownIndex] = GridStatus.empty;
+        updatedGridData[tapDownIndex] = tapDownGridStatus;
+        tapDownGridStatus = updatedGridData[index];
         updatedGridData[index] = GridStatus.targetPoint;
         tapDownIndex = index;
       } else if (currentGrid == GridStatus.empty) {
@@ -288,7 +294,7 @@ class GridNotifierCubit extends StateNotifier<GridNotifierState> {
   bool _isValidNeighbor(
       int currentIndex, int neighborIndex, int direction, int cross, List<GridStatus> gridData) {
     final isFirstLeftInRowIndex = neighborIndex % cross == 0;
-    final isEndRightInRowIndex = neighborIndex % (cross - 1) == 0;
+    final isEndRightInRowIndex = (neighborIndex + 1) % cross == 0;
 
     if (direction == 1 && isFirstLeftInRowIndex) return false; // avoid exiting the boundaries
     if (direction == -1 && isEndRightInRowIndex) return false; // avoid exiting the boundaries
@@ -310,5 +316,80 @@ class GridNotifierCubit extends StateNotifier<GridNotifierState> {
       }
       traceIndex = previous[traceIndex];
     }
+  }
+
+  void generateMaze() {
+    final gridData = List<GridStatus>.from(state.gridData);
+
+    // Clear the maze but keep start and target points
+    for (int i = 0; i < gridData.length; i++) {
+      if (gridData[i] != GridStatus.startPoint && gridData[i] != GridStatus.targetPoint) {
+        gridData[i] = GridStatus.empty;
+      }
+    }
+
+    // Start the division from the full grid
+    _recursiveDivision(gridData, 0, state.rowMainAxisCount, 0, state.columnCrossAxisCount);
+  }
+
+  Future<void> _recursiveDivision(
+      List<GridStatus> gridData, int rowStart, int rowEnd, int colStart, int colEnd) async {
+    if (rowEnd - rowStart < 2 || colEnd - colStart < 2) return; // Avoid too small segments
+
+    bool divideVertically = Random().nextBool();
+
+    if (divideVertically) {
+      return _recursiveVerticalDivision(gridData, rowStart, rowEnd, colStart, colEnd);
+    } else {
+      return _recursiveHorizontalDivision(gridData, rowStart, rowEnd, colStart, colEnd);
+    }
+  }
+
+  Future<void> _recursiveVerticalDivision(
+      List<GridStatus> gridData, int rowStart, int rowEnd, int colStart, int colEnd) async {
+    if (rowEnd - rowStart < 2 || colEnd - colStart < 2) return;
+
+    int splitCol = Random().nextInt(colEnd - colStart - 1) + colStart + 1;
+    for (int row = rowStart; row < rowEnd; row++) {
+      if (row == rowStart || row == rowEnd - 1) continue; // Skip the boundary
+      final index = row * state.columnCrossAxisCount + splitCol;
+      final grid = gridData[index];
+      if (grid == GridStatus.startPoint || grid == GridStatus.targetPoint) return;
+      gridData[index] = GridStatus.wall;
+      state = state.copyWith(gridData: List<GridStatus>.from(gridData));
+      await Future.delayed(const Duration(milliseconds: 10));
+    }
+
+    // Open a passage
+    int passageAt = Random().nextInt(rowEnd - rowStart) + rowStart;
+    gridData[passageAt * state.columnCrossAxisCount + splitCol] = GridStatus.empty;
+
+    await _recursiveDivision(gridData, rowStart, rowEnd, colStart, splitCol);
+    await _recursiveDivision(gridData, rowStart, rowEnd, splitCol + 1, colEnd);
+  }
+
+  Future<void> _recursiveHorizontalDivision(
+      List<GridStatus> gridData, int rowStart, int rowEnd, int colStart, int colEnd) async {
+    if (rowEnd - rowStart < 2 || colEnd - colStart < 2) return;
+
+    int splitRow = Random().nextInt(rowEnd - rowStart - 1) + rowStart + 1;
+    for (int col = colStart; col < colEnd; col++) {
+      if (col == colStart || col == colEnd - 1) continue; // Skip the boundary
+
+      final index = splitRow * state.columnCrossAxisCount + col;
+      final grid = gridData[index];
+      if (grid == GridStatus.startPoint || grid == GridStatus.targetPoint) return;
+      gridData[index] = GridStatus.wall;
+
+      state = state.copyWith(gridData: List<GridStatus>.from(gridData));
+      await Future.delayed(const Duration(milliseconds: 10));
+    }
+
+    // Open a passage
+    int passageAt = Random().nextInt(colEnd - colStart) + colStart;
+    gridData[splitRow * state.columnCrossAxisCount + passageAt] = GridStatus.empty;
+
+    await _recursiveDivision(gridData, rowStart, splitRow, colStart, colEnd);
+    await _recursiveDivision(gridData, splitRow + 1, rowEnd, colStart, colEnd);
   }
 }
