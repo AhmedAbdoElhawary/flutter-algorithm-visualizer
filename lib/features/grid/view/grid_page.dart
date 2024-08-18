@@ -36,9 +36,19 @@ class GridPage extends StatelessWidget {
             builder: (context, ref, _) {
               return TextButton(
                 onPressed: () {
+                  ref.read(gridNotifierProvider.notifier).generateMaze();
+                },
+                child: const RegularText(StringsManager.generateMaze),
+              );
+            },
+          ),
+          Consumer(
+            builder: (context, ref, _) {
+              return TextButton(
+                onPressed: () {
                   ref.read(gridNotifierProvider.notifier).performDijkstra();
                 },
-                child: const RegularText("Start Dijkstra"),
+                child: const RegularText("Dijkstra"),
               );
             },
           ),
@@ -48,13 +58,16 @@ class GridPage extends StatelessWidget {
                 onPressed: () {
                   ref.read(gridNotifierProvider.notifier).performBFS();
                 },
-                child: const RegularText("Start BFS"),
+                child: const RegularText("BFS"),
               );
             },
           ),
           Consumer(
             builder: (context, ref, _) {
               return TextButton(
+                onLongPress: () {
+                  ref.read(gridNotifierProvider.notifier).clearTheGrid(keepWall: true);
+                },
                 onPressed: () {
                   ref.read(gridNotifierProvider.notifier).clearTheGrid();
                 },
