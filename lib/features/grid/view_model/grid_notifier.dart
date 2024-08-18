@@ -6,13 +6,26 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 part 'grid_notifier_state.dart';
 
+class MazeDirection {
+  final int rowDelta;
+  final int colDelta;
+
+  const MazeDirection._(this.rowDelta, this.colDelta);
+
+  static const up = MazeDirection._(-1, 0);
+  static const down = MazeDirection._(1, 0);
+  static const left = MazeDirection._(0, -1);
+  static const right = MazeDirection._(0, 1);
+}
+
 class GridNotifierCubit extends StateNotifier<GridNotifierState> {
   GridNotifierCubit() : super(GridNotifierState());
   final int columnSquares = 20;
   static const Duration scaleAppearDurationForWall = Duration(milliseconds: 700);
-  static const Duration clearDuration = Duration(microseconds: 10);
+  static const Duration clearDuration = Duration(microseconds: 1);
   static const Duration drawFindingPathDuration = Duration(milliseconds: 2);
   static const Duration drawSearcherDuration = Duration(milliseconds: 5);
+  static const Duration mazeDuration = Duration(milliseconds: 10);
 
   int tapDownIndex = -1;
   GridStatus tapDownGridStatus = GridStatus.empty;
@@ -318,7 +331,7 @@ class GridNotifierCubit extends StateNotifier<GridNotifierState> {
     }
   }
 
-  void generateMaze() {
+  void generateMaze() async {
     final gridData = List<GridStatus>.from(state.gridData);
 
     // Clear the maze but keep start and target points
@@ -328,68 +341,40 @@ class GridNotifierCubit extends StateNotifier<GridNotifierState> {
       }
     }
 
-    // Start the division from the full grid
-    _recursiveDivision(gridData, 0, state.rowMainAxisCount, 0, state.columnCrossAxisCount);
+    // Random starting point
+    final random = Random();
+    int startRow = (random.nextInt(state.rowMainAxisCount - 2) ~/ 2) * 2 + 1;
+    int startCol = (random.nextInt(state.columnCrossAxisCount - 2) ~/ 2) * 2 + 1;
+
+    await _cravePassage(startRow, startCol, gridData);
+
+    state = state.copyWith(gridData: gridData);
   }
 
-  Future<void> _recursiveDivision(
-      List<GridStatus> gridData, int rowStart, int rowEnd, int colStart, int colEnd) async {
-    if (rowEnd - rowStart < 2 || colEnd - colStart < 2) return; // Avoid too small segments
+  Future<void> _cravePassage(int row, int col, List<GridStatus> gridData) async {
+    final directions = [MazeDirection.up, MazeDirection.down, MazeDirection.left, MazeDirection.right];
+    directions.shuffle();
 
-    bool divideVertically = Random().nextBool();
+    for (final direction in directions) {
+      final newRow = row + direction.rowDelta * 2;
+      final newCol = col + direction.colDelta * 2;
 
-    if (divideVertically) {
-      return _recursiveVerticalDivision(gridData, rowStart, rowEnd, colStart, colEnd);
-    } else {
-      return _recursiveHorizontalDivision(gridData, rowStart, rowEnd, colStart, colEnd);
+      if (_isValidCell(newRow, newCol) &&
+          gridData[newRow * state.columnCrossAxisCount + newCol] == GridStatus.empty) {
+        gridData[(row + direction.rowDelta) * state.columnCrossAxisCount + (col + direction.colDelta)] =
+            GridStatus.wall;
+        gridData[newRow * state.columnCrossAxisCount + newCol] = GridStatus.wall;
+
+        state = state.copyWith(gridData: List.from(gridData));
+
+        await Future.delayed(mazeDuration);
+
+        await _cravePassage(newRow, newCol, gridData);
+      }
     }
   }
 
-  Future<void> _recursiveVerticalDivision(
-      List<GridStatus> gridData, int rowStart, int rowEnd, int colStart, int colEnd) async {
-    if (rowEnd - rowStart < 2 || colEnd - colStart < 2) return;
-
-    int splitCol = Random().nextInt(colEnd - colStart - 1) + colStart + 1;
-    for (int row = rowStart; row < rowEnd; row++) {
-      if (row == rowStart || row == rowEnd - 1) continue; // Skip the boundary
-      final index = row * state.columnCrossAxisCount + splitCol;
-      final grid = gridData[index];
-      if (grid == GridStatus.startPoint || grid == GridStatus.targetPoint) return;
-      gridData[index] = GridStatus.wall;
-      state = state.copyWith(gridData: List<GridStatus>.from(gridData));
-      await Future.delayed(const Duration(milliseconds: 10));
-    }
-
-    // Open a passage
-    int passageAt = Random().nextInt(rowEnd - rowStart) + rowStart;
-    gridData[passageAt * state.columnCrossAxisCount + splitCol] = GridStatus.empty;
-
-    await _recursiveDivision(gridData, rowStart, rowEnd, colStart, splitCol);
-    await _recursiveDivision(gridData, rowStart, rowEnd, splitCol + 1, colEnd);
-  }
-
-  Future<void> _recursiveHorizontalDivision(
-      List<GridStatus> gridData, int rowStart, int rowEnd, int colStart, int colEnd) async {
-    if (rowEnd - rowStart < 2 || colEnd - colStart < 2) return;
-
-    int splitRow = Random().nextInt(rowEnd - rowStart - 1) + rowStart + 1;
-    for (int col = colStart; col < colEnd; col++) {
-      if (col == colStart || col == colEnd - 1) continue; // Skip the boundary
-
-      final index = splitRow * state.columnCrossAxisCount + col;
-      final grid = gridData[index];
-      if (grid == GridStatus.startPoint || grid == GridStatus.targetPoint) return;
-      gridData[index] = GridStatus.wall;
-
-      state = state.copyWith(gridData: List<GridStatus>.from(gridData));
-      await Future.delayed(const Duration(milliseconds: 10));
-    }
-
-    // Open a passage
-    int passageAt = Random().nextInt(colEnd - colStart) + colStart;
-    gridData[splitRow * state.columnCrossAxisCount + passageAt] = GridStatus.empty;
-
-    await _recursiveDivision(gridData, rowStart, splitRow, colStart, colEnd);
-    await _recursiveDivision(gridData, splitRow + 1, rowEnd, colStart, colEnd);
+  bool _isValidCell(int row, int col) {
+    return row > 0 && col > 0 && row < state.rowMainAxisCount && col < state.columnCrossAxisCount;
   }
 }
