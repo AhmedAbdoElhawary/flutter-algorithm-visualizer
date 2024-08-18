@@ -215,7 +215,7 @@ class GridNotifierCubit extends StateNotifier<GridNotifierState> {
       // for marking the current grid as visited
       if (gridData[currentIndex] != GridStatus.startPoint &&
           gridData[currentIndex] != GridStatus.targetPoint) {
-        gridData[currentIndex] = GridStatus.filledSearcher;
+        gridData[currentIndex] = GridStatus.searcher;
         state = state.copyWith(gridData: List<GridStatus>.from(gridData));
         await Future.delayed(drawSearcherDuration);
       }
@@ -276,7 +276,7 @@ class GridNotifierCubit extends StateNotifier<GridNotifierState> {
           // Visualize the search process
           if (gridData[neighborIndex] != GridStatus.startPoint &&
               gridData[neighborIndex] != GridStatus.targetPoint) {
-            gridData[neighborIndex] = GridStatus.filledSearcher;
+            gridData[neighborIndex] = GridStatus.searcher;
             state = state.copyWith(gridData: List<GridStatus>.from(gridData));
             await Future.delayed(drawSearcherDuration);
           }
