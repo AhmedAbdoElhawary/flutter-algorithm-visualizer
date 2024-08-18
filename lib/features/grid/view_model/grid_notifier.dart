@@ -92,9 +92,12 @@ class GridNotifierCubit extends StateNotifier<GridNotifierState> {
   }
 
   Future<void> _clearTheGrid({required GridNotifierState addState}) async {
-    for (int i = 0; i < addState.gridCount; i++) {
+    final elements = addState.gridData;
+
+    for (int i = 0; i < elements.length; i++) {
       final grid = addState.gridData[i];
       if (grid == GridStatus.targetPoint || grid == GridStatus.startPoint) continue;
+
       addState.gridData[i] = GridStatus.empty;
       state = addState.copyWith(gridData: addState.gridData);
 
