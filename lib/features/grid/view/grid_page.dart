@@ -13,15 +13,15 @@ final gridNotifierProvider = StateNotifierProvider<GridNotifierCubit, GridNotifi
 );
 
 BorderSide _borderSide([bool isWhite = false]) =>
-    BorderSide(color: isWhite ? ColorManager.white : ColorManager.dividerBlue, width: isWhite ? 0.5.r : 1.r);
+    BorderSide(color: isWhite ? ColorManager.white : ColorManager.dividerBlue, width: isWhite ? 0.25.r : 1.r);
 
 BorderDirectional _allBorder() => BorderDirectional(top: _borderSide(), start: _borderSide());
 
 BorderDirectional _thineVerticalBorder() => BorderDirectional(
       top: _borderSide(true),
       start: _borderSide(true),
-      // end: _borderSide(true),
-      // bottom: _borderSide(true),
+      end: _borderSide(true),
+      bottom:  _borderSide(true),
     );
 
 class GridPage extends StatelessWidget {
