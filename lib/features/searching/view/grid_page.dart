@@ -1,15 +1,17 @@
 import 'package:algorithm_visualizer/core/resources/color_manager.dart';
 import 'package:algorithm_visualizer/core/resources/strings_manager.dart';
+import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
 import 'package:algorithm_visualizer/core/widgets/adaptive/text/adaptive_text.dart';
+import 'package:algorithm_visualizer/core/widgets/custom_widgets/custom_dialog.dart';
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/custom_icon.dart';
-import 'package:algorithm_visualizer/features/grid/view_model/grid_notifier.dart';
+import 'package:algorithm_visualizer/features/searching/view_model/grid_notifier.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 part '../widgets/searcher_grid.dart';
 
-final gridNotifierProvider = StateNotifierProvider<GridNotifierCubit, GridNotifierState>(
-  (ref) => GridNotifierCubit(),
+final _gridNotifierProvider = StateNotifierProvider<SearchingNotifier, GridNotifierState>(
+  (ref) => SearchingNotifier(),
 );
 
 BorderSide _borderSide([bool isWhite = false]) =>
@@ -24,8 +26,8 @@ BorderDirectional _thineVerticalBorder() => BorderDirectional(
       bottom: _borderSide(true),
     );
 
-class GridPage extends StatelessWidget {
-  const GridPage({super.key});
+class SearchingPage extends StatelessWidget {
+  const SearchingPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -36,42 +38,44 @@ class GridPage extends StatelessWidget {
             builder: (context, ref, _) {
               return TextButton(
                 onPressed: () {
-                  ref.read(gridNotifierProvider.notifier).generateMaze();
+                  CustomAlertDialog(context).solidDialog(
+                    parameters: [
+                      ListDialogParameters(
+                        text: StringsManager.generateMaze,
+                        onTap: () {
+                          ref.read(_gridNotifierProvider.notifier).generateMaze();
+                        },
+                      ),
+                      ListDialogParameters(
+                        text: "Dijkstra",
+                        onTap: () {
+                          ref.read(_gridNotifierProvider.notifier).performDijkstra();
+                        },
+                      ),
+                      ListDialogParameters(
+                        text: "BFS",
+                        onTap: () {
+                          ref.read(_gridNotifierProvider.notifier).performBFS();
+                        },
+                      ),
+                      ListDialogParameters(
+                        text: StringsManager.clearPath,
+                        color: ThemeEnum.redColor,
+                        onTap: () {
+                          ref.read(_gridNotifierProvider.notifier).clearTheGrid(keepWall: true);
+                        },
+                      ),
+                      ListDialogParameters(
+                        text: StringsManager.clearAll,
+                        color: ThemeEnum.redColor,
+                        onTap: () {
+                          ref.read(_gridNotifierProvider.notifier).clearTheGrid();
+                        },
+                      ),
+                    ],
+                  );
                 },
-                child: const RegularText(StringsManager.generateMaze),
-              );
-            },
-          ),
-          Consumer(
-            builder: (context, ref, _) {
-              return TextButton(
-                onPressed: () {
-                  ref.read(gridNotifierProvider.notifier).performDijkstra();
-                },
-                child: const RegularText("Dijkstra"),
-              );
-            },
-          ),
-          Consumer(
-            builder: (context, ref, _) {
-              return TextButton(
-                onPressed: () {
-                  ref.read(gridNotifierProvider.notifier).performBFS();
-                },
-                child: const RegularText("BFS"),
-              );
-            },
-          ),
-          Consumer(
-            builder: (context, ref, _) {
-              return TextButton(
-                onLongPress: () {
-                  ref.read(gridNotifierProvider.notifier).clearTheGrid(keepWall: true);
-                },
-                onPressed: () {
-                  ref.read(gridNotifierProvider.notifier).clearTheGrid();
-                },
-                child: const RegularText(StringsManager.clear),
+                child: const CustomIcon(Icons.menu_rounded),
               );
             },
           ),
@@ -112,7 +116,7 @@ class _BuildLayoutState extends ConsumerState<_BuildLayout> {
   }
 
   void _updateLayout() {
-    ref.read(gridNotifierProvider.notifier).updateGridLayout(widget.size);
+    ref.read(_gridNotifierProvider.notifier).updateGridLayout(widget.size);
   }
 
   @override
@@ -126,14 +130,14 @@ class _BuildGridItems extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, ref) {
-    final gridCount = ref.watch(gridNotifierProvider.select((it) => it.gridCount));
-    final watchColumnCrossAxisCount = ref.watch(gridNotifierProvider.select((it) => it.columnCrossAxisCount));
+    final gridCount = ref.watch(_gridNotifierProvider.select((it) => it.gridCount));
+    final watchColumnCrossAxisCount = ref.watch(_gridNotifierProvider.select((it) => it.columnCrossAxisCount));
 
     if (gridCount == 0) {
       return const Center(child: MediumText(StringsManager.notInitializeGridYet));
     }
 
-    final read = ref.read(gridNotifierProvider.notifier);
+    final read = ref.read(_gridNotifierProvider.notifier);
 
     return Listener(
       onPointerDown: read.onPointerDownOnGrid,
@@ -165,7 +169,7 @@ class _Square extends ConsumerStatefulWidget {
 class _SquareState extends ConsumerState<_Square> {
   @override
   Widget build(BuildContext context) {
-    final isSelected = ref.watch(gridNotifierProvider.select((it) => it.gridData[widget.index]));
+    final isSelected = ref.watch(_gridNotifierProvider.select((it) => it.gridData[widget.index]));
 
     final isColored = isSelected != GridStatus.empty;
     final showBorder = isSelected != GridStatus.empty &&
@@ -178,7 +182,7 @@ class _SquareState extends ConsumerState<_Square> {
       ),
       child: AnimatedScale(
         scale: isColored ? 1.0 : 0.1,
-        duration: GridNotifierCubit.scaleAppearDurationForWall,
+        duration: SearchingNotifier.scaleAppearDurationForWall,
         curve: Curves.elasticOut,
         child: Builder(
           builder: (context) {
@@ -210,7 +214,7 @@ class _PathGrid extends StatelessWidget {
   Widget build(BuildContext context) {
     return Consumer(
       builder: (context, ref, _) {
-        final size = ref.watch(gridNotifierProvider.select((it) => it.gridSize));
+        final size = ref.watch(_gridNotifierProvider.select((it) => it.gridSize));
 
         return Container(
           width: size,
@@ -229,7 +233,7 @@ class _WallGrid extends StatelessWidget {
   Widget build(BuildContext context) {
     return Consumer(
       builder: (context, ref, _) {
-        final size = ref.watch(gridNotifierProvider.select((it) => it.gridSize));
+        final size = ref.watch(_gridNotifierProvider.select((it) => it.gridSize));
 
         return Container(
           width: size,
@@ -248,7 +252,7 @@ class _StartPointGrid extends StatelessWidget {
   Widget build(BuildContext context) {
     return Consumer(
       builder: (context, ref, _) {
-        final size = ref.watch(gridNotifierProvider.select((it) => it.gridSize));
+        final size = ref.watch(_gridNotifierProvider.select((it) => it.gridSize));
 
         return Container(
           width: size,
@@ -274,7 +278,7 @@ class _TargetPointGrid extends StatelessWidget {
   Widget build(BuildContext context) {
     return Consumer(
       builder: (context, ref, _) {
-        final size = ref.watch(gridNotifierProvider.select((it) => it.gridSize));
+        final size = ref.watch(_gridNotifierProvider.select((it) => it.gridSize));
 
         return Container(
           width: size,
@@ -323,7 +327,7 @@ class _DefaultGrid extends StatelessWidget {
   Widget build(BuildContext context) {
     return Consumer(
       builder: (context, ref, _) {
-        final size = ref.watch(gridNotifierProvider.select((it) => it.gridSize));
+        final size = ref.watch(_gridNotifierProvider.select((it) => it.gridSize));
 
         return Container(
           width: size,
