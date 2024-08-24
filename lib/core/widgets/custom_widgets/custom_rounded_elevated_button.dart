@@ -9,14 +9,14 @@ class CustomRoundedElevatedButton extends StatelessWidget {
   final Widget child;
   final VoidCallback onPressed;
   final bool fitToContent;
-  final bool smallRounded;
+  final double roundedRadius;
   final double fixedSize;
   const CustomRoundedElevatedButton({
     super.key,
     this.backgroundColor = ThemeEnum.focusColor,
     this.shadowColor = ThemeEnum.transparentColor,
     this.fitToContent = true,
-    this.smallRounded = false,
+    this.roundedRadius = 50,
     this.fixedSize = 35,
     required this.child,
     required this.onPressed,
@@ -37,7 +37,7 @@ class CustomRoundedElevatedButton extends StatelessWidget {
         fixedSize: fitToContent ? Size.fromHeight(fixedSize.r) : null,
         padding: EdgeInsets.symmetric(horizontal: 15.r),
         shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(smallRounded ? 10 : 50).r),
+            borderRadius: BorderRadius.circular(roundedRadius).r),
         surfaceTintColor: background,
         foregroundColor: context.getColor(ThemeEnum.hintColor),
       ),
