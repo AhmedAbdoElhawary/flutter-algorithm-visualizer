@@ -29,5 +29,8 @@ class StringsManager {
   static const String generateMaze = "Generate maze";
   static const String searching = "Searching";
   static const String sorting = "Sorting";
+  static const String stop = "Stop";
+  static const String play = "Play";
+  static const String reset = "Reset";
 
 }
