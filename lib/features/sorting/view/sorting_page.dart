@@ -1,78 +1,83 @@
-import 'package:algorithm_visualizer/core/helpers/random_int.dart';
 import 'package:algorithm_visualizer/core/resources/strings_manager.dart';
 import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/custom_dialog.dart';
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/custom_icon.dart';
+import 'package:algorithm_visualizer/features/sorting/view_model/sorting_notifier.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
+part '../widgets/sorting_app_bar.dart';
+
+final _notifierProvider = StateNotifierProvider<SortingNotifier, SortingNotifierState>(
+  (ref) => SortingNotifier(),
+);
 
 class SortingPage extends StatelessWidget {
   const SortingPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final list = CustomRandom.generateRandomList(150, 70);
-
     return Scaffold(
       appBar: AppBar(
         elevation: 1,
-        actions: [
-          Consumer(
-            builder: (context, ref, _) {
-              return TextButton(
-                onPressed: () {
-                  CustomAlertDialog(context).solidDialog(
-                    parameters: [
-                      ListDialogParameters(
-                        text: StringsManager.generateMaze,
-                        onTap: () {},
-                      ),
-                      ListDialogParameters(
-                        text: "Dijkstra",
-                        onTap: () {},
-                      ),
-                      ListDialogParameters(
-                        text: "BFS",
-                        onTap: () {},
-                      ),
-                      ListDialogParameters(
-                        text: StringsManager.clearPath,
-                        color: ThemeEnum.redColor,
-                        onTap: () {},
-                      ),
-                      ListDialogParameters(
-                        text: StringsManager.clearAll,
-                        color: ThemeEnum.redColor,
-                        onTap: () {},
-                      ),
-                    ],
+        title: Consumer(builder: (context, ref, _) {
+          return InkWell(
+            onTap: () {
+              ref.read(_notifierProvider.notifier).bubbleSort();
+            },
+            child: const Text("Sort"),
+          );
+        }),
+      ),
+      body: Consumer(builder: (context, ref, _) {
+        final items = ref.watch(_notifierProvider).list;
+
+        return Padding(
+          padding: const EdgeInsets.only(top: 15),
+          child: SizedBox(
+            height: SortingNotifier.maxListItemHeight*1.2,
+            width: double.infinity,
+            child: Stack(
+              alignment: AlignmentDirectional.bottomCenter,
+              children: List.generate(
+                items.length,
+                (index) {
+                  final item = items[index];
+                  final position =
+                      ref.watch(_notifierProvider.select((state) => state.positions[item.id]!));
+                  return AnimatedPositioned(
+                    key: ValueKey(item.id),
+                    left: position.dx,
+                    bottom: position.dy,
+                    duration: SortingNotifier.swipeDuration,
+                    child: _BuildItem(item: item),
                   );
                 },
-                child: const CustomIcon(Icons.menu_rounded),
-              );
-            },
-          ),
-        ],
-      ),
-      body: Padding(
-        padding: REdgeInsets.only(top: 15),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.end,
-          children: List.generate(
-            list.length,
-            (index) => Flexible(
-              child: Container(
-                margin: REdgeInsets.symmetric(horizontal: 1),
-                height: (1 + (list[index])).toDouble(),
-                decoration: BoxDecoration(
-                  color: context.getColor(ThemeEnum.darkBlueColor),
-                  borderRadius: const BorderRadius.vertical(
-                    top: Radius.circular(1),
-                  ),
-                ),
               ),
             ),
+          ),
+        );
+      }),
+    );
+  }
+}
+
+class _BuildItem extends ConsumerWidget {
+  const _BuildItem({required this.item});
+
+  final SortableItem item;
+
+  @override
+  Widget build(BuildContext context, ref) {
+    final itemWidth = SortingNotifier.calculateItemWidth(context);
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: SortingNotifier.itemsPadding / 2),
+      child: Container(
+        height: SortingNotifier.calculateItemHeight(item.value),
+        width: itemWidth,
+        decoration: BoxDecoration(
+          color: SortingNotifier.getColor(item.value),
+          borderRadius: const BorderRadius.vertical(
+            top: Radius.circular(1),
           ),
         ),
       ),
