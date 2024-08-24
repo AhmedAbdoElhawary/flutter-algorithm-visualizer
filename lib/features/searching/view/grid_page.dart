@@ -131,7 +131,8 @@ class _BuildGridItems extends ConsumerWidget {
   @override
   Widget build(BuildContext context, ref) {
     final gridCount = ref.watch(_gridNotifierProvider.select((it) => it.gridCount));
-    final watchColumnCrossAxisCount = ref.watch(_gridNotifierProvider.select((it) => it.columnCrossAxisCount));
+    final watchColumnCrossAxisCount =
+        ref.watch(_gridNotifierProvider.select((it) => it.columnCrossAxisCount));
 
     if (gridCount == 0) {
       return const Center(child: MediumText(StringsManager.notInitializeGridYet));
@@ -212,16 +213,8 @@ class _PathGrid extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer(
-      builder: (context, ref, _) {
-        final size = ref.watch(_gridNotifierProvider.select((it) => it.gridSize));
-
-        return Container(
-          width: size,
-          height: size,
-          decoration: const BoxDecoration(color: ColorManager.light2Yellow),
-        );
-      },
+    return const _WidgetSize(
+      decoration: BoxDecoration(color: ColorManager.light2Yellow),
     );
   }
 }
@@ -231,16 +224,8 @@ class _WallGrid extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer(
-      builder: (context, ref, _) {
-        final size = ref.watch(_gridNotifierProvider.select((it) => it.gridSize));
-
-        return Container(
-          width: size,
-          height: size,
-          decoration: const BoxDecoration(color: ColorManager.wallBlack),
-        );
-      },
+    return const _WidgetSize(
+      decoration: BoxDecoration(color: ColorManager.wallBlack),
     );
   }
 }
@@ -250,23 +235,15 @@ class _StartPointGrid extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer(
-      builder: (context, ref, _) {
-        final size = ref.watch(_gridNotifierProvider.select((it) => it.gridSize));
-
-        return Container(
-          width: size,
-          height: size,
-          decoration: const BoxDecoration(shape: BoxShape.circle),
-          child: const FittedBox(
-            child: CustomIcon(
-              Icons.arrow_forward_ios_rounded,
-              size: 50,
-              color: ColorManager.darkPurple,
-            ),
-          ),
-        );
-      },
+    return const _WidgetSize(
+      decoration: BoxDecoration(shape: BoxShape.circle),
+      child: FittedBox(
+        child: CustomIcon(
+          Icons.arrow_forward_ios_rounded,
+          size: 50,
+          color: ColorManager.darkPurple,
+        ),
+      ),
     );
   }
 }
@@ -276,27 +253,19 @@ class _TargetPointGrid extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer(
-      builder: (context, ref, _) {
-        final size = ref.watch(_gridNotifierProvider.select((it) => it.gridSize));
-
-        return Container(
-          width: size,
-          height: size,
-          decoration: const BoxDecoration(shape: BoxShape.circle),
-          child: const FittedBox(
-            child: _Circle(
-              radius: 30,
-              backgroundColor: ColorManager.darkPurple,
-              child: _Circle(
-                radius: 20,
-                backgroundColor: ColorManager.white,
-                child: _Circle(radius: 12, backgroundColor: ColorManager.darkPurple),
-              ),
-            ),
+    return const _WidgetSize(
+      decoration: BoxDecoration(shape: BoxShape.circle),
+      child: FittedBox(
+        child: _Circle(
+          radius: 30,
+          backgroundColor: ColorManager.darkPurple,
+          child: _Circle(
+            radius: 20,
+            backgroundColor: ColorManager.white,
+            child: _Circle(radius: 12, backgroundColor: ColorManager.darkPurple),
           ),
-        );
-      },
+        ),
+      ),
     );
   }
 }
@@ -325,16 +294,25 @@ class _DefaultGrid extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer(
-      builder: (context, ref, _) {
-        final size = ref.watch(_gridNotifierProvider.select((it) => it.gridSize));
+    return const _WidgetSize(
+      decoration: BoxDecoration(color: ColorManager.transparent),
+    );
+  }
+}
 
-        return Container(
-          width: size,
-          height: size,
-          decoration: const BoxDecoration(color: ColorManager.transparent),
-        );
-      },
+class _WidgetSize extends ConsumerWidget {
+  const _WidgetSize({this.child, this.decoration});
+  final Widget? child;
+  final Decoration? decoration;
+  @override
+  Widget build(BuildContext context, ref) {
+    final size = ref.watch(_gridNotifierProvider.select((it) => it.gridSize));
+
+    return Container(
+      width: size,
+      height: size,
+      decoration: decoration,
+      child: child,
     );
   }
 }
