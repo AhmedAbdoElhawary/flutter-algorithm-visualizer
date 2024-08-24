@@ -42,15 +42,16 @@ final class GridNotifierState {
     List<GridStatus>? gridData,
     int? currentTappedIndex,
   }) {
+
     return GridNotifierState(
-      columnCrossAxisCount: columnCrossAxisCount ?? this.columnCrossAxisCount,
-      rowMainAxisCount: rowMainAxisCount ?? this.rowMainAxisCount,
-      gridSize: gridSize ?? this.gridSize,
-      gridCount: gridCount ?? this.gridCount,
-      screenHeight: screenHeight ?? this.screenHeight,
-      screenWidth: screenWidth ?? this.screenWidth,
-      gridData: gridData ?? this.gridData,
-      currentTappedIndex: currentTappedIndex ?? this.currentTappedIndex,
+      columnCrossAxisCount: columnCrossAxisCount!=this.columnCrossAxisCount?(columnCrossAxisCount ?? this.columnCrossAxisCount):this.columnCrossAxisCount,
+      rowMainAxisCount: rowMainAxisCount!=this.rowMainAxisCount?(rowMainAxisCount ?? this.rowMainAxisCount):this.rowMainAxisCount,
+      gridSize: gridSize!=this.gridSize?(gridSize ?? this.gridSize):this.gridSize,
+      gridCount: gridCount!=this.gridCount?(gridCount ?? this.gridCount):this.gridCount,
+      screenHeight: screenHeight!=this.screenHeight?(screenHeight ?? this.screenHeight):this.screenHeight,
+      screenWidth: screenWidth!=this.screenWidth?(screenWidth ?? this.screenWidth):this.screenWidth,
+      gridData: gridData!=this.gridData?(gridData ?? this.gridData):this.gridData,
+      currentTappedIndex: currentTappedIndex!=this.currentTappedIndex?(currentTappedIndex ?? this.currentTappedIndex):this.currentTappedIndex,
     );
   }
 }
