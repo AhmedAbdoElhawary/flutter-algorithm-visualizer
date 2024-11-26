@@ -18,9 +18,9 @@ class MazeDirection {
   static const right = MazeDirection._(0, 1);
 }
 
-class GridNotifierCubit extends StateNotifier<GridNotifierState> {
-  GridNotifierCubit() : super(GridNotifierState());
-  final int columnSquares = 20;
+class SearchingNotifier extends StateNotifier<GridNotifierState> {
+  SearchingNotifier() : super(GridNotifierState());
+  final int columnSquares = 40;
   static const Duration scaleAppearDurationForWall = Duration(milliseconds: 700);
   static const Duration clearDuration = Duration(microseconds: 1);
   static const Duration drawFindingPathDuration = Duration(milliseconds: 2);
@@ -359,8 +359,11 @@ class GridNotifierCubit extends StateNotifier<GridNotifierState> {
       final newRow = row + direction.rowDelta * 2;
       final newCol = col + direction.colDelta * 2;
 
+      final currentGrid = gridData[newRow * state.columnCrossAxisCount + newCol];
       if (_isValidCell(newRow, newCol) &&
-          gridData[newRow * state.columnCrossAxisCount + newCol] == GridStatus.empty) {
+          currentGrid == GridStatus.empty &&
+          currentGrid != GridStatus.startPoint &&
+          currentGrid != GridStatus.targetPoint) {
         gridData[(row + direction.rowDelta) * state.columnCrossAxisCount + (col + direction.colDelta)] =
             GridStatus.wall;
         gridData[newRow * state.columnCrossAxisCount + newCol] = GridStatus.wall;
