@@ -31,11 +31,16 @@ class SortingPage extends StatelessWidget {
           },
         ),
       ),
-      body: const Stack(
+      body: Stack(
         alignment: AlignmentDirectional.bottomCenter,
         children: [
-          Align(alignment: AlignmentDirectional.topCenter, child: _BuildList()),
-          _InteractionButton(),
+          const Align(alignment: AlignmentDirectional.topCenter, child: _BuildList()),
+          // _ControlButtons(),
+          const Align(alignment: AlignmentDirectional.bottomCenter, child: _InteractionButton()),
+          ...List.generate(
+            SortingNotifier.sortingAlgorithms.length,
+            (index) => _SelectedOperation(index),
+          ),
         ],
       ),
     );
@@ -47,11 +52,47 @@ class _InteractionButton extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, ref) {
-    return const Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        _ControlButtons(),
-      ],
+    return const _ControlButtons();
+  }
+}
+
+class _SelectedOperation extends ConsumerWidget {
+  const _SelectedOperation(this.index);
+  final int index;
+  @override
+  Widget build(BuildContext context, ref) {
+    final algo = SortingNotifier.sortingAlgorithms[index];
+    final isChanged = ref.watch(_notifierProvider).selectedAlgorithms.contains(algo);
+    final width = SortingNotifier.calculateButtonWidth(index);
+
+    return AnimatedPositionedDirectional(
+      duration: const Duration(milliseconds: 300),
+      start: width,
+      bottom: isChanged ? 100 : 0,
+      // width: width,
+      child: CustomRoundedElevatedButton(
+        roundedRadius: 3,
+        backgroundColor: ThemeEnum.whiteD7Color,
+        child: RegularText(algo.name, fontSize: 14),
+        onPressed: () {
+          ref.read(_notifierProvider.notifier).selectAlgorithm(index);
+        },
+      ),
+    );
+  }
+}
+
+class Item extends StatelessWidget {
+  final String text;
+
+  const Item({super.key, required this.text});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(10),
+      color: context.getColor(ThemeEnum.whiteD7Color),
+      child: RegularText(text, color: ThemeEnum.primaryColor),
     );
   }
 }
@@ -61,7 +102,7 @@ class _BuildList extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, ref) {
-    final items = ref.watch(_notifierProvider).list;
+    final items = ref.watch(_notifierProvider.select((state) => state.list));
 
     return Padding(
       padding: const EdgeInsets.only(top: 15),
