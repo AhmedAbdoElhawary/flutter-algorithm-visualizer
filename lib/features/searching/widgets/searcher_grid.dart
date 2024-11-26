@@ -69,7 +69,7 @@ class _SearcherGridState extends State<_SearcherGrid> with SingleTickerProviderS
   @override
   Widget build(BuildContext context) {
     return Consumer(builder: (context, ref, _) {
-      final size = ref.watch(gridNotifierProvider.select((it) => it.gridSize));
+      final size = ref.watch(_gridNotifierProvider.select((it) => it.gridSize));
 
       return AnimatedBuilder(
         animation: _controller,

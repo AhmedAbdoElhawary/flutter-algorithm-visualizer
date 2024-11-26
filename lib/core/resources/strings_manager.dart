@@ -24,6 +24,13 @@ class StringsManager {
   static const String unknownPage = "Unknown page";
   static const String notInitializeGridYet = "Not initialize grid yet.";
   static const String clear = "Clear";
+  static const String clearAll = "Clear all";
+  static const String clearPath = "Clear path";
   static const String generateMaze = "Generate maze";
+  static const String searching = "Searching";
+  static const String sorting = "Sorting";
+  static const String stop = "Stop";
+  static const String play = "Play";
+  static const String reset = "Reset";
 
 }
