@@ -1,4 +1,6 @@
 import 'package:algorithm_visualizer/core/helpers/screen_size.dart';
+import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
+import 'package:algorithm_visualizer/core/widgets/adaptive/text/adaptive_text.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -9,6 +11,9 @@ part 'sorting_state.dart';
 
 enum SortingEnum { played, stopped, none }
 
+enum SortingAlgorithm { bubble, selection, merge, quick }
+
+//SortingAlgorithm
 class SortableItem {
   final int id;
   final int value;
@@ -28,8 +33,43 @@ class SortingNotifier extends StateNotifier<SortingNotifierState> {
   SortingEnum _operation = SortingEnum.none;
   CancelableOperation<void>? _cancelableBubbleSort;
 
+  static const List<SortingAlgorithm> widthButtons = [
+    SortingAlgorithm.bubble,
+    SortingAlgorithm.selection,
+    SortingAlgorithm.merge,
+    SortingAlgorithm.quick,
+  ];
+
+  static const List<SortingAlgorithm> sortingAlgorithms = [
+    SortingAlgorithm.bubble,
+    SortingAlgorithm.selection,
+    SortingAlgorithm.merge,
+    SortingAlgorithm.quick,
+  ];
+
+  void selectAlgorithm(int index) {
+    final target = sortingAlgorithms[index];
+    final selected = [...state.selectedAlgorithms];
+    final targetIndex = selected.indexOf(target);
+
+    if (targetIndex != -1) {
+      selected.removeAt(targetIndex);
+    } else {
+      selected.add(target);
+    }
+    state = state.copyWith(selectedAlgorithms: selected);
+  }
+
   static List<SortableItem> generateList() {
     return List.generate(_listSize, (index) => SortableItem(index, index + 1))..shuffle();
+  }
+
+  static double calculateButtonWidth(int index) {
+    double width = 0;
+    for (int i = 0; i <= index; i++) {
+      width += sortingAlgorithms[index].name.length *5;
+    }
+    return width;
   }
 
   static double calculateItemWidth(BuildContext context) {
