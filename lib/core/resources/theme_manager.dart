@@ -37,6 +37,8 @@ enum ThemeEnum {
   greenColor,
   redColor,
   orangeColor,
+  //
+  comparedColor,
 }
 
 extension ThemeExtension on BuildContext {
@@ -84,6 +86,7 @@ extension ThemeExtension on BuildContext {
       ThemeEnum.greenColor: ColorManager.green,
       ThemeEnum.redColor: ColorManager.red,
       ThemeEnum.orangeColor: ColorManager.orange,
+      ThemeEnum.comparedColor: ColorManager.dividerBlue,
     };
   }
 
