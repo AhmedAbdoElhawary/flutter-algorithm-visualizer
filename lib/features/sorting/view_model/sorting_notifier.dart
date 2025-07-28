@@ -1,6 +1,4 @@
 import 'package:algorithm_visualizer/core/helpers/screen_size.dart';
-import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
-import 'package:algorithm_visualizer/core/widgets/adaptive/text/adaptive_text.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -89,7 +87,7 @@ class SortingNotifier extends StateNotifier<SortingNotifierState> {
     double step = (itemIndex * 2) / 100;
     final value = step + 0.1 > 1 ? 1.0 : step + 0.1;
 
-    return Colors.indigo.withOpacity(value);
+    return Colors.indigo.withValues(alpha: value);
   }
 
   void _initializePositions() {
