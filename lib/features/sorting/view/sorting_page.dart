@@ -18,19 +18,7 @@ class SortingPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        elevation: 1,
-        title: Consumer(
-          builder: (context, ref, _) {
-            return InkWell(
-              onTap: () {
-                ref.read(_notifierProvider.notifier).bubbleSort();
-              },
-              child: const Text("Sort"),
-            );
-          },
-        ),
-      ),
+      appBar: appBar(),
       body: Stack(
         alignment: AlignmentDirectional.bottomCenter,
         children: [
@@ -42,6 +30,22 @@ class SortingPage extends StatelessWidget {
             (index) => _SelectedOperation(index),
           ),
         ],
+      ),
+    );
+  }
+
+  AppBar appBar() {
+    return AppBar(
+      elevation: 1,
+      title: Consumer(
+        builder: (context, ref, _) {
+          return InkWell(
+            onTap: () {
+              ref.read(_notifierProvider.notifier).bubbleSort();
+            },
+            child: const RegularText(StringsManager.sort),
+          );
+        },
       ),
     );
   }
