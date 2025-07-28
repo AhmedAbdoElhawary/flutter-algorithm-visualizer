@@ -19,17 +19,19 @@ class SortingPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: appBar(),
-      body: Stack(
-        alignment: AlignmentDirectional.bottomCenter,
-        children: [
-          const Align(alignment: AlignmentDirectional.topCenter, child: _BuildList()),
-          // _ControlButtons(),
-          const Align(alignment: AlignmentDirectional.bottomCenter, child: _InteractionButton()),
-          ...List.generate(
-            SortingNotifier.sortingAlgorithms.length,
-            (index) => _SelectedOperation(index),
-          ),
-        ],
+      body: SafeArea(
+        child: Stack(
+          alignment: AlignmentDirectional.bottomCenter,
+          children: [
+            const Align(alignment: AlignmentDirectional.topCenter, child: _BuildList()),
+            // _ControlButtons(),
+            const Align(alignment: AlignmentDirectional.bottomCenter, child: _InteractionButton()),
+            ...List.generate(
+              SortingNotifier.sortingAlgorithms.length,
+              (index) => _SelectedOperation(index),
+            ),
+          ],
+        ),
       ),
     );
   }
