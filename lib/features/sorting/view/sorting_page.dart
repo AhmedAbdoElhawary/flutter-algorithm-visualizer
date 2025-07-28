@@ -5,6 +5,7 @@ import 'package:algorithm_visualizer/core/widgets/custom_widgets/custom_rounded_
 import 'package:algorithm_visualizer/features/sorting/view_model/sorting_notifier.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 part '../widgets/sorting_app_bar.dart';
 part '../widgets/control_buttons.dart';
 
@@ -12,32 +13,52 @@ final _notifierProvider = StateNotifierProvider<SortingNotifier, SortingNotifier
   (ref) => SortingNotifier(),
 );
 
-class SortingPage extends ConsumerWidget {
+class SortingPage extends ConsumerStatefulWidget {
   const SortingPage({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    return PopScope(
-      onPopInvokedWithResult: (didPop, result) {
-        if (!didPop) return;
+  ConsumerState<SortingPage> createState() => _SortingPageState();
+}
 
-        ref.invalidate(_notifierProvider); // deletes current instance and resets
-      },
-      child: Scaffold(
-        appBar: appBar(),
-        body: SafeArea(
-          child: Stack(
-            alignment: AlignmentDirectional.bottomCenter,
-            children: [
-              const Align(alignment: AlignmentDirectional.topCenter, child: _BuildList()),
-              // _ControlButtons(),
-              const Align(alignment: AlignmentDirectional.bottomCenter, child: _InteractionButton()),
-              ...List.generate(
-                SortingNotifier.sortingAlgorithms.length,
-                (index) => _SelectedOperation(index),
+class _SortingPageState extends ConsumerState<SortingPage> {
+  @override
+  void deactivate() {
+    ref.invalidate(_notifierProvider); // deletes current instance and resets
+    super.deactivate();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: appBar(),
+      body: SafeArea(
+        child: Stack(
+          alignment: AlignmentDirectional.bottomCenter,
+          children: [
+            const Align(alignment: AlignmentDirectional.topCenter, child: _BuildList()),
+            // _ControlButtons(),
+            Padding(
+              padding: REdgeInsets.symmetric(horizontal: 0),
+              child: Align(
+                alignment: AlignmentDirectional.bottomCenter,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  spacing: 10,
+                  children: [
+                    Wrap(
+                      spacing: 10,
+                      alignment: WrapAlignment.center,
+                      children: List.generate(
+                        SortingNotifier.sortingAlgorithms.length,
+                        (index) => _SelectedOperation(index),
+                      ),
+                    ),
+                    const _InteractionButton(),
+                  ],
+                ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
@@ -76,21 +97,14 @@ class _SelectedOperation extends ConsumerWidget {
   Widget build(BuildContext context, ref) {
     final algo = SortingNotifier.sortingAlgorithms[index];
     final isChanged = ref.watch(_notifierProvider).selectedAlgorithms.contains(algo);
-    final width = SortingNotifier.calculateButtonWidth(index);
 
-    return AnimatedPositionedDirectional(
-      duration: const Duration(milliseconds: 300),
-      start: width,
-      bottom: isChanged ? 100 : 0,
-      // width: width,
-      child: CustomRoundedElevatedButton(
-        roundedRadius: 3,
-        backgroundColor: ThemeEnum.whiteD7Color,
-        child: RegularText(algo.name, fontSize: 14),
-        onPressed: () {
-          ref.read(_notifierProvider.notifier).selectAlgorithm(index);
-        },
-      ),
+    return CustomRoundedElevatedButton(
+      roundedRadius: 3,
+      backgroundColor: isChanged ? ThemeEnum.blueColor : ThemeEnum.whiteD7Color,
+      child: RegularText(algo.name, fontSize: 14),
+      onPressed: () {
+        ref.read(_notifierProvider.notifier).selectAlgorithm(index);
+      },
     );
   }
 }
@@ -118,9 +132,9 @@ class _BuildList extends ConsumerWidget {
     final items = ref.watch(_notifierProvider.select((state) => state.list));
 
     return Padding(
-      padding: const EdgeInsets.only(top: 15),
+      padding: const EdgeInsets.only(top: 5),
       child: SizedBox(
-        height: SortingNotifier.maxListItemHeight * 1.2,
+        height: SortingNotifier.maxListItemHeight * 1.3,
         width: double.infinity,
         child: Stack(
           alignment: AlignmentDirectional.bottomCenter,
@@ -152,13 +166,17 @@ class _BuildItem extends ConsumerWidget {
   @override
   Widget build(BuildContext context, ref) {
     final itemWidth = SortingNotifier.calculateItemWidth(context);
+    final comparableTwoItems = ref.watch(_notifierProvider.select((state) =>
+    item == state.comparableTwoItems?.first || item == state.comparableTwoItems?.second));
+
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: SortingNotifier.itemsPadding / 2),
       child: Container(
         height: SortingNotifier.calculateItemHeight(item.value),
         width: itemWidth,
         decoration: BoxDecoration(
-          color: SortingNotifier.getColor(item.value),
+          color: context.getColor(
+              comparableTwoItems ? SortingNotifier.comparedColor : SortingNotifier.itemColor),
           borderRadius: const BorderRadius.vertical(
             top: Radius.circular(1),
           ),
