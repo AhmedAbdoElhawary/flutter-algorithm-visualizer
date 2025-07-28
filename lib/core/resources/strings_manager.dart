@@ -32,5 +32,5 @@ class StringsManager {
   static const String stop = "Stop";
   static const String play = "Play";
   static const String reset = "Reset";
-
+  static const String sort = "Sort";
 }
