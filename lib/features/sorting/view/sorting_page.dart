@@ -12,25 +12,32 @@ final _notifierProvider = StateNotifierProvider<SortingNotifier, SortingNotifier
   (ref) => SortingNotifier(),
 );
 
-class SortingPage extends StatelessWidget {
+class SortingPage extends ConsumerWidget {
   const SortingPage({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: appBar(),
-      body: SafeArea(
-        child: Stack(
-          alignment: AlignmentDirectional.bottomCenter,
-          children: [
-            const Align(alignment: AlignmentDirectional.topCenter, child: _BuildList()),
-            // _ControlButtons(),
-            const Align(alignment: AlignmentDirectional.bottomCenter, child: _InteractionButton()),
-            ...List.generate(
-              SortingNotifier.sortingAlgorithms.length,
-              (index) => _SelectedOperation(index),
-            ),
-          ],
+  Widget build(BuildContext context, WidgetRef ref) {
+    return PopScope(
+      onPopInvokedWithResult: (didPop, result) {
+        if (!didPop) return;
+
+        ref.invalidate(_notifierProvider); // deletes current instance and resets
+      },
+      child: Scaffold(
+        appBar: appBar(),
+        body: SafeArea(
+          child: Stack(
+            alignment: AlignmentDirectional.bottomCenter,
+            children: [
+              const Align(alignment: AlignmentDirectional.topCenter, child: _BuildList()),
+              // _ControlButtons(),
+              const Align(alignment: AlignmentDirectional.bottomCenter, child: _InteractionButton()),
+              ...List.generate(
+                SortingNotifier.sortingAlgorithms.length,
+                (index) => _SelectedOperation(index),
+              ),
+            ],
+          ),
         ),
       ),
     );
