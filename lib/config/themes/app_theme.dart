@@ -26,7 +26,7 @@ class AppTheme {
         surfaceTintColor: ColorManager.white,
         shadowColor: ColorManager.white,
       ),
-      dialogTheme: const DialogTheme(surfaceTintColor: ColorManager.whiteD5),
+      dialogTheme: const DialogThemeData(surfaceTintColor: ColorManager.whiteD5),
       dividerColor: ColorManager.blackOp10,
       scaffoldBackgroundColor: ColorManager.white,
       iconTheme: const IconThemeData(color: ColorManager.black),
@@ -34,10 +34,10 @@ class AppTheme {
       elevatedButtonTheme: _elevatedButtonThemeData(),
       textButtonTheme: const TextButtonThemeData(
           style: ButtonStyle(
-            overlayColor: WidgetStatePropertyAll(
-              ColorManager.whiteD3,
-            ),
-          )),
+        overlayColor: WidgetStatePropertyAll(
+          ColorManager.whiteD3,
+        ),
+      )),
       chipTheme: const ChipThemeData(backgroundColor: ColorManager.blackOp10),
       canvasColor: ColorManager.transparent,
       splashColor: ColorManager.white,
@@ -56,9 +56,7 @@ class AppTheme {
         // circle avatar color
         primaryContainer: ColorManager.whiteD4,
         surface: ColorManager.whiteD3,
-      )
-          .copyWith(surface: ColorManager.whiteD5)
-          .copyWith(error: ColorManager.black),
+      ).copyWith(surface: ColorManager.whiteD5).copyWith(error: ColorManager.black),
     );
   }
 
@@ -66,10 +64,8 @@ class AppTheme {
     return ElevatedButtonThemeData(
       style: ButtonStyle(
         fixedSize: WidgetStateProperty.all<Size>(Size(double.maxFinite, 45.r)),
-        backgroundColor: WidgetStateProperty.resolveWith<Color?>(
-                (_) => ColorManager.whiteD2),
-        overlayColor: WidgetStateProperty.resolveWith<Color?>(
-                (_) => ColorManager.whiteOp20),
+        backgroundColor: WidgetStateProperty.resolveWith<Color?>((_) => ColorManager.whiteD2),
+        overlayColor: WidgetStateProperty.resolveWith<Color?>((_) => ColorManager.whiteOp20),
         shape: WidgetStateProperty.all<RoundedRectangleBorder>(
           const RoundedRectangleBorder(borderRadius: BorderRadius.zero),
         ),
@@ -81,15 +77,14 @@ class AppTheme {
     return OutlinedButtonThemeData(
       style: OutlinedButton.styleFrom(
         fixedSize: Size(double.maxFinite, 45.r),
-        shape:
-        RoundedRectangleBorder(borderRadius: BorderRadius.circular(50.r)),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50.r)),
         side: BorderSide(width: 1.r, color: ColorManager.whiteD5),
       ),
     );
   }
 
-  static TabBarTheme _tabBarTheme() {
-    return TabBarTheme(
+  static TabBarThemeData _tabBarTheme() {
+    return TabBarThemeData(
       indicatorSize: TabBarIndicatorSize.label,
       labelPadding: EdgeInsets.zero,
       indicator: BoxDecoration(
@@ -105,20 +100,16 @@ class AppTheme {
   static TextTheme _textTheme() {
     return TextTheme(
       bodyLarge: _getStyle(const GetRegularStyle(color: ColorManager.greyD4)),
-      bodyMedium: _getStyle(
-          const GetRegularStyle(color: ColorManager.greyD5, fontSize: 12)),
+      bodyMedium: _getStyle(const GetRegularStyle(color: ColorManager.greyD5, fontSize: 12)),
       bodySmall: _getStyle(const GetRegularStyle(color: ColorManager.greyD2)),
       titleSmall: _getStyle(const GetRegularStyle(color: ColorManager.greyD2)),
       labelSmall: _getStyle(const GetMediumStyle(color: ColorManager.greyD2)),
       displaySmall: _getStyle(const GetMediumStyle(color: ColorManager.greyD2)),
       displayLarge: _getStyle(const GetMediumStyle(color: ColorManager.grey)),
       displayMedium: _getStyle(const GetMediumStyle(color: ColorManager.grey)),
-      headlineLarge:
-      _getStyle(const GetRegularStyle(color: ColorManager.whiteD3)),
-      headlineMedium:
-      _getStyle(const GetRegularStyle(color: ColorManager.greyD2)),
-      headlineSmall:
-      _getStyle(const GetRegularStyle(color: ColorManager.greyD2)),
+      headlineLarge: _getStyle(const GetRegularStyle(color: ColorManager.whiteD3)),
+      headlineMedium: _getStyle(const GetRegularStyle(color: ColorManager.greyD2)),
+      headlineSmall: _getStyle(const GetRegularStyle(color: ColorManager.greyD2)),
       labelLarge: _getStyle(const GetRegularStyle(color: ColorManager.greyD2)),
       labelMedium: _getStyle(const GetRegularStyle(color: ColorManager.greyD2)),
       titleLarge: _getStyle(const GetRegularStyle(color: ColorManager.greyD2)),
@@ -139,8 +130,7 @@ class AppTheme {
       shadowColor: ColorManager.blackOp20,
       scrolledUnderElevation: 1.5.r,
       iconTheme: const IconThemeData(color: ColorManager.black),
-      titleTextStyle: const GetRegularStyle(
-          fontSize: 16, color: ColorManager.black),
+      titleTextStyle: const GetRegularStyle(fontSize: 16, color: ColorManager.black),
     );
   }
 
@@ -164,7 +154,7 @@ class AppTheme {
         surfaceTintColor: ColorManager.blackL5,
         shadowColor: ColorManager.blackL5,
       ),
-      dialogTheme: const DialogTheme(surfaceTintColor: ColorManager.blackL5),
+      dialogTheme: const DialogThemeData(surfaceTintColor: ColorManager.blackL5),
       dividerColor: ColorManager.whiteOp10,
       scaffoldBackgroundColor: ColorManager.blackBlue,
       iconTheme: const IconThemeData(color: ColorManager.white),
@@ -191,9 +181,7 @@ class AppTheme {
       colorScheme: const ColorScheme.highContrastDark(
         primaryContainer: ColorManager.blackL4,
         surface: ColorManager.blackL6,
-      )
-          .copyWith(surface: ColorManager.blackL6)
-          .copyWith(error: ColorManager.white),
+      ).copyWith(surface: ColorManager.blackL6).copyWith(error: ColorManager.white),
     );
   }
 
@@ -201,10 +189,8 @@ class AppTheme {
     return ElevatedButtonThemeData(
       style: ButtonStyle(
         fixedSize: WidgetStateProperty.all<Size>(Size(double.maxFinite, 45.r)),
-        backgroundColor: WidgetStateProperty.resolveWith<Color?>(
-                (_) => ColorManager.blackL2),
-        overlayColor: WidgetStateProperty.resolveWith<Color?>(
-                (_) => ColorManager.blackOp20),
+        backgroundColor: WidgetStateProperty.resolveWith<Color?>((_) => ColorManager.blackL2),
+        overlayColor: WidgetStateProperty.resolveWith<Color?>((_) => ColorManager.blackOp20),
         shape: WidgetStateProperty.all<RoundedRectangleBorder>(
           const RoundedRectangleBorder(borderRadius: BorderRadius.zero),
         ),
@@ -216,15 +202,14 @@ class AppTheme {
     return OutlinedButtonThemeData(
       style: OutlinedButton.styleFrom(
         fixedSize: Size(double.maxFinite, 45.r),
-        shape:
-        RoundedRectangleBorder(borderRadius: BorderRadius.circular(50.r)),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50.r)),
         side: BorderSide(width: 1.r, color: ColorManager.whiteD5),
       ),
     );
   }
 
-  static TabBarTheme _tabBarDarkTheme() {
-    return TabBarTheme(
+  static TabBarThemeData _tabBarDarkTheme() {
+    return TabBarThemeData(
       indicatorSize: TabBarIndicatorSize.label,
       labelPadding: EdgeInsets.zero,
       indicator: BoxDecoration(
@@ -240,20 +225,16 @@ class AppTheme {
   static TextTheme _textDarkTheme() {
     return TextTheme(
       bodyLarge: _getStyle(const GetRegularStyle(color: ColorManager.greyD1)),
-      bodyMedium: _getStyle(
-          const GetRegularStyle(color: ColorManager.grey, fontSize: 12)),
+      bodyMedium: _getStyle(const GetRegularStyle(color: ColorManager.grey, fontSize: 12)),
       bodySmall: _getStyle(const GetRegularStyle(color: ColorManager.greyD2)),
       titleSmall: _getStyle(const GetRegularStyle(color: ColorManager.greyD2)),
       labelSmall: _getStyle(const GetMediumStyle(color: ColorManager.greyD2)),
       displaySmall: _getStyle(const GetMediumStyle(color: ColorManager.greyD2)),
       displayLarge: _getStyle(const GetMediumStyle(color: ColorManager.grey)),
       displayMedium: _getStyle(const GetMediumStyle(color: ColorManager.grey)),
-      headlineLarge:
-      _getStyle(const GetRegularStyle(color: ColorManager.blackL3Blue)),
-      headlineMedium:
-      _getStyle(const GetRegularStyle(color: ColorManager.greyD2)),
-      headlineSmall:
-      _getStyle(const GetRegularStyle(color: ColorManager.greyD2)),
+      headlineLarge: _getStyle(const GetRegularStyle(color: ColorManager.blackL3Blue)),
+      headlineMedium: _getStyle(const GetRegularStyle(color: ColorManager.greyD2)),
+      headlineSmall: _getStyle(const GetRegularStyle(color: ColorManager.greyD2)),
       labelLarge: _getStyle(const GetRegularStyle(color: ColorManager.greyD2)),
       labelMedium: _getStyle(const GetRegularStyle(color: ColorManager.greyD2)),
       titleLarge: _getStyle(const GetRegularStyle(color: ColorManager.greyD2)),
@@ -270,8 +251,7 @@ class AppTheme {
       shadowColor: ColorManager.greyD8,
       scrolledUnderElevation: 1.5.r,
       iconTheme: const IconThemeData(color: ColorManager.white),
-      titleTextStyle: const GetRegularStyle(
-          fontSize:16, color: ColorManager.white),
+      titleTextStyle: const GetRegularStyle(fontSize: 16, color: ColorManager.white),
     );
   }
 }
