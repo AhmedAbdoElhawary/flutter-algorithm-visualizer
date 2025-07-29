@@ -1,9 +1,3 @@
-import 'package:algorithm_visualizer/core/helpers/screen_size.dart';
-import 'package:collection/collection.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:async/async.dart';
 
 //SortingAlgorithm
 class SortableItem {
