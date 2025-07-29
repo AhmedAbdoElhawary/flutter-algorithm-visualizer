@@ -12,19 +12,26 @@ enum SortingAlgorithm { bubble, selection, insertion, merge, quick }
 
 enum SortingEnum { played, stopped, none }
 
-//SortingAlgorithm
-class ComparableItems {
-  final SortableItem first;
-  final SortableItem second;
+enum SortingStatus { unSorted, compared, swapped, sorted, none }
 
-  ComparableItems({required this.first, required this.second});
-}
-
+/// a unique [id] for each item, but [value] can be repeated
 class SortableItem {
   final int id;
   final int value;
+  final SortingStatus sortedStatus;
+  SortableItem({
+    required this.id,
+    required this.value,
+    this.sortedStatus = SortingStatus.unSorted,
+  });
 
-  SortableItem(this.id, this.value);
+  SortableItem copyWith({int? id, int? value, SortingStatus? sortedStatus}) {
+    return SortableItem(
+      id: id ?? this.id,
+      value: value ?? this.value,
+      sortedStatus: sortedStatus ?? this.sortedStatus,
+    );
+  }
 }
 
 class SortingNotifier extends StateNotifier<SortingNotifierState> {
@@ -39,13 +46,17 @@ class SortingNotifier extends StateNotifier<SortingNotifierState> {
     SortingAlgorithm.merge,
     SortingAlgorithm.quick,
   ];
-  static const int _listSize = 30;
+  static const int _listSize = 20;
   static double maxListItemHeight = 250.h;
   static double itemsPadding = 1.w;
+  static const ThemeEnum swipedColor = ThemeEnum.redColor;
   static const ThemeEnum comparedColor = ThemeEnum.comparedColor;
   static const ThemeEnum itemColor = ThemeEnum.blueColor;
-  static const Duration swipeDuration = Duration(milliseconds: 50);
-  static const Duration stopForThinkingDuration = Duration(milliseconds: 100);
+  static const ThemeEnum doneSortingColor = ThemeEnum.greenColor;
+
+  static const Duration swipeDuration = Duration(milliseconds: 20);
+  static const Duration stopForThinkingDuration = Duration(milliseconds: 20);
+
   SortingEnum _operation = SortingEnum.none;
   CancelableOperation<void>? _cancelableSort;
 
@@ -53,7 +64,7 @@ class SortingNotifier extends StateNotifier<SortingNotifierState> {
   int j = 0;
 
   static List<SortableItem> generateList() {
-    return List.generate(_listSize, (index) => SortableItem(index, index + 1))..shuffle();
+    return List.generate(_listSize, (index) => SortableItem(id: index, value: index + 1))..shuffle();
   }
 
   static double calculateItemWidth(BuildContext context) {
@@ -139,14 +150,29 @@ class SortingNotifier extends StateNotifier<SortingNotifierState> {
     for (i = 0; i < list.length - 1; i++) {
       if (_operation != SortingEnum.played) return;
 
+      bool isSorted = true;
+
       for (j = 0; j < list.length - i - 1; j++) {
+        if (_operation != SortingEnum.played) return;
+
+        list[j] = list[j].copyWith(sortedStatus: SortingStatus.compared);
+        list[j + 1] = list[j + 1].copyWith(sortedStatus: SortingStatus.compared);
+        state = state.copyWith(list: list);
+
+        if (_operation != SortingEnum.played) return;
+        await Future.delayed(stopForThinkingDuration);
         if (_operation != SortingEnum.played) return;
         await Future.delayed(stopForThinkingDuration);
 
-        state = state.copyWith(comparableTwoItems: ComparableItems(first: list[j], second: list[j + 1]));
-        await Future.delayed(stopForThinkingDuration);
-
         if (list[j].value > list[j + 1].value) {
+          list[j] = list[j].copyWith(sortedStatus: SortingStatus.swapped);
+          list[j + 1] = list[j + 1].copyWith(sortedStatus: SortingStatus.swapped);
+          state = state.copyWith(list: list);
+          if (_operation != SortingEnum.played) return;
+
+          await Future.delayed(stopForThinkingDuration);
+
+          isSorted = false;
           list.swap(j, j + 1);
 
           final positions = Map<int, Offset>.from(state.positions);
@@ -155,9 +181,38 @@ class SortingNotifier extends StateNotifier<SortingNotifierState> {
           positions[list[j + 1].id] = tempPosition;
 
           state = state.copyWith(list: list, positions: positions);
-          await Future.delayed(swipeDuration);
+          await Future.delayed(stopForThinkingDuration);
+          if (_operation != SortingEnum.played) return;
+
+          list[j] = list[j].copyWith(sortedStatus: SortingStatus.unSorted);
+          list[j + 1] = list[j + 1].copyWith(sortedStatus: SortingStatus.unSorted);
+          state = state.copyWith(list: list);
+
+          await Future.delayed(stopForThinkingDuration);
+
+          if (_operation != SortingEnum.played) return;
+        } else {
+          list[j] = list[j].copyWith(sortedStatus: SortingStatus.unSorted);
+          list[j + 1] = list[j + 1].copyWith(sortedStatus: SortingStatus.unSorted);
+          state = state.copyWith(list: list);
         }
       }
+
+      if (isSorted) {
+        await _greenSortedItemsAsDone();
+        return;
+      }
+    }
+    await _greenSortedItemsAsDone();
+  }
+
+  Future<void> _greenSortedItemsAsDone() async {
+    final list = List<SortableItem>.from(state.list);
+
+    for (int i = 0; i < list.length; i++) {
+      list[i] = list[i].copyWith(sortedStatus: SortingStatus.sorted);
+      state = state.copyWith(list: list);
+      await Future.delayed(swipeDuration);
     }
   }
 }
