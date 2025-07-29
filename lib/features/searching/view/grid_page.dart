@@ -146,7 +146,6 @@ class _BuildGridItems extends ConsumerWidget {
       onPointerUp: read.onPointerUpOnGrid,
       child: GridView.builder(
         physics: const NeverScrollableScrollPhysics(),
-        shrinkWrap: true,
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: watchColumnCrossAxisCount,
           childAspectRatio: 1.0, // Ensures squares
@@ -178,6 +177,7 @@ class _SquareState extends ConsumerState<_Square> {
         isSelected != GridStatus.targetPoint;
 
     return Container(
+      key: ValueKey(widget.index),
       decoration: BoxDecoration(
         border: showBorder ? _thineVerticalBorder() : _allBorder(),
       ),
