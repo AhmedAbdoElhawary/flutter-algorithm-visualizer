@@ -148,7 +148,7 @@ class _BuildList extends ConsumerWidget {
                 left: position.dx,
                 bottom: position.dy,
                 duration: SortingNotifier.swipeDuration,
-                child: _BuildItem(item: item),
+                child: _BuildItem(item: item, index: index),
               );
             },
           ),
@@ -159,27 +159,31 @@ class _BuildList extends ConsumerWidget {
 }
 
 class _BuildItem extends ConsumerWidget {
-  const _BuildItem({required this.item});
+  const _BuildItem({required this.item, required this.index});
 
   final SortableItem item;
-
+  final int index;
   @override
   Widget build(BuildContext context, ref) {
     final itemWidth = SortingNotifier.calculateItemWidth(context);
-    final comparableTwoItems = ref.watch(_notifierProvider.select((state) =>
-    item == state.comparableTwoItems?.first || item == state.comparableTwoItems?.second));
+    final currentItem = ref.watch(_notifierProvider.select((state) => state.list[index]));
 
+    final color = currentItem.sortedStatus == SortingStatus.sorted
+        ? SortingNotifier.doneSortingColor
+        : (currentItem.sortedStatus == SortingStatus.swapped
+            ? SortingNotifier.swipedColor
+            : currentItem.sortedStatus == SortingStatus.compared
+                ? SortingNotifier.comparedColor
+                : SortingNotifier.itemColor);
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: SortingNotifier.itemsPadding / 2),
-      child: Container(
+      child: AnimatedContainer(
+        duration: SortingNotifier.swipeDuration,
         height: SortingNotifier.calculateItemHeight(item.value),
         width: itemWidth,
         decoration: BoxDecoration(
-          color: context.getColor(
-              comparableTwoItems ? SortingNotifier.comparedColor : SortingNotifier.itemColor),
-          borderRadius: const BorderRadius.vertical(
-            top: Radius.circular(1),
-          ),
+          color: context.getColor(color),
+          borderRadius: const BorderRadius.vertical(top: Radius.circular(1)),
         ),
       ),
     );
