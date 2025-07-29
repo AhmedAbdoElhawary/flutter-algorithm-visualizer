@@ -13,11 +13,11 @@ enum SortingAlgorithm { bubble, selection, insertion, merge, quick }
 enum SortingEnum { played, stopped, none }
 
 //SortingAlgorithm
-class ComparableTwoItems {
+class ComparableItems {
   final SortableItem first;
   final SortableItem second;
 
-  ComparableTwoItems({required this.first, required this.second});
+  ComparableItems({required this.first, required this.second});
 }
 
 class SortableItem {
@@ -44,8 +44,8 @@ class SortingNotifier extends StateNotifier<SortingNotifierState> {
   static double itemsPadding = 1.w;
   static const ThemeEnum comparedColor = ThemeEnum.comparedColor;
   static const ThemeEnum itemColor = ThemeEnum.blueColor;
-  static const Duration swipeDuration = Duration(milliseconds: 200);
-  static const Duration stopForThinkingDuration = Duration(milliseconds: 500);
+  static const Duration swipeDuration = Duration(milliseconds: 50);
+  static const Duration stopForThinkingDuration = Duration(milliseconds: 100);
   SortingEnum _operation = SortingEnum.none;
   CancelableOperation<void>? _cancelableSort;
 
@@ -143,7 +143,7 @@ class SortingNotifier extends StateNotifier<SortingNotifierState> {
         if (_operation != SortingEnum.played) return;
         await Future.delayed(stopForThinkingDuration);
 
-        state = state.copyWith(comparableTwoItems: ComparableTwoItems(first: list[j], second: list[j + 1]));
+        state = state.copyWith(comparableTwoItems: ComparableItems(first: list[j], second: list[j + 1]));
         await Future.delayed(stopForThinkingDuration);
 
         if (list[j].value > list[j + 1].value) {
