@@ -144,6 +144,16 @@ class SortingNotifier extends StateNotifier<SortingNotifierState> {
     }
   }
 
+  Future<void> _greenSortedItemsAsDone() async {
+    final list = List<SortableItem>.from(state.list);
+
+    for (int i = 0; i < list.length; i++) {
+      list[i] = list[i].copyWith(sortedStatus: SortingStatus.sorted);
+      state = state.copyWith(list: list);
+      await Future.delayed(swipeDuration);
+    }
+  }
+
   Future<void> _bubbleSort() async {
     final list = List<SortableItem>.from(state.list);
 
@@ -206,13 +216,4 @@ class SortingNotifier extends StateNotifier<SortingNotifierState> {
     await _greenSortedItemsAsDone();
   }
 
-  Future<void> _greenSortedItemsAsDone() async {
-    final list = List<SortableItem>.from(state.list);
-
-    for (int i = 0; i < list.length; i++) {
-      list[i] = list[i].copyWith(sortedStatus: SortingStatus.sorted);
-      state = state.copyWith(list: list);
-      await Future.delayed(swipeDuration);
-    }
-  }
 }
