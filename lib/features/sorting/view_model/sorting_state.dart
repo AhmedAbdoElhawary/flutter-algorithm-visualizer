@@ -1,7 +1,7 @@
 part of 'sorting_notifier.dart';
 
 class SortingNotifierState {
-  final ComparableTwoItems? comparableTwoItems;
+  final ComparableItems? comparableTwoItems;
   final List<SortableItem> list;
   final Map<int, Offset> positions;
   final List<SortingAlgorithm> selectedAlgorithms;
@@ -14,7 +14,7 @@ class SortingNotifierState {
   });
 
   SortingNotifierState copyWith({
-    ComparableTwoItems? comparableTwoItems,
+    ComparableItems? comparableTwoItems,
     List<SortableItem>? list,
     Map<int, Offset>? positions,
     List<SortingAlgorithm>? selectedAlgorithms,
