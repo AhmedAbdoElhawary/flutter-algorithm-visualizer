@@ -1,3 +1,4 @@
+import 'package:algorithm_visualizer/core/draggable_progress.dart' show DraggableProgressBar;
 import 'package:algorithm_visualizer/core/resources/strings_manager.dart';
 import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
 import 'package:algorithm_visualizer/core/widgets/adaptive/text/adaptive_text.dart';
@@ -53,7 +54,21 @@ class _SortingPageState extends ConsumerState<SortingPage> {
                         (index) => _SelectedOperation(index),
                       ),
                     ),
-                    const _InteractionButton(),
+                    const _ControlButtons(),
+                    Row(
+                      children: [
+                        DraggableProgressBar(
+                          onChanged: (persent) {
+                            ref.read(_notifierProvider.notifier).changeSpeed(persent);
+                          },
+                        ),
+                        DraggableProgressBar(
+                          onChanged: (persent) {
+                            ref.read(_notifierProvider.notifier).changeSize(persent);
+                          },
+                        ),
+                      ],
+                    ),
                   ],
                 ),
               ),
@@ -69,24 +84,10 @@ class _SortingPageState extends ConsumerState<SortingPage> {
       elevation: 1,
       title: Consumer(
         builder: (context, ref, _) {
-          return InkWell(
-            onTap: () {
-              ref.read(_notifierProvider.notifier).bubbleSort();
-            },
-            child: const RegularText(StringsManager.sort),
-          );
+          return const InkWell(child: RegularText(StringsManager.sort));
         },
       ),
     );
-  }
-}
-
-class _InteractionButton extends ConsumerWidget {
-  const _InteractionButton();
-
-  @override
-  Widget build(BuildContext context, ref) {
-    return const _ControlButtons();
   }
 }
 
@@ -130,6 +131,7 @@ class _BuildList extends ConsumerWidget {
   @override
   Widget build(BuildContext context, ref) {
     final items = ref.watch(_notifierProvider.select((state) => state.list));
+    final speedDuration = ref.watch(_notifierProvider.select((state) => state.swipeDuration));
 
     return Padding(
       padding: const EdgeInsets.only(top: 5),
@@ -147,8 +149,11 @@ class _BuildList extends ConsumerWidget {
                 key: ValueKey(item.id),
                 left: position.dx,
                 bottom: position.dy,
-                duration: SortingNotifier.swipeDuration,
-                child: _BuildItem(item: item, index: index),
+                duration: speedDuration,
+                child: _BuildItem(
+                    item: item,
+                    index: index,
+                    speedDuration:speedDuration),
               );
             },
           ),
@@ -159,13 +164,15 @@ class _BuildList extends ConsumerWidget {
 }
 
 class _BuildItem extends ConsumerWidget {
-  const _BuildItem({required this.item, required this.index});
+  const _BuildItem({required this.item, required this.index, required this.speedDuration});
 
   final SortableItem item;
   final int index;
+  final Duration speedDuration;
   @override
   Widget build(BuildContext context, ref) {
-    final itemWidth = SortingNotifier.calculateItemWidth(context);
+    final size = ref.watch(_notifierProvider.select((state) => state.size));
+    final itemWidth = SortingNotifier.calculateItemWidth(context, size);
     final currentItem = ref.watch(_notifierProvider.select((state) => state.list[index]));
 
     final color = currentItem.sortedStatus == SortingStatus.sorted
@@ -178,8 +185,8 @@ class _BuildItem extends ConsumerWidget {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: SortingNotifier.itemsPadding / 2),
       child: AnimatedContainer(
-        duration: SortingNotifier.swipeDuration,
-        height: SortingNotifier.calculateItemHeight(item.value),
+        duration: speedDuration,
+        height: SortingNotifier.calculateItemHeight(item.value, size),
         width: itemWidth,
         decoration: BoxDecoration(
           color: context.getColor(color),
