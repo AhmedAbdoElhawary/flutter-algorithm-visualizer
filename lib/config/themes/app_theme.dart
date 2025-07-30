@@ -17,9 +17,7 @@ class AppTheme {
       focusColor: ColorManager.black,
       disabledColor: ColorManager.blackOp50,
       switchTheme: const SwitchThemeData(),
-      dialogBackgroundColor: ColorManager.whiteD1,
       hoverColor: ColorManager.blackOp50,
-      indicatorColor: ColorManager.blackOp40,
       highlightColor: ColorManager.whiteD3,
       bottomSheetTheme: const BottomSheetThemeData(
         backgroundColor: ColorManager.white,
@@ -145,9 +143,7 @@ class AppTheme {
       shadowColor: ColorManager.whiteOp10,
       focusColor: ColorManager.white,
       disabledColor: ColorManager.whiteOp50,
-      dialogBackgroundColor: ColorManager.blackL1,
       hoverColor: ColorManager.whiteOp50,
-      indicatorColor: ColorManager.whiteOp40,
       highlightColor: ColorManager.blackL3Blue,
       bottomSheetTheme: const BottomSheetThemeData(
         backgroundColor: ColorManager.blackL5,
