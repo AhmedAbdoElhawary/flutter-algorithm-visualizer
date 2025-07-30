@@ -20,7 +20,7 @@ class MazeDirection {
 
 class SearchingNotifier extends StateNotifier<GridNotifierState> {
   SearchingNotifier() : super(GridNotifierState());
-  final int columnSquares = 40;
+  final int columnSquares = 25;
   static const Duration scaleAppearDurationForWall = Duration(milliseconds: 700);
   static const Duration clearDuration = Duration(microseconds: 1);
   static const Duration drawFindingPathDuration = Duration(milliseconds: 2);
