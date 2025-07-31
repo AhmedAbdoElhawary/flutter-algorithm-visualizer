@@ -17,7 +17,7 @@ abstract class SortingNotifier extends StateNotifier<SortingNotifierState> {
 
   static double maxListItemHeight = 250.h;
   static double itemsPadding = 1.w;
-  static const ThemeEnum swipingColor = ThemeEnum.redColor;
+  static const ThemeEnum swappingColor = ThemeEnum.redColor;
   static const ThemeEnum comparedColor = ThemeEnum.comparedColor;
   static const ThemeEnum itemColor = ThemeEnum.blueColor;
   static const ThemeEnum doneSortingColor = ThemeEnum.greenColor;
@@ -145,9 +145,9 @@ abstract class SortingNotifier extends StateNotifier<SortingNotifierState> {
 
           break;
 
-        case SortingStatus.swiping:
-          list[step.index1] = list[step.index1].copyWith(sortedStatus: SortingStatus.swiping);
-          list[step.index2] = list[step.index2].copyWith(sortedStatus: SortingStatus.swiping);
+        case SortingStatus.swapping:
+          list[step.index1] = list[step.index1].copyWith(sortedStatus: SortingStatus.swapping);
+          list[step.index2] = list[step.index2].copyWith(sortedStatus: SortingStatus.swapping);
           state = state.copyWith(list: list);
 
           await Future.delayed(speedDuration);
@@ -162,7 +162,7 @@ abstract class SortingNotifier extends StateNotifier<SortingNotifierState> {
           state = state.copyWith(list: list, positions: positions);
           break;
 
-        case SortingStatus.swiped:
+        case SortingStatus.swapped:
         case SortingStatus.unSorted:
           list[step.index1] = list[step.index1].copyWith(sortedStatus: SortingStatus.unSorted);
           list[step.index2] = list[step.index2].copyWith(sortedStatus: SortingStatus.unSorted);
