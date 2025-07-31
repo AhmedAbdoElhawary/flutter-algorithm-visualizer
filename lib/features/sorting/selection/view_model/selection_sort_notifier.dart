@@ -1,4 +1,5 @@
 import 'package:algorithm_visualizer/features/sorting/base/view_model/sorting_notifier.dart';
+import 'package:collection/collection.dart';
 
 class SelectionSortNotifier extends SortingNotifier {
   @override
@@ -25,12 +26,10 @@ class SelectionSortNotifier extends SortingNotifier {
       }
 
       if (minIndex != i) {
-        steps.add(SortingStep(index1: i, index2: minIndex, action: SortingStatus.swiping));
+        steps.add(SortingStep(index1: i, index2: minIndex, action: SortingStatus.swapping));
 
-        final temp = arr[i];
-        arr[i] = arr[minIndex];
-        arr[minIndex] = temp;
-        steps.add(SortingStep(index1: minIndex, index2: j, action: SortingStatus.swiped));
+        arr.swap(minIndex, i);
+        steps.add(SortingStep(index1: minIndex, index2: j, action: SortingStatus.swapped));
       }
 
       steps.add(SortingStep(index1: i, index2: i, action: SortingStatus.sorted));
