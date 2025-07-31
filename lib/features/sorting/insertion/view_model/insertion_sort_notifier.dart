@@ -12,10 +12,10 @@ class InsertionSortNotifier extends SortingNotifier {
 
       while (j > 0 && arr[j] < arr[j - 1]) {
         steps.add(SortingStep(index1: j, index2: j - 1, action: SortingStatus.compared));
-        steps.add(SortingStep(index1: j, index2: j - 1, action: SortingStatus.swiping));
+        steps.add(SortingStep(index1: j, index2: j - 1, action: SortingStatus.swapping));
 
         arr.swap(j, j - 1);
-        steps.add(SortingStep(index1: j, index2: j - 1, action: SortingStatus.swiped));
+        steps.add(SortingStep(index1: j, index2: j - 1, action: SortingStatus.swapped));
         j--;
       }
       steps.add(SortingStep(index1: j, index2: j, action: SortingStatus.sorted));
