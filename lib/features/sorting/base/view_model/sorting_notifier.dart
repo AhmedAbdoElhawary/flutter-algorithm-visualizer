@@ -17,7 +17,7 @@ abstract class SortingNotifier extends StateNotifier<SortingNotifierState> {
 
   static double maxListItemHeight = 250.h;
   static double itemsPadding = 1.w;
-  static const ThemeEnum swipedColor = ThemeEnum.redColor;
+  static const ThemeEnum swipingColor = ThemeEnum.redColor;
   static const ThemeEnum comparedColor = ThemeEnum.comparedColor;
   static const ThemeEnum itemColor = ThemeEnum.blueColor;
   static const ThemeEnum doneSortingColor = ThemeEnum.greenColor;
@@ -145,9 +145,9 @@ abstract class SortingNotifier extends StateNotifier<SortingNotifierState> {
 
           break;
 
-        case SortingStatus.swapped:
-          list[step.index1] = list[step.index1].copyWith(sortedStatus: SortingStatus.swapped);
-          list[step.index2] = list[step.index2].copyWith(sortedStatus: SortingStatus.swapped);
+        case SortingStatus.swiping:
+          list[step.index1] = list[step.index1].copyWith(sortedStatus: SortingStatus.swiping);
+          list[step.index2] = list[step.index2].copyWith(sortedStatus: SortingStatus.swiping);
           state = state.copyWith(list: list);
 
           await Future.delayed(speedDuration);
@@ -162,13 +162,14 @@ abstract class SortingNotifier extends StateNotifier<SortingNotifierState> {
           state = state.copyWith(list: list, positions: positions);
           break;
 
+        case SortingStatus.swiped:
         case SortingStatus.unSorted:
           list[step.index1] = list[step.index1].copyWith(sortedStatus: SortingStatus.unSorted);
           list[step.index2] = list[step.index2].copyWith(sortedStatus: SortingStatus.unSorted);
           state = state.copyWith(list: list);
           break;
 
-      // i don't want to make it green while sorting and mark all of them at once as green at the end
+        // i don't want to make it green while sorting and mark all of them at once as green at the end
         case SortingStatus.sorted:
         case SortingStatus.none:
           list[step.index1] = list[step.index1].copyWith(sortedStatus: SortingStatus.none);
@@ -181,5 +182,6 @@ abstract class SortingNotifier extends StateNotifier<SortingNotifierState> {
 
     await greenSortedItemsAsDone();
   }
+
   List<SortingStep> buildSorting(List<int> values);
 }
