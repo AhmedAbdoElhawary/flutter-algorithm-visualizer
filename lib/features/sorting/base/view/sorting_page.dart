@@ -110,7 +110,8 @@ class _BuildList extends ConsumerWidget {
                 left: position.dx,
                 bottom: position.dy,
                 duration: speedDuration,
-                child: _BuildItem(item: item, index: index, speedDuration: speedDuration*0.5, instance: instance),
+                child: _BuildItem(
+                    item: item, index: index, speedDuration: speedDuration * 0.5, instance: instance),
               );
             },
           ),
