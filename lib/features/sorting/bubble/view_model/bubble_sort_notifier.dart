@@ -1,21 +1,10 @@
 import 'package:algorithm_visualizer/features/sorting/base/view_model/sorting_notifier.dart';
-import 'package:async/async.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 
 class BubbleSortNotifier extends SortingNotifier {
   @override
-  Future<void> startSelectedSorting() async {
-    cancelableSort = CancelableOperation.fromFuture(_bubbleSort());
-
-    try {
-      await cancelableSort?.value;
-    } catch (e) {
-      debugPrint("something wrong with bubbleSort: $e");
-    }
-  }
-
-  Future<void> _bubbleSort() async {
+  Future<void> buildSort() async {
     final list = List<SortableItem>.from(state.list);
 
     for (i = 0; i < list.length - 1; i++) {
