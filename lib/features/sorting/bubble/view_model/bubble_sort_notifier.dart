@@ -60,28 +60,28 @@ class BubbleSortNotifier extends SortingNotifier {
     await greenSortedItemsAsDone();
   }
 
-  List<BubbleSortStep> bubbleSortSteps(List<int> values) {
-    final steps = <BubbleSortStep>[];
+  List<SortingStep> bubbleSortSteps(List<int> values) {
+    final steps = <SortingStep>[];
     final arr = List<int>.from(values);
 
     for (int i = 0; i < arr.length - 1; i++) {
       bool isSorted = true;
 
       for (int j = 0; j < arr.length - i - 1; j++) {
-        steps.add(BubbleSortStep(index1: j, index2: j + 1, action: SortingStatus.compared)); // external
+        steps.add(SortingStep(index1: j, index2: j + 1, action: SortingStatus.compared)); // external
 
         if (arr[j] > arr[j + 1]) {
-          steps.add(BubbleSortStep(index1: j, index2: j + 1, action: SortingStatus.swapped)); // external
+          steps.add(SortingStep(index1: j, index2: j + 1, action: SortingStatus.swapped)); // external
           final tmp = arr[j];
           arr[j] = arr[j + 1];
           arr[j + 1] = tmp;
           isSorted = false;
         }
 
-        steps.add(BubbleSortStep(index1: j, index2: j + 1, action: SortingStatus.unSorted)); // external
+        steps.add(SortingStep(index1: j, index2: j + 1, action: SortingStatus.unSorted)); // external
       }
 
-      steps.add(BubbleSortStep(
+      steps.add(SortingStep(
           index1: arr.length - i - 1, index2: arr.length - i - 1, action: SortingStatus.sorted)); // external
 
       if (isSorted) break;
@@ -89,16 +89,4 @@ class BubbleSortNotifier extends SortingNotifier {
 
     return steps;
   }
-}
-
-class BubbleSortStep {
-  final int index1;
-  final int index2;
-  final SortingStatus action;
-
-  BubbleSortStep({
-    required this.index1,
-    required this.index2,
-    required this.action,
-  });
 }
