@@ -3,40 +3,25 @@ import 'package:algorithm_visualizer/core/resources/strings_manager.dart';
 import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
 import 'package:algorithm_visualizer/core/widgets/adaptive/text/adaptive_text.dart';
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/custom_rounded_elevated_button.dart';
-import 'package:algorithm_visualizer/features/sorting/view_model/sorting_notifier.dart';
+import 'package:algorithm_visualizer/features/sorting/base/view_model/sorting_notifier.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 part '../widgets/sorting_app_bar.dart';
 part '../widgets/control_buttons.dart';
 
-final _notifierProvider = StateNotifierProvider<SortingNotifier, SortingNotifierState>(
-  (ref) => SortingNotifier(),
-);
-
-class SortingPage extends ConsumerStatefulWidget {
-  const SortingPage({super.key});
-
+class SortingPage extends ConsumerWidget {
+  const SortingPage({required this.instance, super.key});
+  final StateNotifierProvider<SortingNotifier, SortingNotifierState> instance;
   @override
-  ConsumerState<SortingPage> createState() => _SortingPageState();
-}
-
-class _SortingPageState extends ConsumerState<SortingPage> {
-  @override
-  void deactivate() {
-    ref.invalidate(_notifierProvider); // deletes current instance and resets
-    super.deactivate();
-  }
-
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, ref) {
     return Scaffold(
       appBar: appBar(),
       body: SafeArea(
         child: Stack(
           alignment: AlignmentDirectional.bottomCenter,
           children: [
-            const Align(alignment: AlignmentDirectional.topCenter, child: _BuildList()),
+            Align(alignment: AlignmentDirectional.topCenter, child: _BuildList(instance)),
             // _ControlButtons(),
             Padding(
               padding: REdgeInsets.symmetric(horizontal: 0),
@@ -46,25 +31,17 @@ class _SortingPageState extends ConsumerState<SortingPage> {
                   mainAxisAlignment: MainAxisAlignment.end,
                   spacing: 10,
                   children: [
-                    Wrap(
-                      spacing: 10,
-                      alignment: WrapAlignment.center,
-                      children: List.generate(
-                        SortingNotifier.sortingAlgorithms.length,
-                        (index) => _SelectedOperation(index),
-                      ),
-                    ),
-                    const _ControlButtons(),
+                    _ControlButtons(instance),
                     Row(
                       children: [
                         DraggableProgressBar(
                           onChanged: (persent) {
-                            ref.read(_notifierProvider.notifier).changeSpeed(persent);
+                            ref.read(instance.notifier).changeSpeed(persent);
                           },
                         ),
                         DraggableProgressBar(
                           onChanged: (persent) {
-                            ref.read(_notifierProvider.notifier).changeSize(persent);
+                            ref.read(instance.notifier).changeSize(persent);
                           },
                         ),
                       ],
@@ -84,28 +61,9 @@ class _SortingPageState extends ConsumerState<SortingPage> {
       elevation: 1,
       title: Consumer(
         builder: (context, ref, _) {
-          return const InkWell(child: RegularText(StringsManager.sort));
+          return const InkWell(child: RegularText(StringsManager.bubbleSort));
         },
       ),
-    );
-  }
-}
-
-class _SelectedOperation extends ConsumerWidget {
-  const _SelectedOperation(this.index);
-  final int index;
-  @override
-  Widget build(BuildContext context, ref) {
-    final algo = SortingNotifier.sortingAlgorithms[index];
-    final isChanged = ref.watch(_notifierProvider).selectedAlgorithms.contains(algo);
-
-    return CustomRoundedElevatedButton(
-      roundedRadius: 3,
-      backgroundColor: isChanged ? ThemeEnum.blueColor : ThemeEnum.whiteD7Color,
-      child: RegularText(algo.name, fontSize: 14),
-      onPressed: () {
-        ref.read(_notifierProvider.notifier).selectAlgorithm(index);
-      },
     );
   }
 }
@@ -126,12 +84,13 @@ class Item extends StatelessWidget {
 }
 
 class _BuildList extends ConsumerWidget {
-  const _BuildList();
+  const _BuildList(this.instance);
+  final StateNotifierProvider<SortingNotifier, SortingNotifierState> instance;
 
   @override
   Widget build(BuildContext context, ref) {
-    final items = ref.watch(_notifierProvider.select((state) => state.list));
-    final speedDuration = ref.watch(_notifierProvider.select((state) => state.swipeDuration));
+    final items = ref.watch(instance.select((state) => state.list));
+    final speedDuration = ref.watch(instance.select((state) => state.swipeDuration));
 
     return Padding(
       padding: const EdgeInsets.only(top: 5),
@@ -144,16 +103,13 @@ class _BuildList extends ConsumerWidget {
             items.length,
             (index) {
               final item = items[index];
-              final position = ref.watch(_notifierProvider.select((state) => state.positions[item.id]!));
+              final position = ref.watch(instance.select((state) => state.positions[item.id]!));
               return AnimatedPositioned(
                 key: ValueKey(item.id),
                 left: position.dx,
                 bottom: position.dy,
                 duration: speedDuration,
-                child: _BuildItem(
-                    item: item,
-                    index: index,
-                    speedDuration:speedDuration),
+                child: _BuildItem(item: item, index: index, speedDuration: speedDuration, instance: instance),
               );
             },
           ),
@@ -164,16 +120,19 @@ class _BuildList extends ConsumerWidget {
 }
 
 class _BuildItem extends ConsumerWidget {
-  const _BuildItem({required this.item, required this.index, required this.speedDuration});
+  const _BuildItem(
+      {required this.item, required this.index, required this.speedDuration, required this.instance});
 
-  final SortableItem item;
   final int index;
+  final SortableItem item;
   final Duration speedDuration;
+  final StateNotifierProvider<SortingNotifier, SortingNotifierState> instance;
+
   @override
   Widget build(BuildContext context, ref) {
-    final size = ref.watch(_notifierProvider.select((state) => state.size));
+    final size = ref.watch(instance.select((state) => state.size));
     final itemWidth = SortingNotifier.calculateItemWidth(context, size);
-    final currentItem = ref.watch(_notifierProvider.select((state) => state.list[index]));
+    final currentItem = ref.watch(instance.select((state) => state.list[index]));
 
     final color = currentItem.sortedStatus == SortingStatus.sorted
         ? SortingNotifier.doneSortingColor
