@@ -140,13 +140,6 @@ class _BuildItem extends ConsumerWidget {
     final itemWidth = SortingNotifier.calculateItemWidth(context, size);
     final currentItem = ref.watch(instance.select((state) => state.list[index]));
 
-    final color = currentItem.sortedStatus == SortingStatus.sorted
-        ? SortingNotifier.doneSortingColor
-        : (currentItem.sortedStatus == SortingStatus.swapped
-            ? SortingNotifier.swipedColor
-            : currentItem.sortedStatus == SortingStatus.compared
-                ? SortingNotifier.comparedColor
-                : SortingNotifier.itemColor);
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: SortingNotifier.itemsPadding / 2),
       child: AnimatedContainer(
@@ -154,7 +147,7 @@ class _BuildItem extends ConsumerWidget {
         height: SortingNotifier.calculateItemHeight(item.value, size),
         width: itemWidth,
         decoration: BoxDecoration(
-          color: context.getColor(color),
+          color: context.getColor(currentItem.getColor),
           borderRadius: const BorderRadius.vertical(top: Radius.circular(1)),
         ),
       ),
