@@ -11,8 +11,9 @@ part '../widgets/sorting_app_bar.dart';
 part '../widgets/control_buttons.dart';
 
 class SortingPage extends ConsumerWidget {
-  const SortingPage({required this.instance, super.key});
+  const SortingPage({required this.instance, required this.title, super.key});
   final StateNotifierProvider<SortingNotifier, SortingNotifierState> instance;
+  final String title;
   @override
   Widget build(BuildContext context, ref) {
     return Scaffold(
@@ -61,7 +62,7 @@ class SortingPage extends ConsumerWidget {
       elevation: 1,
       title: Consumer(
         builder: (context, ref, _) {
-          return const InkWell(child: RegularText(StringsManager.bubbleSort));
+          return InkWell(child: RegularText(title));
         },
       ),
     );

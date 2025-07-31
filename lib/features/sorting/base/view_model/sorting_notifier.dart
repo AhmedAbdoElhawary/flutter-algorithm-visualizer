@@ -1,6 +1,5 @@
 import 'package:algorithm_visualizer/core/helpers/screen_size.dart';
 import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
-import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -74,6 +73,8 @@ abstract class SortingNotifier extends StateNotifier<SortingNotifierState> {
   }
 
   void changeSize(double size) {
+    if (operation == SortingEnum.played) return;
+
     final newSize = _minSize + (_maxSize - _minSize) * size;
     state = state.copyWith(size: newSize.toInt());
     generateAgain();
@@ -84,14 +85,17 @@ abstract class SortingNotifier extends StateNotifier<SortingNotifierState> {
     operation = SortingEnum.stopped;
   }
 
-  void playSorting() {
+  Future<void> playSorting() async {
     if (operation == SortingEnum.played) return;
     operation = SortingEnum.played;
 
-    startSelectedSorting();
+    await startSelectedSorting();
+
+    operation = SortingEnum.none;
   }
 
-  void generateAgain() {
+  Future<void> generateAgain() async {
+    await cancelableSort?.cancel();
     operation = SortingEnum.none;
 
     i = 0;
@@ -100,8 +104,6 @@ abstract class SortingNotifier extends StateNotifier<SortingNotifierState> {
     state = state.copyWith(list: generateList(_size));
     _initializePositions();
   }
-
-  Future<void> startSelectedSorting();
 
   Future<void> greenSortedItemsAsDone() async {
     final list = List<SortableItem>.from(state.list);
@@ -113,88 +115,15 @@ abstract class SortingNotifier extends StateNotifier<SortingNotifierState> {
     }
   }
 
-  Future<void> _selectionSort() async {
-    final list = List<SortableItem>.from(state.list);
+  Future<void> startSelectedSorting() async {
+    cancelableSort = CancelableOperation.fromFuture(buildSort());
 
-    for (int i = 0; i < list.length - 1; i++) {
-      if (operation != SortingEnum.played) return;
-
-      int minIndex = i;
-
-      for (int j = i + 1; j < list.length; j++) {
-        if (operation != SortingEnum.played) return;
-
-        list[minIndex] = list[minIndex].copyWith(sortedStatus: SortingStatus.compared);
-        list[j] = list[j].copyWith(sortedStatus: SortingStatus.compared);
-        state = state.copyWith(list: list);
-        await Future.delayed(speedDuration);
-
-        if (list[j].value < list[minIndex].value) minIndex = j;
-
-        list[j] = list[j].copyWith(sortedStatus: SortingStatus.unSorted);
-        list[minIndex] = list[minIndex].copyWith(sortedStatus: SortingStatus.unSorted);
-        state = state.copyWith(list: list);
-      }
-
-      if (minIndex != i) {
-        list[minIndex] = list[minIndex].copyWith(sortedStatus: SortingStatus.swapped);
-        list[i] = list[i].copyWith(sortedStatus: SortingStatus.swapped);
-        state = state.copyWith(list: list);
-        await Future.delayed(speedDuration);
-
-        list.swap(i, minIndex);
-
-        final positions = Map<int, Offset>.from(state.positions);
-        final temp = positions[list[i].id]!;
-        positions[list[i].id] = positions[list[minIndex].id]!;
-        positions[list[minIndex].id] = temp;
-
-        state = state.copyWith(list: list, positions: positions);
-        await Future.delayed(speedDuration);
-
-        list[i] = list[i].copyWith(sortedStatus: SortingStatus.unSorted);
-        list[minIndex] = list[minIndex].copyWith(sortedStatus: SortingStatus.unSorted);
-        state = state.copyWith(list: list);
-      }
+    try {
+      await cancelableSort?.value;
+    } catch (e) {
+      debugPrint("something wrong with bubbleSort: $e");
     }
-
-    await greenSortedItemsAsDone();
   }
 
-  Future<void> _insertionSort() async {
-    final list = List<SortableItem>.from(state.list);
-
-    for (int i = 1; i < list.length; i++) {
-      if (operation != SortingEnum.played) return;
-
-      SortableItem keyItem = list[i];
-      int j = i - 1;
-
-      while (j >= 0 && list[j].value > keyItem.value) {
-        if (operation != SortingEnum.played) return;
-
-        list[j] = list[j].copyWith(sortedStatus: SortingStatus.compared);
-        list[j + 1] = list[j + 1].copyWith(sortedStatus: SortingStatus.compared);
-        state = state.copyWith(list: list);
-        await Future.delayed(speedDuration);
-
-        list.swap(j, j + 1);
-
-        final positions = Map<int, Offset>.from(state.positions);
-        final temp = positions[list[j].id]!;
-        positions[list[j].id] = positions[list[j + 1].id]!;
-        positions[list[j + 1].id] = temp;
-
-        state = state.copyWith(list: list, positions: positions);
-        await Future.delayed(speedDuration);
-
-        list[j] = list[j].copyWith(sortedStatus: SortingStatus.unSorted);
-        list[j + 1] = list[j + 1].copyWith(sortedStatus: SortingStatus.unSorted);
-        state = state.copyWith(list: list);
-        j--;
-      }
-    }
-
-    await greenSortedItemsAsDone();
-  }
+  Future<void> buildSort();
 }
