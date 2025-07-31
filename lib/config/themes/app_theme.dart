@@ -4,6 +4,7 @@ import 'package:algorithm_visualizer/core/resources/color_manager.dart';
 import 'package:algorithm_visualizer/core/resources/font_manager.dart';
 import 'package:algorithm_visualizer/core/resources/styles_manager.dart';
 
+// temp
 class AppTheme {
   static ThemeData get light {
     return ThemeData(
