@@ -1,26 +1,30 @@
-name: handle some stuff
+name: Run Script
 
 on:
-  workflow_dispatch: # allows manual run
+  workflow_dispatch:
+  schedule:
+    - cron: '0 8 * * *'
 
 jobs:
-  script:
-    name: Run Script
+  daily-push:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
+      - name: Checkout this repo
         uses: actions/checkout@v3
         with:
           fetch-depth: 0
 
-      - name: Configure Git
+      - name: Setup Git
         run: |
           git config user.name "${{ secrets.GIT_USER_NAME }}"
           git config user.email "${{ secrets.GIT_USER_EMAIL }}"
 
-      - name: Run Script Action
-        uses: AhmedAbdoElhawary/private-algo-action@main
-        with:
-          source-branch: feature/sorting
-          target-branch: develop
+      - name: Clone Private Action Repo
+        run: |
+          git clone https://oauth2:${{ secrets.PRIVATE_ACTION_TOKEN }}@github.com/AhmedAbdoElhawary/private-algo-action.git action-code
+          chmod +x action-code/scripts/script.sh
+
+      - name: Run Script
+        run: |
+          ./action-code/scripts/script.sh feature/sorting develop
