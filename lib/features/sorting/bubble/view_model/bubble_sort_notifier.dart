@@ -3,7 +3,7 @@ import 'package:collection/collection.dart';
 
 class BubbleSortNotifier extends SortingNotifier {
   @override
-  List<SortingStep> buildSorting(List<int> values) {
+  SortingResult buildSorting(List<int> values) {
     final steps = <SortingStep>[];
     final arr = List<int>.from(values);
 
@@ -29,6 +29,6 @@ class BubbleSortNotifier extends SortingNotifier {
       if (isSorted) break;
     }
 
-    return steps;
+    return SortingResult(sortedValues: arr, steps: steps);
   }
 }
