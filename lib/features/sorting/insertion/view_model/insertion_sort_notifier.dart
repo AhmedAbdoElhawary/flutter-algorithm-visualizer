@@ -3,7 +3,7 @@ import 'package:collection/collection.dart';
 
 class InsertionSortNotifier extends SortingNotifier {
   @override
-  List<SortingStep> buildSorting(List<int> values) {
+  SortingResult buildSorting(List<int> values) {
     final steps = <SortingStep>[];
     final arr = List<int>.from(values);
 
@@ -23,6 +23,6 @@ class InsertionSortNotifier extends SortingNotifier {
 
     steps.add(SortingStep(index1: arr.length - 1, index2: arr.length - 1, action: SortingStatus.sorted));
 
-    return steps;
+    return SortingResult(sortedValues: arr, steps: steps);
   }
 }
