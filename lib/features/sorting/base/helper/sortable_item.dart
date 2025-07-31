@@ -44,3 +44,10 @@ class SortingStep {
     required this.action,
   });
 }
+
+class SortingResult {
+  final List<SortingStep> steps;
+  final List<int> sortedValues;
+
+  SortingResult({required this.steps, required this.sortedValues});
+}
