@@ -130,7 +130,7 @@ abstract class SortingNotifier extends StateNotifier<SortingNotifierState> {
     final list = List<SortableItem>.from(state.list);
     final values = list.map((e) => e.value).toList();
 
-    final steps = buildSorting(values);
+    final steps = buildSorting(values).steps;
 
     for (final step in steps) {
       if (operation != SortingEnum.played) return;
@@ -183,5 +183,5 @@ abstract class SortingNotifier extends StateNotifier<SortingNotifierState> {
     await greenSortedItemsAsDone();
   }
 
-  List<SortingStep> buildSorting(List<int> values);
+  SortingResult buildSorting(List<int> values);
 }
