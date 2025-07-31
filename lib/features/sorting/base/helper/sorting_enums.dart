@@ -15,4 +15,4 @@ enum SortingAlgorithm {
 
 enum SortingEnum { played, stopped, none }
 
-enum SortingStatus { unSorted, compared, swapped, sorted, none }
+enum SortingStatus { unSorted, compared, swiping, swiped, sorted, none }
