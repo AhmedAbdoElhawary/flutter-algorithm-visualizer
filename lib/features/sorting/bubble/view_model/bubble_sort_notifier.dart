@@ -1,4 +1,5 @@
 import 'package:algorithm_visualizer/features/sorting/base/view_model/sorting_notifier.dart';
+import 'package:collection/collection.dart';
 
 class BubbleSortNotifier extends SortingNotifier {
   @override
@@ -13,14 +14,13 @@ class BubbleSortNotifier extends SortingNotifier {
         steps.add(SortingStep(index1: j, index2: j + 1, action: SortingStatus.compared)); // external
 
         if (arr[j] > arr[j + 1]) {
-          steps.add(SortingStep(index1: j, index2: j + 1, action: SortingStatus.swiping)); // external
-          final tmp = arr[j];
-          arr[j] = arr[j + 1];
-          arr[j + 1] = tmp;
+          steps.add(SortingStep(index1: j, index2: j + 1, action: SortingStatus.swapping)); // external
+
+          arr.swap(j, j + 1);
           isSorted = false;
         }
 
-        steps.add(SortingStep(index1: j, index2: j + 1, action: SortingStatus.swiped)); // external
+        steps.add(SortingStep(index1: j, index2: j + 1, action: SortingStatus.swapped)); // external
       }
 
       steps.add(SortingStep(
