@@ -18,6 +18,19 @@ class SortableItem {
       sortedStatus: sortedStatus ?? this.sortedStatus,
     );
   }
+
+  ThemeEnum get getColor {
+    switch (sortedStatus) {
+      case SortingStatus.sorted:
+        return SortingNotifier.doneSortingColor;
+      case SortingStatus.swiping:
+        return SortingNotifier.swipingColor;
+      case SortingStatus.compared:
+        return SortingNotifier.comparedColor;
+      default:
+        return SortingNotifier.itemColor;
+    }
+  }
 }
 
 class SortingStep {
