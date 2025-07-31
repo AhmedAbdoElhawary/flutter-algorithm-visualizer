@@ -14,6 +14,7 @@ class SelectionSortNotifier extends SortingNotifier {
 
         if (arr[j] < arr[minIndex]) {
           final previousIndex = minIndex;
+          // to reset action
           if (minIndex != i) {
             steps.add(SortingStep(index1: previousIndex, index2: previousIndex, action: SortingStatus.none));
           }
@@ -24,12 +25,12 @@ class SelectionSortNotifier extends SortingNotifier {
       }
 
       if (minIndex != i) {
-        steps.add(SortingStep(index1: i, index2: minIndex, action: SortingStatus.swapped));
+        steps.add(SortingStep(index1: i, index2: minIndex, action: SortingStatus.swiping));
 
         final temp = arr[i];
         arr[i] = arr[minIndex];
         arr[minIndex] = temp;
-        steps.add(SortingStep(index1: minIndex, index2: j, action: SortingStatus.unSorted));
+        steps.add(SortingStep(index1: minIndex, index2: j, action: SortingStatus.swiped));
       }
 
       steps.add(SortingStep(index1: i, index2: i, action: SortingStatus.sorted));
