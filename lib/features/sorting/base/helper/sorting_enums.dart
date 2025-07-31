@@ -4,7 +4,7 @@ enum SortingAlgorithm {
   bubble,
   selection,
   insertion,
-  // merge,
+  merge,
   // quick,
   // shell,
   // heap,

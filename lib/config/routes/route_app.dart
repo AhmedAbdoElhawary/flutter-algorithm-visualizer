@@ -6,6 +6,7 @@ import 'package:algorithm_visualizer/features/searching/view/grid_page.dart';
 import 'package:algorithm_visualizer/features/sorting/base/view/sorting_list_page.dart';
 import 'package:algorithm_visualizer/features/sorting/bubble/view/bubble_sort_page.dart';
 import 'package:algorithm_visualizer/features/sorting/insertion/view/insertion_sort_page.dart';
+import 'package:algorithm_visualizer/features/sorting/merge/view/merge_sort_page.dart';
 import 'package:algorithm_visualizer/features/sorting/selection/view/selection_sort_page.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -31,9 +32,14 @@ class Routes {
   static const RouteConfig insertionSort = RouteConfig(
     name: 'insertionSort',
     path: 'insertionSort',
-  ); static const RouteConfig selectionSort = RouteConfig(
+  );
+  static const RouteConfig selectionSort = RouteConfig(
     name: 'selectionSort',
     path: 'selectionSort',
+  );
+  static const RouteConfig mergeSort = RouteConfig(
+    name: 'mergeSort',
+    path: 'mergeSort',
   );
 }
 
@@ -90,11 +96,19 @@ class AppRoutes {
                 builder: (context, state) {
                   return const InsertionSortPage();
                 },
-              ),  GoRoute(
+              ),
+              GoRoute(
                 path: Routes.selectionSort.path,
                 name: Routes.selectionSort.name,
                 builder: (context, state) {
                   return const SelectionSortPage();
+                },
+              ),
+              GoRoute(
+                path: Routes.mergeSort.path,
+                name: Routes.mergeSort.name,
+                builder: (context, state) {
+                  return const MergeSortPage();
                 },
               ),
             ],
