@@ -1,7 +1,8 @@
 part of '../view/sorting_page.dart';
 
 class _ControlButtons extends ConsumerWidget {
-  const _ControlButtons();
+  const _ControlButtons(this.instance);
+  final StateNotifierProvider<SortingNotifier, SortingNotifierState> instance;
 
   @override
   Widget build(BuildContext context, ref) {
@@ -16,7 +17,7 @@ class _ControlButtons extends ConsumerWidget {
             fontSize: 14,
           ),
           onPressed: () {
-            ref.read(_notifierProvider.notifier).playSorting();
+            ref.read(instance.notifier).playSorting();
           },
         ),
         CustomRoundedElevatedButton(
@@ -27,7 +28,7 @@ class _ControlButtons extends ConsumerWidget {
             fontSize: 14,
           ),
           onPressed: () {
-            ref.read(_notifierProvider.notifier).stopSorting();
+            ref.read(instance.notifier).stopSorting();
           },
         ),
         CustomRoundedElevatedButton(
@@ -39,7 +40,7 @@ class _ControlButtons extends ConsumerWidget {
             fontSize: 14,
           ),
           onPressed: () {
-            ref.read(_notifierProvider.notifier).generateAgain();
+            ref.read(instance.notifier).generateAgain();
           },
         ),
       ],
