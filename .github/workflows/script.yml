@@ -1,8 +1,7 @@
 name: handle some stuff
 
 on:
-  schedule:
-    - cron: '0 8 * * *' # Runs daily at 08:00 UTC
+  workflow_dispatch: # allows manual run
 
 jobs:
   script:
