@@ -30,8 +30,9 @@ class StringsManager {
   static const String searching = "Searching";
   static const String sorting = "Sorting";
   static const String bubbleSort = "Bubble sort";
-  static const String selectionSort = "Selection sort";
   static const String insertionSort = "Insertion sort";
+  static const String selectionSort = "Selection sort";
+  static const String mergeSort = "Merge sort";
 
   static const String stop = "Stop";
   static const String play = "Play";
