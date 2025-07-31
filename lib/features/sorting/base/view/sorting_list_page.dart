@@ -32,9 +32,17 @@ class SortingListPage extends StatelessWidget {
               CustomRoundedElevatedButton(
                 roundedRadius: 3,
                 backgroundColor: ThemeEnum.whiteD5Color,
+                child: const RegularText(StringsManager.insertionSort),
+                onPressed: () {
+                  context.pushTo(Routes.insertionSort);
+                },
+              ),
+              CustomRoundedElevatedButton(
+                roundedRadius: 3,
+                backgroundColor: ThemeEnum.whiteD5Color,
                 child: const RegularText(StringsManager.selectionSort),
                 onPressed: () {
-                  // context.pushTo(Routes.sorting);
+                  context.pushTo(Routes.selectionSort);
                 },
               ),
             ],
