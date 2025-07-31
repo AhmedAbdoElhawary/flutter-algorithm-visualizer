@@ -120,8 +120,12 @@ class _BuildList extends ConsumerWidget {
 }
 
 class _BuildItem extends ConsumerWidget {
-  const _BuildItem(
-      {required this.item, required this.index, required this.speedDuration, required this.instance});
+  const _BuildItem({
+    required this.item,
+    required this.index,
+    required this.speedDuration,
+    required this.instance,
+  });
 
   final int index;
   final SortableItem item;
