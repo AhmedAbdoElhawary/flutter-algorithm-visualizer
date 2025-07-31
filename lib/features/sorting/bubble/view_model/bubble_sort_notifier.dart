@@ -13,14 +13,14 @@ class BubbleSortNotifier extends SortingNotifier {
         steps.add(SortingStep(index1: j, index2: j + 1, action: SortingStatus.compared)); // external
 
         if (arr[j] > arr[j + 1]) {
-          steps.add(SortingStep(index1: j, index2: j + 1, action: SortingStatus.swapped)); // external
+          steps.add(SortingStep(index1: j, index2: j + 1, action: SortingStatus.swiping)); // external
           final tmp = arr[j];
           arr[j] = arr[j + 1];
           arr[j + 1] = tmp;
           isSorted = false;
         }
 
-        steps.add(SortingStep(index1: j, index2: j + 1, action: SortingStatus.unSorted)); // external
+        steps.add(SortingStep(index1: j, index2: j + 1, action: SortingStatus.swiped)); // external
       }
 
       steps.add(SortingStep(
