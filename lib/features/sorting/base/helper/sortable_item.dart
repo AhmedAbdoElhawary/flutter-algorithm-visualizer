@@ -19,3 +19,15 @@ class SortableItem {
     );
   }
 }
+
+class SortingStep {
+  final int index1;
+  final int index2;
+  final SortingStatus action;
+
+  SortingStep({
+    required this.index1,
+    required this.index2,
+    required this.action,
+  });
+}
