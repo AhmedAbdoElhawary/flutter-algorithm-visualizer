@@ -44,7 +44,7 @@ class _BasePageState extends State<BasePage> {
                 backgroundColor: ThemeEnum.whiteD5Color,
                 child: const RegularText(StringsManager.sorting),
                 onPressed: () {
-                  context.pushTo(Routes.sorting);
+                  context.pushTo(Routes.sortingList);
                 },
               ),
             ],

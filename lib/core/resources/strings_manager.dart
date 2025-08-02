@@ -29,8 +29,13 @@ class StringsManager {
   static const String generateMaze = "Generate maze";
   static const String searching = "Searching";
   static const String sorting = "Sorting";
+  static const String bubbleSort = "Bubble sort";
+  static const String insertionSort = "Insertion sort";
+  static const String selectionSort = "Selection sort";
+  static const String mergeSort = "Merge sort";
+
   static const String stop = "Stop";
   static const String play = "Play";
   static const String reset = "Reset";
-
+  static const String sort = "Sort";
 }

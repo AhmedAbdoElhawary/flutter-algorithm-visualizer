@@ -3,7 +3,11 @@ import 'package:algorithm_visualizer/core/resources/strings_manager.dart';
 import 'package:algorithm_visualizer/core/widgets/adaptive/text/adaptive_text.dart';
 import 'package:algorithm_visualizer/features/base/view/base_page.dart';
 import 'package:algorithm_visualizer/features/searching/view/grid_page.dart';
-import 'package:algorithm_visualizer/features/sorting/view/sorting_page.dart';
+import 'package:algorithm_visualizer/features/sorting/base/view/sorting_list_page.dart';
+import 'package:algorithm_visualizer/features/sorting/bubble/view/bubble_sort_page.dart';
+import 'package:algorithm_visualizer/features/sorting/insertion/view/insertion_sort_page.dart';
+import 'package:algorithm_visualizer/features/sorting/merge/view/merge_sort_page.dart';
+import 'package:algorithm_visualizer/features/sorting/selection/view/selection_sort_page.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -16,9 +20,26 @@ class Routes {
     name: 'searching',
     path: '/searching',
   );
-  static const RouteConfig sorting = RouteConfig(
-    name: 'sorting',
-    path: '/sorting',
+
+  static const RouteConfig sortingList = RouteConfig(
+    name: 'sortingList',
+    path: '/sortingList',
+  );
+  static const RouteConfig bubbleSort = RouteConfig(
+    name: 'bubbleSort',
+    path: 'bubbleSort',
+  );
+  static const RouteConfig insertionSort = RouteConfig(
+    name: 'insertionSort',
+    path: 'insertionSort',
+  );
+  static const RouteConfig selectionSort = RouteConfig(
+    name: 'selectionSort',
+    path: 'selectionSort',
+  );
+  static const RouteConfig mergeSort = RouteConfig(
+    name: 'mergeSort',
+    path: 'mergeSort',
   );
 }
 
@@ -46,9 +67,7 @@ class AppRoutes {
         builder: (context, state, child) {
           return child;
         },
-
         routes: [
-
           GoRoute(
             path: Routes.base.path,
             name: Routes.base.name,
@@ -60,9 +79,39 @@ class AppRoutes {
             builder: (context, state) => const SearchingPage(),
           ),
           GoRoute(
-            path: Routes.sorting.path,
-            name: Routes.sorting.name,
-            builder: (context, state) => const SortingPage(),
+            path: Routes.sortingList.path,
+            name: Routes.sortingList.name,
+            builder: (context, state) => const SortingListPage(),
+            routes: [
+              GoRoute(
+                path: Routes.bubbleSort.path,
+                name: Routes.bubbleSort.name,
+                builder: (context, state) {
+                  return const BubbleSortPage();
+                },
+              ),
+              GoRoute(
+                path: Routes.insertionSort.path,
+                name: Routes.insertionSort.name,
+                builder: (context, state) {
+                  return const InsertionSortPage();
+                },
+              ),
+              GoRoute(
+                path: Routes.selectionSort.path,
+                name: Routes.selectionSort.name,
+                builder: (context, state) {
+                  return const SelectionSortPage();
+                },
+              ),
+              GoRoute(
+                path: Routes.mergeSort.path,
+                name: Routes.mergeSort.name,
+                builder: (context, state) {
+                  return const MergeSortPage();
+                },
+              ),
+            ],
           ),
         ],
       ),
