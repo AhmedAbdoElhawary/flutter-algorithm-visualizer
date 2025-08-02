@@ -11,16 +11,16 @@
 |                | A* Search                  | ❌     |
 |                | ...More                    |         |
 |----------------|----------------------------|---------|
-| **Mazes**      | Backtracking               | ✅     |
+| **Mazes**      | Backtracking               | ❌     |
 |                | Eller's maze               | ❌     |
 |                | Randomized Kruskal's maze  | ❌     |
 |                | Aldous-Broder              | ❌     |
 |                | Recursive Division         | ❌     |
 |                | Binary Tree                | ❌     |
 |----------------|----------------------------|--------|
-| **Sorting**    | Bubble Sort                | ❌     |
-|                | Selection Sort             | ❌     |
-|                | Insertion Sort             | ❌     |
+| **Sorting**    | Bubble Sort                | ✅     |
+|                | Selection Sort             | ✅     |
+|                | Insertion Sort             | ✅     |
 |                | Merge Sort                 | ❌     |
 |                | Quick Sort                 | ❌     |
 |                | Radix Sort                 | ❌     |
