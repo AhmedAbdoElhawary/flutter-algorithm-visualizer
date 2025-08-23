@@ -15,11 +15,11 @@ abstract class SortingNotifier extends StateNotifier<SortingNotifierState> {
     _initializePositions();
   }
 
-  static double maxListItemHeight = 250.h;
+  static double maxListItemHeight = 250.r;
   static double itemsPadding = 1.w;
   static const ThemeEnum swappingColor = ThemeEnum.redColor;
-  static const ThemeEnum comparedColor = ThemeEnum.comparedColor;
-  static const ThemeEnum itemColor = ThemeEnum.blueColor;
+  static const ThemeEnum comparedColor = ThemeEnum.lightBlueColor;
+  static const ThemeEnum itemColor = ThemeEnum.darkBlueColor;
   static const ThemeEnum doneSortingColor = ThemeEnum.greenColor;
 
   static const int _defaultSize = 20;
@@ -30,7 +30,7 @@ abstract class SortingNotifier extends StateNotifier<SortingNotifierState> {
   // static const Duration _maxSpeedDuration = Duration(milliseconds: 3000);
   // static const Duration _minSpeedDuration = Duration(milliseconds: 20);
 
-  SortingEnum operation = SortingEnum.none;
+  SortingEnum _operation = SortingEnum.none;
   CancelableOperation<void>? cancelableSort;
 
   int i = 0;
@@ -55,6 +55,13 @@ abstract class SortingNotifier extends StateNotifier<SortingNotifierState> {
 
   Duration get speedDuration => state.swipeDuration;
   int get _size => state.size;
+
+  SortingEnum get operation => _operation;
+
+  set operation(SortingEnum value) {
+    state = state.copyWith(operationStatus: value);
+    _operation = value;
+  }
 
   void _initializePositions() {
     final positions = <int, Offset>{};
@@ -83,7 +90,7 @@ abstract class SortingNotifier extends StateNotifier<SortingNotifierState> {
 
   void stopSorting() {
     cancelableSort?.cancel();
-    operation = SortingEnum.stopped;
+    if (operation == SortingEnum.played) operation = SortingEnum.stopped;
   }
 
   Future<void> playSorting() async {
