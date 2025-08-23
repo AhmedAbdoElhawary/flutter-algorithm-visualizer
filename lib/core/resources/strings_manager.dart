@@ -26,7 +26,8 @@ class StringsManager {
   static const String clear = "Clear";
   static const String clearAll = "Clear all";
   static const String clearPath = "Clear path";
-  static const String generateMaze = "Generate maze";
+  static const String recursiveBacktrackerMaze = "Recursive Backtracker Maze";
+  static const String recursiveDivisionMaze = "Recursive Division Maze";
   static const String searching = "Searching";
   static const String sorting = "Sorting";
   static const String bubbleSort = "Bubble sort";
