@@ -20,7 +20,7 @@ class MazeDirection {
 
 class SearchingNotifier extends StateNotifier<GridNotifierState> {
   SearchingNotifier() : super(GridNotifierState());
-  final int columnSquares = 25;
+  final int columnSquares = 26; // make it odd always
   static const Duration scaleAppearDurationForWall = Duration(milliseconds: 700);
   static const Duration clearDuration = Duration(microseconds: 1);
   static const Duration drawFindingPathDuration = Duration(milliseconds: 2);
@@ -341,17 +341,62 @@ class SearchingNotifier extends StateNotifier<GridNotifierState> {
       }
     }
 
-    // Random starting point
-    final random = Random();
-    int startRow = (random.nextInt(state.rowMainAxisCount - 2) ~/ 2) * 2 + 1;
-    int startCol = (random.nextInt(state.columnCrossAxisCount - 2) ~/ 2) * 2 + 1;
+    // 🔹 Draw outer border walls
+    await _drawBorders(gridData);
 
-    await _cravePassage(startRow, startCol, gridData);
+    // 🔹 Force the second border inside as a corridor (always empty)
+    _makeSafeCorridor(gridData);
+
+    final random = Random();
+    int startRow = (random.nextInt((state.rowMainAxisCount - 3) ~/ 2) * 2) + 2; // >= 2
+    int startCol = (random.nextInt((state.columnCrossAxisCount - 3) ~/ 2) * 2) + 2; // >= 2
+
+    await _drawWalls(startRow, startCol, gridData);
 
     state = state.copyWith(gridData: gridData);
   }
 
-  Future<void> _cravePassage(int row, int col, List<GridStatus> gridData) async {
+  Future<void> _drawBorders(List<GridStatus> gridData) async {
+    // Top & bottom rows
+    for (int c = 0; c < state.columnCrossAxisCount; c++) {
+      for (final r in [0, state.rowMainAxisCount - 1]) {
+        final idx = r * state.columnCrossAxisCount + c;
+        if (gridData[idx] != GridStatus.startPoint && gridData[idx] != GridStatus.targetPoint) {
+          gridData[idx] = GridStatus.wall;
+          state = state.copyWith(gridData: List.from(gridData));
+          await Future.delayed(mazeDuration);
+        }
+      }
+    }
+
+    // Left & right columns
+    for (int r = 1; r < state.rowMainAxisCount - 1; r++) {
+      for (final c in [0, state.columnCrossAxisCount - 1]) {
+        final idx = r * state.columnCrossAxisCount + c;
+        if (gridData[idx] != GridStatus.startPoint && gridData[idx] != GridStatus.targetPoint) {
+          gridData[idx] = GridStatus.wall;
+          state = state.copyWith(gridData: List.from(gridData));
+          await Future.delayed(mazeDuration);
+        }
+      }
+    }
+  }
+
+  /// Make the second layer inside the borders always a safe corridor (roads).
+  void _makeSafeCorridor(List<GridStatus> gridData) {
+    for (int r = 1; r < state.rowMainAxisCount - 1; r++) {
+      for (int c = 1; c < state.columnCrossAxisCount - 1; c++) {
+        if (r == 1 || r == state.rowMainAxisCount - 2 || c == 1 || c == state.columnCrossAxisCount - 2) {
+          final idx = r * state.columnCrossAxisCount + c;
+          if (gridData[idx] != GridStatus.startPoint && gridData[idx] != GridStatus.targetPoint) {
+            gridData[idx] = GridStatus.empty; // always keep clear
+          }
+        }
+      }
+    }
+  }
+
+  Future<void> _drawWalls(int row, int col, List<GridStatus> gridData) async {
     final directions = [MazeDirection.up, MazeDirection.down, MazeDirection.left, MazeDirection.right];
     directions.shuffle();
 
@@ -359,25 +404,32 @@ class SearchingNotifier extends StateNotifier<GridNotifierState> {
       final newRow = row + direction.rowDelta * 2;
       final newCol = col + direction.colDelta * 2;
 
-      final currentGrid = gridData[newRow * state.columnCrossAxisCount + newCol];
       if (_isValidCell(newRow, newCol) &&
-          currentGrid == GridStatus.empty &&
-          currentGrid != GridStatus.startPoint &&
-          currentGrid != GridStatus.targetPoint) {
-        gridData[(row + direction.rowDelta) * state.columnCrossAxisCount + (col + direction.colDelta)] =
-            GridStatus.wall;
-        gridData[newRow * state.columnCrossAxisCount + newCol] = GridStatus.wall;
+          gridData[newRow * state.columnCrossAxisCount + newCol] == GridStatus.empty) {
+        final betweenRow = row + direction.rowDelta;
+        final betweenCol = col + direction.colDelta;
+
+        final betweenIdx = betweenRow * state.columnCrossAxisCount + betweenCol;
+        final newIdx = newRow * state.columnCrossAxisCount + newCol;
+
+        if (gridData[betweenIdx] != GridStatus.startPoint && gridData[betweenIdx] != GridStatus.targetPoint) {
+          gridData[betweenIdx] = GridStatus.wall;
+        }
+
+        if (gridData[newIdx] != GridStatus.startPoint && gridData[newIdx] != GridStatus.targetPoint) {
+          gridData[newIdx] = GridStatus.wall;
+        }
 
         state = state.copyWith(gridData: List.from(gridData));
-
         await Future.delayed(mazeDuration);
 
-        await _cravePassage(newRow, newCol, gridData);
+        await _drawWalls(newRow, newCol, gridData);
       }
     }
   }
 
   bool _isValidCell(int row, int col) {
-    return row > 0 && col > 0 && row < state.rowMainAxisCount && col < state.columnCrossAxisCount;
+    // must be inside the "safe corridor"
+    return row > 1 && col > 1 && row < state.rowMainAxisCount - 2 && col < state.columnCrossAxisCount - 2;
   }
 }
