@@ -24,6 +24,9 @@ class StringsManager {
   static const String unknownPage = "Unknown page";
   static const String notInitializeGridYet = "Not initialize grid yet.";
   static const String clear = "Clear";
+  static const String dijkstra = "Dijkstra";
+  static const String bFS = "BFS";
+  static const String dFS = "DFS";
   static const String clearAll = "Clear all";
   static const String clearPath = "Clear path";
   static const String recursiveBacktrackerMaze = "Recursive Backtracker Maze";
