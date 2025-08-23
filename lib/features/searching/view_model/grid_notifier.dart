@@ -331,7 +331,7 @@ class SearchingNotifier extends StateNotifier<GridNotifierState> {
     }
   }
 
-  void generateMaze() async {
+  void generateRecursiveBacktrackerMaze() async {
     final gridData = List<GridStatus>.from(state.gridData);
 
     // Clear the maze but keep start and target points
@@ -431,5 +431,80 @@ class SearchingNotifier extends StateNotifier<GridNotifierState> {
   bool _isValidCell(int row, int col) {
     // must be inside the "safe corridor"
     return row > 1 && col > 1 && row < state.rowMainAxisCount - 2 && col < state.columnCrossAxisCount - 2;
+  }
+
+  // Recursive Division Maze Generation
+  Future<void> generateRecursiveDivisionMaze() async {
+    final gridData = List<GridStatus>.from(state.gridData);
+
+    // Step 1: Start with all empty
+    for (int i = 0; i < gridData.length; i++) {
+      if (gridData[i] != GridStatus.startPoint && gridData[i] != GridStatus.targetPoint) {
+        gridData[i] = GridStatus.empty;
+      }
+    }
+
+    // Step 2: Add outer borders as walls
+    for (int r = 0; r < state.rowMainAxisCount; r++) {
+      for (int c = 0; c < state.columnCrossAxisCount; c++) {
+        if (r == 0 || c == 0 || r == state.rowMainAxisCount - 1 || c == state.columnCrossAxisCount - 1) {
+          if (gridData[r * state.columnCrossAxisCount + c] != GridStatus.startPoint &&
+              gridData[r * state.columnCrossAxisCount + c] != GridStatus.targetPoint) {
+            gridData[r * state.columnCrossAxisCount + c] = GridStatus.wall;
+            state = state.copyWith(gridData: List.from(gridData));
+            await Future.delayed(mazeDuration);
+          }
+        }
+      }
+    }
+
+    state = state.copyWith(gridData: List.from(gridData));
+
+    await _divide(1, 1, state.rowMainAxisCount - 2, state.columnCrossAxisCount - 2, gridData);
+
+    state = state.copyWith(gridData: gridData);
+  }
+
+  Future<void> _divide(int row, int col, int height, int width, List<GridStatus> gridData) async {
+    if (height < 2 || width < 2) return;
+
+    final random = Random();
+    final horizontal = random.nextBool();
+
+    if (horizontal) {
+      // Horizontal wall
+      int wallRow = row + (random.nextInt(height ~/ 2)) * 2 + 1;
+      int passageCol = col + (random.nextInt(width ~/ 2)) * 2;
+
+      for (int c = col; c < col + width; c++) {
+        if (c == passageCol) continue;
+        if (gridData[wallRow * state.columnCrossAxisCount + c] != GridStatus.startPoint &&
+            gridData[wallRow * state.columnCrossAxisCount + c] != GridStatus.targetPoint) {
+          gridData[wallRow * state.columnCrossAxisCount + c] = GridStatus.wall;
+          state = state.copyWith(gridData: List.from(gridData));
+          await Future.delayed(mazeDuration); // 🔹 Delay for each cell
+        }
+      }
+
+      await _divide(row, col, wallRow - row, width, gridData);
+      await _divide(wallRow + 1, col, row + height - wallRow - 1, width, gridData);
+    } else {
+      // Vertical wall
+      int wallCol = col + (random.nextInt(width ~/ 2)) * 2 + 1;
+      int passageRow = row + (random.nextInt(height ~/ 2)) * 2;
+
+      for (int r = row; r < row + height; r++) {
+        if (r == passageRow) continue;
+        if (gridData[r * state.columnCrossAxisCount + wallCol] != GridStatus.startPoint &&
+            gridData[r * state.columnCrossAxisCount + wallCol] != GridStatus.targetPoint) {
+          gridData[r * state.columnCrossAxisCount + wallCol] = GridStatus.wall;
+          state = state.copyWith(gridData: List.from(gridData));
+          await Future.delayed(mazeDuration); // 🔹 Delay for each cell
+        }
+      }
+
+      await _divide(row, col, height, wallCol - col, gridData);
+      await _divide(row, wallCol + 1, height, col + width - wallCol - 1, gridData);
+    }
   }
 }
