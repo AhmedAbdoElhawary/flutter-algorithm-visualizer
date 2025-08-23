@@ -41,9 +41,15 @@ class SearchingPage extends StatelessWidget {
                   CustomAlertDialog(context).solidDialog(
                     parameters: [
                       ListDialogParameters(
-                        text: StringsManager.generateMaze,
+                        text: StringsManager.recursiveBacktrackerMaze,
                         onTap: () {
-                          ref.read(_gridNotifierProvider.notifier).generateMaze();
+                          ref.read(_gridNotifierProvider.notifier).generateRecursiveBacktrackerMaze();
+                        },
+                      ),
+                      ListDialogParameters(
+                        text: StringsManager.recursiveDivisionMaze,
+                        onTap: () {
+                          ref.read(_gridNotifierProvider.notifier).generateRecursiveDivisionMaze();
                         },
                       ),
                       ListDialogParameters(
