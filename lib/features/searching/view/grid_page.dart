@@ -53,13 +53,13 @@ class SearchingPage extends StatelessWidget {
                         },
                       ),
                       ListDialogParameters(
-                        text: "Dijkstra",
+                        text: StringsManager.dijkstra,
                         onTap: () {
                           ref.read(_gridNotifierProvider.notifier).performDijkstra();
                         },
                       ),
                       ListDialogParameters(
-                        text: "BFS",
+                        text: StringsManager.bFS,
                         onTap: () {
                           ref.read(_gridNotifierProvider.notifier).performBFS();
                         },
