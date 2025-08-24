@@ -44,6 +44,8 @@ class StringsManager {
   static const String shellSort = "Shell sort";
   static const String countingSort = "Counting sort";
   static const String bucketSort = "Bucket sort";
+  static const String comparisonSort = "Comparison sort";
+  static const String comparisonAlgorithms = "Comparison algorithms";
 
   static const String stop = "Stop";
   static const String play = "Play";
