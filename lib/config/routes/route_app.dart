@@ -6,6 +6,7 @@ import 'package:algorithm_visualizer/features/searching/view/grid_page.dart';
 import 'package:algorithm_visualizer/features/sorting/base/view/sorting_list_page.dart';
 import 'package:algorithm_visualizer/features/sorting/bubble/view/bubble_sort_page.dart';
 import 'package:algorithm_visualizer/features/sorting/bucket/view/bucket_sort_page.dart';
+import 'package:algorithm_visualizer/features/sorting/comparison/view/comparison_sort_page.dart';
 import 'package:algorithm_visualizer/features/sorting/counting/view/counting_sort_page.dart';
 import 'package:algorithm_visualizer/features/sorting/heap/view/heap_sort_page.dart';
 import 'package:algorithm_visualizer/features/sorting/insertion/view/insertion_sort_page.dart';
@@ -70,6 +71,10 @@ class Routes {
   static const RouteConfig bucketSort = RouteConfig(
     name: 'bucketSort',
     path: 'bucketSort',
+  );
+  static const RouteConfig comparisonSort = RouteConfig(
+    name: 'comparisonSort',
+    path: 'comparisonSort',
   );
 }
 
@@ -181,6 +186,13 @@ class AppRoutes {
                 name: Routes.bucketSort.name,
                 builder: (context, state) {
                   return const BucketSortPage();
+                },
+              ),
+              GoRoute(
+                path: Routes.comparisonSort.path,
+                name: Routes.comparisonSort.name,
+                builder: (context, state) {
+                  return const ComparisonSortPage();
                 },
               ),
             ],
