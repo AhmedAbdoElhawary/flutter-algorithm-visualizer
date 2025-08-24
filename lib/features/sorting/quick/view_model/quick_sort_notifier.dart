@@ -38,8 +38,7 @@ class QuickSortNotifier extends SortingNotifier {
 
     void quickSort(int low, int high) {
       if (low < high) {
-        int pi = partition(low, high);
-
+        final pi = partition(low, high);
         quickSort(low, pi - 1);
         quickSort(pi + 1, high);
       }
@@ -47,7 +46,6 @@ class QuickSortNotifier extends SortingNotifier {
 
     if (arr.isNotEmpty) quickSort(0, arr.length - 1);
 
-    // Final marking of all sorted items (UI will green them at end anyway)
     return SortingResult(sortedValues: arr, steps: steps);
   }
 }
