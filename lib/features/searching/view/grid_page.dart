@@ -59,6 +59,12 @@ class SearchingPage extends StatelessWidget {
                         },
                       ),
                       ListDialogParameters(
+                        text: StringsManager.aStarSearch,
+                        onTap: () {
+                          ref.read(_gridNotifierProvider.notifier).performAStar();
+                        },
+                      ),
+                      ListDialogParameters(
                         text: StringsManager.bFS,
                         onTap: () {
                           ref.read(_gridNotifierProvider.notifier).performBFS();
