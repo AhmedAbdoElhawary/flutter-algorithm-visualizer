@@ -31,10 +31,7 @@ abstract class SortingNotifier extends StateNotifier<SortingNotifierState> {
   // static const Duration _minSpeedDuration = Duration(milliseconds: 20);
 
   SortingEnum _operation = SortingEnum.none;
-  CancelableOperation<void>? cancelableSort;
-
-  int i = 0;
-  int j = 0;
+  CancelableOperation<void>? _cancelableSort;
 
   static List<SortableItem> _generateList(int size) {
     return List.generate(size, (index) => SortableItem(id: index, value: index + 1))..shuffle();
@@ -56,9 +53,9 @@ abstract class SortingNotifier extends StateNotifier<SortingNotifierState> {
   Duration get speedDuration => state.swipeDuration;
   int get _size => state.size;
 
-  SortingEnum get operation => _operation;
+  SortingEnum get _getOperation => _operation;
 
-  set operation(SortingEnum value) {
+  set _setOperation(SortingEnum value) {
     state = state.copyWith(operationStatus: value);
     _operation = value;
   }
@@ -81,7 +78,7 @@ abstract class SortingNotifier extends StateNotifier<SortingNotifierState> {
   }
 
   void changeSize(double size) {
-    if (operation == SortingEnum.played) return;
+    if (_getOperation == SortingEnum.played) return;
 
     final newSize = _minSize + (_maxSize - _minSize) * size;
     state = state.copyWith(size: newSize.toInt());
@@ -89,25 +86,22 @@ abstract class SortingNotifier extends StateNotifier<SortingNotifierState> {
   }
 
   void stopSorting() {
-    cancelableSort?.cancel();
-    if (operation == SortingEnum.played) operation = SortingEnum.stopped;
+    _cancelableSort?.cancel();
+    if (_getOperation == SortingEnum.played) _setOperation = SortingEnum.stopped;
   }
 
   Future<void> playSorting() async {
-    if (operation == SortingEnum.played) return;
-    operation = SortingEnum.played;
+    if (_getOperation == SortingEnum.played) return;
+    _setOperation = SortingEnum.played;
 
     await _startSelectedSorting();
 
-    operation = SortingEnum.none;
+    _setOperation = SortingEnum.none;
   }
 
   Future<void> generateAgain() async {
-    await cancelableSort?.cancel();
-    operation = SortingEnum.none;
-
-    i = 0;
-    j = 0;
+    await _cancelableSort?.cancel();
+    _setOperation = SortingEnum.none;
 
     state = state.copyWith(list: _generateList(_size));
     _initializePositions();
@@ -124,10 +118,10 @@ abstract class SortingNotifier extends StateNotifier<SortingNotifierState> {
   }
 
   Future<void> _startSelectedSorting() async {
-    cancelableSort = CancelableOperation.fromFuture(_buildSort());
+    _cancelableSort = CancelableOperation.fromFuture(_buildSort());
 
     try {
-      await cancelableSort?.value;
+      await _cancelableSort?.value;
     } catch (e) {
       debugPrint("something wrong with bubbleSort: $e");
     }
@@ -140,7 +134,7 @@ abstract class SortingNotifier extends StateNotifier<SortingNotifierState> {
     final steps = buildSorting(values).steps;
 
     for (final step in steps) {
-      if (operation != SortingEnum.played) return;
+      if (_getOperation != SortingEnum.played) return;
 
       switch (step.action) {
         case SortingStatus.compared:
