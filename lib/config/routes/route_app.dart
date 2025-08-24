@@ -64,6 +64,10 @@ class Routes {
     name: 'countingSort',
     path: 'countingSort',
   );
+  static const RouteConfig bucketSort = RouteConfig(
+    name: 'bucketSort',
+    path: 'bucketSort',
+  );
 }
 
 class RouteConfig {
@@ -167,6 +171,13 @@ class AppRoutes {
                 name: Routes.countingSort.name,
                 builder: (context, state) {
                   return const CountingSortPage();
+                },
+              ),
+              GoRoute(
+                path: Routes.bucketSort.path,
+                name: Routes.bucketSort.name,
+                builder: (context, state) {
+                  return const BucketSortPage();
                 },
               ),
             ],
