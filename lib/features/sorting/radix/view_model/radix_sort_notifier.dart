@@ -7,61 +7,54 @@ class RadixSortNotifier extends SortingNotifier {
     final steps = <SortingStep>[];
     final arr = List<int>.from(values);
 
-    int getMax(List<int> arr) {
-      int maxVal = arr[0];
-      for (int i = 1; i < arr.length; i++) {
-        if (arr[i] > maxVal) maxVal = arr[i];
-      }
-      return maxVal;
+    if (arr.isEmpty) {
+      return SortingResult(sortedValues: arr, steps: steps);
     }
 
-    void countSort(int exp) {
-      final n = arr.length;
-      final output = List<int>.filled(n, 0);
-      final count = List<int>.filled(10, 0);
+    int maxVal = arr.reduce((a, b) => a > b ? a : b);
 
-      // Count occurrences of digits
-      for (int i = 0; i < n; i++) {
-        int digit = (arr[i] ~/ exp) % 10;
-        count[digit]++;
-      }
-
-      // Accumulate counts
-      for (int i = 1; i < 10; i++) {
-        count[i] += count[i - 1];
-      }
-
-      // Build output array (stable order)
-      for (int i = n - 1; i >= 0; i--) {
-        int digit = (arr[i] ~/ exp) % 10;
-        output[count[digit] - 1] = arr[i];
-        count[digit]--;
-      }
-
-      // Copy output back into arr with steps
-      for (int i = 0; i < n; i++) {
-        if (arr[i] != output[i]) {
-          // Find where arr[i] should go
-          int newVal = output[i];
-          int oldIndex = arr.indexOf(newVal, i); // find next occurrence
-
-          steps.add(SortingStep(index1: i, index2: oldIndex, action: SortingStatus.swapping));
-          arr.swap(i, oldIndex);
-          steps.add(SortingStep(index1: i, index2: oldIndex, action: SortingStatus.swapped));
-        }
-      }
-    }
-
-    final maxVal = getMax(arr);
-
-    // Do counting sort for every digit
+    // Perform counting sort for every digit
     for (int exp = 1; maxVal ~/ exp > 0; exp *= 10) {
-      countSort(exp);
+      _countingSortByDigit(arr, exp, steps);
     }
 
-    // Mark all sorted at the end
+    // Mark all as sorted
     steps.add(SortingStep(index1: arr.length - 1, index2: arr.length - 1, action: SortingStatus.sorted));
 
     return SortingResult(sortedValues: arr, steps: steps);
+  }
+
+  void _countingSortByDigit(List<int> arr, int exp, List<SortingStep> steps) {
+    int n = arr.length;
+    List<int> output = List<int>.filled(n, 0);
+    List<int> count = List<int>.filled(10, 0);
+
+    // 1. Count occurrences of digits
+    for (int i = 0; i < n; i++) {
+      int digit = (arr[i] ~/ exp) % 10;
+      count[digit]++;
+    }
+
+    // 2. Compute prefix sums
+    for (int i = 1; i < 10; i++) {
+      count[i] += count[i - 1];
+    }
+
+    // 3. Build output array (stable order, so go from right to left)
+    for (int i = n - 1; i >= 0; i--) {
+      int digit = (arr[i] ~/ exp) % 10;
+      output[count[digit] - 1] = arr[i];
+      count[digit]--;
+    }
+
+    // 4. Copy back to arr + log steps
+    for (int i = 0; i < n; i++) {
+      if (arr[i] != output[i]) {
+        int oldIndex = arr.indexOf(output[i], i);
+        steps.add(SortingStep(index1: i, index2: oldIndex, action: SortingStatus.swapping));
+        arr.swap(i, oldIndex);
+        steps.add(SortingStep(index1: i, index2: oldIndex, action: SortingStatus.swapped));
+      }
+    }
   }
 }
