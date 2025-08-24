@@ -9,8 +9,8 @@
 |                | DFS                        | ❌     |
 |                | Dijkstra                   | ✅     |
 |                | A* Search                  | ✅     |
-|                | ...More                    |         |
-|----------------|----------------------------|---------|
+|                | ...More                    |        |
+|----------------|----------------------------|--------|
 | **Mazes**      | Backtracking               | ✅     |
 |                | Eller's maze               | ❌     |
 |                | Randomized Kruskal's maze  | ❌     |
@@ -21,12 +21,12 @@
 | **Sorting**    | Bubble Sort                | ✅     |
 |                | Selection Sort             | ✅     |
 |                | Insertion Sort             | ✅     |
-|                | Merge Sort                 | ❌     |
-|                | Quick Sort                 | ❌     |
-|                | Radix Sort                 | ❌     |
-|                | Heap Sort                  | ❌     |
-|                | Bucket Sort                | ❌     |
-|                | Counting Sort              | ❌     |
+|                | Merge Sort                 | ✅     |
+|                | Quick Sort                 | ✅     |
+|                | Radix Sort                 | ✅     |
+|                | Heap Sort                  | ✅     |
+|                | Bucket Sort                | ✅     |
+|                | Counting Sort              | ✅     |
 |----------------|----------------------------|--------|
 | **Trees**      | Binary Tree                | ❌     |
 |                | Binary Search Tree         | ❌     |
