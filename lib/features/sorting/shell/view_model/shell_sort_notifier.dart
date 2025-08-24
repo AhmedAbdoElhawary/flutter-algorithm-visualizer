@@ -6,31 +6,33 @@ class ShellSortNotifier extends SortingNotifier {
   SortingResult buildSorting(List<int> values) {
     final steps = <SortingStep>[];
     final arr = List<int>.from(values);
-    int n = arr.length;
+    final n = arr.length;
 
-    // Start with a big gap, then reduce
-    for (int gap = n ~/ 2; gap > 0; gap ~/= 2) {
-      // Do a gapped insertion sort
+    // Knuth gap sequence: 1, 4, 13, 40, ...
+    int gap = 1;
+    while (gap < n ~/ 3) {
+      gap = 3 * gap + 1;
+    }
+
+    for (; gap >= 1; gap = (gap - 1) ~/ 3) {
       for (int i = gap; i < n; i++) {
         int j = i;
-
-        while (j >= gap && arr[j - gap] > arr[j]) {
-          // Compare
+        // Gapped insertion via adjacent swaps (with step logs)
+        while (j >= gap) {
           steps.add(SortingStep(index1: j, index2: j - gap, action: SortingStatus.compared));
           steps.add(SortingStep(index1: j, index2: j - gap, action: SortingStatus.unSorted));
 
-          // Swap
-          steps.add(SortingStep(index1: j, index2: j - gap, action: SortingStatus.swapping));
-          arr.swap(j, j - gap);
-          steps.add(SortingStep(index1: j, index2: j - gap, action: SortingStatus.swapped));
-
-          j -= gap;
+          if (arr[j] < arr[j - gap]) {
+            steps.add(SortingStep(index1: j, index2: j - gap, action: SortingStatus.swapping));
+            arr.swap(j, j - gap);
+            steps.add(SortingStep(index1: j, index2: j - gap, action: SortingStatus.swapped));
+            j -= gap;
+          } else {
+            break;
+          }
         }
       }
     }
-
-    // Mark all sorted at the end
-    steps.add(SortingStep(index1: arr.length - 1, index2: arr.length - 1, action: SortingStatus.sorted));
 
     return SortingResult(sortedValues: arr, steps: steps);
   }
