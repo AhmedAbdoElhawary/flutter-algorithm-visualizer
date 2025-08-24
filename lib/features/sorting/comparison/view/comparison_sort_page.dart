@@ -26,6 +26,16 @@ class _ComparisonSortPageState extends ConsumerState<ComparisonSortPage> {
   @override
   void deactivate() {
     ref.invalidate(_notifierProvider); // deletes current instance and resets
+
+    ComparisonSortNotifier.sortingAlgorithms.values.toList().forEach(
+      (element) {
+        try {
+          ref.invalidate(element.provider);
+        } catch (e) {
+          //
+        }
+      },
+    );
     super.deactivate();
   }
 
@@ -109,7 +119,7 @@ class _DrawerMenu extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final selectedAlgorithms = ref.watch(_notifierProvider.select((state) => state.selectedAlgorithms));
-    final algorithms = ref.read(_notifierProvider.notifier).sortingAlgorithms.keys.toList();
+    final algorithms = ComparisonSortNotifier.sortingAlgorithms.keys.toList();
     return Drawer(
       child: SafeArea(
         child: ListView(
