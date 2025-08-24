@@ -90,6 +90,9 @@ class _ComparisonSortPageState extends ConsumerState<ComparisonSortPage> {
     return AppBar(
       elevation: 1,
       title: const SortingAppBar(title: StringsManager.comparisonSort),
+      actions: [
+       CloseButton(),
+      ],
     );
   }
 }
