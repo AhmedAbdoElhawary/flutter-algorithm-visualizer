@@ -21,9 +21,14 @@ class SortingAlgorithm {
 }
 
 class ComparisonSortNotifier extends StateNotifier<ComparisonSortingNotifierState> {
-  ComparisonSortNotifier() : super(ComparisonSortingNotifierState(selectedAlgorithms: []));
+  ComparisonSortNotifier()
+      : super(
+          ComparisonSortingNotifierState(
+            selectedAlgorithms: [sortingAlgorithms[StringsManager.bubbleSort]!],
+          ),
+        );
 
-  final Map<String, SortingAlgorithm> sortingAlgorithms = {
+  static final Map<String, SortingAlgorithm> sortingAlgorithms = {
     StringsManager.bubbleSort: SortingAlgorithm(
       name: StringsManager.bubbleSort,
       provider: StateNotifierProvider<SortingNotifier, SortingNotifierState>(
@@ -94,6 +99,8 @@ class ComparisonSortNotifier extends StateNotifier<ComparisonSortingNotifierStat
 
   void selectAlgorithm(String algo) {
     final isExist = state.selectedAlgorithms.firstWhereOrNull((element) => element.name == algo) != null;
+    if (isExist && state.selectedAlgorithms.length == 1) return;
+
     if (isExist) {
       state = state.copyWith(
           selectedAlgorithms: state.selectedAlgorithms.where((element) => element.name != algo).toList());
