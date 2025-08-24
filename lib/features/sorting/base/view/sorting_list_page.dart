@@ -93,7 +93,14 @@ class SortingListPage extends StatelessWidget {
                   context.pushTo(Routes.countingSort);
                 },
               ),
-
+              CustomRoundedElevatedButton(
+                roundedRadius: 3,
+                backgroundColor: ThemeEnum.whiteD5Color,
+                child: const RegularText(StringsManager.bucketSort),
+                onPressed: () {
+                  context.pushTo(Routes.bucketSort);
+                },
+              ),
             ],
           ),
         ),
