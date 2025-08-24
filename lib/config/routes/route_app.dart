@@ -52,6 +52,10 @@ class Routes {
     name: 'quickSort',
     path: 'quickSort',
   );
+  static const RouteConfig radixSort = RouteConfig(
+    name: 'radixSort',
+    path: 'radixSort',
+  );
 }
 
 class RouteConfig {
@@ -134,6 +138,13 @@ class AppRoutes {
                 name: Routes.quickSort.name,
                 builder: (context, state) {
                   return const QuickSortPage();
+                },
+              ),
+              GoRoute(
+                path: Routes.radixSort.path,
+                name: Routes.radixSort.name,
+                builder: (context, state) {
+                  return const RadixSortPage();
                 },
               ),
             ],
