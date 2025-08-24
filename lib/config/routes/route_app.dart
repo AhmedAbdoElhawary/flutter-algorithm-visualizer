@@ -5,8 +5,11 @@ import 'package:algorithm_visualizer/features/base/view/base_page.dart';
 import 'package:algorithm_visualizer/features/searching/view/grid_page.dart';
 import 'package:algorithm_visualizer/features/sorting/base/view/sorting_list_page.dart';
 import 'package:algorithm_visualizer/features/sorting/bubble/view/bubble_sort_page.dart';
+import 'package:algorithm_visualizer/features/sorting/heap/view/heap_sort_page.dart';
 import 'package:algorithm_visualizer/features/sorting/insertion/view/insertion_sort_page.dart';
 import 'package:algorithm_visualizer/features/sorting/merge/view/merge_sort_page.dart';
+import 'package:algorithm_visualizer/features/sorting/quick/view/quick_sort_page.dart';
+import 'package:algorithm_visualizer/features/sorting/radix/view/radix_sort_page.dart';
 import 'package:algorithm_visualizer/features/sorting/selection/view/selection_sort_page.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -40,6 +43,10 @@ class Routes {
   static const RouteConfig mergeSort = RouteConfig(
     name: 'mergeSort',
     path: 'mergeSort',
+  );
+  static const RouteConfig heapSort = RouteConfig(
+    name: 'heapSort',
+    path: 'heapSort',
   );
 }
 
@@ -111,6 +118,14 @@ class AppRoutes {
                   return const MergeSortPage();
                 },
               ),
+              GoRoute(
+                path: Routes.heapSort.path,
+                name: Routes.heapSort.name,
+                builder: (context, state) {
+                  return const HeapSortPage();
+                },
+              ),
+           
             ],
           ),
         ],
