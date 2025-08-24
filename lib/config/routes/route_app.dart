@@ -60,6 +60,10 @@ class Routes {
     name: 'shellSort',
     path: 'shellSort',
   );
+  static const RouteConfig countingSort = RouteConfig(
+    name: 'countingSort',
+    path: 'countingSort',
+  );
 }
 
 class RouteConfig {
@@ -156,6 +160,13 @@ class AppRoutes {
                 name: Routes.shellSort.name,
                 builder: (context, state) {
                   return const ShellSortPage();
+                },
+              ),
+              GoRoute(
+                path: Routes.countingSort.path,
+                name: Routes.countingSort.name,
+                builder: (context, state) {
+                  return const CountingSortPage();
                 },
               ),
             ],
