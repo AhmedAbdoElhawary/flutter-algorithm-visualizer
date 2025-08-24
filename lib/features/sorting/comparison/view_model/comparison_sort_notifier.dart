@@ -86,6 +86,12 @@ class ComparisonSortNotifier extends StateNotifier<ComparisonSortingNotifierStat
     ),
   };
 
+  SortingEnum get _getOperation => state.operationStatus;
+
+  set _setOperation(SortingEnum value) {
+    state = state.copyWith(operationStatus: value);
+  }
+
   void selectAlgorithm(String algo) {
     final isExist = state.selectedAlgorithms.firstWhereOrNull((element) => element.name == algo) != null;
     if (isExist) {
@@ -106,6 +112,8 @@ class ComparisonSortNotifier extends StateNotifier<ComparisonSortingNotifierStat
   }
 
   void changeSize(double size, WidgetRef ref) {
+    if (_getOperation == SortingEnum.played) return;
+
     for (var element in state.selectedAlgorithms) {
       ref.read(element.provider.notifier).changeSize(size);
     }
@@ -118,20 +126,25 @@ class ComparisonSortNotifier extends StateNotifier<ComparisonSortingNotifierStat
   }
 
   Future<void> generateAgain(WidgetRef ref) async {
-    for (var element in state.selectedAlgorithms) {
-      ref.read(element.provider.notifier).generateAgain();
-    }
+    final generateAgain = state.selectedAlgorithms.map((e) => ref.read(e.provider.notifier).generateAgain());
+    await Future.wait(generateAgain.toList());
+    _setOperation = SortingEnum.none;
   }
 
   Future<void> playSorting(WidgetRef ref) async {
-    for (var element in state.selectedAlgorithms) {
-      ref.read(element.provider.notifier).playSorting();
-    }
+    if (_getOperation == SortingEnum.played) return;
+
+    final playSorting = state.selectedAlgorithms.map((e) => ref.read(e.provider.notifier).playSorting());
+    _setOperation = SortingEnum.played;
+
+    await Future.wait(playSorting.toList());
+    _setOperation = SortingEnum.none;
   }
 
   void stopSorting(WidgetRef ref) {
     for (var element in state.selectedAlgorithms) {
       ref.read(element.provider.notifier).stopSorting();
     }
+    if (_getOperation == SortingEnum.played) _setOperation = SortingEnum.stopped;
   }
 }
