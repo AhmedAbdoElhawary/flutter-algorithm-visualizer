@@ -11,7 +11,7 @@ part '../helper/sorting_enums.dart';
 part '../helper/sortable_item.dart';
 
 abstract class SortingNotifier extends StateNotifier<SortingNotifierState> {
-  SortingNotifier() : super(SortingNotifierState(list: generateList(_defaultSize))) {
+  SortingNotifier() : super(SortingNotifierState(list: _generateList(_defaultSize))) {
     _initializePositions();
   }
 
@@ -36,7 +36,7 @@ abstract class SortingNotifier extends StateNotifier<SortingNotifierState> {
   int i = 0;
   int j = 0;
 
-  static List<SortableItem> generateList(int size) {
+  static List<SortableItem> _generateList(int size) {
     return List.generate(size, (index) => SortableItem(id: index, value: index + 1))..shuffle();
   }
 
@@ -97,7 +97,7 @@ abstract class SortingNotifier extends StateNotifier<SortingNotifierState> {
     if (operation == SortingEnum.played) return;
     operation = SortingEnum.played;
 
-    await startSelectedSorting();
+    await _startSelectedSorting();
 
     operation = SortingEnum.none;
   }
@@ -109,11 +109,11 @@ abstract class SortingNotifier extends StateNotifier<SortingNotifierState> {
     i = 0;
     j = 0;
 
-    state = state.copyWith(list: generateList(_size));
+    state = state.copyWith(list: _generateList(_size));
     _initializePositions();
   }
 
-  Future<void> greenSortedItemsAsDone() async {
+  Future<void> _greenSortedItemsAsDone() async {
     final list = List<SortableItem>.from(state.list);
 
     for (int i = 0; i < list.length; i++) {
@@ -123,8 +123,8 @@ abstract class SortingNotifier extends StateNotifier<SortingNotifierState> {
     }
   }
 
-  Future<void> startSelectedSorting() async {
-    cancelableSort = CancelableOperation.fromFuture(buildSort());
+  Future<void> _startSelectedSorting() async {
+    cancelableSort = CancelableOperation.fromFuture(_buildSort());
 
     try {
       await cancelableSort?.value;
@@ -133,7 +133,7 @@ abstract class SortingNotifier extends StateNotifier<SortingNotifierState> {
     }
   }
 
-  Future<void> buildSort() async {
+  Future<void> _buildSort() async {
     final list = List<SortableItem>.from(state.list);
     final values = list.map((e) => e.value).toList();
 
@@ -187,7 +187,7 @@ abstract class SortingNotifier extends StateNotifier<SortingNotifierState> {
       await Future.delayed(speedDuration);
     }
 
-    await greenSortedItemsAsDone();
+    await _greenSortedItemsAsDone();
   }
 
   SortingResult buildSorting(List<int> values);
