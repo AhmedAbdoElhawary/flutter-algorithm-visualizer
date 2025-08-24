@@ -30,7 +30,6 @@ abstract class SortingNotifier extends StateNotifier<SortingNotifierState> {
   // static const Duration _maxSpeedDuration = Duration(milliseconds: 3000);
   // static const Duration _minSpeedDuration = Duration(milliseconds: 20);
 
-  SortingEnum _operation = SortingEnum.none;
   CancelableOperation<void>? _cancelableSort;
 
   static List<SortableItem> _generateList(int size) {
@@ -53,11 +52,10 @@ abstract class SortingNotifier extends StateNotifier<SortingNotifierState> {
   Duration get speedDuration => state.swipeDuration;
   int get _size => state.size;
 
-  SortingEnum get _getOperation => _operation;
+  SortingEnum get _getOperation => state.operationStatus;
 
   set _setOperation(SortingEnum value) {
     state = state.copyWith(operationStatus: value);
-    _operation = value;
   }
 
   void _initializePositions() {
