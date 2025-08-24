@@ -56,6 +56,10 @@ class Routes {
     name: 'radixSort',
     path: 'radixSort',
   );
+  static const RouteConfig shellSort = RouteConfig(
+    name: 'shellSort',
+    path: 'shellSort',
+  );
 }
 
 class RouteConfig {
@@ -145,6 +149,13 @@ class AppRoutes {
                 name: Routes.radixSort.name,
                 builder: (context, state) {
                   return const RadixSortPage();
+                },
+              ),
+              GoRoute(
+                path: Routes.shellSort.path,
+                name: Routes.shellSort.name,
+                builder: (context, state) {
+                  return const ShellSortPage();
                 },
               ),
             ],
