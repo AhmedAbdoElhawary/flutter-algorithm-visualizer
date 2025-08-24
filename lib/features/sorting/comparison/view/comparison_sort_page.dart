@@ -59,7 +59,7 @@ class _ComparisonSortPageState extends ConsumerState<ComparisonSortPage> {
                         children: [
                           SpeedDraggable(
                             onChanged: (persent) {
-                              ref.read(_notifierProvider.notifier).changeSpeed(persent,ref);
+                              ref.read(_notifierProvider.notifier).changeSpeed(persent, ref);
                             },
                           ),
                           _SizeDraggable(ref: ref),
@@ -97,7 +97,7 @@ class _SizeDraggable extends StatelessWidget {
     return SizeDraggable(
       isRunning: isRunning,
       onChanged: (persent) {
-        ref.read(_notifierProvider.notifier).changeSize(persent,ref);
+        ref.read(_notifierProvider.notifier).changeSize(persent, ref);
       },
     );
   }
