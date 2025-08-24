@@ -38,6 +38,12 @@ class StringsManager {
   static const String insertionSort = "Insertion sort";
   static const String selectionSort = "Selection sort";
   static const String mergeSort = "Merge sort";
+  static const String heapSort = "Heap sort";
+  static const String quickSort = "Quick sort";
+  static const String radixSort = "Radix sort";
+  static const String shellSort = "Shell sort";
+  static const String countingSort = "Counting sort";
+  static const String bucketSort = "Bucket sort";
 
   static const String stop = "Stop";
   static const String play = "Play";
