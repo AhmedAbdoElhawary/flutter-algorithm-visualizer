@@ -8,14 +8,14 @@
 | **Graphs**     | BFS                        | ✅     |
 |                | DFS                        | ❌     |
 |                | Dijkstra                   | ✅     |
-|                | A* Search                  | ❌     |
+|                | A* Search                  | ✅     |
 |                | ...More                    |         |
 |----------------|----------------------------|---------|
-| **Mazes**      | Backtracking               | ❌     |
+| **Mazes**      | Backtracking               | ✅     |
 |                | Eller's maze               | ❌     |
 |                | Randomized Kruskal's maze  | ❌     |
 |                | Aldous-Broder              | ❌     |
-|                | Recursive Division         | ❌     |
+|                | Recursive Division         | ✅     |
 |                | Binary Tree                | ❌     |
 |----------------|----------------------------|--------|
 | **Sorting**    | Bubble Sort                | ✅     |
