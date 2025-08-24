@@ -53,6 +53,15 @@ class SortingListPage extends StatelessWidget {
                   context.pushTo(Routes.mergeSort);
                 },
               ),
+              CustomRoundedElevatedButton(
+                roundedRadius: 3,
+                backgroundColor: ThemeEnum.whiteD5Color,
+                child: const RegularText(StringsManager.heapSort),
+                onPressed: () {
+                  context.pushTo(Routes.heapSort);
+                },
+              ),
+
             ],
           ),
         ),
