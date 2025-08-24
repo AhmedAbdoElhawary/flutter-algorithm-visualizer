@@ -331,6 +331,86 @@ class SearchingNotifier extends StateNotifier<GridNotifierState> {
     }
   }
 
+  Future<void> performAStar() async {
+    final gridData = List<GridStatus>.from(state.gridData);
+    final startPointIndex = gridData.indexOf(GridStatus.startPoint);
+    final targetPointIndex = gridData.indexOf(GridStatus.targetPoint);
+
+    if (startPointIndex == -1 || targetPointIndex == -1) return;
+
+    final cross = state.columnCrossAxisCount;
+
+    final gScore = List<double>.filled(gridData.length, double.infinity);
+    final fScore = List<double>.filled(gridData.length, double.infinity);
+    final previous = List<int?>.filled(gridData.length, null);
+    final visited = <int>{};
+
+    gScore[startPointIndex] = 0;
+    fScore[startPointIndex] = _heuristic(startPointIndex, targetPointIndex, cross);
+
+    // priority queue based on fScore (g + h)
+    final pq = PriorityQueue<int>((a, b) => fScore[a].compareTo(fScore[b]));
+    pq.add(startPointIndex);
+
+    final directions = [
+      -cross, // up
+      cross, // down
+      -1, // left
+      1, // right
+    ];
+
+    while (pq.isNotEmpty) {
+      final currentIndex = pq.removeFirst();
+
+      if (currentIndex == targetPointIndex) {
+        await _tracePath(previous, currentIndex);
+        return;
+      }
+
+      visited.add(currentIndex);
+
+      for (final direction in directions) {
+        final neighborIndex = currentIndex + direction;
+
+        if (!_isValidNeighbor(currentIndex, neighborIndex, direction, cross, gridData)) {
+          continue;
+        }
+
+        if (visited.contains(neighborIndex)) continue;
+
+        final tentativeG = gScore[currentIndex] + 1; // weight = 1
+
+        if (tentativeG < gScore[neighborIndex]) {
+          gScore[neighborIndex] = tentativeG;
+          fScore[neighborIndex] = tentativeG + _heuristic(neighborIndex, targetPointIndex, cross);
+          previous[neighborIndex] = currentIndex;
+
+          if (!pq.contains(neighborIndex)) {
+            pq.add(neighborIndex);
+          }
+
+          // visualize
+          if (gridData[neighborIndex] != GridStatus.startPoint &&
+              gridData[neighborIndex] != GridStatus.targetPoint) {
+            gridData[neighborIndex] = GridStatus.searcher;
+            state = state.copyWith(gridData: List<GridStatus>.from(gridData));
+            await Future.delayed(drawSearcherDuration);
+          }
+        }
+      }
+    }
+  }
+
+  double _heuristic(int index, int targetIndex, int cross) {
+    // Manhattan distance
+    final x1 = index % cross;
+    final y1 = index ~/ cross;
+    final x2 = targetIndex % cross;
+    final y2 = targetIndex ~/ cross;
+
+    return ((x1 - x2).abs() + (y1 - y2).abs()).toDouble();
+  }
+
   void generateRecursiveBacktrackerMaze() async {
     final gridData = List<GridStatus>.from(state.gridData);
 
