@@ -48,6 +48,10 @@ class Routes {
     name: 'heapSort',
     path: 'heapSort',
   );
+  static const RouteConfig quickSort = RouteConfig(
+    name: 'quickSort',
+    path: 'quickSort',
+  );
 }
 
 class RouteConfig {
@@ -125,7 +129,13 @@ class AppRoutes {
                   return const HeapSortPage();
                 },
               ),
-           
+              GoRoute(
+                path: Routes.quickSort.path,
+                name: Routes.quickSort.name,
+                builder: (context, state) {
+                  return const QuickSortPage();
+                },
+              ),
             ],
           ),
         ],
