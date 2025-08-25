@@ -58,28 +58,32 @@ class _BuildBody extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-      child: Stack(
-        alignment: AlignmentDirectional.bottomCenter,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Align(alignment: AlignmentDirectional.topCenter, child: ShowUpSortingList(instance)),
-          Align(
-            alignment: AlignmentDirectional.bottomCenter,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.end,
-              spacing: 10,
-              children: [
-                _SortingControlButtons(instance),
-                SymmetricPadding(
-                  horizontal: 15,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      _SpeedDraggable(instance: instance),
-                      _SizeDraggable(instance: instance),
-                    ],
+          Flexible(
+            child: Align(
+              alignment: AlignmentDirectional.bottomCenter,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.end,
+                spacing: 10,
+                children: [
+                  Flexible(child: _SortingControlButtons(instance)),
+                  Flexible(
+                    child: SymmetricPadding(
+                      horizontal: 15,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          _SpeedDraggable(instance: instance),
+                          _SizeDraggable(instance: instance),
+                        ],
+                      ),
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ],
@@ -96,11 +100,12 @@ class ShowUpSortingList extends ConsumerWidget {
   Widget build(BuildContext context, ref) {
     final items = ref.watch(instance.select((state) => state.list));
     final speedDuration = ref.watch(instance.select((state) => state.swipeDuration));
+    final maxHeight = SortingNotifier.calculateMaxListItemHeight(context);
 
     return Padding(
       padding: const EdgeInsets.only(top: 5),
       child: RSizedBox(
-        height: selectedAlgorithmLength == 1 ? SortingNotifier.maxListItemHeight * 1.05 : null,
+        height: selectedAlgorithmLength == 1 ? maxHeight*1.01  : null,
         width: double.infinity,
         child: Stack(
           alignment: AlignmentDirectional.bottomCenter,
@@ -156,7 +161,7 @@ class _BuildItem extends ConsumerWidget {
       padding: EdgeInsets.symmetric(horizontal: SortingNotifier.itemsPadding / 2),
       child: AnimatedContainer(
         duration: speedDuration,
-        height: SortingNotifier.calculateItemHeight(item.value, size) / selectedAlgorithmLength,
+        height: SortingNotifier.calculateItemHeight(context, item.value, size) / selectedAlgorithmLength,
         width: itemWidth,
         decoration: BoxDecoration(
           color: context.getColor(currentItem?.getColor ?? SortingNotifier.itemColor),
