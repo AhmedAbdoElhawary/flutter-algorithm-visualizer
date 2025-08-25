@@ -32,7 +32,7 @@ class SearchingPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: _ControlButtons(),
+        title: const _ControlButtons(),
         centerTitle: true,
       ),
       body: SafeArea(
@@ -83,10 +83,10 @@ class _ControlButtons extends StatelessWidget {
                       icon: const Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          MediumText(StringsManager.maze, fontSize: 12),
+                          MediumText(StringsManager.maze, fontSize: 16),
                           CustomIcon(
                             Icons.keyboard_arrow_down_rounded,
-                            size: 16,
+                            size: 20,
                           ),
                         ],
                       ), // 3-dot menu
@@ -124,8 +124,8 @@ class _ControlButtons extends StatelessWidget {
                       icon: const Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          MediumText(StringsManager.visualize, fontSize: 12),
-                          CustomIcon(Icons.keyboard_arrow_down_rounded, size: 16),
+                          MediumText(StringsManager.visualize, fontSize: 16),
+                          CustomIcon(Icons.keyboard_arrow_down_rounded, size: 22),
                         ],
                       ), // 3-dot menu
                     ),
@@ -157,8 +157,8 @@ class _ControlButtons extends StatelessWidget {
                       icon: const Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          MediumText(StringsManager.clear, fontSize: 12, color: ThemeEnum.redColor),
-                          CustomIcon(Icons.keyboard_arrow_down_rounded, size: 16, color: ColorManager.red),
+                          MediumText(StringsManager.clear, fontSize: 16, color: ThemeEnum.redColor),
+                          CustomIcon(Icons.keyboard_arrow_down_rounded, size: 20, color: ColorManager.red),
                         ],
                       ), // 3-dot menu
                     ),
@@ -250,7 +250,8 @@ class _Square extends ConsumerStatefulWidget {
 class _SquareState extends ConsumerState<_Square> {
   @override
   Widget build(BuildContext context) {
-    final isSelected = ref.watch(_gridNotifierProvider.select((it) => it.gridData[widget.index]));
+    final isSelected = ref.watch(_gridNotifierProvider
+        .select((it) => it.gridData.length > widget.index ? it.gridData[widget.index] : GridStatus.empty));
 
     final isColored = isSelected != GridStatus.empty;
     final showBorder = isSelected != GridStatus.empty &&
