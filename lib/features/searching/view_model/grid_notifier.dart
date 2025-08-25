@@ -30,6 +30,9 @@ class SearchingNotifier extends StateNotifier<GridNotifierState> {
   int tapDownIndex = -1;
   GridStatus tapDownGridStatus = GridStatus.empty;
 
+  /// [_isBuildingGrid] if build maze or search or even clear grid
+  bool _isBuildingGrid = false;
+  bool _isSearched = false;
   void updateGridLayout(Size size) {
     final screenWidth = size.width;
     final screenHeight = size.height;
@@ -123,25 +126,47 @@ class SearchingNotifier extends StateNotifier<GridNotifierState> {
     }
   }
 
-  void clearTheGrid({bool keepWall = false}) {
-    _clearTheGrid(addState: state, keepWall: keepWall);
+  Future<void> clearTheGrid({bool keepWall = false, bool clearAnyway = false}) async {
+    if (!clearAnyway && _isBuildingGrid) return;
+    _isBuildingGrid = true;
+
+    await _clearTheGrid(addState: state, keepWall: keepWall);
 
     state = state.copyWith(currentTappedIndex: -1);
+
+    _isSearched = false;
+    _isBuildingGrid = false;
   }
 
   void onPointerDownOnGrid(PointerDownEvent event) {
+    if (_isBuildingGrid) return;
+    _isBuildingGrid = true;
+
     tapDownIndex = _getIndex(addState: state, localPosition: event.localPosition);
+    _isBuildingGrid = false;
   }
 
   void onPointerUpOnGrid(PointerUpEvent event) {
+    if (_isBuildingGrid) return;
+    _isBuildingGrid = true;
+
     tapDownIndex = -1;
+
+    _isBuildingGrid = false;
   }
 
   void onFingerMoveOnGrid(PointerMoveEvent event) {
+    if (_isBuildingGrid) return;
+    _isBuildingGrid = true;
+
     final index = _getIndex(addState: state, localPosition: event.localPosition);
 
     /// to handle multi calls from listener widget
-    if (index == state.currentTappedIndex) return;
+    if (index == state.currentTappedIndex) {
+      _isBuildingGrid = false;
+
+      return;
+    }
 
     if (index >= 0 && index < state.gridData.length) {
       final updatedGridData = List<GridStatus>.from(state.gridData);
@@ -165,6 +190,8 @@ class SearchingNotifier extends StateNotifier<GridNotifierState> {
 
       state = state.copyWith(gridData: updatedGridData, currentTappedIndex: index);
     }
+
+    _isBuildingGrid = false;
   }
 
   int _getIndex({
@@ -183,11 +210,20 @@ class SearchingNotifier extends StateNotifier<GridNotifierState> {
   }
 
   Future<void> performBFS() async {
+    if (_isBuildingGrid) return;
+    _isBuildingGrid = true;
+
+    if (_isSearched) await clearTheGrid(keepWall: true,clearAnyway: true);
+
     final gridData = List<GridStatus>.from(state.gridData);
     final startPointIndex = gridData.indexOf(GridStatus.startPoint);
     final targetPointIndex = gridData.indexOf(GridStatus.targetPoint);
 
-    if (startPointIndex == -1 || targetPointIndex == -1) return;
+    if (startPointIndex == -1 || targetPointIndex == -1) {
+      _isBuildingGrid = false;
+      return;
+    }
+
 
     final queue = Queue<int>();
     final Set<int> visited = <int>{};
@@ -215,6 +251,9 @@ class SearchingNotifier extends StateNotifier<GridNotifierState> {
 
       if (currentIndex == targetPointIndex) {
         _tracePath(previous, currentIndex);
+        _isBuildingGrid = false;
+        _isSearched = true;
+
         return;
       }
 
@@ -239,14 +278,24 @@ class SearchingNotifier extends StateNotifier<GridNotifierState> {
         await Future.delayed(drawSearcherDuration);
       }
     }
+
+    _isBuildingGrid = false;
+    _isSearched = true;
   }
 
   Future<void> performDijkstra() async {
+    if (_isBuildingGrid) return;
+    _isBuildingGrid = true;
+    if (_isSearched) await clearTheGrid(keepWall: true,clearAnyway: true);
+
     final gridData = List<GridStatus>.from(state.gridData);
     final startPointIndex = gridData.indexOf(GridStatus.startPoint);
     final targetPointIndex = gridData.indexOf(GridStatus.targetPoint);
 
-    if (startPointIndex == -1 || targetPointIndex == -1) return;
+    if (startPointIndex == -1 || targetPointIndex == -1) {
+      _isBuildingGrid = false;
+      return;
+    }
 
     final distance = List<double>.filled(gridData.length, double.infinity);
     final previous = List<int?>.filled(gridData.length, null);
@@ -275,6 +324,8 @@ class SearchingNotifier extends StateNotifier<GridNotifierState> {
       // If we reached the target, we trace back the path
       if (currentIndex == targetPointIndex) {
         _tracePath(previous, currentIndex);
+        _isBuildingGrid = false;
+        _isSearched = true;
         return;
       }
 
@@ -302,6 +353,8 @@ class SearchingNotifier extends StateNotifier<GridNotifierState> {
         }
       }
     }
+    _isBuildingGrid = false;
+    _isSearched = true;
   }
 
   bool _isValidNeighbor(
@@ -332,11 +385,19 @@ class SearchingNotifier extends StateNotifier<GridNotifierState> {
   }
 
   Future<void> performAStar() async {
+    if (_isBuildingGrid) return;
+    _isBuildingGrid = true;
+    if (_isSearched) await clearTheGrid(keepWall: true,clearAnyway: true);
+
     final gridData = List<GridStatus>.from(state.gridData);
     final startPointIndex = gridData.indexOf(GridStatus.startPoint);
     final targetPointIndex = gridData.indexOf(GridStatus.targetPoint);
 
-    if (startPointIndex == -1 || targetPointIndex == -1) return;
+    if (startPointIndex == -1 || targetPointIndex == -1) {
+      _isBuildingGrid = false;
+
+      return;
+    }
 
     final cross = state.columnCrossAxisCount;
 
@@ -364,6 +425,9 @@ class SearchingNotifier extends StateNotifier<GridNotifierState> {
 
       if (currentIndex == targetPointIndex) {
         await _tracePath(previous, currentIndex);
+        _isBuildingGrid = false;
+        _isSearched = true;
+
         return;
       }
 
@@ -399,6 +463,8 @@ class SearchingNotifier extends StateNotifier<GridNotifierState> {
         }
       }
     }
+    _isBuildingGrid = false;
+    _isSearched = true;
   }
 
   double _heuristic(int index, int targetIndex, int cross) {
@@ -412,6 +478,8 @@ class SearchingNotifier extends StateNotifier<GridNotifierState> {
   }
 
   void generateRecursiveBacktrackerMaze() async {
+    if (_isBuildingGrid) return;
+    _isBuildingGrid = true;
     final gridData = List<GridStatus>.from(state.gridData);
 
     // Clear the maze but keep start and target points
@@ -434,6 +502,8 @@ class SearchingNotifier extends StateNotifier<GridNotifierState> {
     await _drawWalls(startRow, startCol, gridData);
 
     state = state.copyWith(gridData: gridData);
+    _isBuildingGrid = false;
+    _isSearched = false;
   }
 
   Future<void> _drawBorders(List<GridStatus> gridData) async {
@@ -515,6 +585,8 @@ class SearchingNotifier extends StateNotifier<GridNotifierState> {
 
   // Recursive Division Maze Generation
   Future<void> generateRecursiveDivisionMaze() async {
+    if (_isBuildingGrid) return;
+    _isBuildingGrid = true;
     final gridData = List<GridStatus>.from(state.gridData);
 
     // Step 1: Start with all empty
@@ -543,6 +615,8 @@ class SearchingNotifier extends StateNotifier<GridNotifierState> {
     await _divide(1, 1, state.rowMainAxisCount - 2, state.columnCrossAxisCount - 2, gridData);
 
     state = state.copyWith(gridData: gridData);
+    _isBuildingGrid = false;
+    _isSearched = false;
   }
 
   Future<void> _divide(int row, int col, int height, int width, List<GridStatus> gridData) async {
