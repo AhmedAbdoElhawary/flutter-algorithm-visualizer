@@ -15,7 +15,7 @@ abstract class SortingNotifier extends StateNotifier<SortingNotifierState> {
     _initializePositions();
   }
 
-  static double maxListItemHeight = 250.r;
+  // static double maxListItemHeight = 250.r;
   static double itemsPadding = 1.w;
   static const ThemeEnum swappingColor = ThemeEnum.redColor;
   static const ThemeEnum comparedColor = ThemeEnum.lightBlueColor;
@@ -44,8 +44,15 @@ abstract class SortingNotifier extends StateNotifier<SortingNotifierState> {
     return availableWidth / size > 0 ? availableWidth / size : 1.0;
   }
 
-  static double calculateItemHeight(int itemIndex, int size) {
-    final value = (maxListItemHeight / size) * (itemIndex + 1);
+  static double calculateMaxListItemHeight(BuildContext context) {
+    final screenHeight = MediaQuery.of(context).size.height * 0.65;
+
+    // Ensure a positive width
+    return screenHeight > 0 ? screenHeight : 1.0;
+  }
+
+  static double calculateItemHeight(BuildContext context, int itemIndex, int size) {
+    final value = (calculateMaxListItemHeight(context) / size) * (itemIndex + 1);
     return value.h;
   }
 

@@ -46,11 +46,18 @@ class SearchingPage extends StatelessWidget {
   }
 }
 
-class _ControlButtons extends StatelessWidget {
+class _ControlButtons extends StatefulWidget {
   const _ControlButtons();
 
+  @override
+  State<_ControlButtons> createState() => _ControlButtonsState();
+}
+
+class _ControlButtonsState extends State<_ControlButtons> {
   PopupMenuItem<String> buildPopupMenuItem(String value, [ThemeEnum? color]) {
-    return PopupMenuItem(value: value, child: RegularText(value, fontSize: 12, color: color));
+    final isLargeScreen = MediaQuery.sizeOf(context).width > 500;
+    return PopupMenuItem(
+        value: value, child: RegularText(value, fontSize: isLargeScreen ? 16 : 14, color: color));
   }
 
   @override
