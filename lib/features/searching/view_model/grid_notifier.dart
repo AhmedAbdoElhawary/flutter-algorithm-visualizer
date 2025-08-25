@@ -20,7 +20,9 @@ class MazeDirection {
 
 class SearchingNotifier extends StateNotifier<GridNotifierState> {
   SearchingNotifier() : super(GridNotifierState());
-  final int columnSquares = 26; // make it odd always
+
+  /// [_gridSquareSize]
+  final double _gridSquareSize = 24;
   static const Duration scaleAppearDurationForWall = Duration(milliseconds: 700);
   static const Duration clearDuration = Duration(microseconds: 1);
   static const Duration drawFindingPathDuration = Duration(milliseconds: 2);
@@ -37,11 +39,8 @@ class SearchingNotifier extends StateNotifier<GridNotifierState> {
     final screenWidth = size.width;
     final screenHeight = size.height;
 
-    final double gridSize =
-        (screenWidth < screenHeight) ? screenWidth / columnSquares : screenHeight / columnSquares;
-
-    final columnCrossAxisCount = (screenWidth / gridSize).floor();
-    final rowMainAxisCount = (screenHeight / gridSize).floor();
+    final columnCrossAxisCount = (screenWidth / _gridSquareSize).floor();
+    final rowMainAxisCount = (screenHeight / _gridSquareSize).floor();
 
     final count = columnCrossAxisCount * rowMainAxisCount;
 
@@ -49,7 +48,7 @@ class SearchingNotifier extends StateNotifier<GridNotifierState> {
       columnCrossAxisCount: columnCrossAxisCount,
       rowMainAxisCount: rowMainAxisCount,
       gridCount: count,
-      gridSize: gridSize,
+      gridSize: _gridSquareSize,
       screenWidth: screenWidth,
       screenHeight: screenHeight,
     );
@@ -213,7 +212,7 @@ class SearchingNotifier extends StateNotifier<GridNotifierState> {
     if (_isBuildingGrid) return;
     _isBuildingGrid = true;
 
-    if (_isSearched) await clearTheGrid(keepWall: true,clearAnyway: true);
+    if (_isSearched) await clearTheGrid(keepWall: true, clearAnyway: true);
 
     final gridData = List<GridStatus>.from(state.gridData);
     final startPointIndex = gridData.indexOf(GridStatus.startPoint);
@@ -223,7 +222,6 @@ class SearchingNotifier extends StateNotifier<GridNotifierState> {
       _isBuildingGrid = false;
       return;
     }
-
 
     final queue = Queue<int>();
     final Set<int> visited = <int>{};
@@ -286,7 +284,7 @@ class SearchingNotifier extends StateNotifier<GridNotifierState> {
   Future<void> performDijkstra() async {
     if (_isBuildingGrid) return;
     _isBuildingGrid = true;
-    if (_isSearched) await clearTheGrid(keepWall: true,clearAnyway: true);
+    if (_isSearched) await clearTheGrid(keepWall: true, clearAnyway: true);
 
     final gridData = List<GridStatus>.from(state.gridData);
     final startPointIndex = gridData.indexOf(GridStatus.startPoint);
@@ -387,7 +385,7 @@ class SearchingNotifier extends StateNotifier<GridNotifierState> {
   Future<void> performAStar() async {
     if (_isBuildingGrid) return;
     _isBuildingGrid = true;
-    if (_isSearched) await clearTheGrid(keepWall: true,clearAnyway: true);
+    if (_isSearched) await clearTheGrid(keepWall: true, clearAnyway: true);
 
     final gridData = List<GridStatus>.from(state.gridData);
     final startPointIndex = gridData.indexOf(GridStatus.startPoint);
@@ -480,6 +478,8 @@ class SearchingNotifier extends StateNotifier<GridNotifierState> {
   void generateRecursiveBacktrackerMaze() async {
     if (_isBuildingGrid) return;
     _isBuildingGrid = true;
+    if (_isSearched) await clearTheGrid(clearAnyway: true);
+
     final gridData = List<GridStatus>.from(state.gridData);
 
     // Clear the maze but keep start and target points
@@ -503,7 +503,7 @@ class SearchingNotifier extends StateNotifier<GridNotifierState> {
 
     state = state.copyWith(gridData: gridData);
     _isBuildingGrid = false;
-    _isSearched = false;
+    _isSearched = true;
   }
 
   Future<void> _drawBorders(List<GridStatus> gridData) async {
@@ -587,6 +587,8 @@ class SearchingNotifier extends StateNotifier<GridNotifierState> {
   Future<void> generateRecursiveDivisionMaze() async {
     if (_isBuildingGrid) return;
     _isBuildingGrid = true;
+    if (_isSearched) await clearTheGrid(clearAnyway: true);
+
     final gridData = List<GridStatus>.from(state.gridData);
 
     // Step 1: Start with all empty
@@ -616,7 +618,7 @@ class SearchingNotifier extends StateNotifier<GridNotifierState> {
 
     state = state.copyWith(gridData: gridData);
     _isBuildingGrid = false;
-    _isSearched = false;
+    _isSearched = true;
   }
 
   Future<void> _divide(int row, int col, int height, int width, List<GridStatus> gridData) async {
