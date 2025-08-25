@@ -2,7 +2,6 @@ import 'package:algorithm_visualizer/core/resources/color_manager.dart';
 import 'package:algorithm_visualizer/core/resources/strings_manager.dart';
 import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
 import 'package:algorithm_visualizer/core/widgets/adaptive/text/adaptive_text.dart';
-import 'package:algorithm_visualizer/core/widgets/custom_widgets/custom_dialog.dart';
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/custom_icon.dart';
 import 'package:algorithm_visualizer/features/searching/view_model/grid_notifier.dart';
 import 'package:flutter/material.dart';
@@ -33,65 +32,120 @@ class SearchingPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        actions: [
-          Consumer(
-            builder: (context, ref, _) {
-              return TextButton(
-                onPressed: () {
-                  CustomAlertDialog(context).solidDialog(
-                    parameters: [
-                      ListDialogParameters(
-                        text: StringsManager.recursiveBacktrackerMaze,
-                        onTap: () {
-                          ref.read(_gridNotifierProvider.notifier).generateRecursiveBacktrackerMaze();
+        title: Consumer(builder: (context, ref, _) {
+          return Row(
+            children: [
+              Expanded(
+                flex: 4,
+                child: SizedBox(
+                  width: double.infinity,
+                  height: 40.r,
+                  child: Center(
+                    child: FittedBox(
+                      fit: BoxFit.scaleDown,
+                      child: PopupMenuButton<String>(
+                        position: PopupMenuPosition.under,
+                        onSelected: (value) {
+                          if (value == StringsManager.recursiveBacktrackerMaze) {
+                            ref.read(_gridNotifierProvider.notifier).generateRecursiveBacktrackerMaze();
+                          } else if (value == StringsManager.recursiveDivisionMaze) {
+                            ref.read(_gridNotifierProvider.notifier).generateRecursiveDivisionMaze();
+                          }
                         },
+                        itemBuilder: (context) => [
+                          buildPopupMenuItem(StringsManager.recursiveBacktrackerMaze),
+                          buildPopupMenuItem(StringsManager.recursiveDivisionMaze),
+                        ],
+                        icon: const Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            MediumText(StringsManager.generateMaze, fontSize: 12),
+                            CustomIcon(
+                              Icons.keyboard_arrow_down_rounded,
+                              size: 16,
+                            ),
+                          ],
+                        ), // 3-dot menu
                       ),
-                      ListDialogParameters(
-                        text: StringsManager.recursiveDivisionMaze,
-                        onTap: () {
-                          ref.read(_gridNotifierProvider.notifier).generateRecursiveDivisionMaze();
+                    ),
+                  ),
+                ),
+              ),
+              Expanded(
+                flex: 3,
+                child: SizedBox(
+                  width: double.infinity,
+                  height: 40.r,
+                  child: FittedBox(
+                    fit: BoxFit.scaleDown,
+                    child: Center(
+                      child: PopupMenuButton<String>(
+                        position: PopupMenuPosition.under,
+                        style: const ButtonStyle(
+                            backgroundColor: WidgetStatePropertyAll(ColorManager.finishedSearcherBlue)),
+                        onSelected: (value) {
+                          if (value == StringsManager.dijkstra) {
+                            ref.read(_gridNotifierProvider.notifier).performDijkstra();
+                          } else if (value == StringsManager.aStarSearch) {
+                            ref.read(_gridNotifierProvider.notifier).performAStar();
+                          } else if (value == StringsManager.bFS) {
+                            ref.read(_gridNotifierProvider.notifier).performBFS();
+                          }
                         },
+                        itemBuilder: (context) => [
+                          buildPopupMenuItem(StringsManager.dijkstra),
+                          buildPopupMenuItem(StringsManager.aStarSearch),
+                          buildPopupMenuItem(StringsManager.bFS),
+                        ],
+                        icon: const Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            MediumText(StringsManager.visualize, fontSize: 12),
+                            CustomIcon(Icons.keyboard_arrow_down_rounded, size: 16),
+                          ],
+                        ), // 3-dot menu
                       ),
-                      ListDialogParameters(
-                        text: StringsManager.dijkstra,
-                        onTap: () {
-                          ref.read(_gridNotifierProvider.notifier).performDijkstra();
+                    ),
+                  ),
+                ),
+              ),
+              Expanded(
+                flex: 3,
+                child: SizedBox(
+                  width: double.infinity,
+                  height: 40.r,
+                  child: FittedBox(
+                    fit: BoxFit.scaleDown,
+                    child: Center(
+                      child: PopupMenuButton<String>(
+                        position: PopupMenuPosition.under,
+                        onSelected: (value) {
+                          if (value == StringsManager.clearPath) {
+                            ref.read(_gridNotifierProvider.notifier).clearTheGrid(keepWall: true);
+                          } else if (value == StringsManager.clearAll) {
+                            ref.read(_gridNotifierProvider.notifier).clearTheGrid();
+                          }
                         },
+                        itemBuilder: (context) => [
+                          buildPopupMenuItem(StringsManager.clearPath, ThemeEnum.redColor),
+                          buildPopupMenuItem(StringsManager.clearAll, ThemeEnum.redColor),
+                        ],
+                        icon: const Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            MediumText(StringsManager.clear, fontSize: 12, color: ThemeEnum.redColor),
+                            CustomIcon(Icons.keyboard_arrow_down_rounded, size: 16, color: ColorManager.red),
+                          ],
+                        ), // 3-dot menu
                       ),
-                      ListDialogParameters(
-                        text: StringsManager.aStarSearch,
-                        onTap: () {
-                          ref.read(_gridNotifierProvider.notifier).performAStar();
-                        },
-                      ),
-                      ListDialogParameters(
-                        text: StringsManager.bFS,
-                        onTap: () {
-                          ref.read(_gridNotifierProvider.notifier).performBFS();
-                        },
-                      ),
-                      ListDialogParameters(
-                        text: StringsManager.clearPath,
-                        color: ThemeEnum.redColor,
-                        onTap: () {
-                          ref.read(_gridNotifierProvider.notifier).clearTheGrid(keepWall: true);
-                        },
-                      ),
-                      ListDialogParameters(
-                        text: StringsManager.clearAll,
-                        color: ThemeEnum.redColor,
-                        onTap: () {
-                          ref.read(_gridNotifierProvider.notifier).clearTheGrid();
-                        },
-                      ),
-                    ],
-                  );
-                },
-                child: const CustomIcon(Icons.menu_rounded),
-              );
-            },
-          ),
-        ],
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          );
+        }),
+        centerTitle: true,
       ),
       body: SafeArea(
         child: LayoutBuilder(
@@ -101,6 +155,10 @@ class SearchingPage extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  PopupMenuItem<String> buildPopupMenuItem(String value, [ThemeEnum? color]) {
+    return PopupMenuItem(value: value, child: RegularText(value, fontSize: 12, color: color));
   }
 }
 
