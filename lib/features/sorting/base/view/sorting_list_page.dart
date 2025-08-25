@@ -19,7 +19,7 @@ class SortingListPage extends StatelessWidget {
       body: const SafeArea(
         child: Center(
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               _CustomButton(text: StringsManager.bubbleSort, route: Routes.bubbleSort),
               _CustomButton(text: StringsManager.insertionSort, route: Routes.insertionSort),
