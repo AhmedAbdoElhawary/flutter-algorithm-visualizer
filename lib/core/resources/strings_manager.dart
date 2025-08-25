@@ -46,6 +46,8 @@ class StringsManager {
   static const String bucketSort = "Bucket sort";
   static const String comparisonSort = "Comparison sort";
   static const String comparisonAlgorithms = "Comparison algorithms";
+  static const String generateMaze = "Generate Maze";
+  static const String visualize = "Visualize";
 
   static const String stop = "Stop";
   static const String play = "Play";
