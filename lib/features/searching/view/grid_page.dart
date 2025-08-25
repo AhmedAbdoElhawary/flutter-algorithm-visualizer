@@ -60,7 +60,7 @@ class _ControlButtons extends StatelessWidget {
         return Row(
           children: [
             Expanded(
-              flex: 4,
+              flex: 8,
               child: SizedBox(
                 width: double.infinity,
                 height: 40.r,
@@ -96,7 +96,7 @@ class _ControlButtons extends StatelessWidget {
               ),
             ),
             Expanded(
-              flex: 7,
+              flex: 10,
               child: SizedBox(
                 width: double.infinity,
                 height: 40.r,
@@ -134,7 +134,7 @@ class _ControlButtons extends StatelessWidget {
               ),
             ),
             Expanded(
-              flex: 7,
+              flex: 10,
               child: SizedBox(
                 width: double.infinity,
                 height: 40.r,
