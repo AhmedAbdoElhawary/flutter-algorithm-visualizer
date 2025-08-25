@@ -59,7 +59,7 @@ class SearchingPage extends StatelessWidget {
                         icon: const Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            MediumText(StringsManager.generateMaze, fontSize: 12),
+                            MediumText(StringsManager.maze, fontSize: 12),
                             CustomIcon(
                               Icons.keyboard_arrow_down_rounded,
                               size: 16,
@@ -72,7 +72,7 @@ class SearchingPage extends StatelessWidget {
                 ),
               ),
               Expanded(
-                flex: 3,
+                flex: 7,
                 child: SizedBox(
                   width: double.infinity,
                   height: 40.r,
@@ -110,7 +110,7 @@ class SearchingPage extends StatelessWidget {
                 ),
               ),
               Expanded(
-                flex: 3,
+                flex: 7,
                 child: SizedBox(
                   width: double.infinity,
                   height: 40.r,
