@@ -105,7 +105,7 @@ class ShowUpSortingList extends ConsumerWidget {
     return Padding(
       padding: const EdgeInsets.only(top: 5),
       child: RSizedBox(
-        height: selectedAlgorithmLength == 1 ? maxHeight*1.01  : null,
+        height: selectedAlgorithmLength == 1 ? maxHeight * 1.01 : null,
         width: double.infinity,
         child: Stack(
           alignment: AlignmentDirectional.bottomCenter,
@@ -161,7 +161,7 @@ class _BuildItem extends ConsumerWidget {
       padding: EdgeInsets.symmetric(horizontal: SortingNotifier.itemsPadding / 2),
       child: AnimatedContainer(
         duration: speedDuration,
-        height: SortingNotifier.calculateItemHeight(context, item.value, size) / selectedAlgorithmLength,
+        height: SortingNotifier.calculateItemHeight(context, item.value, size, selectedAlgorithmLength),
         width: itemWidth,
         decoration: BoxDecoration(
           color: context.getColor(currentItem?.getColor ?? SortingNotifier.itemColor),
