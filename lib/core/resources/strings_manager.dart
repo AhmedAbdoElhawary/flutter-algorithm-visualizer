@@ -48,6 +48,7 @@ class StringsManager {
   static const String comparisonAlgorithms = "Comparison algorithms";
   static const String generateMaze = "Generate Maze";
   static const String visualize = "Visualize";
+  static const String maze = "Maze";
 
   static const String stop = "Stop";
   static const String play = "Play";
