@@ -51,9 +51,23 @@ abstract class SortingNotifier extends StateNotifier<SortingNotifierState> {
     return screenHeight > 0 ? screenHeight : 1.0;
   }
 
-  static double calculateItemHeight(BuildContext context, int itemIndex, int size) {
+  static double calculateItemHeight(
+    BuildContext context,
+    int itemIndex,
+    int size,
+    int selectedAlgorithmsLength,
+  ) {
     final value = (calculateMaxListItemHeight(context) / size) * (itemIndex + 1);
-    return value.h;
+    final perc = selectedAlgorithmsLength == 1
+        ? 1
+        : selectedAlgorithmsLength <= 3
+            ? 0.9
+            : selectedAlgorithmsLength <= 6
+                ? 0.8
+                : selectedAlgorithmsLength <= 9
+                    ? 0.7
+                    : 0.6;
+    return value.h / selectedAlgorithmsLength * perc;
   }
 
   Duration get speedDuration => state.swipeDuration;
