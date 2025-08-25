@@ -14,7 +14,8 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const defaultSize = Size(360, 690);
+
+    final defaultSize = MediaQuery.sizeOf(context);
 
     return ScreenUtilInit(
       designSize: defaultSize,
