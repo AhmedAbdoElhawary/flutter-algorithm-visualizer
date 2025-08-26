@@ -9,14 +9,8 @@ final _notifierProvider = StateNotifierProvider<SortingNotifier, SortingNotifier
   (ref) => CountingSortNotifier(),
 );
 
-class CountingSortPage extends StatefulWidget {
+class CountingSortPage extends StatelessWidget {
   const CountingSortPage({super.key});
-
-  @override
-  State<CountingSortPage> createState() => _CountingSortPageState();
-}
-
-class _CountingSortPageState extends State<CountingSortPage> {
 
   @override
   Widget build(BuildContext context) {
