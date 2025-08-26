@@ -104,18 +104,23 @@ abstract class SortingNotifier extends StateNotifier<SortingNotifierState> {
     generateAgain();
   }
 
-  void stopSorting() {
-    _cancelableSort?.cancel();
+  Future<void> cancelSorting() async {
+   await _cancelableSort?.cancel();
+  }
+
+  Future<void> stopSorting() async {
+   await _cancelableSort?.cancel();
     if (_getOperation == SortingEnum.played) _setOperation = SortingEnum.stopped;
   }
 
-  Future<void> playSorting() async {
+  Future<void> playSorting(BuildContext context) async {
     if (_getOperation == SortingEnum.played) return;
     _setOperation = SortingEnum.played;
 
     await _startSelectedSorting();
 
-    _setOperation = SortingEnum.none;
+// to avoid error of mounted when popup while the sorting algorithm still running
+    if (context.mounted) _setOperation = SortingEnum.none;
   }
 
   Future<void> generateAgain() async {
