@@ -9,14 +9,9 @@ final _notifierProvider = StateNotifierProvider<SortingNotifier, SortingNotifier
   (ref) => RadixSortNotifier(),
 );
 
-class RadixSortPage extends StatefulWidget {
+class RadixSortPage extends StatelessWidget {
   const RadixSortPage({super.key});
 
-  @override
-  State<RadixSortPage> createState() => _RadixSortPageState();
-}
-
-class _RadixSortPageState extends State<RadixSortPage> {
   @override
   Widget build(BuildContext context) {
     return SortingPage(instance: _notifierProvider, title: StringsManager.radixSort);

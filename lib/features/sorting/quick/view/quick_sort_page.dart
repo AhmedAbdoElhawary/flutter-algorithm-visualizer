@@ -9,14 +9,9 @@ final _notifierProvider = StateNotifierProvider<SortingNotifier, SortingNotifier
   (ref) => QuickSortNotifier(),
 );
 
-class QuickSortPage extends StatefulWidget {
+class QuickSortPage extends StatelessWidget {
   const QuickSortPage({super.key});
 
-  @override
-  State<QuickSortPage> createState() => _QuickSortPageState();
-}
-
-class _QuickSortPageState extends State<QuickSortPage> {
   @override
   Widget build(BuildContext context) {
     return SortingPage(instance: _notifierProvider, title: StringsManager.quickSort);
