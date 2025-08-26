@@ -9,14 +9,8 @@ final _notifierProvider = StateNotifierProvider<SortingNotifier, SortingNotifier
   (ref) => MergeSortNotifier(),
 );
 
-class MergeSortPage extends StatefulWidget {
+class MergeSortPage extends StatelessWidget {
   const MergeSortPage({super.key});
-
-  @override
-  State<MergeSortPage> createState() => _MergeSortPageState();
-}
-
-class _MergeSortPageState extends State<MergeSortPage> {
 
   @override
   Widget build(BuildContext context) {
