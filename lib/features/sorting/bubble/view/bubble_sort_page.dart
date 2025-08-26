@@ -18,12 +18,6 @@ class BubbleSortPage extends ConsumerStatefulWidget {
 
 class _BubbleSortPageState extends ConsumerState<BubbleSortPage> {
   @override
-  void deactivate() {
-    ref.invalidate(_notifierProvider); // deletes current instance and resets
-    super.deactivate();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return SortingPage(instance: _notifierProvider, title: StringsManager.bubbleSort);
   }
