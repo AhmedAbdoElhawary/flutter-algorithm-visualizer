@@ -9,14 +9,9 @@ final _notifierProvider = StateNotifierProvider<SortingNotifier, SortingNotifier
   (ref) => BucketSortNotifier(),
 );
 
-class BucketSortPage extends StatefulWidget {
+class BucketSortPage extends StatelessWidget {
   const BucketSortPage({super.key});
 
-  @override
-  State<BucketSortPage> createState() => _BucketSortPageState();
-}
-
-class _BucketSortPageState extends State<BucketSortPage> {
   @override
   Widget build(BuildContext context) {
     return SortingPage(instance: _notifierProvider, title: StringsManager.bucketSort);
