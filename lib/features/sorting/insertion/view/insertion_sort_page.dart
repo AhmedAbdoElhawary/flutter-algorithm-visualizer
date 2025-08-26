@@ -9,20 +9,14 @@ final _notifierProvider = StateNotifierProvider<SortingNotifier, SortingNotifier
   (ref) => InsertionSortNotifier(),
 );
 
-class InsertionSortPage extends ConsumerStatefulWidget {
+class InsertionSortPage extends StatefulWidget {
   const InsertionSortPage({super.key});
 
   @override
-  ConsumerState<InsertionSortPage> createState() => _InsertionSortPageState();
+  State<InsertionSortPage> createState() => _InsertionSortPageState();
 }
 
-class _InsertionSortPageState extends ConsumerState<InsertionSortPage> {
-  @override
-  void deactivate() {
-    ref.invalidate(_notifierProvider); // deletes current instance and resets
-    super.deactivate();
-  }
-
+class _InsertionSortPageState extends State<InsertionSortPage> {
   @override
   Widget build(BuildContext context) {
     return SortingPage(instance: _notifierProvider, title: StringsManager.insertionSort);
