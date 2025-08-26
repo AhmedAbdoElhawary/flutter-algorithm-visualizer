@@ -25,21 +25,29 @@ BorderDirectional _thineVerticalBorder() => BorderDirectional(
       bottom: _borderSide(true),
     );
 
-class SearchingPage extends StatelessWidget {
+class SearchingPage extends ConsumerWidget {
   const SearchingPage({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const _ControlButtons(),
-        centerTitle: true,
-      ),
-      body: SafeArea(
-        child: LayoutBuilder(
-          builder: (BuildContext context, BoxConstraints constraints) {
-            return _BuildLayout(constraints.biggest);
-          },
+  Widget build(BuildContext context, WidgetRef ref) {
+    return PopScope(
+      onPopInvokedWithResult: (didPop, result) async {
+        if (didPop) {
+          await ref.read(_gridNotifierProvider.notifier).cancelSearching();
+          ref.invalidate(_gridNotifierProvider);
+        }
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          title: const _ControlButtons(),
+          centerTitle: true,
+        ),
+        body: SafeArea(
+          child: LayoutBuilder(
+            builder: (BuildContext context, BoxConstraints constraints) {
+              return _BuildLayout(constraints.biggest);
+            },
+          ),
         ),
       ),
     );

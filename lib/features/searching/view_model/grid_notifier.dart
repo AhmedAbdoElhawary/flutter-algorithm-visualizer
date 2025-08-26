@@ -1,5 +1,6 @@
 import 'dart:collection';
 import 'dart:math';
+import 'package:async/async.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -25,16 +26,22 @@ class SearchingNotifier extends StateNotifier<GridNotifierState> {
   final double _gridSquareSize = 25;
   static const Duration scaleAppearDurationForWall = Duration(milliseconds: 700);
   static const Duration clearDuration = Duration(microseconds: 1);
-  static const Duration drawFindingPathDuration = Duration(milliseconds: 2);
-  static const Duration drawSearcherDuration = Duration(milliseconds: 5);
+  static const Duration drawSearcherDuration = Duration(milliseconds: 25);
   static const Duration mazeDuration = Duration(milliseconds: 10);
 
   int tapDownIndex = -1;
   GridStatus tapDownGridStatus = GridStatus.empty;
+  CancelableOperation<void>? _cancelableSearch;
 
   /// [_isBuildingGrid] if build maze or search or even clear grid
   bool _isBuildingGrid = false;
   bool _isSearched = false;
+
+  Future<void> cancelSearching() async {
+    await _cancelableSearch?.cancel();
+    // _cancelableSearch=null;
+  }
+
   void updateGridLayout(Size size) {
     final screenWidth = size.width;
     final screenHeight = size.height;
@@ -129,6 +136,19 @@ class SearchingNotifier extends StateNotifier<GridNotifierState> {
     if (!clearAnyway && _isBuildingGrid) return;
     _isBuildingGrid = true;
 
+    await cancelSearching();
+
+    _cancelableSearch =
+        CancelableOperation.fromFuture(_clearTheGridFun(clearAnyway: clearAnyway, keepWall: keepWall));
+
+    try {
+      await _cancelableSearch?.value;
+    } catch (e) {
+      debugPrint("something wrong with clearTheGrid: $e");
+    }
+  }
+
+  Future<void> _clearTheGridFun({bool keepWall = false, bool clearAnyway = false}) async {
     await _clearTheGrid(addState: state, keepWall: keepWall);
 
     state = state.copyWith(currentTappedIndex: -1);
@@ -138,20 +158,11 @@ class SearchingNotifier extends StateNotifier<GridNotifierState> {
   }
 
   void onPointerDownOnGrid(PointerDownEvent event) {
-    if (_isBuildingGrid) return;
-    _isBuildingGrid = true;
-
     tapDownIndex = _getIndex(addState: state, localPosition: event.localPosition);
-    _isBuildingGrid = false;
   }
 
   void onPointerUpOnGrid(PointerUpEvent event) {
-    if (_isBuildingGrid) return;
-    _isBuildingGrid = true;
-
     tapDownIndex = -1;
-
-    _isBuildingGrid = false;
   }
 
   void onFingerMoveOnGrid(PointerMoveEvent event) {
@@ -211,7 +222,18 @@ class SearchingNotifier extends StateNotifier<GridNotifierState> {
   Future<void> performBFS() async {
     if (_isBuildingGrid) return;
     _isBuildingGrid = true;
+    await cancelSearching();
 
+    _cancelableSearch = CancelableOperation.fromFuture(_performBFSFun());
+
+    try {
+      await _cancelableSearch?.value;
+    } catch (e) {
+      debugPrint("something wrong with performBFS: $e");
+    }
+  }
+
+  Future<void> _performBFSFun() async {
     if (_isSearched) await clearTheGrid(keepWall: true, clearAnyway: true);
 
     final gridData = List<GridStatus>.from(state.gridData);
@@ -284,6 +306,18 @@ class SearchingNotifier extends StateNotifier<GridNotifierState> {
   Future<void> performDijkstra() async {
     if (_isBuildingGrid) return;
     _isBuildingGrid = true;
+    await cancelSearching();
+
+    _cancelableSearch = CancelableOperation.fromFuture(_performDijkstraFun());
+
+    try {
+      await _cancelableSearch?.value;
+    } catch (e) {
+      debugPrint("something wrong with performDijkstra: $e");
+    }
+  }
+
+  Future<void> _performDijkstraFun() async {
     if (_isSearched) await clearTheGrid(keepWall: true, clearAnyway: true);
 
     final gridData = List<GridStatus>.from(state.gridData);
@@ -385,6 +419,18 @@ class SearchingNotifier extends StateNotifier<GridNotifierState> {
   Future<void> performAStar() async {
     if (_isBuildingGrid) return;
     _isBuildingGrid = true;
+    await cancelSearching();
+
+    _cancelableSearch = CancelableOperation.fromFuture(_performAStarFun());
+
+    try {
+      await _cancelableSearch?.value;
+    } catch (e) {
+      debugPrint("something wrong with performAStar: $e");
+    }
+  }
+
+  Future<void> _performAStarFun() async {
     if (_isSearched) await clearTheGrid(keepWall: true, clearAnyway: true);
 
     final gridData = List<GridStatus>.from(state.gridData);
@@ -475,9 +521,21 @@ class SearchingNotifier extends StateNotifier<GridNotifierState> {
     return ((x1 - x2).abs() + (y1 - y2).abs()).toDouble();
   }
 
-  void generateRecursiveBacktrackerMaze() async {
+  Future<void> generateRecursiveBacktrackerMaze() async {
     if (_isBuildingGrid) return;
     _isBuildingGrid = true;
+    await cancelSearching();
+
+    _cancelableSearch = CancelableOperation.fromFuture(_generateRecursiveBacktrackerMazeFun());
+
+    try {
+      await _cancelableSearch?.value;
+    } catch (e) {
+      debugPrint("something wrong with generateRecursiveBacktrackerMaze: $e");
+    }
+  }
+
+  Future<void> _generateRecursiveBacktrackerMazeFun() async {
     if (_isSearched) await clearTheGrid(clearAnyway: true);
 
     final gridData = List<GridStatus>.from(state.gridData);
@@ -583,10 +641,22 @@ class SearchingNotifier extends StateNotifier<GridNotifierState> {
     return row > 1 && col > 1 && row < state.rowMainAxisCount - 2 && col < state.columnCrossAxisCount - 2;
   }
 
-  // Recursive Division Maze Generation
   Future<void> generateRecursiveDivisionMaze() async {
     if (_isBuildingGrid) return;
     _isBuildingGrid = true;
+    await cancelSearching();
+
+    _cancelableSearch = CancelableOperation.fromFuture(_generateRecursiveDivisionMazeFun());
+
+    try {
+      await _cancelableSearch?.value;
+    } catch (e) {
+      debugPrint("something wrong with generateRecursiveDivisionMaze: $e");
+    }
+  }
+
+  // Recursive Division Maze Generation
+  Future<void> _generateRecursiveDivisionMazeFun() async {
     if (_isSearched) await clearTheGrid(clearAnyway: true);
 
     final gridData = List<GridStatus>.from(state.gridData);
