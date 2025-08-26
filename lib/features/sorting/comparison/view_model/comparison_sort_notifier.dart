@@ -11,6 +11,7 @@ import 'package:algorithm_visualizer/features/sorting/radix/view_model/radix_sor
 import 'package:algorithm_visualizer/features/sorting/selection/view_model/selection_sort_notifier.dart';
 import 'package:algorithm_visualizer/features/sorting/shell/view_model/shell_sort_notifier.dart';
 import 'package:collection/collection.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 part 'comparison_sort_state.dart';
 
@@ -138,20 +139,27 @@ class ComparisonSortNotifier extends StateNotifier<ComparisonSortingNotifierStat
     _setOperation = SortingEnum.none;
   }
 
-  Future<void> playSorting(WidgetRef ref) async {
+  Future<void> playSorting(BuildContext context, WidgetRef ref) async {
     if (_getOperation == SortingEnum.played) return;
 
-    final playSorting = state.selectedAlgorithms.map((e) => ref.read(e.provider.notifier).playSorting());
+    final playSorting =
+        state.selectedAlgorithms.map((e) => ref.read(e.provider.notifier).playSorting(context));
     _setOperation = SortingEnum.played;
 
     await Future.wait(playSorting.toList());
-    _setOperation = SortingEnum.none;
+    if (context.mounted) _setOperation = SortingEnum.none;
   }
 
-  void stopSorting(WidgetRef ref) {
-    for (var element in state.selectedAlgorithms) {
-      ref.read(element.provider.notifier).stopSorting();
-    }
+  Future<void> stopSorting(WidgetRef ref) async {
+    final stopSorting = state.selectedAlgorithms.map((e) => ref.read(e.provider.notifier).stopSorting());
+    _setOperation = SortingEnum.played;
+
+    await Future.wait(stopSorting.toList());
+
     if (_getOperation == SortingEnum.played) _setOperation = SortingEnum.stopped;
+  }
+  Future<void> cancelSorting(WidgetRef ref) async {
+    final cancelSorting = state.selectedAlgorithms.map((e) => ref.read(e.provider.notifier).cancelSorting());
+    await Future.wait(cancelSorting.toList());
   }
 }
