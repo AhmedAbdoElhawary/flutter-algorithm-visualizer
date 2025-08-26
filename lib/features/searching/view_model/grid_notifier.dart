@@ -169,7 +169,16 @@ class SearchingNotifier extends StateNotifier<GridNotifierState> {
     if (_isBuildingGrid) return;
     _isBuildingGrid = true;
 
-    final index = _getIndex(addState: state, localPosition: event.localPosition);
+    int index = _getIndex(addState: state, localPosition: event.localPosition);
+
+    /// when you try to draw on the right border if you make the arrow closly to the border it will draw the wall in the left side (the next index)
+    /// those two lines to prevent that
+    final calcIndex = (event.localPosition.dx / _gridSquareSize).floor();
+    if (calcIndex != 0 &&
+        calcIndex % state.columnCrossAxisCount == 0 &&
+        index % state.columnCrossAxisCount == 0) {
+      index--;
+    }
 
     /// to handle multi calls from listener widget
     if (index == state.currentTappedIndex) {
