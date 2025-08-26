@@ -9,14 +9,14 @@ final _notifierProvider = StateNotifierProvider<SortingNotifier, SortingNotifier
   (ref) => BubbleSortNotifier(),
 );
 
-class BubbleSortPage extends ConsumerStatefulWidget {
+class BubbleSortPage extends StatefulWidget {
   const BubbleSortPage({super.key});
 
   @override
-  ConsumerState<BubbleSortPage> createState() => _BubbleSortPageState();
+  State<BubbleSortPage> createState() => _BubbleSortPageState();
 }
 
-class _BubbleSortPageState extends ConsumerState<BubbleSortPage> {
+class _BubbleSortPageState extends State<BubbleSortPage> {
   @override
   Widget build(BuildContext context) {
     return SortingPage(instance: _notifierProvider, title: StringsManager.bubbleSort);
