@@ -9,14 +9,9 @@ final _notifierProvider = StateNotifierProvider<SortingNotifier, SortingNotifier
   (ref) => ShellSortNotifier(),
 );
 
-class ShellSortPage extends StatefulWidget {
+class ShellSortPage extends StatelessWidget {
   const ShellSortPage({super.key});
 
-  @override
-  State<ShellSortPage> createState() => _ShellSortPageState();
-}
-
-class _ShellSortPageState extends State<ShellSortPage> {
   @override
   Widget build(BuildContext context) {
     return SortingPage(instance: _notifierProvider, title: StringsManager.shellSort);
