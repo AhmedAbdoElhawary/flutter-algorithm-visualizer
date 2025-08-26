@@ -9,14 +9,8 @@ final _notifierProvider = StateNotifierProvider<SortingNotifier, SortingNotifier
   (ref) => HeapSortNotifier(),
 );
 
-class HeapSortPage extends StatefulWidget {
+class HeapSortPage extends StatelessWidget {
   const HeapSortPage({super.key});
-
-  @override
-  State<HeapSortPage> createState() => _HeapSortPageState();
-}
-
-class _HeapSortPageState extends State<HeapSortPage> {
 
   @override
   Widget build(BuildContext context) {
