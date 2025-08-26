@@ -7,7 +7,7 @@ class _SortingControlButtons extends ConsumerWidget {
   @override
   Widget build(BuildContext context, ref) {
     return SortingControlButtons(
-      playSorting: () => ref.read(instance.notifier).playSorting(),
+      playSorting: () => ref.read(instance.notifier).playSorting(context),
       stopSorting: () => ref.read(instance.notifier).stopSorting(),
       generateAgain: () => ref.read(instance.notifier).generateAgain(),
     );

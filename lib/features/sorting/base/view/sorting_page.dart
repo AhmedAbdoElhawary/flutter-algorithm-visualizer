@@ -14,16 +14,24 @@ part '../widgets/control_buttons.dart';
 part '../widgets/size_draggable.dart';
 part '../widgets/speed_draggable.dart';
 
-class SortingPage extends StatelessWidget {
+class SortingPage extends ConsumerWidget {
   const SortingPage({required this.instance, required this.title, super.key});
   final StateNotifierProvider<SortingNotifier, SortingNotifierState> instance;
   final String title;
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: appBar(),
-      body: _BuildBody(instance: instance),
+  Widget build(BuildContext context, WidgetRef ref) {
+    return PopScope(
+      onPopInvokedWithResult: (didPop, result) async {
+        if (didPop) {
+          await ref.read(instance.notifier).cancelSorting();
+          ref.invalidate(instance); // deletes current instance and resets
+        }
+      },
+      child: Scaffold(
+        appBar: appBar(),
+        body: _BuildBody(instance: instance),
+      ),
     );
   }
 

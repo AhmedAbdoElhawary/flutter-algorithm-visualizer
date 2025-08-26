@@ -24,63 +24,65 @@ class ComparisonSortPage extends ConsumerStatefulWidget {
 
 class _ComparisonSortPageState extends ConsumerState<ComparisonSortPage> {
   @override
-  void deactivate() {
-    ref.invalidate(_notifierProvider); // deletes current instance and resets
+  Widget build(BuildContext context) {
+    return PopScope(
+      onPopInvokedWithResult: (didPop, result) async {
+        if (didPop) {
+          await ref.read(_notifierProvider.notifier).cancelSorting(ref);
 
-    ComparisonSortNotifier.sortingAlgorithms.values.toList().forEach(
-      (element) {
-        try {
-          ref.invalidate(element.provider);
-        } catch (e) {
-          //
+          ComparisonSortNotifier.sortingAlgorithms.values.toList().forEach(
+            (element) {
+              try {
+                ref.invalidate(element.provider);
+              } catch (e) {
+                //
+              }
+            },
+          );
+          ref.invalidate(_notifierProvider); // deletes current instance and resets
         }
       },
-    );
-    super.deactivate();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: appBar(),
-      drawer: const _DrawerMenu(),
-      body: SafeArea(
-        child: Column(
-          children: [
-            const Flexible(child: _BuildComparisonLists()),
-            const RSizedBox(height: 15),
-            Padding(
-              padding: REdgeInsets.symmetric(horizontal: 0),
-              child: Align(
-                alignment: AlignmentDirectional.bottomCenter,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  spacing: 10,
-                  children: [
-                    SortingControlButtons(
-                      playSorting: () => ref.read(_notifierProvider.notifier).playSorting(ref),
-                      stopSorting: () => ref.read(_notifierProvider.notifier).stopSorting(ref),
-                      generateAgain: () => ref.read(_notifierProvider.notifier).generateAgain(ref),
-                    ),
-                    SymmetricPadding(
-                      horizontal: 15,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          SpeedDraggable(
-                            onChanged: (persent) {
-                              ref.read(_notifierProvider.notifier).changeSpeed(persent, ref);
-                            },
-                          ),
-                          _SizeDraggable(ref: ref),
-                        ],
+      child: Scaffold(
+        appBar: appBar(),
+        drawer: const _DrawerMenu(),
+        body: SafeArea(
+          child: Column(
+            children: [
+              const Flexible(child: _BuildComparisonLists()),
+              const RSizedBox(height: 15),
+              Padding(
+                padding: REdgeInsets.symmetric(horizontal: 0),
+                child: Align(
+                  alignment: AlignmentDirectional.bottomCenter,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    spacing: 10,
+                    children: [
+                      SortingControlButtons(
+                        playSorting: () => ref.read(_notifierProvider.notifier).playSorting(context, ref),
+                        stopSorting: () => ref.read(_notifierProvider.notifier).stopSorting(ref),
+                        generateAgain: () => ref.read(_notifierProvider.notifier).generateAgain(ref),
                       ),
-                    ),
-                  ],
+                      SymmetricPadding(
+                        horizontal: 15,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            SpeedDraggable(
+                              onChanged: (persent) {
+                                ref.read(_notifierProvider.notifier).changeSpeed(persent, ref);
+                              },
+                            ),
+                            _SizeDraggable(ref: ref),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
