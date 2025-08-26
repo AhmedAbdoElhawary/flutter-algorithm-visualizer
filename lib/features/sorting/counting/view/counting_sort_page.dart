@@ -9,19 +9,14 @@ final _notifierProvider = StateNotifierProvider<SortingNotifier, SortingNotifier
   (ref) => CountingSortNotifier(),
 );
 
-class CountingSortPage extends ConsumerStatefulWidget {
+class CountingSortPage extends StatefulWidget {
   const CountingSortPage({super.key});
 
   @override
-  ConsumerState<CountingSortPage> createState() => _CountingSortPageState();
+  State<CountingSortPage> createState() => _CountingSortPageState();
 }
 
-class _CountingSortPageState extends ConsumerState<CountingSortPage> {
-  @override
-  void deactivate() {
-    ref.invalidate(_notifierProvider); // deletes current instance and resets
-    super.deactivate();
-  }
+class _CountingSortPageState extends State<CountingSortPage> {
 
   @override
   Widget build(BuildContext context) {
