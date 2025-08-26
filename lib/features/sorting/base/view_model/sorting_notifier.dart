@@ -59,12 +59,12 @@ abstract class SortingNotifier extends StateNotifier<SortingNotifierState> {
   ) {
     final value = (calculateMaxListItemHeight(context) / size) * (itemIndex + 1);
     final perc = selectedAlgorithmsLength == 1
-        ? 1
-        : selectedAlgorithmsLength <= 3
+        ? 0.95
+        : selectedAlgorithmsLength <= 2
             ? 0.9
-            : selectedAlgorithmsLength <= 6
+            : selectedAlgorithmsLength <= 4
                 ? 0.8
-                : selectedAlgorithmsLength <= 9
+                : selectedAlgorithmsLength <= 6
                     ? 0.7
                     : 0.6;
     return value.h / selectedAlgorithmsLength * perc;
@@ -105,11 +105,11 @@ abstract class SortingNotifier extends StateNotifier<SortingNotifierState> {
   }
 
   Future<void> cancelSorting() async {
-   await _cancelableSort?.cancel();
+    await _cancelableSort?.cancel();
   }
 
   Future<void> stopSorting() async {
-   await _cancelableSort?.cancel();
+    await _cancelableSort?.cancel();
     if (_getOperation == SortingEnum.played) _setOperation = SortingEnum.stopped;
   }
 
