@@ -9,14 +9,9 @@ final _notifierProvider = StateNotifierProvider<SortingNotifier, SortingNotifier
   (ref) => InsertionSortNotifier(),
 );
 
-class InsertionSortPage extends StatefulWidget {
+class InsertionSortPage extends StatelessWidget {
   const InsertionSortPage({super.key});
 
-  @override
-  State<InsertionSortPage> createState() => _InsertionSortPageState();
-}
-
-class _InsertionSortPageState extends State<InsertionSortPage> {
   @override
   Widget build(BuildContext context) {
     return SortingPage(instance: _notifierProvider, title: StringsManager.insertionSort);
