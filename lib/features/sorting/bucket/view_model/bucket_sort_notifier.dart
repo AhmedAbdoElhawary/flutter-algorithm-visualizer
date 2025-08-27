@@ -15,21 +15,17 @@ class BucketSortNotifier extends SortingNotifier {
     int maxVal = arr.reduce((a, b) => a > b ? a : b);
     int minVal = arr.reduce((a, b) => a < b ? a : b);
 
-    // Decide number of buckets (basic choice = n)
     int bucketCount = n;
     double bucketRange = (maxVal - minVal + 1) / bucketCount;
 
-    // 1. Create buckets
     final buckets = List.generate(bucketCount, (_) => <int>[]);
 
-    // 2. Scatter: put array elements into buckets
     for (int value in arr) {
       int bucketIndex = ((value - minVal) / bucketRange).floor();
       if (bucketIndex >= bucketCount) bucketIndex = bucketCount - 1;
       buckets[bucketIndex].add(value);
     }
 
-    // 3. Sort each bucket (Insertion Sort)
     for (var bucket in buckets) {
       for (int i = 1; i < bucket.length; i++) {
         int key = bucket[i];
@@ -42,7 +38,6 @@ class BucketSortNotifier extends SortingNotifier {
       }
     }
 
-    // 4. Gather: merge buckets back into arr
     int index = 0;
     for (var bucket in buckets) {
       for (int value in bucket) {
@@ -59,7 +54,6 @@ class BucketSortNotifier extends SortingNotifier {
       }
     }
 
-    // Mark all sorted at the end
     steps.add(SortingStep(index1: arr.length - 1, index2: arr.length - 1, action: SortingStatus.sorted));
 
     return SortingResult(sortedValues: arr, steps: steps);
