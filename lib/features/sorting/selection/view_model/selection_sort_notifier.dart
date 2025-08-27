@@ -15,7 +15,6 @@ class SelectionSortNotifier extends SortingNotifier {
 
         if (arr[j] < arr[minIndex]) {
           final previousIndex = minIndex;
-          // to reset action
           if (minIndex != i) {
             steps.add(SortingStep(index1: previousIndex, index2: previousIndex, action: SortingStatus.none));
           }
