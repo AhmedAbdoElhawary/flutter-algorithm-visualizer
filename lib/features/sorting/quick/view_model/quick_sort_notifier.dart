@@ -12,7 +12,6 @@ class QuickSortNotifier extends SortingNotifier {
       int i = low - 1;
 
       for (int j = low; j < high; j++) {
-        // Compare arr[j] with pivot
         steps.add(SortingStep(index1: j, index2: high, action: SortingStatus.compared));
         steps.add(SortingStep(index1: j, index2: high, action: SortingStatus.unSorted));
 
@@ -26,7 +25,6 @@ class QuickSortNotifier extends SortingNotifier {
         }
       }
 
-      // Place pivot in correct position
       if (i + 1 != high) {
         steps.add(SortingStep(index1: i + 1, index2: high, action: SortingStatus.swapping));
         arr.swap(i + 1, high);
