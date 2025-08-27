@@ -1,54 +1,26 @@
 # flutter-algorithm-visualizer
 
-<table>
-  <tr>
-    <td width="50%">
-      <video
-        src="https://github.com/user-attachments/assets/24df7dd2-6a99-492d-a535-b30c156f0d9d"
-        controls
-        muted
-        playsinline
-        width="100%">
-      </video>
-      <p align="center"><em>Left demo caption</em></p>
-    </td>
-    <td width="50%">
-      <video
-        src="https://github.com/user-attachments/assets/16636436-2db4-4722-84e2-d660f1042752"
-        controls
-        muted
-        playsinline
-        width="100%">
-      </video>
-      <p align="center"><em>Right demo caption</em></p>
-    </td>
-  </tr>
-</table>
+Flutter Algorithm and Data Structure Visualizer is an interactive learning tool designed to help students, developers, and enthusiasts understand how algorithms and data structures work under the hood. Built with Flutter, it provides a smooth, cross-platform experience on both mobile and desktop.
 
-<table>
-  <tr>
-    <td width="50%">
-      <video
-        src="https://github.com/user-attachments/assets/2450c41e-c732-4b4c-9502-1dbfcbf355bc"
-        controls
-        muted
-        playsinline
-        width="100%">
-      </video>
-      <p align="center"><em>Left demo caption</em></p>
-    </td>
-    <td width="50%">
-      <video
-        src="https://github.com/user-attachments/assets/2bcae3fb-75a3-4db8-b28d-ab9b987c9403"
-        controls
-        muted
-        playsinline
-        width="100%">
-      </video>
-      <p align="center"><em>Right demo caption</em></p>
-    </td>
-  </tr>
-</table>
+The app features intuitive step-by-step animations that bring abstract concepts like sorting, searching, graph, and pathfinding to life. Users can watch how algorithms process it in real time, and adjust the speed of execution for deeper exploration.
+
+Key highlights include:
+
+- 📊 Sorting Algorithms – Visualize Bubble Sort, Merge Sort, Quick Sort, and more.
+
+- 🌐 Graph Algorithms – Understand BFS, and shortest path algorithms like Dijkstra and A*.
+
+- 🎨 Clean UI & Smooth Animations – Built with Flutter’s powerful rendering system for responsive and engaging visuals.
+
+Whether you are preparing for coding interviews, studying computer science fundamentals, or just curious about algorithms, this app makes learning interactive, visual, and fun.
+
+https://github.com/user-attachments/assets/24df7dd2-6a99-492d-a535-b30c156f0d9d
+
+https://github.com/user-attachments/assets/16636436-2db4-4722-84e2-d660f1042752
+
+https://github.com/user-attachments/assets/2450c41e-c732-4b4c-9502-1dbfcbf355bc
+
+https://github.com/user-attachments/assets/2bcae3fb-75a3-4db8-b28d-ab9b987c9403
 
 
 ### Initially, we will cover:
