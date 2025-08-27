@@ -269,10 +269,10 @@ class SearchingNotifier extends StateNotifier<GridNotifierState> {
     const right = 1;
 
     final directions = [
-      up, // up
-      down, // down
-      left, // left
-      right, // right
+      up,
+      down,
+      left,
+      right,
     ];
 
     while (queue.isNotEmpty) {
@@ -299,7 +299,7 @@ class SearchingNotifier extends StateNotifier<GridNotifierState> {
         }
       }
 
-      // for marking the current grid as visited
+      /// for marking the current grid as visited
       if (gridData[currentIndex] != GridStatus.startPoint &&
           gridData[currentIndex] != GridStatus.targetPoint) {
         gridData[currentIndex] = GridStatus.searcher;
@@ -345,7 +345,6 @@ class SearchingNotifier extends StateNotifier<GridNotifierState> {
 
     distance[startPointIndex] = 0;
 
-    // priority queue to get the minimum distance vertex
     final pq = PriorityQueue<int>((a, b) => distance[a].compareTo(distance[b]));
     pq.add(startPointIndex);
 
@@ -359,10 +358,9 @@ class SearchingNotifier extends StateNotifier<GridNotifierState> {
     while (pq.isNotEmpty) {
       final currentIndex = pq.removeFirst();
 
-      // Mark the current node as visited
+      /// mark the current node as visited
       visited[currentIndex] = true;
 
-      // If we reached the target, we trace back the path
       if (currentIndex == targetPointIndex) {
         _tracePath(previous, currentIndex);
         _isBuildingGrid = false;
@@ -377,14 +375,15 @@ class SearchingNotifier extends StateNotifier<GridNotifierState> {
           continue;
         }
 
-        final tentativeDistance = distance[currentIndex] + 1; // Assume weight of 1 for each move
+        final tentativeDistance = distance[currentIndex] + 1;
+
+        /// assume weight of 1 for each move
 
         if (tentativeDistance < distance[neighborIndex]) {
           distance[neighborIndex] = tentativeDistance;
           previous[neighborIndex] = currentIndex;
           pq.add(neighborIndex);
 
-          // Visualize the search process
           if (gridData[neighborIndex] != GridStatus.startPoint &&
               gridData[neighborIndex] != GridStatus.targetPoint) {
             gridData[neighborIndex] = GridStatus.searcher;
@@ -403,8 +402,8 @@ class SearchingNotifier extends StateNotifier<GridNotifierState> {
     final isFirstLeftInRowIndex = neighborIndex % cross == 0;
     final isEndRightInRowIndex = (neighborIndex + 1) % cross == 0;
 
-    if (direction == 1 && isFirstLeftInRowIndex) return false; // avoid exiting the boundaries
-    if (direction == -1 && isEndRightInRowIndex) return false; // avoid exiting the boundaries
+    if (direction == 1 && isFirstLeftInRowIndex) return false;
+    if (direction == -1 && isEndRightInRowIndex) return false;
 
     return neighborIndex >= 0 &&
         neighborIndex < gridData.length &&
@@ -506,7 +505,6 @@ class SearchingNotifier extends StateNotifier<GridNotifierState> {
             pq.add(neighborIndex);
           }
 
-          // visualize
           if (gridData[neighborIndex] != GridStatus.startPoint &&
               gridData[neighborIndex] != GridStatus.targetPoint) {
             gridData[neighborIndex] = GridStatus.searcher;
@@ -521,7 +519,6 @@ class SearchingNotifier extends StateNotifier<GridNotifierState> {
   }
 
   double _heuristic(int index, int targetIndex, int cross) {
-    // Manhattan distance
     final x1 = index % cross;
     final y1 = index ~/ cross;
     final x2 = targetIndex % cross;
@@ -549,17 +546,15 @@ class SearchingNotifier extends StateNotifier<GridNotifierState> {
 
     final gridData = List<GridStatus>.from(state.gridData);
 
-    // Clear the maze but keep start and target points
+    /// clear the maze but keep start and target points
     for (int i = 0; i < gridData.length; i++) {
       if (gridData[i] != GridStatus.startPoint && gridData[i] != GridStatus.targetPoint) {
         gridData[i] = GridStatus.empty;
       }
     }
 
-    // 🔹 Draw outer border walls
     await _drawBorders(gridData);
 
-    // 🔹 Force the second border inside as a corridor (always empty)
     _makeSafeCorridor(gridData);
 
     final random = Random();
@@ -574,7 +569,6 @@ class SearchingNotifier extends StateNotifier<GridNotifierState> {
   }
 
   Future<void> _drawBorders(List<GridStatus> gridData) async {
-    // Top & bottom rows
     for (int c = 0; c < state.columnCrossAxisCount; c++) {
       for (final r in [0, state.rowMainAxisCount - 1]) {
         final idx = r * state.columnCrossAxisCount + c;
@@ -586,7 +580,6 @@ class SearchingNotifier extends StateNotifier<GridNotifierState> {
       }
     }
 
-    // Left & right columns
     for (int r = 1; r < state.rowMainAxisCount - 1; r++) {
       for (final c in [0, state.columnCrossAxisCount - 1]) {
         final idx = r * state.columnCrossAxisCount + c;
@@ -664,7 +657,6 @@ class SearchingNotifier extends StateNotifier<GridNotifierState> {
     }
   }
 
-  // Recursive Division Maze Generation
   Future<void> _generateRecursiveDivisionMazeFun() async {
     if (_isSearched) await clearTheGrid(clearAnyway: true);
 
@@ -707,7 +699,7 @@ class SearchingNotifier extends StateNotifier<GridNotifierState> {
     final horizontal = random.nextBool();
 
     if (horizontal) {
-      // Horizontal wall
+      /// horizontal wall
       int wallRow = row + (random.nextInt(height ~/ 2)) * 2 + 1;
       int passageCol = col + (random.nextInt(width ~/ 2)) * 2;
 
@@ -717,14 +709,14 @@ class SearchingNotifier extends StateNotifier<GridNotifierState> {
             gridData[wallRow * state.columnCrossAxisCount + c] != GridStatus.targetPoint) {
           gridData[wallRow * state.columnCrossAxisCount + c] = GridStatus.wall;
           state = state.copyWith(gridData: List.from(gridData));
-          await Future.delayed(mazeDuration); // 🔹 Delay for each cell
+          await Future.delayed(mazeDuration);
         }
       }
 
       await _divide(row, col, wallRow - row, width, gridData);
       await _divide(wallRow + 1, col, row + height - wallRow - 1, width, gridData);
     } else {
-      // Vertical wall
+      /// vertical wall
       int wallCol = col + (random.nextInt(width ~/ 2)) * 2 + 1;
       int passageRow = row + (random.nextInt(height ~/ 2)) * 2;
 
@@ -734,7 +726,7 @@ class SearchingNotifier extends StateNotifier<GridNotifierState> {
             gridData[r * state.columnCrossAxisCount + wallCol] != GridStatus.targetPoint) {
           gridData[r * state.columnCrossAxisCount + wallCol] = GridStatus.wall;
           state = state.copyWith(gridData: List.from(gridData));
-          await Future.delayed(mazeDuration); // 🔹 Delay for each cell
+          await Future.delayed(mazeDuration);
         }
       }
 
