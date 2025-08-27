@@ -26,7 +26,6 @@ class _SearcherGridState extends State<_SearcherGrid> with SingleTickerProviderS
       vsync: this,
     );
 
-    // Define the scale animation from 0.1 to 1.2 then back to 1.0
     _scaleAnimation = TweenSequence([
       TweenSequenceItem(tween: Tween<double>(begin: 0.1, end: 1.4), weight: 60),
       TweenSequenceItem(tween: Tween<double>(begin: 1.4, end: 1.0), weight: 40),
@@ -37,7 +36,6 @@ class _SearcherGridState extends State<_SearcherGrid> with SingleTickerProviderS
       ),
     );
 
-    // Define the color animation
     _colorAnimation = TweenSequence([
       TweenSequenceItem(tween: ColorTween(begin: startColor, end: mediumColor), weight: 40),
       TweenSequenceItem(tween: ColorTween(begin: mediumColor, end: finishedSearcherColor), weight: 60),
