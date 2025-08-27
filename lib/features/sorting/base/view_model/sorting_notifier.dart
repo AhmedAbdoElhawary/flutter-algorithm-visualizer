@@ -15,7 +15,6 @@ abstract class SortingNotifier extends StateNotifier<SortingNotifierState> {
     _initializePositions();
   }
 
-  // static double maxListItemHeight = 250.r;
   static double itemsPadding = 1.w;
   static const ThemeEnum swappingColor = ThemeEnum.redColor;
   static const ThemeEnum comparedColor = ThemeEnum.lightBlueColor;
@@ -27,8 +26,6 @@ abstract class SortingNotifier extends StateNotifier<SortingNotifierState> {
   static const int _minSize = 10;
 
   static const Duration _defaultSpeedDuration = Duration(milliseconds: 300);
-  // static const Duration _maxSpeedDuration = Duration(milliseconds: 3000);
-  // static const Duration _minSpeedDuration = Duration(milliseconds: 20);
 
   CancelableOperation<void>? _cancelableSort;
 
@@ -40,14 +37,12 @@ abstract class SortingNotifier extends StateNotifier<SortingNotifierState> {
     final screenWidth = MediaQuery.of(context).size.width;
     final availableWidth = screenWidth - (itemsPadding * (size - 1));
 
-    // Ensure a positive width
     return availableWidth / size > 0 ? availableWidth / size : 1.0;
   }
 
   static double calculateMaxListItemHeight(BuildContext context) {
     final screenHeight = MediaQuery.of(context).size.height * 0.65;
 
-    // Ensure a positive width
     return screenHeight > 0 ? screenHeight : 1.0;
   }
 
@@ -194,7 +189,7 @@ abstract class SortingNotifier extends StateNotifier<SortingNotifierState> {
           state = state.copyWith(list: list);
           break;
 
-        // i don't want to make it green while sorting and mark all of them at once as green at the end
+        /// i don't want to make it green while sorting and mark all of them at once as green at the end
         case SortingStatus.sorted:
         case SortingStatus.none:
           list[step.index1] = list[step.index1].copyWith(sortedStatus: SortingStatus.none);
