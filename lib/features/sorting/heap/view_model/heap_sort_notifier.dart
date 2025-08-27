@@ -40,12 +40,10 @@ class HeapSortNotifier extends SortingNotifier {
     void heapSort() {
       int n = arr.length;
 
-      // Build max heap
       for (int i = (n ~/ 2) - 1; i >= 0; i--) {
         heapify(n, i);
       }
 
-      // Extract elements one by one
       for (int i = n - 1; i > 0; i--) {
         steps.add(SortingStep(index1: 0, index2: i, action: SortingStatus.swapping));
         arr.swap(0, i);
@@ -56,7 +54,6 @@ class HeapSortNotifier extends SortingNotifier {
     }
 
     if (arr.isNotEmpty) heapSort();
-    // Mark the first element sorted
     steps.add(SortingStep(index1: 0, index2: 0, action: SortingStatus.sorted));
 
     return SortingResult(sortedValues: arr, steps: steps);
