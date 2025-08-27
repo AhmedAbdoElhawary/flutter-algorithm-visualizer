@@ -13,12 +13,10 @@ class RadixSortNotifier extends SortingNotifier {
 
     int maxVal = arr.reduce((a, b) => a > b ? a : b);
 
-    // Perform counting sort for every digit
     for (int exp = 1; maxVal ~/ exp > 0; exp *= 10) {
       _countingSortByDigit(arr, exp, steps);
     }
 
-    // Mark all as sorted
     steps.add(SortingStep(index1: arr.length - 1, index2: arr.length - 1, action: SortingStatus.sorted));
 
     return SortingResult(sortedValues: arr, steps: steps);
@@ -29,25 +27,21 @@ class RadixSortNotifier extends SortingNotifier {
     List<int> output = List<int>.filled(n, 0);
     List<int> count = List<int>.filled(10, 0);
 
-    // 1. Count occurrences of digits
     for (int i = 0; i < n; i++) {
       int digit = (arr[i] ~/ exp) % 10;
       count[digit]++;
     }
 
-    // 2. Compute prefix sums
     for (int i = 1; i < 10; i++) {
       count[i] += count[i - 1];
     }
 
-    // 3. Build output array (stable order, so go from right to left)
     for (int i = n - 1; i >= 0; i--) {
       int digit = (arr[i] ~/ exp) % 10;
       output[count[digit] - 1] = arr[i];
       count[digit]--;
     }
 
-    // 4. Copy back to arr + log steps
     for (int i = 0; i < n; i++) {
       if (arr[i] != output[i]) {
         int oldIndex = arr.indexOf(output[i], i);
