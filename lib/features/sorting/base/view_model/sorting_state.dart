@@ -5,7 +5,9 @@ class SortingNotifierState {
   final Map<int, Offset> positions;
   final Duration swipeDuration;
   final int size;
+  final SortingEnum operationStatus;
   SortingNotifierState({
+    this.operationStatus = SortingEnum.none,
     this.size = SortingNotifier._defaultSize,
     this.swipeDuration = SortingNotifier._defaultSpeedDuration,
     required this.list,
@@ -17,9 +19,10 @@ class SortingNotifierState {
     Duration? swipeDuration,
     List<SortableItem>? list,
     Map<int, Offset>? positions,
-    List<SortingAlgorithm>? selectedAlgorithms,
+    SortingEnum? operationStatus,
   }) {
     return SortingNotifierState(
+      operationStatus: operationStatus ?? this.operationStatus,
       size: size ?? this.size,
       swipeDuration: swipeDuration ?? this.swipeDuration,
       list: list ?? this.list,
