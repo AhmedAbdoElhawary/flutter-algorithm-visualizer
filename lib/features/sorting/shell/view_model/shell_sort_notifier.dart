@@ -27,7 +27,6 @@ class ShellSortNotifier extends SortingNotifier {
       }
     }
 
-    // Mark all sorted at the end
     steps.add(SortingStep(index1: arr.length - 1, index2: arr.length - 1, action: SortingStatus.sorted));
 
     return SortingResult(sortedValues: arr, steps: steps);
