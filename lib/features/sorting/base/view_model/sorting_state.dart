@@ -19,7 +19,6 @@ class SortingNotifierState {
     Duration? swipeDuration,
     List<SortableItem>? list,
     Map<int, Offset>? positions,
-    List<SortingAlgorithm>? selectedAlgorithms,
     SortingEnum? operationStatus,
   }) {
     return SortingNotifierState(
