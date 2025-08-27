@@ -5,9 +5,16 @@ import 'package:algorithm_visualizer/features/base/view/base_page.dart';
 import 'package:algorithm_visualizer/features/searching/view/grid_page.dart';
 import 'package:algorithm_visualizer/features/sorting/base/view/sorting_list_page.dart';
 import 'package:algorithm_visualizer/features/sorting/bubble/view/bubble_sort_page.dart';
+import 'package:algorithm_visualizer/features/sorting/bucket/view/bucket_sort_page.dart';
+import 'package:algorithm_visualizer/features/sorting/comparison/view/comparison_sort_page.dart';
+import 'package:algorithm_visualizer/features/sorting/counting/view/counting_sort_page.dart';
+import 'package:algorithm_visualizer/features/sorting/heap/view/heap_sort_page.dart';
 import 'package:algorithm_visualizer/features/sorting/insertion/view/insertion_sort_page.dart';
 import 'package:algorithm_visualizer/features/sorting/merge/view/merge_sort_page.dart';
+import 'package:algorithm_visualizer/features/sorting/quick/view/quick_sort_page.dart';
+import 'package:algorithm_visualizer/features/sorting/radix/view/radix_sort_page.dart';
 import 'package:algorithm_visualizer/features/sorting/selection/view/selection_sort_page.dart';
+import 'package:algorithm_visualizer/features/sorting/shell/view/shell_sort_page.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -40,6 +47,34 @@ class Routes {
   static const RouteConfig mergeSort = RouteConfig(
     name: 'mergeSort',
     path: 'mergeSort',
+  );
+  static const RouteConfig heapSort = RouteConfig(
+    name: 'heapSort',
+    path: 'heapSort',
+  );
+  static const RouteConfig quickSort = RouteConfig(
+    name: 'quickSort',
+    path: 'quickSort',
+  );
+  static const RouteConfig radixSort = RouteConfig(
+    name: 'radixSort',
+    path: 'radixSort',
+  );
+  static const RouteConfig shellSort = RouteConfig(
+    name: 'shellSort',
+    path: 'shellSort',
+  );
+  static const RouteConfig countingSort = RouteConfig(
+    name: 'countingSort',
+    path: 'countingSort',
+  );
+  static const RouteConfig bucketSort = RouteConfig(
+    name: 'bucketSort',
+    path: 'bucketSort',
+  );
+  static const RouteConfig comparisonSort = RouteConfig(
+    name: 'comparisonSort',
+    path: 'comparisonSort',
   );
 }
 
@@ -109,6 +144,55 @@ class AppRoutes {
                 name: Routes.mergeSort.name,
                 builder: (context, state) {
                   return const MergeSortPage();
+                },
+              ),
+              GoRoute(
+                path: Routes.heapSort.path,
+                name: Routes.heapSort.name,
+                builder: (context, state) {
+                  return const HeapSortPage();
+                },
+              ),
+              GoRoute(
+                path: Routes.quickSort.path,
+                name: Routes.quickSort.name,
+                builder: (context, state) {
+                  return const QuickSortPage();
+                },
+              ),
+              GoRoute(
+                path: Routes.radixSort.path,
+                name: Routes.radixSort.name,
+                builder: (context, state) {
+                  return const RadixSortPage();
+                },
+              ),
+              GoRoute(
+                path: Routes.shellSort.path,
+                name: Routes.shellSort.name,
+                builder: (context, state) {
+                  return const ShellSortPage();
+                },
+              ),
+              GoRoute(
+                path: Routes.countingSort.path,
+                name: Routes.countingSort.name,
+                builder: (context, state) {
+                  return const CountingSortPage();
+                },
+              ),
+              GoRoute(
+                path: Routes.bucketSort.path,
+                name: Routes.bucketSort.name,
+                builder: (context, state) {
+                  return const BucketSortPage();
+                },
+              ),
+              GoRoute(
+                path: Routes.comparisonSort.path,
+                name: Routes.comparisonSort.name,
+                builder: (context, state) {
+                  return const ComparisonSortPage();
                 },
               ),
             ],

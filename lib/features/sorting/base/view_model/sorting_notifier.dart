@@ -11,15 +11,14 @@ part '../helper/sorting_enums.dart';
 part '../helper/sortable_item.dart';
 
 abstract class SortingNotifier extends StateNotifier<SortingNotifierState> {
-  SortingNotifier() : super(SortingNotifierState(list: generateList(_defaultSize))) {
+  SortingNotifier() : super(SortingNotifierState(list: _generateList(_defaultSize))) {
     _initializePositions();
   }
 
-  static double maxListItemHeight = 250.h;
   static double itemsPadding = 1.w;
   static const ThemeEnum swappingColor = ThemeEnum.redColor;
-  static const ThemeEnum comparedColor = ThemeEnum.comparedColor;
-  static const ThemeEnum itemColor = ThemeEnum.blueColor;
+  static const ThemeEnum comparedColor = ThemeEnum.lightBlueColor;
+  static const ThemeEnum itemColor = ThemeEnum.darkBlueColor;
   static const ThemeEnum doneSortingColor = ThemeEnum.greenColor;
 
   static const int _defaultSize = 20;
@@ -27,16 +26,10 @@ abstract class SortingNotifier extends StateNotifier<SortingNotifierState> {
   static const int _minSize = 10;
 
   static const Duration _defaultSpeedDuration = Duration(milliseconds: 300);
-  // static const Duration _maxSpeedDuration = Duration(milliseconds: 3000);
-  // static const Duration _minSpeedDuration = Duration(milliseconds: 20);
 
-  SortingEnum operation = SortingEnum.none;
-  CancelableOperation<void>? cancelableSort;
+  CancelableOperation<void>? _cancelableSort;
 
-  int i = 0;
-  int j = 0;
-
-  static List<SortableItem> generateList(int size) {
+  static List<SortableItem> _generateList(int size) {
     return List.generate(size, (index) => SortableItem(id: index, value: index + 1))..shuffle();
   }
 
@@ -44,17 +37,42 @@ abstract class SortingNotifier extends StateNotifier<SortingNotifierState> {
     final screenWidth = MediaQuery.of(context).size.width;
     final availableWidth = screenWidth - (itemsPadding * (size - 1));
 
-    // Ensure a positive width
     return availableWidth / size > 0 ? availableWidth / size : 1.0;
   }
 
-  static double calculateItemHeight(int itemIndex, int size) {
-    final value = (maxListItemHeight / size) * (itemIndex + 1);
-    return value.h;
+  static double calculateMaxListItemHeight(BuildContext context) {
+    final screenHeight = MediaQuery.of(context).size.height * 0.65;
+
+    return screenHeight > 0 ? screenHeight : 1.0;
+  }
+
+  static double calculateItemHeight(
+    BuildContext context,
+    int itemIndex,
+    int size,
+    int selectedAlgorithmsLength,
+  ) {
+    final value = (calculateMaxListItemHeight(context) / size) * (itemIndex + 1);
+    final perc = selectedAlgorithmsLength == 1
+        ? 0.95
+        : selectedAlgorithmsLength <= 2
+            ? 0.9
+            : selectedAlgorithmsLength <= 4
+                ? 0.8
+                : selectedAlgorithmsLength <= 6
+                    ? 0.7
+                    : 0.6;
+    return value.h / selectedAlgorithmsLength * perc;
   }
 
   Duration get speedDuration => state.swipeDuration;
   int get _size => state.size;
+
+  SortingEnum get _getOperation => state.operationStatus;
+
+  set _setOperation(SortingEnum value) {
+    state = state.copyWith(operationStatus: value);
+  }
 
   void _initializePositions() {
     final positions = <int, Offset>{};
@@ -74,39 +92,41 @@ abstract class SortingNotifier extends StateNotifier<SortingNotifierState> {
   }
 
   void changeSize(double size) {
-    if (operation == SortingEnum.played) return;
+    if (_getOperation == SortingEnum.played) return;
 
     final newSize = _minSize + (_maxSize - _minSize) * size;
     state = state.copyWith(size: newSize.toInt());
     generateAgain();
   }
 
-  void stopSorting() {
-    cancelableSort?.cancel();
-    operation = SortingEnum.stopped;
+  Future<void> cancelSorting() async {
+    await _cancelableSort?.cancel();
   }
 
-  Future<void> playSorting() async {
-    if (operation == SortingEnum.played) return;
-    operation = SortingEnum.played;
+  Future<void> stopSorting() async {
+    await _cancelableSort?.cancel();
+    if (_getOperation == SortingEnum.played) _setOperation = SortingEnum.stopped;
+  }
 
-    await startSelectedSorting();
+  Future<void> playSorting(BuildContext context) async {
+    if (_getOperation == SortingEnum.played) return;
+    _setOperation = SortingEnum.played;
 
-    operation = SortingEnum.none;
+    await _startSelectedSorting();
+
+// to avoid error of mounted when popup while the sorting algorithm still running
+    if (context.mounted) _setOperation = SortingEnum.none;
   }
 
   Future<void> generateAgain() async {
-    await cancelableSort?.cancel();
-    operation = SortingEnum.none;
+    await _cancelableSort?.cancel();
+    _setOperation = SortingEnum.none;
 
-    i = 0;
-    j = 0;
-
-    state = state.copyWith(list: generateList(_size));
+    state = state.copyWith(list: _generateList(_size));
     _initializePositions();
   }
 
-  Future<void> greenSortedItemsAsDone() async {
+  Future<void> _greenSortedItemsAsDone() async {
     final list = List<SortableItem>.from(state.list);
 
     for (int i = 0; i < list.length; i++) {
@@ -116,24 +136,24 @@ abstract class SortingNotifier extends StateNotifier<SortingNotifierState> {
     }
   }
 
-  Future<void> startSelectedSorting() async {
-    cancelableSort = CancelableOperation.fromFuture(buildSort());
+  Future<void> _startSelectedSorting() async {
+    _cancelableSort = CancelableOperation.fromFuture(_buildSort());
 
     try {
-      await cancelableSort?.value;
+      await _cancelableSort?.value;
     } catch (e) {
       debugPrint("something wrong with bubbleSort: $e");
     }
   }
 
-  Future<void> buildSort() async {
+  Future<void> _buildSort() async {
     final list = List<SortableItem>.from(state.list);
     final values = list.map((e) => e.value).toList();
 
     final steps = buildSorting(values).steps;
 
     for (final step in steps) {
-      if (operation != SortingEnum.played) return;
+      if (_getOperation != SortingEnum.played) return;
 
       switch (step.action) {
         case SortingStatus.compared:
@@ -169,7 +189,7 @@ abstract class SortingNotifier extends StateNotifier<SortingNotifierState> {
           state = state.copyWith(list: list);
           break;
 
-        // i don't want to make it green while sorting and mark all of them at once as green at the end
+        /// i don't want to make it green while sorting and mark all of them at once as green at the end
         case SortingStatus.sorted:
         case SortingStatus.none:
           list[step.index1] = list[step.index1].copyWith(sortedStatus: SortingStatus.none);
@@ -180,7 +200,7 @@ abstract class SortingNotifier extends StateNotifier<SortingNotifierState> {
       await Future.delayed(speedDuration);
     }
 
-    await greenSortedItemsAsDone();
+    await _greenSortedItemsAsDone();
   }
 
   SortingResult buildSorting(List<int> values);
