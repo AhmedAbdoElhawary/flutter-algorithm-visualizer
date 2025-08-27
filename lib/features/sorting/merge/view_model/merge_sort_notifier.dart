@@ -12,14 +12,12 @@ class MergeSortNotifier extends SortingNotifier {
       int j = mid + 1;
 
       while (i <= mid && j <= right) {
-        // Compare current elements
         steps.add(SortingStep(index1: i, index2: j, action: SortingStatus.compared));
         steps.add(SortingStep(index1: i, index2: j, action: SortingStatus.unSorted));
 
         if (arr[i] <= arr[j]) {
           i++;
         } else {
-          // Bubble arr[j] left until it reaches position i
           int k = j;
           while (k > i) {
             steps.add(SortingStep(index1: k, index2: k - 1, action: SortingStatus.swapping));
