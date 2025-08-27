@@ -34,7 +34,7 @@ class CustomRoundedElevatedButton extends StatelessWidget {
       style: ElevatedButton.styleFrom(
         backgroundColor: background,
         shadowColor: shadow ?? ColorManager.transparent,
-        fixedSize: fitToContent ? Size.fromHeight(fixedSize.r) : null,
+        fixedSize: fitToContent ? Size.fromHeight(fixedSize.r) : Size.fromWidth(fixedSize.r),
         padding: EdgeInsets.symmetric(horizontal: 15.r),
         shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(roundedRadius).r),

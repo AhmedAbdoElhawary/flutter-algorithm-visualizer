@@ -14,21 +14,12 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const defaultSize = Size(360, 690);
+    final defaultSize = MediaQuery.sizeOf(context);
 
     return ScreenUtilInit(
       designSize: defaultSize,
       minTextAdapt: true,
       splitScreenMode: true,
-      fontSizeResolver: (fontSize, instance) {
-        final size = fontSize;
-        final width = MediaQuery.of(context).size.width;
-        // Size(501.7, 669.0)
-
-        if (width <= 450) return size.toDouble() * (instance.scaleText);
-
-        return size.toDouble() * (instance.scaleText / 1.35);
-      },
       builder: (context, child) {
         return Consumer(
           builder: (context, ref, child) {
@@ -39,9 +30,8 @@ class MyApp extends StatelessWidget {
 
             return LayoutBuilder(
               builder: (context, constraints) {
-                final padding = constraints.maxWidth < 450
-                    ? 0.0
-                    : ((constraints.maxWidth - defaultSize.width) / 2.3);
+                final padding =
+                    constraints.maxWidth < 450 ? 0.0 : ((constraints.maxWidth - defaultSize.width) / 2.3);
 
                 return SystemOverlay(
                   isBlackTheme: isDarkMode,
@@ -62,12 +52,9 @@ class MyApp extends StatelessWidget {
                         themeMode: themeMode,
                         debugShowCheckedModeBanner: false,
                         routerDelegate: AppRoutes.router.routerDelegate,
-                        backButtonDispatcher:
-                            AppRoutes.router.backButtonDispatcher,
-                        routeInformationParser:
-                            AppRoutes.router.routeInformationParser,
-                        routeInformationProvider:
-                            AppRoutes.router.routeInformationProvider,
+                        backButtonDispatcher: AppRoutes.router.backButtonDispatcher,
+                        routeInformationParser: AppRoutes.router.routeInformationParser,
+                        routeInformationProvider: AppRoutes.router.routeInformationProvider,
                       ),
                     ),
                   ),

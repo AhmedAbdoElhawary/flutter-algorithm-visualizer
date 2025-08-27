@@ -2,8 +2,8 @@ part of '../../../../core/widgets/adaptive/padding/adaptive_padding.dart';
 
 class SymmetricPadding extends StatelessWidget {
   const SymmetricPadding({
-    required this.horizontal,
-    required this.vertical,
+    this.horizontal = 0,
+    this.vertical = 0,
     required this.child,
     super.key,
   });
@@ -13,8 +13,6 @@ class SymmetricPadding extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return _RPadding(
-        padding:
-            REdgeInsets.symmetric(horizontal: horizontal, vertical: vertical),
-        child: child);
+        padding: REdgeInsets.symmetric(horizontal: horizontal, vertical: vertical), child: child);
   }
 }

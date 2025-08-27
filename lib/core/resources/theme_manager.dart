@@ -33,6 +33,7 @@ enum ThemeEnum {
 
   blueColor,
   darkBlueColor,
+  mediumBlueColor,
   lightBlueColor,
   greenColor,
   redColor,
@@ -82,7 +83,8 @@ extension ThemeExtension on BuildContext {
           Theme.of(this).textTheme.bodyLarge?.color ?? ColorManager.greyD3,
       ThemeEnum.blueColor: ColorManager.blue,
       ThemeEnum.darkBlueColor: ColorManager.darkBlue,
-      ThemeEnum.lightBlueColor: ColorManager.lightBlue,
+      ThemeEnum.mediumBlueColor: ColorManager.mediumBlue,
+      ThemeEnum.lightBlueColor: ColorManager.finishedSearcherBlue,
       ThemeEnum.greenColor: ColorManager.green,
       ThemeEnum.redColor: ColorManager.red,
       ThemeEnum.orangeColor: ColorManager.orange,

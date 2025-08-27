@@ -9,19 +9,8 @@ final _notifierProvider = StateNotifierProvider<SortingNotifier, SortingNotifier
       (ref) => SelectionSortNotifier(),
 );
 
-class SelectionSortPage extends ConsumerStatefulWidget {
+class SelectionSortPage extends StatelessWidget {
   const SelectionSortPage({super.key});
-
-  @override
-  ConsumerState<SelectionSortPage> createState() => _SelectionSortPageState();
-}
-
-class _SelectionSortPageState extends ConsumerState<SelectionSortPage> {
-  @override
-  void deactivate() {
-    ref.invalidate(_notifierProvider); // deletes current instance and resets
-    super.deactivate();
-  }
 
   @override
   Widget build(BuildContext context) {

@@ -7,6 +7,9 @@ import 'package:algorithm_visualizer/core/widgets/adaptive/text/adaptive_text.da
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/custom_rounded_elevated_button.dart';
 import 'package:flutter/material.dart';
 
+import 'movable_animated_button.dart';
+import 'movable_pins.dart';
+
 class BasePage extends StatefulWidget {
   const BasePage({super.key});
 
@@ -28,26 +31,29 @@ class _BasePageState extends State<BasePage> {
     return Scaffold(
       body: SafeArea(
         child: Center(
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              CustomRoundedElevatedButton(
-                roundedRadius: 3,
-                backgroundColor: ThemeEnum.whiteD5Color,
-                child: const RegularText(StringsManager.searching),
-                onPressed: () {
-                  context.pushTo(Routes.searching);
-                },
-              ),
-              CustomRoundedElevatedButton(
-                roundedRadius: 3,
-                backgroundColor: ThemeEnum.whiteD5Color,
-                child: const RegularText(StringsManager.sorting),
-                onPressed: () {
-                  context.pushTo(Routes.sortingList);
-                },
-              ),
-            ],
+          child: MovablePinsBackground(
+            pinColor: ThemeEnum.whiteD4Color,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                FloatingAnimatedButton(
+                  child: CustomRoundedElevatedButton(
+                    roundedRadius: 3,
+                    backgroundColor: ThemeEnum.whiteD5Color,
+                    child: const RegularText(StringsManager.searching),
+                    onPressed: () => context.pushTo(Routes.searching),
+                  ),
+                ),
+                FloatingAnimatedButton(
+                  child: CustomRoundedElevatedButton(
+                    roundedRadius: 3,
+                    backgroundColor: ThemeEnum.whiteD5Color,
+                    child: const RegularText(StringsManager.sorting),
+                    onPressed: () => context.pushTo(Routes.sortingList),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),
