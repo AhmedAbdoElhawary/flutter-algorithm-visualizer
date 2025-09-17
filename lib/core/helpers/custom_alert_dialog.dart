@@ -32,8 +32,7 @@ class CustomAlertDialog {
   final BuildContext context;
   CustomAlertDialog(this.context);
 
-  Future<bool?> openDialog(DialogParameters parameters,
-      {bool barrierDismissible = true}) {
+  Future<bool?> openDialog(DialogParameters parameters, {bool barrierDismissible = true}) {
     return showDialog<bool>(
       context: context,
       barrierDismissible: barrierDismissible,
@@ -90,8 +89,7 @@ class _Content extends StatelessWidget {
               children: [
                 Padding(
                   padding: REdgeInsets.symmetric(vertical: 10),
-                  child: BoldText(parameters.actionText,
-                      color: ThemeEnum.redColor),
+                  child: BoldText(parameters.actionText, color: ThemeEnum.redColor),
                 ),
               ],
             ),
@@ -100,8 +98,7 @@ class _Content extends StatelessWidget {
         const CustomDivider(withHeight: false),
         InkWell(
           borderRadius: BorderRadius.only(
-              bottomLeft: Radius.circular(_borderRadius.r),
-              bottomRight: Radius.circular(_borderRadius.r)),
+              bottomLeft: Radius.circular(_borderRadius.r), bottomRight: Radius.circular(_borderRadius.r)),
           onTap: () {
             final onTapCancel = parameters.onTapCancel;
             if (onTapCancel != null) onTapCancel();
@@ -117,8 +114,7 @@ class _Content extends StatelessWidget {
               children: [
                 Padding(
                   padding: REdgeInsets.symmetric(vertical: 10),
-                  child: RegularText(parameters.cancelText,
-                      color: ThemeEnum.focusColor),
+                  child: RegularText(parameters.cancelText, color: ThemeEnum.focusColor),
                 ),
               ],
             ),
