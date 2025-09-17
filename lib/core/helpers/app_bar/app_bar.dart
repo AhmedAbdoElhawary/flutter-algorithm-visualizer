@@ -6,8 +6,7 @@ import 'package:algorithm_visualizer/core/widgets/adaptive/text/adaptive_text.da
 import 'package:flutter/material.dart';
 
 class CustomAppBar {
-  static AppBar iconAppBar(
-      {bool isShadowTransparent = true, bool withBackButton = true}) {
+  static AppBar iconAppBar({bool isShadowTransparent = true, bool withBackButton = true}) {
     return GlobalAppBar(
       centerTitle: true,
       // title: const AppLogo(),
@@ -110,10 +109,8 @@ class AppBarCheckButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return IconButton(
       icon: enableTap
-          ? const Icon(Icons.check_rounded,
-              size: secondAppBarIconSize, color: ColorManager.blue)
-          : const Icon(Icons.check_rounded,
-              size: secondAppBarIconSize, color: ColorManager.lightBlue),
+          ? const Icon(Icons.check_rounded, size: secondAppBarIconSize, color: ColorManager.blue)
+          : const Icon(Icons.check_rounded, size: secondAppBarIconSize, color: ColorManager.lightBlue),
       onPressed: () {
         final onTap = this.onTap;
         if (onTap != null) onTap();

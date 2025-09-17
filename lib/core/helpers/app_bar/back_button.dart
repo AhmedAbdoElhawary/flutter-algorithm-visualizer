@@ -8,7 +8,6 @@ class CustomAppBarBackButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return IconButton(
       icon: const CustomBackButtonIcon(),
-
       onPressed: () {
         Navigator.maybePop(context);
       },

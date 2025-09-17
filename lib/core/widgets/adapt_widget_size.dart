@@ -7,9 +7,7 @@ class AdaptWidgetSize extends StatelessWidget {
   Widget build(BuildContext context) {
     return LayoutBuilder(
       builder: (context, constraints) {
-        final size = constraints.maxWidth > constraints.maxHeight
-            ? constraints.maxHeight
-            : constraints.maxWidth;
+        final size = constraints.maxWidth > constraints.maxHeight ? constraints.maxHeight : constraints.maxWidth;
 
         final newSize = size * 0.35;
         final adapt = newSize > 50 ? 80.0 : newSize;
