@@ -64,8 +64,7 @@ class _ControlButtons extends StatefulWidget {
 class _ControlButtonsState extends State<_ControlButtons> {
   PopupMenuItem<String> buildPopupMenuItem(String value, [ThemeEnum? color]) {
     final isLargeScreen = MediaQuery.sizeOf(context).width > 500;
-    return PopupMenuItem(
-        value: value, child: RegularText(value, fontSize: isLargeScreen ? 16 : 14, color: color));
+    return PopupMenuItem(value: value, child: RegularText(value, fontSize: isLargeScreen ? 16 : 14, color: color));
   }
 
   @override
@@ -120,8 +119,8 @@ class _ControlButtonsState extends State<_ControlButtons> {
                   child: Center(
                     child: PopupMenuButton<String>(
                       position: PopupMenuPosition.under,
-                      style: const ButtonStyle(
-                          backgroundColor: WidgetStatePropertyAll(ColorManager.finishedSearcherBlue)),
+                      style:
+                          const ButtonStyle(backgroundColor: WidgetStatePropertyAll(ColorManager.finishedSearcherBlue)),
                       onSelected: (value) {
                         if (value == StringsManager.dijkstra) {
                           ref.read(_gridNotifierProvider.notifier).performDijkstra();
@@ -227,8 +226,7 @@ class _BuildGridItems extends ConsumerWidget {
   @override
   Widget build(BuildContext context, ref) {
     final gridCount = ref.watch(_gridNotifierProvider.select((it) => it.gridCount));
-    final watchColumnCrossAxisCount =
-        ref.watch(_gridNotifierProvider.select((it) => it.columnCrossAxisCount));
+    final watchColumnCrossAxisCount = ref.watch(_gridNotifierProvider.select((it) => it.columnCrossAxisCount));
 
     if (gridCount == 0) {
       return const Center(child: MediumText(StringsManager.notInitializeGridYet));
@@ -269,9 +267,8 @@ class _SquareState extends ConsumerState<_Square> {
         .select((it) => it.gridData.length > widget.index ? it.gridData[widget.index] : GridStatus.empty));
 
     final isColored = isSelected != GridStatus.empty;
-    final showBorder = isSelected != GridStatus.empty &&
-        isSelected != GridStatus.startPoint &&
-        isSelected != GridStatus.targetPoint;
+    final showBorder =
+        isSelected != GridStatus.empty && isSelected != GridStatus.startPoint && isSelected != GridStatus.targetPoint;
 
     return Container(
       key: ValueKey(widget.index),
