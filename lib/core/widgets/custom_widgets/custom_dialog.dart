@@ -22,8 +22,7 @@ class CustomAlertDialog {
   final BuildContext context;
   CustomAlertDialog(this.context);
 
-  Future<bool?> solidDialog(
-      {required List<ListDialogParameters> parameters, bool barrierDismissible = true}) {
+  Future<bool?> solidDialog({required List<ListDialogParameters> parameters, bool barrierDismissible = true}) {
     return showDialog<bool>(
       context: context,
       barrierDismissible: barrierDismissible,
