@@ -162,8 +162,7 @@ class _BuildItem extends ConsumerWidget {
   Widget build(BuildContext context, ref) {
     final size = ref.watch(instance.select((state) => state.size));
     final itemWidth = SortingNotifier.calculateItemWidth(context, size);
-    final currentItem =
-        ref.watch(instance.select((state) => index < state.list.length ? state.list[index] : null));
+    final currentItem = ref.watch(instance.select((state) => index < state.list.length ? state.list[index] : null));
 
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: SortingNotifier.itemsPadding / 2),
