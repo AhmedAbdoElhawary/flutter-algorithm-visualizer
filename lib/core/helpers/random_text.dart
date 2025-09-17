@@ -1,4 +1,3 @@
-
 class HashCode {
   static String generateIdentifier(List<String> userIds) {
     userIds.sort();
