@@ -12,7 +12,6 @@ class SymmetricPadding extends StatelessWidget {
   final Widget child;
   @override
   Widget build(BuildContext context) {
-    return _RPadding(
-        padding: REdgeInsets.symmetric(horizontal: horizontal, vertical: vertical), child: child);
+    return _RPadding(padding: REdgeInsets.symmetric(horizontal: horizontal, vertical: vertical), child: child);
   }
 }

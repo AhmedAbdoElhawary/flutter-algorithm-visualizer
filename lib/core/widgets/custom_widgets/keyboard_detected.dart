@@ -15,12 +15,10 @@ class KeyboardVisibilityBuilder extends StatefulWidget {
   });
 
   @override
-  KeyboardVisibilityBuilderState createState() =>
-      KeyboardVisibilityBuilderState();
+  KeyboardVisibilityBuilderState createState() => KeyboardVisibilityBuilderState();
 }
 
-class KeyboardVisibilityBuilderState extends State<KeyboardVisibilityBuilder>
-    with WidgetsBindingObserver {
+class KeyboardVisibilityBuilderState extends State<KeyboardVisibilityBuilder> with WidgetsBindingObserver {
   var _isKeyboardVisible = false;
 
   @override

@@ -1,7 +1,7 @@
 part of '../view/sorting_page.dart';
 
 class _SizeDraggable extends ConsumerWidget {
-  const _SizeDraggable({ required this.instance});
+  const _SizeDraggable({required this.instance});
 
   final StateNotifierProvider<SortingNotifier, SortingNotifierState> instance;
 

@@ -178,7 +178,7 @@ class ParticlePainter extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     final circlePaint = Paint()..color = pinColor;
     final linePaint = Paint()
-      ..color = pinColor.withOpacity(0.2)
+      ..color = pinColor.withValues(alpha: 0.2)
       ..strokeWidth = 0.5;
 
     const maxDistance = 150.0;
@@ -190,7 +190,7 @@ class ParticlePainter extends CustomPainter {
         if (p == other) continue;
         final dist = (p.position - other.position).distance;
         if (dist < maxDistance) {
-          linePaint.color = pinColor.withOpacity(1 - dist / maxDistance);
+          linePaint.color = pinColor.withValues(alpha: 1 - dist / maxDistance);
           canvas.drawLine(p.position, other.position, linePaint);
         }
       }

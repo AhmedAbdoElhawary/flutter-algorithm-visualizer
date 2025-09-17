@@ -26,8 +26,7 @@ class CustomRoundedElevatedButton extends StatelessWidget {
   Widget build(BuildContext context) {
     final backgroundColor = this.backgroundColor;
     final shadowColor = this.shadowColor;
-    final background =
-        backgroundColor == null ? null : context.getColor(backgroundColor);
+    final background = backgroundColor == null ? null : context.getColor(backgroundColor);
     final shadow = shadowColor == null ? null : context.getColor(shadowColor);
 
     return ElevatedButton(
@@ -36,8 +35,7 @@ class CustomRoundedElevatedButton extends StatelessWidget {
         shadowColor: shadow ?? ColorManager.transparent,
         fixedSize: fitToContent ? Size.fromHeight(fixedSize.r) : Size.fromWidth(fixedSize.r),
         padding: EdgeInsets.symmetric(horizontal: 15.r),
-        shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(roundedRadius).r),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(roundedRadius).r),
         surfaceTintColor: background,
         foregroundColor: context.getColor(ThemeEnum.hintColor),
       ),

@@ -22,7 +22,7 @@ class CustomSwitch extends ConsumerWidget {
         value: value,
         onChanged: onChanged,
         activeTrackColor: context.getColor(ThemeEnum.focusColor),
-        activeColor: context.getColor(ThemeEnum.whiteD1Color),
+        activeThumbColor: context.getColor(ThemeEnum.whiteD1Color),
         inactiveThumbColor: context.getColor(ThemeEnum.whiteColor),
         thumbIcon: WidgetStatePropertyAll(
           Icon(
@@ -30,10 +30,8 @@ class CustomSwitch extends ConsumerWidget {
             color: context.getColor(ThemeEnum.transparentColor),
           ),
         ),
-        inactiveTrackColor:
-            isLight ? ColorManager.whiteD5 : ColorManager.blackL3,
-        trackOutlineColor:
-            const WidgetStatePropertyAll(ColorManager.transparent),
+        inactiveTrackColor: isLight ? ColorManager.whiteD5 : ColorManager.blackL3,
+        trackOutlineColor: const WidgetStatePropertyAll(ColorManager.transparent),
       ),
     );
   }

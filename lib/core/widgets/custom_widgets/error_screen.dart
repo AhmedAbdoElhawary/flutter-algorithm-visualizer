@@ -14,12 +14,10 @@ class ErrorScreen extends StatelessWidget {
         padding: 20,
         child: foundation.kReleaseMode
             ? const Center(
-                child: RegularText(StringsManager.sorryForInconvenience,
-                    fontSize: 18),
+                child: RegularText(StringsManager.sorryForInconvenience, fontSize: 18),
               )
             : Center(
-                child: RegularText('Exception Details: $detailsException',
-                    maxLines: 5),
+                child: RegularText('Exception Details: $detailsException', maxLines: 5),
               ),
       ),
     );

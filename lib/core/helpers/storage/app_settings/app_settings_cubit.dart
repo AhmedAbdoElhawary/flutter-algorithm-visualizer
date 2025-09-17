@@ -8,8 +8,7 @@ part 'app_settings_state.dart';
 
 // Define your StateNotifierProvider
 final appSettingsProvider =
-    StateNotifierProvider<AppSettingsNotifier, AppSettingsState>(
-        (ref) => AppSettingsNotifier());
+    StateNotifierProvider<AppSettingsNotifier, AppSettingsState>((ref) => AppSettingsNotifier());
 
 class AppSettingsNotifier extends StateNotifier<AppSettingsState> {
   AppSettingsNotifier() : super(AppSettingsState.initial());
@@ -25,8 +24,7 @@ class AppSettingsNotifier extends StateNotifier<AppSettingsState> {
 
   LanguagesEnum get languageSelected => languageSelectedChar.language;
 
-  String get languageSelectedChar =>
-      _languageSelectedChar ?? _getLanguageSelectedChar;
+  String get languageSelectedChar => _languageSelectedChar ?? _getLanguageSelectedChar;
   String get _getLanguageSelectedChar => _storage.read(_langSveKey) ?? "en";
 
   bool get isLangEnglish => languageSelected == LanguagesEnum.english;
@@ -84,9 +82,7 @@ class AppSettingsNotifier extends StateNotifier<AppSettingsState> {
   ThemeMode get modeSelected => _selectedMode ?? _getModeSelected;
 
   ThemeMode get _getModeSelected =>
-      (_storage.read(_modeSveKey) ?? "light") == "light"
-          ? ThemeMode.light
-          : ThemeMode.dark;
+      (_storage.read(_modeSveKey) ?? "light") == "light" ? ThemeMode.light : ThemeMode.dark;
 
   bool get isThemeLight => modeSelected == ThemeMode.light;
 }

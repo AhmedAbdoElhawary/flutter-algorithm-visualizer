@@ -16,7 +16,6 @@ class OnlyPadding extends StatelessWidget {
   final Widget child;
   @override
   Widget build(BuildContext context) {
-
     return _RPadding(
       padding: REdgeInsetsDirectional.only(
         start: startPadding,

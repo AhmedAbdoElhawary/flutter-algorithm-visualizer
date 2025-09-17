@@ -138,8 +138,7 @@ class SearchingNotifier extends StateNotifier<GridNotifierState> {
 
     await cancelSearching();
 
-    _cancelableSearch =
-        CancelableOperation.fromFuture(_clearTheGridFun(clearAnyway: clearAnyway, keepWall: keepWall));
+    _cancelableSearch = CancelableOperation.fromFuture(_clearTheGridFun(clearAnyway: clearAnyway, keepWall: keepWall));
 
     try {
       await _cancelableSearch?.value;
@@ -174,9 +173,7 @@ class SearchingNotifier extends StateNotifier<GridNotifierState> {
     /// when you try to draw on the right border if you make the arrow closly to the border it will draw the wall in the left side (the next index)
     /// those two lines to prevent that
     final calcIndex = (event.localPosition.dx / _gridSquareSize).floor();
-    if (calcIndex != 0 &&
-        calcIndex % state.columnCrossAxisCount == 0 &&
-        index % state.columnCrossAxisCount == 0) {
+    if (calcIndex != 0 && calcIndex % state.columnCrossAxisCount == 0 && index % state.columnCrossAxisCount == 0) {
       index--;
     }
 
@@ -300,8 +297,7 @@ class SearchingNotifier extends StateNotifier<GridNotifierState> {
       }
 
       /// for marking the current grid as visited
-      if (gridData[currentIndex] != GridStatus.startPoint &&
-          gridData[currentIndex] != GridStatus.targetPoint) {
+      if (gridData[currentIndex] != GridStatus.startPoint && gridData[currentIndex] != GridStatus.targetPoint) {
         gridData[currentIndex] = GridStatus.searcher;
         state = state.copyWith(gridData: List<GridStatus>.from(gridData));
         await Future.delayed(drawSearcherDuration);
@@ -384,8 +380,7 @@ class SearchingNotifier extends StateNotifier<GridNotifierState> {
           previous[neighborIndex] = currentIndex;
           pq.add(neighborIndex);
 
-          if (gridData[neighborIndex] != GridStatus.startPoint &&
-              gridData[neighborIndex] != GridStatus.targetPoint) {
+          if (gridData[neighborIndex] != GridStatus.startPoint && gridData[neighborIndex] != GridStatus.targetPoint) {
             gridData[neighborIndex] = GridStatus.searcher;
             state = state.copyWith(gridData: List<GridStatus>.from(gridData));
             await Future.delayed(drawSearcherDuration);
@@ -397,17 +392,14 @@ class SearchingNotifier extends StateNotifier<GridNotifierState> {
     _isSearched = true;
   }
 
-  bool _isValidNeighbor(
-      int currentIndex, int neighborIndex, int direction, int cross, List<GridStatus> gridData) {
+  bool _isValidNeighbor(int currentIndex, int neighborIndex, int direction, int cross, List<GridStatus> gridData) {
     final isFirstLeftInRowIndex = neighborIndex % cross == 0;
     final isEndRightInRowIndex = (neighborIndex + 1) % cross == 0;
 
     if (direction == 1 && isFirstLeftInRowIndex) return false;
     if (direction == -1 && isEndRightInRowIndex) return false;
 
-    return neighborIndex >= 0 &&
-        neighborIndex < gridData.length &&
-        gridData[neighborIndex] != GridStatus.wall;
+    return neighborIndex >= 0 && neighborIndex < gridData.length && gridData[neighborIndex] != GridStatus.wall;
   }
 
   Future<void> _tracePath(List<int?> previous, int currentIndex) async {
@@ -505,8 +497,7 @@ class SearchingNotifier extends StateNotifier<GridNotifierState> {
             pq.add(neighborIndex);
           }
 
-          if (gridData[neighborIndex] != GridStatus.startPoint &&
-              gridData[neighborIndex] != GridStatus.targetPoint) {
+          if (gridData[neighborIndex] != GridStatus.startPoint && gridData[neighborIndex] != GridStatus.targetPoint) {
             gridData[neighborIndex] = GridStatus.searcher;
             state = state.copyWith(gridData: List<GridStatus>.from(gridData));
             await Future.delayed(drawSearcherDuration);
@@ -614,8 +605,7 @@ class SearchingNotifier extends StateNotifier<GridNotifierState> {
       final newRow = row + direction.rowDelta * 2;
       final newCol = col + direction.colDelta * 2;
 
-      if (_isValidCell(newRow, newCol) &&
-          gridData[newRow * state.columnCrossAxisCount + newCol] == GridStatus.empty) {
+      if (_isValidCell(newRow, newCol) && gridData[newRow * state.columnCrossAxisCount + newCol] == GridStatus.empty) {
         final betweenRow = row + direction.rowDelta;
         final betweenCol = col + direction.colDelta;
 

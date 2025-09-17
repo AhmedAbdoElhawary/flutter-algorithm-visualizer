@@ -2,8 +2,7 @@ import 'package:algorithm_visualizer/core/helpers/current_device.dart';
 import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/foundation.dart'
-    show TargetPlatform, defaultTargetPlatform;
+import 'package:flutter/foundation.dart' show TargetPlatform, defaultTargetPlatform;
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class CustomCircularProgress extends StatelessWidget {
@@ -14,8 +13,7 @@ class CustomCircularProgress extends StatelessWidget {
   Widget build(BuildContext context) {
     bool isThatAndroid = defaultTargetPlatform == TargetPlatform.android;
     final color = this.color;
-    final tColor =
-        color == null ? Theme.of(context).focusColor : context.getColor(color);
+    final tColor = color == null ? Theme.of(context).focusColor : context.getColor(color);
 
     return isThatAndroid
         ? Column(
@@ -27,14 +25,12 @@ class CustomCircularProgress extends StatelessWidget {
                 child: SizedBox(
                   width: 20.r,
                   height: 20.r,
-                  child: CircularProgressIndicator(
-                      strokeWidth: 3.r, color: tColor),
+                  child: CircularProgressIndicator(strokeWidth: 3.r, color: tColor),
                 ),
               ),
             ],
           )
-        : CupertinoActivityIndicator(
-            color: tColor, radius: 9.r, animating: true);
+        : CupertinoActivityIndicator(color: tColor, radius: 9.r, animating: true);
   }
 }
 
@@ -46,20 +42,17 @@ class SmallCircularProgress extends StatelessWidget {
   Widget build(BuildContext context) {
     bool isThatAndroid = defaultTargetPlatform == TargetPlatform.android;
     final color = this.color;
-    final tColor =
-        color == null ? Theme.of(context).focusColor : context.getColor(color);
+    final tColor = color == null ? Theme.of(context).focusColor : context.getColor(color);
 
     return isThatAndroid
         ? SizedBox(
             width: 15.r,
             height: 15.r,
             child: ClipOval(
-              child:
-                  CircularProgressIndicator(strokeWidth: 3.5.r, color: tColor),
+              child: CircularProgressIndicator(strokeWidth: 3.5.r, color: tColor),
             ),
           )
-        : CupertinoActivityIndicator(
-            color: tColor, radius: 9.r, animating: true);
+        : CupertinoActivityIndicator(color: tColor, radius: 9.r, animating: true);
   }
 }
 
@@ -67,22 +60,19 @@ class ThineCircularProgress extends StatelessWidget {
   final ThemeEnum? color;
   final ThemeEnum? backgroundColor;
   final double strokeWidth;
-  const ThineCircularProgress(
-      {super.key, this.color, this.backgroundColor, this.strokeWidth = 2});
+  const ThineCircularProgress({super.key, this.color, this.backgroundColor, this.strokeWidth = 2});
 
   @override
   Widget build(BuildContext context) {
     final color = this.color;
-    final tColor =
-        color == null ? Theme.of(context).focusColor : context.getColor(color);
+    final tColor = color == null ? Theme.of(context).focusColor : context.getColor(color);
     final backgroundColor = this.backgroundColor;
 
     return Center(
       child: CircularProgressIndicator.adaptive(
         strokeWidth: strokeWidth.r,
         valueColor: AlwaysStoppedAnimation<Color>(tColor),
-        backgroundColor:
-            backgroundColor != null ? context.getColor(backgroundColor) : null,
+        backgroundColor: backgroundColor != null ? context.getColor(backgroundColor) : null,
       ),
     );
   }
@@ -104,16 +94,14 @@ class ThineCircularProgressWithValue extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final color = this.color;
-    final tColor =
-        color == null ? Theme.of(context).focusColor : context.getColor(color);
+    final tColor = color == null ? Theme.of(context).focusColor : context.getColor(color);
     final backgroundColor = this.backgroundColor;
 
     return Center(
       child: CircularProgressIndicator.adaptive(
         strokeWidth: strokeWidth.r,
         valueColor: AlwaysStoppedAnimation<Color>(tColor),
-        backgroundColor:
-            backgroundColor != null ? context.getColor(backgroundColor) : null,
+        backgroundColor: backgroundColor != null ? context.getColor(backgroundColor) : null,
         value: value,
       ),
     );
@@ -147,14 +135,12 @@ class CustomThineCircularProgress extends StatelessWidget {
   final ThemeEnum? color;
   final ThemeEnum? backgroundColor;
   final double strokeWidth;
-  const CustomThineCircularProgress(
-      {super.key, this.color, this.backgroundColor, this.strokeWidth = 2});
+  const CustomThineCircularProgress({super.key, this.color, this.backgroundColor, this.strokeWidth = 2});
 
   @override
   Widget build(BuildContext context) {
     final color = this.color;
-    final tColor =
-        color == null ? Theme.of(context).focusColor : context.getColor(color);
+    final tColor = color == null ? Theme.of(context).focusColor : context.getColor(color);
     final backgroundColor = this.backgroundColor;
 
     return Center(
@@ -162,12 +148,9 @@ class CustomThineCircularProgress extends StatelessWidget {
           ? CircularProgressIndicator(
               strokeWidth: strokeWidth.r,
               valueColor: AlwaysStoppedAnimation<Color>(tColor),
-              backgroundColor: backgroundColor != null
-                  ? context.getColor(backgroundColor)
-                  : null,
+              backgroundColor: backgroundColor != null ? context.getColor(backgroundColor) : null,
             )
-          : CupertinoActivityIndicator(
-              color: tColor, radius: strokeWidth.r, animating: true),
+          : CupertinoActivityIndicator(color: tColor, radius: strokeWidth.r, animating: true),
     );
   }
 }
@@ -188,8 +171,7 @@ class CustomThineCircularProgressWithValue extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final color = this.color;
-    final tColor =
-        color == null ? Theme.of(context).focusColor : context.getColor(color);
+    final tColor = color == null ? Theme.of(context).focusColor : context.getColor(color);
     final backgroundColor = this.backgroundColor;
 
     return Center(
@@ -197,13 +179,10 @@ class CustomThineCircularProgressWithValue extends StatelessWidget {
           ? CircularProgressIndicator(
               strokeWidth: strokeWidth.r,
               valueColor: AlwaysStoppedAnimation<Color>(tColor),
-              backgroundColor: backgroundColor != null
-                  ? context.getColor(backgroundColor)
-                  : null,
+              backgroundColor: backgroundColor != null ? context.getColor(backgroundColor) : null,
               value: value,
             )
-          : CupertinoActivityIndicator(
-              color: tColor, radius: strokeWidth.r, animating: false),
+          : CupertinoActivityIndicator(color: tColor, radius: strokeWidth.r, animating: false),
     );
   }
 }
@@ -222,16 +201,14 @@ class BaseCircularProgress extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final color = this.color;
-    final tColor =
-        color == null ? Theme.of(context).focusColor : context.getColor(color);
+    final tColor = color == null ? Theme.of(context).focusColor : context.getColor(color);
     final backgroundColor = this.backgroundColor;
 
     return Center(
       child: CircularProgressIndicator(
         strokeWidth: strokeWidth.r,
         valueColor: AlwaysStoppedAnimation<Color>(tColor),
-        backgroundColor:
-            backgroundColor != null ? context.getColor(backgroundColor) : null,
+        backgroundColor: backgroundColor != null ? context.getColor(backgroundColor) : null,
       ),
     );
   }

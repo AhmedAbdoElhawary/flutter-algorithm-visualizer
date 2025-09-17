@@ -8,9 +8,9 @@ class BoldText extends _AdaptiveText {
     super.fontStyle = FontStyle.normal,
     super.color = ThemeEnum.focusColor,
     super.shadows,
-    super.fontWeight= FontWeightManager.bold,
+    super.fontWeight = FontWeightManager.bold,
     super.textAlign,
     super.maxLines = 2,
     super.key,
-  }) ;
+  });
 }
