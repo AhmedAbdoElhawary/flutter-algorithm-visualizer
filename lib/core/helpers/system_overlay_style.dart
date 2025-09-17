@@ -48,9 +48,8 @@ class TransparentSystemOverlay extends StatelessWidget {
 
   SystemUiOverlayStyle transparentTheme() {
     return const SystemUiOverlayStyle(
-      statusBarColor: Colors.transparent,
-      systemNavigationBarColor: Colors.transparent,
-      systemNavigationBarDividerColor: ColorManager.transparent
-    );
+        statusBarColor: Colors.transparent,
+        systemNavigationBarColor: Colors.transparent,
+        systemNavigationBarDividerColor: ColorManager.transparent);
   }
 }

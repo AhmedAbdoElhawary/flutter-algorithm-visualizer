@@ -4,10 +4,8 @@ import 'package:go_router/go_router.dart';
 
 extension Navigators on BuildContext {
   String? get currentRoute => ModalRoute.of(this)?.settings.name;
-  (String?, Object?) get currentRouteSettings => (
-        ModalRoute.of(this)?.settings.name,
-        ModalRoute.of(this)?.settings.arguments
-      );
+  (String?, Object?) get currentRouteSettings =>
+      (ModalRoute.of(this)?.settings.name, ModalRoute.of(this)?.settings.arguments);
   void unFocusKeyboard() {
     try {
       if (mounted) FocusScope.of(this).unfocus();
@@ -53,9 +51,7 @@ extension Navigators on BuildContext {
 
       final currentValue = currentRouteSettings.$2;
 
-      if (currentValue is Map &&
-          currentRoute == path.name &&
-          arguments == currentValue[path.pathParamsName]) {
+      if (currentValue is Map && currentRoute == path.name && arguments == currentValue[path.pathParamsName]) {
         return;
       }
     }
@@ -64,13 +60,8 @@ extension Navigators on BuildContext {
         .pushNamed(
       path.name,
       extra: arguments,
-      pathParameters: pathParametersRaw ??
-          (pathParameters.isNotEmpty
-              ? {path.pathParamsName: pathParameters}
-              : {}),
-      queryParameters: queryParameters.isNotEmpty
-          ? {path.queryParamsName: queryParameters}
-          : {},
+      pathParameters: pathParametersRaw ?? (pathParameters.isNotEmpty ? {path.pathParamsName: pathParameters} : {}),
+      queryParameters: queryParameters.isNotEmpty ? {path.queryParamsName: queryParameters} : {},
     )
         .then((value) {
       unFocusKeyboard();
@@ -87,8 +78,7 @@ extension Navigators on BuildContext {
         .pushReplacementNamed(
       path.name,
       extra: arguments,
-      pathParameters:
-          pathParameters.isEmpty ? {} : {path.pathParamsName: pathParameters},
+      pathParameters: pathParameters.isEmpty ? {} : {path.pathParamsName: pathParameters},
     )
         .then((value) {
       unFocusKeyboard();
@@ -110,8 +100,7 @@ extension Navigators on BuildContext {
         .pushReplacementNamed(
       path.name,
       extra: arguments,
-      pathParameters:
-          pathParameters.isEmpty ? {} : {path.pathParamsName: pathParameters},
+      pathParameters: pathParameters.isEmpty ? {} : {path.pathParamsName: pathParameters},
     )
         .then((value) {
       unFocusKeyboard();
@@ -133,8 +122,7 @@ extension Navigators on BuildContext {
         .pushNamed(
       path.name,
       extra: arguments,
-      pathParameters:
-          pathParameters.isEmpty ? {} : {path.pathParamsName: pathParameters},
+      pathParameters: pathParameters.isEmpty ? {} : {path.pathParamsName: pathParameters},
     )
         .then((value) {
       unFocusKeyboard();

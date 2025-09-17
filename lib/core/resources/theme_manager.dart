@@ -50,13 +50,10 @@ extension ThemeExtension on BuildContext {
       ThemeEnum.hintColor: Theme.of(this).hintColor,
 
       /// what ever dark or light. Maybe if we have multiple themes, it will save a lot of time.
-      ThemeEnum.whiteD1Color: Theme.of(this).dialogBackgroundColor,
+      ThemeEnum.whiteD1Color: Theme.of(this).dialogTheme.backgroundColor!,
       ThemeEnum.whiteD2Color: Theme.of(this).primaryColorLight,
-      ThemeEnum.bottomSheetColor:
-          Theme.of(this).bottomSheetTheme.backgroundColor ??
-              Theme.of(this).primaryColorLight,
-      ThemeEnum.whiteD3Color:
-          Theme.of(this).textTheme.headlineLarge?.color ?? ColorManager.grey,
+      ThemeEnum.bottomSheetColor: Theme.of(this).bottomSheetTheme.backgroundColor ?? Theme.of(this).primaryColorLight,
+      ThemeEnum.whiteD3Color: Theme.of(this).textTheme.headlineLarge?.color ?? ColorManager.grey,
       ThemeEnum.whiteD4Color: Theme.of(this).colorScheme.primaryContainer,
       ThemeEnum.whiteD5Color: ColorManager.whiteD5,
       ThemeEnum.whiteD7Color: ColorManager.whiteD7,
@@ -79,8 +76,7 @@ extension ThemeExtension on BuildContext {
 
       ThemeEnum.greyColor: ColorManager.grey,
       ThemeEnum.grey5Color: ColorManager.greyD9,
-      ThemeEnum.darkGreyColor:
-          Theme.of(this).textTheme.bodyLarge?.color ?? ColorManager.greyD3,
+      ThemeEnum.darkGreyColor: Theme.of(this).textTheme.bodyLarge?.color ?? ColorManager.greyD3,
       ThemeEnum.blueColor: ColorManager.blue,
       ThemeEnum.darkBlueColor: ColorManager.darkBlue,
       ThemeEnum.mediumBlueColor: ColorManager.mediumBlue,
@@ -92,6 +88,5 @@ extension ThemeExtension on BuildContext {
     };
   }
 
-  Color getColor(ThemeEnum color) =>
-      _colors[color] ?? Theme.of(this).primaryColor;
+  Color getColor(ThemeEnum color) => _colors[color] ?? Theme.of(this).primaryColor;
 }

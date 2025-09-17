@@ -25,9 +25,7 @@ class CustomAssetsSvg extends StatelessWidget {
       path,
       height: size?.r,
       semanticsLabel: semanticLabel,
-      colorFilter: color == null
-          ? null
-          : ColorFilter.mode(context.getColor(color), BlendMode.srcIn),
+      colorFilter: color == null ? null : ColorFilter.mode(context.getColor(color), BlendMode.srcIn),
     );
   }
 }
