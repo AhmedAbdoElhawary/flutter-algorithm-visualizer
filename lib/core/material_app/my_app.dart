@@ -30,8 +30,7 @@ class MyApp extends StatelessWidget {
 
             return LayoutBuilder(
               builder: (context, constraints) {
-                final padding =
-                    constraints.maxWidth < 450 ? 0.0 : ((constraints.maxWidth - defaultSize.width) / 2.3);
+                final padding = constraints.maxWidth < 450 ? 0.0 : ((constraints.maxWidth - defaultSize.width) / 2.3);
 
                 return SystemOverlay(
                   isBlackTheme: isDarkMode,
