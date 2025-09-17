@@ -55,8 +55,7 @@ class CustomBottomSheet {
     );
   }
 
-  static Future<void> _showBottomSheet(
-      BuildContext context, Widget child) async {
+  static Future<void> _showBottomSheet(BuildContext context, Widget child) async {
     return showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -152,17 +151,12 @@ class _BottomSheetDash extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: REdgeInsetsDirectional.only(
-          start: 10,
-          end: 10,
-          top: 10,
-          bottom: withLittleBottomPadding ? 5 : 10),
+      padding: REdgeInsetsDirectional.only(start: 10, end: 10, top: 10, bottom: withLittleBottomPadding ? 5 : 10),
       child: Container(
         width: 40.w,
         height: 3.5.h,
-        decoration: BoxDecoration(
-            color: context.getColor(ThemeEnum.hoverColor),
-            borderRadius: BorderRadius.circular(5)),
+        decoration:
+            BoxDecoration(color: context.getColor(ThemeEnum.hoverColor), borderRadius: BorderRadius.circular(5)),
       ),
     );
   }
