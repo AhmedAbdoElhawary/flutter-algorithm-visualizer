@@ -6,7 +6,6 @@ class EndPadding extends StatelessWidget {
   final Widget child;
   @override
   Widget build(BuildContext context) {
-    return _RPadding(
-        padding: REdgeInsetsDirectional.only(end: padding), child: child);
+    return _RPadding(padding: REdgeInsetsDirectional.only(end: padding), child: child);
   }
 }
