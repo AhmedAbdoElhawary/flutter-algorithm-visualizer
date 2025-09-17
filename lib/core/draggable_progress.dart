@@ -30,9 +30,8 @@ class LinearSliderState extends State<DraggableProgressBar> {
   @override
   Widget build(BuildContext context) {
     return Slider(
-      activeColor: widget.isActive
-          ? context.getColor(ThemeEnum.mediumBlueColor)
-          : context.getColor(ThemeEnum.whiteD7Color),
+      activeColor:
+          widget.isActive ? context.getColor(ThemeEnum.mediumBlueColor) : context.getColor(ThemeEnum.whiteD7Color),
       value: sliderValue,
       onChanged: (v) {
         setState(() {

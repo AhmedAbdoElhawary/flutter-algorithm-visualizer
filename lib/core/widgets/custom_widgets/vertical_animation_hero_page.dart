@@ -9,8 +9,7 @@ class VerticalAnimationHeroPage extends StatefulWidget {
   final VoidCallback onSwipe;
   final Widget child;
   @override
-  State<VerticalAnimationHeroPage> createState() =>
-      _VerticalAnimationHeroPageState();
+  State<VerticalAnimationHeroPage> createState() => _VerticalAnimationHeroPageState();
 }
 
 class _VerticalAnimationHeroPageState extends State<VerticalAnimationHeroPage> {

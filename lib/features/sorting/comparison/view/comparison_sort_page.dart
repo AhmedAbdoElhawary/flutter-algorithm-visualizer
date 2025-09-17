@@ -136,11 +136,9 @@ class _DrawerMenu extends ConsumerWidget {
             ...List.generate(
               algorithms.length,
               (index) => ListTile(
-                trailing:
-                    selectedAlgorithms.firstWhereOrNull((element) => element.name == algorithms[index]) !=
-                            null
-                        ? const CustomIcon(Icons.check)
-                        : null,
+                trailing: selectedAlgorithms.firstWhereOrNull((element) => element.name == algorithms[index]) != null
+                    ? const CustomIcon(Icons.check)
+                    : null,
                 title: RegularText(algorithms[index]),
                 onTap: () {
                   ref.read(_notifierProvider.notifier).selectAlgorithm(algorithms[index]);
