@@ -25,7 +25,10 @@ class AppTheme {
         surfaceTintColor: ColorManager.white,
         shadowColor: ColorManager.white,
       ),
-      dialogTheme: const DialogThemeData(surfaceTintColor: ColorManager.whiteD5),
+      dialogTheme: const DialogThemeData(
+        surfaceTintColor: ColorManager.whiteD5,
+        backgroundColor: ColorManager.whiteD1,
+      ),
       dividerColor: ColorManager.blackOp10,
       scaffoldBackgroundColor: ColorManager.white,
       iconTheme: const IconThemeData(color: ColorManager.black),
@@ -44,7 +47,7 @@ class AppTheme {
       tabBarTheme: _tabBarTheme(),
       textTheme: _textTheme(),
       dividerTheme: const DividerThemeData(color: ColorManager.whiteD5),
-      bottomAppBarTheme:  const BottomAppBarThemeData(color: ColorManager.blackOp30),
+      bottomAppBarTheme: const BottomAppBarThemeData(color: ColorManager.blackOp30),
       textSelectionTheme: const TextSelectionThemeData(
         cursorColor: ColorManager.teal,
         selectionColor: ColorManager.blackOp10,
@@ -151,7 +154,10 @@ class AppTheme {
         surfaceTintColor: ColorManager.blackL5,
         shadowColor: ColorManager.blackL5,
       ),
-      dialogTheme: const DialogThemeData(surfaceTintColor: ColorManager.blackL5),
+      dialogTheme: const DialogThemeData(
+        surfaceTintColor: ColorManager.blackL5,
+        backgroundColor: ColorManager.blackL1,
+      ),
       dividerColor: ColorManager.whiteOp10,
       scaffoldBackgroundColor: ColorManager.blackBlue,
       iconTheme: const IconThemeData(color: ColorManager.white),
@@ -169,7 +175,7 @@ class AppTheme {
       tabBarTheme: _tabBarDarkTheme(),
       textTheme: _textDarkTheme(),
       dividerTheme: const DividerThemeData(color: ColorManager.blackL5),
-      bottomAppBarTheme:  const BottomAppBarThemeData(color: ColorManager.whiteOp30),
+      bottomAppBarTheme: const BottomAppBarThemeData(color: ColorManager.whiteOp30),
       textSelectionTheme: const TextSelectionThemeData(
         cursorColor: ColorManager.teal,
         selectionColor: ColorManager.greyD6,

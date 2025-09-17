@@ -142,8 +142,7 @@ class ComparisonSortNotifier extends StateNotifier<ComparisonSortingNotifierStat
   Future<void> playSorting(BuildContext context, WidgetRef ref) async {
     if (_getOperation == SortingEnum.played) return;
 
-    final playSorting =
-        state.selectedAlgorithms.map((e) => ref.read(e.provider.notifier).playSorting(context));
+    final playSorting = state.selectedAlgorithms.map((e) => ref.read(e.provider.notifier).playSorting(context));
     _setOperation = SortingEnum.played;
 
     await Future.wait(playSorting.toList());
@@ -158,6 +157,7 @@ class ComparisonSortNotifier extends StateNotifier<ComparisonSortingNotifierStat
 
     if (_getOperation == SortingEnum.played) _setOperation = SortingEnum.stopped;
   }
+
   Future<void> cancelSorting(WidgetRef ref) async {
     final cancelSorting = state.selectedAlgorithms.map((e) => ref.read(e.provider.notifier).cancelSorting());
     await Future.wait(cancelSorting.toList());
