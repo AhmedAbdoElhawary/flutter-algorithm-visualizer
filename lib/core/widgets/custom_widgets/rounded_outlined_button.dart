@@ -23,22 +23,17 @@ class RoundedOutlinedButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final backgroundColor = this.backgroundColor;
-    final background =
-        backgroundColor == null ? null : context.getColor(backgroundColor);
+    final background = backgroundColor == null ? null : context.getColor(backgroundColor);
 
     return OutlinedButton(
       style: OutlinedButton.styleFrom(
-        backgroundColor:
-            backgroundColor == null ? null : context.getColor(backgroundColor),
-        fixedSize: size == OutlineEnumFixedSize.small
-            ? Size.fromHeight(smallRounded ? 30.h : 35.h)
-            : null,
+        backgroundColor: backgroundColor == null ? null : context.getColor(backgroundColor),
+        fixedSize: size == OutlineEnumFixedSize.small ? Size.fromHeight(smallRounded ? 30.h : 35.h) : null,
         padding: REdgeInsets.symmetric(horizontal: 15),
         surfaceTintColor: background,
         foregroundColor: context.getColor(ThemeEnum.hintColor),
         side: BorderSide(color: context.getColor(borderColor), width: 1.5.r),
-        shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(smallRounded ? 5 : 50)),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(smallRounded ? 5 : 50)),
       ),
       onPressed: onPressed,
       child: child,

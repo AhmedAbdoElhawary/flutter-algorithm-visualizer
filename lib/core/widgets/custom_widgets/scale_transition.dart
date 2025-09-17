@@ -12,8 +12,7 @@ class CustomScaleTransition extends StatefulWidget {
   State<CustomScaleTransition> createState() => _CustomScaleTransitionState();
 }
 
-class _CustomScaleTransitionState extends State<CustomScaleTransition>
-    with TickerProviderStateMixin {
+class _CustomScaleTransitionState extends State<CustomScaleTransition> with TickerProviderStateMixin {
   bool remove = false;
 
   @override

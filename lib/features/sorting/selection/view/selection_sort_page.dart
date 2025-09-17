@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 final _notifierProvider = StateNotifierProvider<SortingNotifier, SortingNotifierState>(
-      (ref) => SelectionSortNotifier(),
+  (ref) => SelectionSortNotifier(),
 );
 
 class SelectionSortPage extends StatelessWidget {
@@ -14,6 +14,6 @@ class SelectionSortPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SortingPage(instance: _notifierProvider,title: StringsManager.selectionSort);
+    return SortingPage(instance: _notifierProvider, title: StringsManager.selectionSort);
   }
 }
