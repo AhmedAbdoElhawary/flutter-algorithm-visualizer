@@ -1,4 +1,4 @@
-package com.example.algorithm_visualizer
+package com.elhawary.algodive
 
 import io.flutter.embedding.android.FlutterActivity
 
