@@ -44,10 +44,9 @@ class _AdaptiveText extends StatelessWidget {
     /// todo: tr
 
     final text = (translate
-            ? this.text
-            // .tr
-            : this.text)
-        .trim();
+        ? this.text
+        // .tr
+        : this.text);
 
     // final actualWeight = text.getExtraWeightForArabic(fontWeight);
     final actualWeight = fontWeight;
