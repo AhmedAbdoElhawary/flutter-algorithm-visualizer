@@ -1,20 +1,7 @@
-import 'package:algorithm_visualizer/core/extensions/navigators.dart';
 import 'package:algorithm_visualizer/core/helpers/app_bar/back_button.dart';
-import 'package:algorithm_visualizer/core/resources/color_manager.dart';
 import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
 import 'package:algorithm_visualizer/core/widgets/adaptive/text/adaptive_text.dart';
 import 'package:flutter/material.dart';
-
-class CustomAppBar {
-  static AppBar iconAppBar({bool isShadowTransparent = true, bool withBackButton = true}) {
-    return GlobalAppBar(
-      centerTitle: true,
-      // title: const AppLogo(),
-      leading: withBackButton ? null : const SizedBox(),
-      shadowColor: isShadowTransparent ? ColorManager.transparent : null,
-    );
-  }
-}
 
 class GlobalAppBar extends AppBar {
   GlobalAppBar({
@@ -75,50 +62,6 @@ class GlobalAppBar extends AppBar {
 }
 
 const double secondAppBarIconSize = 28;
-
-class AppBarCloseButton extends StatelessWidget {
-  const AppBarCloseButton({this.onTap, this.withPopup = true, super.key});
-  final VoidCallback? onTap;
-  final bool withPopup;
-  @override
-  Widget build(BuildContext context) {
-    return IconButton(
-      onPressed: () {
-        final onTap = this.onTap;
-        if (onTap != null) onTap();
-        if (withPopup) {
-          Navigator.maybePop(context); // will be helpful for PopScope
-        }
-      },
-      icon: const CloseButtonIcon(),
-    );
-  }
-}
-
-class AppBarCheckButton extends StatelessWidget {
-  const AppBarCheckButton({
-    this.onTap,
-    this.withPopup = true,
-    this.enableTap = true,
-    super.key,
-  });
-  final VoidCallback? onTap;
-  final bool withPopup;
-  final bool enableTap;
-  @override
-  Widget build(BuildContext context) {
-    return IconButton(
-      icon: enableTap
-          ? const Icon(Icons.check_rounded, size: secondAppBarIconSize, color: ColorManager.blue)
-          : const Icon(Icons.check_rounded, size: secondAppBarIconSize, color: ColorManager.lightBlue),
-      onPressed: () {
-        final onTap = this.onTap;
-        if (onTap != null) onTap();
-        if (withPopup) context.back();
-      },
-    );
-  }
-}
 
 class GlobalAppBarText extends StatelessWidget {
   const GlobalAppBarText({super.key, required this.text});
