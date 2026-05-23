@@ -9,7 +9,7 @@ class AppSettingsState {
   factory AppSettingsState.initial() {
     return AppSettingsState(
       language: LanguagesEnum.english,
-      themeMode: ThemeMode.light,
+      themeMode: ThemeMode.dark,
     );
   }
 
