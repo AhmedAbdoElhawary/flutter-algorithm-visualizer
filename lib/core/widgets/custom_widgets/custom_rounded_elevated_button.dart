@@ -37,7 +37,7 @@ class CustomRoundedElevatedButton extends StatelessWidget {
         padding: EdgeInsets.symmetric(horizontal: 15.r),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(roundedRadius).r),
         surfaceTintColor: background,
-        foregroundColor: context.getColor(ThemeEnum.hintColor),
+        foregroundColor: context.getColor(ThemeEnum.glassColor),
       ),
       onPressed: onPressed,
       child: child,
