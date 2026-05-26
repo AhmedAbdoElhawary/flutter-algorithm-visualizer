@@ -34,6 +34,7 @@ class StringsManager {
   static const String recursiveDivisionMaze = "Recursive Division Maze";
   static const String searching = "Searching";
   static const String sorting = "Sorting";
+
   static const String bubbleSort = "Bubble sort";
   static const String insertionSort = "Insertion sort";
   static const String selectionSort = "Selection sort";
@@ -45,6 +46,18 @@ class StringsManager {
   static const String countingSort = "Counting sort";
   static const String bucketSort = "Bucket sort";
   static const String comparisonSort = "Comparison sort";
+
+  static const String bubbleSortDescription = "Swaps like bubbles rising until the biggest reaches the top.";
+  static const String selectionSortDescription = "Selects the smallest item each round and fixes its place.";
+  static const String insertionSortDescription = "Inserts each item into its correct sorted position.";
+  static const String mergeSortDescription = "Merges divided sorted parts into one ordered list.";
+  static const String quickSortDescription = "Quickly partitions data around a chosen pivot value.";
+  static const String heapSortDescription = "Uses a heap tree to repeatedly extract the largest item.";
+  static const String shellSortDescription = "Improves insertion sort using distant element gaps.";
+  static const String radixSortDescription = "Sorts numbers digit by digit from least to greatest.";
+  static const String countingSortDescription = "Counts occurrences instead of comparing values directly.";
+  static const String bucketSortDescription = "Distributes items into buckets, then sorts each bucket.";
+
   static const String comparisonAlgorithms = "Comparison algorithms";
   static const String generateMaze = "Generate Maze";
   static const String visualize = "Visualize";
@@ -56,4 +69,10 @@ class StringsManager {
   static const String sort = "Sort";
   static const String speed = "Speed";
   static const String size = "Size";
+  static const String time = "Time: ";
+  static const String space = "Space: ";
+  static const String best = "Best: ";
+  static const String average = "Average: ";
+  static const String worst = "Worst: ";
+
 }
