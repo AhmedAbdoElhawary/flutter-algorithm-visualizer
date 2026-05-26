@@ -1,3 +1,5 @@
+import 'package:algorithm_visualizer/core/helpers/o_notation.dart';
+import 'package:algorithm_visualizer/core/resources/strings_manager.dart';
 import 'package:algorithm_visualizer/features/sorting/base/view_model/sorting_notifier.dart';
 import 'package:collection/collection.dart';
 
@@ -45,4 +47,20 @@ class MergeSortNotifier extends SortingNotifier {
 
     return SortingResult(sortedValues: arr, steps: steps);
   }
+
+
+  static final algorithmComplexity = AlgorithmComplexity(
+    name: StringsManager.mergeSort,
+    bestTimeComplexity: ONotationComplexity.nLogN,
+    averageTimeComplexity: ONotationComplexity.nLogN,
+    worstTimeComplexity: ONotationComplexity.nLogN,
+    spaceComplexity: ONotationComplexity.n,
+  );
+
+  @override
+  AlgorithmComplexity get algoComplexity => algorithmComplexity;
+
+  @override
+  String get description => StringsManager.mergeSortDescription;
+
 }
