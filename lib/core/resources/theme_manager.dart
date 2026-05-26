@@ -4,7 +4,12 @@ import 'package:flutter/material.dart';
 enum ThemeEnum {
   primaryColor,
   focusColor,
-  hintColor,
+  glassColor,
+  cardGlassColor,
+  shadowColor,
+  greyD6Color,
+  mainDarkColor,
+  white2DarkColor,
 
   whiteD1Color,
   whiteD2Color,
@@ -32,6 +37,7 @@ enum ThemeEnum {
   bottomSheetColor,
 
   blueColor,
+  darkPurpleColor,
   darkBlueColor,
   mediumBlueColor,
   lightBlueColor,
@@ -47,7 +53,10 @@ extension ThemeExtension on BuildContext {
     return {
       ThemeEnum.primaryColor: Theme.of(this).primaryColor,
       ThemeEnum.focusColor: Theme.of(this).focusColor,
-      ThemeEnum.hintColor: Theme.of(this).hintColor,
+      ThemeEnum.glassColor: Theme.of(this).hintColor,
+      ThemeEnum.cardGlassColor: ColorManager.cardDarkColor,
+      ThemeEnum.shadowColor: Theme.of(this).shadowColor,
+      ThemeEnum.white2DarkColor: ColorManager.white2DarkColor,
 
       /// what ever dark or light. Maybe if we have multiple themes, it will save a lot of time.
       ThemeEnum.whiteD1Color: Theme.of(this).dialogTheme.backgroundColor!,
@@ -73,8 +82,10 @@ extension ThemeExtension on BuildContext {
       ThemeEnum.blackOp80: ColorManager.blackOp80,
       ThemeEnum.blackOp50: ColorManager.blackOp50,
       ThemeEnum.hoverColor: Theme.of(this).hoverColor,
+      ThemeEnum.mainDarkColor: ColorManager.mainDarkColor,
 
       ThemeEnum.greyColor: ColorManager.grey,
+      ThemeEnum.greyD6Color: ColorManager.greyD6,
       ThemeEnum.grey5Color: ColorManager.greyD9,
       ThemeEnum.darkGreyColor: Theme.of(this).textTheme.bodyLarge?.color ?? ColorManager.greyD3,
       ThemeEnum.blueColor: ColorManager.blue,
@@ -85,6 +96,7 @@ extension ThemeExtension on BuildContext {
       ThemeEnum.redColor: ColorManager.red,
       ThemeEnum.orangeColor: ColorManager.orange,
       ThemeEnum.comparedColor: ColorManager.dividerBlue,
+      ThemeEnum.darkPurpleColor: ColorManager.darkPurple,
     };
   }
 
