@@ -24,17 +24,28 @@ import 'package:flutter/material.dart';
 /// blackOp10 => 10%
 
 abstract final class ColorManager {
+  /// -------- dark theme ------------>
+  static const Color primaryDarkColor =  Color.fromRGBO(8,13,26, 1);
+  static const Color mainDarkColor = Color.fromRGBO(131,140,248, 1);
+  static const Color main2DarkColor = Color.fromRGBO(192,132,252, 1);
+  static const Color glassDarkColor = Color.fromRGBO(14,23,41, 0.8);
+  static const Color cardDarkColor =  Color.fromRGBO(24,29,43, 0.7);
+  static const Color borderGlassDarkColor = Color(0x1BFFFFFF);
+  static const Color white2DarkColor = Color.fromRGBO(148,163,184, 1);
+
+  /// -------------------------------->
+
   static const Color transparent = Colors.transparent;
   static const Color transparentWhite = Color.fromRGBO(255, 255, 255, 0.48627450980392156);
-  static const Color whiteOp10 = Color.fromRGBO(255, 255, 255, .1);
-  static const Color whiteOp20 = Color.fromRGBO(255, 255, 255, .2);
-  static const Color whiteOp30 = Color.fromRGBO(255, 255, 255, .3);
-  static const Color whiteOp40 = Color.fromRGBO(255, 255, 255, .4);
-  static const Color whiteOp50 = Color.fromRGBO(255, 255, 255, .5);
-  static const Color whiteOp60 = Color.fromRGBO(255, 255, 255, .6);
-  static const Color whiteOp70 = Color.fromRGBO(255, 255, 255, .7);
-  static const Color whiteOp80 = Color.fromRGBO(255, 255, 255, .8);
-  static const Color whiteOp90 = Color.fromRGBO(255, 255, 255, .9);
+  static const Color whiteOp10 = Color.fromRGBO(166, 170, 218, .1);
+  static const Color whiteOp20 = Color.fromRGBO(166, 170, 218, .2);
+  static const Color whiteOp30 = Color.fromRGBO(166, 170, 218, .3);
+  static const Color whiteOp40 = Color.fromRGBO(67, 86, 122, 1.0);
+  static const Color whiteOp50 = Color.fromRGBO(63,78,109, 1);
+  static const Color whiteOp60 = Color.fromRGBO(166, 170, 218, .6);
+  static const Color whiteOp70 = Color.fromRGBO(166, 170, 218, .7);
+  static const Color whiteOp80 = Color.fromRGBO(166, 170, 218, .8);
+  static const Color whiteOp90 = Color.fromRGBO(166, 170, 218, .9);
   static const Color white = Color.fromRGBO(255, 255, 255, 1);
   static const Color whiteD1 = Color.fromRGBO(245, 245, 245, 1);
   static const Color whiteD2 = Color.fromRGBO(240, 240, 240, 1);
@@ -47,8 +58,8 @@ abstract final class ColorManager {
   static const Color whiteD9 = Color.fromRGBO(175, 175, 175, 1);
   static const Color whiteD10 = Color.fromRGBO(165, 165, 165, 1);
 
-  static const Color grey = Color.fromRGBO(155, 155, 155, 1);
-  static const Color greyOp70 = Color.fromRGBO(155, 155, 155, 0.84);
+  static const Color grey = Color.fromRGBO(131, 137, 155, 1.0);
+  static const Color greyOp70 = Color.fromRGBO(125, 133, 154, 0.8392156862745098);
   static const Color greyD1 = Color.fromRGBO(145, 145, 145, 1);
   static const Color greyD2 = Color.fromRGBO(135, 135, 135, 1);
   static const Color greyD3 = Color.fromRGBO(125, 125, 125, 1);
@@ -90,7 +101,6 @@ abstract final class ColorManager {
   static const Color lightBlueM2 = Color.fromRGBO(209, 234, 255, 1.0);
   static const Color lightBlueWhiteD1 = Color.fromRGBO(243, 243, 246, 1.0);
   static const Color blackL3Blue = Color.fromRGBO(14, 14, 19, 1.0);
-  static const Color blackBlue = Color.fromRGBO(0, 0, 5, 1.0);
   static const Color darkPurple = Color.fromRGBO(66, 8, 99, 1.0);
 
   static const Color green = Color.fromRGBO(25, 189, 98, 1.0);
