@@ -1,3 +1,5 @@
+import 'package:algorithm_visualizer/core/helpers/o_notation.dart';
+import 'package:algorithm_visualizer/core/resources/strings_manager.dart';
 import 'package:algorithm_visualizer/features/sorting/base/view_model/sorting_notifier.dart';
 import 'package:collection/collection.dart';
 
@@ -39,4 +41,19 @@ class SelectionSortNotifier extends SortingNotifier {
 
     return SortingResult(sortedValues: arr, steps: steps);
   }
+
+  static final algorithmComplexity = AlgorithmComplexity(
+    name: StringsManager.selectionSort,
+    bestTimeComplexity: ONotationComplexity.n2,
+    averageTimeComplexity: ONotationComplexity.n2,
+    worstTimeComplexity: ONotationComplexity.n2,
+    spaceComplexity: ONotationComplexity.constant,
+  );
+
+  @override
+  AlgorithmComplexity get algoComplexity => algorithmComplexity;
+
+  @override
+  String get description => StringsManager.selectionSortDescription;
+
 }
