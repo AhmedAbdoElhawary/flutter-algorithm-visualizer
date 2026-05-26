@@ -1,3 +1,5 @@
+import 'package:algorithm_visualizer/core/helpers/o_notation.dart';
+import 'package:algorithm_visualizer/core/resources/strings_manager.dart';
 import 'package:algorithm_visualizer/features/sorting/base/view_model/sorting_notifier.dart';
 import 'package:collection/collection.dart';
 
@@ -51,4 +53,19 @@ class RadixSortNotifier extends SortingNotifier {
       }
     }
   }
+
+  static final algorithmComplexity = AlgorithmComplexity(
+    name: StringsManager.radixSort,
+    bestTimeComplexity: ONotationComplexity.nk,
+    averageTimeComplexity: ONotationComplexity.nk,
+    worstTimeComplexity: ONotationComplexity.nk,
+    spaceComplexity: ONotationComplexity.nPlusK,
+  );
+
+  @override
+  AlgorithmComplexity get algoComplexity => algorithmComplexity;
+
+  @override
+  String get description => StringsManager.radixSortDescription;
+
 }
