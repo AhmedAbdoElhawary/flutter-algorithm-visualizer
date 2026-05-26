@@ -1,3 +1,4 @@
+import 'package:algorithm_visualizer/core/helpers/o_notation.dart';
 import 'package:algorithm_visualizer/core/helpers/screen_size.dart';
 import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
 import 'package:collection/collection.dart';
@@ -14,16 +15,21 @@ abstract class SortingNotifier extends StateNotifier<SortingNotifierState> {
   SortingNotifier() : super(SortingNotifierState(list: _generateList(_defaultSize))) {
     _initializePositions();
   }
+  AlgorithmComplexity get algoComplexity;
+  String get description;
 
-  static double itemsPadding = 1.w;
   static const ThemeEnum swappingColor = ThemeEnum.redColor;
   static const ThemeEnum comparedColor = ThemeEnum.lightBlueColor;
   static const ThemeEnum itemColor = ThemeEnum.darkBlueColor;
   static const ThemeEnum doneSortingColor = ThemeEnum.greenColor;
 
-  static const int _defaultSize = 20;
-  static const int _maxSize = 100;
-  static const int _minSize = 10;
+  static const int _defaultSize = 9;
+  static const int _maxSize = 15;
+  static const int _minSize = 5;
+  static double itemsPadding = 5.w;
+  static double horizontalInsidePadding = (30 + bottomInsidePadding * 2).r;
+  static const double bottomInsidePadding = 20;
+  static double horizontalOutSidePadding = 32.r;
 
   static const Duration _defaultSpeedDuration = Duration(milliseconds: 300);
 
@@ -34,14 +40,15 @@ abstract class SortingNotifier extends StateNotifier<SortingNotifierState> {
   }
 
   static double calculateItemWidth(BuildContext context, int size) {
-    final screenWidth = MediaQuery.of(context).size.width;
+    final screenWidth = MediaQuery.of(context).size.width - horizontalInsidePadding;
     final availableWidth = screenWidth - (itemsPadding * (size - 1));
 
-    return availableWidth / size > 0 ? availableWidth / size : 1.0;
+    final width = availableWidth / size > 0 ? availableWidth / size : 1.0;
+    return width;
   }
 
   static double calculateMaxListItemHeight(BuildContext context) {
-    final screenHeight = MediaQuery.of(context).size.height * 0.65;
+    final screenHeight = MediaQuery.of(context).size.height * 0.27;
 
     return screenHeight > 0 ? screenHeight : 1.0;
   }
@@ -54,7 +61,7 @@ abstract class SortingNotifier extends StateNotifier<SortingNotifierState> {
   ) {
     final value = (calculateMaxListItemHeight(context) / size) * (itemIndex + 1);
     final perc = selectedAlgorithmsLength == 1
-        ? 0.95
+        ? 0.8
         : selectedAlgorithmsLength <= 2
             ? 0.9
             : selectedAlgorithmsLength <= 4
