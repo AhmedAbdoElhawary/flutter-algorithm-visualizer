@@ -5,6 +5,8 @@ enum ThemeEnum {
   primaryColor,
   focusColor,
   glassColor,
+  columnColor,
+  backgroundForSortingColor,
   cardGlassColor,
   shadowColor,
   greyD6Color,
@@ -57,6 +59,8 @@ extension ThemeExtension on BuildContext {
       ThemeEnum.cardGlassColor: ColorManager.cardDarkColor,
       ThemeEnum.shadowColor: Theme.of(this).shadowColor,
       ThemeEnum.white2DarkColor: ColorManager.white2DarkColor,
+      ThemeEnum.columnColor: ColorManager.columnColor,
+      ThemeEnum.backgroundForSortingColor: ColorManager.backgroundForSortingColor,
 
       /// what ever dark or light. Maybe if we have multiple themes, it will save a lot of time.
       ThemeEnum.whiteD1Color: Theme.of(this).dialogTheme.backgroundColor!,

@@ -277,6 +277,8 @@ class ShowUpSortingList extends ConsumerWidget {
       padding: REdgeInsets.symmetric(horizontal: 16),
       child: Container(
         decoration: BoxDecoration(
+          color:context.getColor(ThemeEnum.backgroundForSortingColor) ,
+
           borderRadius: BorderRadius.circular(20),
           border: Border.all(color: context.getColor(ThemeEnum.shadowColor)),
         ),

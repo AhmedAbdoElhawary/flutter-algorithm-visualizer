@@ -20,7 +20,8 @@ abstract class SortingNotifier extends StateNotifier<SortingNotifierState> {
 
   static const ThemeEnum swappingColor = ThemeEnum.redColor;
   static const ThemeEnum comparedColor = ThemeEnum.lightBlueColor;
-  static const ThemeEnum itemColor = ThemeEnum.darkBlueColor;
+  static const ThemeEnum itemColor = ThemeEnum.columnColor;
+  static const ThemeEnum backgroundForSortingColor = ThemeEnum.backgroundForSortingColor;
   static const ThemeEnum doneSortingColor = ThemeEnum.greenColor;
 
   static const int _defaultSize = 9;
@@ -34,6 +35,7 @@ abstract class SortingNotifier extends StateNotifier<SortingNotifierState> {
   static const Duration _defaultSpeedDuration = Duration(milliseconds: 300);
 
   CancelableOperation<void>? _cancelableSort;
+  CancelableOperation<void>? _cancelableItemsDone;
 
   static List<SortableItem> _generateList(int size) {
     return List.generate(size, (index) => SortableItem(id: index, value: index + 1))..shuffle();
@@ -108,10 +110,12 @@ abstract class SortingNotifier extends StateNotifier<SortingNotifierState> {
 
   Future<void> cancelSorting() async {
     await _cancelableSort?.cancel();
+    await _cancelableItemsDone?.cancel();
   }
 
   Future<void> stopSorting() async {
     await _cancelableSort?.cancel();
+    await _cancelableItemsDone?.cancel();
     if (_getOperation == SortingEnum.played) _setOperation = SortingEnum.stopped;
   }
 
@@ -127,6 +131,7 @@ abstract class SortingNotifier extends StateNotifier<SortingNotifierState> {
 
   Future<void> generateAgain() async {
     await _cancelableSort?.cancel();
+    await _cancelableItemsDone?.cancel();
     _setOperation = SortingEnum.none;
 
     state = state.copyWith(list: _generateList(_size));
@@ -134,6 +139,16 @@ abstract class SortingNotifier extends StateNotifier<SortingNotifierState> {
   }
 
   Future<void> _greenSortedItemsAsDone() async {
+    _cancelableItemsDone = CancelableOperation.fromFuture(_itemsDone());
+
+    try {
+      await _cancelableItemsDone?.value;
+    } catch (e) {
+      debugPrint("something wrong with cancel mark done for items: $e");
+    }
+  }
+
+  Future<void> _itemsDone() async {
     final list = List<SortableItem>.from(state.list);
 
     for (int i = 0; i < list.length; i++) {
@@ -149,7 +164,7 @@ abstract class SortingNotifier extends StateNotifier<SortingNotifierState> {
     try {
       await _cancelableSort?.value;
     } catch (e) {
-      debugPrint("something wrong with bubbleSort: $e");
+      debugPrint("something wrong with sorting: $e");
     }
   }
 
