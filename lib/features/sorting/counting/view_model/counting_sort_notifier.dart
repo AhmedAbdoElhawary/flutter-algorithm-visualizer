@@ -1,3 +1,5 @@
+import 'package:algorithm_visualizer/core/helpers/o_notation.dart';
+import 'package:algorithm_visualizer/core/resources/strings_manager.dart';
 import 'package:algorithm_visualizer/features/sorting/base/view_model/sorting_notifier.dart';
 import 'package:collection/collection.dart';
 
@@ -40,4 +42,18 @@ class CountingSortNotifier extends SortingNotifier {
 
     return SortingResult(sortedValues: arr, steps: steps);
   }
+  static final algorithmComplexity = AlgorithmComplexity(
+    name: StringsManager.countingSort,
+    bestTimeComplexity: ONotationComplexity.nPlusK,
+    averageTimeComplexity: ONotationComplexity.nPlusK,
+    worstTimeComplexity: ONotationComplexity.nPlusK,
+    spaceComplexity: ONotationComplexity.nPlusK,
+  );
+
+  @override
+  AlgorithmComplexity get algoComplexity => algorithmComplexity;
+
+  @override
+  String get description => StringsManager.countingSortDescription;
+
 }
