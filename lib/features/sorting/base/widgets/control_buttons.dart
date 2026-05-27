@@ -13,6 +13,7 @@ class _SortingControlButtons extends ConsumerWidget {
       playSorting: () => ref.read(instance.notifier).playSorting(context),
       stopSorting: () => ref.read(instance.notifier).stopSorting(),
       generateAgain: () => ref.read(instance.notifier).generateAgain(),
+      speedSorting: ref.read(instance.notifier).changeSpeed,
     );
   }
 }
@@ -22,11 +23,13 @@ class SortingControlButtons extends ConsumerWidget {
     required this.playSorting,
     required this.stopSorting,
     required this.generateAgain,
+    required this.speedSorting,
     super.key,
   });
   final VoidCallback playSorting;
   final VoidCallback stopSorting;
   final VoidCallback generateAgain;
+  final void Function(SpeedStatus) speedSorting;
   @override
   Widget build(BuildContext context, ref) {
     return Row(
@@ -45,14 +48,15 @@ class SortingControlButtons extends ConsumerWidget {
           icon: Icons.skip_next_rounded,
           onTap: () {},
         ),
-        _SpeedPicker(),
+        _SpeedPicker(speedSorting),
       ],
     );
   }
 }
 
 class _SpeedPicker extends StatefulWidget {
-  const _SpeedPicker();
+  const _SpeedPicker(this.speedSorting);
+  final void Function(SpeedStatus) speedSorting;
 
   @override
   State<_SpeedPicker> createState() => _SpeedPickerState();
@@ -74,7 +78,9 @@ class _SpeedPickerState extends State<_SpeedPicker> {
           return GestureDetector(
             onTap: () {
               setState(() => _speedMultiplier = s);
-              // if (_isPlaying) { _pause(); _play(); }
+              widget.speedSorting(_speedMultiplier == 1
+                  ? SpeedStatus.normal
+                  : (_speedMultiplier == 2 ? SpeedStatus.average : SpeedStatus.fast));
             },
             child: AnimatedContainer(
               duration: const Duration(milliseconds: 150),
