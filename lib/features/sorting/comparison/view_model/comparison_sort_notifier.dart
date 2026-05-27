@@ -127,7 +127,7 @@ class ComparisonSortNotifier extends StateNotifier<ComparisonSortingNotifierStat
     }
   }
 
-  void changeSpeed(double percent, WidgetRef ref) {
+  void changeSpeed(SpeedStatus percent, WidgetRef ref) {
     for (var element in state.selectedAlgorithms) {
       ref.read(element.provider.notifier).changeSpeed(percent);
     }
