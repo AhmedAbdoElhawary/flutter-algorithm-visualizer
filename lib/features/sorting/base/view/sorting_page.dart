@@ -4,7 +4,6 @@ import 'package:algorithm_visualizer/core/helpers/o_notation.dart';
 import 'package:algorithm_visualizer/core/resources/color_manager.dart';
 import 'package:algorithm_visualizer/core/resources/strings_manager.dart';
 import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
-import 'package:algorithm_visualizer/core/widgets/adaptive/padding/adaptive_padding.dart';
 import 'package:algorithm_visualizer/core/widgets/adaptive/text/adaptive_text.dart';
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/custom_icon.dart';
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/glass_card.dart';
@@ -16,7 +15,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 part '../widgets/sorting_app_bar.dart';
 part '../widgets/control_buttons.dart';
 part '../widgets/size_draggable.dart';
-part '../widgets/speed_draggable.dart';
 
 class SortingPage extends ConsumerWidget {
   const SortingPage({required this.instance, required this.title, super.key});
@@ -215,48 +213,6 @@ class SortingAppBar extends StatelessWidget {
       builder: (context, ref, _) {
         return InkWell(child: RegularText(title));
       },
-    );
-  }
-}
-
-class _BuildBody extends StatelessWidget {
-  const _BuildBody({required this.instance});
-
-  final StateNotifierProvider<SortingNotifier, SortingNotifierState> instance;
-
-  @override
-  Widget build(BuildContext context) {
-    return SafeArea(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Align(alignment: AlignmentDirectional.topCenter, child: ShowUpSortingList(instance)),
-          Flexible(
-            child: Align(
-              alignment: AlignmentDirectional.bottomCenter,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.end,
-                spacing: 10,
-                children: [
-                  Flexible(child: _SortingControlButtons(instance)),
-                  Flexible(
-                    child: SymmetricPadding(
-                      horizontal: 15,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          _SpeedDraggable(instance: instance),
-                          _SizeDraggable(instance: instance),
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ],
-      ),
     );
   }
 }
