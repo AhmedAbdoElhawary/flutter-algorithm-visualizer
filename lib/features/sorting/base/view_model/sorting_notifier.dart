@@ -11,6 +11,8 @@ part 'sorting_state.dart';
 part '../helper/sorting_enums.dart';
 part '../helper/sortable_item.dart';
 
+enum SpeedStatus { normal, average, fast }
+
 abstract class SortingNotifier extends StateNotifier<SortingNotifierState> {
   SortingNotifier() : super(SortingNotifierState(list: _generateList(_defaultSize))) {
     _initializePositions();
@@ -93,9 +95,14 @@ abstract class SortingNotifier extends StateNotifier<SortingNotifierState> {
     state = state.copyWith(positions: positions);
   }
 
-  void changeSpeed(double percent) {
-    final p = 1 - (percent);
-    double duration = _size * p * (p * 20);
+  void changeSpeed(SpeedStatus speedStatus) {
+    final defaultSpeed = _defaultSpeedDuration.inMilliseconds.toDouble();
+
+    double duration = speedStatus == SpeedStatus.normal
+        ? defaultSpeed
+        : speedStatus == SpeedStatus.average
+            ? defaultSpeed / 1.5
+            : defaultSpeed / 2;
 
     state = state.copyWith(swipeDuration: Duration(milliseconds: duration.toInt()));
   }
