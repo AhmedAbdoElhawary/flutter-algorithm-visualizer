@@ -62,5 +62,27 @@ class MergeSortNotifier extends SortingNotifier {
 
   @override
   String get description => StringsManager.mergeSortDescription;
+  @override
+  List<String> get codeSnippet => const [
+    'mergeSort(arr, left, right)',      // 0
+    '  if left >= right: return',       // 1
+    '  mid = (left + right) / 2',      // 2
+    '  mergeSort(arr, left, mid)',      // 3
+    '  mergeSort(arr, mid+1, right)',   // 4
+    '  merge(left, mid, right)',        // 5
+    '    while i < left, j < right',   // 6
+    '    if arr[i] <= arr[j]',         // 7
+    '      result ← arr[i++]',         // 8
+    '    else result ← arr[j++]',      // 9
+    '  copy result back to arr',        // 10
+  ];
 
+  @override
+  int codeLineForStep(SortingStep step) => switch (step.action) {
+    SortingStatus.compared                              => 7,  // comparing merge candidates
+    SortingStatus.swapping                              => 8,  // writing into result buffer
+    SortingStatus.swapped || SortingStatus.unSorted     => 6,  // advancing merge pointers
+    SortingStatus.sorted                                => 10, // writing result back to arr
+    _                                                   => -1,
+  };
 }
