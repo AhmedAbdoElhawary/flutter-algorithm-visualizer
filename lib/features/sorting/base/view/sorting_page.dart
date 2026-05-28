@@ -37,6 +37,7 @@ class SortingPage extends ConsumerWidget {
           physics: BouncingScrollPhysics(),
           slivers: [
             SliverAppBar(
+              pinned: true,
               centerTitle: false,
               titleSpacing: 0,
               leading: CustomBackButtonIcon(),
@@ -64,10 +65,125 @@ class SortingPage extends ConsumerWidget {
             SliverPadding(
               padding: REdgeInsetsDirectional.only(top: 10, bottom: 10),
               sliver: SliverToBoxAdapter(child: _ProgressBar(instance)),
-            ),   SliverPadding(
+            ),
+            SliverPadding(
               padding: REdgeInsetsDirectional.only(top: 10, bottom: 10),
               sliver: SliverToBoxAdapter(child: _SortingControlButtons(instance)),
             ),
+            SliverPadding(
+              padding: REdgeInsetsDirectional.only(top: 10, bottom: 10),
+              sliver: SliverToBoxAdapter(child: _LiveCodeSnippet(instance)),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _LiveCodeSnippet extends ConsumerWidget {
+  const _LiveCodeSnippet(this.instance);
+
+  final StateNotifierProvider<SortingNotifier, SortingNotifierState> instance;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final currentLine = ref.watch(instance.select((s) => s.currentCodeLine));
+    final codeLines = ref.read(instance.notifier).codeSnippet;
+
+    return Padding(
+      padding: REdgeInsets.symmetric(horizontal: 16),
+      child: GlassContainer(
+        withAboveShadow: false,
+        borderRadius: 12,
+        padding: REdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            // ── Header ──────────────────────────────────────────────────────
+            Row(
+              children: [
+                CustomIcon(Icons.data_object_rounded, size: 14, color: ThemeEnum.hoverColor),
+                RSizedBox(width: 6),
+                MediumText(StringsManager.pseudocode, fontSize: 13, color: ThemeEnum.hoverColor),
+                const Spacer(),
+                // Pill showing which line is active.
+                AnimatedSwitcher(
+                  duration: const Duration(milliseconds: 180),
+                  child: currentLine >= 0
+                      ? Container(
+                          key: ValueKey(currentLine),
+                          padding: REdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                          decoration: BoxDecoration(
+                            color: context.getColor(ThemeEnum.lightBlueColor).withOpacity(0.15),
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          child: RegularText(
+                            'L${currentLine + 1}',
+                            fontSize: 11,
+                            color: ThemeEnum.lightBlueColor,
+                          ),
+                        )
+                      : const SizedBox.shrink(),
+                ),
+              ],
+            ),
+            RSizedBox(height: 12),
+            // ── Code lines ───────────────────────────────────────────────────
+            ...codeLines.asMap().entries.map((entry) {
+              final i = entry.key;
+              final isActive = i == currentLine;
+
+              return AnimatedContainer(
+                duration: const Duration(milliseconds: 200),
+                margin: REdgeInsets.only(bottom: 3),
+                decoration: BoxDecoration(
+                  color: isActive
+                      ? context.getColor(ThemeEnum.lightBlueColor).withOpacity(0.12)
+                      : Colors.transparent,
+                  borderRadius: BorderRadius.circular(4),
+                  border: isActive
+                      ? Border(
+                          left: BorderSide(
+                            color: context.getColor(ThemeEnum.lightBlueColor),
+                            width: 2.5,
+                          ),
+                        )
+                      : null,
+                ),
+                padding: REdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                child: Row(
+                  children: [
+                    // Line number
+                    SizedBox(
+                      width: 20,
+                      child: RegularText(
+                        '${i + 1}',
+                        fontSize: 11,
+                        color: isActive ? ThemeEnum.lightBlueColor : ThemeEnum.hoverColor,
+                      ),
+                    ),
+                    RSizedBox(width: 10),
+                    // Code text — grows to fill available space
+                    Expanded(
+                      child: RegularText(
+                        entry.value,
+                        fontSize: 12,
+                        color: isActive ? ThemeEnum.white2DarkColor : ThemeEnum.hoverColor,
+                      ),
+                    ),
+                    // Execution arrow shown only on the active line
+                    if (isActive)
+                      CustomIcon(
+                        Icons.arrow_right_rounded,
+                        size: 16,
+                        color: ThemeEnum.lightBlueColor,
+                      ),
+                  ],
+                ),
+              );
+            }),
           ],
         ),
       ),
@@ -106,32 +222,46 @@ class _TimeComplexityData extends StatelessWidget {
   }
 }
 
-class _StatusLiveText extends StatelessWidget {
+class _StatusLiveText extends ConsumerWidget {
   const _StatusLiveText(this.instance);
 
   final StateNotifierProvider<SortingNotifier, SortingNotifierState> instance;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final text = ref.watch(instance.select((s) => s.statusText));
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: GlassContainer(
         withAboveShadow: false,
         borderRadius: 8,
         padding: REdgeInsets.symmetric(horizontal: 16, vertical: 12),
-        child: MediumText("Array is fully sorted! 🎉", fontSize: 14, color: ThemeEnum.white2DarkColor),
+        child: AnimatedSwitcher(
+          duration: const Duration(milliseconds: 250),
+          child: MediumText(
+            key: ValueKey(text),
+            text,
+            fontSize: 14,
+            color: ThemeEnum.white2DarkColor,
+          ),
+        ),
       ),
     );
   }
 }
 
-class _ProgressBar extends StatelessWidget {
+class _ProgressBar extends ConsumerWidget {
   const _ProgressBar(this.instance);
 
   final StateNotifierProvider<SortingNotifier, SortingNotifierState> instance;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    // Only rebuild when these two values change — nothing else.
+    final progress = ref.watch(instance.select((s) => s.progressValue));
+    final label = ref.watch(instance.select((s) => s.progressLabel));
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: Row(
@@ -139,11 +269,19 @@ class _ProgressBar extends StatelessWidget {
           Expanded(
             child: ClipRRect(
               borderRadius: BorderRadius.circular(4),
-              child: GradientLinearProgressIndicator(value: 0.8),
+              child: GradientLinearProgressIndicator(value: progress),
             ),
           ),
           RSizedBox(width: 10),
-          MediumText("Step 15 of 37",fontSize: 12,color: ThemeEnum.hoverColor)
+          AnimatedSwitcher(
+            duration: const Duration(milliseconds: 200),
+            child: MediumText(
+              key: ValueKey(label),
+              label,
+              fontSize: 12,
+              color: ThemeEnum.hoverColor,
+            ),
+          ),
         ],
       ),
     );
@@ -233,8 +371,7 @@ class ShowUpSortingList extends ConsumerWidget {
       padding: REdgeInsets.symmetric(horizontal: 16),
       child: Container(
         decoration: BoxDecoration(
-          color:context.getColor(ThemeEnum.backgroundForSortingColor) ,
-
+          color: context.getColor(ThemeEnum.backgroundForSortingColor),
           borderRadius: BorderRadius.circular(20),
           border: Border.all(color: context.getColor(ThemeEnum.shadowColor)),
         ),
