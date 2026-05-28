@@ -62,6 +62,28 @@ class QuickSortNotifier extends SortingNotifier {
 
   @override
   String get description => StringsManager.quickSortDescription;
+  @override
+  List<String> get codeSnippet => const [
+    'quickSort(arr, low, high)',         // 0
+    '  if low >= high: return',          // 1
+    '  pivot = arr[high]',               // 2
+    '  i = low - 1',                     // 3
+    '  for j from low to high-1',       // 4
+    '    if arr[j] <= pivot',            // 5
+    '      i++',                         // 6
+    '      swap(arr[i], arr[j])',        // 7
+    '  swap(arr[i+1], arr[high])',       // 8  ← pivot to final pos
+    '  quickSort(arr, low, i)',          // 9
+    '  quickSort(arr, i+2, high)',       // 10
+  ];
 
+  @override
+  int codeLineForStep(SortingStep step) => switch (step.action) {
+    SortingStatus.compared                              => 5,  // arr[j] <= pivot
+    SortingStatus.swapping                              => 7,  // partition swap
+    SortingStatus.swapped || SortingStatus.unSorted     => 4,  // advance j
+    SortingStatus.sorted                                => 8,  // pivot placed
+    _                                                   => -1,
+  };
 
 }

@@ -67,5 +67,26 @@ class RadixSortNotifier extends SortingNotifier {
 
   @override
   String get description => StringsManager.radixSortDescription;
+  @override
+  List<String> get codeSnippet => const [
+    'for each digit place d (LSD→MSD)',  // 0
+    '  count = new array[0..9]',         // 1
+    '  for i from 0 to n-1',            // 2
+    '    count[digit(arr[i], d)]++',    // 3
+    '  for i from 1 to 9',              // 4
+    '    count[i] += count[i-1]',       // 5  ← prefix sums
+    '  for i from n-1 downTo 0',        // 6
+    '    out[--count[digit(arr[i])]]',  // 7
+    '      = arr[i]',                   // 8
+    '  copy out[] back to arr',          // 9
+  ];
 
+  @override
+  int codeLineForStep(SortingStep step) => switch (step.action) {
+    SortingStatus.compared                              => 3,  // counting digit frequency
+    SortingStatus.swapping                              => 7,  // placing into output
+    SortingStatus.swapped || SortingStatus.unSorted     => 6,  // advance placement loop
+    SortingStatus.sorted                                => 9,  // copy output → arr
+    _                                                   => -1,
+  };
 }
