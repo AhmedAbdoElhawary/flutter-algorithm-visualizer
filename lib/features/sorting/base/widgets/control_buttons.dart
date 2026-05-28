@@ -4,51 +4,29 @@ const double verticalPadding = 7;
 const double roundedCircle = 12;
 
 class _SortingControlButtons extends ConsumerWidget {
-  const _SortingControlButtons(this.instance);
-  final StateNotifierProvider<SortingNotifier, SortingNotifierState> instance;
+  const _SortingControlButtons(this.notifier);
+  final StateNotifierProvider<SortingNotifier, SortingNotifierState> notifier;
 
   @override
   Widget build(BuildContext context, ref) {
-    return SortingControlButtons(
-      playSorting: () => ref.read(instance.notifier).playSorting(context),
-      stopSorting: () => ref.read(instance.notifier).stopSorting(),
-      generateAgain: () => ref.read(instance.notifier).generateAgain(),
-      speedSorting: ref.read(instance.notifier).changeSpeed,
-    );
-  }
-}
-
-class SortingControlButtons extends ConsumerWidget {
-  const SortingControlButtons({
-    required this.playSorting,
-    required this.stopSorting,
-    required this.generateAgain,
-    required this.speedSorting,
-    super.key,
-  });
-  final VoidCallback playSorting;
-  final VoidCallback stopSorting;
-  final VoidCallback generateAgain;
-  final void Function(SpeedStatus) speedSorting;
-  @override
-  Widget build(BuildContext context, ref) {
+    final instance = ref.read(notifier.notifier);
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
         _CtrlButton(
           icon: Icons.refresh_rounded,
-          onTap: generateAgain,
+          onTap: instance.generateAgain,
         ),
         _CtrlButton(
           icon: Icons.skip_previous_rounded,
-          onTap: () {},
+          onTap: () => instance.isAtFirstStep ? null : instance.stepBackward(),
         ),
-        _PlayPauseButton(onTap: playSorting),
+        _PlayPauseButton(notifier: notifier),
         _CtrlButton(
           icon: Icons.skip_next_rounded,
-          onTap: () {},
+          onTap: () => instance.isAtLastStep ? null : instance.stepForward(),
         ),
-        _SpeedPicker(speedSorting),
+        _SpeedPicker(instance.changeSpeed),
       ],
     );
   }
@@ -100,14 +78,19 @@ class _SpeedPickerState extends State<_SpeedPicker> {
   }
 }
 
-class _PlayPauseButton extends StatelessWidget {
-  const _PlayPauseButton({required this.onTap});
-  final VoidCallback onTap;
+class _PlayPauseButton extends ConsumerWidget {
+  const _PlayPauseButton({required this.notifier});
+  final StateNotifierProvider<SortingNotifier, SortingNotifierState> notifier;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, ref) {
+    final isPlaying = ref.watch(notifier.select((state) => state.isPlaying));
+    final instance = ref.read(notifier.notifier);
+
     return GestureDetector(
-      onTap: onTap,
+      onTap: () {
+        isPlaying ? instance.stopSorting() : instance.playSorting(context);
+      },
       child: Container(
         padding: REdgeInsets.all(verticalPadding + 4),
         decoration: BoxDecoration(
@@ -129,9 +112,9 @@ class _PlayPauseButton extends StatelessWidget {
           ],
         ),
         child: Icon(
-          // _isPlaying ? Icons.pause_rounded :
-          Icons.play_arrow_rounded,
-          color: Colors.white, size: 30,
+          isPlaying ? Icons.pause_rounded : Icons.play_arrow_rounded,
+          color: Colors.white,
+          size: 30,
         ),
       ),
     );
