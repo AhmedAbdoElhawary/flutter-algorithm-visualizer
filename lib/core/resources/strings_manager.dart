@@ -74,5 +74,6 @@ class StringsManager {
   static const String best = "Best: ";
   static const String average = "Average: ";
   static const String worst = "Worst: ";
+  static const String pseudocode = "pseudocode";
 
 }
