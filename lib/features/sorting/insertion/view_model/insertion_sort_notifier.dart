@@ -41,5 +41,24 @@ class InsertionSortNotifier extends SortingNotifier {
 
   @override
   String get description => StringsManager.insertionSortDescription;
+  @override
+  List<String> get codeSnippet => const [
+    'for i from 1 to n-1',          // 0
+    '  key = arr[i]',               // 1
+    '  j = i - 1',                  // 2
+    '  while j >= 0',               // 3
+    '    and arr[j] > key',         // 4
+    '    arr[j+1] = arr[j]',        // 5
+    '    j = j - 1',                // 6
+    '  arr[j+1] = key',             // 7
+  ];
 
+  @override
+  int codeLineForStep(SortingStep step) => switch (step.action) {
+    SortingStatus.compared                              => 4, // arr[j] > key
+    SortingStatus.swapping                              => 5, // shift arr[j] right
+    SortingStatus.swapped || SortingStatus.unSorted     => 6, // j--
+    SortingStatus.sorted                                => 7, // place key
+    _                                                   => -1,
+  };
 }
