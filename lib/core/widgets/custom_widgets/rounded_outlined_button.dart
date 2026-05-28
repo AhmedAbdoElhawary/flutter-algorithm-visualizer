@@ -16,7 +16,7 @@ class RoundedOutlinedButton extends StatelessWidget {
     this.smallRounded = false,
     this.backgroundColor,
     this.size = OutlineEnumFixedSize.small,
-    this.borderColor = ThemeEnum.hintColor,
+    this.borderColor = ThemeEnum.glassColor,
     required this.child,
     required this.onPressed,
   });
@@ -31,7 +31,7 @@ class RoundedOutlinedButton extends StatelessWidget {
         fixedSize: size == OutlineEnumFixedSize.small ? Size.fromHeight(smallRounded ? 30.h : 35.h) : null,
         padding: REdgeInsets.symmetric(horizontal: 15),
         surfaceTintColor: background,
-        foregroundColor: context.getColor(ThemeEnum.hintColor),
+        foregroundColor: context.getColor(ThemeEnum.glassColor),
         side: BorderSide(color: context.getColor(borderColor), width: 1.5.r),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(smallRounded ? 5 : 50)),
       ),

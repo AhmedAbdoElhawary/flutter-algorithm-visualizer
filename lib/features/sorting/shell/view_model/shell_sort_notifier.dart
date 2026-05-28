@@ -1,3 +1,5 @@
+import 'package:algorithm_visualizer/core/helpers/o_notation.dart';
+import 'package:algorithm_visualizer/core/resources/strings_manager.dart';
 import 'package:algorithm_visualizer/features/sorting/base/view_model/sorting_notifier.dart';
 import 'package:collection/collection.dart';
 
@@ -31,4 +33,41 @@ class ShellSortNotifier extends SortingNotifier {
 
     return SortingResult(sortedValues: arr, steps: steps);
   }
+
+  static final algorithmComplexity = AlgorithmComplexity(
+    name: StringsManager.shellSort,
+    bestTimeComplexity: ONotationComplexity.nLogN,
+    averageTimeComplexity: ONotationComplexity.n2,
+    worstTimeComplexity: ONotationComplexity.n2,
+    spaceComplexity: ONotationComplexity.constant,
+  );
+
+  @override
+  AlgorithmComplexity get algoComplexity => algorithmComplexity;
+
+  @override
+  String get description => StringsManager.shellSortDescription;
+  @override
+  List<String> get codeSnippet => const [
+    'gap = n / 2',                      // 0
+    'while gap > 0',                    // 1
+    '  for i from gap to n-1',         // 2
+    '    temp = arr[i]',                // 3
+    '    j = i',                        // 4
+    '    while j >= gap',               // 5
+    '      and arr[j-gap] > temp',      // 6
+    '      arr[j] = arr[j-gap]',        // 7
+    '      j -= gap',                   // 8
+    '    arr[j] = temp',                // 9
+    '  gap = gap / 2',                  // 10
+  ];
+
+  @override
+  int codeLineForStep(SortingStep step) => switch (step.action) {
+    SortingStatus.compared                              => 6,  // arr[j-gap] > temp
+    SortingStatus.swapping                              => 7,  // shift element right
+    SortingStatus.swapped || SortingStatus.unSorted     => 8,  // j -= gap
+    SortingStatus.sorted                                => 9,  // arr[j] = temp (placed)
+    _                                                   => -1,
+  };
 }

@@ -1,3 +1,5 @@
+import 'package:algorithm_visualizer/core/helpers/o_notation.dart';
+import 'package:algorithm_visualizer/core/resources/strings_manager.dart';
 import 'package:algorithm_visualizer/features/sorting/base/view_model/sorting_notifier.dart';
 import 'package:collection/collection.dart';
 
@@ -58,4 +60,41 @@ class BucketSortNotifier extends SortingNotifier {
 
     return SortingResult(sortedValues: arr, steps: steps);
   }
+
+  static final algorithmComplexity = AlgorithmComplexity(
+    name: StringsManager.bucketSort,
+    bestTimeComplexity: ONotationComplexity.nPlusK,
+    averageTimeComplexity: ONotationComplexity.nPlusK,
+    worstTimeComplexity: ONotationComplexity.n2,
+    spaceComplexity: ONotationComplexity.n,
+  );
+
+  @override
+  AlgorithmComplexity get algoComplexity => algorithmComplexity;
+
+  @override
+  String get description => StringsManager.bucketSortDescription;
+
+  @override
+  List<String> get codeSnippet => const [
+    'n = arr.length',                          // 0
+    'buckets = array of n empty lists',        // 1
+    'for i from 0 to n-1',                    // 2
+    '  idx = floor(arr[i] × n / max)',         // 3
+    '  buckets[idx].add(arr[i])',              // 4
+    'for each bucket b',                       // 5
+    '  insertionSort(b)',                      // 6
+    '    if b[j] > b[j+1]',                   // 7
+    '      swap(b[j], b[j+1])',               // 8
+    'concatenate all buckets into arr',        // 9
+  ];
+
+  @override
+  int codeLineForStep(SortingStep step) => switch (step.action) {
+    SortingStatus.compared                              => 7,  // compare within bucket
+    SortingStatus.swapping                              => 8,  // swap within bucket
+    SortingStatus.swapped || SortingStatus.unSorted     => 6,  // continue bucket sort
+    SortingStatus.sorted                                => 9,  // merge buckets back
+    _                                                   => -1,
+  };
 }

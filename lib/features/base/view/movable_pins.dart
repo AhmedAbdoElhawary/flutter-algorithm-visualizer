@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
+import 'package:algorithm_visualizer/core/widgets/custom_widgets/glass_card.dart';
 import 'package:flutter/material.dart';
 
 class MovablePinsBackground extends StatefulWidget {
@@ -107,8 +108,10 @@ class _MovablePinsBackgroundState extends State<MovablePinsBackground> with Sing
       },
 
       child: Stack(
+        fit: StackFit.expand,
         alignment: AlignmentDirectional.center,
         children: [
+          AnimatedBackground(),
           CustomPaint(
             painter: ParticlePainter(_particles, context.getColor(widget.pinColor)),
             child: const SizedBox.expand(),
