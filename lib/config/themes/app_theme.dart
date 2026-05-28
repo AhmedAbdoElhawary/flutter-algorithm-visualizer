@@ -182,7 +182,7 @@ class AppTheme {
         selectionHandleColor: ColorManager.white,
       ),
       colorScheme: const ColorScheme.highContrastDark(
-        primaryContainer: ColorManager.blackL4,
+        primaryContainer: ColorManager.greyD9,
         surface: ColorManager.blackL6,
       ).copyWith(surface: ColorManager.blackL6).copyWith(error: ColorManager.white),
     );

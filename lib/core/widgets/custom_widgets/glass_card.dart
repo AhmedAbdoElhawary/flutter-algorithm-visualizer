@@ -168,7 +168,7 @@ class _ORB extends StatelessWidget {
         shape: BoxShape.circle,
         gradient: RadialGradient(
           colors: [
-            color.withValues(alpha: 0.1),
+            color.withValues(alpha: 0.13),
             Colors.transparent,
           ],
         ),
