@@ -58,13 +58,13 @@ class _ComparisonSortPageState extends ConsumerState<ComparisonSortPage> {
                     mainAxisAlignment: MainAxisAlignment.end,
                     spacing: 10,
                     children: [
-                      SortingControlButtons(
-                        playSorting: () => ref.read(_notifierProvider.notifier).playSorting(context, ref),
-                        stopSorting: () => ref.read(_notifierProvider.notifier).stopSorting(ref),
-                        generateAgain: () => ref.read(_notifierProvider.notifier).generateAgain(ref),
-                        speedSorting: (percent) =>
-                            ref.read(_notifierProvider.notifier).changeSpeed(percent, ref),
-                      ),
+                      // SortingControlButtons(
+                      //   instance: () => ref.read(_notifierProvider.notifier).playSorting(context, ref),
+                      //   stopSorting: () => ref.read(_notifierProvider.notifier).stopSorting(ref),
+                      //   generateAgain: () => ref.read(_notifierProvider.notifier).generateAgain(ref),
+                      //   speedSorting: (percent) =>
+                      //       ref.read(_notifierProvider.notifier).changeSpeed(percent, ref),
+                      // ),
                       SymmetricPadding(
                         horizontal: 15,
                         child: Row(
