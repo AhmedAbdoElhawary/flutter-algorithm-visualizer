@@ -11,7 +11,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class CustomBottomSheet {
   static BuildContext? context;
-  static initializeContextForPost(BuildContext ctx) {
+  static void initializeContextForPost(BuildContext ctx) {
     context = ctx;
   }
 

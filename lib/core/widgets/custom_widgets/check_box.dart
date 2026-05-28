@@ -40,7 +40,7 @@ class CustomCheckBox extends StatelessWidget {
             shape: isCircle ? BoxShape.circle : BoxShape.rectangle,
           ),
           child: isSelected && withCheckIcon
-              ? const CustomIcon(Icons.check_rounded, color: ColorManager.white, size: 18)
+              ? const CustomIcon(Icons.check_rounded, color: ThemeEnum.whiteColor, size: 18)
               : null,
         ),
       ),
