@@ -12,6 +12,11 @@ enum ThemeEnum {
   greyD6Color,
   mainDarkColor,
   white2DarkColor,
+  textDarkColor,
+  text2DarkColor,
+  purpleColor,
+  borderPurpleColor,
+  lightPurpleColor,
 
   whiteD1Color,
   whiteD2Color,
@@ -61,6 +66,11 @@ extension ThemeExtension on BuildContext {
       ThemeEnum.white2DarkColor: ColorManager.white2DarkColor,
       ThemeEnum.columnColor: ColorManager.columnColor,
       ThemeEnum.backgroundForSortingColor: ColorManager.backgroundForSortingColor,
+      ThemeEnum.textDarkColor: ColorManager.textDarkColor,
+      ThemeEnum.text2DarkColor: ColorManager.text2DarkColor,
+      ThemeEnum.purpleColor: ColorManager.purpleColor,
+      ThemeEnum.lightPurpleColor: ColorManager.lightPurpleColor,
+      ThemeEnum.borderPurpleColor: ColorManager.borderPurpleColor,
 
       /// what ever dark or light. Maybe if we have multiple themes, it will save a lot of time.
       ThemeEnum.whiteD1Color: Theme.of(this).dialogTheme.backgroundColor!,
