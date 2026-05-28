@@ -55,5 +55,23 @@ class SelectionSortNotifier extends SortingNotifier {
 
   @override
   String get description => StringsManager.selectionSortDescription;
+  @override
+  List<String> get codeSnippet => const [
+    'for i from 0 to n-2',             // 0
+    '  minIdx = i',                    // 1
+    '  for j from i+1 to n-1',        // 2
+    '    if arr[j] < arr[minIdx]',     // 3
+    '      minIdx = j',                // 4
+    '  if minIdx != i',                // 5
+    '    swap(arr[i], arr[minIdx])',   // 6
+  ];
 
+  @override
+  int codeLineForStep(SortingStep step) => switch (step.action) {
+    SortingStatus.compared                              => 3, // comparing with current min
+    SortingStatus.swapping                              => 6, // swap min into place
+    SortingStatus.swapped || SortingStatus.unSorted     => 2, // advance inner loop
+    SortingStatus.sorted                                => 5, // verify min changed
+    _                                                   => -1,
+  };
 }
