@@ -172,7 +172,7 @@ class _ControlButtonsState extends State<_ControlButtons> {
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           MediumText(StringsManager.clear, fontSize: 16, color: ThemeEnum.redColor),
-                          CustomIcon(Icons.keyboard_arrow_down_rounded, size: 20, color: ColorManager.red),
+                          CustomIcon(Icons.keyboard_arrow_down_rounded, size: 20, color: ThemeEnum.redColor),
                         ],
                       ), // 3-dot menu
                     ),
@@ -335,7 +335,7 @@ class _StartPointGrid extends StatelessWidget {
         child: CustomIcon(
           Icons.arrow_forward_ios_rounded,
           size: 50,
-          color: ColorManager.darkPurple,
+          color: ThemeEnum.darkPurpleColor,
         ),
       ),
     );
