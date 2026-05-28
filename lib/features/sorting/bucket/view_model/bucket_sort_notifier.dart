@@ -74,4 +74,27 @@ class BucketSortNotifier extends SortingNotifier {
 
   @override
   String get description => StringsManager.bucketSortDescription;
+
+  @override
+  List<String> get codeSnippet => const [
+    'n = arr.length',                          // 0
+    'buckets = array of n empty lists',        // 1
+    'for i from 0 to n-1',                    // 2
+    '  idx = floor(arr[i] × n / max)',         // 3
+    '  buckets[idx].add(arr[i])',              // 4
+    'for each bucket b',                       // 5
+    '  insertionSort(b)',                      // 6
+    '    if b[j] > b[j+1]',                   // 7
+    '      swap(b[j], b[j+1])',               // 8
+    'concatenate all buckets into arr',        // 9
+  ];
+
+  @override
+  int codeLineForStep(SortingStep step) => switch (step.action) {
+    SortingStatus.compared                              => 7,  // compare within bucket
+    SortingStatus.swapping                              => 8,  // swap within bucket
+    SortingStatus.swapped || SortingStatus.unSorted     => 6,  // continue bucket sort
+    SortingStatus.sorted                                => 9,  // merge buckets back
+    _                                                   => -1,
+  };
 }
