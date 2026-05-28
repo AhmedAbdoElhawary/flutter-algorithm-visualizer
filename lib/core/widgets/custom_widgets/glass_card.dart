@@ -45,17 +45,19 @@ class GlassCard extends StatelessWidget {
             children: [
               Row(
                 children: [
-                  CustomIcon(Icons.access_time_rounded, size: 12, color: ThemeEnum.greyColor),
+                  CustomIcon(Icons.access_time_rounded, size: 12, color: ThemeEnum.text2DarkColor),
                   RSizedBox(width: 2),
-                  RegularText(algoComplexity.worstTimeComplexity.getText, color: ThemeEnum.greyD6Color, fontSize: 11),
+                  RegularText(algoComplexity.worstTimeComplexity.getText,
+                      color: ThemeEnum.textDarkColor, fontSize: 11),
                 ],
               ),
               Spacer(),
               Row(
                 children: [
-                  CustomIcon(Icons.storage_rounded, size: 12, color: ThemeEnum.greyColor),
+                  CustomIcon(Icons.storage_rounded, size: 12, color: ThemeEnum.text2DarkColor),
                   RSizedBox(width: 2),
-                  RegularText(algoComplexity.spaceComplexity.getText, color: ThemeEnum.greyD6Color, fontSize: 11),
+                  RegularText(algoComplexity.spaceComplexity.getText,
+                      color: ThemeEnum.textDarkColor, fontSize: 11),
                 ],
               ),
               Spacer(),
@@ -71,20 +73,26 @@ class GlassCard extends StatelessWidget {
 class GlassContainer extends StatelessWidget {
   final Widget child;
   final double borderRadius;
+  final double borderWidth;
   final EdgeInsetsGeometry padding;
   final bool withAboveShadow;
+  final bool highlightCard;
   final ThemeEnum color;
   const GlassContainer({
     super.key,
     required this.child,
     this.color = ThemeEnum.glassColor,
     this.borderRadius = 20,
+    this.borderWidth = 0.5,
     this.withAboveShadow = true,
+    this.highlightCard = false,
     this.padding = const EdgeInsets.all(15),
   });
 
   @override
   Widget build(BuildContext context) {
+    final borderColor = context.getColor(highlightCard ? ThemeEnum.borderPurpleColor : ThemeEnum.shadowColor);
+
     return ClipRRect(
       borderRadius: BorderRadius.circular(borderRadius),
       child: BackdropFilter(
@@ -93,15 +101,15 @@ class GlassContainer extends StatelessWidget {
           padding: padding,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(borderRadius),
-            color: context.getColor(color),
+            color: context.getColor(highlightCard ? ThemeEnum.lightPurpleColor : color),
             border: Border(
               top: BorderSide(
-                  color: context.getColor(ThemeEnum.shadowColor),
-                  width: withAboveShadow ? 1.5 : 0.5,
+                  color: borderColor,
+                  width: withAboveShadow ? 1.5 : borderWidth,
                   strokeAlign: withAboveShadow ? -2 : -1),
-              right: BorderSide(color: context.getColor(ThemeEnum.shadowColor), width: 0.5),
-              left: BorderSide(color: context.getColor(ThemeEnum.shadowColor), width: 0.5),
-              bottom: BorderSide(color: context.getColor(ThemeEnum.shadowColor), width: 0.5),
+              right: BorderSide(color: borderColor, width: borderWidth),
+              left: BorderSide(color: borderColor, width: borderWidth),
+              bottom: BorderSide(color: borderColor, width:borderWidth),
             ),
           ),
           child: child,
