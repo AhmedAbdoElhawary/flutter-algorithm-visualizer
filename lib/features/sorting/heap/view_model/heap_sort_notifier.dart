@@ -76,5 +76,27 @@ class HeapSortNotifier extends SortingNotifier {
 
   @override
   String get description => StringsManager.heapSortDescription;
+  @override
+  List<String> get codeSnippet => const [
+    'buildMaxHeap(arr)',                    // 0
+    '  for i from n/2-1 downTo 0',         // 1
+    '    heapify(arr, n, i)',               // 2
+    'for i from n-1 downTo 1',             // 3
+    '  swap(arr[0], arr[i])',              // 4
+    '  heapify(arr, i, 0)',                // 5
+    '    largest = parent',                // 6
+    '    if child > arr[largest]',         // 7
+    '      largest = child index',         // 8
+    '    if largest != parent',            // 9
+    '      swap(arr[parent], arr[largest])',// 10
+  ];
 
+  @override
+  int codeLineForStep(SortingStep step) => switch (step.action) {
+    SortingStatus.compared                              => 7,  // child vs largest
+    SortingStatus.swapping                              => 10, // heapify swap
+    SortingStatus.swapped || SortingStatus.unSorted     => 9,  // check if swap needed
+    SortingStatus.sorted                                => 4,  // extract max to end
+    _                                                   => -1,
+  };
 }

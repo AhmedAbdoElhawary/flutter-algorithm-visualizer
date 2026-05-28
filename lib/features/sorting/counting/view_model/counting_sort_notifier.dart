@@ -55,5 +55,26 @@ class CountingSortNotifier extends SortingNotifier {
 
   @override
   String get description => StringsManager.countingSortDescription;
+  @override
+  List<String> get codeSnippet => const [
+    'max = findMax(arr)',                  // 0
+    'count = new array[0..max]',           // 1
+    'for i from 0 to n-1',               // 2
+    '  count[arr[i]]++',                  // 3
+    'for i from 1 to max',               // 4
+    '  count[i] += count[i-1]',          // 5  ← prefix sums
+    'for i from n-1 downTo 0',           // 6
+    '  out[count[arr[i]]-1] = arr[i]',   // 7
+    '  count[arr[i]]--',                  // 8
+    'copy out[] back to arr',             // 9
+  ];
 
+  @override
+  int codeLineForStep(SortingStep step) => switch (step.action) {
+    SortingStatus.compared                              => 3,  // counting occurrences
+    SortingStatus.swapping                              => 7,  // writing to output array
+    SortingStatus.swapped || SortingStatus.unSorted     => 6,  // advance placement loop
+    SortingStatus.sorted                                => 9,  // copy output → arr
+    _                                                   => -1,
+  };
 }
