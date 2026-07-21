@@ -17,7 +17,6 @@ class _MovablePinsBackgroundState extends State<MovablePinsBackground> with Sing
   final List<Particle> _particles = [];
   final Random _random = Random();
 
-  /// 🔧 Adjustable parameters
   double speedFactor = 0.3;
   double densityFactor = 0.45;
   final int maxPins = 150;
@@ -53,7 +52,6 @@ class _MovablePinsBackgroundState extends State<MovablePinsBackground> with Sing
         p.randomWalk();
         p.update();
 
-        // remove if outside screen
         if (!p.isInside(size)) {
           _particles.removeAt(i);
           _particles.add(Particle.random(_random, size, speedFactor));
@@ -74,8 +72,6 @@ class _MovablePinsBackgroundState extends State<MovablePinsBackground> with Sing
     _createParticles(size);
 
     return GestureDetector(
-      // set max pins limit
-
       onTapDown: (d) {
         setState(() {
           // add new pin
@@ -95,13 +91,13 @@ class _MovablePinsBackgroundState extends State<MovablePinsBackground> with Sing
       },
       onPanUpdate: (d) {
         setState(() {
-          const influenceRadius = 100.0; // 👈 adjust how far the finger affects pins
+          const influenceRadius = 100.0;
           for (var p in _particles) {
             final distance = (p.position - d.localPosition).distance;
             if (distance < influenceRadius) {
-              // push away
+
               final direction = (p.position - d.localPosition).normalize();
-              p.velocity += direction * 0.5; // 👈 adjust strength
+              p.velocity += direction * 0.5;
             }
           }
         });
