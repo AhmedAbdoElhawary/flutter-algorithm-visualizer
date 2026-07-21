@@ -23,7 +23,7 @@ class SearchingNotifier extends StateNotifier<GridNotifierState> {
   SearchingNotifier() : super(GridNotifierState());
 
   /// [_gridSquareSize]
-  final double _gridSquareSize = 25;
+  final double _gridSquareSize = 10;
   static const Duration scaleAppearDurationForWall = Duration(milliseconds: 700);
   static const Duration clearDuration = Duration(microseconds: 1);
   static const Duration drawSearcherDuration = Duration(milliseconds: 25);
