@@ -1,6 +1,6 @@
-import 'package:algorithm_visualizer/core/helpers/o_notation.dart';
 import 'package:algorithm_visualizer/core/helpers/screen_size.dart';
 import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
+import 'package:algorithm_visualizer/features/base/view_model/base_page_view_model.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -13,13 +13,10 @@ part '../helper/sortable_item.dart';
 
 enum SpeedStatus { normal, average, fast }
 
-abstract class SortingNotifier extends StateNotifier<SortingNotifierState> {
+abstract class SortingNotifier extends StateNotifier<SortingNotifierState> implements AlgorithmNotifier{
   SortingNotifier() : super(SortingNotifierState(list: _generateList(_defaultSize))) {
     _initializePositions();
   }
-
-  AlgorithmComplexity get algoComplexity;
-  String get description;
 
   static const ThemeEnum swappingColor = ThemeEnum.redColor;
   static const ThemeEnum comparedColor = ThemeEnum.lightBlueColor;
@@ -38,15 +35,6 @@ abstract class SortingNotifier extends StateNotifier<SortingNotifierState> {
   static const Duration _defaultSpeedDuration = Duration(milliseconds: 300);
 
   CancelableOperation<void>? _cancelableSort;
-
-  /// Pseudocode lines shown in the live code panel (one string per line).
-  List<String> get codeSnippet;
-
-  /// Maps a step's action to the zero-based index in [codeSnippet].
-  /// Return -1 to clear the highlight.
-  int codeLineForStep(SortingStep step);
-
-  // ── Public convenience getters ──────────────────────────────────────────────
 
   /// Shorthand so callers don't need to reach into state.
   bool get isPlaying => state.isPlaying;
