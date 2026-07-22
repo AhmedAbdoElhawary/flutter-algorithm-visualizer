@@ -1,5 +1,7 @@
 import 'package:algorithm_visualizer/config/routes/route_app.dart';
+import 'package:algorithm_visualizer/core/helpers/o_notation.dart';
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/glass_card.dart';
+import 'package:algorithm_visualizer/features/sorting/base/view_model/sorting_notifier.dart';
 import 'package:algorithm_visualizer/features/sorting/bubble/view_model/bubble_sort_notifier.dart';
 import 'package:algorithm_visualizer/features/sorting/bucket/view_model/bucket_sort_notifier.dart';
 import 'package:algorithm_visualizer/features/sorting/counting/view_model/counting_sort_notifier.dart';
@@ -19,7 +21,6 @@ class AlgoCard {
 }
 
 class BasePageViewModel {
-  static final searchingCard = [];
   static final sortingCards = [
     AlgoCard(
       route: Routes.bubbleSort,
@@ -102,4 +103,49 @@ class BasePageViewModel {
       ),
     ),
   ];
+  static final searchingCards = [
+    AlgoCard(
+      route: Routes.searching,
+      card: GlassCard(
+        algoComplexity: BubbleSortNotifier.algorithmComplexity,
+        color: Color(0xFF5B9CF6),
+        icon: Icons.location_searching_rounded,
+      ),
+    ),
+    AlgoCard(
+      route: Routes.searching,
+      card: GlassCard(
+        algoComplexity: SelectionSortNotifier.algorithmComplexity,
+        color: Color(0xFFFFA726),
+        icon: Icons.search_off_rounded,
+      ),
+    ),
+    AlgoCard(
+      route: Routes.searching,
+      card: GlassCard(
+        algoComplexity: InsertionSortNotifier.algorithmComplexity,
+        color: Color(0xFF66BB6A),
+        icon: Icons.find_replace_rounded,
+      ),
+    ),
+  ];
+}
+
+abstract class AlgorithmNotifier {
+
+  // static final algorithmComplexity = AlgorithmComplexity(
+  //   name: StringsManager.bubbleSort,
+  //   bestTimeComplexity: ONotationComplexity.n,
+  //   averageTimeComplexity: ONotationComplexity.n2,
+  //   worstTimeComplexity: ONotationComplexity.n2,
+  //   spaceComplexity: ONotationComplexity.constant,
+  // );
+
+  AlgorithmComplexity get algoComplexity;
+
+  String get description ;
+
+  List<String> get codeSnippet;
+
+  int codeLineForStep(SortingStep step);
 }
