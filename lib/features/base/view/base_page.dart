@@ -84,16 +84,28 @@ class _BasePageState extends State<BasePage> with SingleTickerProviderStateMixin
                             );
                           },
                         ),
-                        InkWell(
-                          onTap: () {
-                            context.pushTo(Routes.searching);
-                          },
-                          child: Container(
-                            color: ColorManager.mainDarkColor,
-                            width: 100,
-                            height: 100,
+                        GridView.builder(
+                          itemCount: BasePageViewModel.searchingCards.length,
+                          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 2,
+                            crossAxisSpacing: 20,
+                            mainAxisSpacing: 20,
+                            childAspectRatio: 1.1,
                           ),
-                        )
+                          itemBuilder: (context, index) {
+                            return Padding(
+                              padding: REdgeInsetsDirectional.only(
+                                  start: index % 2 == 0 ? 20 : 0, end: index % 2 != 0 ? 20 : 0),
+                              child: InkWell(
+                                  borderRadius: BorderRadius.circular(20),
+                                  highlightColor: context.getColor(ThemeEnum.primaryColor),
+                                  onTap: () {
+                                    context.pushTo(BasePageViewModel.searchingCards[index].route);
+                                  },
+                                  child: BasePageViewModel.searchingCards[index].card),
+                            );
+                          },
+                        ),
                       ],
                     ),
                   ),
