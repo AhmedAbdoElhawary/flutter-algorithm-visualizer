@@ -1,14 +1,17 @@
 import 'package:algorithm_visualizer/core/draggable_progress.dart' show DraggableProgressBar;
 import 'package:algorithm_visualizer/core/helpers/app_bar/back_button.dart';
-import 'package:algorithm_visualizer/core/helpers/o_notation.dart';
 import 'package:algorithm_visualizer/core/resources/color_manager.dart';
 import 'package:algorithm_visualizer/core/resources/strings_manager.dart';
 import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
 import 'package:algorithm_visualizer/core/widgets/adaptive/text/adaptive_text.dart';
+import 'package:algorithm_visualizer/core/widgets/custom_widgets/algorithm_title.dart';
+import 'package:algorithm_visualizer/core/widgets/custom_widgets/complexity_details.dart';
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/custom_icon.dart';
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/glass_card.dart';
+import 'package:algorithm_visualizer/features/base/view_model/base_page_view_model.dart';
 import 'package:algorithm_visualizer/features/sorting/base/view_model/sorting_notifier.dart';
 import 'package:algorithm_visualizer/features/sorting/base/widgets/linear_progress_indicator.dart';
+import 'package:algorithm_visualizer/lib%202/pathfinding/widgets/algo_tab.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -16,21 +19,49 @@ part '../widgets/sorting_app_bar.dart';
 part '../widgets/control_buttons.dart';
 part '../widgets/size_draggable.dart';
 
-class SortingPage extends ConsumerWidget {
+class SortingPage extends ConsumerStatefulWidget {
   const SortingPage({required this.instance, required this.title, super.key});
   final StateNotifierProvider<SortingNotifier, SortingNotifierState> instance;
   final String title;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<SortingPage> createState() => _SortingPageState();
+}
+
+class _SortingPageState extends ConsumerState<SortingPage> {
+  late StateNotifierProvider<SortingNotifier, SortingNotifierState> instance = widget.instance;
+  late String title = widget.title;
+  final controller = ScrollController();
+  final cardValues = BasePageViewModel.sortingCards.values.toList();
+
+  Future<void> deleteInstance(StateNotifierProvider<SortingNotifier, SortingNotifierState> instance) async {
+    await ref.read(instance.notifier).cancelSorting();
+    ref.invalidate(instance);
+  }
+
+  @override
+  void initState() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final index = cardValues.indexWhere((element) => element.title == title);
+      if (index != -1) {
+        controller.animateTo(
+          index * 100,
+          duration: const Duration(milliseconds: 500),
+          curve: Curves.ease,
+        );
+      }
+    });
+
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final description = ref.read(instance.notifier).description;
     final complexity = ref.read(instance.notifier).algoComplexity;
     return PopScope(
       onPopInvokedWithResult: (didPop, result) async {
-        if (didPop) {
-          await ref.read(instance.notifier).cancelSorting();
-          ref.invalidate(instance); // deletes current instance and resets
-        }
+        if (didPop) await deleteInstance(instance);
       },
       child: Scaffold(
         body: CustomScrollView(
@@ -41,27 +72,52 @@ class SortingPage extends ConsumerWidget {
               centerTitle: false,
               titleSpacing: 0,
               leading: CustomBackButtonIcon(),
-              title: _AlgorithmTitle(title: title, description: description),
+              title: AlgorithmTitle(title: title, description: description),
             ),
-            SliverToBoxAdapter(
-              child: SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    RSizedBox(width: 16),
-                    _TimeComplexityData(complexity: complexity),
-                    RSizedBox(width: 10),
-                    _SpaceComplexityData(complexity: complexity),
-                    RSizedBox(width: 16),
-                  ],
+            SliverToBoxAdapter(child: ComplexityDetails(complexity: complexity)),
+            SliverPadding(
+              padding: REdgeInsetsDirectional.only(top: 12, bottom: 12),
+              sliver: SliverToBoxAdapter(
+                child: SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  controller: controller,
+                  child: Row(
+                    children: List.generate(
+                      BasePageViewModel.sortingCards.length,
+                      (index) {
+                        return Padding(
+                          padding: REdgeInsetsDirectional.only(
+                              start: index == 0 ? 16 : 8,
+                              end: index < BasePageViewModel.sortingCards.length - 1 ? 0 : 16),
+                          child: InkWell(
+                            onTap: () async {
+                              if (title == cardValues[index].title) return;
+                              final inst = instance;
+
+                              setState(() {
+                                instance = cardValues[index].instance;
+                                title = cardValues[index].title;
+                              });
+
+                              await deleteInstance(inst);
+                            },
+                            child: AlgoTab(
+                              isSelected: cardValues[index].title == title,
+                              addEndPadding: false,
+                              label: cardValues[index].card.algoComplexity.name,
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
                 ),
               ),
             ),
             SliverPadding(
-                padding: REdgeInsetsDirectional.only(top: 20, bottom: 10),
+                padding: REdgeInsetsDirectional.only(bottom: 10),
                 sliver: SliverToBoxAdapter(child: ShowUpSortingList(instance))),
-            SliverToBoxAdapter(child: _StatusLiveText(instance)),
+            // SliverToBoxAdapter(child: _StatusLiveText(instance)),
             SliverPadding(
               padding: REdgeInsetsDirectional.only(top: 10, bottom: 10),
               sliver: SliverToBoxAdapter(child: _ProgressBar(instance)),
@@ -116,7 +172,7 @@ class _LiveCodeSnippet extends ConsumerWidget {
                           key: ValueKey(currentLine),
                           padding: REdgeInsets.symmetric(horizontal: 8, vertical: 2),
                           decoration: BoxDecoration(
-                            color: context.getColor(ThemeEnum.lightBlueColor).withOpacity(0.15),
+                            color: context.getColor(ThemeEnum.lightBlueColor).withValues(alpha: 0.15),
                             borderRadius: BorderRadius.circular(20),
                           ),
                           child: RegularText(
@@ -140,7 +196,7 @@ class _LiveCodeSnippet extends ConsumerWidget {
                 margin: REdgeInsets.only(bottom: 3),
                 decoration: BoxDecoration(
                   color: isActive
-                      ? context.getColor(ThemeEnum.lightBlueColor).withOpacity(0.12)
+                      ? context.getColor(ThemeEnum.lightBlueColor).withValues(alpha: 0.12)
                       : Colors.transparent,
                   borderRadius: BorderRadius.circular(4),
                   border: isActive
@@ -191,65 +247,35 @@ class _LiveCodeSnippet extends ConsumerWidget {
   }
 }
 
-class _TimeComplexityData extends StatelessWidget {
-  const _TimeComplexityData({required this.complexity});
-
-  final AlgorithmComplexity complexity;
-
-  @override
-  Widget build(BuildContext context) {
-    return GlassContainer(
-      withAboveShadow: false,
-      borderRadius: 8,
-      padding: REdgeInsets.all(6),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          CustomIcon(Icons.access_time_rounded, size: 14, color: ThemeEnum.hoverColor),
-          RSizedBox(width: 4),
-          RegularText(StringsManager.time, color: ThemeEnum.hoverColor, fontSize: 14),
-          RSizedBox(width: 2),
-          RegularText(StringsManager.best, color: ThemeEnum.white2DarkColor, fontSize: 12),
-          RSizedBox(width: 2),
-          SemiBoldText(complexity.bestTimeComplexity.getText, color: ThemeEnum.greenColor, fontSize: 14),
-          RSizedBox(width: 4),
-          RegularText(StringsManager.worst, color: ThemeEnum.white2DarkColor, fontSize: 12),
-          RSizedBox(width: 2),
-          SemiBoldText(complexity.worstTimeComplexity.getText, color: ThemeEnum.mainDarkColor, fontSize: 14),
-        ],
-      ),
-    );
-  }
-}
-
-class _StatusLiveText extends ConsumerWidget {
-  const _StatusLiveText(this.instance);
-
-  final StateNotifierProvider<SortingNotifier, SortingNotifierState> instance;
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final text = ref.watch(instance.select((s) => s.statusText));
-
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
-      child: GlassContainer(
-        withAboveShadow: false,
-        borderRadius: 8,
-        padding: REdgeInsets.symmetric(horizontal: 16, vertical: 12),
-        child: AnimatedSwitcher(
-          duration: const Duration(milliseconds: 250),
-          child: MediumText(
-            key: ValueKey(text),
-            text,
-            fontSize: 14,
-            color: ThemeEnum.white2DarkColor,
-          ),
-        ),
-      ),
-    );
-  }
-}
+//
+// class _StatusLiveText extends ConsumerWidget {
+//   const _StatusLiveText(this.instance);
+//
+//   final StateNotifierProvider<SortingNotifier, SortingNotifierState> instance;
+//
+//   @override
+//   Widget build(BuildContext context, WidgetRef ref) {
+//     final text = ref.watch(instance.select((s) => s.statusText));
+//
+//     return Padding(
+//       padding: const EdgeInsets.symmetric(horizontal: 16),
+//       child: GlassContainer(
+//         withAboveShadow: false,
+//         borderRadius: 8,
+//         padding: REdgeInsets.symmetric(horizontal: 16, vertical: 12),
+//         child: AnimatedSwitcher(
+//           duration: const Duration(milliseconds: 250),
+//           child: MediumText(
+//             key: ValueKey(text),
+//             text,
+//             fontSize: 14,
+//             color: ThemeEnum.white2DarkColor,
+//           ),
+//         ),
+//       ),
+//     );
+//   }
+// }
 
 class _ProgressBar extends ConsumerWidget {
   const _ProgressBar(this.instance);
@@ -284,58 +310,6 @@ class _ProgressBar extends ConsumerWidget {
           ),
         ],
       ),
-    );
-  }
-}
-
-class _SpaceComplexityData extends StatelessWidget {
-  const _SpaceComplexityData({required this.complexity});
-
-  final AlgorithmComplexity complexity;
-
-  @override
-  Widget build(BuildContext context) {
-    return GlassContainer(
-      withAboveShadow: false,
-      borderRadius: 8,
-      padding: REdgeInsets.all(6),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          CustomIcon(Icons.storage_rounded, size: 14, color: ThemeEnum.hoverColor),
-          RSizedBox(width: 4),
-          RegularText(StringsManager.space, color: ThemeEnum.hoverColor, fontSize: 14),
-          RSizedBox(width: 2),
-          SemiBoldText(complexity.spaceComplexity.getText, color: ThemeEnum.mainDarkColor, fontSize: 14),
-        ],
-      ),
-    );
-  }
-}
-
-class _AlgorithmTitle extends StatelessWidget {
-  const _AlgorithmTitle({
-    required this.title,
-    required this.description,
-  });
-
-  final String title;
-  final String description;
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      mainAxisAlignment: MainAxisAlignment.start,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        BoldText(title, fontSize: 20),
-        RegularText(
-          description,
-          fontSize: 11,
-          color: ThemeEnum.hoverColor,
-        )
-      ],
     );
   }
 }
