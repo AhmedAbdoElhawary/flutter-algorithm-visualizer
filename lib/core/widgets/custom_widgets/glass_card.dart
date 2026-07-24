@@ -126,25 +126,25 @@ class AnimatedBackground extends StatelessWidget {
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        Positioned(
-          top: -100,
-          left: -80,
+        PositionedDirectional(
+          top: -25,
+          start: -80,
           child: _ORB(
             color: const Color(0xFF5B9CF6),
             size: 260,
           ),
         ),
-        Positioned(
+        PositionedDirectional(
           top: 220,
-          right: -100,
+          end: -100,
           child: _ORB(
             color: const Color(0xFFA78BFA),
             size: 280,
           ),
         ),
-        Positioned(
-          bottom: -120,
-          left: -60,
+        PositionedDirectional(
+          bottom: -25,
+          start: -60,
           child: _ORB(
             color: const Color(0xFF38BDF8),
             size: 240,
