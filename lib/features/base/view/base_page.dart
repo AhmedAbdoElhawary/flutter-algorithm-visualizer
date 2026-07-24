@@ -1,4 +1,3 @@
-import 'package:algorithm_visualizer/config/routes/route_app.dart';
 import 'package:algorithm_visualizer/core/extensions/navigators.dart';
 import 'package:algorithm_visualizer/core/helpers/screen_size.dart';
 import 'package:algorithm_visualizer/core/resources/color_manager.dart';
@@ -38,6 +37,9 @@ class _BasePageState extends State<BasePage> with SingleTickerProviderStateMixin
 
   @override
   Widget build(BuildContext context) {
+    final cardValues = BasePageViewModel.sortingCards.values.toList();
+    final searchingCardValues = BasePageViewModel.searchingCards.values.toList();
+
     return Scaffold(
       body: SafeArea(
         bottom: false,
@@ -78,9 +80,9 @@ class _BasePageState extends State<BasePage> with SingleTickerProviderStateMixin
                                   borderRadius: BorderRadius.circular(20),
                                   highlightColor: context.getColor(ThemeEnum.primaryColor),
                                   onTap: () {
-                                    context.pushTo(BasePageViewModel.sortingCards[index].route);
+                                    context.pushTo(cardValues[index].route);
                                   },
-                                  child: BasePageViewModel.sortingCards[index].card),
+                                  child: cardValues[index].card),
                             );
                           },
                         ),
@@ -100,9 +102,9 @@ class _BasePageState extends State<BasePage> with SingleTickerProviderStateMixin
                                   borderRadius: BorderRadius.circular(20),
                                   highlightColor: context.getColor(ThemeEnum.primaryColor),
                                   onTap: () {
-                                    context.pushTo(BasePageViewModel.searchingCards[index].route);
+                                    context.pushTo(searchingCardValues[index].route);
                                   },
-                                  child: BasePageViewModel.searchingCards[index].card),
+                                  child: searchingCardValues[index].card),
                             );
                           },
                         ),
