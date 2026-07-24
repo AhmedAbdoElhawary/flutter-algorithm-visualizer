@@ -24,7 +24,7 @@ abstract class SortingNotifier extends StateNotifier<SortingNotifierState> imple
   static const ThemeEnum backgroundForSortingColor = ThemeEnum.backgroundForSortingColor;
   static const ThemeEnum doneSortingColor = ThemeEnum.greenColor;
 
-  static const int _defaultSize = 9;
+  static const int _defaultSize = 11;
   static const int _maxSize = 15;
   static const int _minSize = 5;
   static double itemsPadding = 5.w;
@@ -36,13 +36,11 @@ abstract class SortingNotifier extends StateNotifier<SortingNotifierState> imple
 
   CancelableOperation<void>? _cancelableSort;
 
-  /// Shorthand so callers don't need to reach into state.
   bool get isPlaying => state.isPlaying;
   bool get isAtFirstStep => state.isAtFirstStep;
   bool get isAtLastStep => state.isAtLastStep;
   bool get isInStepMode => state.isInStepMode;
 
-  // ── Static helpers ──────────────────────────────────────────────────────────
 
   static List<SortableItem> _generateList(int size) {
     return List.generate(size, (index) => SortableItem(id: index, value: index + 1))..shuffle();
@@ -78,7 +76,6 @@ abstract class SortingNotifier extends StateNotifier<SortingNotifierState> imple
     return value.h / selectedAlgorithmsLength * perc;
   }
 
-  // ── Private state helpers ───────────────────────────────────────────────────
 
   Duration get speedDuration => state.swipeDuration;
   int get _size => state.size;
@@ -95,7 +92,6 @@ abstract class SortingNotifier extends StateNotifier<SortingNotifierState> imple
     state = state.copyWith(positions: positions);
   }
 
-  // ── Speed / Size ────────────────────────────────────────────────────────────
 
   void changeSpeed(SpeedStatus speedStatus) {
     final defaultSpeed = _defaultSpeedDuration.inMilliseconds.toDouble();
@@ -114,18 +110,10 @@ abstract class SortingNotifier extends StateNotifier<SortingNotifierState> imple
     generateAgain();
   }
 
-  // ── Playback control ────────────────────────────────────────────────────────
-  /// Strips all highlight colours from every item without touching list order or positions.
-
   void _resetItemColors() {
     final cleanList = state.list.map((item) => item.copyWith(sortedStatus: SortingStatus.none)).toList();
     state = state.copyWith(list: cleanList);
   }
-
-  /// Aborts any in-progress operation and resets the visualiser completely.
-  ///
-  /// Generates a brand-new shuffled list and positions, as if the user had
-  /// just opened the screen. Works from any state (playing, stopped, or idle).
 
   Future<void> cancelSorting() async {
     await _cancelableSort?.cancel();
@@ -143,12 +131,6 @@ abstract class SortingNotifier extends StateNotifier<SortingNotifierState> imple
     );
     _initializePositions();
   }
-
-  /// Halts the running animation and wipes highlight colours.
-  ///
-  /// The list stays in its current partially-sorted order so the user can
-  /// inspect exactly where the algorithm paused. Safe to call at any time —
-  /// exits immediately when nothing is playing.
 
   Future<void> stopSorting() async {
     if (!state.isPlaying) return;
@@ -188,14 +170,6 @@ abstract class SortingNotifier extends StateNotifier<SortingNotifierState> imple
     _initializePositions();
   }
 
-  // ── Step-by-step ────────────────────────────────────────────────────────────
-
-  /// Pre-computes every visual snapshot for manual stepping.
-  ///
-  /// Snapshot layout:
-  ///   [0]        → initial (unsorted) state
-  ///   [1 .. n]   → one snapshot per algorithm step
-  ///   [n+1]      → fully sorted (all items green)
 
   void _precomputeSnapshots() {
     final values = state.list.map((e) => e.value).toList();
@@ -205,7 +179,6 @@ abstract class SortingNotifier extends StateNotifier<SortingNotifierState> imple
     final posSnaps = <Map<int, Offset>>[];
     final codeSnaps = <int>[];
 
-    // Snapshot 0 — initial unsorted state, no line highlighted.
     listSnaps.add(List<SortableItem>.from(state.list));
     posSnaps.add(Map<int, Offset>.from(state.positions));
     codeSnaps.add(-1);
@@ -239,10 +212,9 @@ abstract class SortingNotifier extends StateNotifier<SortingNotifierState> imple
 
       listSnaps.add(List<SortableItem>.from(wList));
       posSnaps.add(Map<int, Offset>.from(wPos));
-      codeSnaps.add(codeLineForStep(step)); // ← record the active line
+      codeSnaps.add(codeLineForStep(step));
     }
 
-    // Final snapshot — all green, no highlight.
     listSnaps.add(wList.map((i) => i.copyWith(sortedStatus: SortingStatus.sorted)).toList());
     posSnaps.add(Map<int, Offset>.from(wPos));
     codeSnaps.add(-1);
@@ -255,11 +227,6 @@ abstract class SortingNotifier extends StateNotifier<SortingNotifierState> imple
       currentCodeLine: -1,
     );
   }
-
-  /// Advances the visualisation by one algorithm step.
-  ///
-  /// Calls [_precomputeSnapshots] automatically on the first invocation so
-  /// callers don't need to worry about setup order.
 
   void stepForward() {
     if (state.isPlaying) return;
@@ -291,8 +258,6 @@ abstract class SortingNotifier extends StateNotifier<SortingNotifierState> imple
     );
   }
 
-  // ── Internal auto-play machinery (unchanged) ────────────────────────────────
-
   Future<void> _greenSortedItemsAsDone() async {
     final list = List<SortableItem>.from(state.list);
     for (int i = 0; i < list.length; i++) {
@@ -316,7 +281,6 @@ abstract class SortingNotifier extends StateNotifier<SortingNotifierState> imple
     final values = list.map((e) => e.value).toList();
     final steps = buildSorting(values).steps;
 
-    // Initialise progress counters before the first step.
     state = state.copyWith(
       totalPlaySteps: steps.length,
       currentPlayStep: 0,
@@ -327,7 +291,6 @@ abstract class SortingNotifier extends StateNotifier<SortingNotifierState> imple
       final step = steps[i];
       if (_getOperation != SortingEnum.played) return;
 
-      // Track progress and highlight the corresponding code line.
       state = state.copyWith(
         currentPlayStep: i + 1,
         currentCodeLine: codeLineForStep(step),
@@ -368,7 +331,6 @@ abstract class SortingNotifier extends StateNotifier<SortingNotifierState> imple
       await Future.delayed(speedDuration);
     }
 
-    // Clear code highlight before the "all green" animation.
     state = state.copyWith(currentCodeLine: -1);
     await _greenSortedItemsAsDone();
   }

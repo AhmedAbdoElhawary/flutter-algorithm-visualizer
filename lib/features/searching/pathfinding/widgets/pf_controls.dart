@@ -7,7 +7,7 @@ import '../providers/searching_notifier.dart';
 import 'ctrl_btn.dart';
 import 'speed_selector.dart';
 
-class c extends ConsumerWidget {
+class PFControls extends ConsumerWidget {
   const PFControls({required this.instance,super.key});
   final StateNotifierProvider<SearchingNotifier, SearchingState> instance;
 
