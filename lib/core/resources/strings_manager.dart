@@ -26,8 +26,8 @@ class StringsManager {
   static const String clear = "Clear";
   static const String dijkstra = "Dijkstra";
   static const String aStarSearch = "A* Search";
-  static const String bFS = "BFS";
-  static const String dFS = "DFS";
+  static const String bFS = "BFS Search";
+  static const String dFS = "DFS Search";
   static const String clearAll = "Clear all";
   static const String clearPath = "Clear path";
   static const String recursiveBacktrackerMaze = "Recursive Backtracker Maze";
@@ -57,7 +57,11 @@ class StringsManager {
   static const String radixSortDescription = "Sorts numbers digit by digit from least to greatest.";
   static const String countingSortDescription = "Counts occurrences instead of comparing values directly.";
   static const String bucketSortDescription = "Distributes items into buckets, then sorts each bucket.";
+//
 
+  static const String breadthFirstSearchDescription = "Finds the shortest path level by level.";
+  static const String depthFirstSearchDescription = "Explores one path deeply before backtracking.";
+  static const String aStarDescription = "Uses heuristics to quickly find the best path.";
   static const String comparisonAlgorithms = "Comparison algorithms";
   static const String generateMaze = "Generate Maze";
   static const String visualize = "Visualize";

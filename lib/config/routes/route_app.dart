@@ -2,6 +2,9 @@ import 'package:algorithm_visualizer/core/helpers/app_bar/app_bar.dart';
 import 'package:algorithm_visualizer/core/resources/strings_manager.dart';
 import 'package:algorithm_visualizer/core/widgets/adaptive/text/adaptive_text.dart';
 import 'package:algorithm_visualizer/features/base/view/base_page.dart';
+import 'package:algorithm_visualizer/features/searching/pathfinding/a_star_searching.dart';
+import 'package:algorithm_visualizer/features/searching/pathfinding/bfs_searching.dart';
+import 'package:algorithm_visualizer/features/searching/pathfinding/dfs_searching.dart';
 import 'package:algorithm_visualizer/features/sorting/bubble/view/bubble_sort_page.dart';
 import 'package:algorithm_visualizer/features/sorting/bucket/view/bucket_sort_page.dart';
 import 'package:algorithm_visualizer/features/sorting/comparison/view/comparison_sort_page.dart';
@@ -15,12 +18,25 @@ import 'package:algorithm_visualizer/features/sorting/selection/view/selection_s
 import 'package:algorithm_visualizer/features/sorting/shell/view/shell_sort_page.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+
 part 'unknown_page.dart';
 
 class Routes {
   static const RouteConfig base = RouteConfig(
     name: 'base',
     path: '/',
+  );
+  static const RouteConfig bfsSearching = RouteConfig(
+    name: 'bfsSearching',
+    path: '/bfsSearching',
+  );
+  static const RouteConfig dfsSearching = RouteConfig(
+    name: 'dfsSearching',
+    path: '/dfsSearching',
+  );
+  static const RouteConfig aStarSearching = RouteConfig(
+    name: 'aStarSearching',
+    path: '/aStarSearching',
   );
 
   static const RouteConfig bubbleSort = RouteConfig(
@@ -98,6 +114,21 @@ class AppRoutes {
             path: Routes.base.path,
             name: Routes.base.name,
             builder: (context, state) => const BasePage(),
+          ),
+          GoRoute(
+            path: Routes.bfsSearching.path,
+            name: Routes.bfsSearching.name,
+            builder: (context, state) => const BFSSearchingPage(),
+          ),
+          GoRoute(
+            path: Routes.dfsSearching.path,
+            name: Routes.dfsSearching.name,
+            builder: (context, state) => const DFSSearchingPage(),
+          ),
+          GoRoute(
+            path: Routes.aStarSearching.path,
+            name: Routes.aStarSearching.name,
+            builder: (context, state) => const AStarSearchingPage(),
           ),
           GoRoute(
             path: Routes.bubbleSort.path,
