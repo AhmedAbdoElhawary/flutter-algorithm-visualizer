@@ -1,5 +1,4 @@
 import 'package:algorithm_visualizer/core/helpers/app_bar/back_button.dart';
-import 'package:algorithm_visualizer/core/resources/strings_manager.dart';
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/algorithm_title.dart';
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/complexity_details.dart';
 import 'package:algorithm_visualizer/features/base/view_model/base_page_view_model.dart';
@@ -14,16 +13,6 @@ import 'widgets/pf_controls.dart';
 import 'widgets/pf_grid.dart';
 import 'widgets/pf_legend.dart';
 import 'widgets/pf_step_info.dart';
-
-class BFSSearchingPage extends StatelessWidget {
-  const BFSSearchingPage({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    final instance = BasePageViewModel.searchingCards[StringsManager.bFS]!.instance;
-    return VisualizerScreen(instance: instance, title: StringsManager.bFS);
-  }
-}
 
 class VisualizerScreen extends ConsumerStatefulWidget {
   const VisualizerScreen({required this.title, required this.instance, super.key});
