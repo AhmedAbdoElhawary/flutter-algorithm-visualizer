@@ -32,6 +32,8 @@ abstract class SearchingNotifier extends StateNotifier<SearchingState> implement
     super.dispose();
   }
 
+  List<PFStep> buildAlgorithm(List<List<bool>> walls);
+
   bool _inBounds(int row, int col) => row >= 0 && row < kPFRows && col >= 0 && col < kPFCols;
 
   Set<int> _buildPath(int end, Map<int, int> parent) {
@@ -104,7 +106,6 @@ abstract class SearchingNotifier extends StateNotifier<SearchingState> implement
 
   // ── Playback ───────────────────────────────────────────────────────────
 
-  List<PFStep> buildAlgorithm(List<List<bool>> walls);
 
   void runAlgorithm() {
     _clearTimer();
