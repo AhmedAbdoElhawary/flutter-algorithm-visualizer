@@ -21,6 +21,8 @@ dependencies:
   animations: ^2.0.11 # not used yet
   collection: ^1.18.0
   async: ^2.11.0
+  google_fonts: ^6.2.1
+  fl_chart: ^0.68.0
 
   cupertino_icons: ^1.0.6
 #  flutter_native_splash: ^2.4.6
