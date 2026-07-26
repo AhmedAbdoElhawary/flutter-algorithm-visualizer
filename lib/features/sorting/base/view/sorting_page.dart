@@ -8,6 +8,7 @@ import 'package:algorithm_visualizer/core/widgets/custom_widgets/algorithm_title
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/complexity_details.dart';
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/custom_icon.dart';
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/glass_card.dart';
+import 'package:algorithm_visualizer/core/widgets/custom_widgets/live_code_snippet.dart';
 import 'package:algorithm_visualizer/features/base/view_model/base_page_view_model.dart';
 import 'package:algorithm_visualizer/features/sorting/base/view_model/sorting_notifier.dart';
 import 'package:algorithm_visualizer/features/sorting/base/widgets/linear_progress_indicator.dart';
@@ -30,9 +31,9 @@ class SortingPage extends ConsumerStatefulWidget {
 
 class _SortingPageState extends ConsumerState<SortingPage> {
   late StateNotifierProvider<SortingNotifier, SortingNotifierState> instance = widget.instance;
-  late String title = widget.title;
-  final controller = ScrollController();
   final cardValues = BasePageViewModel.sortingCards.values.toList();
+  final controller = ScrollController();
+  late String title = widget.title;
 
   Future<void> deleteInstance(StateNotifierProvider<SortingNotifier, SortingNotifierState> instance) async {
     await ref.read(instance.notifier).cancelSorting();
@@ -59,6 +60,7 @@ class _SortingPageState extends ConsumerState<SortingPage> {
   Widget build(BuildContext context) {
     final description = ref.read(instance.notifier).description;
     final complexity = ref.read(instance.notifier).algoComplexity;
+
     return PopScope(
       onPopInvokedWithResult: (didPop, result) async {
         if (didPop) await deleteInstance(instance);
@@ -146,104 +148,7 @@ class _LiveCodeSnippet extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final currentLine = ref.watch(instance.select((s) => s.currentCodeLine));
     final codeLines = ref.read(instance.notifier).codeSnippet;
-
-    return Padding(
-      padding: REdgeInsets.symmetric(horizontal: 16),
-      child: GlassContainer(
-        withAboveShadow: false,
-        borderRadius: 12,
-        padding: REdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            // ── Header ──────────────────────────────────────────────────────
-            Row(
-              children: [
-                CustomIcon(Icons.data_object_rounded, size: 14, color: ThemeEnum.hoverColor),
-                RSizedBox(width: 6),
-                MediumText(StringsManager.pseudocode, fontSize: 13, color: ThemeEnum.hoverColor),
-                const Spacer(),
-                // Pill showing which line is active.
-                AnimatedSwitcher(
-                  duration: const Duration(milliseconds: 180),
-                  child: currentLine >= 0
-                      ? Container(
-                          key: ValueKey(currentLine),
-                          padding: REdgeInsets.symmetric(horizontal: 8, vertical: 2),
-                          decoration: BoxDecoration(
-                            color: context.getColor(ThemeEnum.lightBlueColor).withValues(alpha: 0.15),
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                          child: RegularText(
-                            'L${currentLine + 1}',
-                            fontSize: 11,
-                            color: ThemeEnum.lightBlueColor,
-                          ),
-                        )
-                      : const SizedBox.shrink(),
-                ),
-              ],
-            ),
-            RSizedBox(height: 12),
-            // ── Code lines ───────────────────────────────────────────────────
-            ...codeLines.asMap().entries.map((entry) {
-              final i = entry.key;
-              final isActive = i == currentLine;
-
-              return AnimatedContainer(
-                duration: const Duration(milliseconds: 200),
-                margin: REdgeInsets.only(bottom: 3),
-                decoration: BoxDecoration(
-                  color: isActive
-                      ? context.getColor(ThemeEnum.lightBlueColor).withValues(alpha: 0.12)
-                      : Colors.transparent,
-                  borderRadius: BorderRadius.circular(4),
-                  border: isActive
-                      ? Border(
-                          left: BorderSide(
-                            color: context.getColor(ThemeEnum.lightBlueColor),
-                            width: 2.5,
-                          ),
-                        )
-                      : null,
-                ),
-                padding: REdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                child: Row(
-                  children: [
-                    // Line number
-                    SizedBox(
-                      width: 20,
-                      child: RegularText(
-                        '${i + 1}',
-                        fontSize: 11,
-                        color: isActive ? ThemeEnum.lightBlueColor : ThemeEnum.hoverColor,
-                      ),
-                    ),
-                    RSizedBox(width: 10),
-                    // Code text — grows to fill available space
-                    Expanded(
-                      child: RegularText(
-                        entry.value,
-                        fontSize: 12,
-                        color: isActive ? ThemeEnum.white2DarkColor : ThemeEnum.hoverColor,
-                      ),
-                    ),
-                    // Execution arrow shown only on the active line
-                    if (isActive)
-                      CustomIcon(
-                        Icons.arrow_right_rounded,
-                        size: 16,
-                        color: ThemeEnum.lightBlueColor,
-                      ),
-                  ],
-                ),
-              );
-            }),
-          ],
-        ),
-      ),
-    );
+    return LiveCodeSnippet(currentLine: currentLine, codeLines: codeLines);
   }
 }
 
@@ -284,7 +189,6 @@ class _ProgressBar extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // Only rebuild when these two values change — nothing else.
     final progress = ref.watch(instance.select((s) => s.progressValue));
     final label = ref.watch(instance.select((s) => s.progressLabel));
 
@@ -422,32 +326,3 @@ class _BuildItem extends ConsumerWidget {
     );
   }
 }
-
-//
-// static Widget playButton() {
-// return Container(
-// width: 90,
-// height: 90,
-// decoration: BoxDecoration(
-// gradient: const LinearGradient(
-// colors: [
-// Color(0xFF7C7BFF),
-// Color(0xFFC17CFF),
-// ],
-// ),
-// borderRadius: BorderRadius.circular(30),
-// boxShadow: [
-// BoxShadow(
-// color: const Color(0xFF9B7CFF).withOpacity(0.5),
-// blurRadius: 24,
-// spreadRadius: 2,
-// ),
-// ],
-// ),
-// child: const Icon(
-// Icons.play_arrow_rounded,
-// size: 50,
-// color: Colors.white,
-// ),
-// );
-// }
