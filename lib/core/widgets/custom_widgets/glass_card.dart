@@ -40,28 +40,36 @@ class GlassCard extends StatelessWidget {
           const Spacer(flex: 6),
           SemiBoldText(algoComplexity.name),
           const SizedBox(height: 6),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Row(
-                children: [
-                  CustomIcon(Icons.access_time_rounded, size: 12, color: ThemeEnum.text2DarkColor),
-                  RSizedBox(width: 2),
-                  RegularText(algoComplexity.worstTimeComplexity.getText,
-                      color: ThemeEnum.textDarkColor, fontSize: 11),
-                ],
-              ),
-              Spacer(),
-              Row(
-                children: [
-                  CustomIcon(Icons.storage_rounded, size: 12, color: ThemeEnum.text2DarkColor),
-                  RSizedBox(width: 2),
-                  RegularText(algoComplexity.spaceComplexity.getText,
-                      color: ThemeEnum.textDarkColor, fontSize: 11),
-                ],
-              ),
-              Spacer(),
-            ],
+          RSizedBox(
+            height: 20,
+            child: CustomScrollView(
+              scrollDirection: Axis.horizontal,
+              slivers: [
+                SliverToBoxAdapter(
+                  child: Row(
+                    children: [
+                      CustomIcon(Icons.access_time_rounded, size: 11, color: ThemeEnum.text2DarkColor),
+                      RSizedBox(width: 2),
+                      RegularText(algoComplexity.worstTimeComplexity.getText,
+                          color: ThemeEnum.textDarkColor, fontSize: 10),
+                    ],
+                  ),
+                ),
+                SliverPadding(
+                  padding: REdgeInsetsDirectional.only(start: 5),
+                  sliver: SliverToBoxAdapter(
+                    child: Row(
+                      children: [
+                        CustomIcon(Icons.storage_rounded, size: 11, color: ThemeEnum.text2DarkColor),
+                        RSizedBox(width: 2),
+                        RegularText(algoComplexity.spaceComplexity.getText,
+                            color: ThemeEnum.textDarkColor, fontSize: 10),
+                      ],
+                    ),
+                  ),
+                )
+              ],
+            ),
           ),
           const Spacer(flex: 1),
         ],
@@ -109,7 +117,7 @@ class GlassContainer extends StatelessWidget {
                   strokeAlign: withAboveShadow ? -2 : -1),
               right: BorderSide(color: borderColor, width: borderWidth),
               left: BorderSide(color: borderColor, width: borderWidth),
-              bottom: BorderSide(color: borderColor, width:borderWidth),
+              bottom: BorderSide(color: borderColor, width: borderWidth),
             ),
           ),
           child: child,
