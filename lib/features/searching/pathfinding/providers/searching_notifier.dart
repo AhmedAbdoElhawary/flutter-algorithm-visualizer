@@ -106,7 +106,6 @@ abstract class SearchingNotifier extends StateNotifier<SearchingState> implement
 
   // ── Playback ───────────────────────────────────────────────────────────
 
-
   void runAlgorithm() {
     _clearTimer();
     final steps = buildAlgorithm(state.walls);
@@ -144,8 +143,20 @@ abstract class SearchingNotifier extends StateNotifier<SearchingState> implement
 
   void reset() => _resetSteps();
 
-  void setSpeed(PlaybackSpeed speed) {
-    state = state.copyWith(speed: speed);
+  PlaybackSpeed _getNextSpeed(PlaybackSpeed speed) {
+    return speed == PlaybackSpeed.slow
+        ? PlaybackSpeed.normal
+        : speed == PlaybackSpeed.normal
+            ? PlaybackSpeed.fast3
+            : speed == PlaybackSpeed.fast3
+                ? PlaybackSpeed.fast5
+                : speed == PlaybackSpeed.fast5
+                    ? PlaybackSpeed.fast10
+                    : PlaybackSpeed.slow;
+  }
+
+  void setNextSpeed(PlaybackSpeed speed) {
+    state = state.copyWith(speed: _getNextSpeed(speed));
     if (state.playing) _startTimer();
   }
 }
