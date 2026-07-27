@@ -55,7 +55,6 @@ class _VisualizerScreenState extends ConsumerState<VisualizerScreen> {
                 title: AlgorithmTitle(title: title, description: description),
               ),
               SliverToBoxAdapter(child: ComplexityDetails(complexity: complexity)),
-              // ComplexityBadges(),
               SliverPadding(
                 padding: REdgeInsets.symmetric(vertical: 12),
                 sliver: SliverToBoxAdapter(
@@ -97,6 +96,10 @@ class _VisualizerScreenState extends ConsumerState<VisualizerScreen> {
               SliverToBoxAdapter(child: PFLegend()),
               SliverToBoxAdapter(child: PFStepInfo(instance: instance)),
               SliverToBoxAdapter(child: PFControls(instance: instance)),
+              // SliverPadding(
+              //   padding: REdgeInsetsDirectional.only(top: 10, bottom: 10),
+              //   sliver: SliverToBoxAdapter(child: _LiveCodeSnippet(instance)),
+              // ),
             ],
           ),
         ),
@@ -104,3 +107,16 @@ class _VisualizerScreenState extends ConsumerState<VisualizerScreen> {
     );
   }
 }
+//
+// class _LiveCodeSnippet extends ConsumerWidget {
+//   const _LiveCodeSnippet(this.instance);
+//
+//   final StateNotifierProvider<SearchingNotifier, SearchingState> instance;
+//
+//   @override
+//   Widget build(BuildContext context, WidgetRef ref) {
+//     final currentLine = ref.watch(instance.select((s) => s.currentCodeLine));
+//     final codeLines = ref.read(instance.notifier).codeSnippet;
+//     return LiveCodeSnippet(currentLine: currentLine, codeLines: codeLines);
+//   }
+// }
