@@ -1,13 +1,14 @@
 import 'package:algorithm_visualizer/lib-temp/theme/app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../models/searching_state.dart';
 import '../providers/searching_notifier.dart';
 
 class SpeedSelector extends ConsumerWidget {
-  const SpeedSelector({required this.instance,super.key});
+  const SpeedSelector({required this.instance, super.key});
   final StateNotifierProvider<SearchingNotifier, SearchingState> instance;
 
   @override
@@ -16,34 +17,28 @@ class SpeedSelector extends ConsumerWidget {
     final notifier = ref.read(instance.notifier);
 
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+      padding: REdgeInsets.symmetric(horizontal: 8, vertical: 8),
       decoration: context.cardDecoration(),
-      child: Row(
-        children: PlaybackSpeed.values.map((s) {
-          final isSelected = speed == s;
-          return GestureDetector(
-            onTap: () => notifier.setSpeed(s),
-            child: Container(
-              width: 22,
-              height: 22,
-              margin: EdgeInsets.only(right: s != PlaybackSpeed.fast ? 2 : 0),
-              decoration: BoxDecoration(
-                color: isSelected ? context.accentBg : Colors.transparent,
-                borderRadius: BorderRadius.circular(5),
-              ),
-              child: Center(
-                child: Text(
-                  '${s.level}×',
-                  style: GoogleFonts.inter(
-                    color: isSelected ? context.accent : context.textMuted,
-                    fontSize: 10,
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
+      child: GestureDetector(
+        onTap: () => notifier.setNextSpeed(speed),
+        child: Container(
+          width: 22.r,
+          height: 22.r,
+          decoration: BoxDecoration(
+            color: context.accentBg,
+            borderRadius: BorderRadius.circular(5),
+          ),
+          child: Center(
+            child: Text(
+              '${speed.level}×',
+              style: GoogleFonts.inter(
+                color: context.accent,
+                fontSize: 10.r,
+                fontWeight: FontWeight.w700,
               ),
             ),
-          );
-        }).toList(),
+          ),
+        ),
       ),
     );
   }
