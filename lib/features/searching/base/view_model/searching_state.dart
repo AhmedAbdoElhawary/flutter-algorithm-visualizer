@@ -1,5 +1,4 @@
-import 'pf_constants.dart';
-import 'pf_step.dart';
+part of 'searching_notifier.dart';
 
 enum PlaybackSpeed { slow, normal, fast3, fast5, fast10 }
 
