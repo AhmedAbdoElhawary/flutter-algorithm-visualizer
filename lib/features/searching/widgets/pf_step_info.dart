@@ -1,10 +1,10 @@
-import 'package:algorithm_visualizer/features/searching/pathfinding/models/searching_state.dart';
+import 'package:algorithm_visualizer/features/searching/helper/searching_state.dart';
 import 'package:algorithm_visualizer/lib-temp/theme/app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-import '../providers/searching_notifier.dart';
+import '../view_model/searching_notifier.dart';
 
 class PFStepInfo extends ConsumerWidget {
   const PFStepInfo({required this.instance,super.key});
