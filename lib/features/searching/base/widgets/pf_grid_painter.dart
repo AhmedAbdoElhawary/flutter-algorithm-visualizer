@@ -1,5 +1,5 @@
-import 'package:algorithm_visualizer/features/searching/helper/pf_constants.dart';
-import 'package:algorithm_visualizer/features/searching/helper/pf_step.dart';
+import 'package:algorithm_visualizer/features/searching/base/helper/pf_constants.dart';
+import 'package:algorithm_visualizer/features/searching/base/helper/pf_step.dart';
 import 'package:flutter/material.dart';
 
 class PFGridPainter extends CustomPainter {
