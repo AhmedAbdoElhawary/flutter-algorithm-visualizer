@@ -3,16 +3,16 @@ import 'package:algorithm_visualizer/core/widgets/custom_widgets/algorithm_title
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/complexity_details.dart';
 import 'package:algorithm_visualizer/features/base/view_model/base_page_view_model.dart';
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/algo_tab.dart';
-import 'package:algorithm_visualizer/features/searching/pathfinding/models/searching_state.dart';
-import 'package:algorithm_visualizer/features/searching/pathfinding/providers/searching_notifier.dart';
+import 'package:algorithm_visualizer/features/searching/helper/searching_state.dart';
+import 'package:algorithm_visualizer/features/searching/view_model/searching_notifier.dart';
 import 'package:algorithm_visualizer/lib-temp/theme/app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'widgets/pf_controls.dart';
-import 'widgets/pf_grid.dart';
-import 'widgets/pf_legend.dart';
-import 'widgets/pf_step_info.dart';
+import '../widgets/pf_controls.dart';
+import '../widgets/pf_grid.dart';
+import '../widgets/pf_legend.dart';
+import '../widgets/pf_step_info.dart';
 
 class VisualizerScreen extends ConsumerStatefulWidget {
   const VisualizerScreen({required this.title, required this.instance, super.key});
