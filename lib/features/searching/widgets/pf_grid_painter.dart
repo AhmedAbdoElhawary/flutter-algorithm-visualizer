@@ -1,7 +1,6 @@
+import 'package:algorithm_visualizer/features/searching/helper/pf_constants.dart';
+import 'package:algorithm_visualizer/features/searching/helper/pf_step.dart';
 import 'package:flutter/material.dart';
-
-import '../models/pf_constants.dart';
-import '../models/pf_step.dart';
 
 class PFGridPainter extends CustomPainter {
   final List<List<bool>> walls;
