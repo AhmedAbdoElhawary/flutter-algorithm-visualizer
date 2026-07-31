@@ -1,6 +1,5 @@
-import 'package:algorithm_visualizer/features/searching/helper/pf_constants.dart';
-import 'package:algorithm_visualizer/features/searching/helper/searching_state.dart';
-import 'package:algorithm_visualizer/features/searching/widgets/pf_grid_painter.dart';
+import 'package:algorithm_visualizer/features/searching/base/helper/pf_constants.dart';
+import 'package:algorithm_visualizer/features/searching/base/widgets/pf_grid_painter.dart';
 import 'package:algorithm_visualizer/lib-temp/theme/app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
