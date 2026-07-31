@@ -4,12 +4,12 @@ import 'dart:math' as math;
 import 'package:algorithm_visualizer/core/helpers/o_notation.dart';
 import 'package:algorithm_visualizer/core/resources/strings_manager.dart';
 import 'package:algorithm_visualizer/features/base/view_model/base_page_view_model.dart';
-import 'package:algorithm_visualizer/features/searching/pathfinding/models/pf_step.dart';
+import 'package:algorithm_visualizer/features/searching/helper/pf_constants.dart';
+import 'package:algorithm_visualizer/features/searching/helper/pf_step.dart';
+import 'package:algorithm_visualizer/features/searching/helper/searching_state.dart';
 import 'package:algorithm_visualizer/features/sorting/base/view_model/sorting_notifier.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../models/pf_constants.dart';
-import '../models/searching_state.dart';
 
 const _kInfinity = 1 << 30;
 const _kOrthogonalDirs = [(-1, 0), (0, 1), (1, 0), (0, -1)];
