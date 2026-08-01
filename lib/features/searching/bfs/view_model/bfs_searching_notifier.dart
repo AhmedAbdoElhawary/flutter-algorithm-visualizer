@@ -66,6 +66,7 @@ class BFSSearchingNotifier extends SearchingNotifier {
     averageTimeComplexity: ONotationComplexity.vPlusE,
     worstTimeComplexity: ONotationComplexity.vPlusE,
     spaceComplexity: ONotationComplexity.vPlusE,
+    stable: true,
   );
 
   @override

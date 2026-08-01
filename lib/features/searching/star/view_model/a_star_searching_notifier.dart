@@ -82,6 +82,7 @@ class AStarSearchingNotifier extends SearchingNotifier {
     averageTimeComplexity: ONotationComplexity.eLogV,
     worstTimeComplexity: ONotationComplexity.eLogV,
     spaceComplexity: ONotationComplexity.vPlusE,
+    stable: true,
   );
 
   @override

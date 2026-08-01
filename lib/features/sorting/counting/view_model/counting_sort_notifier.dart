@@ -48,6 +48,7 @@ class CountingSortNotifier extends SortingNotifier {
     averageTimeComplexity: ONotationComplexity.nPlusK,
     worstTimeComplexity: ONotationComplexity.nPlusK,
     spaceComplexity: ONotationComplexity.nPlusK,
+    stable: true,
   );
 
   @override

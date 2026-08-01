@@ -69,6 +69,7 @@ class DFSSearchingNotifier extends SearchingNotifier {
     averageTimeComplexity: ONotationComplexity.vPlusE,
     worstTimeComplexity: ONotationComplexity.vPlusE,
     spaceComplexity: ONotationComplexity.vPlusE,
+    stable: false,
   );
 
   @override
