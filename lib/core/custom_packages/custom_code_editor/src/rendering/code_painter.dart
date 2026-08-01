@@ -20,11 +20,16 @@ class CodeSpanBuilder {
   /// [lines] must be the same source lines the tokens were computed from
   /// (used to fill in any text a tokenizer didn't emit a token for, e.g.
   /// trailing whitespace) and must have the same length as [lineTokens].
+  ///
+  /// When [errorLine] is non-null (0-indexed), that line is painted with
+  /// [CodeEditorTheme.errorColor] as a translucent background plus a wavy
+  /// underline, on top of whatever syntax colors it would otherwise get.
   static TextSpan build({
     required List<String> lines,
     required List<List<Token>> lineTokens,
     required TextStyle baseStyle,
     required CodeEditorTheme theme,
+    int? errorLine,
   }) {
     final List<InlineSpan> children = <InlineSpan>[];
     for (int i = 0; i < lines.length; i++) {
@@ -32,7 +37,14 @@ class CodeSpanBuilder {
       final List<Token> tokens = i < lineTokens.length
           ? lineTokens[i]
           : const <Token>[];
-      _appendLine(children, line, tokens, baseStyle, theme);
+      _appendLine(
+        children,
+        line,
+        tokens,
+        baseStyle,
+        theme,
+        isErrorLine: i == errorLine,
+      );
       if (i != lines.length - 1) {
         children.add(const TextSpan(text: '\n'));
       }
@@ -45,25 +57,56 @@ class CodeSpanBuilder {
     String line,
     List<Token> tokens,
     TextStyle baseStyle,
-    CodeEditorTheme theme,
-  ) {
-    if (line.isEmpty) return;
+    CodeEditorTheme theme, {
+    required bool isErrorLine,
+  }) {
+    // An empty line still needs *something* painted on it for the error
+    // background/underline to be visible, so fall through to a
+    // zero-width-safe single space span rather than bailing out early.
+    if (line.isEmpty) {
+      if (isErrorLine) {
+        out.add(TextSpan(text: '', style: _errorStyle(theme, null)));
+      }
+      return;
+    }
+
     int cursor = 0;
     for (final Token token in tokens) {
       // Fill any gap the tokenizer left uncovered (e.g. leading spaces)
       // with the base style so no source text is ever silently dropped.
       if (token.start > cursor) {
-        out.add(TextSpan(text: line.substring(cursor, token.start)));
+        final String gap = line.substring(cursor, token.start);
+        out.add(TextSpan(
+          text: gap,
+          style: isErrorLine ? _errorStyle(theme, null) : null,
+        ));
       }
       final Color? color = theme.tokenColors[token.type];
       out.add(TextSpan(
         text: token.text,
-        style: color != null ? TextStyle(color: color) : null,
+        style: isErrorLine ? _errorStyle(theme, color) : _colorStyle(color),
       ));
       cursor = token.end;
     }
     if (cursor < line.length) {
-      out.add(TextSpan(text: line.substring(cursor)));
+      final String tail = line.substring(cursor);
+      out.add(TextSpan(
+        text: tail,
+        style: isErrorLine ? _errorStyle(theme, null) : null,
+      ));
     }
+  }
+
+  static TextStyle? _colorStyle(Color? color) =>
+      color != null ? TextStyle(color: color) : null;
+
+  static TextStyle _errorStyle(CodeEditorTheme theme, Color? tokenColor) {
+    return TextStyle(
+      color: tokenColor,
+      backgroundColor: theme.errorColor.withOpacity(0.16),
+      decoration: TextDecoration.underline,
+      decorationColor: theme.errorColor,
+      decorationStyle: TextDecorationStyle.wavy,
+    );
   }
 }
