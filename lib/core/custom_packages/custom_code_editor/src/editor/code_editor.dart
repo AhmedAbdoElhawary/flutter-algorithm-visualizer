@@ -60,7 +60,7 @@ class CodeEditor extends StatefulWidget {
 class _CodeEditorState extends State<CodeEditor> {
   late FocusNode _focusNode;
   final ScrollController _scrollController = ScrollController();
-
+  final double _numbersPadding = 5;
   int _lineCount = 1;
   int? _activeLine;
   int? _errorLine;
@@ -98,9 +98,7 @@ class _CodeEditorState extends State<CodeEditor> {
       activeLine = doc.lineColumnAt(selection.baseOffset).line;
     }
     final int? errorLine = widget.controller.errorLine;
-    if (doc.lineCount != _lineCount ||
-        activeLine != _activeLine ||
-        errorLine != _errorLine) {
+    if (doc.lineCount != _lineCount || activeLine != _activeLine || errorLine != _errorLine) {
       setState(() {
         _lineCount = doc.lineCount;
         _activeLine = activeLine;
@@ -127,9 +125,26 @@ class _CodeEditorState extends State<CodeEditor> {
     final double lineHeightMultiplier = theme.textStyle.height ?? 1.4;
     final double lineHeight = fontSize * lineHeightMultiplier;
 
+    final borderRadius = theme.borderRadius;
+
     final Widget editableArea = Container(
-      color: theme.background,
-      padding: theme.editorPadding,
+      padding: EdgeInsets.only(
+          bottom: theme.editorPadding.bottom + _numbersPadding,
+          top: theme.editorPadding.top,
+          left: theme.editorPadding.left,
+          right: theme.editorPadding.right),
+      decoration: BoxDecoration(
+        borderRadius: borderRadius == null
+            ? null
+            : borderRadius.bottomEnd != Radius.zero && borderRadius.topEnd != Radius.zero
+                ? BorderRadiusDirectional.only(bottomEnd: borderRadius.bottomEnd, topEnd: borderRadius.topEnd)
+                : borderRadius.bottomEnd != Radius.zero
+                    ? BorderRadiusDirectional.only(bottomEnd: borderRadius.bottomEnd)
+                    : borderRadius.topEnd != Radius.zero
+                        ? BorderRadiusDirectional.only(topEnd: borderRadius.topEnd)
+                        : null,
+        color: theme.background,
+      ),
       child: EditableText(
         controller: widget.controller,
         focusNode: _focusNode,
@@ -146,28 +161,44 @@ class _CodeEditorState extends State<CodeEditor> {
         autocorrect: false,
         enableSuggestions: false,
         scrollController: _scrollController,
-        cursorWidth: 2,
+        cursorWidth: theme.caretWidth,
+        cursorHeight: theme.caretHeight,
+        cursorOffset: Offset(0, 2),
         cursorRadius: const Radius.circular(1),
       ),
     );
 
-    if (!config.showLineNumbers) {
-      return editableArea;
-    }
+    if (!config.showLineNumbers) return editableArea;
 
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: <Widget>[
-        LineNumbers(
-          lineCount: _lineCount,
-          theme: theme,
-          scrollController: _mirrorScrollController(),
-          lineHeight: lineHeight,
-          activeLine: _activeLine,
-          errorLine: _errorLine,
-        ),
-        Expanded(child: editableArea),
-      ],
+    return Container(
+      decoration: BoxDecoration(
+        border: theme.border,
+        borderRadius: borderRadius,
+      ),
+      child: Row(
+        children: <Widget>[
+          LineNumbers(
+            numbersPadding: _numbersPadding,
+            borderRadius: borderRadius == null
+                ? null
+                : borderRadius.bottomStart != Radius.zero && borderRadius.topStart != Radius.zero
+                    ? BorderRadiusDirectional.only(
+                        bottomStart: borderRadius.bottomStart, topStart: borderRadius.topStart)
+                    : borderRadius.bottomStart != Radius.zero
+                        ? BorderRadiusDirectional.only(bottomStart: borderRadius.bottomStart)
+                        : borderRadius.topStart != Radius.zero
+                            ? BorderRadiusDirectional.only(topStart: borderRadius.topStart)
+                            : null,
+            lineCount: _lineCount,
+            theme: theme,
+            scrollController: _mirrorScrollController(),
+            lineHeight: lineHeight,
+            activeLine: _activeLine,
+            errorLine: _errorLine,
+          ),
+          Expanded(child: editableArea),
+        ],
+      ),
     );
   }
 
