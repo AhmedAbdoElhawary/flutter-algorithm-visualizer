@@ -16,9 +16,14 @@ class CodeEditorTheme {
     required this.lineNumberStyle,
     this.lineNumberBackground,
     this.activeLineBackground,
+    this.caretWidth = 1,
+    this.caretHeight = 15,
     this.errorColor = const Color(0xFFFF5252),
     this.gutterPadding = const EdgeInsets.symmetric(horizontal: 12),
     this.editorPadding = const EdgeInsets.all(12),
+    this.borderRadius = const BorderRadiusDirectional.vertical(bottom: Radius.circular(15)),
+    this.border,
+    this.borderBetweenNumbersAndEditor = true,
   });
 
   /// Editor background color.
@@ -26,6 +31,14 @@ class CodeEditorTheme {
 
   /// Color of the text cursor.
   final Color caretColor;
+
+  final double caretWidth;
+
+  final double caretHeight;
+
+  final BorderRadiusDirectional? borderRadius;
+  final Border? border;
+  final bool borderBetweenNumbersAndEditor;
 
   /// Color of the text selection highlight.
   final Color selectionColor;
