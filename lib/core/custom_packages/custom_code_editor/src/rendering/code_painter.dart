@@ -103,7 +103,7 @@ class CodeSpanBuilder {
   static TextStyle _errorStyle(CodeEditorTheme theme, Color? tokenColor) {
     return TextStyle(
       color: tokenColor,
-      backgroundColor: theme.errorColor.withOpacity(0.16),
+      backgroundColor: theme.errorColor.withValues(alpha: 0.16),
       decoration: TextDecoration.underline,
       decorationColor: theme.errorColor,
       decorationStyle: TextDecorationStyle.wavy,

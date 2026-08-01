@@ -2,7 +2,7 @@
 ///
 /// Every node carries a 1-indexed [line] so that runtime errors can be
 /// reported against the exact source line that caused them.
-library ast;
+library;
 
 abstract class Node {
   const Node(this.line);
@@ -36,7 +36,7 @@ class FunctionDecl extends Node {
 // ---------------------------------------------------------------------
 
 abstract class Stmt extends Node {
-  const Stmt(int line) : super(line);
+  const Stmt(super.line);
 }
 
 class Block extends Stmt {
@@ -91,11 +91,11 @@ class ReturnStmt extends Stmt {
 }
 
 class BreakStmt extends Stmt {
-  BreakStmt(int line) : super(line);
+  BreakStmt(super.line);
 }
 
 class ContinueStmt extends Stmt {
-  ContinueStmt(int line) : super(line);
+  ContinueStmt(super.line);
 }
 
 // ---------------------------------------------------------------------
@@ -103,7 +103,7 @@ class ContinueStmt extends Stmt {
 // ---------------------------------------------------------------------
 
 abstract class Expr extends Node {
-  const Expr(int line) : super(line);
+  const Expr(super.line);
 }
 
 class IntLiteral extends Expr {
@@ -122,7 +122,7 @@ class BoolLiteral extends Expr {
 }
 
 class NullLiteral extends Expr {
-  NullLiteral(int line) : super(line);
+  NullLiteral(super.line);
 }
 
 /// A string literal, pre-split into literal text chunks and interpolated
