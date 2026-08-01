@@ -23,6 +23,8 @@ class ComplexityDetails extends StatelessWidget {
           TimeComplexityData(complexity: complexity),
           RSizedBox(width: 10),
           SpaceComplexityData(complexity: complexity),
+          RSizedBox(width: 10),
+          StabilityData(complexity: complexity),
           RSizedBox(width: 16),
         ],
       ),
@@ -48,19 +50,12 @@ class TimeComplexityData extends StatelessWidget {
           RSizedBox(width: 4),
           RegularText(StringsManager.time, color: ThemeEnum.hoverColor, fontSize: 14),
           RSizedBox(width: 2),
-          RegularText(StringsManager.best, color: ThemeEnum.white2DarkColor, fontSize: 12),
-          RSizedBox(width: 2),
-          SemiBoldText(complexity.bestTimeComplexity.getText, color: ThemeEnum.greenColor, fontSize: 14),
-          RSizedBox(width: 4),
-          RegularText(StringsManager.worst, color: ThemeEnum.white2DarkColor, fontSize: 12),
-          RSizedBox(width: 2),
           SemiBoldText(complexity.worstTimeComplexity.getText, color: ThemeEnum.mainDarkColor, fontSize: 14),
         ],
       ),
     );
   }
 }
-
 
 class SpaceComplexityData extends StatelessWidget {
   const SpaceComplexityData({super.key, required this.complexity});
@@ -81,6 +76,31 @@ class SpaceComplexityData extends StatelessWidget {
           RegularText(StringsManager.space, color: ThemeEnum.hoverColor, fontSize: 14),
           RSizedBox(width: 2),
           SemiBoldText(complexity.spaceComplexity.getText, color: ThemeEnum.mainDarkColor, fontSize: 14),
+        ],
+      ),
+    );
+  }
+}
+
+class StabilityData extends StatelessWidget {
+  const StabilityData({super.key, required this.complexity});
+
+  final AlgorithmComplexity complexity;
+
+  @override
+  Widget build(BuildContext context) {
+    return GlassContainer(
+      withAboveShadow: false,
+      borderRadius: 8,
+      padding: REdgeInsets.all(6),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          CustomIcon(Icons.balance_rounded, size: 14, color: ThemeEnum.hoverColor),
+          RSizedBox(width: 4),
+          RegularText(StringsManager.stable, color: ThemeEnum.hoverColor, fontSize: 14),
+          RSizedBox(width: 2),
+          SemiBoldText(complexity.getStabilityText, color: ThemeEnum.greenColor, fontSize: 14),
         ],
       ),
     );
