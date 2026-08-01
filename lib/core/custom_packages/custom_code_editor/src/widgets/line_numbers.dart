@@ -1,4 +1,5 @@
-import 'package:flutter/widgets.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../models/code_editor_theme.dart';
 
@@ -15,7 +16,9 @@ class LineNumbers extends StatelessWidget {
     required this.theme,
     required this.scrollController,
     required this.lineHeight,
+    required this.numbersPadding,
     this.activeLine,
+    this.borderRadius,
     this.errorLine,
   });
 
@@ -23,6 +26,7 @@ class LineNumbers extends StatelessWidget {
   final CodeEditorTheme theme;
   final ScrollController scrollController;
   final double lineHeight;
+  final double numbersPadding;
 
   /// Zero-based index of the line the caret is currently on, used to
   /// bold/highlight the active line number. Null for no highlight.
@@ -31,14 +35,25 @@ class LineNumbers extends StatelessWidget {
   /// Zero-based index of a line flagged with a syntax/runtime error. When
   /// set, that line's number is painted in [CodeEditorTheme.errorColor].
   final int? errorLine;
-
+  final BorderRadiusGeometry? borderRadius;
   @override
   Widget build(BuildContext context) {
     final int digits = '$lineCount'.length;
+    final border = theme.border;
 
     return Container(
-      color: theme.lineNumberBackground ?? theme.background,
-      padding: theme.gutterPadding,
+      padding: EdgeInsets.only(
+          bottom: theme.gutterPadding.bottom + numbersPadding,
+          top: theme.gutterPadding.top,
+          left: theme.gutterPadding.left,
+          right: theme.gutterPadding.right),
+      decoration: BoxDecoration(
+        borderRadius: borderRadius,
+        color: theme.lineNumberBackground ?? theme.background,
+        border: theme.borderBetweenNumbersAndEditor && border != null
+            ? BorderDirectional(end: border.left)
+            : null,
+      ),
       child: SingleChildScrollView(
         controller: scrollController,
         physics: const NeverScrollableScrollPhysics(),
@@ -57,9 +72,10 @@ class LineNumbers extends StatelessWidget {
                 fontWeight: FontWeight.bold,
               );
             }
-            return SizedBox(
+            return Container(
+              padding: REdgeInsets.only(top: numbersPadding),
               height: lineHeight,
-              child: Text('${index + 1}'.padLeft(digits), style: style),
+              child: Center(child: Text('${index + 1}'.padLeft(digits), style: style)),
             );
           }),
         ),
