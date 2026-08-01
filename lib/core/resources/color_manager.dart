@@ -25,21 +25,24 @@ import 'package:flutter/material.dart';
 
 abstract final class ColorManager {
   /// -------- dark theme ------------>
-  static const Color primaryDarkColor =  Color.fromRGBO(8,13,26, 1);
-  static const Color mainDarkColor = Color.fromRGBO(131,140,248, 1);
-  static const Color main2DarkColor = Color.fromRGBO(192,132,252, 1);
-  static const Color glassDarkColor = Color.fromRGBO(14,23,41, 0.8);
-  static const Color columnColor = Color.fromRGBO(25,42,69, 1);
+  static const Color primaryDarkColor = Color.fromRGBO(8, 13, 26, 1);
+  static const Color mainDarkColor = Color.fromRGBO(131, 140, 248, 1);
+  static const Color main2DarkColor = Color.fromRGBO(192, 132, 252, 1);
+  static const Color glassDarkColor = Color.fromRGBO(14, 23, 41, 0.8);
+  static const Color columnColor = Color.fromRGBO(25, 42, 69, 1);
   static const Color backgroundForSortingColor = Color.fromRGBO(14, 23, 41, 0.30980392156862746);
-  static const Color cardDarkColor =  Color.fromRGBO(24,29,43, 0.7);
+  static const Color cardDarkColor = Color.fromRGBO(24, 29, 43, 0.7);
   static const Color borderGlassDarkColor = Color(0x1BFFFFFF);
-  static const Color white2DarkColor = Color.fromRGBO(148,163,184, 1);
-  static const Color textDarkColor = Color.fromRGBO(67,84,116, 1);
+  static const Color white2DarkColor = Color.fromRGBO(148, 163, 184, 1);
+  static const Color textDarkColor = Color.fromRGBO(67, 84, 116, 1);
   static const Color text2DarkColor = Color.fromRGBO(160, 179, 217, 1.0);
 
-  static const Color purpleColor = Color.fromRGBO(129,140,248, 1.0);
-  static const Color lightPurpleColor = Color.fromRGBO(23,28,53, 1.0);
+  static const Color purpleColor = Color.fromRGBO(129, 140, 248, 1.0);
+  static const Color lightPurpleColor = Color.fromRGBO(23, 28, 53, 1.0);
   static const Color borderPurpleColor = Color.fromRGBO(67, 73, 128, 1.0);
+
+  static const Color codeEditorBackground = Color.fromRGBO(12, 17, 23, 1);
+  static const Color codeEditorNumberColor = Color.fromRGBO(44, 60, 87, 1);
 
   /// -------------------------------->
 
@@ -49,7 +52,7 @@ abstract final class ColorManager {
   static const Color whiteOp20 = Color.fromRGBO(166, 170, 218, .2);
   static const Color whiteOp30 = Color.fromRGBO(166, 170, 218, .3);
   static const Color whiteOp40 = Color.fromRGBO(67, 86, 122, 1.0);
-  static const Color whiteOp50 = Color.fromRGBO(63,78,109, 1);
+  static const Color whiteOp50 = Color.fromRGBO(63, 78, 109, 1);
   static const Color whiteOp60 = Color.fromRGBO(166, 170, 218, .6);
   static const Color whiteOp70 = Color.fromRGBO(166, 170, 218, .7);
   static const Color whiteOp80 = Color.fromRGBO(166, 170, 218, .8);
