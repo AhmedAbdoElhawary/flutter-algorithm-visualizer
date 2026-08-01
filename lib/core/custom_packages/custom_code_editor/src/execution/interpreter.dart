@@ -377,7 +377,7 @@ class Interpreter {
     } on InterpreterError {
       rethrow;
     } catch (e) {
-      if (e is IntegerDivisionByZeroException) {
+      if (e is UnsupportedError) {
         throw InterpreterError('Division by zero', line);
       }
       throw InterpreterError(
