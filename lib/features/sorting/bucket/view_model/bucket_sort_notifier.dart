@@ -67,6 +67,7 @@ class BucketSortNotifier extends SortingNotifier {
     averageTimeComplexity: ONotationComplexity.nPlusK,
     worstTimeComplexity: ONotationComplexity.n2,
     spaceComplexity: ONotationComplexity.n,
+    stable: true,
   );
 
   @override
