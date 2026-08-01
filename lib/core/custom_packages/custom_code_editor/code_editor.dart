@@ -28,6 +28,13 @@ export 'src/syntax/tokenizer.dart';
 // Formatting
 export 'src/formatting/formatter.dart';
 
+// Execution ("run this code" support)
+export 'src/execution/ast.dart';
+export 'src/execution/interpreter.dart';
+export 'src/execution/lexer.dart';
+export 'src/execution/parser.dart';
+export 'src/execution/runner.dart';
+
 // Widgets
 export 'src/widgets/line_numbers.dart';
 
