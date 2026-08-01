@@ -16,6 +16,7 @@ class CodeEditorTheme {
     required this.lineNumberStyle,
     this.lineNumberBackground,
     this.activeLineBackground,
+    this.errorColor = const Color(0xFFFF5252),
     this.gutterPadding = const EdgeInsets.symmetric(horizontal: 12),
     this.editorPadding = const EdgeInsets.all(12),
   });
@@ -47,6 +48,11 @@ class CodeEditorTheme {
   /// Optional highlight color for the line the caret currently sits on.
   /// No highlight when null.
   final Color? activeLineBackground;
+
+  /// Color used to flag a line with a syntax/runtime error (see
+  /// `CodeController.execute`): a translucent background plus a wavy
+  /// underline are drawn using this color.
+  final Color errorColor;
 
   /// Horizontal padding inside the line-number gutter.
   final EdgeInsets gutterPadding;
@@ -133,6 +139,7 @@ class CodeEditorTheme {
     TextStyle? lineNumberStyle,
     Color? lineNumberBackground,
     Color? activeLineBackground,
+    Color? errorColor,
     EdgeInsets? gutterPadding,
     EdgeInsets? editorPadding,
   }) {
@@ -145,6 +152,7 @@ class CodeEditorTheme {
       lineNumberStyle: lineNumberStyle ?? this.lineNumberStyle,
       lineNumberBackground: lineNumberBackground ?? this.lineNumberBackground,
       activeLineBackground: activeLineBackground ?? this.activeLineBackground,
+      errorColor: errorColor ?? this.errorColor,
       gutterPadding: gutterPadding ?? this.gutterPadding,
       editorPadding: editorPadding ?? this.editorPadding,
     );
