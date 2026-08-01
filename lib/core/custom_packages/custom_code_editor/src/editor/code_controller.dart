@@ -1,10 +1,12 @@
 import 'package:flutter/widgets.dart';
 
+import '../execution/runner.dart';
 import '../formatting/formatter.dart';
 import '../models/code_editor_config.dart';
 import '../models/code_editor_theme.dart';
 import '../rendering/code_painter.dart';
 import '../syntax/syntax_highlighter.dart';
+import '../syntax/token.dart';
 import '../syntax/tokenizer.dart';
 import '../utils/bracket_utils.dart';
 import '../utils/indentation.dart';
@@ -28,6 +30,7 @@ class CodeController extends TextEditingController {
     Tokenizer? tokenizer,
     this.config = const CodeEditorConfig(),
     this.formatter,
+    this.runner,
     CodeEditorTheme? theme,
   })  : _highlighter =
             tokenizer != null ? SyntaxHighlighter(tokenizer) : null,
@@ -40,6 +43,10 @@ class CodeController extends TextEditingController {
   /// Optional formatter used by [format]. No-op when null.
   CodeFormatter? formatter;
 
+  /// Optional runner used by [execute]. No-op (returns a failed
+  /// [RunResult]) when null.
+  CodeRunner? runner;
+
   /// Theme used for syntax-highlight coloring in [buildTextSpan].
   ///
   /// [CodeEditor] keeps this in sync with its own `theme` property; you
@@ -47,6 +54,41 @@ class CodeController extends TextEditingController {
   CodeEditorTheme theme;
 
   SyntaxHighlighter? _highlighter;
+
+  /// 0-indexed line currently flagged as having a syntax/runtime error,
+  /// or null when there isn't one. Set by [execute]; cleared automatically
+  /// the next time the text actually changes.
+  int? errorLine;
+
+  /// The most recent result from [execute], if any.
+  RunResult? lastRunResult;
+
+  /// Runs [runner] on the current text and updates [errorLine] /
+  /// [lastRunResult] accordingly, notifying listeners so [CodeEditor] and
+  /// [LineNumbers] can repaint. Returns a no-op successful [RunResult]
+  /// with empty output when no [runner] is attached.
+  RunResult execute() {
+    final CodeRunner? r = runner;
+    if (r == null) {
+      const RunResult result = RunResult(stdout: <String>[]);
+      lastRunResult = result;
+      return result;
+    }
+    final RunResult result = r.run(text);
+    errorLine = result.error != null ? result.error!.line - 1 : null;
+    lastRunResult = result;
+    notifyListeners();
+    return result;
+  }
+
+  /// Clears any error-line highlight set by [execute] without re-running
+  /// anything.
+  void clearError() {
+    if (errorLine != null) {
+      errorLine = null;
+      notifyListeners();
+    }
+  }
 
   /// The current text as a [CodeDocument], for line-oriented access.
   CodeDocument get document => CodeDocument(text);
@@ -72,7 +114,11 @@ class CodeController extends TextEditingController {
 
   @override
   set value(TextEditingValue newValue) {
-    super.value = _transform(value, newValue);
+    final TextEditingValue transformed = _transform(value, newValue);
+    if (errorLine != null && transformed.text != value.text) {
+      errorLine = null;
+    }
+    super.value = transformed;
   }
 
   // ---------------------------------------------------------------------
@@ -86,7 +132,7 @@ class CodeController extends TextEditingController {
     required bool withComposing,
   }) {
     final SyntaxHighlighter? highlighter = _highlighter;
-    if (highlighter == null) {
+    if (highlighter == null && errorLine == null) {
       return super.buildTextSpan(
         context: context,
         style: style,
@@ -94,12 +140,14 @@ class CodeController extends TextEditingController {
       );
     }
     final CodeDocument doc = document;
-    final tokens = highlighter.highlight(doc.lines);
+    final List<List<Token>> tokens = highlighter?.highlight(doc.lines) ??
+        List<List<Token>>.generate(doc.lineCount, (_) => const <Token>[]);
     return CodeSpanBuilder.build(
       lines: doc.lines,
       lineTokens: tokens,
       baseStyle: style ?? const TextStyle(),
       theme: theme,
+      errorLine: errorLine,
     );
   }
 

@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-
 import '../models/code_editor_config.dart';
 import '../models/code_editor_theme.dart';
 import '../widgets/line_numbers.dart';
@@ -65,6 +63,7 @@ class _CodeEditorState extends State<CodeEditor> {
 
   int _lineCount = 1;
   int? _activeLine;
+  int? _errorLine;
 
   @override
   void initState() {
@@ -98,10 +97,14 @@ class _CodeEditorState extends State<CodeEditor> {
     if (selection.baseOffset >= 0) {
       activeLine = doc.lineColumnAt(selection.baseOffset).line;
     }
-    if (doc.lineCount != _lineCount || activeLine != _activeLine) {
+    final int? errorLine = widget.controller.errorLine;
+    if (doc.lineCount != _lineCount ||
+        activeLine != _activeLine ||
+        errorLine != _errorLine) {
       setState(() {
         _lineCount = doc.lineCount;
         _activeLine = activeLine;
+        _errorLine = errorLine;
       });
     }
   }
@@ -161,6 +164,7 @@ class _CodeEditorState extends State<CodeEditor> {
           scrollController: _mirrorScrollController(),
           lineHeight: lineHeight,
           activeLine: _activeLine,
+          errorLine: _errorLine,
         ),
         Expanded(child: editableArea),
       ],
