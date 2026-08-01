@@ -55,6 +55,7 @@ class QuickSortNotifier extends SortingNotifier {
     averageTimeComplexity: ONotationComplexity.nLogN,
     worstTimeComplexity: ONotationComplexity.n2,
     spaceComplexity: ONotationComplexity.logN,
+    stable: false,
   );
 
   @override
