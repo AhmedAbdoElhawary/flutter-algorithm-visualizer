@@ -16,6 +16,7 @@ class LineNumbers extends StatelessWidget {
     required this.scrollController,
     required this.lineHeight,
     this.activeLine,
+    this.errorLine,
   });
 
   final int lineCount;
@@ -26,6 +27,10 @@ class LineNumbers extends StatelessWidget {
   /// Zero-based index of the line the caret is currently on, used to
   /// bold/highlight the active line number. Null for no highlight.
   final int? activeLine;
+
+  /// Zero-based index of a line flagged with a syntax/runtime error. When
+  /// set, that line's number is painted in [CodeEditorTheme.errorColor].
+  final int? errorLine;
 
   @override
   Widget build(BuildContext context) {
@@ -41,15 +46,20 @@ class LineNumbers extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.end,
           children: List<Widget>.generate(lineCount, (int index) {
             final bool isActive = index == activeLine;
+            final bool isError = index == errorLine;
+            TextStyle style = theme.lineNumberStyle;
+            if (isActive) {
+              style = style.copyWith(color: theme.textStyle.color);
+            }
+            if (isError) {
+              style = style.copyWith(
+                color: theme.errorColor,
+                fontWeight: FontWeight.bold,
+              );
+            }
             return SizedBox(
               height: lineHeight,
-              child: Text(
-                '${index + 1}'.padLeft(digits),
-                style: isActive
-                    ? theme.lineNumberStyle
-                        .copyWith(color: theme.textStyle.color)
-                    : theme.lineNumberStyle,
-              ),
+              child: Text('${index + 1}'.padLeft(digits), style: style),
             );
           }),
         ),
