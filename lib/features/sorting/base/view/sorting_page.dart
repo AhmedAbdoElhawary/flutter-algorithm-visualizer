@@ -1,5 +1,4 @@
 import 'package:algorithm_visualizer/core/draggable_progress.dart' show DraggableProgressBar;
-import 'package:algorithm_visualizer/core/extensions/theme.dart';
 import 'package:algorithm_visualizer/core/helpers/app_bar/back_button.dart';
 import 'package:algorithm_visualizer/core/resources/color_manager.dart';
 import 'package:algorithm_visualizer/core/resources/strings_manager.dart';
@@ -252,15 +251,13 @@ class ShowUpSortingList extends ConsumerWidget {
       child: ClipRRect(
         borderRadius: BorderRadius.circular(20),
         child: CustomPaint(
-          size: Size(double.infinity, 280.r),
-          painter: _GridBgPainter(context.isDark),
+          // size: Size(double.infinity, 200.r),
+          painter: _GridBgPainter(
+            backgroundColor: context.getColor(ThemeEnum.backgroundForSortingColor),
+            borderColor: context.getColor(ThemeEnum.shadowColor),
+          ),
           child: Container(
-            decoration: BoxDecoration(
-              color: context.getColor(ThemeEnum.backgroundForSortingColor),
-              borderRadius: BorderRadius.circular(20),
-              border: Border.all(color: context.getColor(ThemeEnum.shadowColor)),
-            ),
-            // padding: REdgeInsets.only(bottom: SortingNotifier.bottomInsidePadding),
+            padding: REdgeInsets.only(bottom: SortingNotifier.bottomInsidePadding),
             child: SizedBox(
               height: selectedAlgorithmLength == 1 ? maxHeight : null,
               child: Stack(
@@ -307,23 +304,69 @@ class ShowUpSortingList extends ConsumerWidget {
 }
 
 class _GridBgPainter extends CustomPainter {
-  final bool isDark;
-  const _GridBgPainter(this.isDark);
+  const _GridBgPainter({
+    required this.backgroundColor,
+    required this.borderColor,
+  });
+
+  final Color backgroundColor;
+  final Color borderColor;
+
   @override
   void paint(Canvas canvas, Size size) {
-    final p = Paint()
-      ..color = (isDark ? Colors.white : Colors.black).withValues(alpha: 0.015)
+    const radius = Radius.circular(20);
+
+    final rect = Offset.zero & size;
+    final rRect = RRect.fromRectAndRadius(rect, radius);
+
+    // Background
+    canvas.drawRRect(
+      rRect,
+      Paint()..color = backgroundColor,
+    );
+
+    // Clip so grid doesn't draw outside rounded corners
+    canvas.save();
+    canvas.clipRRect(rRect);
+
+    final gridPaint = Paint()
+      ..color = borderColor.withValues(alpha: 0.015)
       ..strokeWidth = 1;
-    for (double x = 0; x < size.width; x += 24) {
-      canvas.drawLine(Offset(x, 0), Offset(x, size.height), p);
+
+    const spacing = 24.0;
+
+    for (double x = 0; x <= size.width; x += spacing) {
+      canvas.drawLine(
+        Offset(x, 0),
+        Offset(x, size.height),
+        gridPaint,
+      );
     }
-    for (double y = 0; y < size.height; y += 24) {
-      canvas.drawLine(Offset(0, y), Offset(size.width, y), p);
+
+    for (double y = 0; y <= size.height; y += spacing) {
+      canvas.drawLine(
+        Offset(0, y),
+        Offset(size.width, y),
+        gridPaint,
+      );
     }
+
+    canvas.restore();
+
+    // Border
+    canvas.drawRRect(
+      rRect,
+      Paint()
+        ..color = borderColor
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = 1,
+    );
   }
 
   @override
-  bool shouldRepaint(_GridBgPainter o) => o.isDark != isDark;
+  bool shouldRepaint(covariant _GridBgPainter oldDelegate) {
+    return backgroundColor != oldDelegate.backgroundColor || borderColor != oldDelegate.borderColor;
+  }
 }
 
 class _BuildItem extends ConsumerWidget {
