@@ -1,7 +1,11 @@
+import 'package:algorithm_visualizer/config/themes/app_theme.dart';
 import 'package:algorithm_visualizer/core/draggable_progress.dart' show DraggableProgressBar;
+import 'package:algorithm_visualizer/core/extensions/theme.dart';
 import 'package:algorithm_visualizer/core/helpers/app_bar/back_button.dart';
+import 'package:algorithm_visualizer/core/helpers/storage/app_settings/app_settings_cubit.dart';
 import 'package:algorithm_visualizer/core/resources/color_manager.dart';
 import 'package:algorithm_visualizer/core/resources/strings_manager.dart';
+import 'package:algorithm_visualizer/core/resources/styles_manager.dart';
 import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
 import 'package:algorithm_visualizer/core/widgets/adaptive/text/adaptive_text.dart';
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/algorithm_title.dart';
@@ -247,47 +251,81 @@ class ShowUpSortingList extends ConsumerWidget {
 
     return Padding(
       padding: REdgeInsets.symmetric(horizontal: 16),
-      child: Container(
-        decoration: BoxDecoration(
-          color: context.getColor(ThemeEnum.backgroundForSortingColor),
-          borderRadius: BorderRadius.circular(20),
-          border: Border.all(color: context.getColor(ThemeEnum.shadowColor)),
-        ),
-        padding: REdgeInsets.only(bottom: SortingNotifier.bottomInsidePadding),
-        child: SizedBox(
-          height: selectedAlgorithmLength == 1 ? maxHeight : null,
-          child: Stack(
-            alignment: AlignmentDirectional.bottomCenter,
-            children: List.generate(
-              items.length,
-              (index) {
-                final item = items[index];
-                final position = ref.watch(instance.select((state) => state.positions[item.id]));
-                return AnimatedPositioned(
-                  key: ValueKey(item.id),
-                  left: position?.dx,
-                  bottom: position?.dy,
-                  width: itemWidth +
-                      SortingNotifier.horizontalInsidePadding -
-                      SortingNotifier.horizontalOutSidePadding,
-                  duration: speedDuration,
-                  child: _BuildItem(
-                      item: item,
-                      index: index,
-                      size: size,
-                      itemWidth: itemWidth,
-                      instance: instance,
-                      speedDuration: speedDuration * 0.5,
-                      selectedAlgorithmLength: selectedAlgorithmLength,
-                      isLastItem: index == items.length - 1),
-                );
-              },
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(20),
+        child: CustomPaint(
+          size: Size(double.infinity, 280.r),
+          painter: _GridBgPainter(context.isDark),
+          child: Container(
+            decoration: BoxDecoration(
+              color: context.getColor(ThemeEnum.backgroundForSortingColor),
+              borderRadius: BorderRadius.circular(20),
+              border: Border.all(color: context.getColor(ThemeEnum.shadowColor)),
+            ),
+            // padding: REdgeInsets.only(bottom: SortingNotifier.bottomInsidePadding),
+            child: SizedBox(
+              height: selectedAlgorithmLength == 1 ? maxHeight : null,
+              child: Stack(
+                alignment: AlignmentDirectional.bottomCenter,
+                children: List.generate(
+                  items.length,
+                  (index) {
+                    final item = items[index];
+                    final position = ref.watch(instance.select((state) => state.positions[item.id]));
+                    return AnimatedPositionedDirectional(
+                      key: ValueKey(item.id),
+                      start: position?.dx,
+                      bottom: position?.dy,
+                      width: itemWidth +
+                          SortingNotifier.horizontalInsidePadding -
+                          SortingNotifier.horizontalOutSidePadding,
+                      duration: speedDuration,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          _BuildItem(
+                              item: item,
+                              index: index,
+                              size: size,
+                              itemWidth: itemWidth,
+                              instance: instance,
+                              speedDuration: speedDuration * 0.5,
+                              selectedAlgorithmLength: selectedAlgorithmLength,
+                              isLastItem: index == items.length - 1),
+                          RSizedBox(height: 4),
+                          MediumText('$index', fontSize: 10, color: ThemeEnum.columnColor),
+                        ],
+                      ),
+                    );
+                  },
+                ),
+              ),
             ),
           ),
         ),
       ),
     );
   }
+}
+
+class _GridBgPainter extends CustomPainter {
+  final bool isDark;
+  const _GridBgPainter(this.isDark);
+  @override
+  void paint(Canvas canvas, Size size) {
+    final p = Paint()
+      ..color = (isDark ? Colors.white : Colors.black).withValues(alpha: 0.015)
+      ..strokeWidth = 1;
+    for (double x = 0; x < size.width; x += 24) {
+      canvas.drawLine(Offset(x, 0), Offset(x, size.height), p);
+    }
+    for (double y = 0; y < size.height; y += 24) {
+      canvas.drawLine(Offset(0, y), Offset(size.width, y), p);
+    }
+  }
+
+  @override
+  bool shouldRepaint(_GridBgPainter o) => o.isDark != isDark;
 }
 
 class _BuildItem extends ConsumerWidget {
@@ -313,16 +351,31 @@ class _BuildItem extends ConsumerWidget {
   Widget build(BuildContext context, ref) {
     final currentItem =
         ref.watch(instance.select((state) => index < state.list.length ? state.list[index] : null));
-    return Center(
-      child: AnimatedContainer(
-        duration: speedDuration,
-        width: itemWidth,
-        height: SortingNotifier.calculateItemHeight(context, item.value, size, selectedAlgorithmLength),
-        decoration: BoxDecoration(
-          color: context.getColor(currentItem?.getColor ?? SortingNotifier.itemColor),
-          borderRadius: BorderRadius.vertical(top: Radius.circular(3.r), bottom: Radius.circular(3.r)),
+    final height = SortingNotifier.calculateItemHeight(context, item.value, size, selectedAlgorithmLength);
+    final color = context.getColor(currentItem?.getColor ?? SortingNotifier.itemColor);
+
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        AnimatedDefaultTextStyle(
+          duration: speedDuration,
+          style: GetMediumStyle(fontSize: 10, color: color),
+          child: Text('${(height / 2).toInt()}'),
         ),
-      ),
+        RSizedBox(height: 4),
+        AnimatedContainer(
+          duration: speedDuration,
+          width: itemWidth,
+          height: height,
+          decoration: BoxDecoration(
+            color: color,
+            boxShadow: currentItem == null || currentItem.getColor == SortingNotifier.itemColor
+                ? null
+                : [BoxShadow(color: color.withValues(alpha: 0.35), blurRadius: 10)],
+            borderRadius: BorderRadius.vertical(top: Radius.circular(3.r), bottom: Radius.circular(3.r)),
+          ),
+        ),
+      ],
     );
   }
 }
