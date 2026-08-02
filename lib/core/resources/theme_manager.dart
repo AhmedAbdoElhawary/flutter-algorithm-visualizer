@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 enum ThemeEnum {
   primaryColor,
   focusColor,
+  howItWorksColor,
   glassColor,
   columnColor,
   backgroundForSortingColor,
@@ -63,6 +64,7 @@ extension ThemeExtension on BuildContext {
       ThemeEnum.glassColor: Theme.of(this).hintColor,
       ThemeEnum.cardGlassColor: ColorManager.cardDarkColor,
       ThemeEnum.shadowColor: Theme.of(this).shadowColor,
+      ThemeEnum.howItWorksColor: ColorManager.howItWorksColor,
       ThemeEnum.white2DarkColor: ColorManager.white2DarkColor,
       ThemeEnum.columnColor: ColorManager.columnSortColor,
       ThemeEnum.backgroundForSortingColor: ColorManager.backgroundForSortingColor,
