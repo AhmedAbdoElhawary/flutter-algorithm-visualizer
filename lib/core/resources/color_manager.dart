@@ -30,7 +30,7 @@ abstract final class ColorManager {
   static const Color main2DarkColor = Color.fromRGBO(192, 132, 252, 1);
   static const Color glassDarkColor = Color.fromRGBO(14, 23, 41, 0.8);
   static const Color completeColumnSortColor = Color.fromRGBO(25, 42, 69, 1);
-  static const Color columnSortColor = Color.fromRGBO(25, 42, 69, 0.6);
+  static const Color columnSortColor = Color.fromRGBO(26, 47, 80, 0.7);
   static const Color backgroundForSortingColor = Color.fromRGBO(14, 23, 41, 0.30980392156862746);
   static const Color cardDarkColor = Color.fromRGBO(24, 29, 43, 0.7);
   static const Color borderGlassDarkColor = Color(0x1BFFFFFF);
