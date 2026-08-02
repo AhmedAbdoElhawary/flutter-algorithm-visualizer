@@ -273,7 +273,7 @@ class ShowUpSortingList extends ConsumerWidget {
                       bottom: position?.dy,
                       width: itemWidth +
                           SortingNotifier.horizontalInsidePadding -
-                          SortingNotifier.horizontalOutSidePadding,
+                          SortingNotifier.handleCentralBars,
                       duration: speedDuration,
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.end,
