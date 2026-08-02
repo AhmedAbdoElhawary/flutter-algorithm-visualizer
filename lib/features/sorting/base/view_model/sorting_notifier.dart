@@ -24,13 +24,13 @@ abstract class SortingNotifier extends StateNotifier<SortingNotifierState> imple
   static const ThemeEnum backgroundForSortingColor = ThemeEnum.backgroundForSortingColor;
   static const ThemeEnum doneSortingColor = ThemeEnum.greenColor;
 
-  static const int _defaultSize = 8;
+  static const int _defaultSize = 7;
   static const int _maxSize = 15;
   static const int _minSize = 5;
   static double itemsPadding = 8.w;
-  static double horizontalInsidePadding = (30 + bottomInsidePadding * 2).r;
-  static const double bottomInsidePadding = 20;
-  static double horizontalOutSidePadding = 32.r;
+  static double horizontalInsidePadding = 120.r;
+  static const double bottomInsidePadding = 15;
+  static double handleCentralBars = horizontalInsidePadding / 4;
 
   static const Duration _defaultSpeedDuration = Duration(milliseconds: 300);
 
