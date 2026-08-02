@@ -34,10 +34,15 @@ class _CodeEditorState extends State<_CodeEditor> with SingleTickerProviderState
   final border = Border.all(color: const Color.fromRGBO(36, 40, 46, 1), width: 1.r);
 
   OverlayEntry? _overlay;
-  late final AnimationController _controller = AnimationController(
+
+  late final AnimationController _controller=AnimationController(
     vsync: this,
-    duration: const Duration(milliseconds: 220),
+    duration: const Duration(milliseconds: 320),
   );
+
+  late final Animation<double> _scale;
+  late final Animation<double> _opacity;
+  late final Animation<Offset> _offset;
 
   void _togglePopup() {
     if (_overlay != null) {
@@ -53,19 +58,24 @@ class _CodeEditorState extends State<_CodeEditor> with SingleTickerProviderState
         final width = MediaQuery.sizeOf(context).width * 0.89;
         return Stack(
           children: [
-            // Blur the entire screen
             Positioned.fill(
               child: GestureDetector(
                 onTap: _removePopup,
-                child: BackdropFilter(
-                  filter: ImageFilter.blur(
-                    sigmaX: 4,
-                    sigmaY:4,
-                  ),
-                  child: Container(
-                    color: ColorManager.primaryDarkColor
-                        .withValues(alpha: 0.2),
-                  ),
+                child: AnimatedBuilder(
+                  animation: _controller,
+                  builder: (_, child) {
+                    final value = Curves.easeOut.transform(_controller.value);
+
+                    return BackdropFilter(
+                      filter: ImageFilter.blur(
+                        sigmaX: value * 12,
+                        sigmaY: value * 12,
+                      ),
+                      child: Container(
+                        color: Colors.black.withValues(alpha: value * 0.18),
+                      ),
+                    );
+                  },
                 ),
               ),
             ),
@@ -75,24 +85,16 @@ class _CodeEditorState extends State<_CodeEditor> with SingleTickerProviderState
               showWhenUnlinked: false,
               offset: Offset(-width, -120.r),
               child: FadeTransition(
-                opacity: CurvedAnimation(
-                  parent: _controller,
-                  curve: Curves.easeOut,
-                ),
-                child: ScaleTransition(
-                  scale: Tween<double>(
-                    begin: 0.9,
-                    end: 1,
-                  ).animate(
-                    CurvedAnimation(
-                      parent: _controller,
-                      curve: Curves.easeOutBack,
+                opacity: _opacity,
+                child: SlideTransition(
+                  position: _offset,
+                  child: ScaleTransition(
+                    scale: _scale,
+                    alignment: Alignment.topRight,
+                    child: const Material(
+                      color: Colors.transparent,
+                      child: HowItWorks(),
                     ),
-                  ),
-                  alignment: Alignment.topRight,
-                  child: const Material(
-                    color: Colors.transparent,
-                    child: HowItWorks(),
                   ),
                 ),
               ),
@@ -118,6 +120,28 @@ class _CodeEditorState extends State<_CodeEditor> with SingleTickerProviderState
   @override
   void initState() {
     super.initState();
+
+    final curve = CurvedAnimation(
+      parent: _controller,
+      curve: Curves.easeOutCubic,
+      reverseCurve: Curves.easeInCubic,
+    );
+
+    _scale = Tween(
+      begin: 0.15,
+      end: 1.0,
+    ).animate(curve);
+
+    _opacity = Tween(
+      begin: 0.0,
+      end: 1.0,
+    ).animate(curve);
+
+    _offset = Tween(
+      begin: const Offset(0.08, -0.08),
+      end: Offset.zero,
+    ).animate(curve);
+
     controller = CodeController(
       text: 'void main() {\n  print("hello");\n}\n',
       tokenizer: const DartTokenizer(),
