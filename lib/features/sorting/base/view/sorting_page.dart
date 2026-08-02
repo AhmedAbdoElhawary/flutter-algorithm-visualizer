@@ -1,8 +1,6 @@
-import 'package:algorithm_visualizer/config/themes/app_theme.dart';
 import 'package:algorithm_visualizer/core/draggable_progress.dart' show DraggableProgressBar;
 import 'package:algorithm_visualizer/core/extensions/theme.dart';
 import 'package:algorithm_visualizer/core/helpers/app_bar/back_button.dart';
-import 'package:algorithm_visualizer/core/helpers/storage/app_settings/app_settings_cubit.dart';
 import 'package:algorithm_visualizer/core/resources/color_manager.dart';
 import 'package:algorithm_visualizer/core/resources/strings_manager.dart';
 import 'package:algorithm_visualizer/core/resources/styles_manager.dart';
