@@ -79,5 +79,8 @@ class StringsManager {
   static const String average = "Average: ";
   static const String worst = "Worst: ";
   static const String pseudocode = "pseudocode";
+  static const String stable = "Stable:";
+  static const String yes = "Yes";
+  static const String no = "No";
 
 }

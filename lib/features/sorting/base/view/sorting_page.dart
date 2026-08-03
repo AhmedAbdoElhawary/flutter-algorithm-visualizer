@@ -2,6 +2,7 @@ import 'package:algorithm_visualizer/core/draggable_progress.dart' show Draggabl
 import 'package:algorithm_visualizer/core/helpers/app_bar/back_button.dart';
 import 'package:algorithm_visualizer/core/resources/color_manager.dart';
 import 'package:algorithm_visualizer/core/resources/strings_manager.dart';
+import 'package:algorithm_visualizer/core/resources/styles_manager.dart';
 import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
 import 'package:algorithm_visualizer/core/widgets/adaptive/text/adaptive_text.dart';
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/algorithm_title.dart';
@@ -247,46 +248,124 @@ class ShowUpSortingList extends ConsumerWidget {
 
     return Padding(
       padding: REdgeInsets.symmetric(horizontal: 16),
-      child: Container(
-        decoration: BoxDecoration(
-          color: context.getColor(ThemeEnum.backgroundForSortingColor),
-          borderRadius: BorderRadius.circular(20),
-          border: Border.all(color: context.getColor(ThemeEnum.shadowColor)),
-        ),
-        padding: REdgeInsets.only(bottom: SortingNotifier.bottomInsidePadding),
-        child: SizedBox(
-          height: selectedAlgorithmLength == 1 ? maxHeight : null,
-          child: Stack(
-            alignment: AlignmentDirectional.bottomCenter,
-            children: List.generate(
-              items.length,
-              (index) {
-                final item = items[index];
-                final position = ref.watch(instance.select((state) => state.positions[item.id]));
-                return AnimatedPositioned(
-                  key: ValueKey(item.id),
-                  left: position?.dx,
-                  bottom: position?.dy,
-                  width: itemWidth +
-                      SortingNotifier.horizontalInsidePadding -
-                      SortingNotifier.horizontalOutSidePadding,
-                  duration: speedDuration,
-                  child: _BuildItem(
-                      item: item,
-                      index: index,
-                      size: size,
-                      itemWidth: itemWidth,
-                      instance: instance,
-                      speedDuration: speedDuration * 0.5,
-                      selectedAlgorithmLength: selectedAlgorithmLength,
-                      isLastItem: index == items.length - 1),
-                );
-              },
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(20),
+        child: CustomPaint(
+          // size: Size(double.infinity, 200.r),
+          painter: _GridBgPainter(
+            backgroundColor: context.getColor(ThemeEnum.backgroundForSortingColor),
+            borderColor: context.getColor(ThemeEnum.shadowColor),
+          ),
+          child: Container(
+            padding: REdgeInsets.only(bottom: SortingNotifier.bottomInsidePadding),
+            child: SizedBox(
+              height: selectedAlgorithmLength == 1 ? maxHeight : null,
+              child: Stack(
+                alignment: AlignmentDirectional.bottomCenter,
+                children: List.generate(
+                  items.length,
+                  (index) {
+                    final item = items[index];
+                    final position = ref.watch(instance.select((state) => state.positions[item.id]));
+                    return AnimatedPositionedDirectional(
+                      key: ValueKey(item.id),
+                      start: position?.dx,
+                      bottom: position?.dy,
+                      width: itemWidth +
+                          SortingNotifier.horizontalInsidePadding -
+                          SortingNotifier.handleCentralBars,
+                      duration: speedDuration,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          _BuildItem(
+                              item: item,
+                              index: index,
+                              size: size,
+                              itemWidth: itemWidth,
+                              instance: instance,
+                              speedDuration: speedDuration * 0.5,
+                              selectedAlgorithmLength: selectedAlgorithmLength,
+                              isLastItem: index == items.length - 1),
+                          RSizedBox(height: 4),
+                          MediumText('$index', fontSize: 10, color: ThemeEnum.columnColor),
+                        ],
+                      ),
+                    );
+                  },
+                ),
+              ),
             ),
           ),
         ),
       ),
     );
+  }
+}
+
+class _GridBgPainter extends CustomPainter {
+  const _GridBgPainter({
+    required this.backgroundColor,
+    required this.borderColor,
+  });
+
+  final Color backgroundColor;
+  final Color borderColor;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    const radius = Radius.circular(20);
+
+    final rect = Offset.zero & size;
+    final rRect = RRect.fromRectAndRadius(rect, radius);
+
+    // Background
+    canvas.drawRRect(
+      rRect,
+      Paint()..color = backgroundColor,
+    );
+
+    // Clip so grid doesn't draw outside rounded corners
+    canvas.save();
+    canvas.clipRRect(rRect);
+
+    final gridPaint = Paint()
+      ..color = borderColor.withValues(alpha: 0.015)
+      ..strokeWidth = 1;
+
+    const spacing = 24.0;
+
+    for (double x = 0; x <= size.width; x += spacing) {
+      canvas.drawLine(
+        Offset(x, 0),
+        Offset(x, size.height),
+        gridPaint,
+      );
+    }
+
+    for (double y = 0; y <= size.height; y += spacing) {
+      canvas.drawLine(
+        Offset(0, y),
+        Offset(size.width, y),
+        gridPaint,
+      );
+    }
+
+    canvas.restore();
+
+    // Border
+    canvas.drawRRect(
+      rRect,
+      Paint()
+        ..color = borderColor
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = 1,
+    );
+  }
+
+  @override
+  bool shouldRepaint(covariant _GridBgPainter oldDelegate) {
+    return backgroundColor != oldDelegate.backgroundColor || borderColor != oldDelegate.borderColor;
   }
 }
 
@@ -313,16 +392,31 @@ class _BuildItem extends ConsumerWidget {
   Widget build(BuildContext context, ref) {
     final currentItem =
         ref.watch(instance.select((state) => index < state.list.length ? state.list[index] : null));
-    return Center(
-      child: AnimatedContainer(
-        duration: speedDuration,
-        width: itemWidth,
-        height: SortingNotifier.calculateItemHeight(context, item.value, size, selectedAlgorithmLength),
-        decoration: BoxDecoration(
-          color: context.getColor(currentItem?.getColor ?? SortingNotifier.itemColor),
-          borderRadius: BorderRadius.vertical(top: Radius.circular(3.r), bottom: Radius.circular(3.r)),
+    final height = SortingNotifier.calculateItemHeight(context, item.value, size, selectedAlgorithmLength);
+    final color = context.getColor(currentItem?.getColor ?? SortingNotifier.itemColor);
+
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        AnimatedDefaultTextStyle(
+          duration: speedDuration,
+          style: GetMediumStyle(fontSize: 10, color: color),
+          child: Text('${(height / 2).toInt()}'),
         ),
-      ),
+        RSizedBox(height: 4),
+        AnimatedContainer(
+          duration: speedDuration,
+          width: itemWidth,
+          height: height,
+          decoration: BoxDecoration(
+            color: color,
+            boxShadow: currentItem == null || currentItem.getColor == SortingNotifier.itemColor
+                ? null
+                : [BoxShadow(color: color.withValues(alpha: 0.35), blurRadius: 10)],
+            borderRadius: BorderRadius.vertical(top: Radius.circular(3.r), bottom: Radius.circular(3.r)),
+          ),
+        ),
+      ],
     );
   }
 }

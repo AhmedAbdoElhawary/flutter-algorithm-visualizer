@@ -48,6 +48,7 @@ class SelectionSortNotifier extends SortingNotifier {
     averageTimeComplexity: ONotationComplexity.n2,
     worstTimeComplexity: ONotationComplexity.n2,
     spaceComplexity: ONotationComplexity.constant,
+    stable: false,
   );
 
   @override

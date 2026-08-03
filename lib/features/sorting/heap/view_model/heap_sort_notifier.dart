@@ -69,6 +69,7 @@ class HeapSortNotifier extends SortingNotifier {
     averageTimeComplexity: ONotationComplexity.nLogN,
     worstTimeComplexity: ONotationComplexity.nLogN,
     spaceComplexity: ONotationComplexity.constant,
+    stable: false,
   );
 
   @override

@@ -90,10 +90,10 @@ Total : 133 files,  6259 codes, 411 comments, 1006 blanks, all 7676 lines
 | [lib/core/widgets/custom\_widgets/scale\_transition.dart](/lib/core/widgets/custom_widgets/scale_transition.dart) | Dart | 34 | 0 | 6 | 40 |
 | [lib/core/widgets/custom\_widgets/vertical\_animation\_hero\_page.dart](/lib/core/widgets/custom_widgets/vertical_animation_hero_page.dart) | Dart | 39 | 0 | 4 | 43 |
 | [lib/features/base/view/base\_page.dart](/lib/features/base/view/base_page.dart) | Dart | 52 | 0 | 5 | 57 |
-| [lib/features/searching/view/grid\_page.dart](/lib/features/searching/view/grid_page.dart) | Dart | 290 | 0 | 35 | 325 |
-| [lib/features/searching/view\_model/grid\_notifier.dart](/lib/features/searching/view_model/grid_notifier.dart) | Dart | 384 | 18 | 109 | 511 |
-| [lib/features/searching/view\_model/grid\_notifier\_state.dart](/lib/features/searching/view_model/grid_notifier_state.dart) | Dart | 50 | 1 | 7 | 58 |
-| [lib/features/searching/widgets/searcher\_grid.dart](/lib/features/searching/widgets/searcher_grid.dart) | Dart | 79 | 3 | 14 | 96 |
+| [lib/features/searching/view/grid\_page.dart](/lib/features/searching/base/view/grid_page.dart) | Dart | 290 | 0 | 35 | 325 |
+| [lib/features/searching/view\_model/grid\_notifier.dart](/lib/features/searching/base/view_model/grid_notifier.dart) | Dart | 384 | 18 | 109 | 511 |
+| [lib/features/searching/view\_model/grid\_notifier\_state.dart](/lib/features/searching/base/view_model/grid_notifier_state.dart) | Dart | 50 | 1 | 7 | 58 |
+| [lib/features/searching/widgets/searcher\_grid.dart](/lib/features/searching/base/widgets/searcher_grid.dart) | Dart | 79 | 3 | 14 | 96 |
 | [lib/features/sorting/base/helper/sortable\_item.dart](/lib/features/sorting/base/helper/sortable_item.dart) | Dart | 45 | 1 | 8 | 54 |
 | [lib/features/sorting/base/helper/sorting\_enums.dart](/lib/features/sorting/base/helper/sorting_enums.dart) | Dart | 9 | 6 | 4 | 19 |
 | [lib/features/sorting/base/view/sorting\_list\_page.dart](/lib/features/sorting/base/view/sorting_list_page.dart) | Dart | 60 | 0 | 3 | 63 |

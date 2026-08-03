@@ -9,6 +9,7 @@ class AppTheme {
   static ThemeData get light {
     return ThemeData(
       useMaterial3: true,
+      brightness: Brightness.light,
       fontFamily: FontConstants.fontFamily,
       visualDensity: VisualDensity.adaptivePlatformDensity,
       primaryColor: ColorManager.white,
@@ -139,6 +140,7 @@ class AppTheme {
   static ThemeData get dark {
     return ThemeData(
       useMaterial3: true,
+      brightness: Brightness.dark,
       fontFamily: FontConstants.fontFamily,
       visualDensity: VisualDensity.adaptivePlatformDensity,
       primaryColor: ColorManager.primaryDarkColor,

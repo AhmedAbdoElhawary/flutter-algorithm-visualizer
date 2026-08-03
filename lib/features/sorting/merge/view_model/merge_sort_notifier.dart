@@ -55,6 +55,7 @@ class MergeSortNotifier extends SortingNotifier {
     averageTimeComplexity: ONotationComplexity.nLogN,
     worstTimeComplexity: ONotationComplexity.nLogN,
     spaceComplexity: ONotationComplexity.n,
+    stable: true,
   );
 
   @override
