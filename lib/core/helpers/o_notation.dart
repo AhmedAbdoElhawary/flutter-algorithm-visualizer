@@ -1,15 +1,19 @@
+import 'package:algorithm_visualizer/core/resources/strings_manager.dart';
+
 class AlgorithmComplexity {
   final String name;
   final ONotationComplexity bestTimeComplexity;
   final ONotationComplexity averageTimeComplexity;
   final ONotationComplexity worstTimeComplexity;
   final ONotationComplexity spaceComplexity;
+  final bool stable;
   AlgorithmComplexity({
     required this.name,
     required this.spaceComplexity,
     required this.averageTimeComplexity,
     required this.worstTimeComplexity,
     required this.bestTimeComplexity,
+    required this.stable,
   });
 }
 
@@ -51,5 +55,10 @@ extension ONotationComplexityExt on ONotationComplexity {
       case ONotationComplexity.eLogV:
         return "O(E log V)";
     }
+  }
+}
+extension AlgorithmComplexityExt on AlgorithmComplexity {
+  String get getStabilityText {
+    return stable ? StringsManager.yes : StringsManager.no;
   }
 }
