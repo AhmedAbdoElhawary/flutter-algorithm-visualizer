@@ -60,6 +60,7 @@ class RadixSortNotifier extends SortingNotifier {
     averageTimeComplexity: ONotationComplexity.nk,
     worstTimeComplexity: ONotationComplexity.nk,
     spaceComplexity: ONotationComplexity.nPlusK,
+    stable: true,
   );
 
   @override

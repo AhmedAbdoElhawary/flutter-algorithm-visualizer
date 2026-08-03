@@ -13,7 +13,7 @@ part '../helper/sortable_item.dart';
 
 enum SpeedStatus { normal, average, fast }
 
-abstract class SortingNotifier extends StateNotifier<SortingNotifierState> implements AlgorithmNotifier{
+abstract class SortingNotifier extends StateNotifier<SortingNotifierState> implements AlgorithmNotifier {
   SortingNotifier() : super(SortingNotifierState(list: _generateList(_defaultSize))) {
     _initializePositions();
   }
@@ -24,13 +24,13 @@ abstract class SortingNotifier extends StateNotifier<SortingNotifierState> imple
   static const ThemeEnum backgroundForSortingColor = ThemeEnum.backgroundForSortingColor;
   static const ThemeEnum doneSortingColor = ThemeEnum.greenColor;
 
-  static const int _defaultSize = 11;
+  static const int _defaultSize = 7;
   static const int _maxSize = 15;
   static const int _minSize = 5;
-  static double itemsPadding = 5.w;
-  static double horizontalInsidePadding = (30 + bottomInsidePadding * 2).r;
-  static const double bottomInsidePadding = 20;
-  static double horizontalOutSidePadding = 32.r;
+  static double itemsPadding = 8.w;
+  static double horizontalInsidePadding = 120.r;
+  static const double bottomInsidePadding = 15;
+  static double handleCentralBars = horizontalInsidePadding / 4;
 
   static const Duration _defaultSpeedDuration = Duration(milliseconds: 300);
 
@@ -40,7 +40,6 @@ abstract class SortingNotifier extends StateNotifier<SortingNotifierState> imple
   bool get isAtFirstStep => state.isAtFirstStep;
   bool get isAtLastStep => state.isAtLastStep;
   bool get isInStepMode => state.isInStepMode;
-
 
   static List<SortableItem> _generateList(int size) {
     return List.generate(size, (index) => SortableItem(id: index, value: index + 1))..shuffle();
@@ -64,7 +63,7 @@ abstract class SortingNotifier extends StateNotifier<SortingNotifierState> imple
     int selectedAlgorithmsLength,
   ) {
     final value = (calculateMaxListItemHeight(context) / size) * (itemIndex + 1);
-    final perc = selectedAlgorithmsLength == 1
+    final per = selectedAlgorithmsLength == 1
         ? 0.8
         : selectedAlgorithmsLength <= 2
             ? 0.9
@@ -73,9 +72,8 @@ abstract class SortingNotifier extends StateNotifier<SortingNotifierState> imple
                 : selectedAlgorithmsLength <= 6
                     ? 0.7
                     : 0.6;
-    return value.h / selectedAlgorithmsLength * perc;
+    return value.h / selectedAlgorithmsLength * (per - 0.15);
   }
-
 
   Duration get speedDuration => state.swipeDuration;
   int get _size => state.size;
@@ -91,7 +89,6 @@ abstract class SortingNotifier extends StateNotifier<SortingNotifierState> imple
     }
     state = state.copyWith(positions: positions);
   }
-
 
   void changeSpeed(SpeedStatus speedStatus) {
     final defaultSpeed = _defaultSpeedDuration.inMilliseconds.toDouble();
@@ -169,7 +166,6 @@ abstract class SortingNotifier extends StateNotifier<SortingNotifierState> imple
     );
     _initializePositions();
   }
-
 
   void _precomputeSnapshots() {
     final values = state.list.map((e) => e.value).toList();
