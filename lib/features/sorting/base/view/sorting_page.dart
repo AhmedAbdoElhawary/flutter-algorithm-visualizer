@@ -148,8 +148,8 @@ class _LiveCodeSnippet extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final currentLine = ref.watch(instance.select((s) => s.currentCodeLine));
-    final codeLines = ref.read(instance.notifier).codeSnippet;
-    return LiveCodeSnippet(currentLine: currentLine, codeLines: codeLines);
+    final code = ref.read(instance.notifier).code;
+    return LiveCodeSnippet(currentLine: currentLine, code: code);
   }
 }
 
