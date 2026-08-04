@@ -70,24 +70,41 @@ class RadixSortNotifier extends SortingNotifier {
   String get description => StringsManager.radixSortDescription;
   @override
   List<String> get codeSnippet => const [
-    'for each digit place d (LSD→MSD)',  // 0
-    '  count = new array[0..9]',         // 1
-    '  for i from 0 to n-1',            // 2
-    '    count[digit(arr[i], d)]++',    // 3
-    '  for i from 1 to 9',              // 4
-    '    count[i] += count[i-1]',       // 5  ← prefix sums
-    '  for i from n-1 downTo 0',        // 6
-    '    out[--count[digit(arr[i])]]',  // 7
-    '      = arr[i]',                   // 8
-    '  copy out[] back to arr',          // 9
+    'void main() {', // 0
+    '  List<int> arr = [64, 34, 25, 12, 22, 11, 90];', // 1
+    '  int maxVal = arr.reduce((a, b) => a > b ? a : b);', // 2
+    '  for (int exp = 1; maxVal ~/ exp > 0; exp *= 10) {', // 3
+    '    countingSortByDigit(arr, exp);', // 4
+    '  }', // 5
+    '}', // 6
+    'void countingSortByDigit(List<int> arr, int exp) {', // 7
+    '  int n = arr.length;', // 8
+    '  List<int> output = List<int>.filled(n, 0);', // 9
+    '  List<int> count = List<int>.filled(10, 0);', // 10
+    '  for (int i = 0; i < n; i++) {', // 11
+    '    int digit = (arr[i] ~/ exp) % 10;', // 12
+    '    count[digit]++;', // 13
+    '  }', // 14
+    '  for (int i = 1; i < 10; i++) {', // 15
+    '    count[i] += count[i - 1];', // 16
+    '  }', // 17
+    '  for (int i = n - 1; i >= 0; i--) {', // 18
+    '    int digit = (arr[i] ~/ exp) % 10;', // 19
+    '    output[count[digit] - 1] = arr[i];', // 20
+    '    count[digit]--;', // 21
+    '  }', // 22
+    '  for (int i = 0; i < n; i++) {', // 23
+    '    arr[i] = output[i];', // 24
+    '  }', // 25
+    '}', // 26
   ];
 
   @override
   int codeLineForStep(SortingStep step) => switch (step.action) {
-    SortingStatus.compared                              => 3,  // counting digit frequency
-    SortingStatus.swapping                              => 7,  // placing into output
-    SortingStatus.swapped || SortingStatus.unSorted     => 6,  // advance placement loop
-    SortingStatus.sorted                                => 9,  // copy output → arr
+    SortingStatus.compared                              => 12, // counting digit frequency
+    SortingStatus.swapping                              => 20, // placing into output
+    SortingStatus.swapped || SortingStatus.unSorted     => 18, // advance placement loop
+    SortingStatus.sorted                                => 24, // copy output → arr
     _                                                   => -1,
   };
 }
