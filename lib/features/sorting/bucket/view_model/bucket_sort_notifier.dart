@@ -114,8 +114,7 @@ class BucketSortNotifier extends SortingNotifier {
   int codeLineForStep(SortingStep step) => switch (step.action) {
     SortingStatus.compared                              => 16,  // bucket[j] > key
     SortingStatus.swapping                              => 17,  // bucket[j + 1] = bucket[j]
-    SortingStatus.swapped || SortingStatus.unSorted     => 15,  // j--
+    SortingStatus.swapped || SortingStatus.none     => 15,  // j--
     SortingStatus.sorted                                => 25,  // concatenate buckets
-    _                                                   => -1,
   };
 }
