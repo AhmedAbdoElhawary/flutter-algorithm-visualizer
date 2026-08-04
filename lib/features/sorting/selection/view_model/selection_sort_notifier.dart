@@ -23,7 +23,7 @@ class SelectionSortNotifier extends SortingNotifier {
           minIndex = j;
         }
 
-        steps.add(SortingStep(index1: minIndex, index2: j, action: SortingStatus.unSorted));
+        steps.add(SortingStep(index1: minIndex, index2: j, action: SortingStatus.none));
       }
 
       if (minIndex != i) {
@@ -80,8 +80,7 @@ class SelectionSortNotifier extends SortingNotifier {
   int codeLineForStep(SortingStep step) => switch (step.action) {
     SortingStatus.compared                              => 5, // arr[j] < arr[minIndex]
     SortingStatus.swapping                              => 11, // arr[i] = arr[minIndex]
-    SortingStatus.swapped || SortingStatus.unSorted     => 4, // advance inner loop
+    SortingStatus.swapped || SortingStatus.none     => 4, // advance inner loop
     SortingStatus.sorted                                => 9, // verify min changed
-    _                                                   => -1,
   };
 }
