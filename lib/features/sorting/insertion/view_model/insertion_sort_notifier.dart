@@ -62,8 +62,7 @@ class InsertionSortNotifier extends SortingNotifier {
   int codeLineForStep(SortingStep step) => switch (step.action) {
     SortingStatus.compared                              => 4, // arr[j] < arr[j - 1]
     SortingStatus.swapping                              => 6, // arr[j] = arr[j - 1]
-    SortingStatus.swapped || SortingStatus.unSorted     => 8, // j--
+    SortingStatus.swapped || SortingStatus.none     => 8, // j--
     SortingStatus.sorted                                => 9, // end of while loop
-    _                                                   => -1,
   };
 }
