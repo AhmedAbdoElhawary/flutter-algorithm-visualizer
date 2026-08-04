@@ -58,24 +58,31 @@ class CountingSortNotifier extends SortingNotifier {
   String get description => StringsManager.countingSortDescription;
   @override
   List<String> get codeSnippet => const [
-    'max = findMax(arr)',                  // 0
-    'count = new array[0..max]',           // 1
-    'for i from 0 to n-1',               // 2
-    '  count[arr[i]]++',                  // 3
-    'for i from 1 to max',               // 4
-    '  count[i] += count[i-1]',          // 5  ← prefix sums
-    'for i from n-1 downTo 0',           // 6
-    '  out[count[arr[i]]-1] = arr[i]',   // 7
-    '  count[arr[i]]--',                  // 8
-    'copy out[] back to arr',             // 9
+    'void main() {', // 0
+    '  List<int> arr = [64, 34, 25, 12, 22, 11, 90];', // 1
+    '  int maxVal = arr.reduce((a, b) => a > b ? a : b);', // 2
+    '  int minVal = arr.reduce((a, b) => a < b ? a : b);', // 3
+    '  int range = maxVal - minVal + 1;', // 4
+    '  List<int> count = List<int>.filled(range, 0);', // 5
+    '  for (int i = 0; i < arr.length; i++) {', // 6
+    '    count[arr[i] - minVal]++;', // 7
+    '  }', // 8
+    '  int index = 0;', // 9
+    '  for (int i = 0; i < range; i++) {', // 10
+    '    while (count[i] > 0) {', // 11
+    '      arr[index++] = i + minVal;', // 12
+    '      count[i]--;', // 13
+    '    }', // 14
+    '  }', // 15
+    '}', // 16
   ];
 
   @override
   int codeLineForStep(SortingStep step) => switch (step.action) {
-    SortingStatus.compared                              => 3,  // counting occurrences
-    SortingStatus.swapping                              => 7,  // writing to output array
-    SortingStatus.swapped || SortingStatus.unSorted     => 6,  // advance placement loop
-    SortingStatus.sorted                                => 9,  // copy output → arr
+    SortingStatus.compared                              => 7,  // counting occurrences
+    SortingStatus.swapping                              => 12, // writing to arr
+    SortingStatus.swapped || SortingStatus.unSorted     => 10, // advance placement loop
+    SortingStatus.sorted                                => 12, // copy output → arr
     _                                                   => -1,
   };
 }
