@@ -81,8 +81,7 @@ class CountingSortNotifier extends SortingNotifier {
   int codeLineForStep(SortingStep step) => switch (step.action) {
     SortingStatus.compared                              => 7,  // counting occurrences
     SortingStatus.swapping                              => 12, // writing to arr
-    SortingStatus.swapped || SortingStatus.unSorted     => 10, // advance placement loop
+    SortingStatus.swapped || SortingStatus.none     => 10, // advance placement loop
     SortingStatus.sorted                                => 12, // copy output → arr
-    _                                                   => -1,
   };
 }
