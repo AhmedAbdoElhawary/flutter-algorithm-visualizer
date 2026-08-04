@@ -14,8 +14,8 @@ class SortingNotifierState {
   final int currentStepIndex;
 
   // Auto-play progress
-  final int currentPlayStep;
   final int totalPlaySteps;
+  final List<SortingStep> sortedSteps;
 
   // Live code tracking (-1 = nothing highlighted)
   final int currentCodeLine;
@@ -29,8 +29,8 @@ class SortingNotifierState {
     this.stepSnapshots = const [],
     this.positionSnapshots = const [],
     this.codeLineSnapshots = const [],
-    this.currentStepIndex = -1,
-    this.currentPlayStep = 0,
+    this.sortedSteps = const [],
+    this.currentStepIndex = 0,
     this.totalPlaySteps = 0,
     this.currentCodeLine = -1,
   });
@@ -49,7 +49,7 @@ class SortingNotifierState {
       final total = stepSnapshots.length - 1;
       return total > 0 ? currentStepIndex / total : 0.0;
     }
-    return totalPlaySteps > 0 ? currentPlayStep / totalPlaySteps : 0.0;
+    return totalPlaySteps > 0 ? currentStepIndex / totalPlaySteps : 0.0;
   }
 
   /// Human-readable label shown next to the progress bar.
@@ -58,7 +58,7 @@ class SortingNotifierState {
       final total = stepSnapshots.length - 1;
       return 'Step $currentStepIndex of $total';
     }
-    if (totalPlaySteps > 0) return 'Step $currentPlayStep of $totalPlaySteps';
+    if (totalPlaySteps > 0) return 'Step $currentStepIndex of $totalPlaySteps';
     return '';
   }
 
@@ -69,7 +69,7 @@ class SortingNotifierState {
     }
     if (isPlaying) return 'Sorting in progress…';
     if (operationStatus == SortingEnum.stopped) return 'Paused — step through or resume';
-    if (isInStepMode) return 'Stepping through the algorithm';
+    // if (isInStepMode) return 'Stepping through the algorithm';
     return 'Ready to sort';
   }
 
@@ -79,13 +79,13 @@ class SortingNotifierState {
     int? size,
     Duration? swipeDuration,
     List<SortableItem>? list,
+    List<SortingStep>? sortedSteps,
     Map<int, Offset>? positions,
     SortingEnum? operationStatus,
     List<List<SortableItem>>? stepSnapshots,
     List<Map<int, Offset>>? positionSnapshots,
     List<int>? codeLineSnapshots,
     int? currentStepIndex,
-    int? currentPlayStep,
     int? totalPlaySteps,
     int? currentCodeLine,
   }) {
@@ -99,9 +99,9 @@ class SortingNotifierState {
       positionSnapshots: positionSnapshots ?? this.positionSnapshots,
       codeLineSnapshots: codeLineSnapshots ?? this.codeLineSnapshots,
       currentStepIndex: currentStepIndex ?? this.currentStepIndex,
-      currentPlayStep: currentPlayStep ?? this.currentPlayStep,
       totalPlaySteps: totalPlaySteps ?? this.totalPlaySteps,
       currentCodeLine: currentCodeLine ?? this.currentCodeLine,
+      sortedSteps: sortedSteps ?? this.sortedSteps,
     );
   }
 }
