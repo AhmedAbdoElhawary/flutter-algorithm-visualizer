@@ -16,7 +16,7 @@ class HeapSortNotifier extends SortingNotifier {
 
       if (left < n) {
         steps.add(SortingStep(index1: i, index2: left, action: SortingStatus.compared));
-        steps.add(SortingStep(index1: i, index2: left, action: SortingStatus.unSorted));
+        steps.add(SortingStep(index1: i, index2: left, action: SortingStatus.none));
         if (arr[left] > arr[largest]) {
           largest = left;
         }
@@ -24,7 +24,7 @@ class HeapSortNotifier extends SortingNotifier {
 
       if (right < n) {
         steps.add(SortingStep(index1: i, index2: right, action: SortingStatus.compared));
-        steps.add(SortingStep(index1: i, index2: right, action: SortingStatus.unSorted));
+        steps.add(SortingStep(index1: i, index2: right, action: SortingStatus.none));
         if (arr[right] > arr[largest]) {
           largest = right;
         }
@@ -115,8 +115,7 @@ class HeapSortNotifier extends SortingNotifier {
   int codeLineForStep(SortingStep step) => switch (step.action) {
     SortingStatus.compared                              => 17, // arr[left] > arr[largest]
     SortingStatus.swapping                              => 25, // arr[i] = arr[largest]
-    SortingStatus.swapped || SortingStatus.unSorted     => 23, // check if swap needed
+    SortingStatus.swapped || SortingStatus.none     => 23, // check if swap needed
     SortingStatus.sorted                                => 8,  // extract max to end
-    _                                                   => -1,
   };
 }
