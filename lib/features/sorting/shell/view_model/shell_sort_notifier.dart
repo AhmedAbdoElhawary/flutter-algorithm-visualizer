@@ -15,7 +15,7 @@ class ShellSortNotifier extends SortingNotifier {
         int j = i;
         while (j >= gap) {
           steps.add(SortingStep(index1: j, index2: j - gap, action: SortingStatus.compared));
-          steps.add(SortingStep(index1: j, index2: j - gap, action: SortingStatus.unSorted));
+          steps.add(SortingStep(index1: j, index2: j - gap, action: SortingStatus.none));
 
           if (arr[j] < arr[j - gap]) {
             steps.add(SortingStep(index1: j, index2: j - gap, action: SortingStatus.swapping));
@@ -75,8 +75,7 @@ class ShellSortNotifier extends SortingNotifier {
   int codeLineForStep(SortingStep step) => switch (step.action) {
     SortingStatus.compared                              => 7,  // arr[j] < arr[j - gap]
     SortingStatus.swapping                              => 9,  // arr[j] = arr[j - gap]
-    SortingStatus.swapped || SortingStatus.unSorted     => 11,  // j -= gap
+    SortingStatus.swapped || SortingStatus.none     => 11,  // j -= gap
     SortingStatus.sorted                                => 13,  // break (placed)
-    _                                                   => -1,
   };
 }
