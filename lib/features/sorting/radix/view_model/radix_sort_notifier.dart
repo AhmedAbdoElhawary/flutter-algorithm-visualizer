@@ -103,8 +103,7 @@ class RadixSortNotifier extends SortingNotifier {
   int codeLineForStep(SortingStep step) => switch (step.action) {
     SortingStatus.compared                              => 12, // counting digit frequency
     SortingStatus.swapping                              => 20, // placing into output
-    SortingStatus.swapped || SortingStatus.unSorted     => 18, // advance placement loop
+    SortingStatus.swapped || SortingStatus.none     => 18, // advance placement loop
     SortingStatus.sorted                                => 24, // copy output → arr
-    _                                                   => -1,
   };
 }
