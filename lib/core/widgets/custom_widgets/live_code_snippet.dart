@@ -8,22 +8,22 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class LiveCodeSnippet extends ConsumerWidget {
-  const LiveCodeSnippet({required this.currentLine, required this.codeLines, super.key});
+  const LiveCodeSnippet({required this.currentLine, required this.code, super.key});
 
-  final List<String> codeLines;
+  final String code;
   final int currentLine;
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Padding(
       padding: REdgeInsets.symmetric(horizontal: 16),
-      child: const _CodeEditor(),
+      child:  _CodeEditor(code),
     );
   }
 }
 
 class _CodeEditor extends StatefulWidget {
-  const _CodeEditor();
-
+  const _CodeEditor(this.code);
+final String code;
   @override
   State<_CodeEditor> createState() => _CodeEditorState();
 }
@@ -143,7 +143,7 @@ class _CodeEditorState extends State<_CodeEditor> with SingleTickerProviderState
     ).animate(curve);
 
     controller = CodeController(
-      text: 'void main() {\n  print("hello");\n}\n',
+      text: widget.code,
       tokenizer: const DartTokenizer(),
       runner: const DartInterpreterRunner(),
       config: const CodeEditorConfig(
