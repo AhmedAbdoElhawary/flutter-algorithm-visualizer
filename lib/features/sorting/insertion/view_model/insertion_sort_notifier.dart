@@ -44,22 +44,26 @@ class InsertionSortNotifier extends SortingNotifier {
   String get description => StringsManager.insertionSortDescription;
   @override
   List<String> get codeSnippet => const [
-    'for i from 1 to n-1',          // 0
-    '  key = arr[i]',               // 1
-    '  j = i - 1',                  // 2
-    '  while j >= 0',               // 3
-    '    and arr[j] > key',         // 4
-    '    arr[j+1] = arr[j]',        // 5
-    '    j = j - 1',                // 6
-    '  arr[j+1] = key',             // 7
+    'void main() {', // 0
+    '  List<int> arr = [64, 34, 25, 12, 22, 11, 90];', // 1
+    '  for (int i = 1; i < arr.length; i++) {', // 2
+    '    int j = i;', // 3
+    '    while (j > 0 && arr[j] < arr[j - 1]) {', // 4
+    '      int temp = arr[j];', // 5
+    '      arr[j] = arr[j - 1];', // 6
+    '      arr[j - 1] = temp;', // 7
+    '      j--;', // 8
+    '    }', // 9
+    '  }', // 10
+    '}', // 11
   ];
 
   @override
   int codeLineForStep(SortingStep step) => switch (step.action) {
-    SortingStatus.compared                              => 4, // arr[j] > key
-    SortingStatus.swapping                              => 5, // shift arr[j] right
-    SortingStatus.swapped || SortingStatus.unSorted     => 6, // j--
-    SortingStatus.sorted                                => 7, // place key
+    SortingStatus.compared                              => 4, // arr[j] < arr[j - 1]
+    SortingStatus.swapping                              => 6, // arr[j] = arr[j - 1]
+    SortingStatus.swapped || SortingStatus.unSorted     => 8, // j--
+    SortingStatus.sorted                                => 9, // end of while loop
     _                                                   => -1,
   };
 }
