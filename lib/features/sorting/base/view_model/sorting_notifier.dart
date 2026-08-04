@@ -224,7 +224,6 @@ abstract class SortingNotifier extends StateNotifier<SortingNotifierState> imple
 
     bool didSpecificStep = false;
     for (int i = currentStepIndex; i < steps.length; i++) {
-      if (_getOperation != SortingEnum.played && !makeOnlyOneStep) return;
 
       final step = steps[i];
 
@@ -232,6 +231,9 @@ abstract class SortingNotifier extends StateNotifier<SortingNotifierState> imple
         currentStepIndex: i,
         currentCodeLine: codeLineForStep(step),
       );
+
+      if (_getOperation != SortingEnum.played && !makeOnlyOneStep) return;
+
       if (didSpecificStep) return;
 
       switch (step.action) {
