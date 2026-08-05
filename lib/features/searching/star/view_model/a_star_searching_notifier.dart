@@ -19,7 +19,7 @@ class AStarSearchingNotifier extends SearchingNotifier {
     steps.add(PFStep(
       visited: {},
       frontier: {start},
-      description: 'A*: start h=${heuristic(start)}, f=${heuristic(start)}',
+      statusText: 'A*: start h=${heuristic(start)}, f=${heuristic(start)}',
     ));
 
     while (openSet.isNotEmpty) {
@@ -33,7 +33,7 @@ class AStarSearchingNotifier extends SearchingNotifier {
           visited: Set.from(closed),
           frontier: Set.from(openSet),
           path: path,
-          description: '✓ A* found optimal path! Length: ${path.length - 1} steps',
+          statusText: '✓ A* found optimal path! Length: ${path.length - 1} steps',
         ));
         return steps;
       }
@@ -63,7 +63,7 @@ class AStarSearchingNotifier extends SearchingNotifier {
       steps.add(PFStep(
         visited: Set.from(closed),
         frontier: Set.from(openSet),
-        description:
+        statusText:
             'A*: visited ($row, $col) g=$g h=${heuristic(current)} f=${g + heuristic(current)}, open: ${openSet.length}',
       ));
     }
@@ -71,7 +71,7 @@ class AStarSearchingNotifier extends SearchingNotifier {
     steps.add(PFStep(
       visited: Set.from(closed),
       frontier: {},
-      description: '✗ No path — search space exhausted',
+      statusText: '✗ No path — search space exhausted',
     ));
     return steps;
   }
@@ -89,7 +89,7 @@ class AStarSearchingNotifier extends SearchingNotifier {
   AlgorithmComplexity get algoComplexity => algorithmComplexity;
 
   @override
-  String get description => StringsManager.aStarDescription;
+  String get algorithmDescription => StringsManager.aStarDescription;
 
   @override
   List<String> get codeSnippet => const [
@@ -106,7 +106,7 @@ class AStarSearchingNotifier extends SearchingNotifier {
   @override
   int codeLineForStep(SortingStep step) {
     final pfStep = step as PFStep;
-    final desc = pfStep.description;
+    final desc = pfStep.statusText;
 
     if (desc.startsWith('A*: start')) return 0;
     if (desc.startsWith('✓')) return 3;
