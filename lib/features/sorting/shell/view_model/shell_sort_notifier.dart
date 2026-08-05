@@ -44,7 +44,7 @@ class ShellSortNotifier extends SortingNotifier {
   AlgorithmComplexity get algoComplexity => algorithmComplexity;
 
   @override
-  String get description => StringsManager.shellSortDescription;
+  String get algorithmDescription => StringsManager.shellSortDescription;
   @override
   List<String> get codeSnippet => const [
         'void main() {', // 0
