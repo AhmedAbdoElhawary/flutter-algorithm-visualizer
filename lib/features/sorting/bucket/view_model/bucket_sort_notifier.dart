@@ -71,7 +71,7 @@ class BucketSortNotifier extends SortingNotifier {
   AlgorithmComplexity get algoComplexity => algorithmComplexity;
 
   @override
-  String get description => StringsManager.bucketSortDescription;
+  String get algorithmDescription => StringsManager.bucketSortDescription;
 
   @override
   List<String> get codeSnippet => const [
