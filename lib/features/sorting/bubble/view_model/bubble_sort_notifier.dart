@@ -51,21 +51,29 @@ class BubbleSortNotifier extends SortingNotifier {
 
   @override
   List<String> get codeSnippet => const [
-        'for i from 0 to n-1', // 0
-        '  isSorted = true', // 1
-        '  for j from 0 to n-i-2', // 2
-        '    if arr[j] > arr[j+1]', // 3
-        '      swap(arr[j], arr[j+1])', // 4
-        '      isSorted = false', // 5
-        '  if isSorted then break', // 6
+        'void main() {', // 0
+        '  List<int> arr = [64, 34, 25, 12, 22, 11, 90];', // 1
+        '  int n = arr.length;', // 2
+        '  for (int i = 0; i < n - 1; i++) {', // 3
+        '    bool isSorted = true;', // 4
+        '    for (int j = 0; j < n - i - 1; j++) {', // 5
+        '      if (arr[j] > arr[j + 1]) {', // 6
+        '        int temp = arr[j];', // 7
+        '        arr[j] = arr[j + 1];', // 8
+        '        arr[j + 1] = temp;', // 9
+        '        isSorted = false;', // 10
+        '      }', // 11
+        '    }', // 12
+        '    if (isSorted) break;', // 13
+        '  }', // 14
+        '}', // 15
       ];
 
   @override
   int codeLineForStep(SortingStep step) => switch (step.action) {
-        SortingStatus.compared => 3, // evaluating the if-condition
-        SortingStatus.swapping => 4, // executing the swap
-        SortingStatus.swapped || SortingStatus.unSorted => 2, // continuing the inner loop
-        SortingStatus.sorted => 6, // checking early-exit flag
-        _ => -1,
+        SortingStatus.compared => 6, // evaluating arr[j] > arr[j + 1]
+        SortingStatus.swapping => 8, // executing arr[j] = arr[j + 1]
+        SortingStatus.swapped || SortingStatus.none => 5, // continuing the inner loop
+        SortingStatus.sorted => 13, // checking early-exit flag
       };
 }

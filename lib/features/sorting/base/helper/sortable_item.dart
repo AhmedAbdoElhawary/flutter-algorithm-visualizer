@@ -8,7 +8,7 @@ class SortableItem {
   SortableItem({
     required this.id,
     required this.value,
-    this.sortedStatus = SortingStatus.unSorted,
+    this.sortedStatus = SortingStatus.none,
   });
 
   SortableItem copyWith({int? id, int? value, SortingStatus? sortedStatus}) {

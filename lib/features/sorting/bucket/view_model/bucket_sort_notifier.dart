@@ -78,24 +78,43 @@ class BucketSortNotifier extends SortingNotifier {
 
   @override
   List<String> get codeSnippet => const [
-    'n = arr.length',                          // 0
-    'buckets = array of n empty lists',        // 1
-    'for i from 0 to n-1',                    // 2
-    '  idx = floor(arr[i] × n / max)',         // 3
-    '  buckets[idx].add(arr[i])',              // 4
-    'for each bucket b',                       // 5
-    '  insertionSort(b)',                      // 6
-    '    if b[j] > b[j+1]',                   // 7
-    '      swap(b[j], b[j+1])',               // 8
-    'concatenate all buckets into arr',        // 9
+    'void main() {', // 0
+    '  List<int> arr = [64, 34, 25, 12, 22, 11, 90];', // 1
+    '  int n = arr.length;', // 2
+    '  int maxVal = arr.reduce((a, b) => a > b ? a : b);', // 3
+    '  int minVal = arr.reduce((a, b) => a < b ? a : b);', // 4
+    '  double bucketRange = (maxVal - minVal + 1) / n;', // 5
+    '  List<List<int>> buckets = List.generate(n, (_) => []);', // 6
+    '  for (int value in arr) {', // 7
+    '    int bucketIndex = ((value - minVal) / bucketRange).floor();', // 8
+    '    if (bucketIndex >= n) bucketIndex = n - 1;', // 9
+    '    buckets[bucketIndex].add(value);', // 10
+    '  }', // 11
+    '  for (var bucket in buckets) {', // 12
+    '    for (int i = 1; i < bucket.length; i++) {', // 13
+    '      int key = bucket[i];', // 14
+    '      int j = i - 1;', // 15
+    '      while (j >= 0 && bucket[j] > key) {', // 16
+    '        bucket[j + 1] = bucket[j];', // 17
+    '        j--;', // 18
+    '      }', // 19
+    '      bucket[j + 1] = key;', // 20
+    '    }', // 21
+    '  }', // 22
+    '  int index = 0;', // 23
+    '  for (var bucket in buckets) {', // 24
+    '    for (int value in bucket) {', // 25
+    '      arr[index++] = value;', // 26
+    '    }', // 27
+    '  }', // 28
+    '}', // 29
   ];
 
   @override
   int codeLineForStep(SortingStep step) => switch (step.action) {
-    SortingStatus.compared                              => 7,  // compare within bucket
-    SortingStatus.swapping                              => 8,  // swap within bucket
-    SortingStatus.swapped || SortingStatus.unSorted     => 6,  // continue bucket sort
-    SortingStatus.sorted                                => 9,  // merge buckets back
-    _                                                   => -1,
+    SortingStatus.compared                              => 16,  // bucket[j] > key
+    SortingStatus.swapping                              => 17,  // bucket[j + 1] = bucket[j]
+    SortingStatus.swapped || SortingStatus.none     => 15,  // j--
+    SortingStatus.sorted                                => 25,  // concatenate buckets
   };
 }
