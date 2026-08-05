@@ -4,7 +4,7 @@ import 'package:algorithm_visualizer/features/sorting/base/view_model/sorting_no
 abstract class AlgorithmDescriptionNotifier {
   AlgorithmComplexity get algoComplexity;
 
-  String get description;
+  String get algorithmDescription;
 
   List<String> get codeSnippet;
 
