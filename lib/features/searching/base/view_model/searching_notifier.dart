@@ -37,7 +37,7 @@ abstract class SearchingNotifier extends StateNotifier<SearchingState> implement
 
   List<PFStep> buildAlgorithm(List<List<bool>> walls);
 
-  bool _inBounds(int row, int col) => row >= 0 && row < kPFRows && col >= 0 && col < kPFCols;
+  bool _inBounds(int row, int col) => row >= 0 && row < kPFCells && col >= 0 && col < kPFCells;
 
   Set<int> _buildPath(int end, Map<int, int> parent) {
     final path = <int>{};
@@ -97,8 +97,8 @@ abstract class SearchingNotifier extends StateNotifier<SearchingState> implement
     _resetSteps();
     final rng = math.Random();
     final walls = List.generate(
-      kPFRows,
-      (r) => List.generate(kPFCols, (c) {
+      kPFCells,
+      (r) => List.generate(kPFCells, (c) {
         if (r == kPFStartRow && c == kPFStartCol) return false;
         if (r == kPFEndRow && c == kPFEndCol) return false;
         return rng.nextDouble() < 0.30;

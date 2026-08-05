@@ -25,8 +25,8 @@ class PFGridPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    final cellW = size.width / kPFCols;
-    final cellH = size.height / kPFRows;
+    final cellW = size.width / kPFCells;
+    final cellH = size.height / kPFCells;
 
     final gridPaint = Paint()
       ..color = (isDark ? Colors.white : Colors.black).withValues(alpha: 0.07)
@@ -38,8 +38,8 @@ class PFGridPainter extends CustomPainter {
       ..color = accent.withValues(alpha: 0.25)
       ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 4);
 
-    for (int row = 0; row < kPFRows; row++) {
-      for (int col = 0; col < kPFCols; col++) {
+    for (int row = 0; row < kPFCells; row++) {
+      for (int col = 0; col < kPFCells; col++) {
         final left = col * cellW;
         final top = row * cellH;
         final rect = Rect.fromLTWH(left, top, cellW, cellH);
