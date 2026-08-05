@@ -33,7 +33,7 @@ class _VisualizerScreenState extends ConsumerState<VisualizerScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final description = ref.read(instance.notifier).description;
+    final description = ref.read(instance.notifier).algorithmDescription;
     final complexity = ref.read(instance.notifier).algoComplexity;
 
     return PopScope(
