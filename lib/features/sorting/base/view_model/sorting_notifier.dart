@@ -76,7 +76,7 @@ abstract class SortingNotifier extends StateNotifier<SortingNotifierState>
     return value.h / selectedAlgorithmsLength * (per - 0.15);
   }
 
-  Duration get _speedDuration => state.speed.stepDuration;
+  Duration get _speedDuration => state.speed.stepDuration*6;
   int get _size => state.size;
 
   SortingEnum get _getOperation => state.operationStatus;
@@ -117,7 +117,7 @@ abstract class SortingNotifier extends StateNotifier<SortingNotifierState>
     state = state.copyWith(
       list: _generateList(_size),
       operationStatus: SortingEnum.none,
-      currentCodeLine: -1,
+      currentStep: SortingStep.noneStep(),
       totalPlaySteps: 0,
       sortedSteps: [],
       currentStepIndex: 0,
@@ -159,7 +159,7 @@ abstract class SortingNotifier extends StateNotifier<SortingNotifierState>
     state = state.copyWith(
       list: _generateList(_size),
       operationStatus: SortingEnum.none,
-      currentCodeLine: -1,
+      currentStep: SortingStep.noneStep(),
       totalPlaySteps: 0,
       sortedSteps: [],
       currentStepIndex: 0,
@@ -231,9 +231,7 @@ abstract class SortingNotifier extends StateNotifier<SortingNotifierState>
         totalPlaySteps: steps.length,
         currentStepIndex: currentStepIndex,
         sortedSteps: steps,
-        currentCodeLine: sortedSteps == null || currentStepIndex <= 0
-            ? -1
-            : codeLineForStep(sortedSteps[currentStepIndex]),
+        currentStep: sortedSteps == null || currentStepIndex <= 0 ? SortingStep.noneStep() : sortedSteps[currentStepIndex],
       );
     }
     bool didSpecificStep = false;
@@ -246,7 +244,7 @@ abstract class SortingNotifier extends StateNotifier<SortingNotifierState>
 
       state = state.copyWith(
         currentStepIndex: i,
-        currentCodeLine: codeLineForStep(step),
+        currentStep: step,
       );
 
       if (_getOperation != SortingEnum.played && !makeOnlyOneStep) {
@@ -298,7 +296,7 @@ abstract class SortingNotifier extends StateNotifier<SortingNotifierState>
       if (makeOnlyOneStep) didSpecificStep = true;
     }
 
-    state = state.copyWith(currentCodeLine: -1);
+    state = state.copyWith(currentStep: SortingStep.noneStep());
     await _greenSortedItemsAsDone();
     _isPlayingFun = false;
   }
