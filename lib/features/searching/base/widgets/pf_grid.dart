@@ -16,8 +16,8 @@ class PFGrid extends ConsumerWidget {
     double cellSize, {
     required bool isGestureStart,
   }) {
-    final col = (localPosition.dx / cellSize).floor().clamp(0, kPFCols - 1);
-    final row = (localPosition.dy / cellSize).floor().clamp(0, kPFRows - 1);
+    final col = (localPosition.dx / cellSize).floor().clamp(0, kPFCells - 1);
+    final row = (localPosition.dy / cellSize).floor().clamp(0, kPFCells - 1);
     ref.read(instance.notifier).setWall(
           row,
           col,
@@ -32,8 +32,8 @@ class PFGrid extends ConsumerWidget {
     return Padding(
       padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
       child: LayoutBuilder(builder: (context, constraints) {
-        final cellSize = constraints.maxWidth / kPFCols;
-        final gridHeight = cellSize * kPFRows;
+        final cellSize = constraints.maxWidth / kPFCells;
+        final gridHeight = cellSize * kPFCells;
 
         return GestureDetector(
           onTapDown: (d) =>
