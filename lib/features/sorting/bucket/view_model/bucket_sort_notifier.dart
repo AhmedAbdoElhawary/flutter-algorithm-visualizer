@@ -50,13 +50,10 @@ class BucketSortNotifier extends SortingNotifier {
           // Swap for visualization
           steps.add(SortingStep(index1: index, index2: targetIndex, action: SortingStatus.swapping));
           arr.swap(index, targetIndex);
-          steps.add(SortingStep(index1: index, index2: targetIndex, action: SortingStatus.swapped));
         }
         index++;
       }
     }
-
-    steps.add(SortingStep(index1: arr.length - 1, index2: arr.length - 1, action: SortingStatus.sorted));
 
     return SortingResult(sortedValues: arr, steps: steps);
   }
@@ -114,7 +111,7 @@ class BucketSortNotifier extends SortingNotifier {
   int codeLineForStep(SortingStep step) => switch (step.action) {
     SortingStatus.compared                              => 16,  // bucket[j] > key
     SortingStatus.swapping                              => 17,  // bucket[j + 1] = bucket[j]
-    SortingStatus.swapped || SortingStatus.none     => 15,  // j--
-    SortingStatus.sorted                                => 25,  // concatenate buckets
+  SortingStatus.none     => 15,  // j--
+    _ => -1,
   };
 }
