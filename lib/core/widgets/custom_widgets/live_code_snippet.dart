@@ -2,7 +2,7 @@ import 'dart:ui';
 
 import 'package:algorithm_visualizer/core/custom_packages/custom_code_editor/code_editor.dart';
 import 'package:algorithm_visualizer/core/resources/color_manager.dart';
-import 'package:algorithm_visualizer/features/searching/base/widgets/pf_note.dart';
+import 'package:algorithm_visualizer/core/widgets/custom_widgets/how_it_works.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
