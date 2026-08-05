@@ -15,7 +15,7 @@ class QuickSortNotifier extends SortingNotifier {
 
       for (int j = low; j < high; j++) {
         steps.add(SortingStep(index1: j, index2: high, action: SortingStatus.compared));
-        steps.add(SortingStep(index1: j, index2: high, action: SortingStatus.unSorted));
+        steps.add(SortingStep(index1: j, index2: high, action: SortingStatus.none));
 
         if (arr[j] <= pivot) {
           i++;
@@ -65,26 +65,45 @@ class QuickSortNotifier extends SortingNotifier {
   String get description => StringsManager.quickSortDescription;
   @override
   List<String> get codeSnippet => const [
-    'quickSort(arr, low, high)',         // 0
-    '  if low >= high: return',          // 1
-    '  pivot = arr[high]',               // 2
-    '  i = low - 1',                     // 3
-    '  for j from low to high-1',       // 4
-    '    if arr[j] <= pivot',            // 5
-    '      i++',                         // 6
-    '      swap(arr[i], arr[j])',        // 7
-    '  swap(arr[i+1], arr[high])',       // 8  ← pivot to final pos
-    '  quickSort(arr, low, i)',          // 9
-    '  quickSort(arr, i+2, high)',       // 10
+    'void main() {', // 0
+    '  List<int> arr = [64, 34, 25, 12, 22, 11, 90];', // 1
+    '  quickSort(arr, 0, arr.length - 1);', // 2
+    '}', // 3
+    'void quickSort(List<int> arr, int low, int high) {', // 4
+    '  if (low < high) {', // 5
+    '    int pi = partition(arr, low, high);', // 6
+    '    quickSort(arr, low, pi - 1);', // 7
+    '    quickSort(arr, pi + 1, high);', // 8
+    '  }', // 9
+    '}', // 10
+    'int partition(List<int> arr, int low, int high) {', // 11
+    '  int pivot = arr[high];', // 12
+    '  int i = low - 1;', // 13
+    '  for (int j = low; j < high; j++) {', // 14
+    '    if (arr[j] <= pivot) {', // 15
+    '      i++;', // 16
+    '      if (i != j) {', // 17
+    '        int temp = arr[i];', // 18
+    '        arr[i] = arr[j];', // 19
+    '        arr[j] = temp;', // 20
+    '      }', // 21
+    '    }', // 22
+    '  }', // 23
+    '  if (i + 1 != high) {', // 24
+    '    int temp = arr[i + 1];', // 25
+    '    arr[i + 1] = arr[high];', // 26
+    '    arr[high] = temp;', // 27
+    '  }', // 28
+    '  return i + 1;', // 29
+    '}', // 30
   ];
 
   @override
   int codeLineForStep(SortingStep step) => switch (step.action) {
-    SortingStatus.compared                              => 5,  // arr[j] <= pivot
-    SortingStatus.swapping                              => 7,  // partition swap
-    SortingStatus.swapped || SortingStatus.unSorted     => 4,  // advance j
-    SortingStatus.sorted                                => 8,  // pivot placed
-    _                                                   => -1,
+    SortingStatus.compared                              => 15, // arr[j] <= pivot
+    SortingStatus.swapping                              => 19, // arr[i] = arr[j]
+    SortingStatus.swapped || SortingStatus.none     => 14, // advance j
+    SortingStatus.sorted                                => 26, // pivot placed
   };
 
 }
