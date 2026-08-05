@@ -44,7 +44,7 @@ class SearchingState {
         speed: PlaybackSpeed.normal,
       );
 
-  static List<List<bool>> emptyWalls() => List.generate(kPFRows, (_) => List.filled(kPFCols, false));
+  static List<List<bool>> emptyWalls() => List.generate(kPFCells, (_) => List.filled(kPFCells, false));
 
   bool get hasSteps => steps != null;
   bool get isAtStart => stepIndex == 0;
