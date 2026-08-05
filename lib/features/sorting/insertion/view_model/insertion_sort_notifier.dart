@@ -37,7 +37,7 @@ class InsertionSortNotifier extends SortingNotifier {
   AlgorithmComplexity get algoComplexity => algorithmComplexity;
 
   @override
-  String get description => StringsManager.insertionSortDescription;
+  String get algorithmDescription => StringsManager.insertionSortDescription;
   @override
   List<String> get codeSnippet => const [
     'void main() {', // 0
