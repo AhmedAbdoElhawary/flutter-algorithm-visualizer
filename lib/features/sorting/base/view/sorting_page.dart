@@ -1,15 +1,16 @@
 import 'package:algorithm_visualizer/core/draggable_progress.dart' show DraggableProgressBar;
 import 'package:algorithm_visualizer/core/helpers/app_bar/back_button.dart';
+import 'package:algorithm_visualizer/core/helpers/playback_speed.dart';
 import 'package:algorithm_visualizer/core/resources/color_manager.dart';
 import 'package:algorithm_visualizer/core/resources/strings_manager.dart';
 import 'package:algorithm_visualizer/core/resources/styles_manager.dart';
 import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
 import 'package:algorithm_visualizer/core/widgets/adaptive/text/adaptive_text.dart';
+import 'package:algorithm_visualizer/core/widgets/custom_widgets/algorithm_control.dart';
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/algorithm_title.dart';
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/complexity_details.dart';
-import 'package:algorithm_visualizer/core/widgets/custom_widgets/custom_icon.dart';
-import 'package:algorithm_visualizer/core/widgets/custom_widgets/glass_card.dart';
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/live_code_snippet.dart';
+import 'package:algorithm_visualizer/features/base/view_model/algorithm_description_interface.dart';
 import 'package:algorithm_visualizer/features/base/view_model/base_page_view_model.dart';
 import 'package:algorithm_visualizer/features/sorting/base/view_model/sorting_notifier.dart';
 import 'package:algorithm_visualizer/features/sorting/base/widgets/linear_progress_indicator.dart';
@@ -122,15 +123,12 @@ class _SortingPageState extends ConsumerState<SortingPage> {
                 sliver: SliverToBoxAdapter(child: ShowUpSortingList(instance))),
             // SliverToBoxAdapter(child: _StatusLiveText(instance)),
             SliverPadding(
-              padding: REdgeInsetsDirectional.only(top: 10, bottom: 10),
+              padding: REdgeInsetsDirectional.only(top: 10, bottom: 0),
               sliver: SliverToBoxAdapter(child: _ProgressBar(instance)),
             ),
+            SliverToBoxAdapter(child: _SortingControlButtons(instance)),
             SliverPadding(
-              padding: REdgeInsetsDirectional.only(top: 10, bottom: 10),
-              sliver: SliverToBoxAdapter(child: _SortingControlButtons(instance)),
-            ),
-            SliverPadding(
-              padding: REdgeInsetsDirectional.only(top: 10, bottom: 10),
+              padding: REdgeInsetsDirectional.only(top: 5, bottom: 10),
               sliver: SliverToBoxAdapter(child: _LiveCodeSnippet(instance)),
             ),
           ],
@@ -241,7 +239,7 @@ class ShowUpSortingList extends ConsumerWidget {
   @override
   Widget build(BuildContext context, ref) {
     final items = ref.watch(instance.select((state) => state.list));
-    final speedDuration = ref.watch(instance.select((state) => state.swipeDuration));
+    final speed = ref.watch(instance.select((state) => state.speed));
     final maxHeight = SortingNotifier.calculateMaxListItemHeight(context);
     final size = ref.watch(instance.select((state) => state.size));
     final itemWidth = SortingNotifier.calculateItemWidth(context, size);
@@ -274,7 +272,7 @@ class ShowUpSortingList extends ConsumerWidget {
                       width: itemWidth +
                           SortingNotifier.horizontalInsidePadding -
                           SortingNotifier.handleCentralBars,
-                      duration: speedDuration,
+                      duration: speed.stepDuration,
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
@@ -284,7 +282,7 @@ class ShowUpSortingList extends ConsumerWidget {
                               size: size,
                               itemWidth: itemWidth,
                               instance: instance,
-                              speedDuration: speedDuration * 0.5,
+                              speedDuration: speed.stepDuration * 0.5,
                               selectedAlgorithmLength: selectedAlgorithmLength,
                               isLastItem: index == items.length - 1),
                           RSizedBox(height: 4),
