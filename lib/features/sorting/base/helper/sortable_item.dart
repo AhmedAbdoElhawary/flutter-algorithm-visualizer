@@ -43,6 +43,8 @@ class SortingStep {
     required this.index2,
     required this.action,
   });
+
+  static SortingStep noneStep() => SortingStep(index1: -1, index2: -2, action: SortingStatus.none);
 }
 
 class SortingResult {
