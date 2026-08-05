@@ -17,13 +17,9 @@ class InsertionSortNotifier extends SortingNotifier {
         steps.add(SortingStep(index1: j, index2: j - 1, action: SortingStatus.swapping));
 
         arr.swap(j, j - 1);
-        steps.add(SortingStep(index1: j, index2: j - 1, action: SortingStatus.swapped));
         j--;
       }
-      steps.add(SortingStep(index1: j, index2: j, action: SortingStatus.sorted));
     }
-
-    steps.add(SortingStep(index1: arr.length - 1, index2: arr.length - 1, action: SortingStatus.sorted));
 
     return SortingResult(sortedValues: arr, steps: steps);
   }
@@ -62,7 +58,7 @@ class InsertionSortNotifier extends SortingNotifier {
   int codeLineForStep(SortingStep step) => switch (step.action) {
     SortingStatus.compared                              => 4, // arr[j] < arr[j - 1]
     SortingStatus.swapping                              => 6, // arr[j] = arr[j - 1]
-    SortingStatus.swapped || SortingStatus.none     => 8, // j--
-    SortingStatus.sorted                                => 9, // end of while loop
+    SortingStatus.none     => 8, // j--
+    _ => -1,
   };
 }
