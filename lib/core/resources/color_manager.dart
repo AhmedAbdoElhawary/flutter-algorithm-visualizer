@@ -39,7 +39,6 @@ abstract final class ColorManager {
   static const Color text2DarkColor = Color.fromRGBO(160, 179, 217, 1.0);
   static const Color howItWorksColor = Color.fromRGBO(23, 28, 53, 1);
 
-  static const Color purpleColor = Color.fromRGBO(129, 140, 248, 1.0);
   static const Color lightPurpleColor = Color.fromRGBO(23, 28, 53, 1.0);
   static const Color borderPurpleColor = Color.fromRGBO(67, 73, 128, 1.0);
 
