@@ -50,6 +50,7 @@ abstract class SearchingNotifier extends StateNotifier<SearchingState>
   @override
   PlaybackSpeed get getSpeed => state.speed;
 
+
   List<PFStep> buildAlgorithm(List<List<bool>> walls);
 
   bool _inBounds(int row, int col) => row >= 0 && row < kPFCells && col >= 0 && col < kPFCells;
