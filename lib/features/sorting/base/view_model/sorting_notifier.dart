@@ -1,6 +1,8 @@
+import 'package:algorithm_visualizer/core/helpers/playback_speed.dart';
 import 'package:algorithm_visualizer/core/helpers/screen_size.dart';
 import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
-import 'package:algorithm_visualizer/features/base/view_model/base_page_view_model.dart';
+import 'package:algorithm_visualizer/features/base/view_model/algorithm_control_interface.dart';
+import 'package:algorithm_visualizer/features/base/view_model/algorithm_description_interface.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -10,9 +12,8 @@ part 'sorting_state.dart';
 part '../helper/sorting_enums.dart';
 part '../helper/sortable_item.dart';
 
-enum SpeedStatus { normal, average, fast }
-
-abstract class SortingNotifier extends StateNotifier<SortingNotifierState> implements AlgorithmNotifier {
+abstract class SortingNotifier extends StateNotifier<SortingNotifierState>
+    implements AlgorithmDescriptionNotifier, AlgorithmControlInterface {
   SortingNotifier() : super(SortingNotifierState(list: _generateList(_defaultSize))) {
     _initializePositions();
   }
@@ -31,11 +32,15 @@ abstract class SortingNotifier extends StateNotifier<SortingNotifierState> imple
   static const double bottomInsidePadding = 15;
   static double handleCentralBars = horizontalInsidePadding / 4;
 
-  static const Duration _defaultSpeedDuration = Duration(milliseconds: 300);
+  @override
+  PlaybackSpeed get getSpeed => state.speed;
 
+  @override
   bool get isPlaying => state.isPlaying;
-  bool get isAtFirstStep => state.isAtFirstStep;
-  bool get isAtLastStep => state.isAtLastStep;
+  @override
+  bool get backwardValidation => state.isAtFirstStep;
+  @override
+  bool get forwardValidation => state.isAtLastStep;
 
   static List<SortableItem> _generateList(int size) {
     return List.generate(size, (index) => SortableItem(id: index, value: index + 1))..shuffle();
@@ -71,12 +76,17 @@ abstract class SortingNotifier extends StateNotifier<SortingNotifierState> imple
     return value.h / selectedAlgorithmsLength * (per - 0.15);
   }
 
-  Duration get speedDuration => state.swipeDuration;
+  Duration get _speedDuration => state.speed.stepDuration;
   int get _size => state.size;
 
   SortingEnum get _getOperation => state.operationStatus;
   set _setOperation(SortingEnum value) => state = state.copyWith(operationStatus: value);
 
+  // @override
+  // void dispose() {
+  //   _stopSorting();
+  //   super.dispose();
+  // }
   void _initializePositions() {
     final positions = <int, Offset>{};
     final itemWidth = calculateItemWidth(ScreenSize.context!, _size);
@@ -86,21 +96,16 @@ abstract class SortingNotifier extends StateNotifier<SortingNotifierState> imple
     state = state.copyWith(positions: positions);
   }
 
-  void changeSpeed(SpeedStatus speedStatus) {
-    final defaultSpeed = _defaultSpeedDuration.inMilliseconds.toDouble();
-    final duration = speedStatus == SpeedStatus.normal
-        ? defaultSpeed
-        : speedStatus == SpeedStatus.average
-            ? defaultSpeed / 1.5
-            : defaultSpeed / 2;
-    state = state.copyWith(swipeDuration: Duration(milliseconds: duration.toInt()));
+  @override
+  void changeSpeed(PlaybackSpeed speed) {
+    state = state.copyWith(speed: speed);
   }
 
   void changeSize(double size) {
     if (_getOperation == SortingEnum.played) return;
     final newSize = _minSize + (_maxSize - _minSize) * size;
     state = state.copyWith(size: newSize.toInt());
-    generateAgain();
+    reset();
   }
 
   void _resetItemColors() {
@@ -118,24 +123,39 @@ abstract class SortingNotifier extends StateNotifier<SortingNotifierState> imple
       currentStepIndex: 0,
     );
     _initializePositions();
+    _resetAllColors();
   }
 
-  Future<void> stopSorting() async {
-    if (!state.isPlaying) return;
+  Future<void> _stopSorting() async {
     _resetItemColors();
     state = state.copyWith(
       operationStatus: SortingEnum.stopped,
     );
   }
 
-  Future<void> playSorting(BuildContext context) async {
-    if (_getOperation == SortingEnum.played) return;
+  Future<void> _playSorting(BuildContext context) async {
     _setOperation = SortingEnum.played;
     await _startSelectedSorting();
-    if (context.mounted) _setOperation = SortingEnum.none;
+    // if (context.mounted) _setOperation = SortingEnum.none;
   }
 
-  Future<void> generateAgain() async {
+  @override
+  Future<void> togglePlay(BuildContext context) async {
+    if (state.isAtLastStep) {
+      await reset();
+
+      if (context.mounted) _playSorting(context);
+
+      return;
+    }
+
+    final isPlaying = state.isPlaying;
+    state = state.copyWith(operationStatus: isPlaying ? SortingEnum.stopped : SortingEnum.played);
+    isPlaying ? _stopSorting() : _playSorting(context);
+  }
+
+  @override
+  Future<void> reset() async {
     state = state.copyWith(
       list: _generateList(_size),
       operationStatus: SortingEnum.none,
@@ -145,8 +165,10 @@ abstract class SortingNotifier extends StateNotifier<SortingNotifierState> imple
       currentStepIndex: 0,
     );
     _initializePositions();
+    _resetAllColors();
   }
 
+  @override
   void stepForward() {
     if (state.isPlaying) return;
 
@@ -156,22 +178,29 @@ abstract class SortingNotifier extends StateNotifier<SortingNotifierState> imple
     _buildSort(stepIndex: next, makeOnlyOneStep: true);
   }
 
+  @override
   void stepBackward() {
     if (state.isPlaying) return;
-    // if (!state.isInStepMode) return;
-
     final prev = state.currentStepIndex - 1;
     if (prev < 0) return;
 
     _buildSort(stepIndex: prev, makeOnlyOneStep: true);
   }
 
+  Future<void> _resetAllColors() async {
+    final list = List<SortableItem>.from(state.list);
+    for (int i = 0; i < list.length; i++) {
+      list[i] = list[i].copyWith(sortedStatus: SortingStatus.none);
+      state = state.copyWith(list: list);
+    }
+  }
+
   Future<void> _greenSortedItemsAsDone() async {
     final list = List<SortableItem>.from(state.list);
     for (int i = 0; i < list.length; i++) {
-      list[i] = list[i].copyWith(sortedStatus: SortingStatus.sorted);
+      list[i] = list[i].copyWith(sortedStatus: SortingStatus.allSorted);
       state = state.copyWith(list: list);
-      await Future.delayed(state.swipeDuration);
+      await Future.delayed(state.speed.stepDuration);
     }
   }
 
@@ -179,6 +208,7 @@ abstract class SortingNotifier extends StateNotifier<SortingNotifierState> imple
     try {
       await _buildSort();
     } catch (e) {
+      /// TODO: create cancel variable and cancel it when dispose
       debugPrint("something wrong with sorting: $e");
     }
   }
@@ -195,6 +225,7 @@ abstract class SortingNotifier extends StateNotifier<SortingNotifierState> imple
     final currentStepIndex = stepIndex == -1 ? state.currentStepIndex : stepIndex;
 
     final steps = sortedSteps ?? buildSorting(values).steps;
+
     if (!makeOnlyOneStep) {
       state = state.copyWith(
         totalPlaySteps: steps.length,
@@ -210,6 +241,7 @@ abstract class SortingNotifier extends StateNotifier<SortingNotifierState> imple
     final step2 = stepIndex == -1 ? null : steps[stepIndex].index2;
 
     for (int i = currentStepIndex; i < steps.length; i++) {
+      final prevStep = steps[i > 0 ? i - 1 : i];
       final step = steps[i];
 
       state = state.copyWith(
@@ -226,19 +258,26 @@ abstract class SortingNotifier extends StateNotifier<SortingNotifierState> imple
         _isPlayingFun = false;
         return;
       }
-
+      if (prevStep.index1 != step.index1) {
+        list[prevStep.index1] = list[prevStep.index1].copyWith(sortedStatus: SortingStatus.none);
+        state = state.copyWith(list: list);
+      }
+      if (prevStep.index2 != step.index2) {
+        list[prevStep.index2] = list[prevStep.index2].copyWith(sortedStatus: SortingStatus.none);
+        state = state.copyWith(list: list);
+      }
       switch (step.action) {
         case SortingStatus.compared:
           list[step.index1] = list[step.index1].copyWith(sortedStatus: SortingStatus.compared);
           list[step.index2] = list[step.index2].copyWith(sortedStatus: SortingStatus.compared);
           state = state.copyWith(list: list);
-          await Future.delayed(speedDuration);
+          await Future.delayed(_speedDuration);
 
         case SortingStatus.swapping:
           list[step.index1] = list[step.index1].copyWith(sortedStatus: SortingStatus.swapping);
           list[step.index2] = list[step.index2].copyWith(sortedStatus: SortingStatus.swapping);
           state = state.copyWith(list: list);
-          await Future.delayed(speedDuration);
+          await Future.delayed(_speedDuration);
 
           list.swap(step.index1, step.index2);
           final positions = Map<int, Offset>.from(state.positions);
@@ -247,15 +286,14 @@ abstract class SortingNotifier extends StateNotifier<SortingNotifierState> imple
           positions[list[step.index2].id] = tempPosition;
           state = state.copyWith(list: list, positions: positions);
 
-        case SortingStatus.swapped:
-        case SortingStatus.sorted:
+        case SortingStatus.allSorted:
         case SortingStatus.none:
           list[step.index1] = list[step.index1].copyWith(sortedStatus: SortingStatus.none);
           list[step.index2] = list[step.index2].copyWith(sortedStatus: SortingStatus.none);
           state = state.copyWith(list: list);
       }
 
-      await Future.delayed(speedDuration);
+      await Future.delayed(_speedDuration);
 
       if (makeOnlyOneStep) didSpecificStep = true;
     }
