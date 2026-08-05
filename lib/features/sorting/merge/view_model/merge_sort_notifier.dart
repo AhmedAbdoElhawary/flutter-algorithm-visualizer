@@ -24,7 +24,6 @@ class MergeSortNotifier extends SortingNotifier {
           while (k > i) {
             steps.add(SortingStep(index1: k, index2: k - 1, action: SortingStatus.swapping));
             arr.swap(k, k - 1);
-            steps.add(SortingStep(index1: k, index2: k - 1, action: SortingStatus.swapped));
             k--;
           }
           i++;
@@ -103,7 +102,7 @@ class MergeSortNotifier extends SortingNotifier {
   int codeLineForStep(SortingStep step) => switch (step.action) {
     SortingStatus.compared                              => 16, // arr[i] <= arr[j]
     SortingStatus.swapping                              => 22, // arr[k] = arr[k - 1]
-    SortingStatus.swapped || SortingStatus.none     => 15, // advancing merge pointers
-    SortingStatus.sorted                                => 22, // writing result back to arr
+    SortingStatus.none     => 15, // advancing merge pointers
+    _ => -1,
   };
 }
