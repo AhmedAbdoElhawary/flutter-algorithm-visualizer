@@ -53,7 +53,7 @@ class CountingSortNotifier extends SortingNotifier {
   AlgorithmComplexity get algoComplexity => algorithmComplexity;
 
   @override
-  String get description => StringsManager.countingSortDescription;
+  String get algorithmDescription => StringsManager.countingSortDescription;
   @override
   List<String> get codeSnippet => const [
         'void main() {', // 0
