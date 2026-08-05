@@ -50,7 +50,7 @@ class SelectionSortNotifier extends SortingNotifier {
   AlgorithmComplexity get algoComplexity => algorithmComplexity;
 
   @override
-  String get description => StringsManager.selectionSortDescription;
+  String get algorithmDescription => StringsManager.selectionSortDescription;
   @override
   List<String> get codeSnippet => const [
     'void main() {', // 0
