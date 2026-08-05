@@ -21,12 +21,7 @@ class BubbleSortNotifier extends SortingNotifier {
           arr.swap(j, j + 1);
           isSorted = false;
         }
-
-        steps.add(SortingStep(index1: j, index2: j + 1, action: SortingStatus.swapped)); // external
       }
-
-      steps.add(SortingStep(
-          index1: arr.length - i - 1, index2: arr.length - i - 1, action: SortingStatus.sorted)); // external
 
       if (isSorted) break;
     }
@@ -73,7 +68,7 @@ class BubbleSortNotifier extends SortingNotifier {
   int codeLineForStep(SortingStep step) => switch (step.action) {
         SortingStatus.compared => 6, // evaluating arr[j] > arr[j + 1]
         SortingStatus.swapping => 8, // executing arr[j] = arr[j + 1]
-        SortingStatus.swapped || SortingStatus.none => 5, // continuing the inner loop
-        SortingStatus.sorted => 13, // checking early-exit flag
-      };
+         SortingStatus.none => 5, // continuing the inner loop
+    _ => -1,
+  };
 }
