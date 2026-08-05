@@ -22,7 +22,6 @@ class QuickSortNotifier extends SortingNotifier {
           if (i != j) {
             steps.add(SortingStep(index1: i, index2: j, action: SortingStatus.swapping));
             arr.swap(i, j);
-            steps.add(SortingStep(index1: i, index2: j, action: SortingStatus.swapped));
           }
         }
       }
@@ -30,7 +29,6 @@ class QuickSortNotifier extends SortingNotifier {
       if (i + 1 != high) {
         steps.add(SortingStep(index1: i + 1, index2: high, action: SortingStatus.swapping));
         arr.swap(i + 1, high);
-        steps.add(SortingStep(index1: i + 1, index2: high, action: SortingStatus.swapped));
       }
 
       return i + 1;
@@ -102,8 +100,8 @@ class QuickSortNotifier extends SortingNotifier {
   int codeLineForStep(SortingStep step) => switch (step.action) {
     SortingStatus.compared                              => 15, // arr[j] <= pivot
     SortingStatus.swapping                              => 19, // arr[i] = arr[j]
-    SortingStatus.swapped || SortingStatus.none     => 14, // advance j
-    SortingStatus.sorted                                => 26, // pivot placed
+ SortingStatus.none     => 14, // advance j
+    _ => -1,
   };
 
 }
