@@ -154,8 +154,8 @@ class _TabViewState extends State<_TabView> {
 
   @override
   Widget build(BuildContext context) {
-    final text1Color = value == 0 ? ThemeEnum.purpleColor : ThemeEnum.textDarkColor;
-    final text2Color = value == 1 ? ThemeEnum.purpleColor : ThemeEnum.textDarkColor;
+    final text1Color = value == 0 ? ThemeEnum.mainDarkColor : ThemeEnum.textDarkColor;
+    final text2Color = value == 1 ? ThemeEnum.mainDarkColor : ThemeEnum.textDarkColor;
     return Row(
       children: [
         Expanded(
