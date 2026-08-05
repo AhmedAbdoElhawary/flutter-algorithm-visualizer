@@ -1,5 +1,4 @@
 import 'package:algorithm_visualizer/config/routes/route_app.dart';
-import 'package:algorithm_visualizer/core/helpers/o_notation.dart';
 import 'package:algorithm_visualizer/core/resources/strings_manager.dart';
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/glass_card.dart';
 import 'package:algorithm_visualizer/features/searching/base/view_model/searching_notifier.dart';
@@ -17,22 +16,8 @@ import 'package:algorithm_visualizer/features/sorting/shell/view_model/shell_sor
 import 'package:flutter/material.dart';
 import 'package:riverpod/riverpod.dart';
 
-abstract class AlgorithmNotifier {
-  AlgorithmComplexity get algoComplexity;
-
-  String get description;
-
-  List<String> get codeSnippet;
-
-  int codeLineForStep(SortingStep step);
-}
-
-extension AlgorithmNotifierExt on AlgorithmNotifier {
-  String get code => codeSnippet.join('\n');
-}
-
 class AlgoSortingCard {
-  final GlassCard card;
+  final AlgorithmGlassCard card;
   final StateNotifierProvider<SortingNotifier, SortingNotifierState> instance;
   final RouteConfig route;
   final String title;
@@ -40,7 +25,7 @@ class AlgoSortingCard {
 }
 
 class AlgoSearchingCard {
-  final GlassCard card;
+  final AlgorithmGlassCard card;
   final StateNotifierProvider<SearchingNotifier, SearchingState> instance;
   final RouteConfig route;
   final String title;
@@ -55,7 +40,7 @@ class BasePageViewModel {
       instance: StateNotifierProvider<SortingNotifier, SortingNotifierState>(
         (ref) => BubbleSortNotifier(),
       ),
-      card: GlassCard(
+      card: AlgorithmGlassCard(
         algoComplexity: BubbleSortNotifier.algorithmComplexity,
         color: Color(0xFF5B9CF6),
         icon: Icons.auto_graph,
@@ -67,7 +52,7 @@ class BasePageViewModel {
       instance: StateNotifierProvider<SortingNotifier, SortingNotifierState>(
         (ref) => SelectionSortNotifier(),
       ),
-      card: GlassCard(
+      card: AlgorithmGlassCard(
         algoComplexity: SelectionSortNotifier.algorithmComplexity,
         color: Color(0xFFFFA726),
         icon: Icons.my_location,
@@ -79,7 +64,7 @@ class BasePageViewModel {
       instance: StateNotifierProvider<SortingNotifier, SortingNotifierState>(
         (ref) => InsertionSortNotifier(),
       ),
-      card: GlassCard(
+      card: AlgorithmGlassCard(
         algoComplexity: InsertionSortNotifier.algorithmComplexity,
         color: Color(0xFF66BB6A),
         icon: Icons.input,
@@ -91,7 +76,7 @@ class BasePageViewModel {
       instance: StateNotifierProvider<SortingNotifier, SortingNotifierState>(
         (ref) => MergeSortNotifier(),
       ),
-      card: GlassCard(
+      card: AlgorithmGlassCard(
         algoComplexity: MergeSortNotifier.algorithmComplexity,
         color: Color(0xFFA78BFA),
         icon: Icons.merge_type,
@@ -103,7 +88,7 @@ class BasePageViewModel {
       instance: StateNotifierProvider<SortingNotifier, SortingNotifierState>(
         (ref) => QuickSortNotifier(),
       ),
-      card: GlassCard(
+      card: AlgorithmGlassCard(
         algoComplexity: QuickSortNotifier.algorithmComplexity,
         color: Color(0xFFFB7185),
         icon: Icons.electric_bolt_rounded,
@@ -115,7 +100,7 @@ class BasePageViewModel {
       instance: StateNotifierProvider<SortingNotifier, SortingNotifierState>(
         (ref) => HeapSortNotifier(),
       ),
-      card: GlassCard(
+      card: AlgorithmGlassCard(
         algoComplexity: HeapSortNotifier.algorithmComplexity,
         color: Color(0xFF8D6E63),
         icon: Icons.account_tree,
@@ -127,7 +112,7 @@ class BasePageViewModel {
       instance: StateNotifierProvider<SortingNotifier, SortingNotifierState>(
         (ref) => ShellSortNotifier(),
       ),
-      card: GlassCard(
+      card: AlgorithmGlassCard(
         algoComplexity: ShellSortNotifier.algorithmComplexity,
         color: Color(0xFF26A69A),
         icon: Icons.blur_linear,
@@ -139,7 +124,7 @@ class BasePageViewModel {
       instance: StateNotifierProvider<SortingNotifier, SortingNotifierState>(
         (ref) => RadixSortNotifier(),
       ),
-      card: GlassCard(
+      card: AlgorithmGlassCard(
         algoComplexity: RadixSortNotifier.algorithmComplexity,
         color: Color(0xFF5C6BC0),
         icon: Icons.pin,
@@ -151,7 +136,7 @@ class BasePageViewModel {
       instance: StateNotifierProvider<SortingNotifier, SortingNotifierState>(
         (ref) => CountingSortNotifier(),
       ),
-      card: GlassCard(
+      card: AlgorithmGlassCard(
         algoComplexity: CountingSortNotifier.algorithmComplexity,
         color: Color(0xFF26C6DA),
         icon: Icons.format_list_numbered,
@@ -163,7 +148,7 @@ class BasePageViewModel {
       instance: StateNotifierProvider<SortingNotifier, SortingNotifierState>(
         (ref) => BucketSortNotifier(),
       ),
-      card: GlassCard(
+      card: AlgorithmGlassCard(
         algoComplexity: BucketSortNotifier.algorithmComplexity,
         color: Color(0xFFFF7043),
         icon: Icons.inventory_2,
@@ -176,7 +161,7 @@ class BasePageViewModel {
       route: Routes.bfsSearching,
       instance: StateNotifierProvider<SearchingNotifier, SearchingState>((ref) => BFSSearchingNotifier()),
       title: StringsManager.bFS,
-      card: GlassCard(
+      card: AlgorithmGlassCard(
         algoComplexity: BFSSearchingNotifier.algorithmComplexity,
         color: Color(0xFF5B9CF6),
         icon: Icons.location_searching_rounded,
@@ -186,7 +171,7 @@ class BasePageViewModel {
       route: Routes.dfsSearching,
       instance: StateNotifierProvider<SearchingNotifier, SearchingState>((ref) => DFSSearchingNotifier()),
       title: StringsManager.dFS,
-      card: GlassCard(
+      card: AlgorithmGlassCard(
         algoComplexity: DFSSearchingNotifier.algorithmComplexity,
         color: Color(0xFFFFA726),
         icon: Icons.search_off_rounded,
@@ -196,7 +181,7 @@ class BasePageViewModel {
       route: Routes.aStarSearching,
       title: StringsManager.aStarSearch,
       instance: StateNotifierProvider<SearchingNotifier, SearchingState>((ref) => AStarSearchingNotifier()),
-      card: GlassCard(
+      card: AlgorithmGlassCard(
         algoComplexity: AStarSearchingNotifier.algorithmComplexity,
         color: Color(0xFF66BB6A),
         icon: Icons.find_replace_rounded,
