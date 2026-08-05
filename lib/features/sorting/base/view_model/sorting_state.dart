@@ -3,7 +3,7 @@ part of 'sorting_notifier.dart';
 class SortingNotifierState {
   final List<SortableItem> list;
   final Map<int, Offset> positions;
-  final Duration swipeDuration;
+  final PlaybackSpeed speed;
   final int size;
   final SortingEnum operationStatus;
 
@@ -18,7 +18,7 @@ class SortingNotifierState {
   SortingNotifierState({
     this.operationStatus = SortingEnum.none,
     this.size = SortingNotifier._defaultSize,
-    this.swipeDuration = SortingNotifier._defaultSpeedDuration,
+    this.speed = PlaybackSpeed.normal,
     required this.list,
     this.positions = const {},
     this.sortedSteps = const [],
@@ -31,7 +31,7 @@ class SortingNotifierState {
 
   bool get isPlaying => operationStatus == SortingEnum.played;
   bool get isAtFirstStep => currentStepIndex == 0;
-  bool get isAtLastStep => currentStepIndex >= totalPlaySteps - 1;
+  bool get isAtLastStep => totalPlaySteps > 0 && currentStepIndex >= totalPlaySteps - 1;
 
   double get progressValue {
     return totalPlaySteps > 0 ? currentStepIndex / totalPlaySteps : 0.0;
@@ -44,7 +44,7 @@ class SortingNotifierState {
 
   SortingNotifierState copyWith({
     int? size,
-    Duration? swipeDuration,
+    PlaybackSpeed? speed,
     List<SortableItem>? list,
     List<SortingStep>? sortedSteps,
     Map<int, Offset>? positions,
@@ -56,7 +56,7 @@ class SortingNotifierState {
     return SortingNotifierState(
       operationStatus: operationStatus ?? this.operationStatus,
       size: size ?? this.size,
-      swipeDuration: swipeDuration ?? this.swipeDuration,
+      speed: speed ?? this.speed,
       list: list ?? this.list,
       positions: positions ?? this.positions,
       currentStepIndex: currentStepIndex ?? this.currentStepIndex,
