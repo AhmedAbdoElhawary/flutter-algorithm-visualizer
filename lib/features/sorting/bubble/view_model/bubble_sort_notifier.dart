@@ -42,7 +42,7 @@ class BubbleSortNotifier extends SortingNotifier {
   AlgorithmComplexity get algoComplexity => algorithmComplexity;
 
   @override
-  String get description => StringsManager.bubbleSortDescription;
+  String get algorithmDescription => StringsManager.bubbleSortDescription;
 
   @override
   List<String> get codeSnippet => const [
