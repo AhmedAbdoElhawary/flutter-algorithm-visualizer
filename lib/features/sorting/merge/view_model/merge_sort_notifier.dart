@@ -61,7 +61,7 @@ class MergeSortNotifier extends SortingNotifier {
   AlgorithmComplexity get algoComplexity => algorithmComplexity;
 
   @override
-  String get description => StringsManager.mergeSortDescription;
+  String get algorithmDescription => StringsManager.mergeSortDescription;
   @override
   List<String> get codeSnippet => const [
     'void main() {', // 0
