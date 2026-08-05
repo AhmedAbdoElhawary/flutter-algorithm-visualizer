@@ -13,7 +13,7 @@ class SortingNotifierState {
   final int totalPlaySteps;
   final List<SortingStep> sortedSteps;
 
-  final int currentCodeLine;
+  final SortingStep? currentStep;
 
   SortingNotifierState({
     this.operationStatus = SortingEnum.none,
@@ -24,7 +24,7 @@ class SortingNotifierState {
     this.sortedSteps = const [],
     this.currentStepIndex = 0,
     this.totalPlaySteps = 0,
-    this.currentCodeLine = -1,
+    this.currentStep,
   });
 
   // ── Computed getters ────────────────────────────────────────────────────────
@@ -42,6 +42,24 @@ class SortingNotifierState {
     return '';
   }
 
+ static String  statusText({required SortingStep? currentStep,required List<SortableItem> list}) {
+    final initialText = 'Initial array - ready to sort';
+    if (currentStep == null || currentStep.index1 == -1 || currentStep.index2 == -1) {
+      return initialText;
+    }
+
+    final value1 = list[currentStep.index1].value;
+    final value2 = list[currentStep.index2].value;
+
+    return currentStep.action == SortingStatus.compared
+        ? 'Compare arr[${currentStep.index1}]=$value1 ↔ arr[${currentStep.index2}]=$value2'
+        : currentStep.action == SortingStatus.swapping
+            ? '$value1 > $value2: swap positions ${currentStep.index1} ↔ ${currentStep.index2}'
+            : currentStep.action == SortingStatus.allSorted
+                ? '✓ Array fully sorted!'
+                : initialText;
+  }
+
   SortingNotifierState copyWith({
     int? size,
     PlaybackSpeed? speed,
@@ -51,7 +69,7 @@ class SortingNotifierState {
     SortingEnum? operationStatus,
     int? currentStepIndex,
     int? totalPlaySteps,
-    int? currentCodeLine,
+    SortingStep? currentStep,
   }) {
     return SortingNotifierState(
       operationStatus: operationStatus ?? this.operationStatus,
@@ -61,7 +79,7 @@ class SortingNotifierState {
       positions: positions ?? this.positions,
       currentStepIndex: currentStepIndex ?? this.currentStepIndex,
       totalPlaySteps: totalPlaySteps ?? this.totalPlaySteps,
-      currentCodeLine: currentCodeLine ?? this.currentCodeLine,
+      currentStep: currentStep ?? this.currentStep,
       sortedSteps: sortedSteps ?? this.sortedSteps,
     );
   }
