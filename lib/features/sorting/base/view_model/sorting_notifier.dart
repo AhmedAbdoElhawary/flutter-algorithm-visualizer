@@ -76,7 +76,7 @@ abstract class SortingNotifier extends StateNotifier<SortingNotifierState>
     return value.h / selectedAlgorithmsLength * (per - 0.15);
   }
 
-  Duration get _speedDuration => state.speed.stepDuration*6;
+  Duration get _speedDuration => state.speed.stepDuration;
   int get _size => state.size;
 
   SortingEnum get _getOperation => state.operationStatus;
