@@ -19,8 +19,6 @@ class RadixSortNotifier extends SortingNotifier {
       _countingSortByDigit(arr, exp, steps);
     }
 
-    steps.add(SortingStep(index1: arr.length - 1, index2: arr.length - 1, action: SortingStatus.sorted));
-
     return SortingResult(sortedValues: arr, steps: steps);
   }
 
@@ -49,7 +47,6 @@ class RadixSortNotifier extends SortingNotifier {
         int oldIndex = arr.indexOf(output[i], i);
         steps.add(SortingStep(index1: i, index2: oldIndex, action: SortingStatus.swapping));
         arr.swap(i, oldIndex);
-        steps.add(SortingStep(index1: i, index2: oldIndex, action: SortingStatus.swapped));
       }
     }
   }
@@ -103,7 +100,7 @@ class RadixSortNotifier extends SortingNotifier {
   int codeLineForStep(SortingStep step) => switch (step.action) {
     SortingStatus.compared                              => 12, // counting digit frequency
     SortingStatus.swapping                              => 20, // placing into output
-    SortingStatus.swapped || SortingStatus.none     => 18, // advance placement loop
-    SortingStatus.sorted                                => 24, // copy output → arr
+   SortingStatus.none     => 18, // advance placement loop
+    _ => -1,
   };
 }
