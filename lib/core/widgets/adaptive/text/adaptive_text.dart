@@ -18,6 +18,7 @@ class _AdaptiveText extends StatelessWidget {
     this.fontStyle = FontStyle.normal,
     this.color,
     this.shadows,
+    this.fontFamily,
     this.fontWeight = FontWeightManager.regular,
     this.maxLines = 2,
     this.letterSpacing = 0,
@@ -27,6 +28,7 @@ class _AdaptiveText extends StatelessWidget {
   });
 
   final String text;
+  final String? fontFamily;
   final bool translate;
   final double fontSize;
   final double letterSpacing;
@@ -65,6 +67,7 @@ class _AdaptiveText extends StatelessWidget {
         decorationThickness: decoration == TextDecoration.none ? null : 3.h,
         shadows: shadows,
         letterSpacing: letterSpacing,
+        fontFamily:fontFamily,
       ),
     );
   }
