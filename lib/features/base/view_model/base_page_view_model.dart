@@ -17,7 +17,6 @@ import 'package:algorithm_visualizer/features/sorting/shell/view_model/shell_sor
 import 'package:flutter/material.dart';
 import 'package:riverpod/riverpod.dart';
 
-
 abstract class AlgorithmNotifier {
   AlgorithmComplexity get algoComplexity;
 
@@ -26,6 +25,10 @@ abstract class AlgorithmNotifier {
   List<String> get codeSnippet;
 
   int codeLineForStep(SortingStep step);
+}
+
+extension AlgorithmNotifierExt on AlgorithmNotifier {
+  String get code => codeSnippet.join('\n');
 }
 
 class AlgoSortingCard {

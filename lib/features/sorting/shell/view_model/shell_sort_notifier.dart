@@ -15,7 +15,7 @@ class ShellSortNotifier extends SortingNotifier {
         int j = i;
         while (j >= gap) {
           steps.add(SortingStep(index1: j, index2: j - gap, action: SortingStatus.compared));
-          steps.add(SortingStep(index1: j, index2: j - gap, action: SortingStatus.unSorted));
+          steps.add(SortingStep(index1: j, index2: j - gap, action: SortingStatus.none));
 
           if (arr[j] < arr[j - gap]) {
             steps.add(SortingStep(index1: j, index2: j - gap, action: SortingStatus.swapping));
@@ -50,25 +50,32 @@ class ShellSortNotifier extends SortingNotifier {
   String get description => StringsManager.shellSortDescription;
   @override
   List<String> get codeSnippet => const [
-    'gap = n / 2',                      // 0
-    'while gap > 0',                    // 1
-    '  for i from gap to n-1',         // 2
-    '    temp = arr[i]',                // 3
-    '    j = i',                        // 4
-    '    while j >= gap',               // 5
-    '      and arr[j-gap] > temp',      // 6
-    '      arr[j] = arr[j-gap]',        // 7
-    '      j -= gap',                   // 8
-    '    arr[j] = temp',                // 9
-    '  gap = gap / 2',                  // 10
+    'void main() {', // 0
+    '  List<int> arr = [64, 34, 25, 12, 22, 11, 90];', // 1
+    '  int n = arr.length;', // 2
+    '  for (int gap = n ~/ 2; gap > 0; gap ~/= 2) {', // 3
+    '    for (int i = gap; i < n; i++) {', // 4
+    '      int j = i;', // 5
+    '      while (j >= gap) {', // 6
+    '        if (arr[j] < arr[j - gap]) {', // 7
+    '          int temp = arr[j];', // 8
+    '          arr[j] = arr[j - gap];', // 9
+    '          arr[j - gap] = temp;', // 10
+    '          j -= gap;', // 11
+    '        } else {', // 12
+    '          break;', // 13
+    '        }', // 14
+    '      }', // 15
+    '    }', // 16
+    '  }', // 17
+    '}', // 18
   ];
 
   @override
   int codeLineForStep(SortingStep step) => switch (step.action) {
-    SortingStatus.compared                              => 6,  // arr[j-gap] > temp
-    SortingStatus.swapping                              => 7,  // shift element right
-    SortingStatus.swapped || SortingStatus.unSorted     => 8,  // j -= gap
-    SortingStatus.sorted                                => 9,  // arr[j] = temp (placed)
-    _                                                   => -1,
+    SortingStatus.compared                              => 7,  // arr[j] < arr[j - gap]
+    SortingStatus.swapping                              => 9,  // arr[j] = arr[j - gap]
+    SortingStatus.swapped || SortingStatus.none     => 11,  // j -= gap
+    SortingStatus.sorted                                => 13,  // break (placed)
   };
 }

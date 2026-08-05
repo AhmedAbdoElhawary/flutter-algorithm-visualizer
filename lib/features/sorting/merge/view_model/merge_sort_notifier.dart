@@ -15,7 +15,7 @@ class MergeSortNotifier extends SortingNotifier {
 
       while (i <= mid && j <= right) {
         steps.add(SortingStep(index1: i, index2: j, action: SortingStatus.compared));
-        steps.add(SortingStep(index1: i, index2: j, action: SortingStatus.unSorted));
+        steps.add(SortingStep(index1: i, index2: j, action: SortingStatus.none));
 
         if (arr[i] <= arr[j]) {
           i++;
@@ -65,25 +65,45 @@ class MergeSortNotifier extends SortingNotifier {
   String get description => StringsManager.mergeSortDescription;
   @override
   List<String> get codeSnippet => const [
-    'mergeSort(arr, left, right)',      // 0
-    '  if left >= right: return',       // 1
-    '  mid = (left + right) / 2',      // 2
-    '  mergeSort(arr, left, mid)',      // 3
-    '  mergeSort(arr, mid+1, right)',   // 4
-    '  merge(left, mid, right)',        // 5
-    '    while i < left, j < right',   // 6
-    '    if arr[i] <= arr[j]',         // 7
-    '      result ← arr[i++]',         // 8
-    '    else result ← arr[j++]',      // 9
-    '  copy result back to arr',        // 10
+    'void main() {', // 0
+    '  List<int> arr = [64, 34, 25, 12, 22, 11, 90];', // 1
+    '  mergeSort(arr, 0, arr.length - 1);', // 2
+    '}', // 3
+    'void mergeSort(List<int> arr, int left, int right) {', // 4
+    '  if (left < right) {', // 5
+    '    int mid = (left + right) >> 1;', // 6
+    '    mergeSort(arr, left, mid);', // 7
+    '    mergeSort(arr, mid + 1, right);', // 8
+    '    mergeInPlace(arr, left, mid, right);', // 9
+    '  }', // 10
+    '}', // 11
+    'void mergeInPlace(List<int> arr, int left, int mid, int right) {', // 12
+    '  int i = left;', // 13
+    '  int j = mid + 1;', // 14
+    '  while (i <= mid && j <= right) {', // 15
+    '    if (arr[i] <= arr[j]) {', // 16
+    '      i++;', // 17
+    '    } else {', // 18
+    '      int k = j;', // 19
+    '      while (k > i) {', // 20
+    '        int temp = arr[k];', // 21
+    '        arr[k] = arr[k - 1];', // 22
+    '        arr[k - 1] = temp;', // 23
+    '        k--;', // 24
+    '      }', // 25
+    '      i++;', // 26
+    '      mid++;', // 27
+    '      j++;', // 28
+    '    }', // 29
+    '  }', // 30
+    '}', // 31
   ];
 
   @override
   int codeLineForStep(SortingStep step) => switch (step.action) {
-    SortingStatus.compared                              => 7,  // comparing merge candidates
-    SortingStatus.swapping                              => 8,  // writing into result buffer
-    SortingStatus.swapped || SortingStatus.unSorted     => 6,  // advancing merge pointers
-    SortingStatus.sorted                                => 10, // writing result back to arr
-    _                                                   => -1,
+    SortingStatus.compared                              => 16, // arr[i] <= arr[j]
+    SortingStatus.swapping                              => 22, // arr[k] = arr[k - 1]
+    SortingStatus.swapped || SortingStatus.none     => 15, // advancing merge pointers
+    SortingStatus.sorted                                => 22, // writing result back to arr
   };
 }
