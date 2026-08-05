@@ -19,7 +19,7 @@ class GradientLinearProgressIndicator extends StatelessWidget {
           children: [
             Container(
               decoration: BoxDecoration(
-                color: context.getColor(ThemeEnum.glassColor),
+                color: context.getColor(ThemeEnum.columnColor),
                 borderRadius: BorderRadius.circular(12),
               ),
             ),
