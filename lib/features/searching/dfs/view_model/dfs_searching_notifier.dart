@@ -16,7 +16,7 @@ class DFSSearchingNotifier extends SearchingNotifier {
     steps.add(PFStep(
       visited: {},
       frontier: {start},
-      description: 'DFS: stack initialized with start ($kPFStartRow, $kPFStartCol)',
+      statusText: 'DFS: stack initialized with start ($kPFStartRow, $kPFStartCol)',
     ));
 
     while (stack.isNotEmpty) {
@@ -32,7 +32,7 @@ class DFSSearchingNotifier extends SearchingNotifier {
           visited: Set.from(visited),
           frontier: Set.from(stack),
           path: path,
-          description: '✓ DFS found a path! Length: ${path.length - 1} steps (may not be shortest)',
+          statusText: '✓ DFS found a path! Length: ${path.length - 1} steps (may not be shortest)',
         ));
         return steps;
       }
@@ -51,14 +51,14 @@ class DFSSearchingNotifier extends SearchingNotifier {
       steps.add(PFStep(
         visited: Set.from(visited),
         frontier: Set.from(stack),
-        description: 'DFS: popped ($row, $col) — stack depth: ${stack.length}',
+        statusText: 'DFS: popped ($row, $col) — stack depth: ${stack.length}',
       ));
     }
 
     steps.add(PFStep(
       visited: Set.from(visited),
       frontier: {},
-      description: '✗ No path — all reachable cells exhausted',
+      statusText: '✗ No path — all reachable cells exhausted',
     ));
     return steps;
   }
@@ -76,7 +76,7 @@ class DFSSearchingNotifier extends SearchingNotifier {
   AlgorithmComplexity get algoComplexity => algorithmComplexity;
 
   @override
-  String get description => StringsManager.depthFirstSearchDescription;
+  String get algorithmDescription => StringsManager.depthFirstSearchDescription;
 
   @override
   List<String> get codeSnippet => const [
@@ -92,7 +92,7 @@ class DFSSearchingNotifier extends SearchingNotifier {
   @override
   int codeLineForStep(SortingStep step) {
     final pfStep = step as PFStep;
-    final desc = pfStep.description;
+    final desc = pfStep.statusText;
 
     if (desc.startsWith('DFS: stack initialized')) return 0;
     if (desc.startsWith('✓')) return 3;
