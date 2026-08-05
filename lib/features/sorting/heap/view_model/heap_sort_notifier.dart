@@ -73,7 +73,7 @@ class HeapSortNotifier extends SortingNotifier {
   AlgorithmComplexity get algoComplexity => algorithmComplexity;
 
   @override
-  String get description => StringsManager.heapSortDescription;
+  String get algorithmDescription => StringsManager.heapSortDescription;
   @override
   List<String> get codeSnippet => const [
     'void main() {', // 0
