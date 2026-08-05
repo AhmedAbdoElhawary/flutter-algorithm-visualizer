@@ -60,7 +60,7 @@ class QuickSortNotifier extends SortingNotifier {
   AlgorithmComplexity get algoComplexity => algorithmComplexity;
 
   @override
-  String get description => StringsManager.quickSortDescription;
+  String get algorithmDescription => StringsManager.quickSortDescription;
   @override
   List<String> get codeSnippet => const [
     'void main() {', // 0
