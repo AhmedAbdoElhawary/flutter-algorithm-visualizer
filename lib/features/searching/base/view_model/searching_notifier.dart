@@ -82,10 +82,9 @@ abstract class SearchingNotifier extends StateNotifier<SearchingState>
     state = state.copyWith(stepIndex: 0, playing: false, clearSteps: true);
   }
 
-  // ── Start / End Point Methods ──────────────────────────────────────────
+  // ── Start / End Point Methods (Now allow dragging & auto-reset steps) ──
 
   void setStartPoint(int row, int col) {
-    if (state.hasSteps) return;
     if (row == state.endRow && col == state.endCol) return;
     if (state.walls[row][col]) return; // Cannot place on a wall
     _resetSteps();
@@ -93,7 +92,6 @@ abstract class SearchingNotifier extends StateNotifier<SearchingState>
   }
 
   void setEndPoint(int row, int col) {
-    if (state.hasSteps) return;
     if (row == state.startRow && col == state.startCol) return;
     if (state.walls[row][col]) return; // Cannot place on a wall
     _resetSteps();
