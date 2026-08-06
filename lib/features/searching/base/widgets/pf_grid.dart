@@ -1,6 +1,8 @@
 import 'package:algorithm_visualizer/core/resources/color_manager.dart';
 import 'package:algorithm_visualizer/features/searching/base/helper/pf_constants.dart';
+import 'package:algorithm_visualizer/features/searching/base/widgets/end_point.dart';
 import 'package:algorithm_visualizer/features/searching/base/widgets/pf_grid_painter.dart';
+import 'package:algorithm_visualizer/features/searching/base/widgets/start_point.dart';
 import 'package:algorithm_visualizer/lib-temp/theme/app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -160,22 +162,41 @@ class _PFGridState extends ConsumerState<PFGrid> with SingleTickerProviderStateM
             ),
             child: ClipRRect(
               borderRadius: BorderRadius.circular(14),
-              child: CustomPaint(
-                size: Size(constraints.maxWidth, gridHeight),
-                painter: PFGridPainter(
-                  walls: state.walls,
-                  step: state.currentStep,
-                  isDark: context.isDark,
-                  startRow: state.startRow,
-                  startCol: state.startCol,
-                  endRow: state.endRow,
-                  endCol: state.endCol,
-                  wallAnimations: _wallAnimations,
-                  frontierAnimations: _frontierAnimations,
-                  visitedAnimations: _visitedAnimations,
-                  pathAnimations: _pathAnimations,
-                  repaint: _controller,
-                ),
+              child: Stack(
+                children: [
+                  CustomPaint(
+                    size: Size(constraints.maxWidth, gridHeight),
+                    painter: PFGridPainter(
+                      walls: state.walls,
+                      step: state.currentStep,
+                      isDark: context.isDark,
+                      wallAnims: _wallAnimations,
+                      frontierAnims: _frontierAnimations,
+                      visitedAnims: _visitedAnimations,
+                      pathAnims: _pathAnimations,
+                      repaint: _controller,
+                    ),
+                  ),
+                  PositionedDirectional(
+                    start: state.startCol * cellSize,
+                    // - 2.5: to center the start point
+                    top: state.startRow * cellSize - 2.5,
+                    width: cellSize,
+                    height: cellSize,
+                    child: PFStartPointWidget(size: cellSize),
+                  ),
+                  PositionedDirectional(
+                    // - 1.5: to center the start point
+
+                    start: state.endCol * cellSize - 1.5,
+                    // - 1: to center the start point
+
+                    top: state.endRow * cellSize - 1,
+                    width: cellSize,
+                    height: cellSize,
+                    child: PFEndPointWidget(size: cellSize),
+                  ),
+                ],
               ),
             ),
           ),
