@@ -22,20 +22,85 @@ class DartTokenizer extends Tokenizer {
   const DartTokenizer();
 
   static const Set<String> _keywords = <String>{
-    'abstract', 'as', 'assert', 'async', 'await', 'break', 'case', 'catch',
-    'class', 'const', 'continue', 'covariant', 'default', 'deferred', 'do',
-    'dynamic', 'else', 'enum', 'export', 'extends', 'extension', 'external',
-    'factory', 'false', 'final', 'finally', 'for', 'Function', 'get', 'hide',
-    'if', 'implements', 'import', 'in', 'interface', 'is', 'late', 'library',
-    'mixin', 'new', 'null', 'on', 'operator', 'part', 'required', 'rethrow',
-    'return', 'set', 'show', 'static', 'super', 'switch', 'sync', 'this',
-    'throw', 'true', 'try', 'typedef', 'var', 'void', 'while', 'with',
+    'abstract',
+    'as',
+    'assert',
+    'async',
+    'await',
+    'break',
+    'case',
+    'catch',
+    'class',
+    'const',
+    'continue',
+    'covariant',
+    'default',
+    'deferred',
+    'do',
+    'dynamic',
+    'else',
+    'enum',
+    'export',
+    'extends',
+    'extension',
+    'external',
+    'factory',
+    'false',
+    'final',
+    'finally',
+    'for',
+    'Function',
+    'get',
+    'hide',
+    'if',
+    'implements',
+    'import',
+    'in',
+    'interface',
+    'is',
+    'late',
+    'library',
+    'mixin',
+    'new',
+    'null',
+    'on',
+    'operator',
+    'part',
+    'required',
+    'rethrow',
+    'return',
+    'set',
+    'show',
+    'static',
+    'super',
+    'switch',
+    'sync',
+    'this',
+    'throw',
+    'true',
+    'try',
+    'typedef',
+    'var',
+    'void',
+    'while',
+    'with',
     'yield',
   };
 
   static const Set<String> _builtinTypes = <String>{
-    'int', 'double', 'num', 'String', 'bool', 'List', 'Map', 'Set', 'Object',
-    'Never', 'Iterable', 'Future', 'Stream',
+    'int',
+    'double',
+    'num',
+    'String',
+    'bool',
+    'List',
+    'Map',
+    'Set',
+    'Object',
+    'Never',
+    'Iterable',
+    'Future',
+    'Stream',
   };
 
   static final RegExp _identifierStart = RegExp(r'[A-Za-z_$]');
@@ -49,8 +114,7 @@ class DartTokenizer extends Tokenizer {
 
   @override
   TokenizeResult tokenizeLine(String line, LineState state) {
-    final bool startsInBlockComment =
-        state is _DartLineState && state.inBlockComment;
+    final bool startsInBlockComment = state is _DartLineState && state.inBlockComment;
     final List<Token> tokens = <Token>[];
     int i = 0;
     bool inBlockComment = startsInBlockComment;
@@ -158,8 +222,7 @@ class DartTokenizer extends Tokenizer {
       if (_digit.hasMatch(ch)) {
         final int start = i;
         while (i < line.length &&
-            (_digit.hasMatch(line[i]) || line[i] == '.' || line[i] == 'x' ||
-                RegExp(r'[A-Fa-f]').hasMatch(line[i]))) {
+            (_digit.hasMatch(line[i]) || line[i] == '.' || line[i] == 'x' || RegExp(r'[A-Fa-f]').hasMatch(line[i]))) {
           i++;
         }
         tokens.add(Token(
