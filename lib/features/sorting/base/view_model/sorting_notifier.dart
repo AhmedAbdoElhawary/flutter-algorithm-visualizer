@@ -43,6 +43,7 @@ abstract class SortingNotifier extends StateNotifier<SortingNotifierState>
   bool get forwardValidation => state.isAtLastStep;
 
   static List<SortableItem> _generateList(int size) {
+
     return List.generate(size, (index) => SortableItem(id: index, value: index + 1))..shuffle();
   }
 
@@ -82,11 +83,6 @@ abstract class SortingNotifier extends StateNotifier<SortingNotifierState>
   SortingEnum get _getOperation => state.operationStatus;
   set _setOperation(SortingEnum value) => state = state.copyWith(operationStatus: value);
 
-  // @override
-  // void dispose() {
-  //   _stopSorting();
-  //   super.dispose();
-  // }
   void _initializePositions() {
     final positions = <int, Offset>{};
     final itemWidth = calculateItemWidth(ScreenSize.context!, _size);
