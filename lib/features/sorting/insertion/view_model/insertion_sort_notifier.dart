@@ -40,25 +40,25 @@ class InsertionSortNotifier extends SortingNotifier {
   String get algorithmDescription => StringsManager.insertionSortDescription;
   @override
   List<String> get codeSnippet => const [
-    'void main() {', // 0
-    '  List<int> arr = [64, 34, 25, 12, 22, 11, 90];', // 1
-    '  for (int i = 1; i < arr.length; i++) {', // 2
-    '    int j = i;', // 3
-    '    while (j > 0 && arr[j] < arr[j - 1]) {', // 4
-    '      int temp = arr[j];', // 5
-    '      arr[j] = arr[j - 1];', // 6
-    '      arr[j - 1] = temp;', // 7
-    '      j--;', // 8
-    '    }', // 9
-    '  }', // 10
-    '}', // 11
-  ];
+        'void main() {', // 0
+        '  List<int> arr = [64, 34, 25, 12, 22, 11, 90];', // 1
+        '  for (int i = 1; i < arr.length; i++) {', // 2
+        '    int j = i;', // 3
+        '    while (j > 0 && arr[j] < arr[j - 1]) {', // 4
+        '      int temp = arr[j];', // 5
+        '      arr[j] = arr[j - 1];', // 6
+        '      arr[j - 1] = temp;', // 7
+        '      j--;', // 8
+        '    }', // 9
+        '  }', // 10
+        '}', // 11
+      ];
 
   @override
   int codeLineForStep(SortingStep step) => switch (step.action) {
-    SortingStatus.compared                              => 4, // arr[j] < arr[j - 1]
-    SortingStatus.swapping                              => 6, // arr[j] = arr[j - 1]
-    SortingStatus.none     => 8, // j--
-    _ => -1,
-  };
+        SortingStatus.compared => 4, // arr[j] < arr[j - 1]
+        SortingStatus.swapping => 6, // arr[j] = arr[j - 1]
+        SortingStatus.none => 8, // j--
+        _ => -1,
+      };
 }
