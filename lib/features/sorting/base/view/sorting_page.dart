@@ -144,8 +144,7 @@ class _LiveCodeSnippet extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final currentStep = ref.watch(instance.select((s) => s.currentStep));
     final code = ref.read(instance.notifier);
-    return LiveCodeSnippet(
-        currentLine: currentStep == null ? -1 : code.codeLineForStep(currentStep), code: code.code);
+    return LiveCodeSnippet(currentLine: currentStep == null ? -1 : code.codeLineForStep(currentStep), code: code.code);
   }
 }
 
@@ -221,9 +220,7 @@ class ShowUpSortingList extends ConsumerWidget {
                       key: ValueKey(item.id),
                       start: position?.dx,
                       bottom: position?.dy,
-                      width: itemWidth +
-                          SortingNotifier.horizontalInsidePadding -
-                          SortingNotifier.handleCentralBars,
+                      width: itemWidth + SortingNotifier.horizontalInsidePadding - SortingNotifier.handleCentralBars,
                       duration: speed.stepDuration,
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.end,
@@ -340,8 +337,7 @@ class _BuildItem extends ConsumerWidget {
   final bool isLastItem;
   @override
   Widget build(BuildContext context, ref) {
-    final currentItem =
-        ref.watch(instance.select((state) => index < state.list.length ? state.list[index] : null));
+    final currentItem = ref.watch(instance.select((state) => index < state.list.length ? state.list[index] : null));
     final height = SortingNotifier.calculateItemHeight(context, item.value, size, selectedAlgorithmLength);
     final color = context.getColor(currentItem?.getColor ?? SortingNotifier.itemColor);
 

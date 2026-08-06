@@ -225,9 +225,8 @@ abstract class SortingNotifier extends StateNotifier<SortingNotifierState>
         totalPlaySteps: steps.length,
         currentStepIndex: currentStepIndex,
         sortedSteps: steps,
-        currentStep: sortedSteps == null || currentStepIndex <= 0
-            ? SortingStep.noneStep()
-            : sortedSteps[currentStepIndex],
+        currentStep:
+            sortedSteps == null || currentStepIndex <= 0 ? SortingStep.noneStep() : sortedSteps[currentStepIndex],
       );
     }
     bool didSpecificStep = false;

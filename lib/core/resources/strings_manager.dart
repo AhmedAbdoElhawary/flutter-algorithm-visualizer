@@ -82,5 +82,4 @@ class StringsManager {
   static const String stable = "Stable:";
   static const String yes = "Yes";
   static const String no = "No";
-
 }
