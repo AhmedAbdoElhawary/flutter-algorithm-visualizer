@@ -9,28 +9,19 @@ class PFGridPainter extends CustomPainter {
   final PFStep? step;
   final bool isDark;
 
-  final int startRow;
-  final int startCol;
-  final int endRow;
-  final int endCol;
-
-  final Map<int, double> wallAnimations;
-  final Map<int, double> frontierAnimations;
-  final Map<int, double> visitedAnimations;
-  final Map<int, double> pathAnimations;
+  final Map<int, double> wallAnims;
+  final Map<int, double> frontierAnims;
+  final Map<int, double> visitedAnims;
+  final Map<int, double> pathAnims;
 
   PFGridPainter({
     required this.walls,
     required this.step,
     required this.isDark,
-    required this.startRow,
-    required this.startCol,
-    required this.endRow,
-    required this.endCol,
-    required this.wallAnimations,
-    required this.frontierAnimations,
-    required this.visitedAnimations,
-    required this.pathAnimations,
+    required this.wallAnims,
+    required this.frontierAnims,
+    required this.visitedAnims,
+    required this.pathAnims,
     required Listenable repaint,
   }) : super(repaint: repaint);
 
@@ -52,8 +43,6 @@ class PFGridPainter extends CustomPainter {
         final rect = Rect.fromLTWH(left, top, cellW, cellH);
 
         final encoded = pfEncode(row, col);
-        final isStart = row == startRow && col == startCol;
-        final isEnd = row == endRow && col == endCol;
         final isWall = walls[row][col];
         final isPath = step?.path?.contains(encoded) == true;
         final isFrontier = step?.frontier.contains(encoded) == true;
@@ -61,30 +50,20 @@ class PFGridPainter extends CustomPainter {
 
         canvas.drawRect(rect, gridPaint);
 
-        if (isStart) {
-          _paintStartPoint(canvas, rect);
-          continue;
-        }
-
-        if (isEnd) {
-          _paintTargetPoint(canvas, rect);
-          continue;
-        }
-
         if (isPath) {
-          final startT = pathAnimations[encoded];
+          final startT = pathAnims[encoded];
           final t = startT != null ? ((now - startT) / 500.0) : 1.0;
           _drawElasticCell(canvas, rect, t, kPathGridColor);
         } else if (isVisited) {
-          final startT = visitedAnimations[encoded];
+          final startT = visitedAnims[encoded];
           final t = startT != null ? ((now - startT) / 1500.0) : 1.0;
           _drawSearcherCell(canvas, rect, t, isFinalVisited: true);
         } else if (isFrontier) {
-          final startT = frontierAnimations[encoded];
+          final startT = frontierAnims[encoded];
           final t = startT != null ? ((now - startT) / 1500.0) : 1.0;
           _drawSearcherCell(canvas, rect, t, isFinalVisited: false);
         } else if (isWall) {
-          final startT = wallAnimations[encoded];
+          final startT = wallAnims[encoded];
           final t = startT != null ? ((now - startT) / 500.0) : 1.0;
           _drawElasticCell(canvas, rect, t, kWallGridColor);
         }
@@ -119,10 +98,7 @@ class PFGridPainter extends CustomPainter {
     } else if (t <= 0.8) {
       double localT = (t - 0.5) / 0.3;
       color = Color.lerp(
-          kSearcherMediumColor,
-          isFinalVisited ? kSearcherFinishedColor : kSearcherMediumColor,
-          localT
-      )!;
+          kSearcherMediumColor, isFinalVisited ? kSearcherFinishedColor : kSearcherMediumColor, localT)!;
     } else {
       color = isFinalVisited ? kSearcherFinishedColor : kSearcherMediumColor;
     }
@@ -148,38 +124,6 @@ class PFGridPainter extends CustomPainter {
     final scaledRect = Rect.fromCenter(center: center, width: width, height: height);
 
     canvas.drawRect(scaledRect.deflate(0.5), Paint()..color = color);
-  }
-
-  void _paintStartPoint(Canvas canvas, Rect rect) {
-    final iconStr = String.fromCharCode(Icons.arrow_forward_ios_rounded.codePoint);
-    final textPainter = TextPainter(
-      text: TextSpan(
-        text: iconStr,
-        style: TextStyle(
-          fontSize: rect.width * 1,
-          fontFamily: Icons.arrow_forward_ios_rounded.fontFamily,
-          package: Icons.arrow_forward_ios_rounded.fontPackage,
-          color: kStartPointIconColor,
-        ),
-      ),
-      textDirection: TextDirection.ltr,
-    )..layout();
-
-    textPainter.paint(
-      canvas,
-      Offset(rect.center.dx - textPainter.width / 2, rect.center.dy - textPainter.height / 2),
-    );
-  }
-
-  void _paintTargetPoint(Canvas canvas, Rect rect) {
-    final center = rect.center;
-    final maxRadius = rect.width / 2.3;
-    final midRadius = maxRadius * (20.0 / 30.0);
-    final minRadius = maxRadius * (12.0 / 30.0);
-
-    canvas.drawCircle(center, maxRadius, Paint()..color = kTargetOuterColor);
-    canvas.drawCircle(center, midRadius, Paint()..color = kTargetMidColor);
-    canvas.drawCircle(center, minRadius, Paint()..color = kTargetInnerColor);
   }
 
   @override
