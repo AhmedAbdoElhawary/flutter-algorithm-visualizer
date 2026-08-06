@@ -7,7 +7,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../view_model/searching_notifier.dart';
 
 class PFGrid extends ConsumerWidget {
-  const PFGrid({required this.instance,super.key});
+  const PFGrid({required this.instance, super.key});
   final StateNotifierProvider<SearchingNotifier, SearchingState> instance;
 
   void _handleCellEvent(
@@ -18,11 +18,7 @@ class PFGrid extends ConsumerWidget {
   }) {
     final col = (localPosition.dx / cellSize).floor().clamp(0, kPFCells - 1);
     final row = (localPosition.dy / cellSize).floor().clamp(0, kPFCells - 1);
-    ref.read(instance.notifier).setWall(
-          row,
-          col,
-          isGestureStart: isGestureStart,
-        );
+    ref.read(instance.notifier).setWall(row, col, isGestureStart: isGestureStart);
   }
 
   @override
@@ -36,12 +32,9 @@ class PFGrid extends ConsumerWidget {
         final gridHeight = cellSize * kPFCells;
 
         return GestureDetector(
-          onTapDown: (d) =>
-              _handleCellEvent(ref, d.localPosition, cellSize, isGestureStart: true),
-          onPanStart: (d) =>
-              _handleCellEvent(ref, d.localPosition, cellSize, isGestureStart: true),
-          onPanUpdate: (d) =>
-              _handleCellEvent(ref, d.localPosition, cellSize, isGestureStart: false),
+          onTapDown: (d) => _handleCellEvent(ref, d.localPosition, cellSize, isGestureStart: true),
+          onPanStart: (d) => _handleCellEvent(ref, d.localPosition, cellSize, isGestureStart: true),
+          onPanUpdate: (d) => _handleCellEvent(ref, d.localPosition, cellSize, isGestureStart: false),
           child: Container(
             width: constraints.maxWidth,
             height: gridHeight,
