@@ -7,8 +7,8 @@ class _SortingControlButtons extends ConsumerWidget {
   @override
   Widget build(BuildContext context, ref) {
     final instance = ref.read(notifier.notifier);
-    final backwardValidation = ref.watch(notifier.select((s) => s.isAtFirstStep));
-    final forwardValidation = ref.watch(notifier.select((s) => s.isAtLastStep));
+    final backwardValidation = ref.watch(notifier.select((s) => !s.isAtFirstStep));
+    final forwardValidation = ref.watch(notifier.select((s) => !s.isAtLastStep));
     final isPlaying = ref.watch(notifier.select((s) => s.isPlaying));
     final getSpeed = ref.watch(notifier.select((s) => s.speed));
 
