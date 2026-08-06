@@ -77,15 +77,15 @@ class BFSSearchingNotifier extends SearchingNotifier {
 
   @override
   List<String> get codeSnippet => const [
-    'enqueue(start)', // 0
-    'while queue is not empty', // 1
-    '  current = dequeue()', // 2
-    '  if current == goal return path', // 3
-    '  for each neighbor', // 4
-    '    if not visited', // 5
-    '      mark visited', // 6
-    '      enqueue(neighbor)', // 7
-  ];
+        'enqueue(start)', // 0
+        'while queue is not empty', // 1
+        '  current = dequeue()', // 2
+        '  if current == goal return path', // 3
+        '  for each neighbor', // 4
+        '    if not visited', // 5
+        '      mark visited', // 6
+        '      enqueue(neighbor)', // 7
+      ];
 
   @override
   int codeLineForStep(SortingStep step) {
