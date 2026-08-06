@@ -32,8 +32,7 @@ class CodeController extends TextEditingController {
     this.formatter,
     this.runner,
     CodeEditorTheme? theme,
-  })  : _highlighter =
-            tokenizer != null ? SyntaxHighlighter(tokenizer) : null,
+  })  : _highlighter = tokenizer != null ? SyntaxHighlighter(tokenizer) : null,
         theme = theme ?? CodeEditorTheme.dark(),
         super(text: text);
 
@@ -140,8 +139,8 @@ class CodeController extends TextEditingController {
       );
     }
     final CodeDocument doc = document;
-    final List<List<Token>> tokens = highlighter?.highlight(doc.lines) ??
-        List<List<Token>>.generate(doc.lineCount, (_) => const <Token>[]);
+    final List<List<Token>> tokens =
+        highlighter?.highlight(doc.lines) ?? List<List<Token>>.generate(doc.lineCount, (_) => const <Token>[]);
     return CodeSpanBuilder.build(
       lines: doc.lines,
       lineTokens: tokens,
@@ -166,8 +165,7 @@ class CodeController extends TextEditingController {
       return newValue;
     }
 
-    final _Edit? edit =
-        _diff(oldValue.text, newValue.text, newValue.selection);
+    final _Edit? edit = _diff(oldValue.text, newValue.text, newValue.selection);
     if (edit == null) return newValue;
 
     // Pure insertion.
@@ -176,18 +174,14 @@ class CodeController extends TextEditingController {
         return _handleNewline(oldValue, edit);
       }
       if (edit.inserted.length == 1 && config.autoCloseBrackets) {
-        final TextEditingValue? handled =
-            _handleAutoCloseOrTypeOver(oldValue, edit);
+        final TextEditingValue? handled = _handleAutoCloseOrTypeOver(oldValue, edit);
         if (handled != null) return handled;
       }
     }
 
     // Pure single-character deletion (backspace).
-    if (edit.deletedLength == 1 &&
-        edit.inserted.isEmpty &&
-        config.autoCloseBrackets) {
-      final TextEditingValue? handled =
-          _handleBracketPairDeletion(oldValue, edit);
+    if (edit.deletedLength == 1 && edit.inserted.isEmpty && config.autoCloseBrackets) {
+      final TextEditingValue? handled = _handleBracketPairDeletion(oldValue, edit);
       if (handled != null) return handled;
     }
 
@@ -201,8 +195,7 @@ class CodeController extends TextEditingController {
     final CodeDocument doc = CodeDocument(oldText);
     final ({int line, int column}) pos = doc.lineColumnAt(insertAt);
     final String currentLine = doc.lineAt(pos.line);
-    final NewlineInsertion insertion =
-        Indentation.computeNewlineInsertion(currentLine, pos.column, config);
+    final NewlineInsertion insertion = Indentation.computeNewlineInsertion(currentLine, pos.column, config);
 
     String before = oldText.substring(0, insertAt);
     if (config.smartSpaces && config.trimTrailingWhitespaceOnNewLine) {
@@ -242,13 +235,11 @@ class CodeController extends TextEditingController {
       }
       // Avoid auto-pairing a quote in the middle of an existing word,
       // e.g. typing the apostrophe in "don't".
-      final bool precededByWordChar = prefix > 0 &&
-          RegExp(r'[A-Za-z0-9_]').hasMatch(oldText[prefix - 1]);
+      final bool precededByWordChar = prefix > 0 && RegExp(r'[A-Za-z0-9_]').hasMatch(oldText[prefix - 1]);
       if (precededByWordChar) return null;
 
       final String closing = BracketUtils.closingFor(c)!;
-      final String text =
-          oldText.substring(0, prefix) + c + closing + oldText.substring(prefix);
+      final String text = oldText.substring(0, prefix) + c + closing + oldText.substring(prefix);
       return TextEditingValue(
         text: text,
         selection: TextSelection.collapsed(offset: prefix + 1),
@@ -257,8 +248,7 @@ class CodeController extends TextEditingController {
 
     if (BracketUtils.isOpener(c)) {
       final String closing = BracketUtils.closingFor(c)!;
-      final String text =
-          oldText.substring(0, prefix) + c + closing + oldText.substring(prefix);
+      final String text = oldText.substring(0, prefix) + c + closing + oldText.substring(prefix);
       return TextEditingValue(
         text: text,
         selection: TextSelection.collapsed(offset: prefix + 1),
@@ -293,8 +283,7 @@ class CodeController extends TextEditingController {
     if (prefix + 1 >= oldText.length) return null;
     if (oldText[prefix + 1] != matchingClose) return null;
 
-    final String text =
-        oldText.substring(0, prefix) + oldText.substring(prefix + 2);
+    final String text = oldText.substring(0, prefix) + oldText.substring(prefix + 2);
     return TextEditingValue(
       text: text,
       selection: TextSelection.collapsed(offset: prefix),
@@ -308,8 +297,7 @@ class CodeController extends TextEditingController {
   ) {
     if (oldText == newText) return null;
 
-    final int maxPrefix =
-        oldText.length < newText.length ? oldText.length : newText.length;
+    final int maxPrefix = oldText.length < newText.length ? oldText.length : newText.length;
     int prefix = 0;
     while (prefix < maxPrefix && oldText[prefix] == newText[prefix]) {
       prefix++;
@@ -317,9 +305,7 @@ class CodeController extends TextEditingController {
 
     int oldEnd = oldText.length;
     int newEnd = newText.length;
-    while (oldEnd > prefix &&
-        newEnd > prefix &&
-        oldText[oldEnd - 1] == newText[newEnd - 1]) {
+    while (oldEnd > prefix && newEnd > prefix && oldText[oldEnd - 1] == newText[newEnd - 1]) {
       oldEnd--;
       newEnd--;
     }
@@ -343,10 +329,8 @@ class CodeController extends TextEditingController {
       if (candidateStart >= 0 &&
           candidateStart + insertedLength <= newText.length &&
           candidateStart <= oldText.length &&
-          oldText.substring(0, candidateStart) ==
-              newText.substring(0, candidateStart) &&
-          oldText.substring(candidateStart) ==
-              newText.substring(candidateStart + insertedLength)) {
+          oldText.substring(0, candidateStart) == newText.substring(0, candidateStart) &&
+          oldText.substring(candidateStart) == newText.substring(candidateStart + insertedLength)) {
         prefix = candidateStart;
       }
     }
