@@ -15,7 +15,8 @@ class SelectionSortPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SortingPage(instance:  BasePageViewModel.sortingCards[StringsManager.selectionSort]?.instance ?? _notifierProvider
-        , title: StringsManager.selectionSort);
+    return SortingPage(
+        instance: BasePageViewModel.sortingCards[StringsManager.selectionSort]?.instance ?? _notifierProvider,
+        title: StringsManager.selectionSort);
   }
 }

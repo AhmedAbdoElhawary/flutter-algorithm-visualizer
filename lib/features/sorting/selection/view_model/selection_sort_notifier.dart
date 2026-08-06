@@ -31,7 +31,6 @@ class SelectionSortNotifier extends SortingNotifier {
 
         arr.swap(minIndex, i);
       }
-
     }
 
     return SortingResult(sortedValues: arr, steps: steps);
@@ -53,29 +52,29 @@ class SelectionSortNotifier extends SortingNotifier {
   String get algorithmDescription => StringsManager.selectionSortDescription;
   @override
   List<String> get codeSnippet => const [
-    'void main() {', // 0
-    '  List<int> arr = [64, 34, 25, 12, 22, 11, 90];', // 1
-    '  for (int i = 0; i < arr.length - 1; i++) {', // 2
-    '    int minIndex = i;', // 3
-    '    for (int j = i + 1; j < arr.length; j++) {', // 4
-    '      if (arr[j] < arr[minIndex]) {', // 5
-    '        minIndex = j;', // 6
-    '      }', // 7
-    '    }', // 8
-    '    if (minIndex != i) {', // 9
-    '      int temp = arr[i];', // 10
-    '      arr[i] = arr[minIndex];', // 11
-    '      arr[minIndex] = temp;', // 12
-    '    }', // 13
-    '  }', // 14
-    '}', // 15
-  ];
+        'void main() {', // 0
+        '  List<int> arr = [64, 34, 25, 12, 22, 11, 90];', // 1
+        '  for (int i = 0; i < arr.length - 1; i++) {', // 2
+        '    int minIndex = i;', // 3
+        '    for (int j = i + 1; j < arr.length; j++) {', // 4
+        '      if (arr[j] < arr[minIndex]) {', // 5
+        '        minIndex = j;', // 6
+        '      }', // 7
+        '    }', // 8
+        '    if (minIndex != i) {', // 9
+        '      int temp = arr[i];', // 10
+        '      arr[i] = arr[minIndex];', // 11
+        '      arr[minIndex] = temp;', // 12
+        '    }', // 13
+        '  }', // 14
+        '}', // 15
+      ];
 
   @override
   int codeLineForStep(SortingStep step) => switch (step.action) {
-    SortingStatus.compared                              => 5, // arr[j] < arr[minIndex]
-    SortingStatus.swapping                              => 11, // arr[i] = arr[minIndex]
- SortingStatus.none     => 4, // advance inner loop
-    _ => -1,
-  };
+        SortingStatus.compared => 5, // arr[j] < arr[minIndex]
+        SortingStatus.swapping => 11, // arr[i] = arr[minIndex]
+        SortingStatus.none => 4, // advance inner loop
+        _ => -1,
+      };
 }
