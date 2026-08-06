@@ -201,8 +201,7 @@ class Interpreter {
       final Environment loopEnv = Environment(env);
       if (stmt.init != null) _execStmt(stmt.init!, loopEnv);
       while (true) {
-        if (stmt.condition != null &&
-            !_truthy(_eval(stmt.condition!, loopEnv), stmt.line)) {
+        if (stmt.condition != null && !_truthy(_eval(stmt.condition!, loopEnv), stmt.line)) {
           break;
         }
         _tick(stmt.line);
@@ -292,9 +291,7 @@ class Interpreter {
     if (expr is BinaryExpr) return _evalBinary(expr, env);
 
     if (expr is ConditionalExpr) {
-      return _truthy(_eval(expr.condition, env), expr.line)
-          ? _eval(expr.thenExpr, env)
-          : _eval(expr.elseExpr, env);
+      return _truthy(_eval(expr.condition, env), expr.line) ? _eval(expr.thenExpr, env) : _eval(expr.elseExpr, env);
     }
 
     if (expr is AssignExpr) return _evalAssign(expr, env);
@@ -332,12 +329,10 @@ class Interpreter {
 
   dynamic _evalBinary(BinaryExpr expr, Environment env) {
     if (expr.op == '&&') {
-      return _truthy(_eval(expr.left, env), expr.line) &&
-          _truthy(_eval(expr.right, env), expr.line);
+      return _truthy(_eval(expr.left, env), expr.line) && _truthy(_eval(expr.right, env), expr.line);
     }
     if (expr.op == '||') {
-      return _truthy(_eval(expr.left, env), expr.line) ||
-          _truthy(_eval(expr.right, env), expr.line);
+      return _truthy(_eval(expr.left, env), expr.line) || _truthy(_eval(expr.right, env), expr.line);
     }
     final dynamic l = _eval(expr.left, env);
     final dynamic r = _eval(expr.right, env);
@@ -480,8 +475,7 @@ class Interpreter {
 
   dynamic _evalCall(CallExpr expr, Environment env) {
     if (expr.callee is Identifier && (expr.callee as Identifier).name == 'print') {
-      final List<dynamic> args =
-          expr.args.map((Expr a) => _eval(a, env)).toList();
+      final List<dynamic> args = expr.args.map((Expr a) => _eval(a, env)).toList();
       output.add(args.isEmpty ? '' : _stringify(args.first));
       return null;
     }
@@ -489,8 +483,7 @@ class Interpreter {
     if (expr.callee is PropertyAccess) {
       final PropertyAccess prop = expr.callee as PropertyAccess;
       final dynamic target = _eval(prop.target, env);
-      final List<dynamic> args =
-          expr.args.map((Expr a) => _eval(a, env)).toList();
+      final List<dynamic> args = expr.args.map((Expr a) => _eval(a, env)).toList();
       return _callBuiltinMethod(target, prop.name, args, expr.line);
     }
 
@@ -506,8 +499,7 @@ class Interpreter {
           expr.line,
         );
       }
-      final List<dynamic> args =
-          expr.args.map((Expr a) => _eval(a, env)).toList();
+      final List<dynamic> args = expr.args.map((Expr a) => _eval(a, env)).toList();
       return _callUserFunction(fn, args);
     }
 
