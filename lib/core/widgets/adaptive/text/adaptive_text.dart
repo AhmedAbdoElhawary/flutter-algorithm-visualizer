@@ -67,7 +67,7 @@ class _AdaptiveText extends StatelessWidget {
         decorationThickness: decoration == TextDecoration.none ? null : 3.h,
         shadows: shadows,
         letterSpacing: letterSpacing,
-        fontFamily:fontFamily,
+        fontFamily: fontFamily,
       ),
     );
   }
