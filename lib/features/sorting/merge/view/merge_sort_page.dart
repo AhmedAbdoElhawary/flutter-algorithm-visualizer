@@ -15,7 +15,8 @@ class MergeSortPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SortingPage(        instance: BasePageViewModel.sortingCards[StringsManager.mergeSort]?.instance ?? _notifierProvider,
-         title: StringsManager.mergeSort);
+    return SortingPage(
+        instance: BasePageViewModel.sortingCards[StringsManager.mergeSort]?.instance ?? _notifierProvider,
+        title: StringsManager.mergeSort);
   }
 }
