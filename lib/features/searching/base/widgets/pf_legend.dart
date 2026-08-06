@@ -1,3 +1,4 @@
+import 'package:algorithm_visualizer/features/searching/base/widgets/pf_grid.dart';
 import 'package:algorithm_visualizer/lib-temp/theme/app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -10,10 +11,10 @@ class PFLegend extends StatelessWidget {
     final items = [
       (context.accentGreen, 'Start'),
       (context.accentRed, 'End'),
-      (context.isDark ? const Color(0xFF1A2540) : const Color(0xFF334155), 'Wall'),
-      (context.accentYellow.withValues(alpha: 0.55), 'Visited'),
-      (context.accentBlue.withValues(alpha: 0.70), 'Frontier'),
-      (context.accent, 'Path'),
+      (kWallGridColor, 'Wall'),
+      (kSearcherStartColor, 'Visited'),
+      (kSearcherFinishedColor, 'Frontier'),
+      (kPathGridColor, 'Path'),
     ];
 
     return Center(
