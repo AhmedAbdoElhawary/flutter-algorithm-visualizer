@@ -6,6 +6,10 @@ class SearchingState {
   final int stepIndex;
   final bool playing;
   final PlaybackSpeed speed;
+  final int startRow;
+  final int startCol;
+  final int endRow;
+  final int endCol;
 
   const SearchingState({
     required this.walls,
@@ -13,6 +17,10 @@ class SearchingState {
     required this.stepIndex,
     required this.playing,
     required this.speed,
+    required this.startRow,
+    required this.startCol,
+    required this.endRow,
+    required this.endCol,
   });
 
   factory SearchingState.initial() => SearchingState(
@@ -21,6 +29,10 @@ class SearchingState {
         stepIndex: 0,
         playing: false,
         speed: PlaybackSpeed.normal,
+        startRow: kPFStartRow,
+        startCol: kPFStartCol,
+        endRow: kPFEndRow,
+        endCol: kPFEndCol,
       );
 
   static List<List<bool>> emptyWalls() => List.generate(kPFCells, (_) => List.filled(kPFCells, false));
@@ -37,6 +49,10 @@ class SearchingState {
     int? stepIndex,
     bool? playing,
     PlaybackSpeed? speed,
+    int? startRow,
+    int? startCol,
+    int? endRow,
+    int? endCol,
   }) {
     return SearchingState(
       walls: walls ?? this.walls,
@@ -44,6 +60,10 @@ class SearchingState {
       stepIndex: stepIndex ?? this.stepIndex,
       playing: playing ?? this.playing,
       speed: speed ?? this.speed,
+      startRow: startRow ?? this.startRow,
+      startCol: startCol ?? this.startCol,
+      endRow: endRow ?? this.endRow,
+      endCol: endCol ?? this.endCol,
     );
   }
 }
