@@ -102,13 +102,13 @@ abstract final class ColorManager {
 
   /// ------------------------------------------>
 
-  static const Color finishedSearcherBlue = Color.fromRGBO(0, 220, 255, 1.0);
-  static const Color wallBlack = Color.fromRGBO(6, 75, 103, 1.0);
+  static const Color finishedSearcherBlue = Color.fromRGBO(0, 187, 255, 1.0);
+  static const Color wallBlack = Color.fromRGBO(22, 68, 101, 1.0);
   static const Color dividerBlue = Color.fromRGBO(175, 216, 248, 1.0);
   static const Color blue = Color.fromRGBO(41, 157, 250, 1.0);
   static const Color darkBlue1 = Color.fromRGBO(23, 154, 255, 1.0);
-  static const Color darkBlue = Color.fromRGBO(2, 73, 128, 1.0);
-  static const Color mediumBlue = Color.fromRGBO(0, 166, 152, 1.0);
+  static const Color darkBlue = Color.fromRGBO(131, 127, 255, 1.0);
+  static const Color mediumBlue = Color.fromRGBO(111, 149, 230, 1.0);
   static const Color lightBlue = Color.fromRGBO(177, 221, 255, 1.0);
   static const Color lightBlueM2 = Color.fromRGBO(209, 234, 255, 1.0);
   static const Color lightBlueWhiteD1 = Color.fromRGBO(243, 243, 246, 1.0);
