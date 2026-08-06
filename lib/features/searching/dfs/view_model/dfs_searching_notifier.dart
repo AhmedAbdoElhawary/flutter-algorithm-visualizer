@@ -80,14 +80,14 @@ class DFSSearchingNotifier extends SearchingNotifier {
 
   @override
   List<String> get codeSnippet => const [
-    'push(start)', // 0
-    'while stack is not empty', // 1
-    '  current = pop()', // 2
-    '  if current == goal return path', // 3
-    '  for each neighbor', // 4
-    '    if not discovered', // 5
-    '      push(neighbor)', // 6
-  ];
+        'push(start)', // 0
+        'while stack is not empty', // 1
+        '  current = pop()', // 2
+        '  if current == goal return path', // 3
+        '  for each neighbor', // 4
+        '    if not discovered', // 5
+        '      push(neighbor)', // 6
+      ];
 
   @override
   int codeLineForStep(SortingStep step) {

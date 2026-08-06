@@ -132,8 +132,8 @@ class SimpleGlassButton extends StatelessWidget {
   final VoidCallback? onTap;
   final String? messageTip;
   final Widget child;
-final double padding;
-  const SimpleGlassButton({super.key, required this.child,this.padding=10, this.onTap, this.messageTip});
+  final double padding;
+  const SimpleGlassButton({super.key, required this.child, this.padding = 10, this.onTap, this.messageTip});
 
   @override
   Widget build(BuildContext context) {
@@ -148,12 +148,9 @@ final double padding;
           boxShadow: context.isThemeDark
               ? []
               : [
-            BoxShadow(
-                color: Colors.black.withValues(alpha: 0.05),
-                blurRadius: 12,
-                offset: const Offset(0, 2)),
-            BoxShadow(color: Colors.black.withValues(alpha: 0.04), spreadRadius: 1),
-          ],
+                  BoxShadow(color: Colors.black.withValues(alpha: 0.05), blurRadius: 12, offset: const Offset(0, 2)),
+                  BoxShadow(color: Colors.black.withValues(alpha: 0.04), spreadRadius: 1),
+                ],
         ),
         child: child,
       ),
