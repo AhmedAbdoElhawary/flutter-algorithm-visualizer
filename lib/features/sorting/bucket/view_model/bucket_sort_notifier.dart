@@ -75,43 +75,43 @@ class BucketSortNotifier extends SortingNotifier {
 
   @override
   List<String> get codeSnippet => const [
-    'void main() {', // 0
-    '  List<int> arr = [64, 34, 25, 12, 22, 11, 90];', // 1
-    '  int n = arr.length;', // 2
-    '  int maxVal = arr.reduce((a, b) => a > b ? a : b);', // 3
-    '  int minVal = arr.reduce((a, b) => a < b ? a : b);', // 4
-    '  double bucketRange = (maxVal - minVal + 1) / n;', // 5
-    '  List<List<int>> buckets = List.generate(n, (_) => []);', // 6
-    '  for (int value in arr) {', // 7
-    '    int bucketIndex = ((value - minVal) / bucketRange).floor();', // 8
-    '    if (bucketIndex >= n) bucketIndex = n - 1;', // 9
-    '    buckets[bucketIndex].add(value);', // 10
-    '  }', // 11
-    '  for (var bucket in buckets) {', // 12
-    '    for (int i = 1; i < bucket.length; i++) {', // 13
-    '      int key = bucket[i];', // 14
-    '      int j = i - 1;', // 15
-    '      while (j >= 0 && bucket[j] > key) {', // 16
-    '        bucket[j + 1] = bucket[j];', // 17
-    '        j--;', // 18
-    '      }', // 19
-    '      bucket[j + 1] = key;', // 20
-    '    }', // 21
-    '  }', // 22
-    '  int index = 0;', // 23
-    '  for (var bucket in buckets) {', // 24
-    '    for (int value in bucket) {', // 25
-    '      arr[index++] = value;', // 26
-    '    }', // 27
-    '  }', // 28
-    '}', // 29
-  ];
+        'void main() {', // 0
+        '  List<int> arr = [64, 34, 25, 12, 22, 11, 90];', // 1
+        '  int n = arr.length;', // 2
+        '  int maxVal = arr.reduce((a, b) => a > b ? a : b);', // 3
+        '  int minVal = arr.reduce((a, b) => a < b ? a : b);', // 4
+        '  double bucketRange = (maxVal - minVal + 1) / n;', // 5
+        '  List<List<int>> buckets = List.generate(n, (_) => []);', // 6
+        '  for (int value in arr) {', // 7
+        '    int bucketIndex = ((value - minVal) / bucketRange).floor();', // 8
+        '    if (bucketIndex >= n) bucketIndex = n - 1;', // 9
+        '    buckets[bucketIndex].add(value);', // 10
+        '  }', // 11
+        '  for (var bucket in buckets) {', // 12
+        '    for (int i = 1; i < bucket.length; i++) {', // 13
+        '      int key = bucket[i];', // 14
+        '      int j = i - 1;', // 15
+        '      while (j >= 0 && bucket[j] > key) {', // 16
+        '        bucket[j + 1] = bucket[j];', // 17
+        '        j--;', // 18
+        '      }', // 19
+        '      bucket[j + 1] = key;', // 20
+        '    }', // 21
+        '  }', // 22
+        '  int index = 0;', // 23
+        '  for (var bucket in buckets) {', // 24
+        '    for (int value in bucket) {', // 25
+        '      arr[index++] = value;', // 26
+        '    }', // 27
+        '  }', // 28
+        '}', // 29
+      ];
 
   @override
   int codeLineForStep(SortingStep step) => switch (step.action) {
-    SortingStatus.compared                              => 16,  // bucket[j] > key
-    SortingStatus.swapping                              => 17,  // bucket[j + 1] = bucket[j]
-  SortingStatus.none     => 15,  // j--
-    _ => -1,
-  };
+        SortingStatus.compared => 16, // bucket[j] > key
+        SortingStatus.swapping => 17, // bucket[j + 1] = bucket[j]
+        SortingStatus.none => 15, // j--
+        _ => -1,
+      };
 }
