@@ -140,8 +140,11 @@ class SpeedSelector extends ConsumerWidget {
       child: expandSpeedEscalator
           ? Row(
               children: getPlaybackSpeedsForSorting()
-                  .map((e) => _BuildChildForSpeedSelector(
-                      interface: interface, selectedSpeed: getSpeed, speed: e, onTap: () => interface.changeSpeed(e)))
+                  .map((e) => Padding(
+                padding: REdgeInsetsDirectional.only(end: 5),
+                    child: _BuildChildForSpeedSelector(
+                        interface: interface, selectedSpeed: getSpeed, speed: e, onTap: () => interface.changeSpeed(e)),
+                  ))
                   .toList(),
             )
           : _BuildChildForSpeedSelector(
@@ -167,25 +170,22 @@ class _BuildChildForSpeedSelector extends StatelessWidget {
   final VoidCallback? onTap;
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: REdgeInsetsDirectional.only(end: 5),
-      child: InkWell(
-        onTap: onTap,
-        child: Container(
-          width: 22.r,
-          height: 22.r,
-          decoration: speed != selectedSpeed
-              ? null
-              : BoxDecoration(
-                  color: context.accentBg,
-                  borderRadius: BorderRadius.circular(5),
-                ),
-          child: Center(
-            child: MediumText(
-              '${speed.level}×',
-              color: speed != selectedSpeed ? ThemeEnum.textDarkColor : ThemeEnum.mainDarkColor,
-              fontSize: 10,
-            ),
+    return InkWell(
+      onTap: onTap,
+      child: Container(
+        width: 22.r,
+        height: 22.r,
+        decoration: speed != selectedSpeed
+            ? null
+            : BoxDecoration(
+                color: context.accentBg,
+                borderRadius: BorderRadius.circular(5),
+              ),
+        child: Center(
+          child: MediumText(
+            '${speed.level}×',
+            color: speed != selectedSpeed ? ThemeEnum.textDarkColor : ThemeEnum.mainDarkColor,
+            fontSize: 10,
           ),
         ),
       ),
