@@ -15,7 +15,8 @@ class HeapSortPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SortingPage(instance: BasePageViewModel.sortingCards[StringsManager.heapSort]?.instance ?? _notifierProvider
-        , title: StringsManager.heapSort);
+    return SortingPage(
+        instance: BasePageViewModel.sortingCards[StringsManager.heapSort]?.instance ?? _notifierProvider,
+        title: StringsManager.heapSort);
   }
 }
