@@ -13,7 +13,7 @@ class AlgoTab extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return Container(
       margin: REdgeInsets.only(right: addEndPadding ? 8 : 0),
-      padding:  REdgeInsets.symmetric(vertical: 8),
+      padding: REdgeInsets.symmetric(vertical: 8),
       decoration: BoxDecoration(
         color: isSelected ? context.accentBg : context.bgCard,
         borderRadius: BorderRadius.circular(10),
@@ -22,7 +22,7 @@ class AlgoTab extends ConsumerWidget {
         ),
       ),
       child: Padding(
-        padding:  REdgeInsets.symmetric(horizontal: 10),
+        padding: REdgeInsets.symmetric(horizontal: 10),
         child: Text(
           label,
           textAlign: TextAlign.center,
