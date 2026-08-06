@@ -43,7 +43,6 @@ abstract class SortingNotifier extends StateNotifier<SortingNotifierState>
   bool get forwardValidation => state.isAtLastStep;
 
   static List<SortableItem> _generateList(int size) {
-
     return List.generate(size, (index) => SortableItem(id: index, value: index + 1))..shuffle();
   }
 
@@ -132,7 +131,6 @@ abstract class SortingNotifier extends StateNotifier<SortingNotifierState>
   Future<void> _playSorting(BuildContext context) async {
     _setOperation = SortingEnum.played;
     await _startSelectedSorting();
-    // if (context.mounted) _setOperation = SortingEnum.none;
   }
 
   @override
@@ -227,7 +225,9 @@ abstract class SortingNotifier extends StateNotifier<SortingNotifierState>
         totalPlaySteps: steps.length,
         currentStepIndex: currentStepIndex,
         sortedSteps: steps,
-        currentStep: sortedSteps == null || currentStepIndex <= 0 ? SortingStep.noneStep() : sortedSteps[currentStepIndex],
+        currentStep: sortedSteps == null || currentStepIndex <= 0
+            ? SortingStep.noneStep()
+            : sortedSteps[currentStepIndex],
       );
     }
     bool didSpecificStep = false;
