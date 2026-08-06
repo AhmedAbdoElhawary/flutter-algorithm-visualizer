@@ -68,7 +68,7 @@ class BubbleSortNotifier extends SortingNotifier {
   int codeLineForStep(SortingStep step) => switch (step.action) {
         SortingStatus.compared => 6, // evaluating arr[j] > arr[j + 1]
         SortingStatus.swapping => 8, // executing arr[j] = arr[j + 1]
-         SortingStatus.none => 5, // continuing the inner loop
-    _ => -1,
-  };
+        SortingStatus.none => 5, // continuing the inner loop
+        _ => -1,
+      };
 }
