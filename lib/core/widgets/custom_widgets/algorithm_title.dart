@@ -1,10 +1,10 @@
-
 import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
 import 'package:algorithm_visualizer/core/widgets/adaptive/text/adaptive_text.dart';
 import 'package:flutter/material.dart';
 
 class AlgorithmTitle extends StatelessWidget {
-  const AlgorithmTitle({super.key,
+  const AlgorithmTitle({
+    super.key,
     required this.title,
     required this.description,
   });
