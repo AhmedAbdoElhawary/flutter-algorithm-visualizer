@@ -1,6 +1,5 @@
 part of 'route_app.dart';
 
-
 class _UnknownPage extends StatelessWidget {
   const _UnknownPage();
 
