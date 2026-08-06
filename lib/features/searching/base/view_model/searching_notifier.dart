@@ -19,7 +19,6 @@ part 'searching_state.dart';
 
 const _kInfinity = 1 << 30;
 const _kOrthogonalDirs = [(-1, 0), (0, 1), (1, 0), (0, -1)];
-// Push order reversed so DFS explores up/right first (top-right biased).
 const _kReverseOrthogonalDirs = [(0, -1), (1, 0), (0, 1), (-1, 0)];
 
 abstract class SearchingNotifier extends StateNotifier<SearchingState>
@@ -27,10 +26,6 @@ abstract class SearchingNotifier extends StateNotifier<SearchingState>
   SearchingNotifier() : super(SearchingState.initial());
 
   Timer? _timer;
-
-  /// Whether the current wall-drawing gesture is erasing or drawing walls.
-  /// Decided once per gesture (on tap-down / pan-start) and reused for every
-  /// cell touched during that same drag — mirrors the original UX.
   bool _erasingGesture = false;
 
   @override
@@ -87,10 +82,28 @@ abstract class SearchingNotifier extends StateNotifier<SearchingState>
     state = state.copyWith(stepIndex: 0, playing: false, clearSteps: true);
   }
 
+  // ── Start / End Point Methods ──────────────────────────────────────────
+
+  void setStartPoint(int row, int col) {
+    if (state.hasSteps) return;
+    if (row == state.endRow && col == state.endCol) return;
+    if (state.walls[row][col]) return; // Cannot place on a wall
+    _resetSteps();
+    state = state.copyWith(startRow: row, startCol: col);
+  }
+
+  void setEndPoint(int row, int col) {
+    if (state.hasSteps) return;
+    if (row == state.startRow && col == state.startCol) return;
+    if (state.walls[row][col]) return; // Cannot place on a wall
+    _resetSteps();
+    state = state.copyWith(endRow: row, endCol: col);
+  }
+
   void setWall(int row, int col, {required bool isGestureStart}) {
     if (state.hasSteps) return;
-    if (row == kPFStartRow && col == kPFStartCol) return;
-    if (row == kPFEndRow && col == kPFEndCol) return;
+    if (row == state.startRow && col == state.startCol) return;
+    if (row == state.endRow && col == state.endCol) return;
 
     if (isGestureStart) {
       _erasingGesture = state.walls[row][col];
@@ -114,8 +127,8 @@ abstract class SearchingNotifier extends StateNotifier<SearchingState>
     final walls = List.generate(
       kPFCells,
       (r) => List.generate(kPFCells, (c) {
-        if (r == kPFStartRow && c == kPFStartCol) return false;
-        if (r == kPFEndRow && c == kPFEndCol) return false;
+        if (r == state.startRow && c == state.startCol) return false;
+        if (r == state.endRow && c == state.endCol) return false;
         return rng.nextDouble() < 0.30;
       }),
     );
