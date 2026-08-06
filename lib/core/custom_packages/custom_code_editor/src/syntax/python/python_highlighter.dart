@@ -22,15 +22,58 @@ class PythonTokenizer extends Tokenizer {
   const PythonTokenizer();
 
   static const Set<String> _keywords = <String>{
-    'and', 'as', 'assert', 'async', 'await', 'break', 'class', 'continue',
-    'def', 'del', 'elif', 'else', 'except', 'finally', 'for', 'from',
-    'global', 'if', 'import', 'in', 'is', 'lambda', 'nonlocal', 'not', 'or',
-    'pass', 'raise', 'return', 'try', 'while', 'with', 'yield',
+    'and',
+    'as',
+    'assert',
+    'async',
+    'await',
+    'break',
+    'class',
+    'continue',
+    'def',
+    'del',
+    'elif',
+    'else',
+    'except',
+    'finally',
+    'for',
+    'from',
+    'global',
+    'if',
+    'import',
+    'in',
+    'is',
+    'lambda',
+    'nonlocal',
+    'not',
+    'or',
+    'pass',
+    'raise',
+    'return',
+    'try',
+    'while',
+    'with',
+    'yield',
   };
 
   static const Set<String> _builtins = <String>{
-    'True', 'False', 'None', 'int', 'float', 'str', 'bool', 'list', 'dict',
-    'set', 'tuple', 'object', 'self', 'cls', 'print', 'len', 'range',
+    'True',
+    'False',
+    'None',
+    'int',
+    'float',
+    'str',
+    'bool',
+    'list',
+    'dict',
+    'set',
+    'tuple',
+    'object',
+    'self',
+    'cls',
+    'print',
+    'len',
+    'range',
   };
 
   static final RegExp _identifierStart = RegExp(r'[A-Za-z_]');
@@ -44,8 +87,7 @@ class PythonTokenizer extends Tokenizer {
 
   @override
   TokenizeResult tokenizeLine(String line, LineState state) {
-    final String? openTriple =
-        state is _PythonLineState ? state.tripleQuote : null;
+    final String? openTriple = state is _PythonLineState ? state.tripleQuote : null;
     final List<Token> tokens = <Token>[];
     int i = 0;
 
@@ -93,10 +135,7 @@ class PythonTokenizer extends Tokenizer {
       }
 
       // Triple-quoted strings.
-      if ((ch == '"' || ch == "'") &&
-          i + 2 < line.length &&
-          line[i + 1] == ch &&
-          line[i + 2] == ch) {
+      if ((ch == '"' || ch == "'") && i + 2 < line.length && line[i + 1] == ch && line[i + 2] == ch) {
         final String quote = ch * 3;
         final int start = i;
         final int end = line.indexOf(quote, i + 3);
@@ -151,8 +190,7 @@ class PythonTokenizer extends Tokenizer {
       // Numbers.
       if (_digit.hasMatch(ch)) {
         final int start = i;
-        while (i < line.length &&
-            (_digit.hasMatch(line[i]) || line[i] == '.')) {
+        while (i < line.length && (_digit.hasMatch(line[i]) || line[i] == '.')) {
           i++;
         }
         tokens.add(Token(
