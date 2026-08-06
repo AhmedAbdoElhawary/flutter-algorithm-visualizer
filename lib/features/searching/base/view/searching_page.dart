@@ -93,7 +93,10 @@ class _VisualizerScreenState extends ConsumerState<VisualizerScreen> {
               ),
               SliverToBoxAdapter(child: PFGrid(instance: instance)),
               SliverToBoxAdapter(child: PFLegend()),
-              SliverToBoxAdapter(child: PFStepInfo(instance: instance)),
+              SliverPadding(
+                padding: REdgeInsets.only(top: 10),
+                sliver: SliverToBoxAdapter(child: PFStepInfo(instance: instance)),
+              ),
               SliverToBoxAdapter(child: SearchingAlgorithmControls(instance: instance)),
               // SliverPadding(
               //   padding: REdgeInsetsDirectional.only(top: 10, bottom: 10),
