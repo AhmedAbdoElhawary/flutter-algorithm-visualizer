@@ -13,7 +13,7 @@ class GetTextStyle extends TextStyle {
     super.decorationThickness,
     super.letterSpacing = 0,
     super.shadows,
-    super.fontFamily=FontConstants.fontFamily,
+    super.fontFamily = FontConstants.fontFamily,
     super.wordSpacing = 1,
   }) : super(fontSize: fontSize);
 }
