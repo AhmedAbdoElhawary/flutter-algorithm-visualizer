@@ -56,8 +56,7 @@ class AlgorithmControls extends ConsumerWidget {
                   child: button,
                 ),
               ),
-              SpeedSelector(
-                  interface: interface, getSpeed: getSpeed, expandSpeedEscalator: expandSpeedEscalator),
+              SpeedSelector(interface: interface, getSpeed: getSpeed, expandSpeedEscalator: expandSpeedEscalator),
             ],
           ),
         ),
@@ -123,8 +122,7 @@ class CtrlButton extends StatelessWidget {
 }
 
 class SpeedSelector extends ConsumerWidget {
-  const SpeedSelector(
-      {required this.interface, required this.expandSpeedEscalator, required this.getSpeed, super.key});
+  const SpeedSelector({required this.interface, required this.expandSpeedEscalator, required this.getSpeed, super.key});
   final AlgorithmControlInterface interface;
   final PlaybackSpeed getSpeed;
   final bool expandSpeedEscalator;
@@ -143,10 +141,7 @@ class SpeedSelector extends ConsumerWidget {
           ? Row(
               children: getPlaybackSpeedsForSorting()
                   .map((e) => _BuildChildForSpeedSelector(
-                      interface: interface,
-                      selectedSpeed: getSpeed,
-                      speed: e,
-                      onTap: () => interface.changeSpeed(e)))
+                      interface: interface, selectedSpeed: getSpeed, speed: e, onTap: () => interface.changeSpeed(e)))
                   .toList(),
             )
           : _BuildChildForSpeedSelector(
