@@ -30,8 +30,7 @@ class BracketUtils {
   static bool isQuote(String char) => char == '"' || char == "'";
 
   /// Whether [open] and [close] form a matching pair.
-  static bool isMatchingPair(String open, String close) =>
-      pairs[open] == close;
+  static bool isMatchingPair(String open, String close) => pairs[open] == close;
 
   /// The closing character that should be auto-inserted for [opener], or
   /// null if [opener] isn't a recognized opening character.
