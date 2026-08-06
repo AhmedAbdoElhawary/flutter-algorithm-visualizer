@@ -1,4 +1,3 @@
-
 import 'package:algorithm_visualizer/core/resources/color_manager.dart';
 import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
 import 'package:flutter/material.dart';
@@ -23,7 +22,6 @@ class GradientLinearProgressIndicator extends StatelessWidget {
                 borderRadius: BorderRadius.circular(12),
               ),
             ),
-
             FractionallySizedBox(
               widthFactor: value,
               child: Container(
