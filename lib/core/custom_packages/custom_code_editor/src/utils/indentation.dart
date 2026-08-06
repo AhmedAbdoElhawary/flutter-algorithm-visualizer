@@ -36,8 +36,7 @@ class Indentation {
     final String base = leadingWhitespaceOf(currentLine);
     final String trimmedBefore = before.trimRight();
 
-    if (trimmedBefore.isNotEmpty &&
-        _openBrackets.contains(trimmedBefore[trimmedBefore.length - 1])) {
+    if (trimmedBefore.isNotEmpty && _openBrackets.contains(trimmedBefore[trimmedBefore.length - 1])) {
       return base + config.indentUnit;
     }
     return base;
@@ -63,8 +62,8 @@ class Indentation {
     final String trimmedBefore = before.trimRight();
     final String trimmedAfter = after.trimLeft();
 
-    final bool beforeEndsWithOpen = trimmedBefore.isNotEmpty &&
-        _openBrackets.contains(trimmedBefore[trimmedBefore.length - 1]);
+    final bool beforeEndsWithOpen =
+        trimmedBefore.isNotEmpty && _openBrackets.contains(trimmedBefore[trimmedBefore.length - 1]);
     final bool afterStartsWithMatchingClose = trimmedAfter.isNotEmpty &&
         _closeBrackets.contains(trimmedAfter[0]) &&
         beforeEndsWithOpen &&
@@ -85,8 +84,7 @@ class Indentation {
       return NewlineInsertion(text: text, caretOffset: 1 + innerIndent.length);
     }
 
-    final String indent =
-        beforeEndsWithOpen ? base + config.indentUnit : base;
+    final String indent = beforeEndsWithOpen ? base + config.indentUnit : base;
     final String text = '\n$indent';
     return NewlineInsertion(text: text, caretOffset: text.length);
   }
