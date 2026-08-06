@@ -27,8 +27,6 @@ class SortingNotifierState {
     this.currentStep,
   });
 
-  // ── Computed getters ────────────────────────────────────────────────────────
-
   bool get isPlaying => operationStatus == SortingEnum.played;
   bool get isAtFirstStep => currentStepIndex == 0;
   bool get isAtLastStep => totalPlaySteps > 0 && currentStepIndex >= totalPlaySteps - 1;
@@ -42,7 +40,7 @@ class SortingNotifierState {
     return '';
   }
 
- static String  statusText({required SortingStep? currentStep,required List<SortableItem> list}) {
+  static String statusText({required SortingStep? currentStep, required List<SortableItem> list}) {
     final initialText = 'Initial array - ready to sort';
     if (currentStep == null || currentStep.index1 == -1 || currentStep.index2 == -1) {
       return initialText;
