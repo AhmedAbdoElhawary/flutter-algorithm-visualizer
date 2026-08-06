@@ -95,14 +95,12 @@ class _MovablePinsBackgroundState extends State<MovablePinsBackground> with Sing
           for (var p in _particles) {
             final distance = (p.position - d.localPosition).distance;
             if (distance < influenceRadius) {
-
               final direction = (p.position - d.localPosition).normalize();
               p.velocity += direction * 0.5;
             }
           }
         });
       },
-
       child: Stack(
         fit: StackFit.expand,
         alignment: AlignmentDirectional.center,
