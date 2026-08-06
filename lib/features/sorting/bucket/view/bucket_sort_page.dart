@@ -15,7 +15,8 @@ class BucketSortPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SortingPage(instance: BasePageViewModel.sortingCards[StringsManager.bucketSort]?.instance ?? _notifierProvider,
+    return SortingPage(
+        instance: BasePageViewModel.sortingCards[StringsManager.bucketSort]?.instance ?? _notifierProvider,
         title: StringsManager.bucketSort);
   }
 }
