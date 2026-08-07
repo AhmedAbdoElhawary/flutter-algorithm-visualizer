@@ -66,7 +66,7 @@ abstract class SearchingNotifier extends StateNotifier<SearchingState>
 
   void _startTimer() {
     _clearTimer();
-    _timer = Timer.periodic(state.speed.stepDuration, (_) {
+    _timer = Timer.periodic(state.speed.stepSearchingDuration, (_) {
       final steps = state.steps;
       if (steps == null || state.stepIndex >= steps.length - 1) {
         state = state.copyWith(playing: false);
