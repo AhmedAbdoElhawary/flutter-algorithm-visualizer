@@ -29,7 +29,7 @@ class SortingNotifierState {
 
   bool get isPlaying => operationStatus == SortingEnum.played;
   bool get isAtFirstStep => currentStepIndex == 0;
-  bool get isAtLastStep => totalPlaySteps > 0 && currentStepIndex >= totalPlaySteps - 1;
+  bool get isAtLastStep => totalPlaySteps > 0 && currentStepIndex >= totalPlaySteps;
 
   double get progressValue {
     return totalPlaySteps > 0 ? currentStepIndex / totalPlaySteps : 0.0;
@@ -38,24 +38,6 @@ class SortingNotifierState {
   String get progressLabel {
     if (totalPlaySteps > 0) return 'Step $currentStepIndex of $totalPlaySteps';
     return '';
-  }
-
-  static String statusText({required SortingStep? currentStep, required List<SortableItem> list}) {
-    final initialText = 'Initial array - ready to sort';
-    if (currentStep == null || currentStep.index1 == -1 || currentStep.index2 == -1) {
-      return initialText;
-    }
-
-    final value1 = list[currentStep.index1].value;
-    final value2 = list[currentStep.index2].value;
-
-    return currentStep.action == SortingStatus.compared
-        ? 'Compare arr[${currentStep.index1}]=$value1 ↔ arr[${currentStep.index2}]=$value2'
-        : currentStep.action == SortingStatus.swapping
-            ? '$value1 > $value2: swap positions ${currentStep.index1} ↔ ${currentStep.index2}'
-            : currentStep.action == SortingStatus.allSorted
-                ? '✓ Array fully sorted!'
-                : initialText;
   }
 
   SortingNotifierState copyWith({
