@@ -1,5 +1,4 @@
 import 'package:algorithm_visualizer/core/helpers/playback_speed.dart';
-import 'package:algorithm_visualizer/core/helpers/screen_size.dart';
 import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
 import 'package:algorithm_visualizer/features/base/view_model/algorithm_control_interface.dart';
 import 'package:algorithm_visualizer/features/base/view_model/algorithm_description_interface.dart';
@@ -12,12 +11,21 @@ part 'sorting_state.dart';
 part '../helper/sorting_enums.dart';
 part '../helper/sortable_item.dart';
 
+/// Immutable snapshot of the visual state after N steps have been applied.
+/// Precomputed once per sort so stepForward/stepBackward can jump directly
+/// to any point without incrementally replaying or trying to "undo" steps.
+class _SortSnapshot {
+  final List<SortableItem> list;
+  final Map<int, Offset> positions;
+
+  const _SortSnapshot(this.list, this.positions);
+}
+
 abstract class SortingNotifier extends StateNotifier<SortingNotifierState>
     implements AlgorithmDescriptionNotifier, AlgorithmControlInterface {
   SortingNotifier() : super(SortingNotifierState(list: _generateList(_defaultSize))) {
     _initializePositions();
   }
-
   static const ThemeEnum swappingColor = ThemeEnum.redColor;
   static const ThemeEnum comparedColor = ThemeEnum.lightBlueColor;
   static const ThemeEnum itemColor = ThemeEnum.columnColor;
@@ -31,6 +39,20 @@ abstract class SortingNotifier extends StateNotifier<SortingNotifierState>
   static double horizontalInsidePadding = 120.r;
   static const double bottomInsidePadding = 15;
   static double handleCentralBars = horizontalInsidePadding / 4;
+
+  /// snapshots[k] == visual state after k steps have been completed.
+  /// snapshots[0] is always the pristine, pre-sort state.
+  /// Invalidated (cleared) whenever a new list/sort is generated.
+  List<_SortSnapshot> _snapshots = [];
+
+  bool _isPlayingFun = false;
+
+  int _selectedAlgorithmLength = 1;
+  int get selectedAlgorithmLength => _selectedAlgorithmLength;
+  set selectedAlgorithmLength(int value) {
+    if (value == selectedAlgorithmLength) return;
+    _selectedAlgorithmLength = value;
+  }
 
   @override
   PlaybackSpeed get getSpeed => state.speed;
@@ -46,24 +68,23 @@ abstract class SortingNotifier extends StateNotifier<SortingNotifierState>
     return List.generate(size, (index) => SortableItem(id: index, value: index + 1))..shuffle();
   }
 
-  static double calculateItemWidth(BuildContext context, int size) {
-    final screenWidth = MediaQuery.of(context).size.width - horizontalInsidePadding;
+  static double calculateItemWidth(int size) {
+    final screenWidth = ScreenUtil().screenWidth - horizontalInsidePadding;
     final availableWidth = screenWidth - (itemsPadding * (size - 1));
     return availableWidth / size > 0 ? availableWidth / size : 1.0;
   }
 
-  static double calculateMaxListItemHeight(BuildContext context) {
-    final screenHeight = MediaQuery.of(context).size.height * 0.27;
+  static double get calculateMaxListItemHeight {
+    final screenHeight = ScreenUtil().screenHeight * 0.27;
     return screenHeight > 0 ? screenHeight : 1.0;
   }
 
-  static double calculateItemHeight(
-    BuildContext context,
+  static (double actualHeight, String writtenHeight) calculateItemHeight(
     int itemIndex,
     int size,
     int selectedAlgorithmsLength,
   ) {
-    final value = (calculateMaxListItemHeight(context) / size) * (itemIndex + 1);
+    final value = (calculateMaxListItemHeight / size) * (itemIndex + 1);
     final per = selectedAlgorithmsLength == 1
         ? 0.8
         : selectedAlgorithmsLength <= 2
@@ -73,10 +94,30 @@ abstract class SortingNotifier extends StateNotifier<SortingNotifierState>
                 : selectedAlgorithmsLength <= 6
                     ? 0.7
                     : 0.6;
-    return value.h / selectedAlgorithmsLength * (per - 0.15);
+    final height = value.h / selectedAlgorithmsLength * (per - 0.15);
+    return (height, '${(height / 2).toInt()}');
   }
 
-  Duration get _speedDuration => state.speed.stepDuration;
+  String statusText({required SortingStep? currentStep, required List<SortableItem> list}) {
+    final initialText = 'Initial array - ready to sort';
+    if (currentStep == null || currentStep.index1 == -1 || currentStep.index2 == -1) return initialText;
+
+    final value1 = list[currentStep.index1].value;
+    final value2 = list[currentStep.index2].value;
+
+    final (actualHeight1, writtenHeight1) = calculateItemHeight(value1, _size, selectedAlgorithmLength);
+    final (actualHeight2, writtenHeight2) = calculateItemHeight(value2, _size, selectedAlgorithmLength);
+
+    return currentStep.action == SortingStatus.compared
+        ? 'Compare arr[${currentStep.index1}]=$writtenHeight1 ↔ arr[${currentStep.index2}]=$writtenHeight2'
+        : currentStep.action == SortingStatus.swapping
+            ? '$writtenHeight2 > $writtenHeight1: swap positions ${currentStep.index1} ↔ ${currentStep.index2}'
+            : currentStep.action == SortingStatus.allSorted
+                ? '✓ Array fully sorted!'
+                : initialText;
+  }
+
+  Duration get _speedDuration => state.speed.stepSortingDuration;
   int get _size => state.size;
 
   SortingEnum get _getOperation => state.operationStatus;
@@ -84,11 +125,12 @@ abstract class SortingNotifier extends StateNotifier<SortingNotifierState>
 
   void _initializePositions() {
     final positions = <int, Offset>{};
-    final itemWidth = calculateItemWidth(ScreenSize.context!, _size);
+    final itemWidth = calculateItemWidth(_size);
     for (int i = 0; i < state.list.length; i++) {
       positions[state.list[i].id] = Offset(i * (itemWidth + itemsPadding), 0);
     }
     state = state.copyWith(positions: positions);
+    _snapshots = [];
   }
 
   @override
@@ -117,8 +159,8 @@ abstract class SortingNotifier extends StateNotifier<SortingNotifierState>
       sortedSteps: [],
       currentStepIndex: 0,
     );
+    _snapshots = [];
     _initializePositions();
-    _resetAllColors();
   }
 
   Future<void> _stopSorting() async {
@@ -158,43 +200,111 @@ abstract class SortingNotifier extends StateNotifier<SortingNotifierState>
       sortedSteps: [],
       currentStepIndex: 0,
     );
+    _snapshots = [];
     _initializePositions();
-    _resetAllColors();
+  }
+
+  /// Builds (once) the step list for the current array plus a snapshot of
+  /// the visual state after every step, so manual stepping works correctly
+  /// even if autoplay was never started, and works identically whether it
+  /// runs before or after autoplay has partially run.
+  void _ensureStepsGenerated() {
+    if (state.sortedSteps.isNotEmpty) return;
+
+    final values = state.list.map((e) => e.value).toList();
+    final steps = buildSorting(values).steps;
+
+    _snapshots = _computeSnapshots(state.list, state.positions, steps);
+
+    state = state.copyWith(
+      sortedSteps: steps,
+      totalPlaySteps: steps.length,
+    );
+  }
+
+  List<_SortSnapshot> _computeSnapshots(
+    List<SortableItem> initialList,
+    Map<int, Offset> initialPositions,
+    List<SortingStep> steps,
+  ) {
+    var list = List<SortableItem>.from(initialList);
+    var positions = Map<int, Offset>.from(initialPositions);
+
+    final snapshots = <_SortSnapshot>[_SortSnapshot(List.of(list), positions)];
+
+    for (final step in steps) {
+      list = list.map((e) => e.copyWith(sortedStatus: SortingStatus.none)).toList();
+
+      if (step.action == SortingStatus.swapping) {
+        list.swap(step.index1, step.index2);
+
+        positions = Map<int, Offset>.from(positions);
+        final id1 = list[step.index1].id;
+        final id2 = list[step.index2].id;
+        final tempPosition = positions[id1]!;
+        positions[id1] = positions[id2]!;
+        positions[id2] = tempPosition;
+      }
+
+      if (step.action == SortingStatus.compared || step.action == SortingStatus.swapping) {
+        list[step.index1] = list[step.index1].copyWith(sortedStatus: step.action);
+        list[step.index2] = list[step.index2].copyWith(sortedStatus: step.action);
+      }
+
+      snapshots.add(_SortSnapshot(List.of(list), positions));
+    }
+
+    return snapshots;
   }
 
   @override
   void stepForward() {
     if (state.isPlaying) return;
 
-    final next = state.currentStepIndex + 1;
-    if (next >= state.sortedSteps.length) return;
+    _ensureStepsGenerated();
 
-    _buildSort(stepIndex: next, makeOnlyOneStep: true);
+    final steps = state.sortedSteps;
+    final next = state.currentStepIndex + 1;
+    if (next > steps.length) return;
+
+    final snapshot = _snapshots[next];
+    state = state.copyWith(
+      list: snapshot.list,
+      positions: snapshot.positions,
+      currentStepIndex: next,
+      currentStep: next > 0 ? steps[next - 1] : SortingStep.noneStep(),
+    );
+
+    if (next == steps.length) {
+      // Fire-and-forget celebratory highlight, matches autoplay completion.
+      _greenSortedItemsAsDone();
+    }
   }
 
   @override
   void stepBackward() {
     if (state.isPlaying) return;
+    if (state.sortedSteps.isEmpty) return;
+
+    final steps = state.sortedSteps;
     final prev = state.currentStepIndex - 1;
     if (prev < 0) return;
 
-    _buildSort(stepIndex: prev, makeOnlyOneStep: true);
-  }
-
-  Future<void> _resetAllColors() async {
-    final list = List<SortableItem>.from(state.list);
-    for (int i = 0; i < list.length; i++) {
-      list[i] = list[i].copyWith(sortedStatus: SortingStatus.none);
-      state = state.copyWith(list: list);
-    }
+    final snapshot = _snapshots[prev];
+    state = state.copyWith(
+      list: snapshot.list,
+      positions: snapshot.positions,
+      currentStepIndex: prev,
+      currentStep: prev > 0 ? steps[prev - 1] : SortingStep.noneStep(),
+    );
   }
 
   Future<void> _greenSortedItemsAsDone() async {
     final list = List<SortableItem>.from(state.list);
     for (int i = 0; i < list.length; i++) {
       list[i] = list[i].copyWith(sortedStatus: SortingStatus.allSorted);
-      state = state.copyWith(list: list);
-      await Future.delayed(state.speed.stepDuration);
+      state = state.copyWith(list: List.of(list));
+      await Future.delayed(state.speed.stepSortingDuration);
     }
   }
 
@@ -207,91 +317,74 @@ abstract class SortingNotifier extends StateNotifier<SortingNotifierState>
     }
   }
 
-  bool _isPlayingFun = false;
-  Future<void> _buildSort({int stepIndex = -1, bool makeOnlyOneStep = false}) async {
+  /// Autoplay: runs forward from state.currentStepIndex (== number of
+  /// steps already completed, whether by autoplay or manual stepping)
+  /// through the rest of the step list, one raw step at a time.
+  Future<void> _buildSort() async {
     if (_isPlayingFun) return;
     _isPlayingFun = true;
 
-    final list = List<SortableItem>.from(state.list);
-    final values = list.map((e) => e.value).toList();
+    _ensureStepsGenerated();
+    final steps = state.sortedSteps;
 
-    final sortedSteps = state.sortedSteps.isEmpty ? null : state.sortedSteps;
-    final currentStepIndex = stepIndex == -1 ? state.currentStepIndex : stepIndex;
+    var list = List<SortableItem>.from(state.list);
+    var positions = Map<int, Offset>.from(state.positions);
 
-    final steps = sortedSteps ?? buildSorting(values).steps;
+    for (int i = state.currentStepIndex; i < steps.length; i++) {
+      if (_getOperation != SortingEnum.played) {
+        _isPlayingFun = false;
+        return;
+      }
 
-    if (!makeOnlyOneStep) {
-      state = state.copyWith(
-        totalPlaySteps: steps.length,
-        currentStepIndex: currentStepIndex,
-        sortedSteps: steps,
-        currentStep:
-            sortedSteps == null || currentStepIndex <= 0 ? SortingStep.noneStep() : sortedSteps[currentStepIndex],
-      );
-    }
-    bool didSpecificStep = false;
-    final step1 = stepIndex == -1 ? null : steps[stepIndex].index1;
-    final step2 = stepIndex == -1 ? null : steps[stepIndex].index2;
-
-    for (int i = currentStepIndex; i < steps.length; i++) {
-      final prevStep = steps[i > 0 ? i - 1 : i];
       final step = steps[i];
+      final prevStep = i > 0 ? steps[i - 1] : null;
 
-      state = state.copyWith(
-        currentStepIndex: i,
-        currentStep: step,
-      );
-
-      if (_getOperation != SortingEnum.played && !makeOnlyOneStep) {
-        _isPlayingFun = false;
-        return;
+      if (prevStep != null) {
+        if (prevStep.index1 != step.index1) {
+          list[prevStep.index1] = list[prevStep.index1].copyWith(sortedStatus: SortingStatus.none);
+        }
+        if (prevStep.index2 != step.index2) {
+          list[prevStep.index2] = list[prevStep.index2].copyWith(sortedStatus: SortingStatus.none);
+        }
       }
 
-      if (didSpecificStep && (step1 != step.index1 || step2 != step.index2)) {
-        _isPlayingFun = false;
-        return;
-      }
-      if (prevStep.index1 != step.index1) {
-        list[prevStep.index1] = list[prevStep.index1].copyWith(sortedStatus: SortingStatus.none);
-        state = state.copyWith(list: list);
-      }
-      if (prevStep.index2 != step.index2) {
-        list[prevStep.index2] = list[prevStep.index2].copyWith(sortedStatus: SortingStatus.none);
-        state = state.copyWith(list: list);
-      }
       switch (step.action) {
         case SortingStatus.compared:
           list[step.index1] = list[step.index1].copyWith(sortedStatus: SortingStatus.compared);
           list[step.index2] = list[step.index2].copyWith(sortedStatus: SortingStatus.compared);
-          state = state.copyWith(list: list);
+          state = state.copyWith(list: List.of(list), positions: positions, currentStep: step);
           await Future.delayed(_speedDuration);
+          break;
 
         case SortingStatus.swapping:
           list[step.index1] = list[step.index1].copyWith(sortedStatus: SortingStatus.swapping);
           list[step.index2] = list[step.index2].copyWith(sortedStatus: SortingStatus.swapping);
-          state = state.copyWith(list: list);
+          state = state.copyWith(list: List.of(list), positions: positions, currentStep: step);
           await Future.delayed(_speedDuration);
 
           list.swap(step.index1, step.index2);
-          final positions = Map<int, Offset>.from(state.positions);
-          final tempPosition = positions[list[step.index1].id]!;
-          positions[list[step.index1].id] = positions[list[step.index2].id]!;
-          positions[list[step.index2].id] = tempPosition;
-          state = state.copyWith(list: list, positions: positions);
+          positions = Map<int, Offset>.from(positions);
+          final id1 = list[step.index1].id;
+          final id2 = list[step.index2].id;
+          final tempPosition = positions[id1]!;
+          positions[id1] = positions[id2]!;
+          positions[id2] = tempPosition;
+          state = state.copyWith(list: List.of(list), positions: positions, currentStep: step);
+          break;
 
         case SortingStatus.allSorted:
         case SortingStatus.none:
           list[step.index1] = list[step.index1].copyWith(sortedStatus: SortingStatus.none);
           list[step.index2] = list[step.index2].copyWith(sortedStatus: SortingStatus.none);
-          state = state.copyWith(list: list);
+          state = state.copyWith(list: List.of(list), positions: positions, currentStep: step);
+          break;
       }
 
       await Future.delayed(_speedDuration);
-
-      if (makeOnlyOneStep) didSpecificStep = true;
+      state = state.copyWith(currentStepIndex: i + 1);
     }
 
-    state = state.copyWith(currentStep: SortingStep.noneStep());
+    state = state.copyWith(currentStepIndex: steps.length, currentStep: SortingStep.noneStep());
     await _greenSortedItemsAsDone();
     _isPlayingFun = false;
   }
