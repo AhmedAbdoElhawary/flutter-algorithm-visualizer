@@ -13,12 +13,12 @@ class PFLegend extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final items = [
-      (context.accentGreen, 'Start'),
-      (context.accentRed, 'End'),
-      (kWallGridColor, 'Wall'),
-      (kSearcherFinishedColor, 'Visited'),
-      (kSearcherStartColor, 'Frontier'),
-      (kPathGridColor, 'Path'),
+      (context.accentGreen, StringsManager.start),
+      (context.accentRed, StringsManager.end),
+      (kWallGridColor, StringsManager.wall),
+      (kSearcherFinishedColor, StringsManager.visited),
+      (kSearcherStartColor, StringsManager.frontier),
+      (kPathGridColor, StringsManager.path),
     ];
 
     return Center(
@@ -30,9 +30,9 @@ class PFLegend extends StatelessWidget {
           children: items.map((item) {
             final (color, label) = item;
             return Row(mainAxisSize: MainAxisSize.min, children: [
-              if (label == 'Start')
+              if (label == StringsManager.start)
                 PFStartPointWidget(size: 10.r)
-              else if (label == 'End')
+              else if (label == StringsManager.end)
                 PFEndPointWidget(size: 12.r)
               else
                 Container(
