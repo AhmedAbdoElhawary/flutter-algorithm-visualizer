@@ -144,7 +144,8 @@ class _LiveCodeSnippet extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final currentStep = ref.watch(instance.select((s) => s.currentStep));
     final code = ref.read(instance.notifier);
-    return LiveCodeSnippet(currentLine: currentStep == null ? -1 : code.codeLineForStep(currentStep), code: code.code);
+    return LiveCodeSnippet(
+        currentLine: currentStep == null ? -1 : code.codeLineForStep(currentStep), code: code.code);
   }
 }
 
@@ -159,11 +160,12 @@ class _StatusText extends ConsumerWidget {
     final label = ref.watch(instance.select((s) => s.progressLabel));
     final currentStep = ref.watch(instance.select((s) => s.currentStep));
     final list = ref.watch(instance.select((s) => s.list));
+    final inst = ref.read(instance.notifier);
 
     return AlgorithmStatusText(
       progressLabel: label,
       progressValue: progress,
-      statusText: SortingNotifierState.statusText(currentStep: currentStep, list: list),
+      statusText: inst.statusText(currentStep: currentStep, list: list),
     );
   }
 }
@@ -183,17 +185,29 @@ class SortingAppBar extends StatelessWidget {
   }
 }
 
-class ShowUpSortingList extends ConsumerWidget {
+class ShowUpSortingList extends ConsumerStatefulWidget {
   const ShowUpSortingList(this.instance, {this.selectedAlgorithmLength = 1, super.key});
   final StateNotifierProvider<SortingNotifier, SortingNotifierState> instance;
   final int selectedAlgorithmLength;
+
   @override
-  Widget build(BuildContext context, ref) {
-    final items = ref.watch(instance.select((state) => state.list));
-    final speed = ref.watch(instance.select((state) => state.speed));
-    final maxHeight = SortingNotifier.calculateMaxListItemHeight(context);
-    final size = ref.watch(instance.select((state) => state.size));
-    final itemWidth = SortingNotifier.calculateItemWidth(context, size);
+  ConsumerState<ShowUpSortingList> createState() => _ShowUpSortingListState();
+}
+
+class _ShowUpSortingListState extends ConsumerState<ShowUpSortingList> {
+  @override
+  void initState() {
+    ref.read(widget.instance.notifier).selectedAlgorithmLength = widget.selectedAlgorithmLength;
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final items = ref.watch(widget.instance.select((state) => state.list));
+    final speed = ref.watch(widget.instance.select((state) => state.speed));
+    final maxHeight = SortingNotifier.calculateMaxListItemHeight;
+    final size = ref.watch(widget.instance.select((state) => state.size));
+    final itemWidth = SortingNotifier.calculateItemWidth(size);
 
     return Padding(
       padding: REdgeInsets.symmetric(horizontal: 16),
@@ -208,20 +222,22 @@ class ShowUpSortingList extends ConsumerWidget {
           child: Container(
             padding: REdgeInsets.only(bottom: SortingNotifier.bottomInsidePadding),
             child: SizedBox(
-              height: selectedAlgorithmLength == 1 ? maxHeight : null,
+              height: widget.selectedAlgorithmLength == 1 ? maxHeight : null,
               child: Stack(
                 alignment: AlignmentDirectional.bottomCenter,
                 children: List.generate(
                   items.length,
                   (index) {
                     final item = items[index];
-                    final position = ref.watch(instance.select((state) => state.positions[item.id]));
+                    final position = ref.watch(widget.instance.select((state) => state.positions[item.id]));
                     return AnimatedPositionedDirectional(
                       key: ValueKey(item.id),
                       start: position?.dx,
                       bottom: position?.dy,
-                      width: itemWidth + SortingNotifier.horizontalInsidePadding - SortingNotifier.handleCentralBars,
-                      duration: speed.stepDuration,
+                      width: itemWidth +
+                          SortingNotifier.horizontalInsidePadding -
+                          SortingNotifier.handleCentralBars,
+                      duration: speed.stepSortingDuration,
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
@@ -230,9 +246,9 @@ class ShowUpSortingList extends ConsumerWidget {
                               index: index,
                               size: size,
                               itemWidth: itemWidth,
-                              instance: instance,
-                              speedDuration: speed.stepDuration * 0.5,
-                              selectedAlgorithmLength: selectedAlgorithmLength,
+                              instance: widget.instance,
+                              speedDuration: speed.stepSortingDuration * 0.5,
+                              selectedAlgorithmLength: widget.selectedAlgorithmLength,
                               isLastItem: index == items.length - 1),
                           RSizedBox(height: 4),
                           MediumText('$index', fontSize: 10, color: ThemeEnum.columnColor),
@@ -337,8 +353,10 @@ class _BuildItem extends ConsumerWidget {
   final bool isLastItem;
   @override
   Widget build(BuildContext context, ref) {
-    final currentItem = ref.watch(instance.select((state) => index < state.list.length ? state.list[index] : null));
-    final height = SortingNotifier.calculateItemHeight(context, item.value, size, selectedAlgorithmLength);
+    final currentItem =
+        ref.watch(instance.select((state) => index < state.list.length ? state.list[index] : null));
+    final (actualHeight, writtenHeight) =
+        SortingNotifier.calculateItemHeight(item.value, size, selectedAlgorithmLength);
     final color = context.getColor(currentItem?.getColor ?? SortingNotifier.itemColor);
 
     return Column(
@@ -347,13 +365,13 @@ class _BuildItem extends ConsumerWidget {
         AnimatedDefaultTextStyle(
           duration: speedDuration,
           style: GetMediumStyle(fontSize: 10, color: color),
-          child: Text('${(height / 2).toInt()}'),
+          child: Text(writtenHeight),
         ),
         RSizedBox(height: 4),
         AnimatedContainer(
           duration: speedDuration,
           width: itemWidth,
-          height: height,
+          height: actualHeight,
           decoration: BoxDecoration(
             color: color,
             boxShadow: currentItem == null || currentItem.getColor == SortingNotifier.itemColor
