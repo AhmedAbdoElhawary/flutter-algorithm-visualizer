@@ -14,7 +14,14 @@ class ParseError implements Exception {
 }
 
 const Set<String> _typeKeywords = <String>{
-  'void', 'int', 'double', 'String', 'bool', 'num', 'dynamic', 'List',
+  'void',
+  'int',
+  'double',
+  'String',
+  'bool',
+  'num',
+  'dynamic',
+  'List',
 };
 
 /// A hand-written recursive-descent parser for a deliberately small
@@ -72,8 +79,7 @@ class Parser {
 
   bool _isVarDeclStart() {
     if (_check(TokKind.keyword) &&
-        (_peek.text == 'var' || _peek.text == 'final' || _peek.text == 'const' ||
-            _typeKeywords.contains(_peek.text))) {
+        (_peek.text == 'var' || _peek.text == 'final' || _peek.text == 'const' || _typeKeywords.contains(_peek.text))) {
       return true;
     }
     return false;
@@ -82,8 +88,7 @@ class Parser {
   void _skipType() {
     if (_check(TokKind.keyword) && _typeKeywords.contains(_peek.text)) {
       _advance();
-    } else if (_check(TokKind.keyword) &&
-        (_peek.text == 'var' || _peek.text == 'final' || _peek.text == 'const')) {
+    } else if (_check(TokKind.keyword) && (_peek.text == 'var' || _peek.text == 'final' || _peek.text == 'const')) {
       _advance();
     } else if (_check(TokKind.identifier)) {
       _advance();
@@ -276,11 +281,7 @@ class Parser {
 
   Expr _parseAssignment() {
     final Expr expr = _parseConditional();
-    if (_checkSymbol('=') ||
-        _checkSymbol('+=') ||
-        _checkSymbol('-=') ||
-        _checkSymbol('*=') ||
-        _checkSymbol('/=')) {
+    if (_checkSymbol('=') || _checkSymbol('+=') || _checkSymbol('-=') || _checkSymbol('*=') || _checkSymbol('/=')) {
       final Tok opTok = _advance();
       final Expr value = _parseAssignment();
       if (expr is! Identifier && expr is! IndexExpr) {
@@ -331,10 +332,7 @@ class Parser {
 
   Expr _parseRelational() {
     Expr expr = _parseAdditive();
-    while (_checkSymbol('<') ||
-        _checkSymbol('>') ||
-        _checkSymbol('<=') ||
-        _checkSymbol('>=')) {
+    while (_checkSymbol('<') || _checkSymbol('>') || _checkSymbol('<=') || _checkSymbol('>=')) {
       final Tok opTok = _advance();
       expr = BinaryExpr(opTok.text, expr, _parseAdditive(), opTok.line);
     }
@@ -352,10 +350,7 @@ class Parser {
 
   Expr _parseMultiplicative() {
     Expr expr = _parseUnary();
-    while (_checkSymbol('*') ||
-        _checkSymbol('/') ||
-        _checkSymbol('~/') ||
-        _checkSymbol('%')) {
+    while (_checkSymbol('*') || _checkSymbol('/') || _checkSymbol('~/') || _checkSymbol('%')) {
       final Tok opTok = _advance();
       expr = BinaryExpr(opTok.text, expr, _parseUnary(), opTok.line);
     }
@@ -380,8 +375,7 @@ class Parser {
         expr = IndexExpr(expr, index, opTok.line);
       } else if (_checkSymbol('.')) {
         final Tok opTok = _advance();
-        final Tok nameTok =
-            _consumeIdentifier('Expected a member name after "."');
+        final Tok nameTok = _consumeIdentifier('Expected a member name after "."');
         if (_checkSymbol('(')) {
           final List<Expr> args = _parseArgs();
           expr = CallExpr(

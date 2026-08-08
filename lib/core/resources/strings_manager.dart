@@ -82,5 +82,10 @@ class StringsManager {
   static const String stable = "Stable:";
   static const String yes = "Yes";
   static const String no = "No";
-
+  static const String start = "Start";
+  static const String end = "End";
+  static const String frontier = "Frontier";
+  static const String visited = "Visited";
+  static const String path = "Path";
+  static const String wall = "Wall";
 }

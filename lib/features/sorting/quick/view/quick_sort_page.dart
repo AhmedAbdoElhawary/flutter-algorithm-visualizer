@@ -15,7 +15,8 @@ class QuickSortPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SortingPage(instance:  BasePageViewModel.sortingCards[StringsManager.quickSort]?.instance ?? _notifierProvider,
-         title: StringsManager.quickSort);
+    return SortingPage(
+        instance: BasePageViewModel.sortingCards[StringsManager.quickSort]?.instance ?? _notifierProvider,
+        title: StringsManager.quickSort);
   }
 }

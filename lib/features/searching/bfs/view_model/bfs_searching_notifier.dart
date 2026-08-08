@@ -15,7 +15,7 @@ class BFSSearchingNotifier extends SearchingNotifier {
     steps.add(PFStep(
       visited: {start},
       frontier: {start},
-      description: 'BFS: queue initialized with start ($kPFStartRow, $kPFStartCol)',
+      statusText: 'BFS: queue initialized with start ($kPFStartRow, $kPFStartCol)',
     ));
 
     while (queue.isNotEmpty) {
@@ -29,7 +29,7 @@ class BFSSearchingNotifier extends SearchingNotifier {
           visited: Set.from(visited),
           frontier: Set.from(queue),
           path: path,
-          description: '✓ BFS found shortest path! Length: ${path.length - 1} steps',
+          statusText: '✓ BFS found shortest path! Length: ${path.length - 1} steps',
         ));
         return steps;
       }
@@ -48,14 +48,14 @@ class BFSSearchingNotifier extends SearchingNotifier {
       steps.add(PFStep(
         visited: Set.from(visited),
         frontier: Set.from(queue),
-        description: 'BFS: dequeued ($row, $col) — queue size: ${queue.length}',
+        statusText: 'BFS: dequeued ($row, $col) — queue size: ${queue.length}',
       ));
     }
 
     steps.add(PFStep(
       visited: Set.from(visited),
       frontier: {},
-      description: '✗ No path — all reachable cells explored',
+      statusText: '✗ No path — all reachable cells explored',
     ));
     return steps;
   }
@@ -73,24 +73,24 @@ class BFSSearchingNotifier extends SearchingNotifier {
   AlgorithmComplexity get algoComplexity => algorithmComplexity;
 
   @override
-  String get description => StringsManager.breadthFirstSearchDescription;
+  String get algorithmDescription => StringsManager.breadthFirstSearchDescription;
 
   @override
   List<String> get codeSnippet => const [
-    'enqueue(start)', // 0
-    'while queue is not empty', // 1
-    '  current = dequeue()', // 2
-    '  if current == goal return path', // 3
-    '  for each neighbor', // 4
-    '    if not visited', // 5
-    '      mark visited', // 6
-    '      enqueue(neighbor)', // 7
-  ];
+        'enqueue(start)', // 0
+        'while queue is not empty', // 1
+        '  current = dequeue()', // 2
+        '  if current == goal return path', // 3
+        '  for each neighbor', // 4
+        '    if not visited', // 5
+        '      mark visited', // 6
+        '      enqueue(neighbor)', // 7
+      ];
 
   @override
   int codeLineForStep(SortingStep step) {
     final pfStep = step as PFStep;
-    final desc = pfStep.description;
+    final desc = pfStep.statusText;
 
     if (desc.startsWith('BFS: queue initialized')) return 0;
     if (desc.startsWith('✓')) return 3;
