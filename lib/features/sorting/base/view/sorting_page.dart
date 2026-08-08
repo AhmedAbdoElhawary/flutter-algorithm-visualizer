@@ -10,8 +10,6 @@ import 'package:algorithm_visualizer/core/widgets/custom_widgets/algorithm_contr
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/algorithm_status_text.dart';
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/algorithm_title.dart';
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/complexity_details.dart';
-import 'package:algorithm_visualizer/core/widgets/custom_widgets/live_code_snippet.dart';
-import 'package:algorithm_visualizer/features/base/view_model/algorithm_description_interface.dart';
 import 'package:algorithm_visualizer/features/base/view_model/base_page_view_model.dart';
 import 'package:algorithm_visualizer/features/sorting/base/view_model/sorting_notifier.dart';
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/algo_tab.dart';
@@ -124,28 +122,10 @@ class _SortingPageState extends ConsumerState<SortingPage> {
               sliver: SliverToBoxAdapter(child: _StatusText(instance)),
             ),
             SliverToBoxAdapter(child: _SortingControlButtons(instance)),
-            SliverPadding(
-              padding: REdgeInsetsDirectional.only(top: 0, bottom: 10),
-              sliver: SliverToBoxAdapter(child: _LiveCodeSnippet(instance)),
-            ),
           ],
         ),
       ),
     );
-  }
-}
-
-class _LiveCodeSnippet extends ConsumerWidget {
-  const _LiveCodeSnippet(this.instance);
-
-  final StateNotifierProvider<SortingNotifier, SortingNotifierState> instance;
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final currentStep = ref.watch(instance.select((s) => s.currentStep));
-    final code = ref.read(instance.notifier);
-    return LiveCodeSnippet(
-        currentLine: currentStep == null ? -1 : code.codeLineForStep(currentStep), code: code.code);
   }
 }
 
