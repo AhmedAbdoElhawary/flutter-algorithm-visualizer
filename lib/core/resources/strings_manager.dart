@@ -57,7 +57,6 @@ class StringsManager {
   static const String radixSortDescription = "Sorts numbers digit by digit from least to greatest.";
   static const String countingSortDescription = "Counts occurrences instead of comparing values directly.";
   static const String bucketSortDescription = "Distributes items into buckets, then sorts each bucket.";
-//
 
   static const String breadthFirstSearchDescription = "Finds the shortest path level by level.";
   static const String depthFirstSearchDescription = "Explores one path deeply before backtracking.";
@@ -66,6 +65,10 @@ class StringsManager {
   static const String generateMaze = "Generate Maze";
   static const String visualize = "Visualize";
   static const String maze = "Maze";
+  static const String initialArrayReadyToSort = "Initial array - ready to sort";
+  static const String arrayFullySorted = "✓ Array fully sorted!";
+  static const String swapPositions = "Swap positions";
+  static const String compare = "Compare";
 
   static const String stop = "Stop";
   static const String play = "Play";

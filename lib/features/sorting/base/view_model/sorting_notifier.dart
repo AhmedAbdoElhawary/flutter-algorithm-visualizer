@@ -1,4 +1,5 @@
 import 'package:algorithm_visualizer/core/helpers/playback_speed.dart';
+import 'package:algorithm_visualizer/core/resources/strings_manager.dart';
 import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
 import 'package:algorithm_visualizer/features/base/view_model/algorithm_control_interface.dart';
 import 'package:algorithm_visualizer/features/base/view_model/algorithm_description_interface.dart';
@@ -99,7 +100,7 @@ abstract class SortingNotifier extends StateNotifier<SortingNotifierState>
   }
 
   String statusText({required SortingStep? currentStep, required List<SortableItem> list}) {
-    final initialText = 'Initial array - ready to sort';
+    final initialText = StringsManager.initialArrayReadyToSort;
     if (currentStep == null || currentStep.index1 == -1 || currentStep.index2 == -1) return initialText;
 
     final value1 = list[currentStep.index1].value;
@@ -109,11 +110,11 @@ abstract class SortingNotifier extends StateNotifier<SortingNotifierState>
     final (actualHeight2, writtenHeight2) = calculateItemHeight(value2, _size, selectedAlgorithmLength);
 
     return currentStep.action == SortingStatus.compared
-        ? 'Compare arr[${currentStep.index1}]=$writtenHeight1 ↔ arr[${currentStep.index2}]=$writtenHeight2'
+        ? '${StringsManager.compare} arr[${currentStep.index1}]=$writtenHeight1 ↔ arr[${currentStep.index2}]=$writtenHeight2'
         : currentStep.action == SortingStatus.swapping
-            ? '$writtenHeight2 > $writtenHeight1: swap positions ${currentStep.index1} ↔ ${currentStep.index2}'
+            ? '$writtenHeight2 > $writtenHeight1: ${StringsManager.swapPositions} ${currentStep.index1} ↔ ${currentStep.index2}'
             : currentStep.action == SortingStatus.allSorted
-                ? '✓ Array fully sorted!'
+                ? StringsManager.arrayFullySorted
                 : initialText;
   }
 
