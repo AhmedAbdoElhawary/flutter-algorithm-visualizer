@@ -2,11 +2,14 @@ import 'dart:async';
 import 'dart:math' as math;
 
 import 'package:algorithm_visualizer/core/helpers/o_notation.dart';
+import 'package:algorithm_visualizer/core/helpers/playback_speed.dart';
 import 'package:algorithm_visualizer/core/resources/strings_manager.dart';
-import 'package:algorithm_visualizer/features/base/view_model/base_page_view_model.dart';
+import 'package:algorithm_visualizer/features/base/view_model/algorithm_control_interface.dart';
+import 'package:algorithm_visualizer/features/base/view_model/algorithm_description_interface.dart';
 import 'package:algorithm_visualizer/features/searching/base/helper/pf_constants.dart';
 import 'package:algorithm_visualizer/features/searching/base/helper/pf_step.dart';
 import 'package:algorithm_visualizer/features/sorting/base/view_model/sorting_notifier.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 part 'package:algorithm_visualizer/features/searching/star/view_model/a_star_searching_notifier.dart';
@@ -16,17 +19,13 @@ part 'searching_state.dart';
 
 const _kInfinity = 1 << 30;
 const _kOrthogonalDirs = [(-1, 0), (0, 1), (1, 0), (0, -1)];
-// Push order reversed so DFS explores up/right first (top-right biased).
 const _kReverseOrthogonalDirs = [(0, -1), (1, 0), (0, 1), (-1, 0)];
 
-abstract class SearchingNotifier extends StateNotifier<SearchingState> implements AlgorithmNotifier {
+abstract class SearchingNotifier extends StateNotifier<SearchingState>
+    implements AlgorithmDescriptionNotifier, AlgorithmControlInterface {
   SearchingNotifier() : super(SearchingState.initial());
 
   Timer? _timer;
-
-  /// Whether the current wall-drawing gesture is erasing or drawing walls.
-  /// Decided once per gesture (on tap-down / pan-start) and reused for every
-  /// cell touched during that same drag — mirrors the original UX.
   bool _erasingGesture = false;
 
   @override
@@ -35,9 +34,20 @@ abstract class SearchingNotifier extends StateNotifier<SearchingState> implement
     super.dispose();
   }
 
+  @override
+  bool get backwardValidation => state.hasSteps && !state.isAtStart;
+  @override
+  bool get forwardValidation => state.hasSteps && !state.isAtEnd;
+
+  @override
+  bool get isPlaying => state.playing;
+
+  @override
+  PlaybackSpeed get getSpeed => state.speed;
+
   List<PFStep> buildAlgorithm(List<List<bool>> walls);
 
-  bool _inBounds(int row, int col) => row >= 0 && row < kPFRows && col >= 0 && col < kPFCols;
+  bool _inBounds(int row, int col) => row >= 0 && row < kPFCells && col >= 0 && col < kPFCells;
 
   Set<int> _buildPath(int end, Map<int, int> parent) {
     final path = <int>{};
@@ -56,7 +66,7 @@ abstract class SearchingNotifier extends StateNotifier<SearchingState> implement
 
   void _startTimer() {
     _clearTimer();
-    _timer = Timer.periodic(state.speed.stepDuration, (_) {
+    _timer = Timer.periodic(state.speed.stepSearchingDuration, (_) {
       final steps = state.steps;
       if (steps == null || state.stepIndex >= steps.length - 1) {
         state = state.copyWith(playing: false);
@@ -72,10 +82,26 @@ abstract class SearchingNotifier extends StateNotifier<SearchingState> implement
     state = state.copyWith(stepIndex: 0, playing: false, clearSteps: true);
   }
 
+  // ── Start / End Point Methods (Now allow dragging & auto-reset steps) ──
+
+  void setStartPoint(int row, int col) {
+    if (row == state.endRow && col == state.endCol) return;
+    if (state.walls[row][col]) return; // Cannot place on a wall
+    _resetSteps();
+    state = state.copyWith(startRow: row, startCol: col);
+  }
+
+  void setEndPoint(int row, int col) {
+    if (row == state.startRow && col == state.startCol) return;
+    if (state.walls[row][col]) return; // Cannot place on a wall
+    _resetSteps();
+    state = state.copyWith(endRow: row, endCol: col);
+  }
+
   void setWall(int row, int col, {required bool isGestureStart}) {
     if (state.hasSteps) return;
-    if (row == kPFStartRow && col == kPFStartCol) return;
-    if (row == kPFEndRow && col == kPFEndCol) return;
+    if (row == state.startRow && col == state.startCol) return;
+    if (row == state.endRow && col == state.endCol) return;
 
     if (isGestureStart) {
       _erasingGesture = state.walls[row][col];
@@ -97,10 +123,10 @@ abstract class SearchingNotifier extends StateNotifier<SearchingState> implement
     _resetSteps();
     final rng = math.Random();
     final walls = List.generate(
-      kPFRows,
-      (r) => List.generate(kPFCols, (c) {
-        if (r == kPFStartRow && c == kPFStartCol) return false;
-        if (r == kPFEndRow && c == kPFEndCol) return false;
+      kPFCells,
+      (r) => List.generate(kPFCells, (c) {
+        if (r == state.startRow && c == state.startCol) return false;
+        if (r == state.endRow && c == state.endCol) return false;
         return rng.nextDouble() < 0.30;
       }),
     );
@@ -109,7 +135,7 @@ abstract class SearchingNotifier extends StateNotifier<SearchingState> implement
 
   // ── Playback ───────────────────────────────────────────────────────────
 
-  void runAlgorithm() {
+  void _runAlgorithm() {
     _clearTimer();
     final steps = buildAlgorithm(state.walls);
 
@@ -117,9 +143,10 @@ abstract class SearchingNotifier extends StateNotifier<SearchingState> implement
     _startTimer();
   }
 
-  void togglePlay() {
+  @override
+  Future<void> togglePlay(BuildContext context) async {
     if (!state.hasSteps) {
-      runAlgorithm();
+      _runAlgorithm();
       return;
     }
     if (state.isAtEnd) {
@@ -132,18 +159,21 @@ abstract class SearchingNotifier extends StateNotifier<SearchingState> implement
     playing ? _startTimer() : _clearTimer();
   }
 
+  @override
   void stepForward() {
     _clearTimer();
     if (state.steps == null || state.isAtEnd) return;
     state = state.copyWith(stepIndex: state.stepIndex + 1, playing: false);
   }
 
+  @override
   void stepBackward() {
     _clearTimer();
     if (state.isAtStart) return;
     state = state.copyWith(stepIndex: state.stepIndex - 1, playing: false);
   }
 
+  @override
   void reset() => _resetSteps();
 
   PlaybackSpeed _getNextSpeed(PlaybackSpeed speed) {
@@ -158,7 +188,8 @@ abstract class SearchingNotifier extends StateNotifier<SearchingState> implement
                     : PlaybackSpeed.slow;
   }
 
-  void setNextSpeed(PlaybackSpeed speed) {
+  @override
+  void changeSpeed(PlaybackSpeed speed) {
     state = state.copyWith(speed: _getNextSpeed(speed));
     if (state.playing) _startTimer();
   }

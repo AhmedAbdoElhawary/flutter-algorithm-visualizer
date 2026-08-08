@@ -2,7 +2,7 @@ import 'dart:ui';
 
 import 'package:algorithm_visualizer/core/custom_packages/custom_code_editor/code_editor.dart';
 import 'package:algorithm_visualizer/core/resources/color_manager.dart';
-import 'package:algorithm_visualizer/features/searching/base/widgets/pf_note.dart';
+import 'package:algorithm_visualizer/core/widgets/custom_widgets/how_it_works.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -16,14 +16,14 @@ class LiveCodeSnippet extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return Padding(
       padding: REdgeInsets.symmetric(horizontal: 16),
-      child:  _CodeEditor(code),
+      child: _CodeEditor(code),
     );
   }
 }
 
 class _CodeEditor extends StatefulWidget {
   const _CodeEditor(this.code);
-final String code;
+  final String code;
   @override
   State<_CodeEditor> createState() => _CodeEditorState();
 }
@@ -35,7 +35,7 @@ class _CodeEditorState extends State<_CodeEditor> with SingleTickerProviderState
 
   OverlayEntry? _overlay;
 
-  late final AnimationController _controller=AnimationController(
+  late final AnimationController _controller = AnimationController(
     vsync: this,
     duration: const Duration(milliseconds: 320),
   );
@@ -79,7 +79,6 @@ class _CodeEditorState extends State<_CodeEditor> with SingleTickerProviderState
                 ),
               ),
             ),
-
             CompositedTransformFollower(
               link: _layerLink,
               showWhenUnlinked: false,

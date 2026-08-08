@@ -15,9 +15,29 @@ enum TokKind {
 }
 
 const Set<String> kKeywords = <String>{
-  'var', 'final', 'const', 'int', 'double', 'String', 'bool', 'num',
-  'dynamic', 'void', 'List', 'if', 'else', 'while', 'for', 'do', 'return',
-  'break', 'continue', 'true', 'false', 'null', 'in',
+  'var',
+  'final',
+  'const',
+  'int',
+  'double',
+  'String',
+  'bool',
+  'num',
+  'dynamic',
+  'void',
+  'List',
+  'if',
+  'else',
+  'while',
+  'for',
+  'do',
+  'return',
+  'break',
+  'continue',
+  'true',
+  'false',
+  'null',
+  'in',
 };
 
 /// A single lexical token with source-line information, used for both
@@ -56,8 +76,20 @@ class Lexer {
   final String source;
 
   static const List<String> _multiCharSymbols = <String>[
-    '=>', '==', '!=', '<=', '>=', '&&', '||', '++', '--', '+=', '-=', '*=',
-    '/=', '~/',
+    '=>',
+    '==',
+    '!=',
+    '<=',
+    '>=',
+    '&&',
+    '||',
+    '++',
+    '--',
+    '+=',
+    '-=',
+    '*=',
+    '/=',
+    '~/',
   ];
   static const String _singleCharSymbols = '+-*/%=<>!(){}[],;.?:';
 
@@ -168,10 +200,7 @@ class Lexer {
         while (i < source.length && _isDigit(source[i])) {
           i++;
         }
-        if (i < source.length &&
-            source[i] == '.' &&
-            i + 1 < source.length &&
-            _isDigit(source[i + 1])) {
+        if (i < source.length && source[i] == '.' && i + 1 < source.length && _isDigit(source[i + 1])) {
           isDouble = true;
           i++;
           while (i < source.length && _isDigit(source[i])) {
@@ -210,8 +239,7 @@ class Lexer {
       );
       final String? matchedMulti = _multiCharSymbols
           .where((String s) => twoOrMore.startsWith(s))
-          .fold<String?>(null, (String? best, String s) =>
-              best == null || s.length > best.length ? s : best);
+          .fold<String?>(null, (String? best, String s) => best == null || s.length > best.length ? s : best);
       if (matchedMulti != null) {
         tokens.add(Tok(TokKind.symbol, matchedMulti, line));
         i += matchedMulti.length;
@@ -233,7 +261,6 @@ class Lexer {
   }
 
   static bool _isDigit(String c) => c.compareTo('0') >= 0 && c.compareTo('9') <= 0;
-  static bool _isIdentStart(String c) =>
-      RegExp(r'[A-Za-z_$]').hasMatch(c);
+  static bool _isIdentStart(String c) => RegExp(r'[A-Za-z_$]').hasMatch(c);
   static bool _isIdentPart(String c) => RegExp(r'[A-Za-z0-9_$]').hasMatch(c);
 }

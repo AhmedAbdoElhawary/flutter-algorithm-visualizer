@@ -1,6 +1,5 @@
 part of '../view/sorting_page.dart';
 
-
 class SizeDraggable extends ConsumerWidget {
   const SizeDraggable({super.key, required this.onChanged, required this.isRunning});
 

@@ -20,7 +20,6 @@ class ShellSortNotifier extends SortingNotifier {
           if (arr[j] < arr[j - gap]) {
             steps.add(SortingStep(index1: j, index2: j - gap, action: SortingStatus.swapping));
             arr.swap(j, j - gap);
-            steps.add(SortingStep(index1: j, index2: j - gap, action: SortingStatus.swapped));
           } else {
             break;
           }
@@ -28,8 +27,6 @@ class ShellSortNotifier extends SortingNotifier {
         }
       }
     }
-
-    steps.add(SortingStep(index1: arr.length - 1, index2: arr.length - 1, action: SortingStatus.sorted));
 
     return SortingResult(sortedValues: arr, steps: steps);
   }
@@ -47,35 +44,35 @@ class ShellSortNotifier extends SortingNotifier {
   AlgorithmComplexity get algoComplexity => algorithmComplexity;
 
   @override
-  String get description => StringsManager.shellSortDescription;
+  String get algorithmDescription => StringsManager.shellSortDescription;
   @override
   List<String> get codeSnippet => const [
-    'void main() {', // 0
-    '  List<int> arr = [64, 34, 25, 12, 22, 11, 90];', // 1
-    '  int n = arr.length;', // 2
-    '  for (int gap = n ~/ 2; gap > 0; gap ~/= 2) {', // 3
-    '    for (int i = gap; i < n; i++) {', // 4
-    '      int j = i;', // 5
-    '      while (j >= gap) {', // 6
-    '        if (arr[j] < arr[j - gap]) {', // 7
-    '          int temp = arr[j];', // 8
-    '          arr[j] = arr[j - gap];', // 9
-    '          arr[j - gap] = temp;', // 10
-    '          j -= gap;', // 11
-    '        } else {', // 12
-    '          break;', // 13
-    '        }', // 14
-    '      }', // 15
-    '    }', // 16
-    '  }', // 17
-    '}', // 18
-  ];
+        'void main() {', // 0
+        '  List<int> arr = [64, 34, 25, 12, 22, 11, 90];', // 1
+        '  int n = arr.length;', // 2
+        '  for (int gap = n ~/ 2; gap > 0; gap ~/= 2) {', // 3
+        '    for (int i = gap; i < n; i++) {', // 4
+        '      int j = i;', // 5
+        '      while (j >= gap) {', // 6
+        '        if (arr[j] < arr[j - gap]) {', // 7
+        '          int temp = arr[j];', // 8
+        '          arr[j] = arr[j - gap];', // 9
+        '          arr[j - gap] = temp;', // 10
+        '          j -= gap;', // 11
+        '        } else {', // 12
+        '          break;', // 13
+        '        }', // 14
+        '      }', // 15
+        '    }', // 16
+        '  }', // 17
+        '}', // 18
+      ];
 
   @override
   int codeLineForStep(SortingStep step) => switch (step.action) {
-    SortingStatus.compared                              => 7,  // arr[j] < arr[j - gap]
-    SortingStatus.swapping                              => 9,  // arr[j] = arr[j - gap]
-    SortingStatus.swapped || SortingStatus.none     => 11,  // j -= gap
-    SortingStatus.sorted                                => 13,  // break (placed)
-  };
+        SortingStatus.compared => 7, // arr[j] < arr[j - gap]
+        SortingStatus.swapping => 9, // arr[j] = arr[j - gap]
+        SortingStatus.none => 11, // j -= gap
+        _ => -1,
+      };
 }

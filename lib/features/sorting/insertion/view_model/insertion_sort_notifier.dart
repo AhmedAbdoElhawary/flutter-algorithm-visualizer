@@ -17,13 +17,9 @@ class InsertionSortNotifier extends SortingNotifier {
         steps.add(SortingStep(index1: j, index2: j - 1, action: SortingStatus.swapping));
 
         arr.swap(j, j - 1);
-        steps.add(SortingStep(index1: j, index2: j - 1, action: SortingStatus.swapped));
         j--;
       }
-      steps.add(SortingStep(index1: j, index2: j, action: SortingStatus.sorted));
     }
-
-    steps.add(SortingStep(index1: arr.length - 1, index2: arr.length - 1, action: SortingStatus.sorted));
 
     return SortingResult(sortedValues: arr, steps: steps);
   }
@@ -41,28 +37,28 @@ class InsertionSortNotifier extends SortingNotifier {
   AlgorithmComplexity get algoComplexity => algorithmComplexity;
 
   @override
-  String get description => StringsManager.insertionSortDescription;
+  String get algorithmDescription => StringsManager.insertionSortDescription;
   @override
   List<String> get codeSnippet => const [
-    'void main() {', // 0
-    '  List<int> arr = [64, 34, 25, 12, 22, 11, 90];', // 1
-    '  for (int i = 1; i < arr.length; i++) {', // 2
-    '    int j = i;', // 3
-    '    while (j > 0 && arr[j] < arr[j - 1]) {', // 4
-    '      int temp = arr[j];', // 5
-    '      arr[j] = arr[j - 1];', // 6
-    '      arr[j - 1] = temp;', // 7
-    '      j--;', // 8
-    '    }', // 9
-    '  }', // 10
-    '}', // 11
-  ];
+        'void main() {', // 0
+        '  List<int> arr = [64, 34, 25, 12, 22, 11, 90];', // 1
+        '  for (int i = 1; i < arr.length; i++) {', // 2
+        '    int j = i;', // 3
+        '    while (j > 0 && arr[j] < arr[j - 1]) {', // 4
+        '      int temp = arr[j];', // 5
+        '      arr[j] = arr[j - 1];', // 6
+        '      arr[j - 1] = temp;', // 7
+        '      j--;', // 8
+        '    }', // 9
+        '  }', // 10
+        '}', // 11
+      ];
 
   @override
   int codeLineForStep(SortingStep step) => switch (step.action) {
-    SortingStatus.compared                              => 4, // arr[j] < arr[j - 1]
-    SortingStatus.swapping                              => 6, // arr[j] = arr[j - 1]
-    SortingStatus.swapped || SortingStatus.none     => 8, // j--
-    SortingStatus.sorted                                => 9, // end of while loop
-  };
+        SortingStatus.compared => 4, // arr[j] < arr[j - 1]
+        SortingStatus.swapping => 6, // arr[j] = arr[j - 1]
+        SortingStatus.none => 8, // j--
+        _ => -1,
+      };
 }

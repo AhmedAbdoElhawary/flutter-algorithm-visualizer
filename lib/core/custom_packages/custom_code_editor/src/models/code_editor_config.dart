@@ -64,8 +64,7 @@ class CodeEditorConfig {
       autoCloseBrackets: autoCloseBrackets ?? this.autoCloseBrackets,
       smartSpaces: smartSpaces ?? this.smartSpaces,
       showLineNumbers: showLineNumbers ?? this.showLineNumbers,
-      trimTrailingWhitespaceOnNewLine: trimTrailingWhitespaceOnNewLine ??
-          this.trimTrailingWhitespaceOnNewLine,
+      trimTrailingWhitespaceOnNewLine: trimTrailingWhitespaceOnNewLine ?? this.trimTrailingWhitespaceOnNewLine,
     );
   }
 }

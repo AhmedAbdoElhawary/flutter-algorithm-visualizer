@@ -34,9 +34,7 @@ class CodeSpanBuilder {
     final List<InlineSpan> children = <InlineSpan>[];
     for (int i = 0; i < lines.length; i++) {
       final String line = lines[i];
-      final List<Token> tokens = i < lineTokens.length
-          ? lineTokens[i]
-          : const <Token>[];
+      final List<Token> tokens = i < lineTokens.length ? lineTokens[i] : const <Token>[];
       _appendLine(
         children,
         line,
@@ -97,8 +95,7 @@ class CodeSpanBuilder {
     }
   }
 
-  static TextStyle? _colorStyle(Color? color) =>
-      color != null ? TextStyle(color: color) : null;
+  static TextStyle? _colorStyle(Color? color) => color != null ? TextStyle(color: color) : null;
 
   static TextStyle _errorStyle(CodeEditorTheme theme, Color? tokenColor) {
     return TextStyle(

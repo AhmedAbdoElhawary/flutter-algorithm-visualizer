@@ -33,7 +33,6 @@ class HeapSortNotifier extends SortingNotifier {
       if (largest != i) {
         steps.add(SortingStep(index1: i, index2: largest, action: SortingStatus.swapping));
         arr.swap(i, largest);
-        steps.add(SortingStep(index1: i, index2: largest, action: SortingStatus.swapped));
 
         heapify(n, largest);
       }
@@ -49,19 +48,15 @@ class HeapSortNotifier extends SortingNotifier {
       for (int i = n - 1; i > 0; i--) {
         steps.add(SortingStep(index1: 0, index2: i, action: SortingStatus.swapping));
         arr.swap(0, i);
-        steps.add(SortingStep(index1: 0, index2: i, action: SortingStatus.swapped));
 
         heapify(i, 0);
       }
     }
 
     if (arr.isNotEmpty) heapSort();
-    steps.add(SortingStep(index1: 0, index2: 0, action: SortingStatus.sorted));
 
     return SortingResult(sortedValues: arr, steps: steps);
   }
-
-
 
   static final algorithmComplexity = AlgorithmComplexity(
     name: StringsManager.heapSort,
@@ -76,46 +71,46 @@ class HeapSortNotifier extends SortingNotifier {
   AlgorithmComplexity get algoComplexity => algorithmComplexity;
 
   @override
-  String get description => StringsManager.heapSortDescription;
+  String get algorithmDescription => StringsManager.heapSortDescription;
   @override
   List<String> get codeSnippet => const [
-    'void main() {', // 0
-    '  List<int> arr = [64, 34, 25, 12, 22, 11, 90];', // 1
-    '  int n = arr.length;', // 2
-    '  for (int i = (n ~/ 2) - 1; i >= 0; i--) {', // 3
-    '    heapify(arr, n, i);', // 4
-    '  }', // 5
-    '  for (int i = n - 1; i > 0; i--) {', // 6
-    '    int temp = arr[0];', // 7
-    '    arr[0] = arr[i];', // 8
-    '    arr[i] = temp;', // 9
-    '    heapify(arr, i, 0);', // 10
-    '  }', // 11
-    '}', // 12
-    'void heapify(List<int> arr, int n, int i) {', // 13
-    '  int largest = i;', // 14
-    '  int left = 2 * i + 1;', // 15
-    '  int right = 2 * i + 2;', // 16
-    '  if (left < n && arr[left] > arr[largest]) {', // 17
-    '    largest = left;', // 18
-    '  }', // 19
-    '  if (right < n && arr[right] > arr[largest]) {', // 20
-    '    largest = right;', // 21
-    '  }', // 22
-    '  if (largest != i) {', // 23
-    '    int temp = arr[i];', // 24
-    '    arr[i] = arr[largest];', // 25
-    '    arr[largest] = temp;', // 26
-    '    heapify(arr, n, largest);', // 27
-    '  }', // 28
-    '}', // 29
-  ];
+        'void main() {', // 0
+        '  List<int> arr = [64, 34, 25, 12, 22, 11, 90];', // 1
+        '  int n = arr.length;', // 2
+        '  for (int i = (n ~/ 2) - 1; i >= 0; i--) {', // 3
+        '    heapify(arr, n, i);', // 4
+        '  }', // 5
+        '  for (int i = n - 1; i > 0; i--) {', // 6
+        '    int temp = arr[0];', // 7
+        '    arr[0] = arr[i];', // 8
+        '    arr[i] = temp;', // 9
+        '    heapify(arr, i, 0);', // 10
+        '  }', // 11
+        '}', // 12
+        'void heapify(List<int> arr, int n, int i) {', // 13
+        '  int largest = i;', // 14
+        '  int left = 2 * i + 1;', // 15
+        '  int right = 2 * i + 2;', // 16
+        '  if (left < n && arr[left] > arr[largest]) {', // 17
+        '    largest = left;', // 18
+        '  }', // 19
+        '  if (right < n && arr[right] > arr[largest]) {', // 20
+        '    largest = right;', // 21
+        '  }', // 22
+        '  if (largest != i) {', // 23
+        '    int temp = arr[i];', // 24
+        '    arr[i] = arr[largest];', // 25
+        '    arr[largest] = temp;', // 26
+        '    heapify(arr, n, largest);', // 27
+        '  }', // 28
+        '}', // 29
+      ];
 
   @override
   int codeLineForStep(SortingStep step) => switch (step.action) {
-    SortingStatus.compared                              => 17, // arr[left] > arr[largest]
-    SortingStatus.swapping                              => 25, // arr[i] = arr[largest]
-    SortingStatus.swapped || SortingStatus.none     => 23, // check if swap needed
-    SortingStatus.sorted                                => 8,  // extract max to end
-  };
+        SortingStatus.compared => 17, // arr[left] > arr[largest]
+        SortingStatus.swapping => 25, // arr[i] = arr[largest]
+        SortingStatus.none => 23, // check if swap needed
+        _ => -1,
+      };
 }

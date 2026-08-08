@@ -56,8 +56,7 @@ class ExprStmt extends Stmt {
 }
 
 class IfStmt extends Stmt {
-  IfStmt(this.condition, this.thenBranch, this.elseBranch, int line)
-      : super(line);
+  IfStmt(this.condition, this.thenBranch, this.elseBranch, int line) : super(line);
   final Expr condition;
   final Stmt thenBranch;
   final Stmt? elseBranch;
@@ -70,8 +69,7 @@ class WhileStmt extends Stmt {
 }
 
 class ForStmt extends Stmt {
-  ForStmt(this.init, this.condition, this.update, this.body, int line)
-      : super(line);
+  ForStmt(this.init, this.condition, this.update, this.body, int line) : super(line);
   final Stmt? init; // VarDeclStmt or ExprStmt
   final Expr? condition;
   final Expr? update;
@@ -160,8 +158,7 @@ class UnaryExpr extends Expr {
 }
 
 class ConditionalExpr extends Expr {
-  ConditionalExpr(this.condition, this.thenExpr, this.elseExpr, int line)
-      : super(line);
+  ConditionalExpr(this.condition, this.thenExpr, this.elseExpr, int line) : super(line);
   final Expr condition;
   final Expr thenExpr;
   final Expr elseExpr;
