@@ -15,7 +15,6 @@ enum ThemeEnum {
   white2DarkColor,
   textDarkColor,
   text2DarkColor,
-  purpleColor,
   borderPurpleColor,
   lightPurpleColor,
 
@@ -70,7 +69,6 @@ extension ThemeExtension on BuildContext {
       ThemeEnum.backgroundForSortingColor: ColorManager.backgroundForSortingColor,
       ThemeEnum.textDarkColor: ColorManager.textDarkColor,
       ThemeEnum.text2DarkColor: ColorManager.text2DarkColor,
-      ThemeEnum.purpleColor: ColorManager.purpleColor,
       ThemeEnum.lightPurpleColor: ColorManager.lightPurpleColor,
       ThemeEnum.borderPurpleColor: ColorManager.borderPurpleColor,
 

@@ -68,9 +68,7 @@ class SyntaxHighlighter {
       newEndStates[i] = _lastEndStates[i];
     }
 
-    LineState state = firstDiff == 0
-        ? tokenizer.initialState
-        : newEndStates[firstDiff - 1];
+    LineState state = firstDiff == 0 ? tokenizer.initialState : newEndStates[firstDiff - 1];
 
     int i = firstDiff;
     for (; i < lines.length; i++) {
@@ -135,8 +133,7 @@ class SyntaxHighlighter {
   bool _sameState(LineState a, LineState b) => a.cacheKey == b.cacheKey;
 
   int _firstDifferingLine(List<String> lines) {
-    final int minLen =
-        lines.length < _lastLines.length ? lines.length : _lastLines.length;
+    final int minLen = lines.length < _lastLines.length ? lines.length : _lastLines.length;
     for (int i = 0; i < minLen; i++) {
       if (lines[i] != _lastLines[i]) return i;
     }

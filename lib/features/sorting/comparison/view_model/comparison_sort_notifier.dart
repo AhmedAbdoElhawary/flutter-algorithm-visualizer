@@ -1,3 +1,4 @@
+import 'package:algorithm_visualizer/core/helpers/playback_speed.dart';
 import 'package:algorithm_visualizer/core/resources/strings_manager.dart';
 import 'package:algorithm_visualizer/features/sorting/base/view_model/sorting_notifier.dart';
 import 'package:algorithm_visualizer/features/sorting/bubble/view_model/bubble_sort_notifier.dart';
@@ -127,35 +128,26 @@ class ComparisonSortNotifier extends StateNotifier<ComparisonSortingNotifierStat
     }
   }
 
-  void changeSpeed(SpeedStatus percent, WidgetRef ref) {
+  void changeSpeed(PlaybackSpeed percent, WidgetRef ref) {
     for (var element in state.selectedAlgorithms) {
       ref.read(element.provider.notifier).changeSpeed(percent);
     }
   }
 
   Future<void> generateAgain(WidgetRef ref) async {
-    final generateAgain = state.selectedAlgorithms.map((e) => ref.read(e.provider.notifier).generateAgain());
+    final generateAgain = state.selectedAlgorithms.map((e) => ref.read(e.provider.notifier).reset());
     await Future.wait(generateAgain.toList());
     _setOperation = SortingEnum.none;
   }
 
-  Future<void> playSorting(BuildContext context, WidgetRef ref) async {
-    if (_getOperation == SortingEnum.played) return;
-
-    final playSorting = state.selectedAlgorithms.map((e) => ref.read(e.provider.notifier).playSorting(context));
-    _setOperation = SortingEnum.played;
+  Future<void> togglePlay(BuildContext context, WidgetRef ref) async {
+    final playSorting = state.selectedAlgorithms.map((e) => ref.read(e.provider.notifier).togglePlay(context));
 
     await Future.wait(playSorting.toList());
+
+    _setOperation = _getOperation == SortingEnum.played ? SortingEnum.stopped : SortingEnum.played;
+
     if (context.mounted) _setOperation = SortingEnum.none;
-  }
-
-  Future<void> stopSorting(WidgetRef ref) async {
-    final stopSorting = state.selectedAlgorithms.map((e) => ref.read(e.provider.notifier).stopSorting());
-    _setOperation = SortingEnum.played;
-
-    await Future.wait(stopSorting.toList());
-
-    if (_getOperation == SortingEnum.played) _setOperation = SortingEnum.stopped;
   }
 
   Future<void> cancelSorting(WidgetRef ref) async {

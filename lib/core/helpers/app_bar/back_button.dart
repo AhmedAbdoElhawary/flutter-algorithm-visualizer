@@ -34,8 +34,7 @@ class CustomBackButtonIcon extends ConsumerWidget {
         child: GlassContainer(
           borderRadius: 8,
           padding: REdgeInsets.all(6),
-          child:
-          CustomIcon(Icons.arrow_back_ios_new_rounded, size: 20, color: ThemeEnum.focusColor),
+          child: CustomIcon(Icons.arrow_back_ios_new_rounded, size: 20, color: ThemeEnum.focusColor),
         ),
       ),
     );

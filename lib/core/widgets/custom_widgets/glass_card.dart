@@ -1,4 +1,5 @@
 import 'dart:ui';
+import 'package:algorithm_visualizer/core/extensions/theme.dart';
 import 'package:algorithm_visualizer/core/helpers/o_notation.dart';
 import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
 import 'package:algorithm_visualizer/core/widgets/adaptive/text/adaptive_text.dart';
@@ -6,12 +7,12 @@ import 'package:algorithm_visualizer/core/widgets/custom_widgets/custom_icon.dar
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-class GlassCard extends StatelessWidget {
+class AlgorithmGlassCard extends StatelessWidget {
   final AlgorithmComplexity algoComplexity;
   final Color color;
   final IconData icon;
 
-  const GlassCard({
+  const AlgorithmGlassCard({
     super.key,
     required this.algoComplexity,
     required this.color,
@@ -124,6 +125,37 @@ class GlassContainer extends StatelessWidget {
         ),
       ),
     );
+  }
+}
+
+class SimpleGlassButton extends StatelessWidget {
+  final VoidCallback? onTap;
+  final String? messageTip;
+  final Widget child;
+  final double padding;
+  const SimpleGlassButton({super.key, required this.child, this.padding = 10, this.onTap, this.messageTip});
+
+  @override
+  Widget build(BuildContext context) {
+    final button = GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: REdgeInsets.all(padding),
+        decoration: BoxDecoration(
+          color: context.getColor(ThemeEnum.glassColor),
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: context.getColor(ThemeEnum.shadowColor)),
+          boxShadow: context.isThemeDark
+              ? []
+              : [
+                  BoxShadow(color: Colors.black.withValues(alpha: 0.05), blurRadius: 12, offset: const Offset(0, 2)),
+                  BoxShadow(color: Colors.black.withValues(alpha: 0.04), spreadRadius: 1),
+                ],
+        ),
+        child: child,
+      ),
+    );
+    return messageTip != null ? Tooltip(message: messageTip!, child: button) : button;
   }
 }
 

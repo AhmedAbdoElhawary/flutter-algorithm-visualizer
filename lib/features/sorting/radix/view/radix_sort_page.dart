@@ -15,7 +15,8 @@ class RadixSortPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SortingPage(instance:  BasePageViewModel.sortingCards[StringsManager.radixSort]?.instance ?? _notifierProvider
-        , title: StringsManager.radixSort);
+    return SortingPage(
+        instance: BasePageViewModel.sortingCards[StringsManager.radixSort]?.instance ?? _notifierProvider,
+        title: StringsManager.radixSort);
   }
 }

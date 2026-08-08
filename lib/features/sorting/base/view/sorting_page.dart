@@ -1,18 +1,19 @@
 import 'package:algorithm_visualizer/core/draggable_progress.dart' show DraggableProgressBar;
 import 'package:algorithm_visualizer/core/helpers/app_bar/back_button.dart';
+import 'package:algorithm_visualizer/core/helpers/playback_speed.dart';
 import 'package:algorithm_visualizer/core/resources/color_manager.dart';
 import 'package:algorithm_visualizer/core/resources/strings_manager.dart';
 import 'package:algorithm_visualizer/core/resources/styles_manager.dart';
 import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
 import 'package:algorithm_visualizer/core/widgets/adaptive/text/adaptive_text.dart';
+import 'package:algorithm_visualizer/core/widgets/custom_widgets/algorithm_control.dart';
+import 'package:algorithm_visualizer/core/widgets/custom_widgets/algorithm_status_text.dart';
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/algorithm_title.dart';
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/complexity_details.dart';
-import 'package:algorithm_visualizer/core/widgets/custom_widgets/custom_icon.dart';
-import 'package:algorithm_visualizer/core/widgets/custom_widgets/glass_card.dart';
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/live_code_snippet.dart';
+import 'package:algorithm_visualizer/features/base/view_model/algorithm_description_interface.dart';
 import 'package:algorithm_visualizer/features/base/view_model/base_page_view_model.dart';
 import 'package:algorithm_visualizer/features/sorting/base/view_model/sorting_notifier.dart';
-import 'package:algorithm_visualizer/features/sorting/base/widgets/linear_progress_indicator.dart';
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/algo_tab.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -59,7 +60,7 @@ class _SortingPageState extends ConsumerState<SortingPage> {
 
   @override
   Widget build(BuildContext context) {
-    final description = ref.read(instance.notifier).description;
+    final description = ref.read(instance.notifier).algorithmDescription;
     final complexity = ref.read(instance.notifier).algoComplexity;
 
     return PopScope(
@@ -79,7 +80,7 @@ class _SortingPageState extends ConsumerState<SortingPage> {
             ),
             SliverToBoxAdapter(child: ComplexityDetails(complexity: complexity)),
             SliverPadding(
-              padding: REdgeInsetsDirectional.only(top: 12, bottom: 12),
+              padding: REdgeInsetsDirectional.only(top: 10, bottom: 10),
               sliver: SliverToBoxAdapter(
                 child: SingleChildScrollView(
                   scrollDirection: Axis.horizontal,
@@ -117,20 +118,14 @@ class _SortingPageState extends ConsumerState<SortingPage> {
                 ),
               ),
             ),
+            SliverToBoxAdapter(child: ShowUpSortingList(instance)),
             SliverPadding(
-                padding: REdgeInsetsDirectional.only(bottom: 10),
-                sliver: SliverToBoxAdapter(child: ShowUpSortingList(instance))),
-            // SliverToBoxAdapter(child: _StatusLiveText(instance)),
-            SliverPadding(
-              padding: REdgeInsetsDirectional.only(top: 10, bottom: 10),
-              sliver: SliverToBoxAdapter(child: _ProgressBar(instance)),
+              padding: REdgeInsetsDirectional.only(top: 10),
+              sliver: SliverToBoxAdapter(child: _StatusText(instance)),
             ),
+            SliverToBoxAdapter(child: _SortingControlButtons(instance)),
             SliverPadding(
-              padding: REdgeInsetsDirectional.only(top: 10, bottom: 10),
-              sliver: SliverToBoxAdapter(child: _SortingControlButtons(instance)),
-            ),
-            SliverPadding(
-              padding: REdgeInsetsDirectional.only(top: 10, bottom: 10),
+              padding: REdgeInsetsDirectional.only(top: 0, bottom: 10),
               sliver: SliverToBoxAdapter(child: _LiveCodeSnippet(instance)),
             ),
           ],
@@ -147,44 +142,15 @@ class _LiveCodeSnippet extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final currentLine = ref.watch(instance.select((s) => s.currentCodeLine));
-    final code = ref.read(instance.notifier).code;
-    return LiveCodeSnippet(currentLine: currentLine, code: code);
+    final currentStep = ref.watch(instance.select((s) => s.currentStep));
+    final code = ref.read(instance.notifier);
+    return LiveCodeSnippet(
+        currentLine: currentStep == null ? -1 : code.codeLineForStep(currentStep), code: code.code);
   }
 }
 
-//
-// class _StatusLiveText extends ConsumerWidget {
-//   const _StatusLiveText(this.instance);
-//
-//   final StateNotifierProvider<SortingNotifier, SortingNotifierState> instance;
-//
-//   @override
-//   Widget build(BuildContext context, WidgetRef ref) {
-//     final text = ref.watch(instance.select((s) => s.statusText));
-//
-//     return Padding(
-//       padding: const EdgeInsets.symmetric(horizontal: 16),
-//       child: GlassContainer(
-//         withAboveShadow: false,
-//         borderRadius: 8,
-//         padding: REdgeInsets.symmetric(horizontal: 16, vertical: 12),
-//         child: AnimatedSwitcher(
-//           duration: const Duration(milliseconds: 250),
-//           child: MediumText(
-//             key: ValueKey(text),
-//             text,
-//             fontSize: 14,
-//             color: ThemeEnum.white2DarkColor,
-//           ),
-//         ),
-//       ),
-//     );
-//   }
-// }
-
-class _ProgressBar extends ConsumerWidget {
-  const _ProgressBar(this.instance);
+class _StatusText extends ConsumerWidget {
+  const _StatusText(this.instance);
 
   final StateNotifierProvider<SortingNotifier, SortingNotifierState> instance;
 
@@ -192,29 +158,14 @@ class _ProgressBar extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final progress = ref.watch(instance.select((s) => s.progressValue));
     final label = ref.watch(instance.select((s) => s.progressLabel));
+    final currentStep = ref.watch(instance.select((s) => s.currentStep));
+    final list = ref.watch(instance.select((s) => s.list));
+    final inst = ref.read(instance.notifier);
 
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
-      child: Row(
-        children: [
-          Expanded(
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(4),
-              child: GradientLinearProgressIndicator(value: progress),
-            ),
-          ),
-          RSizedBox(width: 10),
-          AnimatedSwitcher(
-            duration: const Duration(milliseconds: 200),
-            child: MediumText(
-              key: ValueKey(label),
-              label,
-              fontSize: 12,
-              color: ThemeEnum.hoverColor,
-            ),
-          ),
-        ],
-      ),
+    return AlgorithmStatusText(
+      progressLabel: label,
+      progressValue: progress,
+      statusText: inst.statusText(currentStep: currentStep, list: list),
     );
   }
 }
@@ -234,17 +185,29 @@ class SortingAppBar extends StatelessWidget {
   }
 }
 
-class ShowUpSortingList extends ConsumerWidget {
+class ShowUpSortingList extends ConsumerStatefulWidget {
   const ShowUpSortingList(this.instance, {this.selectedAlgorithmLength = 1, super.key});
   final StateNotifierProvider<SortingNotifier, SortingNotifierState> instance;
   final int selectedAlgorithmLength;
+
   @override
-  Widget build(BuildContext context, ref) {
-    final items = ref.watch(instance.select((state) => state.list));
-    final speedDuration = ref.watch(instance.select((state) => state.swipeDuration));
-    final maxHeight = SortingNotifier.calculateMaxListItemHeight(context);
-    final size = ref.watch(instance.select((state) => state.size));
-    final itemWidth = SortingNotifier.calculateItemWidth(context, size);
+  ConsumerState<ShowUpSortingList> createState() => _ShowUpSortingListState();
+}
+
+class _ShowUpSortingListState extends ConsumerState<ShowUpSortingList> {
+  @override
+  void initState() {
+    ref.read(widget.instance.notifier).selectedAlgorithmLength = widget.selectedAlgorithmLength;
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final items = ref.watch(widget.instance.select((state) => state.list));
+    final speed = ref.watch(widget.instance.select((state) => state.speed));
+    final maxHeight = SortingNotifier.calculateMaxListItemHeight;
+    final size = ref.watch(widget.instance.select((state) => state.size));
+    final itemWidth = SortingNotifier.calculateItemWidth(size);
 
     return Padding(
       padding: REdgeInsets.symmetric(horizontal: 16),
@@ -259,14 +222,14 @@ class ShowUpSortingList extends ConsumerWidget {
           child: Container(
             padding: REdgeInsets.only(bottom: SortingNotifier.bottomInsidePadding),
             child: SizedBox(
-              height: selectedAlgorithmLength == 1 ? maxHeight : null,
+              height: widget.selectedAlgorithmLength == 1 ? maxHeight : null,
               child: Stack(
                 alignment: AlignmentDirectional.bottomCenter,
                 children: List.generate(
                   items.length,
                   (index) {
                     final item = items[index];
-                    final position = ref.watch(instance.select((state) => state.positions[item.id]));
+                    final position = ref.watch(widget.instance.select((state) => state.positions[item.id]));
                     return AnimatedPositionedDirectional(
                       key: ValueKey(item.id),
                       start: position?.dx,
@@ -274,7 +237,7 @@ class ShowUpSortingList extends ConsumerWidget {
                       width: itemWidth +
                           SortingNotifier.horizontalInsidePadding -
                           SortingNotifier.handleCentralBars,
-                      duration: speedDuration,
+                      duration: speed.stepSortingDuration,
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
@@ -283,9 +246,9 @@ class ShowUpSortingList extends ConsumerWidget {
                               index: index,
                               size: size,
                               itemWidth: itemWidth,
-                              instance: instance,
-                              speedDuration: speedDuration * 0.5,
-                              selectedAlgorithmLength: selectedAlgorithmLength,
+                              instance: widget.instance,
+                              speedDuration: speed.stepSortingDuration * 0.5,
+                              selectedAlgorithmLength: widget.selectedAlgorithmLength,
                               isLastItem: index == items.length - 1),
                           RSizedBox(height: 4),
                           MediumText('$index', fontSize: 10, color: ThemeEnum.columnColor),
@@ -392,7 +355,8 @@ class _BuildItem extends ConsumerWidget {
   Widget build(BuildContext context, ref) {
     final currentItem =
         ref.watch(instance.select((state) => index < state.list.length ? state.list[index] : null));
-    final height = SortingNotifier.calculateItemHeight(context, item.value, size, selectedAlgorithmLength);
+    final (actualHeight, writtenHeight) =
+        SortingNotifier.calculateItemHeight(item.value, size, selectedAlgorithmLength);
     final color = context.getColor(currentItem?.getColor ?? SortingNotifier.itemColor);
 
     return Column(
@@ -401,13 +365,13 @@ class _BuildItem extends ConsumerWidget {
         AnimatedDefaultTextStyle(
           duration: speedDuration,
           style: GetMediumStyle(fontSize: 10, color: color),
-          child: Text('${(height / 2).toInt()}'),
+          child: Text(writtenHeight),
         ),
         RSizedBox(height: 4),
         AnimatedContainer(
           duration: speedDuration,
           width: itemWidth,
-          height: height,
+          height: actualHeight,
           decoration: BoxDecoration(
             color: color,
             boxShadow: currentItem == null || currentItem.getColor == SortingNotifier.itemColor

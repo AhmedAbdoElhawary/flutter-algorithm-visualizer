@@ -1,32 +1,15 @@
 part of 'searching_notifier.dart';
 
-enum PlaybackSpeed { slow, normal, fast3, fast5, fast10 }
-
-extension PlaybackSpeedX on PlaybackSpeed {
-  Duration get stepDuration => switch (this) {
-        PlaybackSpeed.slow => const Duration(milliseconds: 150),
-        PlaybackSpeed.normal => const Duration(milliseconds: 55),
-        PlaybackSpeed.fast3 => const Duration(milliseconds: 16),
-        PlaybackSpeed.fast5 => const Duration(milliseconds: 10),
-        PlaybackSpeed.fast10 => const Duration(milliseconds: 5),
-      };
-
-  /// Display multiplier shown on the speed selector (1×, 2×, 3×).
-  int get level => switch (this) {
-        PlaybackSpeed.slow => 1,
-        PlaybackSpeed.normal => 2,
-        PlaybackSpeed.fast3 => 3,
-        PlaybackSpeed.fast5 => 5,
-        PlaybackSpeed.fast10 => 10,
-      };
-}
-
 class SearchingState {
   final List<List<bool>> walls;
   final List<PFStep>? steps;
   final int stepIndex;
   final bool playing;
   final PlaybackSpeed speed;
+  final int startRow;
+  final int startCol;
+  final int endRow;
+  final int endCol;
 
   const SearchingState({
     required this.walls,
@@ -34,6 +17,10 @@ class SearchingState {
     required this.stepIndex,
     required this.playing,
     required this.speed,
+    required this.startRow,
+    required this.startCol,
+    required this.endRow,
+    required this.endCol,
   });
 
   factory SearchingState.initial() => SearchingState(
@@ -42,9 +29,13 @@ class SearchingState {
         stepIndex: 0,
         playing: false,
         speed: PlaybackSpeed.normal,
+        startRow: kPFStartRow,
+        startCol: kPFStartCol,
+        endRow: kPFEndRow,
+        endCol: kPFEndCol,
       );
 
-  static List<List<bool>> emptyWalls() => List.generate(kPFRows, (_) => List.filled(kPFCols, false));
+  static List<List<bool>> emptyWalls() => List.generate(kPFCells, (_) => List.filled(kPFCells, false));
 
   bool get hasSteps => steps != null;
   bool get isAtStart => stepIndex == 0;
@@ -58,6 +49,10 @@ class SearchingState {
     int? stepIndex,
     bool? playing,
     PlaybackSpeed? speed,
+    int? startRow,
+    int? startCol,
+    int? endRow,
+    int? endCol,
   }) {
     return SearchingState(
       walls: walls ?? this.walls,
@@ -65,6 +60,10 @@ class SearchingState {
       stepIndex: stepIndex ?? this.stepIndex,
       playing: playing ?? this.playing,
       speed: speed ?? this.speed,
+      startRow: startRow ?? this.startRow,
+      startCol: startCol ?? this.startCol,
+      endRow: endRow ?? this.endRow,
+      endCol: endCol ?? this.endCol,
     );
   }
 }

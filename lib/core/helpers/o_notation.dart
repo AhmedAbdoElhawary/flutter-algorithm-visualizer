@@ -57,6 +57,7 @@ extension ONotationComplexityExt on ONotationComplexity {
     }
   }
 }
+
 extension AlgorithmComplexityExt on AlgorithmComplexity {
   String get getStabilityText {
     return stable ? StringsManager.yes : StringsManager.no;

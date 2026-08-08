@@ -15,7 +15,8 @@ class InsertionSortPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SortingPage(instance:
-    BasePageViewModel.sortingCards[StringsManager.insertionSort]?.instance ?? _notifierProvider, title: StringsManager.insertionSort);
+    return SortingPage(
+        instance: BasePageViewModel.sortingCards[StringsManager.insertionSort]?.instance ?? _notifierProvider,
+        title: StringsManager.insertionSort);
   }
 }

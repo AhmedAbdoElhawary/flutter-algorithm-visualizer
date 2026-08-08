@@ -30,7 +30,6 @@ class CountingSortNotifier extends SortingNotifier {
 
           steps.add(SortingStep(index1: index, index2: targetIndex, action: SortingStatus.swapping));
           arr.swap(index, targetIndex);
-          steps.add(SortingStep(index1: index, index2: targetIndex, action: SortingStatus.swapped));
         }
 
         index++;
@@ -38,10 +37,9 @@ class CountingSortNotifier extends SortingNotifier {
       }
     }
 
-    steps.add(SortingStep(index1: arr.length - 1, index2: arr.length - 1, action: SortingStatus.sorted));
-
     return SortingResult(sortedValues: arr, steps: steps);
   }
+
   static final algorithmComplexity = AlgorithmComplexity(
     name: StringsManager.countingSort,
     bestTimeComplexity: ONotationComplexity.nPlusK,
@@ -55,33 +53,33 @@ class CountingSortNotifier extends SortingNotifier {
   AlgorithmComplexity get algoComplexity => algorithmComplexity;
 
   @override
-  String get description => StringsManager.countingSortDescription;
+  String get algorithmDescription => StringsManager.countingSortDescription;
   @override
   List<String> get codeSnippet => const [
-    'void main() {', // 0
-    '  List<int> arr = [64, 34, 25, 12, 22, 11, 90];', // 1
-    '  int maxVal = arr.reduce((a, b) => a > b ? a : b);', // 2
-    '  int minVal = arr.reduce((a, b) => a < b ? a : b);', // 3
-    '  int range = maxVal - minVal + 1;', // 4
-    '  List<int> count = List<int>.filled(range, 0);', // 5
-    '  for (int i = 0; i < arr.length; i++) {', // 6
-    '    count[arr[i] - minVal]++;', // 7
-    '  }', // 8
-    '  int index = 0;', // 9
-    '  for (int i = 0; i < range; i++) {', // 10
-    '    while (count[i] > 0) {', // 11
-    '      arr[index++] = i + minVal;', // 12
-    '      count[i]--;', // 13
-    '    }', // 14
-    '  }', // 15
-    '}', // 16
-  ];
+        'void main() {', // 0
+        '  List<int> arr = [64, 34, 25, 12, 22, 11, 90];', // 1
+        '  int maxVal = arr.reduce((a, b) => a > b ? a : b);', // 2
+        '  int minVal = arr.reduce((a, b) => a < b ? a : b);', // 3
+        '  int range = maxVal - minVal + 1;', // 4
+        '  List<int> count = List<int>.filled(range, 0);', // 5
+        '  for (int i = 0; i < arr.length; i++) {', // 6
+        '    count[arr[i] - minVal]++;', // 7
+        '  }', // 8
+        '  int index = 0;', // 9
+        '  for (int i = 0; i < range; i++) {', // 10
+        '    while (count[i] > 0) {', // 11
+        '      arr[index++] = i + minVal;', // 12
+        '      count[i]--;', // 13
+        '    }', // 14
+        '  }', // 15
+        '}', // 16
+      ];
 
   @override
   int codeLineForStep(SortingStep step) => switch (step.action) {
-    SortingStatus.compared                              => 7,  // counting occurrences
-    SortingStatus.swapping                              => 12, // writing to arr
-    SortingStatus.swapped || SortingStatus.none     => 10, // advance placement loop
-    SortingStatus.sorted                                => 12, // copy output → arr
-  };
+        SortingStatus.compared => 7, // counting occurrences
+        SortingStatus.swapping => 12, // writing to arr
+        SortingStatus.none => 10, // advance placement loop
+        _ => -1,
+      };
 }
