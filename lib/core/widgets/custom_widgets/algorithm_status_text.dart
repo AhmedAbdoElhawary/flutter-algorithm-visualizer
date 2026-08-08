@@ -23,7 +23,7 @@ class AlgorithmStatusText extends ConsumerWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            RegularText(statusText, color: ThemeEnum.hoverColor, fontFamily: 'JetBrainsMono', fontSize: 12),
+            RegularText(statusText, color: ThemeEnum.white2DarkColor, fontFamily: 'JetBrainsMono', fontSize: 12),
             const SizedBox(height: 8),
             Row(
               children: [
