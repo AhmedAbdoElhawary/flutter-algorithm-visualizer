@@ -154,7 +154,7 @@ abstract class SearchingNotifier extends StateNotifier<SearchingState>
       _startTimer();
       return;
     }
-    final playing = !state.playing;
+    final playing = !isPlaying;
     state = state.copyWith(playing: playing);
     playing ? _startTimer() : _clearTimer();
   }
@@ -191,6 +191,6 @@ abstract class SearchingNotifier extends StateNotifier<SearchingState>
   @override
   void changeSpeed(PlaybackSpeed speed) {
     state = state.copyWith(speed: _getNextSpeed(speed));
-    if (state.playing) _startTimer();
+    if (isPlaying) _startTimer();
   }
 }
