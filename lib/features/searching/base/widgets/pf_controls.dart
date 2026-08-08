@@ -23,8 +23,8 @@ class SearchingAlgorithmControls extends ConsumerWidget {
       backwardValidation: backwardValidation,
       forwardValidation: forwardValidation,
       endOptionButtons: [
-        CtrlButton(icon: Icons.grid_off_rounded, onTap: notifier.clearWalls, messageTip: 'Clear walls'),
-        CtrlButton(icon: Icons.shuffle_rounded, onTap: notifier.randomizeWalls, messageTip: 'Random walls'),
+        CtrlButton(icon: Icons.grid_off_rounded, size: 18, onTap: notifier.clearWalls, messageTip: 'Clear walls'),
+        CtrlButton(icon: Icons.shuffle_rounded, size: 18, onTap: notifier.randomizeWalls, messageTip: 'Random walls'),
       ],
     );
   }
