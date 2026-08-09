@@ -1,32 +1,60 @@
+
 # flutter-algorithm-visualizer
-## Something great will build.
+## Still in an initial state.
+
+Flutter Algorithm and Data Structure Visualizer is an interactive learning tool designed to help students, developers, and enthusiasts understand how algorithms and data structures work under the hood. Built with Flutter, it provides a smooth, cross-platform experience on both mobile and desktop.
+
+The app features intuitive step-by-step animations that bring abstract concepts like sorting, searching, graphs, and pathfinding to life. Users can watch how algorithms process it in real time and adjust the speed of execution for deeper exploration.
+
+Key highlights include:
+
+- 📊 Sorting Algorithms – Visualize Bubble Sort, Merge Sort, Quick Sort, and more.
+
+- 🌐 Graph Algorithms – Understand BFS and shortest path algorithms like A*.
+
+- 🎨 Clean UI & Smooth Animations – Built with Flutter’s powerful rendering system for responsive and engaging visuals.
+
+Whether you are preparing for coding interviews, studying computer science fundamentals, or just curious about algorithms, this app makes learning interactive, visual, and fun.
+
+## SnapShots
+
+<img height="900" alt="ScreenRecording2026-08-08at6 42 00PM-ezgif com-video-to-gif-converter" src="https://github.com/user-attachments/assets/905c52f4-5715-4be2-9215-eb758d2e6055" />
+
+<img height="900" alt="ScreenRecording2026-08-08at6 43 17PM-ezgif com-video-to-gif-converter" src="https://github.com/user-attachments/assets/d0d21a3d-eb03-46d0-9ac5-ff642408bbd6" />
+
+<img height="900" alt="ScreenRecording2026-08-08at6 42 17PM-ezgif com-video-to-gif-converter" src="https://github.com/user-attachments/assets/d87c1cb5-ca69-4553-a58b-ff3ae3c96646" />
+
+<img height="900" alt="ScreenRecording2026-08-08at6 43 54PM-ezgif com-video-to-gif-converter (2)" src="https://github.com/user-attachments/assets/e1f5e695-ad1e-4cd6-b23e-0aa9a664b2f0" />
+
+
 
 ### Initially, we will cover:
 
 | Category       | Algorithm                  | Status |
 |----------------|----------------------------|--------|
 | **Graphs**     | BFS                        | ✅     |
-|                | DFS                        | ❌     |
-|                | Dijkstra                   | ✅     |
-|                | A* Search                  | ❌     |
-|                | ...More                    |         |
-|----------------|----------------------------|---------|
-| **Mazes**      | Backtracking               | ✅     |
+|                | DFS                        | ✅     |
+|                | Dijkstra                   | ❌     |
+|                | A* Search                  | ✅     |
+|                | ...More                    |        |
+|----------------|----------------------------|--------|
+| **Mazes**      | Backtracking               | ❌     |
 |                | Eller's maze               | ❌     |
 |                | Randomized Kruskal's maze  | ❌     |
 |                | Aldous-Broder              | ❌     |
 |                | Recursive Division         | ❌     |
 |                | Binary Tree                | ❌     |
 |----------------|----------------------------|--------|
-| **Sorting**    | Bubble Sort                | ❌     |
-|                | Selection Sort             | ❌     |
-|                | Insertion Sort             | ❌     |
-|                | Merge Sort                 | ❌     |
-|                | Quick Sort                 | ❌     |
-|                | Radix Sort                 | ❌     |
-|                | Heap Sort                  | ❌     |
-|                | Bucket Sort                | ❌     |
-|                | Counting Sort              | ❌     |
+| **Sorting**    | Bubble Sort                | ✅     |
+|                | Selection Sort             | ✅     |
+|                | Insertion Sort             | ✅     |
+|                | Merge Sort                 | ✅     |
+|                | Quick Sort                 | ✅     |
+|                | Radix Sort                 | ✅     |
+|                | Heap Sort                  | ✅     |
+|                | Bucket Sort                | ✅     |
+|                | Counting Sort              | ✅     |
+|                | Shell Sort                 | ✅     |
 |----------------|----------------------------|--------|
 | **Trees**      | Binary Tree                | ❌     |
 |                | Binary Search Tree         | ❌     |
@@ -50,13 +78,4 @@
 - And more...
 
 - We will also write an explanation code for every algorithm in several languages.
-- Compare different algorithms with interaction way
-
-
-#### Note: this UI is not the final one, especially the app bar.
-https://github.com/user-attachments/assets/ae8a24d8-d656-43a8-8e46-cf4c6a5876c1
-
-https://github.com/user-attachments/assets/39767076-f4d7-4122-a59f-59c90767f632
-
-https://github.com/user-attachments/assets/0f180367-89e3-47d6-b018-95e02e682081
-
+- Compare different algorithms with the interaction way
