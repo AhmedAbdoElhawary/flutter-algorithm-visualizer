@@ -5,20 +5,20 @@ import 'package:algorithm_visualizer/core/resources/strings_manager.dart';
 import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
 import 'package:algorithm_visualizer/core/widgets/adaptive/text/adaptive_text.dart';
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/glass_card.dart';
-import 'package:algorithm_visualizer/features/base/view_model/base_page_view_model.dart';
+import 'package:algorithm_visualizer/features/home/view_model/home_page_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'movable_pins.dart';
 
-class BasePage extends StatefulWidget {
-  const BasePage({super.key});
+class HomePage extends StatefulWidget {
+  const HomePage({super.key});
 
   @override
-  State<BasePage> createState() => _BasePageState();
+  State<HomePage> createState() => _HomePageState();
 }
 
-class _BasePageState extends State<BasePage> with SingleTickerProviderStateMixin {
+class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin {
   late final controller = TabController(length: 2, vsync: this);
 
   @override
@@ -37,8 +37,8 @@ class _BasePageState extends State<BasePage> with SingleTickerProviderStateMixin
 
   @override
   Widget build(BuildContext context) {
-    final cardValues = BasePageViewModel.sortingCards.values.toList();
-    final searchingCardValues = BasePageViewModel.searchingCards.values.toList();
+    final cardValues = HomePageViewModel.sortingCards.values.toList();
+    final searchingCardValues = HomePageViewModel.searchingCards.values.toList();
 
     return Scaffold(
       body: SafeArea(
@@ -65,7 +65,7 @@ class _BasePageState extends State<BasePage> with SingleTickerProviderStateMixin
                       controller: controller,
                       children: [
                         GridView.builder(
-                          itemCount: BasePageViewModel.sortingCards.length,
+                          itemCount: HomePageViewModel.sortingCards.length,
                           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                             crossAxisCount: 2,
                             crossAxisSpacing: 20,
@@ -87,7 +87,7 @@ class _BasePageState extends State<BasePage> with SingleTickerProviderStateMixin
                           },
                         ),
                         GridView.builder(
-                          itemCount: BasePageViewModel.searchingCards.length,
+                          itemCount: HomePageViewModel.searchingCards.length,
                           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                             crossAxisCount: 2,
                             crossAxisSpacing: 20,
