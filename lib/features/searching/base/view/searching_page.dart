@@ -1,8 +1,8 @@
 import 'package:algorithm_visualizer/core/helpers/app_bar/back_button.dart';
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/algorithm_title.dart';
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/complexity_details.dart';
-import 'package:algorithm_visualizer/features/base/view_model/base_page_view_model.dart';
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/algo_tab.dart';
+import 'package:algorithm_visualizer/features/home/view_model/home_page_view_model.dart';
 import 'package:algorithm_visualizer/features/searching/base/view_model/searching_notifier.dart';
 import 'package:algorithm_visualizer/lib-temp/theme/app_theme.dart';
 import 'package:flutter/material.dart';
@@ -23,7 +23,7 @@ class VisualizerScreen extends ConsumerStatefulWidget {
 
 class _VisualizerScreenState extends ConsumerState<VisualizerScreen> {
   late StateNotifierProvider<SearchingNotifier, SearchingState> instance = widget.instance;
-  final searchingCardValues = BasePageViewModel.searchingCards.values.toList();
+  final searchingCardValues = HomePageViewModel.searchingCards.values.toList();
   late String title = widget.title;
 
   void deleteInstance(StateNotifierProvider<SearchingNotifier, SearchingState> instance) {
@@ -50,7 +50,8 @@ class _VisualizerScreenState extends ConsumerState<VisualizerScreen> {
                 pinned: true,
                 centerTitle: false,
                 titleSpacing: 0,
-                leading: CustomBackButtonIcon(),
+                leadingWidth: 16.r,
+                leading: SizedBox(),
                 title: AlgorithmTitle(title: title, description: description),
               ),
               SliverToBoxAdapter(child: ComplexityDetails(complexity: complexity)),
@@ -59,13 +60,13 @@ class _VisualizerScreenState extends ConsumerState<VisualizerScreen> {
                 sliver: SliverToBoxAdapter(
                   child: Row(
                     children: List.generate(
-                      BasePageViewModel.searchingCards.length,
+                      HomePageViewModel.searchingCards.length,
                       (index) {
                         return Expanded(
                           child: Padding(
                             padding: REdgeInsetsDirectional.only(
                                 start: index == 0 ? 16 : 8,
-                                end: index < BasePageViewModel.searchingCards.length - 1 ? 0 : 16),
+                                end: index < HomePageViewModel.searchingCards.length - 1 ? 0 : 16),
                             child: InkWell(
                               onTap: () async {
                                 if (title == searchingCardValues[index].title) return;
