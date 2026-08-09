@@ -32,7 +32,7 @@ class AlgoSearchingCard {
   AlgoSearchingCard({required this.route, required this.title, required this.card, required this.instance});
 }
 
-class BasePageViewModel {
+class HomePageViewModel {
   static final Map<String, AlgoSortingCard> sortingCards = {
     StringsManager.bubbleSort: AlgoSortingCard(
       route: Routes.bubbleSort,
