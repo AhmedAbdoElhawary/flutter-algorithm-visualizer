@@ -1,5 +1,4 @@
 import 'package:algorithm_visualizer/core/draggable_progress.dart' show DraggableProgressBar;
-import 'package:algorithm_visualizer/core/helpers/app_bar/back_button.dart';
 import 'package:algorithm_visualizer/core/helpers/playback_speed.dart';
 import 'package:algorithm_visualizer/core/resources/color_manager.dart';
 import 'package:algorithm_visualizer/core/resources/strings_manager.dart';
@@ -10,7 +9,7 @@ import 'package:algorithm_visualizer/core/widgets/custom_widgets/algorithm_contr
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/algorithm_status_text.dart';
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/algorithm_title.dart';
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/complexity_details.dart';
-import 'package:algorithm_visualizer/features/base/view_model/base_page_view_model.dart';
+import 'package:algorithm_visualizer/features/home/view_model/home_page_view_model.dart';
 import 'package:algorithm_visualizer/features/sorting/base/view_model/sorting_notifier.dart';
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/algo_tab.dart';
 import 'package:flutter/material.dart';
@@ -31,7 +30,7 @@ class SortingPage extends ConsumerStatefulWidget {
 
 class _SortingPageState extends ConsumerState<SortingPage> {
   late StateNotifierProvider<SortingNotifier, SortingNotifierState> instance = widget.instance;
-  final cardValues = BasePageViewModel.sortingCards.values.toList();
+  final cardValues = HomePageViewModel.sortingCards.values.toList();
   final controller = ScrollController();
   late String title = widget.title;
 
@@ -73,7 +72,8 @@ class _SortingPageState extends ConsumerState<SortingPage> {
               pinned: true,
               centerTitle: false,
               titleSpacing: 0,
-              leading: CustomBackButtonIcon(),
+              leadingWidth: 16.r,
+              leading: SizedBox(),
               title: AlgorithmTitle(title: title, description: description),
             ),
             SliverToBoxAdapter(child: ComplexityDetails(complexity: complexity)),
@@ -85,12 +85,12 @@ class _SortingPageState extends ConsumerState<SortingPage> {
                   controller: controller,
                   child: Row(
                     children: List.generate(
-                      BasePageViewModel.sortingCards.length,
+                      HomePageViewModel.sortingCards.length,
                       (index) {
                         return Padding(
                           padding: REdgeInsetsDirectional.only(
                               start: index == 0 ? 16 : 8,
-                              end: index < BasePageViewModel.sortingCards.length - 1 ? 0 : 16),
+                              end: index < HomePageViewModel.sortingCards.length - 1 ? 0 : 16),
                           child: InkWell(
                             onTap: () async {
                               if (title == cardValues[index].title) return;
@@ -214,7 +214,9 @@ class _ShowUpSortingListState extends ConsumerState<ShowUpSortingList> {
                       key: ValueKey(item.id),
                       start: position?.dx,
                       bottom: position?.dy,
-                      width: itemWidth + SortingNotifier.horizontalInsidePadding - SortingNotifier.handleCentralBars,
+                      width: itemWidth +
+                          SortingNotifier.horizontalInsidePadding -
+                          SortingNotifier.handleCentralBars,
                       duration: speed.stepSortingDuration,
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.end,
@@ -331,7 +333,8 @@ class _BuildItem extends ConsumerWidget {
   final bool isLastItem;
   @override
   Widget build(BuildContext context, ref) {
-    final currentItem = ref.watch(instance.select((state) => index < state.list.length ? state.list[index] : null));
+    final currentItem =
+        ref.watch(instance.select((state) => index < state.list.length ? state.list[index] : null));
     final (actualHeight, writtenHeight) =
         SortingNotifier.calculateItemHeight(item.value, size, selectedAlgorithmLength);
     final color = context.getColor(currentItem?.getColor ?? SortingNotifier.itemColor);
