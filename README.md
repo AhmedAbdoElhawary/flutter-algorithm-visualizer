@@ -24,7 +24,8 @@ Whether you are preparing for coding interviews, studying computer science funda
 
 <img height="900" alt="ScreenRecording2026-08-08at6 42 17PM-ezgif com-video-to-gif-converter" src="https://github.com/user-attachments/assets/d87c1cb5-ca69-4553-a58b-ff3ae3c96646" />
 
-<img height="900" alt="ScreenRecording2026-08-08at6 43 54PM-ezgif com-video-to-gif-converter" src="https://github.com/user-attachments/assets/33c9e38d-8856-48c1-a1c4-dfedb7035663" />
+<img height="900" alt="ScreenRecording2026-08-08at6 43 54PM-ezgif com-video-to-gif-converter (2)" src="https://github.com/user-attachments/assets/e1f5e695-ad1e-4cd6-b23e-0aa9a664b2f0" />
+
 
 
 ### Initially, we will cover:
