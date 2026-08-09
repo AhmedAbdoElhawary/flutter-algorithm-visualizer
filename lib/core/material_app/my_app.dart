@@ -40,11 +40,7 @@ class MyApp extends StatelessWidget {
                       padding: EdgeInsets.symmetric(horizontal: padding),
                       child: MaterialApp.router(
                         title: StringsManager.appName,
-                        // defaultTransition: Transition.noTransition,
-                        // translations: TranslationHandler(),
                         locale: Locale(controller.language.shortKey),
-                        // fallbackLocale:
-                        // Locale(LanguagesEnum.english.shortKey),
                         localeResolutionCallback: dynamicTranslate,
                         theme: theme,
                         darkTheme: AppTheme.dark,
