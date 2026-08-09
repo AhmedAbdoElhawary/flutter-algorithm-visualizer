@@ -16,6 +16,8 @@ Key highlights include:
 
 Whether you are preparing for coding interviews, studying computer science fundamentals, or just curious about algorithms, this app makes learning interactive, visual, and fun.
 
+## SnapShots
+
 <img height="900" alt="ScreenRecording2026-08-08at6 42 00PM-ezgif com-video-to-gif-converter" src="https://github.com/user-attachments/assets/905c52f4-5715-4be2-9215-eb758d2e6055" />
 
 <img height="900" alt="ScreenRecording2026-08-08at6 43 17PM-ezgif com-video-to-gif-converter" src="https://github.com/user-attachments/assets/d0d21a3d-eb03-46d0-9ac5-ff642408bbd6" />
