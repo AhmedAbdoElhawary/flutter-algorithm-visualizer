@@ -89,7 +89,7 @@ Total : 133 files,  6259 codes, 411 comments, 1006 blanks, all 7676 lines
 | [lib/core/widgets/custom\_widgets/rounded\_outlined\_button.dart](/lib/core/widgets/custom_widgets/rounded_outlined_button.dart) | Dart | 44 | 0 | 4 | 48 |
 | [lib/core/widgets/custom\_widgets/scale\_transition.dart](/lib/core/widgets/custom_widgets/scale_transition.dart) | Dart | 34 | 0 | 6 | 40 |
 | [lib/core/widgets/custom\_widgets/vertical\_animation\_hero\_page.dart](/lib/core/widgets/custom_widgets/vertical_animation_hero_page.dart) | Dart | 39 | 0 | 4 | 43 |
-| [lib/features/base/view/base\_page.dart](/lib/features/base/view/base_page.dart) | Dart | 52 | 0 | 5 | 57 |
+| [lib/features/base/view/base\_page.dart](/lib/features/home/view/home_page.dart) | Dart | 52 | 0 | 5 | 57 |
 | [lib/features/searching/view/grid\_page.dart](/lib/features/searching/base/view/grid_page.dart) | Dart | 290 | 0 | 35 | 325 |
 | [lib/features/searching/view\_model/grid\_notifier.dart](/lib/features/searching/base/view_model/grid_notifier.dart) | Dart | 384 | 18 | 109 | 511 |
 | [lib/features/searching/view\_model/grid\_notifier\_state.dart](/lib/features/searching/base/view_model/grid_notifier_state.dart) | Dart | 50 | 1 | 7 | 58 |
