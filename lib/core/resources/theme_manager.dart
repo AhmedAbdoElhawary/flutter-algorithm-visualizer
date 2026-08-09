@@ -17,6 +17,7 @@ enum ThemeEnum {
   text2DarkColor,
   borderPurpleColor,
   lightPurpleColor,
+  codeEditorNumberColor,
 
   whiteD1Color,
   whiteD2Color,
@@ -93,6 +94,7 @@ extension ThemeExtension on BuildContext {
       ThemeEnum.solidWhiteOp60Color: ColorManager.whiteOp60,
       ThemeEnum.whiteOp50Color: ColorManager.whiteOp50,
       ThemeEnum.whiteOp20Color: ColorManager.whiteOp20,
+      ThemeEnum.codeEditorNumberColor: ColorManager.codeEditorNumberColor,
       ThemeEnum.blackOp80: ColorManager.blackOp80,
       ThemeEnum.blackOp50: ColorManager.blackOp50,
       ThemeEnum.hoverColor: Theme.of(this).hoverColor,
