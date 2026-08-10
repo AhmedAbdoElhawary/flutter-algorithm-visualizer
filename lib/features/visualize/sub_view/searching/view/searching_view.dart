@@ -1,7 +1,7 @@
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/complexity_details.dart';
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/algo_tab.dart';
 import 'package:algorithm_visualizer/features/base/view_model/base_view_model.dart';
-import 'package:algorithm_visualizer/features/searching/base/view_model/searching_notifier.dart';
+import 'package:algorithm_visualizer/features/visualize/sub_view/searching/view_model/searching_notifier.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
