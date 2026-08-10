@@ -1,5 +1,5 @@
 import 'package:algorithm_visualizer/features/base/view_model/base_view_model.dart';
-import 'package:algorithm_visualizer/features/searching/base/view/searching_view.dart';
+import 'package:algorithm_visualizer/features/visualize/view/visualize_page.dart';
 import 'package:flutter/material.dart';
 
 class BFSSearchingPage extends StatelessWidget {
@@ -7,6 +7,6 @@ class BFSSearchingPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SearchingView(card: SearchingAlgoCards.bfs);
+    return VisualizePage(searchingCard: SearchingAlgoCards.bfs);
   }
 }
