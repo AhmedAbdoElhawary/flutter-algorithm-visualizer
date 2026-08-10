@@ -9,7 +9,7 @@ import 'package:algorithm_visualizer/core/widgets/custom_widgets/algorithm_contr
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/algorithm_status_text.dart';
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/complexity_details.dart';
 import 'package:algorithm_visualizer/features/base/view_model/base_view_model.dart';
-import 'package:algorithm_visualizer/features/sorting/base/view_model/sorting_notifier.dart';
+import 'package:algorithm_visualizer/features/visualize/sub_view/sorting/view_model/sorting_notifier.dart';
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/algo_tab.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
