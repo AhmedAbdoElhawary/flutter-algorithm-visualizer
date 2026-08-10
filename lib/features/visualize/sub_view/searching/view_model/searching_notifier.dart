@@ -6,15 +6,15 @@ import 'package:algorithm_visualizer/core/helpers/playback_speed.dart';
 import 'package:algorithm_visualizer/core/resources/strings_manager.dart';
 import 'package:algorithm_visualizer/features/base/view_model/algorithm_control_interface.dart';
 import 'package:algorithm_visualizer/features/base/view_model/algorithm_description_interface.dart';
-import 'package:algorithm_visualizer/features/searching/base/helper/pf_constants.dart';
-import 'package:algorithm_visualizer/features/searching/base/helper/pf_step.dart';
-import 'package:algorithm_visualizer/features/sorting/base/view_model/sorting_notifier.dart';
+import 'package:algorithm_visualizer/features/visualize/sub_view/searching/helper/pf_constants.dart';
+import 'package:algorithm_visualizer/features/visualize/sub_view/searching/helper/pf_step.dart';
+import 'package:algorithm_visualizer/features/visualize/sub_view/sorting/view_model/sorting_notifier.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-part 'package:algorithm_visualizer/features/searching/base/view_model/sub_searching/a_star_searching_notifier.dart';
-part 'package:algorithm_visualizer/features/searching/base/view_model/sub_searching/bfs_searching_notifier.dart';
-part 'package:algorithm_visualizer/features/searching/base/view_model/sub_searching/dfs_searching_notifier.dart';
+part 'package:algorithm_visualizer/features/visualize/sub_view/searching/view_model/sub_searching/a_star_searching_notifier.dart';
+part 'package:algorithm_visualizer/features/visualize/sub_view/searching/view_model/sub_searching/bfs_searching_notifier.dart';
+part 'package:algorithm_visualizer/features/visualize/sub_view/searching/view_model/sub_searching/dfs_searching_notifier.dart';
 part 'searching_state.dart';
 
 const _kInfinity = 1 << 30;
