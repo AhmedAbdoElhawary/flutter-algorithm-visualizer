@@ -1,7 +1,7 @@
 import 'package:algorithm_visualizer/core/resources/strings_manager.dart';
-import 'package:algorithm_visualizer/features/searching/base/widgets/end_point.dart';
-import 'package:algorithm_visualizer/features/searching/base/widgets/pf_grid.dart';
-import 'package:algorithm_visualizer/features/searching/base/widgets/start_point.dart';
+import 'package:algorithm_visualizer/features/visualize/sub_view/searching/widgets/end_point.dart';
+import 'package:algorithm_visualizer/features/visualize/sub_view/searching/widgets/pf_grid.dart';
+import 'package:algorithm_visualizer/features/visualize/sub_view/searching/widgets/start_point.dart';
 import 'package:algorithm_visualizer/lib-temp/theme/app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';

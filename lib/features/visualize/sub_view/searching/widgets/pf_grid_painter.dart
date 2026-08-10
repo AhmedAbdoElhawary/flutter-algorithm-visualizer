@@ -1,7 +1,7 @@
 import 'package:algorithm_visualizer/core/resources/color_manager.dart';
-import 'package:algorithm_visualizer/features/searching/base/helper/pf_constants.dart';
-import 'package:algorithm_visualizer/features/searching/base/helper/pf_step.dart';
-import 'package:algorithm_visualizer/features/searching/base/widgets/pf_grid.dart';
+import 'package:algorithm_visualizer/features/visualize/sub_view/searching/helper/pf_constants.dart';
+import 'package:algorithm_visualizer/features/visualize/sub_view/searching/helper/pf_step.dart';
+import 'package:algorithm_visualizer/features/visualize/sub_view/searching/widgets/pf_grid.dart';
 import 'package:flutter/material.dart';
 
 class PFGridPainter extends CustomPainter {
