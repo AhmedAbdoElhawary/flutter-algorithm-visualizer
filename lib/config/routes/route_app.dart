@@ -4,6 +4,7 @@ import 'package:algorithm_visualizer/core/widgets/adaptive/text/adaptive_text.da
 import 'package:algorithm_visualizer/features/base/view/base_navigation.dart';
 import 'package:algorithm_visualizer/features/base/view_model/base_view_model.dart';
 import 'package:algorithm_visualizer/features/home/view/home_page.dart';
+import 'package:algorithm_visualizer/features/practice/view/practice_page.dart';
 import 'package:algorithm_visualizer/features/visualize/view/visualize_page.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
@@ -14,6 +15,9 @@ part 'unknown_page.dart';
 final _rootKey = GlobalKey<NavigatorState>();
 final _tabAKey = GlobalKey<NavigatorState>();
 final _tabBKey = GlobalKey<NavigatorState>();
+final _tabCKey = GlobalKey<NavigatorState>();
+final _tabDKey = GlobalKey<NavigatorState>();
+final _tabEKey = GlobalKey<NavigatorState>();
 
 class Routes {
   static const RouteConfig home = RouteConfig(
@@ -24,6 +28,19 @@ class Routes {
     name: 'visualize',
     path: '/visualize',
     queryParamsName: "instance",
+  );
+
+  static const RouteConfig code = RouteConfig(
+    name: 'code',
+    path: '/code',
+  );
+  static const RouteConfig practice = RouteConfig(
+    name: 'practice',
+    path: '/practice',
+  );
+  static const RouteConfig profile = RouteConfig(
+    name: 'profile',
+    path: '/profile',
   );
 }
 
@@ -80,6 +97,36 @@ class AppRoutes {
                   }
                   return VisualizePage(sortingCard: sortingAlgo, searchingCard: searchingAlgo);
                 },
+              ),
+            ],
+          ),
+          StatefulShellBranch(
+            navigatorKey: _tabCKey,
+            routes: [
+              GoRoute(
+                path: Routes.code.path,
+                name: Routes.code.name,
+                builder: (context, state) => PracticePage(),
+              ),
+            ],
+          ),
+          StatefulShellBranch(
+            navigatorKey: _tabDKey,
+            routes: [
+              GoRoute(
+                path: Routes.practice.path,
+                name: Routes.practice.name,
+                builder: (context, state) => PracticePage(),
+              ),
+            ],
+          ),
+          StatefulShellBranch(
+            navigatorKey: _tabEKey,
+            routes: [
+              GoRoute(
+                path: Routes.profile.path,
+                name: Routes.profile.name,
+                builder: (context, state) => PracticePage(),
               ),
             ],
           ),
