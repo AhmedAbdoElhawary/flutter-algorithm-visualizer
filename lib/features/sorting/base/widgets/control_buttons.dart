@@ -1,4 +1,4 @@
-part of '../view/sorting_page.dart';
+part of '../view/sorting_view.dart';
 
 class _SortingControlButtons extends ConsumerWidget {
   const _SortingControlButtons(this.notifier);
