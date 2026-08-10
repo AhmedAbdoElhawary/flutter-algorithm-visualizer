@@ -1,3 +1,4 @@
+import 'package:algorithm_visualizer/config/routes/route_app.dart';
 import 'package:algorithm_visualizer/core/extensions/navigators.dart';
 import 'package:algorithm_visualizer/core/helpers/screen_size.dart';
 import 'package:algorithm_visualizer/core/resources/color_manager.dart';
@@ -82,7 +83,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
                                   borderRadius: BorderRadius.circular(20),
                                   highlightColor: context.getColor(ThemeEnum.primaryColor),
                                   onTap: () {
-                                    context.pushTo(card.route);
+                                    context.pushTo(Routes.visualize, queryParameters: card.page.name);
                                   },
                                   child: card.card),
                             );
@@ -105,7 +106,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
                                   borderRadius: BorderRadius.circular(20),
                                   highlightColor: context.getColor(ThemeEnum.primaryColor),
                                   onTap: () {
-                                    context.pushTo(card.route);
+                                    context.pushTo(Routes.visualize, queryParameters: card.page.name);
                                   },
                                   child: card.card),
                             );
