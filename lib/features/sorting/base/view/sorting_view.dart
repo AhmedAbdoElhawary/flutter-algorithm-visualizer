@@ -11,6 +11,7 @@ import 'package:algorithm_visualizer/core/widgets/custom_widgets/complexity_deta
 import 'package:algorithm_visualizer/features/base/view_model/base_view_model.dart';
 import 'package:algorithm_visualizer/features/sorting/base/view_model/sorting_notifier.dart';
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/algo_tab.dart';
+import 'package:algorithm_visualizer/features/sorting/bubble/view_model/bubble_sort_notifier.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -18,18 +19,21 @@ part '../widgets/sorting_app_bar.dart';
 part '../widgets/control_buttons.dart';
 part '../widgets/size_draggable.dart';
 
-class SortingPage extends ConsumerStatefulWidget {
-  const SortingPage({required this.instance, required this.title, super.key});
-  final StateNotifierProvider<SortingNotifier, SortingNotifierState> instance;
-  final String title;
+class SortingView extends ConsumerStatefulWidget {
+  const SortingView({this.card = SortingAlgoCards.bubble, super.key});
+  final SortingAlgoCards card;
 
   @override
-  ConsumerState<SortingPage> createState() => _SortingPageState();
+  ConsumerState<SortingView> createState() => _SortingPageState();
 }
 
-class _SortingPageState extends ConsumerState<SortingPage> {
-  late StateNotifierProvider<SortingNotifier, SortingNotifierState> instance = widget.instance;
-  late String title = widget.title;
+class _SortingPageState extends ConsumerState<SortingView> {
+  late StateNotifierProvider<SortingNotifier, SortingNotifierState> instance =
+      StateNotifierProvider<SortingNotifier, SortingNotifierState>(
+    (ref) => BubbleSortNotifier(),
+  );
+
+  late SortingAlgoCards card = widget.card;
 
   Future<void> deleteInstance(StateNotifierProvider<SortingNotifier, SortingNotifierState> instance) async {
     await ref.read(instance.notifier).cancelSorting();
@@ -48,14 +52,14 @@ class _SortingPageState extends ConsumerState<SortingPage> {
           padding: REdgeInsetsDirectional.only(top: 10, bottom: 10),
           sliver: SliverToBoxAdapter(
             child: _SortingSelectionList(
-                title: title,
-                onChangedTab: (AlgoSortingCard cardValue) async {
-                  if (title == cardValue.title) return;
+                card: card,
+                onChangedTab: (SortingAlgoCards cardValue) async {
+                  if (card == cardValue) return;
                   final inst = instance;
 
                   setState(() {
-                    instance = cardValue.instance;
-                    title = cardValue.title;
+                    instance = BaseViewModel.sortingCards(cardValue).instance;
+                    card = cardValue;
                   });
 
                   await deleteInstance(inst);
@@ -78,21 +82,21 @@ class _SortingPageState extends ConsumerState<SortingPage> {
 }
 
 class _SortingSelectionList extends StatefulWidget {
-  const _SortingSelectionList({required this.title, required this.onChangedTab});
-  final String title;
-  final Future<void> Function(AlgoSortingCard cardValue) onChangedTab;
+  const _SortingSelectionList({required this.card, required this.onChangedTab});
+  final SortingAlgoCards card;
+  final Future<void> Function(SortingAlgoCards cardValue) onChangedTab;
   @override
   State<_SortingSelectionList> createState() => _SortingSelectionListState();
 }
 
 class _SortingSelectionListState extends State<_SortingSelectionList> {
-  final cardValues = BaseViewModel.baseCategory.sortingCards.values.toList();
+  final cardValues = SortingAlgoCards.values;
   final controller = ScrollController();
 
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      final index = cardValues.indexWhere((element) => element.title == widget.title);
+      final index = cardValues.indexWhere((element) => element == widget.card);
       if (index != -1) {
         controller.animateTo(
           index * 100,
@@ -112,18 +116,18 @@ class _SortingSelectionListState extends State<_SortingSelectionList> {
       controller: controller,
       child: Row(
         children: List.generate(
-          BaseViewModel.baseCategory.sortingCards.length,
+          cardValues.length,
           (index) {
+            final cardValue = BaseViewModel.sortingCards(cardValues[index]);
             return Padding(
               padding: REdgeInsetsDirectional.only(
-                  start: index == 0 ? 16 : 8,
-                  end: index < BaseViewModel.baseCategory.sortingCards.length - 1 ? 0 : 16),
+                  start: index == 0 ? 16 : 8, end: index < cardValues.length - 1 ? 0 : 16),
               child: InkWell(
                 onTap: () => widget.onChangedTab(cardValues[index]),
                 child: AlgoTab(
-                  isSelected: cardValues[index].title == widget.title,
+                  isSelected: cardValues[index] == widget.card,
                   addEndPadding: false,
-                  label: cardValues[index].card.algoComplexity.name,
+                  label: cardValue.card.algoComplexity.name,
                 ),
               ),
             );
