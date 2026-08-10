@@ -5,10 +5,19 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class AlgoTab extends ConsumerWidget {
-  const AlgoTab({required this.label, required this.isSelected, required this.addEndPadding, super.key});
+  const AlgoTab({
+    required this.label,
+    this.icon,
+    required this.isSelected,
+    required this.addEndPadding,
+    this.verticalPadding = 0,
+    super.key,
+  });
   final String label;
   final bool isSelected;
   final bool addEndPadding;
+  final IconData? icon;
+  final double verticalPadding;
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Container(
@@ -22,15 +31,21 @@ class AlgoTab extends ConsumerWidget {
         ),
       ),
       child: Padding(
-        padding: REdgeInsets.symmetric(horizontal: 10),
-        child: Text(
-          label,
-          textAlign: TextAlign.center,
-          style: GoogleFonts.jetBrainsMono(
-            color: isSelected ? context.accent : context.textMuted,
-            fontSize: 13.r,
-            fontWeight: FontWeight.w700,
-          ),
+        padding: REdgeInsets.symmetric(horizontal: 10,vertical: verticalPadding),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            if (icon != null) ...[Icon(icon!,color: isSelected ? context.accent : context.textMuted,size: 20.r), RSizedBox(width: 5)],
+            Text(
+              label,
+              textAlign: TextAlign.center,
+              style: GoogleFonts.jetBrainsMono(
+                color: isSelected ? context.accent : context.textMuted,
+                fontSize: 13.r,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+          ],
         ),
       ),
     );
