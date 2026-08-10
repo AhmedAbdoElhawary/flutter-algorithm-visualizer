@@ -58,6 +58,40 @@ class _SortingPageState extends ConsumerState<SortingPage> {
               leading: SizedBox(),
               title: AlgorithmTitle(title: title, description: description),
             ),
+            SliverToBoxAdapter(
+              child: Padding(
+                padding: REdgeInsets.symmetric(horizontal: 16),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: InkWell(
+                        onTap: () {},
+                        child: AlgoTab(
+                          isSelected: true,
+                          addEndPadding: false,
+                          label: StringsManager.sorting,
+                          verticalPadding: 3,
+                          icon: Icons.filter_list_rounded,
+                        ),
+                      ),
+                    ),
+                    RSizedBox(width: 10),
+                    Expanded(
+                      child: InkWell(
+                        onTap: () {},
+                        child: AlgoTab(
+                          isSelected: false,
+                          addEndPadding: false,
+                          label: StringsManager.searching,
+                          verticalPadding: 3,
+                          icon: Icons.map_rounded,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
             SliverPadding(
               padding: REdgeInsetsDirectional.only(top: 10, bottom: 10),
               sliver: SliverToBoxAdapter(
