@@ -2,6 +2,7 @@ import 'package:algorithm_visualizer/core/helpers/app_bar/app_bar.dart';
 import 'package:algorithm_visualizer/core/resources/strings_manager.dart';
 import 'package:algorithm_visualizer/core/widgets/adaptive/text/adaptive_text.dart';
 import 'package:algorithm_visualizer/features/base/view/base_navigation.dart';
+import 'package:algorithm_visualizer/features/base/view_model/base_view_model.dart';
 import 'package:algorithm_visualizer/features/home/view/home_page.dart';
 import 'package:algorithm_visualizer/features/searching/bfs/view/bfs_searching.dart';
 import 'package:algorithm_visualizer/features/searching/dfs/view/dfs_searching.dart';
@@ -18,10 +19,12 @@ import 'package:algorithm_visualizer/features/sorting/radix/view/radix_sort_page
 import 'package:algorithm_visualizer/features/sorting/selection/view/selection_sort_page.dart';
 import 'package:algorithm_visualizer/features/sorting/shell/view/shell_sort_page.dart';
 import 'package:algorithm_visualizer/features/visualize/view/visualize_page.dart';
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 part 'unknown_page.dart';
+
 final _rootKey = GlobalKey<NavigatorState>();
 final _tabAKey = GlobalKey<NavigatorState>();
 final _tabBKey = GlobalKey<NavigatorState>();
@@ -34,6 +37,7 @@ class Routes {
   static const RouteConfig visualize = RouteConfig(
     name: 'visualize',
     path: '/visualize',
+    queryParamsName: "instance",
   );
   static const RouteConfig bfsSearching = RouteConfig(
     name: 'bfsSearching',
@@ -117,9 +121,7 @@ class AppRoutes {
     routes: [
       StatefulShellRoute.indexedStack(
         builder: (context, state, navigationShell) {
-          return MainNavigationShell(
-            navigationShell: navigationShell
-          );
+          return MainNavigationShell(navigationShell: navigationShell);
         },
         branches: [
           StatefulShellBranch(
@@ -138,7 +140,17 @@ class AppRoutes {
               GoRoute(
                 path: Routes.visualize.path,
                 name: Routes.visualize.name,
-                builder: (context, state) => const VisualizePage(),
+                builder: (context, state) {
+                  final instance = state.uri.queryParameters["instance"];
+                  final sortingAlgo =
+                      SortingAlgoCards.values.firstWhereOrNull((element) => element.name == instance);
+                  final searchingAlgo =
+                      SearchingAlgoCards.values.firstWhereOrNull((element) => element.name == instance);
+                  if (instance != null && (sortingAlgo == null && searchingAlgo == null)) {
+                    return _UnknownPage();
+                  }
+                  return VisualizePage(sortingCard: sortingAlgo, searchingCard: searchingAlgo);
+                },
                 routes: [
                   GoRoute(
                     path: Routes.bfsSearching.path,
