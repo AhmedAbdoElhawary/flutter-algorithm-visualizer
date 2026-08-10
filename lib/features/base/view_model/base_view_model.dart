@@ -1,4 +1,3 @@
-import 'package:algorithm_visualizer/config/routes/route_app.dart';
 import 'package:algorithm_visualizer/core/resources/strings_manager.dart';
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/glass_card.dart';
 import 'package:algorithm_visualizer/features/searching/base/view_model/searching_notifier.dart';
@@ -23,17 +22,17 @@ enum SearchingAlgoCards { bfs, dfs, aStar }
 class AlgoSortingCard {
   final AlgorithmGlassCard card;
   final StateNotifierProvider<SortingNotifier, SortingNotifierState> instance;
-  final RouteConfig route;
+  final SortingAlgoCards page;
   final String title;
-  AlgoSortingCard({required this.route, required this.title, required this.card, required this.instance});
+  AlgoSortingCard({required this.page, required this.title, required this.card, required this.instance});
 }
 
 class AlgoSearchingCard {
   final AlgorithmGlassCard card;
   final StateNotifierProvider<SearchingNotifier, SearchingState> instance;
-  final RouteConfig route;
+  final SearchingAlgoCards page;
   final String title;
-  AlgoSearchingCard({required this.route, required this.title, required this.card, required this.instance});
+  AlgoSearchingCard({required this.page, required this.title, required this.card, required this.instance});
 }
 
 class BaseCategory {
@@ -43,12 +42,11 @@ class BaseCategory {
 }
 
 class BaseViewModel {
-  // static BaseCategory baseCategory(bool isSorting,);
   static AlgoSortingCard sortingCards(SortingAlgoCards card) {
     switch (card) {
       case SortingAlgoCards.bubble:
         return AlgoSortingCard(
-          route: Routes.bubbleSort,
+          page: SortingAlgoCards.bubble,
           title: StringsManager.bubbleSort,
           instance: StateNotifierProvider<SortingNotifier, SortingNotifierState>(
             (ref) => BubbleSortNotifier(),
@@ -61,7 +59,7 @@ class BaseViewModel {
         );
       case SortingAlgoCards.selection:
         return AlgoSortingCard(
-          route: Routes.selectionSort,
+          page: SortingAlgoCards.selection,
           title: StringsManager.selectionSort,
           instance: StateNotifierProvider<SortingNotifier, SortingNotifierState>(
             (ref) => SelectionSortNotifier(),
@@ -74,7 +72,7 @@ class BaseViewModel {
         );
       case SortingAlgoCards.insertion:
         return AlgoSortingCard(
-          route: Routes.insertionSort,
+          page: SortingAlgoCards.insertion,
           title: StringsManager.insertionSort,
           instance: StateNotifierProvider<SortingNotifier, SortingNotifierState>(
             (ref) => InsertionSortNotifier(),
@@ -87,7 +85,7 @@ class BaseViewModel {
         );
       case SortingAlgoCards.merge:
         return AlgoSortingCard(
-          route: Routes.mergeSort,
+          page: SortingAlgoCards.merge,
           title: StringsManager.mergeSort,
           instance: StateNotifierProvider<SortingNotifier, SortingNotifierState>(
             (ref) => MergeSortNotifier(),
@@ -100,7 +98,7 @@ class BaseViewModel {
         );
       case SortingAlgoCards.quick:
         return AlgoSortingCard(
-          route: Routes.quickSort,
+          page: SortingAlgoCards.quick,
           title: StringsManager.quickSort,
           instance: StateNotifierProvider<SortingNotifier, SortingNotifierState>(
             (ref) => QuickSortNotifier(),
@@ -113,7 +111,7 @@ class BaseViewModel {
         );
       case SortingAlgoCards.heap:
         return AlgoSortingCard(
-          route: Routes.heapSort,
+          page: SortingAlgoCards.heap,
           title: StringsManager.heapSort,
           instance: StateNotifierProvider<SortingNotifier, SortingNotifierState>(
             (ref) => HeapSortNotifier(),
@@ -126,7 +124,7 @@ class BaseViewModel {
         );
       case SortingAlgoCards.shell:
         return AlgoSortingCard(
-          route: Routes.shellSort,
+          page: SortingAlgoCards.shell,
           title: StringsManager.shellSort,
           instance: StateNotifierProvider<SortingNotifier, SortingNotifierState>(
             (ref) => ShellSortNotifier(),
@@ -139,7 +137,7 @@ class BaseViewModel {
         );
       case SortingAlgoCards.radix:
         return AlgoSortingCard(
-          route: Routes.radixSort,
+          page: SortingAlgoCards.radix,
           title: StringsManager.radixSort,
           instance: StateNotifierProvider<SortingNotifier, SortingNotifierState>(
             (ref) => RadixSortNotifier(),
@@ -152,7 +150,7 @@ class BaseViewModel {
         );
       case SortingAlgoCards.counting:
         return AlgoSortingCard(
-          route: Routes.countingSort,
+          page: SortingAlgoCards.counting,
           title: StringsManager.countingSort,
           instance: StateNotifierProvider<SortingNotifier, SortingNotifierState>(
             (ref) => CountingSortNotifier(),
@@ -165,7 +163,7 @@ class BaseViewModel {
         );
       case SortingAlgoCards.bucket:
         return AlgoSortingCard(
-          route: Routes.bucketSort,
+          page: SortingAlgoCards.bucket,
           title: StringsManager.bucketSort,
           instance: StateNotifierProvider<SortingNotifier, SortingNotifierState>(
             (ref) => BucketSortNotifier(),
@@ -182,7 +180,7 @@ class BaseViewModel {
   static AlgoSearchingCard searchingCards(SearchingAlgoCards cards) {
     return switch (cards) {
       SearchingAlgoCards.bfs => AlgoSearchingCard(
-          route: Routes.bfsSearching,
+          page: SearchingAlgoCards.bfs,
           instance: StateNotifierProvider<SearchingNotifier, SearchingState>((ref) => BFSSearchingNotifier()),
           title: StringsManager.bFS,
           card: AlgorithmGlassCard(
@@ -192,7 +190,7 @@ class BaseViewModel {
           ),
         ),
       SearchingAlgoCards.dfs => AlgoSearchingCard(
-          route: Routes.dfsSearching,
+          page: SearchingAlgoCards.dfs,
           instance: StateNotifierProvider<SearchingNotifier, SearchingState>((ref) => DFSSearchingNotifier()),
           title: StringsManager.dFS,
           card: AlgorithmGlassCard(
@@ -202,7 +200,7 @@ class BaseViewModel {
           ),
         ),
       SearchingAlgoCards.aStar => AlgoSearchingCard(
-          route: Routes.aStarSearching,
+          page: SearchingAlgoCards.aStar,
           title: StringsManager.aStarSearch,
           instance:
               StateNotifierProvider<SearchingNotifier, SearchingState>((ref) => AStarSearchingNotifier()),
