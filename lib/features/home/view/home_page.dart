@@ -5,7 +5,7 @@ import 'package:algorithm_visualizer/core/resources/strings_manager.dart';
 import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
 import 'package:algorithm_visualizer/core/widgets/adaptive/text/adaptive_text.dart';
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/glass_card.dart';
-import 'package:algorithm_visualizer/features/home/view_model/home_page_view_model.dart';
+import 'package:algorithm_visualizer/features/base/view_model/base_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -37,8 +37,8 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
 
   @override
   Widget build(BuildContext context) {
-    final cardValues = HomePageViewModel.sortingCards.values.toList();
-    final searchingCardValues = HomePageViewModel.searchingCards.values.toList();
+    final cardValues = BaseViewModel.baseCategory.sortingCards.values.toList();
+    final searchingCardValues = BaseViewModel.baseCategory.searchingCards.values.toList();
 
     return Scaffold(
       body: SafeArea(
@@ -65,7 +65,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
                       controller: controller,
                       children: [
                         GridView.builder(
-                          itemCount: HomePageViewModel.sortingCards.length,
+                          itemCount: BaseViewModel.baseCategory.sortingCards.length,
                           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                             crossAxisCount: 2,
                             crossAxisSpacing: 20,
@@ -87,7 +87,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
                           },
                         ),
                         GridView.builder(
-                          itemCount: HomePageViewModel.searchingCards.length,
+                          itemCount: BaseViewModel.baseCategory.searchingCards.length,
                           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                             crossAxisCount: 2,
                             crossAxisSpacing: 20,
