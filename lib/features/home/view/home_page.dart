@@ -37,8 +37,8 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
 
   @override
   Widget build(BuildContext context) {
-    final cardValues = BaseViewModel.baseCategory.sortingCards.values.toList();
-    final searchingCardValues = BaseViewModel.baseCategory.searchingCards.values.toList();
+    final sortingCardValues = SortingAlgoCards.values;
+    final searchingCardValues = SearchingAlgoCards.values;
 
     return Scaffold(
       body: SafeArea(
@@ -65,7 +65,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
                       controller: controller,
                       children: [
                         GridView.builder(
-                          itemCount: BaseViewModel.baseCategory.sortingCards.length,
+                          itemCount: sortingCardValues.length,
                           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                             crossAxisCount: 2,
                             crossAxisSpacing: 20,
@@ -73,6 +73,8 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
                             childAspectRatio: 1.1,
                           ),
                           itemBuilder: (context, index) {
+                            final card = BaseViewModel.sortingCards(sortingCardValues[index]);
+
                             return Padding(
                               padding: REdgeInsetsDirectional.only(
                                   start: index % 2 == 0 ? 20 : 0, end: index % 2 != 0 ? 20 : 0),
@@ -80,14 +82,14 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
                                   borderRadius: BorderRadius.circular(20),
                                   highlightColor: context.getColor(ThemeEnum.primaryColor),
                                   onTap: () {
-                                    context.pushTo(cardValues[index].route);
+                                    context.pushTo(card.route);
                                   },
-                                  child: cardValues[index].card),
+                                  child: card.card),
                             );
                           },
                         ),
                         GridView.builder(
-                          itemCount: BaseViewModel.baseCategory.searchingCards.length,
+                          itemCount: searchingCardValues.length,
                           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                             crossAxisCount: 2,
                             crossAxisSpacing: 20,
@@ -95,6 +97,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
                             childAspectRatio: 1.1,
                           ),
                           itemBuilder: (context, index) {
+                            final card = BaseViewModel.searchingCards(searchingCardValues[index]);
                             return Padding(
                               padding: REdgeInsetsDirectional.only(
                                   start: index % 2 == 0 ? 20 : 0, end: index % 2 != 0 ? 20 : 0),
@@ -102,9 +105,9 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
                                   borderRadius: BorderRadius.circular(20),
                                   highlightColor: context.getColor(ThemeEnum.primaryColor),
                                   onTap: () {
-                                    context.pushTo(searchingCardValues[index].route);
+                                    context.pushTo(card.route);
                                   },
-                                  child: searchingCardValues[index].card),
+                                  child: card.card),
                             );
                           },
                         ),
