@@ -91,4 +91,10 @@ class StringsManager {
   static const String visited = "Visited";
   static const String path = "Path";
   static const String wall = "Wall";
+  static const String solved = "solved";
+  static const String attempted = "attempted";
+  static const String easy = "Easy";
+  static const String medium = "Medium";
+  static const String hard = "Hard";
+  static const String searchProblem = "Search problems…";
 }
