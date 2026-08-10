@@ -51,6 +51,7 @@ enum ThemeEnum {
   lightBlueColor,
   greenColor,
   redColor,
+  red2Color,
   orangeColor,
   //
   comparedColor,
@@ -110,6 +111,7 @@ extension ThemeExtension on BuildContext {
       ThemeEnum.lightBlueColor: ColorManager.finishedSearcherBlue,
       ThemeEnum.greenColor: ColorManager.green,
       ThemeEnum.redColor: ColorManager.red,
+      ThemeEnum.red2Color: ColorManager.red2,
       ThemeEnum.orangeColor: ColorManager.orange,
       ThemeEnum.comparedColor: ColorManager.dividerBlue,
       ThemeEnum.darkPurpleColor: ColorManager.darkPurple,
