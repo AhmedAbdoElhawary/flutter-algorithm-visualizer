@@ -3,8 +3,8 @@ import 'package:algorithm_visualizer/core/resources/strings_manager.dart';
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/algo_tab.dart';
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/algorithm_title.dart';
 import 'package:algorithm_visualizer/features/base/view_model/base_view_model.dart';
-import 'package:algorithm_visualizer/features/searching/base/view/searching_view.dart';
-import 'package:algorithm_visualizer/features/sorting/base/view/sorting_view.dart';
+import 'package:algorithm_visualizer/features/visualize/sub_view/searching/view/searching_view.dart';
+import 'package:algorithm_visualizer/features/visualize/sub_view/sorting/view/sorting_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
