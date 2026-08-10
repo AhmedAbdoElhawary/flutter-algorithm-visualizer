@@ -1,21 +1,46 @@
+import 'package:algorithm_visualizer/config/routes/route_app.dart';
 import 'package:algorithm_visualizer/core/resources/strings_manager.dart';
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/algo_tab.dart';
+import 'package:algorithm_visualizer/features/base/view_model/base_view_model.dart';
+import 'package:algorithm_visualizer/features/searching/base/view/searching_view.dart';
+import 'package:algorithm_visualizer/features/sorting/base/view/sorting_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class VisualizePage extends StatefulWidget {
-  const VisualizePage({super.key});
+  const VisualizePage({this.sortingCard, this.searchingCard, super.key});
+  final SortingAlgoCards? sortingCard;
+  final SearchingAlgoCards? searchingCard;
 
   @override
   State<VisualizePage> createState() => _VisualizePageState();
 }
 
 class _VisualizePageState extends State<VisualizePage> {
+  late final initialView = widget.sortingCard == null && widget.searchingCard == null
+      ? 0
+      : widget.searchingCard == null
+          ? 0
+          : 1;
+
+  late int tabView = initialView;
+
+  (SortingAlgoCards?, SearchingAlgoCards?) getCards() {
+    var sortingCard = widget.sortingCard;
+    var searchingCard = widget.searchingCard;
+    sortingCard ??= SortingAlgoCards.bubble;
+    searchingCard ??= SearchingAlgoCards.bfs;
+
+    return tabView == 0 ? (sortingCard, null) : (null, searchingCard);
+  }
+
   @override
   Widget build(BuildContext context) {
+    final (sortingCard, searchingCard) = getCards();
+
     return Scaffold(
       body: CustomScrollView(
-        physics: BouncingScrollPhysics(),
+        physics: NeverScrollableScrollPhysics(),
         slivers: [
           SliverAppBar(
             pinned: true,
@@ -32,9 +57,13 @@ class _VisualizePageState extends State<VisualizePage> {
                 children: [
                   Expanded(
                     child: InkWell(
-                      onTap: () {},
+                      onTap: () {
+                        setState(() {
+                          tabView = 0;
+                        });
+                      },
                       child: AlgoTab(
-                        isSelected: true,
+                        isSelected: tabView == 0,
                         addEndPadding: false,
                         label: StringsManager.sorting,
                         verticalPadding: 3,
@@ -45,9 +74,13 @@ class _VisualizePageState extends State<VisualizePage> {
                   RSizedBox(width: 10),
                   Expanded(
                     child: InkWell(
-                      onTap: () {},
+                      onTap: () {
+                        setState(() {
+                          tabView = 1;
+                        });
+                      },
                       child: AlgoTab(
-                        isSelected: false,
+                        isSelected: tabView == 1,
                         addEndPadding: false,
                         label: StringsManager.searching,
                         verticalPadding: 3,
@@ -60,8 +93,11 @@ class _VisualizePageState extends State<VisualizePage> {
             ),
           ),
           SliverFillRemaining(
-            // child: ,
-          ),
+              child: tabView == 0 && sortingCard != null
+                  ? SortingView(card: sortingCard)
+                  : searchingCard != null
+                      ? SearchingView(card: searchingCard)
+                      : UnknownView()),
         ],
       ),
     );
