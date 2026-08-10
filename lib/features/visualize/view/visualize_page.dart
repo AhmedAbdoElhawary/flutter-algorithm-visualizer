@@ -17,12 +17,13 @@ class VisualizePage extends StatefulWidget {
 }
 
 class _VisualizePageState extends State<VisualizePage> {
-  late int tabView = widget.sortingCard == null && widget.searchingCard == null
+  late int tabView = getTabView;
+
+  int get getTabView => widget.sortingCard == null && widget.searchingCard == null
       ? 0
       : widget.searchingCard == null
           ? 0
           : 1;
-
   (SortingAlgoCards?, SearchingAlgoCards?) getCards() {
     var sortingCard = widget.sortingCard;
     var searchingCard = widget.searchingCard;
@@ -30,6 +31,22 @@ class _VisualizePageState extends State<VisualizePage> {
     searchingCard ??= SearchingAlgoCards.bfs;
 
     return tabView == 0 ? (sortingCard, null) : (null, searchingCard);
+  }
+
+  @override
+  void setState(VoidCallback fn) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      super.setState(fn);
+    });
+  }
+
+  @override
+  void didUpdateWidget(covariant VisualizePage oldWidget) {
+    if (oldWidget.sortingCard != widget.sortingCard || oldWidget.searchingCard != widget.searchingCard) {
+      tabView = getTabView;
+      setState(() {});
+    }
+    super.didUpdateWidget(oldWidget);
   }
 
   @override
