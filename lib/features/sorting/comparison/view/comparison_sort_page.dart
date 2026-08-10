@@ -3,7 +3,7 @@ import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
 import 'package:algorithm_visualizer/core/widgets/adaptive/padding/adaptive_padding.dart';
 import 'package:algorithm_visualizer/core/widgets/adaptive/text/adaptive_text.dart';
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/custom_icon.dart';
-import 'package:algorithm_visualizer/features/sorting/base/view/sorting_page.dart';
+import 'package:algorithm_visualizer/features/sorting/base/view/sorting_view.dart';
 import 'package:algorithm_visualizer/features/sorting/base/view_model/sorting_notifier.dart';
 import 'package:algorithm_visualizer/features/sorting/comparison/view_model/comparison_sort_notifier.dart';
 import 'package:collection/collection.dart';
