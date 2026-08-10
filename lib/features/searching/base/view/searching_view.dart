@@ -19,7 +19,7 @@ class SearchingView extends ConsumerStatefulWidget {
 
 class _VisualizerScreenState extends ConsumerState<SearchingView> {
   late StateNotifierProvider<SearchingNotifier, SearchingState> instance =
-      StateNotifierProvider<SearchingNotifier, SearchingState>((ref) => BFSSearchingNotifier());
+      BaseViewModel.searchingCards(widget.card).instance;
 
   // final searchingCardValues = SortingAlgoCards;
   late SearchingAlgoCards card = widget.card;
@@ -27,6 +27,33 @@ class _VisualizerScreenState extends ConsumerState<SearchingView> {
   void deleteInstance(StateNotifierProvider<SearchingNotifier, SearchingState> instance) {
     ref.read(instance.notifier).reset();
     ref.invalidate(instance);
+  }
+
+  @override
+  void setState(VoidCallback fn) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      super.setState(fn);
+    });
+  }
+
+  @override
+  void initState() {
+    _jump();
+    super.initState();
+  }
+
+  @override
+  void didUpdateWidget(covariant SearchingView oldWidget) {
+    if (widget.card != card) _jump();
+
+    super.didUpdateWidget(oldWidget);
+  }
+
+  void _jump() {
+    setState(() {
+      instance = BaseViewModel.searchingCards(widget.card).instance;
+      card = widget.card;
+    });
   }
 
   @override
