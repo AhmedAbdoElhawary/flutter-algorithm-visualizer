@@ -12,9 +12,9 @@ import 'package:algorithm_visualizer/features/sorting/base/view_model/sorting_no
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-part 'package:algorithm_visualizer/features/searching/star/view_model/a_star_searching_notifier.dart';
-part 'package:algorithm_visualizer/features/searching/bfs/view_model/bfs_searching_notifier.dart';
-part 'package:algorithm_visualizer/features/searching/dfs/view_model/dfs_searching_notifier.dart';
+part 'package:algorithm_visualizer/features/searching/base/view_model/sub_searching/a_star_searching_notifier.dart';
+part 'package:algorithm_visualizer/features/searching/base/view_model/sub_searching/bfs_searching_notifier.dart';
+part 'package:algorithm_visualizer/features/searching/base/view_model/sub_searching/dfs_searching_notifier.dart';
 part 'searching_state.dart';
 
 const _kInfinity = 1 << 30;
