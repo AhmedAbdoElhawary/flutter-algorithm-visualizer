@@ -17,13 +17,11 @@ class VisualizePage extends StatefulWidget {
 }
 
 class _VisualizePageState extends State<VisualizePage> {
-  late final initialView = widget.sortingCard == null && widget.searchingCard == null
+  late int tabView = widget.sortingCard == null && widget.searchingCard == null
       ? 0
       : widget.searchingCard == null
           ? 0
           : 1;
-
-  late int tabView = initialView;
 
   (SortingAlgoCards?, SearchingAlgoCards?) getCards() {
     var sortingCard = widget.sortingCard;
