@@ -11,8 +11,10 @@ import '../widgets/pf_legend.dart';
 import '../widgets/pf_step_info.dart';
 
 class SearchingView extends ConsumerStatefulWidget {
-  const SearchingView({this.card = SearchingAlgoCards.bfs, super.key});
+  const SearchingView({this.card = SearchingAlgoCards.bfs, required this.onAlgoChanged, super.key});
   final SearchingAlgoCards card;
+  final void Function(String title, String description) onAlgoChanged;
+
   @override
   ConsumerState<SearchingView> createState() => _VisualizerScreenState();
 }
@@ -21,7 +23,6 @@ class _VisualizerScreenState extends ConsumerState<SearchingView> {
   late StateNotifierProvider<SearchingNotifier, SearchingState> instance =
       BaseViewModel.searchingCards(widget.card).instance;
 
-  // final searchingCardValues = SortingAlgoCards;
   late SearchingAlgoCards card = widget.card;
 
   void deleteInstance(StateNotifierProvider<SearchingNotifier, SearchingState> instance) {
@@ -38,27 +39,36 @@ class _VisualizerScreenState extends ConsumerState<SearchingView> {
 
   @override
   void initState() {
-    _jump();
+    _jump(card: widget.card);
     super.initState();
   }
 
   @override
   void didUpdateWidget(covariant SearchingView oldWidget) {
-    if (widget.card != card) _jump();
+    if (widget.card != card) _jump(card: widget.card);
 
     super.didUpdateWidget(oldWidget);
   }
 
-  void _jump() {
+  Future<void> _jump({required SearchingAlgoCards card, bool cleanInstance = false}) async {
+    if (cleanInstance) {
+      final prevInstance = instance;
+      deleteInstance(prevInstance);
+    }
+
     setState(() {
-      instance = BaseViewModel.searchingCards(widget.card).instance;
-      card = widget.card;
+      instance = BaseViewModel.searchingCards(card).instance;
+      this.card = card;
     });
+
+    final description = ref.read(instance.notifier).algorithmDescription;
+    final cardValue = BaseViewModel.searchingCards(card);
+
+    widget.onAlgoChanged(cardValue.title, description);
   }
 
   @override
   Widget build(BuildContext context) {
-    final description = ref.read(instance.notifier).algorithmDescription;
     final complexity = ref.read(instance.notifier).algoComplexity;
 
     final searchingValues = SearchingAlgoCards.values;
@@ -82,14 +92,8 @@ class _VisualizerScreenState extends ConsumerState<SearchingView> {
                       child: InkWell(
                         onTap: () async {
                           if (card == cardValue) return;
-                          final inst = instance;
 
-                          setState(() {
-                            instance = searchingCardValues.instance;
-                            card = cardValue;
-                          });
-
-                          deleteInstance(inst);
+                          _jump(card: cardValue, cleanInstance: true);
                         },
                         child: AlgoTab(
                           isSelected: cardValue == card,
