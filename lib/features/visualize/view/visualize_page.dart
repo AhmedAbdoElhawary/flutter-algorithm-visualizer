@@ -1,6 +1,7 @@
 import 'package:algorithm_visualizer/config/routes/route_app.dart';
 import 'package:algorithm_visualizer/core/resources/strings_manager.dart';
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/algo_tab.dart';
+import 'package:algorithm_visualizer/core/widgets/custom_widgets/algorithm_title.dart';
 import 'package:algorithm_visualizer/features/base/view_model/base_view_model.dart';
 import 'package:algorithm_visualizer/features/searching/base/view/searching_view.dart';
 import 'package:algorithm_visualizer/features/sorting/base/view/sorting_view.dart';
@@ -17,6 +18,12 @@ class VisualizePage extends StatefulWidget {
 }
 
 class _VisualizePageState extends State<VisualizePage> {
+  late var sortingCard = widget.sortingCard;
+  late var searchingCard = widget.searchingCard;
+
+  final ValueNotifier<String> title = ValueNotifier("");
+  final ValueNotifier<String> description = ValueNotifier("");
+
   late int tabView = getTabView;
 
   int get getTabView => widget.sortingCard == null && widget.searchingCard == null
@@ -24,9 +31,10 @@ class _VisualizePageState extends State<VisualizePage> {
       : widget.searchingCard == null
           ? 0
           : 1;
+
   (SortingAlgoCards?, SearchingAlgoCards?) getCards() {
-    var sortingCard = widget.sortingCard;
-    var searchingCard = widget.searchingCard;
+    var sortingCard = this.sortingCard;
+    var searchingCard = this.searchingCard;
     sortingCard ??= SortingAlgoCards.bubble;
     searchingCard ??= SearchingAlgoCards.bfs;
 
@@ -44,6 +52,8 @@ class _VisualizePageState extends State<VisualizePage> {
   void didUpdateWidget(covariant VisualizePage oldWidget) {
     if (oldWidget.sortingCard != widget.sortingCard || oldWidget.searchingCard != widget.searchingCard) {
       tabView = getTabView;
+      sortingCard = widget.sortingCard;
+      searchingCard = widget.searchingCard;
       setState(() {});
     }
     super.didUpdateWidget(oldWidget);
@@ -63,7 +73,14 @@ class _VisualizePageState extends State<VisualizePage> {
             titleSpacing: 0,
             leadingWidth: 16.r,
             leading: SizedBox(),
-            // title: AlgorithmTitle(title: title, description: description),
+            title: ValueListenableBuilder(
+              valueListenable: title,
+              builder: (context, titleValue, child) => ValueListenableBuilder(
+                valueListenable: description,
+                builder: (context, descriptionValue, child) =>
+                    AlgorithmTitle(title: titleValue, description: descriptionValue),
+              ),
+            ),
           ),
           SliverToBoxAdapter(
             child: Padding(
@@ -75,6 +92,8 @@ class _VisualizePageState extends State<VisualizePage> {
                       onTap: () {
                         setState(() {
                           tabView = 0;
+                          this.sortingCard = SortingAlgoCards.bubble;
+                          this.searchingCard = null;
                         });
                       },
                       child: AlgoTab(
@@ -92,6 +111,8 @@ class _VisualizePageState extends State<VisualizePage> {
                       onTap: () {
                         setState(() {
                           tabView = 1;
+                          this.sortingCard = null;
+                          this.searchingCard = SearchingAlgoCards.bfs;
                         });
                       },
                       child: AlgoTab(
@@ -109,9 +130,21 @@ class _VisualizePageState extends State<VisualizePage> {
           ),
           SliverFillRemaining(
               child: tabView == 0 && sortingCard != null
-                  ? SortingView(card: sortingCard)
+                  ? SortingView(
+                      card: sortingCard,
+                      onAlgoChanged: (title, description) {
+                        this.title.value = title;
+                        this.description.value = description;
+                      },
+                    )
                   : searchingCard != null
-                      ? SearchingView(card: searchingCard)
+                      ? SearchingView(
+                          card: searchingCard,
+                          onAlgoChanged: (title, description) {
+                            this.title.value = title;
+                            this.description.value = description;
+                          },
+                        )
                       : UnknownView()),
         ],
       ),
