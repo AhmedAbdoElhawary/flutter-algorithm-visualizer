@@ -7,9 +7,8 @@ import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
 import 'package:algorithm_visualizer/core/widgets/adaptive/text/adaptive_text.dart';
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/algorithm_control.dart';
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/algorithm_status_text.dart';
-import 'package:algorithm_visualizer/core/widgets/custom_widgets/algorithm_title.dart';
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/complexity_details.dart';
-import 'package:algorithm_visualizer/features/home/view_model/home_page_view_model.dart';
+import 'package:algorithm_visualizer/features/base/view_model/base_view_model.dart';
 import 'package:algorithm_visualizer/features/sorting/base/view_model/sorting_notifier.dart';
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/algo_tab.dart';
 import 'package:flutter/material.dart';
@@ -42,87 +41,38 @@ class _SortingPageState extends ConsumerState<SortingPage> {
     final description = ref.read(instance.notifier).algorithmDescription;
     final complexity = ref.read(instance.notifier).algoComplexity;
 
-    return PopScope(
-      onPopInvokedWithResult: (didPop, result) async {
-        if (didPop) await deleteInstance(instance);
-      },
-      child: Scaffold(
-        body: CustomScrollView(
-          physics: BouncingScrollPhysics(),
-          slivers: [
-            SliverAppBar(
-              pinned: true,
-              centerTitle: false,
-              titleSpacing: 0,
-              leadingWidth: 16.r,
-              leading: SizedBox(),
-              title: AlgorithmTitle(title: title, description: description),
-            ),
-            SliverToBoxAdapter(
-              child: Padding(
-                padding: REdgeInsets.symmetric(horizontal: 16),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: InkWell(
-                        onTap: () {},
-                        child: AlgoTab(
-                          isSelected: true,
-                          addEndPadding: false,
-                          label: StringsManager.sorting,
-                          verticalPadding: 3,
-                          icon: Icons.filter_list_rounded,
-                        ),
-                      ),
-                    ),
-                    RSizedBox(width: 10),
-                    Expanded(
-                      child: InkWell(
-                        onTap: () {},
-                        child: AlgoTab(
-                          isSelected: false,
-                          addEndPadding: false,
-                          label: StringsManager.searching,
-                          verticalPadding: 3,
-                          icon: Icons.map_rounded,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            SliverPadding(
-              padding: REdgeInsetsDirectional.only(top: 10, bottom: 10),
-              sliver: SliverToBoxAdapter(
-                child: _SortingSelectionList(
-                    title: title,
-                    onChangedTab: (AlgoSortingCard cardValue) async {
-                      if (title == cardValue.title) return;
-                      final inst = instance;
+    return CustomScrollView(
+      physics: NeverScrollableScrollPhysics(),
+      slivers: [
+        SliverPadding(
+          padding: REdgeInsetsDirectional.only(top: 10, bottom: 10),
+          sliver: SliverToBoxAdapter(
+            child: _SortingSelectionList(
+                title: title,
+                onChangedTab: (AlgoSortingCard cardValue) async {
+                  if (title == cardValue.title) return;
+                  final inst = instance;
 
-                      setState(() {
-                        instance = cardValue.instance;
-                        title = cardValue.title;
-                      });
+                  setState(() {
+                    instance = cardValue.instance;
+                    title = cardValue.title;
+                  });
 
-                      await deleteInstance(inst);
-                    }),
-              ),
-            ),
-            SliverPadding(
-              padding: REdgeInsetsDirectional.only(bottom: 10),
-              sliver: SliverToBoxAdapter(child: ComplexityDetails(complexity: complexity)),
-            ),
-            SliverToBoxAdapter(child: ShowUpSortingList(instance)),
-            SliverPadding(
-              padding: REdgeInsetsDirectional.only(top: 10),
-              sliver: SliverToBoxAdapter(child: _StatusText(instance)),
-            ),
-            SliverToBoxAdapter(child: _SortingControlButtons(instance)),
-          ],
+                  await deleteInstance(inst);
+                }),
+          ),
         ),
-      ),
+        SliverPadding(
+          padding: REdgeInsetsDirectional.only(bottom: 10),
+          sliver: SliverToBoxAdapter(child: ComplexityDetails(complexity: complexity)),
+        ),
+        SliverToBoxAdapter(child: ShowUpSortingList(instance)),
+        SliverPadding(
+          padding: REdgeInsetsDirectional.only(top: 10),
+          sliver: SliverToBoxAdapter(child: _StatusText(instance)),
+        ),
+        SliverToBoxAdapter(child: _SortingControlButtons(instance)),
+      ],
     );
   }
 }
@@ -136,7 +86,7 @@ class _SortingSelectionList extends StatefulWidget {
 }
 
 class _SortingSelectionListState extends State<_SortingSelectionList> {
-  final cardValues = HomePageViewModel.sortingCards.values.toList();
+  final cardValues = BaseViewModel.baseCategory.sortingCards.values.toList();
   final controller = ScrollController();
 
   @override
@@ -162,12 +112,12 @@ class _SortingSelectionListState extends State<_SortingSelectionList> {
       controller: controller,
       child: Row(
         children: List.generate(
-          HomePageViewModel.sortingCards.length,
+          BaseViewModel.baseCategory.sortingCards.length,
           (index) {
             return Padding(
               padding: REdgeInsetsDirectional.only(
                   start: index == 0 ? 16 : 8,
-                  end: index < HomePageViewModel.sortingCards.length - 1 ? 0 : 16),
+                  end: index < BaseViewModel.baseCategory.sortingCards.length - 1 ? 0 : 16),
               child: InkWell(
                 onTap: () => widget.onChangedTab(cardValues[index]),
                 child: AlgoTab(
