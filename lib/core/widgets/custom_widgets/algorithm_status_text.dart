@@ -1,6 +1,6 @@
 import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
 import 'package:algorithm_visualizer/core/widgets/adaptive/text/adaptive_text.dart';
-import 'package:algorithm_visualizer/features/sorting/base/widgets/linear_progress_indicator.dart';
+import 'package:algorithm_visualizer/features/visualize/sub_view/sorting/widgets/linear_progress_indicator.dart';
 import 'package:algorithm_visualizer/lib-temp/theme/app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
