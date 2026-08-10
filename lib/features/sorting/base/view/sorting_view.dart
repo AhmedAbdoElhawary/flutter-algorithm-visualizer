@@ -19,9 +19,9 @@ part '../widgets/control_buttons.dart';
 part '../widgets/size_draggable.dart';
 
 class SortingView extends ConsumerStatefulWidget {
-  const SortingView({this.card = SortingAlgoCards.bubble, super.key});
+  const SortingView({this.card = SortingAlgoCards.bubble, required this.onAlgoChanged, super.key});
   final SortingAlgoCards card;
-
+  final void Function(String title, String description) onAlgoChanged;
   @override
   ConsumerState<SortingView> createState() => _SortingPageState();
 }
@@ -46,28 +46,36 @@ class _SortingPageState extends ConsumerState<SortingView> {
 
   @override
   void initState() {
-    _jump();
+    _jump(card: widget.card);
 
     super.initState();
   }
 
   @override
   void didUpdateWidget(covariant SortingView oldWidget) {
-    if (widget.card != card) _jump();
+    if (widget.card != card) _jump(card: widget.card);
 
     super.didUpdateWidget(oldWidget);
   }
 
-  void _jump() {
+  Future<void> _jump({required SortingAlgoCards card, bool cleanInstance = false}) async {
+    if (cleanInstance) {
+      final prevInstance = instance;
+      await deleteInstance(prevInstance);
+    }
+
     setState(() {
-      instance = BaseViewModel.sortingCards(widget.card).instance;
-      card = widget.card;
+      instance = BaseViewModel.sortingCards(card).instance;
+      this.card = card;
     });
+
+    final description = ref.read(instance.notifier).algorithmDescription;
+    final cardValue = BaseViewModel.sortingCards(card);
+    widget.onAlgoChanged(cardValue.title, description);
   }
 
   @override
   Widget build(BuildContext context) {
-    final description = ref.read(instance.notifier).algorithmDescription;
     final complexity = ref.read(instance.notifier).algoComplexity;
 
     return CustomScrollView(
@@ -80,14 +88,8 @@ class _SortingPageState extends ConsumerState<SortingView> {
                 card: card,
                 onChangedTab: (SortingAlgoCards cardValue) async {
                   if (card == cardValue) return;
-                  final inst = instance;
 
-                  setState(() {
-                    instance = BaseViewModel.sortingCards(cardValue).instance;
-                    card = cardValue;
-                  });
-
-                  await deleteInstance(inst);
+                  _jump(card: cardValue, cleanInstance: true);
                 }),
           ),
         ),
