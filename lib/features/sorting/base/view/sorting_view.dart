@@ -11,7 +11,6 @@ import 'package:algorithm_visualizer/core/widgets/custom_widgets/complexity_deta
 import 'package:algorithm_visualizer/features/base/view_model/base_view_model.dart';
 import 'package:algorithm_visualizer/features/sorting/base/view_model/sorting_notifier.dart';
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/algo_tab.dart';
-import 'package:algorithm_visualizer/features/sorting/bubble/view_model/bubble_sort_notifier.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -29,15 +28,41 @@ class SortingView extends ConsumerStatefulWidget {
 
 class _SortingPageState extends ConsumerState<SortingView> {
   late StateNotifierProvider<SortingNotifier, SortingNotifierState> instance =
-      StateNotifierProvider<SortingNotifier, SortingNotifierState>(
-    (ref) => BubbleSortNotifier(),
-  );
+      BaseViewModel.sortingCards(widget.card).instance;
 
   late SortingAlgoCards card = widget.card;
 
   Future<void> deleteInstance(StateNotifierProvider<SortingNotifier, SortingNotifierState> instance) async {
     await ref.read(instance.notifier).cancelSorting();
     ref.invalidate(instance);
+  }
+
+  @override
+  void setState(VoidCallback fn) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      super.setState(fn);
+    });
+  }
+
+  @override
+  void initState() {
+    _jump();
+
+    super.initState();
+  }
+
+  @override
+  void didUpdateWidget(covariant SortingView oldWidget) {
+    if (widget.card != card) _jump();
+
+    super.didUpdateWidget(oldWidget);
+  }
+
+  void _jump() {
+    setState(() {
+      instance = BaseViewModel.sortingCards(widget.card).instance;
+      card = widget.card;
+    });
   }
 
   @override
@@ -95,6 +120,18 @@ class _SortingSelectionListState extends State<_SortingSelectionList> {
 
   @override
   void initState() {
+    _jump();
+    super.initState();
+  }
+
+  @override
+  void didUpdateWidget(covariant _SortingSelectionList oldWidget) {
+    if (widget.card != oldWidget.card) _jump();
+
+    super.didUpdateWidget(oldWidget);
+  }
+
+  void _jump() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final index = cardValues.indexWhere((element) => element == widget.card);
       if (index != -1) {
@@ -105,8 +142,6 @@ class _SortingSelectionListState extends State<_SortingSelectionList> {
         );
       }
     });
-
-    super.initState();
   }
 
   @override
