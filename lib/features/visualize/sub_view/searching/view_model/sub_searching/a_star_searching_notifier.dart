@@ -1,4 +1,4 @@
-part of 'package:algorithm_visualizer/features/searching/base/view_model/searching_notifier.dart';
+part of 'package:algorithm_visualizer/features/visualize/sub_view/searching/view_model/searching_notifier.dart';
 
 class AStarSearchingNotifier extends SearchingNotifier {
   @override
