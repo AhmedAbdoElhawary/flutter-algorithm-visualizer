@@ -30,29 +30,11 @@ class SortingPage extends ConsumerStatefulWidget {
 
 class _SortingPageState extends ConsumerState<SortingPage> {
   late StateNotifierProvider<SortingNotifier, SortingNotifierState> instance = widget.instance;
-  final cardValues = HomePageViewModel.sortingCards.values.toList();
-  final controller = ScrollController();
   late String title = widget.title;
 
   Future<void> deleteInstance(StateNotifierProvider<SortingNotifier, SortingNotifierState> instance) async {
     await ref.read(instance.notifier).cancelSorting();
     ref.invalidate(instance);
-  }
-
-  @override
-  void initState() {
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      final index = cardValues.indexWhere((element) => element.title == title);
-      if (index != -1) {
-        controller.animateTo(
-          index * 100,
-          duration: const Duration(milliseconds: 500),
-          curve: Curves.ease,
-        );
-      }
-    });
-
-    super.initState();
   }
 
   @override
@@ -76,45 +58,27 @@ class _SortingPageState extends ConsumerState<SortingPage> {
               leading: SizedBox(),
               title: AlgorithmTitle(title: title, description: description),
             ),
-            SliverToBoxAdapter(child: ComplexityDetails(complexity: complexity)),
             SliverPadding(
               padding: REdgeInsetsDirectional.only(top: 10, bottom: 10),
               sliver: SliverToBoxAdapter(
-                child: SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  controller: controller,
-                  child: Row(
-                    children: List.generate(
-                      HomePageViewModel.sortingCards.length,
-                      (index) {
-                        return Padding(
-                          padding: REdgeInsetsDirectional.only(
-                              start: index == 0 ? 16 : 8,
-                              end: index < HomePageViewModel.sortingCards.length - 1 ? 0 : 16),
-                          child: InkWell(
-                            onTap: () async {
-                              if (title == cardValues[index].title) return;
-                              final inst = instance;
+                child: _SortingSelectionList(
+                    title: title,
+                    onChangedTab: (AlgoSortingCard cardValue) async {
+                      if (title == cardValue.title) return;
+                      final inst = instance;
 
-                              setState(() {
-                                instance = cardValues[index].instance;
-                                title = cardValues[index].title;
-                              });
+                      setState(() {
+                        instance = cardValue.instance;
+                        title = cardValue.title;
+                      });
 
-                              await deleteInstance(inst);
-                            },
-                            child: AlgoTab(
-                              isSelected: cardValues[index].title == title,
-                              addEndPadding: false,
-                              label: cardValues[index].card.algoComplexity.name,
-                            ),
-                          ),
-                        );
-                      },
-                    ),
-                  ),
-                ),
+                      await deleteInstance(inst);
+                    }),
               ),
+            ),
+            SliverPadding(
+              padding: REdgeInsetsDirectional.only(bottom: 10),
+              sliver: SliverToBoxAdapter(child: ComplexityDetails(complexity: complexity)),
             ),
             SliverToBoxAdapter(child: ShowUpSortingList(instance)),
             SliverPadding(
@@ -123,6 +87,63 @@ class _SortingPageState extends ConsumerState<SortingPage> {
             ),
             SliverToBoxAdapter(child: _SortingControlButtons(instance)),
           ],
+        ),
+      ),
+    );
+  }
+}
+
+class _SortingSelectionList extends StatefulWidget {
+  const _SortingSelectionList({required this.title, required this.onChangedTab});
+  final String title;
+  final Future<void> Function(AlgoSortingCard cardValue) onChangedTab;
+  @override
+  State<_SortingSelectionList> createState() => _SortingSelectionListState();
+}
+
+class _SortingSelectionListState extends State<_SortingSelectionList> {
+  final cardValues = HomePageViewModel.sortingCards.values.toList();
+  final controller = ScrollController();
+
+  @override
+  void initState() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final index = cardValues.indexWhere((element) => element.title == widget.title);
+      if (index != -1) {
+        controller.animateTo(
+          index * 100,
+          duration: const Duration(milliseconds: 500),
+          curve: Curves.ease,
+        );
+      }
+    });
+
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      controller: controller,
+      child: Row(
+        children: List.generate(
+          HomePageViewModel.sortingCards.length,
+          (index) {
+            return Padding(
+              padding: REdgeInsetsDirectional.only(
+                  start: index == 0 ? 16 : 8,
+                  end: index < HomePageViewModel.sortingCards.length - 1 ? 0 : 16),
+              child: InkWell(
+                onTap: () => widget.onChangedTab(cardValues[index]),
+                child: AlgoTab(
+                  isSelected: cardValues[index].title == widget.title,
+                  addEndPadding: false,
+                  label: cardValues[index].card.algoComplexity.name,
+                ),
+              ),
+            );
+          },
         ),
       ),
     );
