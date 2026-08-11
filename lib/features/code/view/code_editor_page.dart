@@ -191,11 +191,15 @@ class _CodeEditorPageState extends State<CodeEditorPage> {
         Row(children: [
           Text(_topics[_topicIdx],
               style: GoogleFonts.inter(
-                  color: context.textPrimary, fontSize: 18, fontWeight: FontWeight.w700, letterSpacing: -0.4)),
+                  color: context.textPrimary,
+                  fontSize: 18,
+                  fontWeight: FontWeight.w700,
+                  letterSpacing: -0.4)),
           const SizedBox(width: 4),
           Icon(Icons.keyboard_arrow_down_rounded, size: 16, color: context.textMuted),
           const Spacer(),
-          _badge('Easy', context.accentBlue, isDark ? const Color(0xFF1E3A5F) : const Color(0xFFDBEAFE), context),
+          _badge('Easy', context.accentBlue, isDark ? const Color(0xFF1E3A5F) : const Color(0xFFDBEAFE),
+              context),
           const SizedBox(width: 8),
           Text('O(log n)', style: GoogleFonts.inter(color: context.textMuted, fontSize: 11)),
         ]),
@@ -216,11 +220,13 @@ class _CodeEditorPageState extends State<CodeEditorPage> {
                 margin: const EdgeInsets.only(right: 6),
                 padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                 decoration: BoxDecoration(
-                  color: active ? (isDark ? const Color(0xFF1E3A5F) : const Color(0xFFDBEAFE)) : context.bgCard,
+                  color:
+                      active ? (isDark ? const Color(0xFF1E3A5F) : const Color(0xFFDBEAFE)) : context.bgCard,
                   borderRadius: BorderRadius.circular(8),
                   border: Border.all(
-                      color:
-                          active ? (isDark ? const Color(0x663B82F6) : const Color(0x662563EB)) : context.borderColor),
+                      color: active
+                          ? (isDark ? const Color(0x663B82F6) : const Color(0x662563EB))
+                          : context.borderColor),
                   boxShadow: context.cardShadow,
                 ),
                 child: Text(e.value,
@@ -311,7 +317,10 @@ class _CodeEditorPageState extends State<CodeEditorPage> {
                   : LinearGradient(
                       begin: Alignment.topLeft,
                       end: Alignment.bottomRight,
-                      colors: [context.accentGreen, isDark ? const Color(0xFF10B981) : const Color(0xFF059669)],
+                      colors: [
+                        context.accentGreen,
+                        isDark ? const Color(0xFF10B981) : const Color(0xFF059669)
+                      ],
                     ),
               borderRadius: BorderRadius.circular(9),
               border: _running ? Border.all(color: context.borderColor) : null,
@@ -344,13 +353,7 @@ class _CodeEditorPageState extends State<CodeEditorPage> {
   Widget _buildCodeView(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
-      child: CodeEditorBlock(_dartCode),
-      // child: CodeBlockContainer(
-      //   code: _code,
-      //   lang: _lang,
-      //   highlightLine: _hlLine,
-      //   executing: _running,
-      // ),
+      child: CodeEditorBlock(code: _dartCode, highlightLineNumber: _hlLine ?? -1,executing: _running),
     );
   }
 
@@ -377,13 +380,16 @@ class _CodeEditorPageState extends State<CodeEditorPage> {
                 Icon(Icons.terminal_rounded, size: 14, color: context.accentGreen),
                 const SizedBox(width: 6),
                 Text('Output',
-                    style: GoogleFonts.inter(color: context.accentGreen, fontSize: 12, fontWeight: FontWeight.w600)),
+                    style: GoogleFonts.inter(
+                        color: context.accentGreen, fontSize: 12, fontWeight: FontWeight.w600)),
                 const Spacer(),
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-                  decoration: BoxDecoration(color: context.accentGreenBg, borderRadius: BorderRadius.circular(6)),
+                  decoration:
+                      BoxDecoration(color: context.accentGreenBg, borderRadius: BorderRadius.circular(6)),
                   child: Text('All tests passed ✓',
-                      style: GoogleFonts.inter(color: context.accentGreen, fontSize: 11, fontWeight: FontWeight.w600)),
+                      style: GoogleFonts.inter(
+                          color: context.accentGreen, fontSize: 11, fontWeight: FontWeight.w600)),
                 ),
               ]),
             ),
@@ -393,7 +399,8 @@ class _CodeEditorPageState extends State<CodeEditorPage> {
               final tc = e.value;
               return Container(
                 padding: const EdgeInsets.fromLTRB(14, 9, 14, 9),
-                decoration: i > 0 ? BoxDecoration(border: Border(top: BorderSide(color: context.borderColor))) : null,
+                decoration:
+                    i > 0 ? BoxDecoration(border: Border(top: BorderSide(color: context.borderColor))) : null,
                 child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
                   Container(
                     width: 18,
@@ -446,9 +453,11 @@ class _CodeEditorPageState extends State<CodeEditorPage> {
     return Padding(
       padding: const EdgeInsets.fromLTRB(16, 12, 16, 0),
       child: Row(children: [
-        Expanded(child: _complexityCard(context, 'Time Complexity', 'O(log n)', 'Logarithmic', context.accent)),
+        Expanded(
+            child: _complexityCard(context, 'Time Complexity', 'O(log n)', 'Logarithmic', context.accent)),
         const SizedBox(width: 10),
-        Expanded(child: _complexityCard(context, 'Space Complexity', 'O(1)', 'Constant', context.accentGreen)),
+        Expanded(
+            child: _complexityCard(context, 'Space Complexity', 'O(1)', 'Constant', context.accentGreen)),
       ]),
     );
   }
@@ -460,7 +469,8 @@ class _CodeEditorPageState extends State<CodeEditorPage> {
       child: Column(children: [
         Text(label, style: GoogleFonts.inter(color: context.textMuted, fontSize: 11)),
         const SizedBox(height: 4),
-        Text(value, style: GoogleFonts.jetBrainsMono(color: color, fontSize: 16, fontWeight: FontWeight.w700)),
+        Text(value,
+            style: GoogleFonts.jetBrainsMono(color: color, fontSize: 16, fontWeight: FontWeight.w700)),
         const SizedBox(height: 2),
         Text(sub, style: GoogleFonts.inter(color: context.textMuted, fontSize: 11)),
       ]),
