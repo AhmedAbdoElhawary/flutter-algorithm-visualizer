@@ -1,3 +1,4 @@
+import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
 import 'package:algorithm_visualizer/lib-temp/theme/app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -24,10 +25,10 @@ class AlgoTab extends ConsumerWidget {
       margin: REdgeInsets.only(right: addEndPadding ? 8 : 0),
       padding: REdgeInsets.symmetric(vertical: 8),
       decoration: BoxDecoration(
-        color: isSelected ? context.accentBg : context.bgCard,
+        color: isSelected ? context.getColor(ThemeEnum.accentBg) : context.getColor(ThemeEnum.card),
         borderRadius: BorderRadius.circular(10),
         border: Border.all(
-          color: isSelected ? context.borderAccent : context.borderColor,
+          color: isSelected ? context.getColor(ThemeEnum.borderAccent) : context.borderColor,
         ),
       ),
       child: Padding(
@@ -36,14 +37,14 @@ class AlgoTab extends ConsumerWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             if (icon != null) ...[
-              Icon(icon!, color: isSelected ? context.accent : context.textMuted, size: 20.r),
+              Icon(icon!, color: isSelected ? context.getColor(ThemeEnum.accent) : context.textMuted, size: 20.r),
               RSizedBox(width: 5)
             ],
             Text(
               label,
               textAlign: TextAlign.center,
               style: GoogleFonts.jetBrainsMono(
-                color: isSelected ? context.accent : context.textMuted,
+                color: isSelected ? context.getColor(ThemeEnum.accent) : context.textMuted,
                 fontSize: 13.r,
                 fontWeight: FontWeight.w700,
               ),
