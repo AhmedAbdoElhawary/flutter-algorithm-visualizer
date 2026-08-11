@@ -17,6 +17,7 @@ enum ThemeEnum {
   text2DarkColor,
   borderPurpleColor,
   lightPurpleColor,
+  codeEditorNumberColor,
 
   whiteD1Color,
   whiteD2Color,
@@ -50,6 +51,7 @@ enum ThemeEnum {
   lightBlueColor,
   greenColor,
   redColor,
+  red2Color,
   orangeColor,
   //
   comparedColor,
@@ -93,6 +95,7 @@ extension ThemeExtension on BuildContext {
       ThemeEnum.solidWhiteOp60Color: ColorManager.whiteOp60,
       ThemeEnum.whiteOp50Color: ColorManager.whiteOp50,
       ThemeEnum.whiteOp20Color: ColorManager.whiteOp20,
+      ThemeEnum.codeEditorNumberColor: ColorManager.codeEditorNumberColor,
       ThemeEnum.blackOp80: ColorManager.blackOp80,
       ThemeEnum.blackOp50: ColorManager.blackOp50,
       ThemeEnum.hoverColor: Theme.of(this).hoverColor,
@@ -108,6 +111,7 @@ extension ThemeExtension on BuildContext {
       ThemeEnum.lightBlueColor: ColorManager.finishedSearcherBlue,
       ThemeEnum.greenColor: ColorManager.green,
       ThemeEnum.redColor: ColorManager.red,
+      ThemeEnum.red2Color: ColorManager.red2,
       ThemeEnum.orangeColor: ColorManager.orange,
       ThemeEnum.comparedColor: ColorManager.dividerBlue,
       ThemeEnum.darkPurpleColor: ColorManager.darkPurple,

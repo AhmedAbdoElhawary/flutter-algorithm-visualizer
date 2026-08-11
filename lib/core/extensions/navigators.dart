@@ -56,17 +56,35 @@ extension Navigators on BuildContext {
       }
     }
 
-    return await GoRouter.of(this)
-        .pushNamed(
+    return GoRouter.of(this).goNamed(
       path.name,
       extra: arguments,
       pathParameters: pathParametersRaw ?? (pathParameters.isNotEmpty ? {path.pathParamsName: pathParameters} : {}),
       queryParameters: queryParameters.isNotEmpty ? {path.queryParamsName: queryParameters} : {},
-    )
-        .then((value) {
-      unFocusKeyboard();
-      return value;
-    });
+    );
+  }
+
+  Future goTo(
+    RouteConfig path, {
+    Object? arguments,
+    String pathParameters = "",
+    Map<String, String>? pathParametersRaw,
+    String queryParameters = "",
+    bool pauseVideo = true,
+  }) async {
+    unFocusKeyboard();
+
+    if (pathParameters.isNotEmpty && arguments == null) {
+      arguments = pathParameters;
+
+      final currentValue = currentRouteSettings.$2;
+
+      if (currentValue is Map && currentRoute == path.name && arguments == currentValue[path.pathParamsName]) {
+        return;
+      }
+    }
+
+    return go(path.path, extra: arguments);
   }
 
   Future pushAndRemoveCurrent(
