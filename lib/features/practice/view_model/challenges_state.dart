@@ -16,12 +16,12 @@ class ChallengesState {
   ChallengesState copyWith({
     ProblemDifficulty? filter,
     String? search,
-    int? expandedIds,
+    int? expandedId,
   }) {
     return ChallengesState(
       filter: filter ?? this.filter,
       search: search ?? this.search,
-      expandedId: expandedIds ?? this.expandedId,
+      expandedId: expandedId ?? this.expandedId,
     );
   }
 }

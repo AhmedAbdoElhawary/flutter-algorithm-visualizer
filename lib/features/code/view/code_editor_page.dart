@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/code_editor.dart';
 import 'package:algorithm_visualizer/lib-temp/theme/app_theme.dart';
-import 'package:algorithm_visualizer/lib-temp/utils/syntax_highlight.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
