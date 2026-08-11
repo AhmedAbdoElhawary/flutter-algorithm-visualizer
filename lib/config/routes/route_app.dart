@@ -3,6 +3,7 @@ import 'package:algorithm_visualizer/core/resources/strings_manager.dart';
 import 'package:algorithm_visualizer/core/widgets/adaptive/text/adaptive_text.dart';
 import 'package:algorithm_visualizer/features/base/view/base_navigation.dart';
 import 'package:algorithm_visualizer/features/base/view_model/base_view_model.dart';
+import 'package:algorithm_visualizer/features/code/view/code_editor_page.dart';
 import 'package:algorithm_visualizer/features/home/view/home_page.dart';
 import 'package:algorithm_visualizer/features/practice/view/practice_page.dart';
 import 'package:algorithm_visualizer/features/visualize/view/visualize_page.dart';
@@ -106,7 +107,7 @@ class AppRoutes {
               GoRoute(
                 path: Routes.code.path,
                 name: Routes.code.name,
-                builder: (context, state) => PracticePage(),
+                builder: (context, state) => CodeEditorPage(),
               ),
             ],
           ),
