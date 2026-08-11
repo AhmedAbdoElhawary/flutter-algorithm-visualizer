@@ -1,15 +1,4 @@
 import 'package:flutter/material.dart';
-// import 'package:google_fonts/google_fonts.dart';
-//
-// class CustomGoogleFont {
-//   static TextStyle getFontStyle({required TextStyle textStyle}) {
-//     return textStyle.copyWith(fontWeight: FontWeight.w100);
-//   }
-//
-//   static TextTheme getFontTextTheme(TextTheme textTheme) {
-//     return textTheme;
-//   }
-// }
 
 class FontConstants {
   static const String fontFamily = "Sf_UI_Display";
