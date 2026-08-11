@@ -60,6 +60,14 @@ class _VisualizePageState extends State<VisualizePage> {
   }
 
   @override
+  void dispose() {
+    title.dispose();
+    description.dispose();
+
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final (sortingCard, searchingCard) = getCards();
 
@@ -133,16 +141,20 @@ class _VisualizePageState extends State<VisualizePage> {
                   ? SortingView(
                       card: sortingCard,
                       onAlgoChanged: (title, description) {
-                        this.title.value = title;
-                        this.description.value = description;
+                        WidgetsBinding.instance.addPostFrameCallback((_) {
+                          this.title.value = title;
+                          this.description.value = description;
+                        });
                       },
                     )
                   : searchingCard != null
                       ? SearchingView(
                           card: searchingCard,
                           onAlgoChanged: (title, description) {
-                            this.title.value = title;
-                            this.description.value = description;
+                            WidgetsBinding.instance.addPostFrameCallback((_) {
+                              this.title.value = title;
+                              this.description.value = description;
+                            });
                           },
                         )
                       : UnknownView()),
