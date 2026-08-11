@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../models/code_editor_config.dart';
 import '../models/code_editor_theme.dart';
 import '../widgets/line_numbers.dart';
@@ -108,6 +109,38 @@ class _CodeEditorState extends State<CodeEditor> {
     });
   }
 
+  List<Widget> _buildLineHighlightBars(CodeEditorTheme theme, double lineHeight) {
+    final List<Widget> bars = <Widget>[];
+    widget.controller.highlightedLines.forEach(
+      (int line, Color color) {
+        if (line == _errorLine) return;
+        bars.add(Positioned(
+          top: line * lineHeight,
+          left: 0,
+          right: 0,
+          height: lineHeight,
+          child: Container(
+            decoration: BoxDecoration(
+                border: BorderDirectional(start: BorderSide(color: color, width: 2)),
+                color: color.withValues(alpha: 0.1)),
+          ),
+        ));
+      },
+    );
+    if (_errorLine != null) {
+      bars.add(
+        Positioned(
+          top: _errorLine! * lineHeight,
+          left: 0,
+          right: 0,
+          height: lineHeight,
+          child: ColoredBox(color: theme.errorColor.withValues(alpha: 0.16)),
+        ),
+      );
+    }
+    return bars;
+  }
+
   @override
   void dispose() {
     widget.controller.removeListener(_onControllerChanged);
@@ -125,16 +158,15 @@ class _CodeEditorState extends State<CodeEditor> {
 
     final double fontSize = theme.textStyle.fontSize ?? 14;
     final double lineHeightMultiplier = theme.textStyle.height ?? 1.4;
-    final double lineHeight = fontSize * lineHeightMultiplier;
+    final double lineHeight = (fontSize * lineHeightMultiplier).r;
 
     final borderRadius = theme.borderRadius;
 
     final Widget editableArea = Container(
-      padding: EdgeInsets.only(
+      padding: REdgeInsetsDirectional.only(
           bottom: theme.editorPadding.bottom + _numbersPadding,
-          top: theme.editorPadding.top,
-          left: theme.editorPadding.left,
-          right: theme.editorPadding.right),
+          top: theme.editorPadding.top + 5,
+          end: theme.editorPadding.right),
       decoration: BoxDecoration(
         borderRadius: borderRadius == null
             ? null
@@ -147,27 +179,34 @@ class _CodeEditorState extends State<CodeEditor> {
                         : null,
         color: theme.background,
       ),
-      child: EditableText(
-        controller: widget.controller,
-        focusNode: _focusNode,
-        style: theme.textStyle,
-        cursorColor: theme.caretColor,
-        backgroundCursorColor: theme.background,
-        selectionColor: theme.selectionColor,
-        autofocus: widget.autofocus,
-        readOnly: widget.readOnly,
-        maxLines: null,
-        minLines: null,
-        expands: false,
-        keyboardType: TextInputType.multiline,
-        textInputAction: widget.textInputAction,
-        autocorrect: false,
-        enableSuggestions: false,
-        scrollController: _scrollController,
-        cursorWidth: theme.caretWidth,
-        cursorHeight: theme.caretHeight,
-        cursorOffset: Offset(0, 2),
-        cursorRadius: const Radius.circular(1),
+      child: Stack(
+        children: [
+          ..._buildLineHighlightBars(theme, lineHeight),
+          Container(
+            padding: REdgeInsetsDirectional.only(start: theme.editorPadding.left),
+            child: EditableText(
+              controller: widget.controller,
+              focusNode: _focusNode,
+              style: theme.textStyle,
+              cursorColor: theme.caretColor,
+              backgroundCursorColor: theme.background,
+              selectionColor: theme.selectionColor,
+              autofocus: widget.autofocus,
+              readOnly: widget.readOnly,
+              maxLines: null,
+              minLines: null,
+              expands: false,
+              keyboardType: TextInputType.multiline,
+              textInputAction: widget.textInputAction,
+              autocorrect: false,
+              enableSuggestions: false,
+              cursorWidth: theme.caretWidth,
+              cursorHeight: theme.caretHeight,
+              cursorOffset: Offset(0, 2),
+              cursorRadius: const Radius.circular(1),
+            ),
+          ),
+        ],
       ),
     );
 
@@ -177,6 +216,7 @@ class _CodeEditorState extends State<CodeEditor> {
       decoration: BoxDecoration(
         border: theme.border,
         borderRadius: borderRadius,
+        color: theme.background,
       ),
       child: Row(
         children: <Widget>[
