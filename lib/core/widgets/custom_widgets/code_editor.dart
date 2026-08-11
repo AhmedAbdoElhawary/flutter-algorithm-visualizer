@@ -96,7 +96,7 @@ class _CodeEditorBlockState extends State<CodeEditorBlock> with SingleTickerProv
     if (widget.highlightLineNumber < 1) return;
     controller.clearHighlights();
 
-    controller.highlightLine(widget.highlightLineNumber, ColorManager.highlightCodeLineColor);
+    controller.highlightLine(widget.highlightLineNumber, ColorManager.accentDk);
   }
 
   @override
@@ -132,8 +132,7 @@ class _CodeEditorBlockState extends State<CodeEditorBlock> with SingleTickerProv
                 RSizedBox(width: 5),
                 CircleAvatar(radius: 5.r, backgroundColor: Color.fromRGBO(46, 156, 117, 1)),
                 Spacer(),
-                if (widget.executing)
-                  MediumText(StringsManager.executing, color: ThemeEnum.greenColor, fontSize: 10)
+                if (widget.executing) MediumText(StringsManager.executing, color: ThemeEnum.accentGreen, fontSize: 10)
               ],
             ),
           ),
