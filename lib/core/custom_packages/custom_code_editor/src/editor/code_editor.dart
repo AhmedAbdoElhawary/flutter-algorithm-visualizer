@@ -98,14 +98,14 @@ class _CodeEditorState extends State<CodeEditor> {
     if (selection.baseOffset >= 0) {
       activeLine = doc.lineColumnAt(selection.baseOffset).line;
     }
-    final int? errorLine = widget.controller.errorLine;
-    if (doc.lineCount != _lineCount || activeLine != _activeLine || errorLine != _errorLine) {
-      setState(() {
-        _lineCount = doc.lineCount;
-        _activeLine = activeLine;
-        _errorLine = errorLine;
-      });
-    }
+    // highlightedLines is mutated in place (not reassigned), so it can't
+    // be cheaply diffed like the other fields — just always rebuild on
+    // any controller notification.
+    setState(() {
+      _lineCount = doc.lineCount;
+      _activeLine = activeLine;
+      _errorLine = widget.controller.errorLine;
+    });
   }
 
   @override
@@ -198,6 +198,7 @@ class _CodeEditorState extends State<CodeEditor> {
             lineHeight: lineHeight,
             activeLine: _activeLine,
             errorLine: _errorLine,
+            highlightedLines: widget.controller.highlightedLines,
           ),
           Expanded(
             child: SingleChildScrollView(
