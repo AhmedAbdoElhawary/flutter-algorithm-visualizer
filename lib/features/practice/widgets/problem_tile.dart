@@ -88,8 +88,7 @@ class _MainRow extends StatelessWidget {
             const RSizedBox(width: 8),
             Text(
               '${problem.num}.',
-              style: GoogleFonts.jetBrainsMono(
-                  color: context.textMuted, fontSize: 11.r, fontWeight: FontWeight.w600),
+              style: GoogleFonts.jetBrainsMono(color: context.textMuted, fontSize: 11.r, fontWeight: FontWeight.w600),
             ),
             const RSizedBox(width: 6),
             Expanded(
@@ -166,8 +165,7 @@ class _DetailsPanel extends StatelessWidget {
                     border: Border.all(color: context.borderAccent),
                   ),
                   child: Text('Solve →',
-                      style: GoogleFonts.inter(
-                          color: context.accent, fontSize: 12.r, fontWeight: FontWeight.w600)),
+                      style: GoogleFonts.inter(color: context.accent, fontSize: 12.r, fontWeight: FontWeight.w600)),
                 ),
               ),
             ],
