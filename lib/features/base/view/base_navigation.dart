@@ -23,7 +23,7 @@ class _MainNavigationShellState extends State<MainNavigationShell> {
       child: Stack(
         children: [
           Padding(
-            padding:  REdgeInsets.only(bottom: 50),
+            padding: REdgeInsets.only(bottom: 50),
             child: widget.navigationShell,
           ),
           Positioned(
@@ -31,10 +31,10 @@ class _MainNavigationShellState extends State<MainNavigationShell> {
             right: 0,
             bottom: 0,
             child: CupertinoTabBar(
-              activeColor: context.getColor(ThemeEnum.darkBlueColor),
+              activeColor: context.getColor(ThemeEnum.accent),
               inactiveColor: context.getColor(ThemeEnum.codeEditorNumberColor),
               iconSize: 22.r,
-              backgroundColor: context.getColor(ThemeEnum.primaryColor),
+              backgroundColor: context.getColor(ThemeEnum.primary),
               border: Border(top: BorderSide(width: 1, color: context.getColor(ThemeEnum.shadowColor))),
               currentIndex: widget.navigationShell.currentIndex,
               onTap: (index) {
