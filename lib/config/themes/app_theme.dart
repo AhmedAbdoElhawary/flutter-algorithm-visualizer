@@ -6,6 +6,7 @@ import 'package:algorithm_visualizer/core/resources/styles_manager.dart';
 
 // temp
 class AppTheme {
+  /// todo: change and adaptive light with dark
   static ThemeData get light {
     return ThemeData(
       useMaterial3: true,
@@ -49,11 +50,6 @@ class AppTheme {
       textTheme: _textTheme(),
       dividerTheme: const DividerThemeData(color: ColorManager.whiteD5),
       bottomAppBarTheme: const BottomAppBarThemeData(color: ColorManager.blackOp30),
-      textSelectionTheme: const TextSelectionThemeData(
-        cursorColor: ColorManager.teal,
-        selectionColor: ColorManager.blackOp10,
-        selectionHandleColor: ColorManager.black,
-      ),
       listTileTheme: const ListTileThemeData(),
       colorScheme: const ColorScheme.highContrastLight(
         // circle avatar color
@@ -143,11 +139,15 @@ class AppTheme {
       brightness: Brightness.dark,
       fontFamily: FontConstants.fontFamily,
       visualDensity: VisualDensity.adaptivePlatformDensity,
-      primaryColor: ColorManager.primaryDarkColor,
-      primaryColorLight: ColorManager.blackL2,
-      hintColor: ColorManager.glassDarkColor,
-      shadowColor: ColorManager.borderGlassDarkColor,
+      primaryColor: ColorManager.primaryDk,
+      scaffoldBackgroundColor: ColorManager.primaryDk,
+      hintColor: ColorManager.cardDk,
       focusColor: ColorManager.white,
+      cardColor: ColorManager.cardDk,
+
+      /// -------- dark theme ------------>
+      primaryColorLight: ColorManager.blackL2,
+      shadowColor: ColorManager.borderGlassDarkColor,
       disabledColor: ColorManager.whiteOp50,
       hoverColor: ColorManager.whiteOp50,
       highlightColor: ColorManager.blackL3Blue,
@@ -161,7 +161,6 @@ class AppTheme {
         backgroundColor: ColorManager.blackL1,
       ),
       dividerColor: ColorManager.whiteOp10,
-      scaffoldBackgroundColor: ColorManager.primaryDarkColor,
       iconTheme: const IconThemeData(color: ColorManager.white),
       outlinedButtonTheme: _outlinedButtonDarkTheme(),
       elevatedButtonTheme: _elevatedButtonDarkThemeData(),
@@ -172,21 +171,19 @@ class AppTheme {
       ),
       chipTheme: const ChipThemeData(backgroundColor: ColorManager.whiteOp10),
       canvasColor: ColorManager.transparent,
-      splashColor: ColorManager.primaryDarkColor,
+      splashColor: ColorManager.primaryDk,
       appBarTheme: _appBarDarkTheme(),
       tabBarTheme: _tabBarDarkTheme(),
       textTheme: _textDarkTheme(),
       dividerTheme: const DividerThemeData(color: ColorManager.blackL5),
       bottomAppBarTheme: const BottomAppBarThemeData(color: ColorManager.whiteOp30),
-      textSelectionTheme: const TextSelectionThemeData(
-        cursorColor: ColorManager.teal,
-        selectionColor: ColorManager.greyD6,
-        selectionHandleColor: ColorManager.white,
-      ),
       colorScheme: const ColorScheme.highContrastDark(
         primaryContainer: ColorManager.greyD9,
-        surface: ColorManager.blackL6,
-      ).copyWith(surface: ColorManager.blackL6).copyWith(error: ColorManager.white),
+        surface: ColorManager.cardDk,
+        primary: ColorManager.accentDk,
+        secondary: ColorManager.accentGreenDk,
+        error: ColorManager.accentRedDk,
+      ),
     );
   }
 
@@ -251,8 +248,8 @@ class AppTheme {
     return AppBarTheme(
       elevation: 0,
       titleSpacing: 5.w,
-      surfaceTintColor: ColorManager.primaryDarkColor,
-      backgroundColor: ColorManager.primaryDarkColor,
+      surfaceTintColor: ColorManager.primaryDk,
+      backgroundColor: ColorManager.primaryDk,
       shadowColor: ColorManager.greyD8,
       scrolledUnderElevation: 1.5.r,
       iconTheme: const IconThemeData(color: ColorManager.white),
