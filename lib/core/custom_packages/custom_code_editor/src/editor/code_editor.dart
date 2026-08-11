@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../models/code_editor_config.dart';
 import '../models/code_editor_theme.dart';
 import '../widgets/line_numbers.dart';
@@ -58,6 +59,7 @@ class CodeEditor extends StatefulWidget {
 }
 
 class _CodeEditorState extends State<CodeEditor> {
+  final ScrollController _horizontalScrollController = ScrollController();
   late FocusNode _focusNode;
   final ScrollController _scrollController = ScrollController();
   final double _numbersPadding = 5;
@@ -97,14 +99,46 @@ class _CodeEditorState extends State<CodeEditor> {
     if (selection.baseOffset >= 0) {
       activeLine = doc.lineColumnAt(selection.baseOffset).line;
     }
-    final int? errorLine = widget.controller.errorLine;
-    if (doc.lineCount != _lineCount || activeLine != _activeLine || errorLine != _errorLine) {
-      setState(() {
-        _lineCount = doc.lineCount;
-        _activeLine = activeLine;
-        _errorLine = errorLine;
-      });
+    // highlightedLines is mutated in place (not reassigned), so it can't
+    // be cheaply diffed like the other fields — just always rebuild on
+    // any controller notification.
+    setState(() {
+      _lineCount = doc.lineCount;
+      _activeLine = activeLine;
+      _errorLine = widget.controller.errorLine;
+    });
+  }
+
+  List<Widget> _buildLineHighlightBars(CodeEditorTheme theme, double lineHeight) {
+    final List<Widget> bars = <Widget>[];
+    widget.controller.highlightedLines.forEach(
+      (int line, Color color) {
+        if (line == _errorLine) return;
+        bars.add(Positioned(
+          top: line * lineHeight,
+          left: 0,
+          right: 0,
+          height: lineHeight,
+          child: Container(
+            decoration: BoxDecoration(
+                border: BorderDirectional(start: BorderSide(color: color, width: 2)),
+                color: color.withValues(alpha: 0.1)),
+          ),
+        ));
+      },
+    );
+    if (_errorLine != null) {
+      bars.add(
+        Positioned(
+          top: _errorLine! * lineHeight,
+          left: 0,
+          right: 0,
+          height: lineHeight,
+          child: ColoredBox(color: theme.errorColor.withValues(alpha: 0.16)),
+        ),
+      );
     }
+    return bars;
   }
 
   @override
@@ -113,6 +147,7 @@ class _CodeEditorState extends State<CodeEditor> {
     if (widget.focusNode == null) _focusNode.dispose();
     _scrollController.dispose();
     _gutterController?.dispose();
+    _horizontalScrollController.dispose();
     super.dispose();
   }
 
@@ -123,16 +158,15 @@ class _CodeEditorState extends State<CodeEditor> {
 
     final double fontSize = theme.textStyle.fontSize ?? 14;
     final double lineHeightMultiplier = theme.textStyle.height ?? 1.4;
-    final double lineHeight = fontSize * lineHeightMultiplier;
+    final double lineHeight = (fontSize * lineHeightMultiplier).r;
 
     final borderRadius = theme.borderRadius;
 
     final Widget editableArea = Container(
-      padding: EdgeInsets.only(
+      padding: REdgeInsetsDirectional.only(
           bottom: theme.editorPadding.bottom + _numbersPadding,
-          top: theme.editorPadding.top,
-          left: theme.editorPadding.left,
-          right: theme.editorPadding.right),
+          top: theme.editorPadding.top + 5,
+          end: theme.editorPadding.right),
       decoration: BoxDecoration(
         borderRadius: borderRadius == null
             ? null
@@ -145,26 +179,34 @@ class _CodeEditorState extends State<CodeEditor> {
                         : null,
         color: theme.background,
       ),
-      child: EditableText(
-        controller: widget.controller,
-        focusNode: _focusNode,
-        style: theme.textStyle,
-        cursorColor: theme.caretColor,
-        backgroundCursorColor: theme.background,
-        selectionColor: theme.selectionColor,
-        autofocus: widget.autofocus,
-        readOnly: widget.readOnly,
-        maxLines: null,
-        minLines: null,
-        keyboardType: TextInputType.multiline,
-        textInputAction: widget.textInputAction,
-        autocorrect: false,
-        enableSuggestions: false,
-        scrollController: _scrollController,
-        cursorWidth: theme.caretWidth,
-        cursorHeight: theme.caretHeight,
-        cursorOffset: Offset(0, 2),
-        cursorRadius: const Radius.circular(1),
+      child: Stack(
+        children: [
+          ..._buildLineHighlightBars(theme, lineHeight),
+          Container(
+            padding: REdgeInsetsDirectional.only(start: theme.editorPadding.left),
+            child: EditableText(
+              controller: widget.controller,
+              focusNode: _focusNode,
+              style: theme.textStyle,
+              cursorColor: theme.caretColor,
+              backgroundCursorColor: theme.background,
+              selectionColor: theme.selectionColor,
+              autofocus: widget.autofocus,
+              readOnly: widget.readOnly,
+              maxLines: null,
+              minLines: null,
+              expands: false,
+              keyboardType: TextInputType.multiline,
+              textInputAction: widget.textInputAction,
+              autocorrect: false,
+              enableSuggestions: false,
+              cursorWidth: theme.caretWidth,
+              cursorHeight: theme.caretHeight,
+              cursorOffset: Offset(0, 2),
+              cursorRadius: const Radius.circular(1),
+            ),
+          ),
+        ],
       ),
     );
 
@@ -174,6 +216,7 @@ class _CodeEditorState extends State<CodeEditor> {
       decoration: BoxDecoration(
         border: theme.border,
         borderRadius: borderRadius,
+        color: theme.background,
       ),
       child: Row(
         children: <Widget>[
@@ -195,8 +238,20 @@ class _CodeEditorState extends State<CodeEditor> {
             lineHeight: lineHeight,
             activeLine: _activeLine,
             errorLine: _errorLine,
+            highlightedLines: widget.controller.highlightedLines,
           ),
-          Expanded(child: editableArea),
+          Expanded(
+            child: SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              controller: _horizontalScrollController,
+              child: SingleChildScrollView(
+                controller: _scrollController,
+                child: IntrinsicWidth(
+                  child: editableArea,
+                ),
+              ),
+            ),
+          ),
         ],
       ),
     );
