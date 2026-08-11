@@ -4,7 +4,6 @@ import 'package:algorithm_visualizer/lib-temp/theme/app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-
 // ─── Sample code ──────────────────────────────────────────────────────────────
 const _dartCode = r'''
 // Binary Search Algorithm
@@ -206,33 +205,33 @@ class _CodeEditorPageState extends State<CodeEditorPage> {
           scrollDirection: Axis.horizontal,
           child: Row(
               children: _topics.asMap().entries.map((e) {
-                final active = e.key == _topicIdx;
-                return GestureDetector(
-                  onTap: () => setState(() {
-                    _topicIdx = e.key;
-                    _showOutput = false;
-                    _hlLine = null;
-                  }),
-                  child: Container(
-                    margin: const EdgeInsets.only(right: 6),
-                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                    decoration: BoxDecoration(
-                      color: active ? (isDark ? const Color(0xFF1E3A5F) : const Color(0xFFDBEAFE)) : context.bgCard,
-                      borderRadius: BorderRadius.circular(8),
-                      border: Border.all(
-                          color:
+            final active = e.key == _topicIdx;
+            return GestureDetector(
+              onTap: () => setState(() {
+                _topicIdx = e.key;
+                _showOutput = false;
+                _hlLine = null;
+              }),
+              child: Container(
+                margin: const EdgeInsets.only(right: 6),
+                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                decoration: BoxDecoration(
+                  color: active ? (isDark ? const Color(0xFF1E3A5F) : const Color(0xFFDBEAFE)) : context.bgCard,
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(
+                      color:
                           active ? (isDark ? const Color(0x663B82F6) : const Color(0x662563EB)) : context.borderColor),
-                      boxShadow: context.cardShadow,
-                    ),
-                    child: Text(e.value,
-                        style: GoogleFonts.inter(
-                          color: active ? context.accentBlue : context.textMuted,
-                          fontSize: 12,
-                          fontWeight: FontWeight.w500,
-                        )),
-                  ),
-                );
-              }).toList()),
+                  boxShadow: context.cardShadow,
+                ),
+                child: Text(e.value,
+                    style: GoogleFonts.inter(
+                      color: active ? context.accentBlue : context.textMuted,
+                      fontSize: 12,
+                      fontWeight: FontWeight.w500,
+                    )),
+              ),
+            );
+          }).toList()),
         ),
       ]),
     );
@@ -310,20 +309,20 @@ class _CodeEditorPageState extends State<CodeEditorPage> {
               gradient: _running
                   ? null
                   : LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-                colors: [context.accentGreen, isDark ? const Color(0xFF10B981) : const Color(0xFF059669)],
-              ),
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                      colors: [context.accentGreen, isDark ? const Color(0xFF10B981) : const Color(0xFF059669)],
+                    ),
               borderRadius: BorderRadius.circular(9),
               border: _running ? Border.all(color: context.borderColor) : null,
               boxShadow: _running
                   ? context.cardShadow
                   : [
-                BoxShadow(
-                    color: context.accentGreen.withValues(alpha: isDark ? 0.3 : 0.22),
-                    blurRadius: 14,
-                    offset: const Offset(0, 4)),
-              ],
+                      BoxShadow(
+                          color: context.accentGreen.withValues(alpha: isDark ? 0.3 : 0.22),
+                          blurRadius: 14,
+                          offset: const Offset(0, 4)),
+                    ],
             ),
             child: Row(mainAxisSize: MainAxisSize.min, children: [
               Icon(Icons.play_arrow_rounded, size: 14, color: _running ? context.textMuted : Colors.white),
@@ -408,14 +407,14 @@ class _CodeEditorPageState extends State<CodeEditorPage> {
                   const SizedBox(width: 10),
                   Expanded(
                       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                        Text(tc.label, style: GoogleFonts.inter(color: context.textSec, fontSize: 12)),
-                        const SizedBox(height: 2),
-                        RichText(
-                            text: TextSpan(style: GoogleFonts.jetBrainsMono(fontSize: 11), children: [
-                              TextSpan(text: '→ ', style: TextStyle(color: context.textMuted)),
-                              TextSpan(text: tc.expected, style: TextStyle(color: context.accentGreen)),
-                            ])),
-                      ])),
+                    Text(tc.label, style: GoogleFonts.inter(color: context.textSec, fontSize: 12)),
+                    const SizedBox(height: 2),
+                    RichText(
+                        text: TextSpan(style: GoogleFonts.jetBrainsMono(fontSize: 11), children: [
+                      TextSpan(text: '→ ', style: TextStyle(color: context.textMuted)),
+                      TextSpan(text: tc.expected, style: TextStyle(color: context.accentGreen)),
+                    ])),
+                  ])),
                   Text('0ms', style: GoogleFonts.inter(color: context.textMuted, fontSize: 10)),
                 ]),
               );
@@ -429,12 +428,12 @@ class _CodeEditorPageState extends State<CodeEditorPage> {
                   text: const TextSpan(
                       style: TextStyle(fontFamily: 'JetBrains Mono', fontSize: 12, height: 1.6),
                       children: [
-                        TextSpan(text: '> ', style: TextStyle(color: _codeConsoleRt)),
-                        TextSpan(text: 'console.log', style: TextStyle(color: _codeConsoleTok)),
-                        TextSpan(text: '(binarySearch(arr, 23))\n', style: TextStyle(color: _codeConsoleDef)),
-                        TextSpan(text: '← ', style: TextStyle(color: _codeConsoleRt)),
-                        TextSpan(text: '5', style: TextStyle(color: _codeConsoleOut)),
-                      ])),
+                    TextSpan(text: '> ', style: TextStyle(color: _codeConsoleRt)),
+                    TextSpan(text: 'console.log', style: TextStyle(color: _codeConsoleTok)),
+                    TextSpan(text: '(binarySearch(arr, 23))\n', style: TextStyle(color: _codeConsoleDef)),
+                    TextSpan(text: '← ', style: TextStyle(color: _codeConsoleRt)),
+                    TextSpan(text: '5', style: TextStyle(color: _codeConsoleOut)),
+                  ])),
             ),
           ]),
         ),
