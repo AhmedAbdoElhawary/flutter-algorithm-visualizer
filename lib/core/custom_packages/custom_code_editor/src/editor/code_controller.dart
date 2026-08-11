@@ -59,6 +59,51 @@ class CodeController extends TextEditingController {
   /// the next time the text actually changes.
   int? errorLine;
 
+  /// Arbitrary `{0-indexed line: color}` highlights, layered under
+  /// [errorLine] (which always wins if both target the same line). Use
+  /// [highlightLine] / [unhighlightLine] / [clearHighlights] to manage
+  /// this rather than mutating it directly, so listeners get notified.
+  ///
+  /// Unlike [errorLine], these are **not** cleared automatically on edit
+  /// — different use cases want different lifetimes (a "current line"
+  /// marker during step-through debugging should move with you; a
+  /// breakpoint should survive edits above it; a search-hit highlight
+  /// should clear on the next search). Clear them yourself when done.
+  final Map<int, Color> highlightedLines = <int, Color>{};
+
+  /// Highlights [line] (0-indexed) with a translucent [color] background.
+  /// Overwrites any existing highlight on that line. Notifies listeners.
+  void highlightLine(int line, Color color) {
+    highlightedLines[line] = color;
+    notifyListeners();
+  }
+
+  /// Highlights every line in [lines] with [color] in one notification,
+  /// instead of one `notifyListeners()` call per line.
+  void highlightLines(Iterable<int> lines, Color color) {
+    for (final int line in lines) {
+      highlightedLines[line] = color;
+    }
+    notifyListeners();
+  }
+
+  /// Removes the highlight from [line], if any. Notifies listeners only
+  /// if something actually changed.
+  void unhighlightLine(int line) {
+    if (highlightedLines.remove(line) != null) {
+      notifyListeners();
+    }
+  }
+
+  /// Removes every highlight added via [highlightLine]/[highlightLines].
+  /// Does not affect [errorLine]; see [clearError] for that.
+  void clearHighlights() {
+    if (highlightedLines.isNotEmpty) {
+      highlightedLines.clear();
+      notifyListeners();
+    }
+  }
+
   /// The most recent result from [execute], if any.
   RunResult? lastRunResult;
 
@@ -131,7 +176,7 @@ class CodeController extends TextEditingController {
     required bool withComposing,
   }) {
     final SyntaxHighlighter? highlighter = _highlighter;
-    if (highlighter == null && errorLine == null) {
+    if (highlighter == null && errorLine == null && highlightedLines.isEmpty) {
       return super.buildTextSpan(
         context: context,
         style: style,
@@ -147,6 +192,7 @@ class CodeController extends TextEditingController {
       baseStyle: style ?? const TextStyle(),
       theme: theme,
       errorLine: errorLine,
+      highlightedLines: highlightedLines,
     );
   }
 
