@@ -35,7 +35,7 @@ class _ChallengesSearchFieldState extends ConsumerState<ChallengesSearchField> {
         decoration: context.cardDecoration(),
         child: Row(
           children: [
-            CustomIcon(Icons.search_rounded, size: 16, color: ThemeEnum.darkBlueColor),
+            CustomIcon(Icons.search_rounded, size: 16, color: ThemeEnum.hoverColor),
             const RSizedBox(width: 10),
             Expanded(
               child: TextField(
