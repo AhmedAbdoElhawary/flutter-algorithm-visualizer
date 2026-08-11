@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:algorithm_visualizer/core/custom_packages/custom_code_editor/src/editor/code_controller.dart';
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/code_editor.dart';
 import 'package:algorithm_visualizer/lib-temp/theme/app_theme.dart';
 import 'package:flutter/material.dart';
@@ -34,53 +35,6 @@ void main() {
   print(idx); // → 5
 }
 ''';
-const _jsCode = r"""// Binary Search Algorithm
-function binarySearch(arr, target) {
-  let left = 0;
-  let right = arr.length - 1;
-
-  while (left <= right) {
-    let mid = Math.floor((left + right) / 2);
-
-    if (arr[mid] === target) {
-      return mid;
-    } else if (arr[mid] < target) {
-      left = mid + 1;
-    } else {
-      right = mid - 1;
-    }
-  }
-
-  return -1;
-}
-
-// Example usage
-const arr = [2, 5, 8, 12, 16, 23, 38, 56, 72, 91];
-const idx = binarySearch(arr, 23);
-console.log(idx); // → 5""";
-
-const _pyCode = r"""# Binary Search Algorithm
-def binary_search(arr, target):
-    left, right = 0, len(arr) - 1
-
-    while left <= right:
-        mid = (left + right) // 2
-
-        if arr[mid] == target:
-            return mid
-        elif arr[mid] < target:
-            left = mid + 1
-        else:
-            right = mid - 1
-
-    return -1
-
-# Example usage
-arr = [2, 5, 8, 12, 16, 23, 38, 56, 72, 91]
-idx = binary_search(arr, 23)
-print(idx)  # → 5""";
-
-const _topics = ['Binary Search', 'Linked List', 'Two Pointers', 'Dynamic Prog', 'Graph BFS'];
 
 const _testCases = [
   (label: 'Find 23 in array', expected: '5', input: '[2,5,8,12,16,23,38,56,72,91], 23'),
@@ -105,15 +59,13 @@ class CodeEditorPage extends StatefulWidget {
 }
 
 class _CodeEditorPageState extends State<CodeEditorPage> {
-  String _lang = 'js';
-  int _topicIdx = 0;
+  CodeController? controller;
+
   bool _running = false;
   bool _showOutput = false;
   bool _copied = false;
   int? _hlLine;
   Timer? _timer;
-
-  String get _code => _lang == 'js' ? _jsCode : _pyCode;
 
   void _handleRun() {
     if (_running) return;
@@ -122,10 +74,10 @@ class _CodeEditorPageState extends State<CodeEditorPage> {
       _showOutput = false;
       _hlLine = null;
     });
-    final lines = [3, 4, 7, 9, 11, 14, 9, 11, 14, 9, 12, 9];
+    final lines = List.generate(controller?.text.split("\n").length ?? 0, (index) => index + 1);
     int idx = 0;
     _timer?.cancel();
-    _timer = Timer.periodic(const Duration(milliseconds: 120), (t) {
+    _timer = Timer.periodic(const Duration(milliseconds: 60), (t) {
       if (!mounted) {
         t.cancel();
         return;
@@ -139,6 +91,8 @@ class _CodeEditorPageState extends State<CodeEditorPage> {
           _running = false;
           _showOutput = true;
         });
+
+        controller?.execute().stdout.join('\n');
       }
     });
   }
@@ -171,7 +125,6 @@ class _CodeEditorPageState extends State<CodeEditorPage> {
               _buildLangBar(context, isDark),
               _buildCodeView(context),
               if (_showOutput) _buildOutput(context),
-              _buildComplexityCards(context),
             ],
           ),
         ),
@@ -179,7 +132,6 @@ class _CodeEditorPageState extends State<CodeEditorPage> {
     );
   }
 
-  // ── Header ─────────────────────────────────────────────────────────────────
   Widget _buildHeader(BuildContext context, bool isDark) {
     return Padding(
       padding: const EdgeInsets.fromLTRB(16, 16, 16, 10),
@@ -189,99 +141,47 @@ class _CodeEditorPageState extends State<CodeEditorPage> {
                 color: context.textMuted, fontSize: 12, fontWeight: FontWeight.w500, letterSpacing: 0.5)),
         const SizedBox(height: 2),
         Row(children: [
-          Text(_topics[_topicIdx],
+          Text("Two Sum",
               style: GoogleFonts.inter(
                   color: context.textPrimary,
                   fontSize: 18,
                   fontWeight: FontWeight.w700,
                   letterSpacing: -0.4)),
-          const SizedBox(width: 4),
-          Icon(Icons.keyboard_arrow_down_rounded, size: 16, color: context.textMuted),
           const Spacer(),
           _badge('Easy', context.accentBlue, isDark ? const Color(0xFF1E3A5F) : const Color(0xFFDBEAFE),
               context),
-          const SizedBox(width: 8),
-          Text('O(log n)', style: GoogleFonts.inter(color: context.textMuted, fontSize: 11)),
         ]),
-        const SizedBox(height: 10),
-        // Topic pills
-        SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          child: Row(
-              children: _topics.asMap().entries.map((e) {
-            final active = e.key == _topicIdx;
-            return GestureDetector(
-              onTap: () => setState(() {
-                _topicIdx = e.key;
-                _showOutput = false;
-                _hlLine = null;
-              }),
-              child: Container(
-                margin: const EdgeInsets.only(right: 6),
-                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                decoration: BoxDecoration(
-                  color:
-                      active ? (isDark ? const Color(0xFF1E3A5F) : const Color(0xFFDBEAFE)) : context.bgCard,
-                  borderRadius: BorderRadius.circular(8),
-                  border: Border.all(
-                      color: active
-                          ? (isDark ? const Color(0x663B82F6) : const Color(0x662563EB))
-                          : context.borderColor),
-                  boxShadow: context.cardShadow,
-                ),
-                child: Text(e.value,
-                    style: GoogleFonts.inter(
-                      color: active ? context.accentBlue : context.textMuted,
-                      fontSize: 12,
-                      fontWeight: FontWeight.w500,
-                    )),
-              ),
-            );
-          }).toList()),
-        ),
       ]),
     );
   }
 
-  // ── Language bar ───────────────────────────────────────────────────────────
   Widget _buildLangBar(BuildContext context, bool isDark) {
     return Padding(
       padding: const EdgeInsets.fromLTRB(16, 0, 16, 10),
       child: Row(children: [
-        // Lang toggle
         Container(
-          padding: const EdgeInsets.all(3),
+          padding: const EdgeInsets.symmetric(vertical: 3, horizontal: 10),
           decoration: BoxDecoration(
             color: context.bgCard,
             borderRadius: BorderRadius.circular(10),
             border: Border.all(color: context.borderColor),
             boxShadow: context.cardShadow,
           ),
-          child: Row(children: [
-            for (final l in ['js', 'py'])
-              GestureDetector(
-                onTap: () => setState(() {
-                  _lang = l;
-                  _showOutput = false;
-                  _hlLine = null;
-                }),
-                child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 5),
-                  decoration: BoxDecoration(
-                    color: _lang == l ? context.accentBg : Colors.transparent,
-                    borderRadius: BorderRadius.circular(7),
-                  ),
-                  child: Text(
-                    l == 'js' ? 'JavaScript' : 'Python',
-                    style: GoogleFonts.inter(
-                      color: _lang == l ? context.accent : context.textMuted,
-                      fontSize: 12,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ),
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 5),
+            decoration: BoxDecoration(
+              color: context.accentBg,
+              borderRadius: BorderRadius.circular(7),
+            ),
+            child: Text(
+              "Dart",
+              style: GoogleFonts.inter(
+                color: context.accent,
+                fontSize: 12,
+                fontWeight: FontWeight.w600,
               ),
-          ]),
+            ),
+          ),
         ),
         const Spacer(),
         // Copy button
@@ -353,7 +253,12 @@ class _CodeEditorPageState extends State<CodeEditorPage> {
   Widget _buildCodeView(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
-      child: CodeEditorBlock(code: _dartCode, highlightLineNumber: _hlLine ?? -1,executing: _running),
+      child: CodeEditorBlock(
+        code: _dartCode,
+        highlightLineNumber: _hlLine ?? -1,
+        executing: _running,
+        controllerCallback: (controller) => this.controller = controller,
+      ),
     );
   }
 
@@ -422,7 +327,6 @@ class _CodeEditorPageState extends State<CodeEditorPage> {
                       TextSpan(text: tc.expected, style: TextStyle(color: context.accentGreen)),
                     ])),
                   ])),
-                  Text('0ms', style: GoogleFonts.inter(color: context.textMuted, fontSize: 10)),
                 ]),
               );
             }),
@@ -433,10 +337,10 @@ class _CodeEditorPageState extends State<CodeEditorPage> {
               padding: const EdgeInsets.fromLTRB(14, 8, 14, 10),
               child: RichText(
                   text: const TextSpan(
-                      style: TextStyle(fontFamily: 'JetBrains Mono', fontSize: 12, height: 1.6),
+                      style: TextStyle(fontFamily: 'JetBrainsMono', fontSize: 12, height: 1.6),
                       children: [
                     TextSpan(text: '> ', style: TextStyle(color: _codeConsoleRt)),
-                    TextSpan(text: 'console.log', style: TextStyle(color: _codeConsoleTok)),
+                    TextSpan(text: 'print', style: TextStyle(color: _codeConsoleTok)),
                     TextSpan(text: '(binarySearch(arr, 23))\n', style: TextStyle(color: _codeConsoleDef)),
                     TextSpan(text: '← ', style: TextStyle(color: _codeConsoleRt)),
                     TextSpan(text: '5', style: TextStyle(color: _codeConsoleOut)),
@@ -445,35 +349,6 @@ class _CodeEditorPageState extends State<CodeEditorPage> {
           ]),
         ),
       ),
-    );
-  }
-
-  // ── Complexity cards ───────────────────────────────────────────────────────
-  Widget _buildComplexityCards(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(16, 12, 16, 0),
-      child: Row(children: [
-        Expanded(
-            child: _complexityCard(context, 'Time Complexity', 'O(log n)', 'Logarithmic', context.accent)),
-        const SizedBox(width: 10),
-        Expanded(
-            child: _complexityCard(context, 'Space Complexity', 'O(1)', 'Constant', context.accentGreen)),
-      ]),
-    );
-  }
-
-  Widget _complexityCard(BuildContext context, String label, String value, String sub, Color color) {
-    return Container(
-      padding: const EdgeInsets.all(14),
-      decoration: context.cardDecoration(),
-      child: Column(children: [
-        Text(label, style: GoogleFonts.inter(color: context.textMuted, fontSize: 11)),
-        const SizedBox(height: 4),
-        Text(value,
-            style: GoogleFonts.jetBrainsMono(color: color, fontSize: 16, fontWeight: FontWeight.w700)),
-        const SizedBox(height: 2),
-        Text(sub, style: GoogleFonts.inter(color: context.textMuted, fontSize: 11)),
-      ]),
     );
   }
 
