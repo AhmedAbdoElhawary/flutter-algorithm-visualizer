@@ -181,12 +181,6 @@ class _CodeEditorBlockState extends State<CodeEditorBlock> with SingleTickerProv
           // Plain text
           TokenType.plain: Color(0xFFD6DEEB),
         },
-
-        // activeLineBackground: ,
-        // editorPadding: ,
-        // errorColor: ,
-        // gutterPadding: ,
-        // lineNumberBackground: ,
       ),
     );
 
@@ -213,7 +207,6 @@ class _CodeEditorBlockState extends State<CodeEditorBlock> with SingleTickerProv
         borderRadius: BorderRadius.only(bottomLeft: Radius.circular(10), bottomRight: Radius.circular(10)),
         // color: ColorManager.codeEditorBackground
       ),
-      // height: 300,
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
