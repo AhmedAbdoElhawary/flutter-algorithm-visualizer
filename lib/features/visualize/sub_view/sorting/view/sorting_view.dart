@@ -157,8 +157,8 @@ class _SortingSelectionListState extends State<_SortingSelectionList> {
           (index) {
             final cardValue = BaseViewModel.sortingCards(cardValues[index]);
             return Padding(
-              padding: REdgeInsetsDirectional.only(
-                  start: index == 0 ? 16 : 8, end: index < cardValues.length - 1 ? 0 : 16),
+              padding:
+                  REdgeInsetsDirectional.only(start: index == 0 ? 16 : 8, end: index < cardValues.length - 1 ? 0 : 16),
               child: InkWell(
                 onTap: () => widget.onChangedTab(cardValues[index]),
                 child: AlgoTab(
@@ -260,9 +260,7 @@ class _ShowUpSortingListState extends ConsumerState<ShowUpSortingList> {
                       key: ValueKey(item.id),
                       start: position?.dx,
                       bottom: position?.dy,
-                      width: itemWidth +
-                          SortingNotifier.horizontalInsidePadding -
-                          SortingNotifier.handleCentralBars,
+                      width: itemWidth + SortingNotifier.horizontalInsidePadding - SortingNotifier.handleCentralBars,
                       duration: speed.stepSortingDuration,
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.end,
@@ -379,8 +377,7 @@ class _BuildItem extends ConsumerWidget {
   final bool isLastItem;
   @override
   Widget build(BuildContext context, ref) {
-    final currentItem =
-        ref.watch(instance.select((state) => index < state.list.length ? state.list[index] : null));
+    final currentItem = ref.watch(instance.select((state) => index < state.list.length ? state.list[index] : null));
     final (actualHeight, writtenHeight) =
         SortingNotifier.calculateItemHeight(item.value, size, selectedAlgorithmLength);
     final color = context.getColor(currentItem?.getColor ?? SortingNotifier.itemColor);
