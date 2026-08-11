@@ -24,18 +24,6 @@ extension Navigators on BuildContext {
     }
   }
 
-  void pop({dynamic result}) {
-    try {
-      unFocusKeyboard();
-
-      if (Navigator.of(this).canPop()) {
-        return Navigator.of(this, rootNavigator: true).pop(result);
-      }
-    } catch (e) {
-      //
-    }
-  }
-
   Future pushTo(
     RouteConfig path, {
     Object? arguments,
