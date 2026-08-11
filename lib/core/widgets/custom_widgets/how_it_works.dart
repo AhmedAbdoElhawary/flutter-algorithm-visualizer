@@ -165,7 +165,7 @@ class _HowItWorks extends ConsumerWidget {
             decoration: BoxDecoration(
               color: context.getColor(ThemeEnum.howItWorksColor),
               borderRadius: BorderRadius.circular(10),
-              border: Border.all(color: context.borderAccent),
+              border: Border.all(color: context.getColor(ThemeEnum.borderAccent)),
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -174,7 +174,7 @@ class _HowItWorks extends ConsumerWidget {
                 Text(
                   '💡 How it works',
                   style: GoogleFonts.inter(
-                    color: context.accent,
+                    color: context.getColor(ThemeEnum.accent),
                     fontSize: 11,
                     fontWeight: FontWeight.w600,
                   ),
@@ -198,8 +198,8 @@ class _HowItWorks extends ConsumerWidget {
           child: CustomPaint(
             size: Size(26.r, 14.r),
             painter: _PopupArrowPainter(
-              fillColor: context.accentBg,
-              borderColor: context.borderAccent,
+              fillColor: context.getColor(ThemeEnum.accentBg),
+              borderColor: context.getColor(ThemeEnum.borderAccent),
             ),
           ),
         ),
