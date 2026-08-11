@@ -97,4 +97,5 @@ class StringsManager {
   static const String medium = "Medium";
   static const String hard = "Hard";
   static const String searchProblem = "Search problems…";
+  static const String executing = "executing";
 }
