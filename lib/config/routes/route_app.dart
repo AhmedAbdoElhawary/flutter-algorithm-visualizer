@@ -89,8 +89,7 @@ class AppRoutes {
                 name: Routes.visualize.name,
                 builder: (context, state) {
                   final instance = state.uri.queryParameters["instance"];
-                  final sortingAlgo =
-                      SortingAlgoCards.values.firstWhereOrNull((element) => element.name == instance);
+                  final sortingAlgo = SortingAlgoCards.values.firstWhereOrNull((element) => element.name == instance);
                   final searchingAlgo =
                       SearchingAlgoCards.values.firstWhereOrNull((element) => element.name == instance);
                   if (instance != null && (sortingAlgo == null && searchingAlgo == null)) {
