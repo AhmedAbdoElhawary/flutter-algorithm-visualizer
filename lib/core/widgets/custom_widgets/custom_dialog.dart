@@ -68,7 +68,7 @@ class _SolidContent extends StatelessWidget {
                           : null),
                   onTap: () {
                     parameters[index].onTap();
-                    context.pop();
+                    context.back();
                   },
                   child: SizedBox(
                     width: double.infinity,
@@ -77,8 +77,7 @@ class _SolidContent extends StatelessWidget {
                       children: [
                         Padding(
                           padding: REdgeInsets.symmetric(vertical: 10),
-                          child: RegularText(parameters[index].text,
-                              color: parameters[index].color ?? ThemeEnum.focusColor),
+                          child: RegularText(parameters[index].text, color: parameters[index].color ?? ThemeEnum.focus),
                         ),
                       ],
                     ),
