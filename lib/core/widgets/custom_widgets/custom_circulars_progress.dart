@@ -114,7 +114,7 @@ class CustomLinearProgress extends StatelessWidget {
   final double strokeWidth;
   const CustomLinearProgress({
     super.key,
-    this.color = ThemeEnum.focusColor,
+    this.color = ThemeEnum.focus,
     this.backgroundColor = ThemeEnum.whiteD2Color,
     this.strokeWidth = 1.5,
   });
