@@ -7,7 +7,7 @@ class RegularText extends _AdaptiveText {
     super.decoration = TextDecoration.none,
     super.fontStyle = FontStyle.normal,
     super.fontFamily,
-    super.color = ThemeEnum.focusColor,
+    super.color = ThemeEnum.focus,
     super.shadows,
     super.maxLines = 2,
     super.textAlign,
