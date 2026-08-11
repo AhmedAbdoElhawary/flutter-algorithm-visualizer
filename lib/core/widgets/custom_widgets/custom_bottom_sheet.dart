@@ -165,7 +165,7 @@ class _BottomSheetDash extends StatelessWidget {
 class BottomSheetText extends StatelessWidget {
   const BottomSheetText(
     this.text, {
-    this.color = ThemeEnum.focusColor,
+    this.color = ThemeEnum.focus,
     this.icon,
     this.iconSize,
     super.key,
