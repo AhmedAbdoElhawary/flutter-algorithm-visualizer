@@ -13,11 +13,11 @@ final Color kGridDarkBg = const Color(0xFF060C1A);
 final Color kGridLightBg = const Color(0xFFF0F4FF);
 
 final Color kWallGridColor = ColorManager.wallBlack;
-final Color kPathGridColor = ColorManager.light2Yellow;
+final Color kPathGridColor = ColorManager.accentYellowDk;
 
-final Color kSearcherStartColor = ColorManager.darkBlue;
+final Color kSearcherStartColor = ColorManager.accentDk;
 final Color kSearcherMediumColor = ColorManager.mediumBlue;
-final Color kSearcherFinishedColor = ColorManager.finishedSearcherBlue;
+final Color kSearcherFinishedColor = ColorManager.accentBlueDk;
 
 final Color kStartPointIconColor = ColorManager.white;
 final Color kTargetOuterColor = ColorManager.darkPurple;
