@@ -51,19 +51,15 @@ extension Navigators on BuildContext {
 
       final currentValue = currentRouteSettings.$2;
 
-      if (currentValue is Map &&
-          currentRoute == path.name &&
-          arguments == currentValue[path.pathParamsName]) {
+      if (currentValue is Map && currentRoute == path.name && arguments == currentValue[path.pathParamsName]) {
         return;
       }
     }
 
-    return  GoRouter.of(this)
-        .goNamed(
+    return GoRouter.of(this).goNamed(
       path.name,
       extra: arguments,
-      pathParameters:
-          pathParametersRaw ?? (pathParameters.isNotEmpty ? {path.pathParamsName: pathParameters} : {}),
+      pathParameters: pathParametersRaw ?? (pathParameters.isNotEmpty ? {path.pathParamsName: pathParameters} : {}),
       queryParameters: queryParameters.isNotEmpty ? {path.queryParamsName: queryParameters} : {},
     );
   }
@@ -83,9 +79,7 @@ extension Navigators on BuildContext {
 
       final currentValue = currentRouteSettings.$2;
 
-      if (currentValue is Map &&
-          currentRoute == path.name &&
-          arguments == currentValue[path.pathParamsName]) {
+      if (currentValue is Map && currentRoute == path.name && arguments == currentValue[path.pathParamsName]) {
         return;
       }
     }
