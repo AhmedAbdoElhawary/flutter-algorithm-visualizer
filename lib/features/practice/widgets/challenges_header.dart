@@ -7,7 +7,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-
 class ChallengesHeader extends ConsumerWidget {
   const ChallengesHeader({super.key});
 
@@ -17,7 +16,7 @@ class ChallengesHeader extends ConsumerWidget {
     final total = ref.watch(problemsProvider).length;
 
     return Padding(
-      padding:  REdgeInsets.fromLTRB(16, 16, 16, 12),
+      padding: REdgeInsets.fromLTRB(16, 16, 16, 12),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
