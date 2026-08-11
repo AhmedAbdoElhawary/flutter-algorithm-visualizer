@@ -11,11 +11,13 @@ class CodeEditorBlock extends StatefulWidget {
     required this.code,
     this.highlightLineNumber = -1,
     this.executing = false,
+    this.controllerCallback,
     super.key,
   });
   final String code;
   final int highlightLineNumber;
   final bool executing;
+  final void Function(CodeController controller)? controllerCallback;
   @override
   State<CodeEditorBlock> createState() => _CodeEditorBlockState();
 }
@@ -70,12 +72,17 @@ class _CodeEditorBlockState extends State<CodeEditorBlock> with SingleTickerProv
 
     _highlightLine();
 
-    // final result = controller.execute();
-    // if (result.success) {
-    //   print(result.stdout.join('\n')); // everything the code printed
-    // } else {
-    //   print('Line ${result.error!.line}: ${result.error!.message}');
-    // }
+    final resultCallback = widget.controllerCallback;
+    if (resultCallback != null) {
+      widget.controllerCallback?.call(controller);
+
+      // final result = controller.execute();
+      // if (result.success) {
+      //   print(result.stdout.join('\n')); // everything the code printed
+      // } else {
+      //   print('Line ${result.error!.line}: ${result.error!.message}');
+      // }
+    }
   }
 
   @override
