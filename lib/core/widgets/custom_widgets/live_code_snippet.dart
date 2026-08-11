@@ -12,7 +12,7 @@ class LiveCodeSnippet extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return Padding(
       padding: REdgeInsets.symmetric(horizontal: 16),
-      child: CodeEditorBlock(code),
+      child: CodeEditorBlock(code: code),
     );
   }
 }
