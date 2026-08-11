@@ -7,7 +7,16 @@ class _UnknownPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: GlobalAppBar(),
-      body: const Center(child: RegularText(StringsManager.unknownPage)),
+      body: UnknownView(),
     );
+  }
+}
+
+class UnknownView extends StatelessWidget {
+  const UnknownView({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const Center(child: RegularText(StringsManager.unknownPage));
   }
 }
