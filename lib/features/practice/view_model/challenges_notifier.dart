@@ -18,8 +18,7 @@ class ChallengesNotifier extends Notifier<ChallengesState> {
   void toggleExpanded(int problemId) {
     if (state.expandedId == problemId) {
       state = state.copyWith(expandedId: 0);
-    }else{
-
+    } else {
       state = state.copyWith(expandedId: problemId);
     }
   }
