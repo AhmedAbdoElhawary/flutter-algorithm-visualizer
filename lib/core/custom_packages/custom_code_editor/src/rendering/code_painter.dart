@@ -76,7 +76,7 @@ class CodeSpanBuilder {
       if (isError || highlight != null) {
         out.add(TextSpan(
           text: '',
-          style: _styleFor(theme, null, isError: isError, highlight: highlight),
+          style: _styleFor(theme, null, isError: isError),
         ));
       }
       return;
@@ -90,13 +90,13 @@ class CodeSpanBuilder {
         final String gap = line.substring(cursor, token.start);
         out.add(TextSpan(
           text: gap,
-          style: _styleFor(theme, null, isError: isError, highlight: highlight),
+          style: _styleFor(theme, null, isError: isError),
         ));
       }
       final Color? color = theme.tokenColors[token.type];
       out.add(TextSpan(
         text: token.text,
-        style: _styleFor(theme, color, isError: isError, highlight: highlight),
+        style: _styleFor(theme, color, isError: isError),
       ));
       cursor = token.end;
     }
@@ -104,28 +104,19 @@ class CodeSpanBuilder {
       final String tail = line.substring(cursor);
       out.add(TextSpan(
         text: tail,
-        style: _styleFor(theme, null, isError: isError, highlight: highlight),
+        style: _styleFor(theme, null, isError: isError),
       ));
     }
   }
 
-  static TextStyle? _styleFor(
-    CodeEditorTheme theme,
-    Color? tokenColor, {
-    required bool isError,
-    Color? highlight,
-  }) {
+  static TextStyle? _styleFor(CodeEditorTheme theme, Color? tokenColor, {required bool isError}) {
     if (isError) {
       return TextStyle(
         color: tokenColor,
-        backgroundColor: theme.errorColor.withValues(alpha: 0.16),
         decoration: TextDecoration.underline,
         decorationColor: theme.errorColor,
         decorationStyle: TextDecorationStyle.wavy,
       );
-    }
-    if (highlight != null) {
-      return TextStyle(color: tokenColor, backgroundColor: highlight.withValues(alpha: 0.18));
     }
     return tokenColor != null ? TextStyle(color: tokenColor) : null;
   }
