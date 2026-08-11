@@ -1,4 +1,5 @@
 import 'package:algorithm_visualizer/core/resources/strings_manager.dart';
+import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
 import 'package:algorithm_visualizer/features/visualize/sub_view/searching/widgets/end_point.dart';
 import 'package:algorithm_visualizer/features/visualize/sub_view/searching/widgets/pf_grid.dart';
 import 'package:algorithm_visualizer/features/visualize/sub_view/searching/widgets/start_point.dart';
@@ -13,8 +14,8 @@ class PFLegend extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final items = [
-      (context.accentGreen, StringsManager.start),
-      (context.accentRed, StringsManager.end),
+      (context.getColor(ThemeEnum.accentGreen), StringsManager.start),
+      (context.getColor(ThemeEnum.accentGreen), StringsManager.end),
       (kWallGridColor, StringsManager.wall),
       (kSearcherFinishedColor, StringsManager.visited),
       (kSearcherStartColor, StringsManager.frontier),
