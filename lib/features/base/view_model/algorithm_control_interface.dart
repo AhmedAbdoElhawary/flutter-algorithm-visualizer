@@ -1,4 +1,4 @@
-import 'package:algorithm_visualizer/core/helpers/playback_speed.dart';
+import 'package:algorithm_visualizer/features/visualize/helper/playback_speed.dart';
 import 'package:flutter/material.dart';
 
 abstract class AlgorithmControlInterface {
