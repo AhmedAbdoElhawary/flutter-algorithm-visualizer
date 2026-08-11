@@ -74,7 +74,8 @@ class CodeController extends TextEditingController {
   /// Highlights [line] (0-indexed) with a translucent [color] background.
   /// Overwrites any existing highlight on that line. Notifies listeners.
   void highlightLine(int line, Color color) {
-    highlightedLines[line] = color;
+    if (line < 1) return;
+    highlightedLines[line - 1] = color;
     notifyListeners();
   }
 
@@ -176,7 +177,7 @@ class CodeController extends TextEditingController {
     required bool withComposing,
   }) {
     final SyntaxHighlighter? highlighter = _highlighter;
-    if (highlighter == null && errorLine == null && highlightedLines.isEmpty) {
+    if (highlighter == null && errorLine == null) {
       return super.buildTextSpan(
         context: context,
         style: style,
@@ -184,15 +185,14 @@ class CodeController extends TextEditingController {
       );
     }
     final CodeDocument doc = document;
-    final List<List<Token>> tokens =
-        highlighter?.highlight(doc.lines) ?? List<List<Token>>.generate(doc.lineCount, (_) => const <Token>[]);
+    final List<List<Token>> tokens = highlighter?.highlight(doc.lines) ??
+        List<List<Token>>.generate(doc.lineCount, (_) => const <Token>[]);
     return CodeSpanBuilder.build(
       lines: doc.lines,
       lineTokens: tokens,
       baseStyle: style ?? const TextStyle(),
       theme: theme,
       errorLine: errorLine,
-      highlightedLines: highlightedLines,
     );
   }
 
