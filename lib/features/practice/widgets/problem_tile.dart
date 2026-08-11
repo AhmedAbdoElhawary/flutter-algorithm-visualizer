@@ -1,3 +1,4 @@
+import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
 import 'package:algorithm_visualizer/features/practice/helper/problem.dart';
 import 'package:algorithm_visualizer/features/practice/helper/problem_style.dart';
 import 'package:algorithm_visualizer/features/practice/view_model/challenges_notifier.dart';
@@ -27,9 +28,9 @@ class ProblemTile extends ConsumerWidget {
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 200),
         decoration: BoxDecoration(
-          color: context.bgCard,
+          color: context.getColor(ThemeEnum.card),
           borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: expanded ? context.borderAccent : context.borderColor),
+          border: Border.all(color: expanded ? context.getColor(ThemeEnum.borderAccent) : context.borderColor),
           boxShadow: context.cardShadow,
         ),
         clipBehavior: Clip.hardEdge,
@@ -136,11 +137,12 @@ class _DetailsPanel extends StatelessWidget {
                 .map((t) => Container(
                       padding: REdgeInsets.symmetric(horizontal: 8, vertical: 3),
                       decoration: BoxDecoration(
-                        color: context.accentBg,
+                        color: context.getColor(ThemeEnum.accentBg),
                         borderRadius: BorderRadius.circular(6),
-                        border: Border.all(color: context.borderAccent),
+                        border: Border.all(color: context.getColor(ThemeEnum.borderAccent)),
                       ),
-                      child: Text(t, style: GoogleFonts.inter(color: context.accent, fontSize: 11.r)),
+                      child:
+                          Text(t, style: GoogleFonts.inter(color: context.getColor(ThemeEnum.accent), fontSize: 11.r)),
                     ))
                 .toList(),
           ),
@@ -160,12 +162,13 @@ class _DetailsPanel extends StatelessWidget {
                 child: Container(
                   padding: REdgeInsets.symmetric(horizontal: 14, vertical: 7),
                   decoration: BoxDecoration(
-                    color: context.accentBg,
+                    color: context.getColor(ThemeEnum.accentBg),
                     borderRadius: BorderRadius.circular(9),
-                    border: Border.all(color: context.borderAccent),
+                    border: Border.all(color: context.getColor(ThemeEnum.borderAccent)),
                   ),
                   child: Text('Solve →',
-                      style: GoogleFonts.inter(color: context.accent, fontSize: 12.r, fontWeight: FontWeight.w600)),
+                      style: GoogleFonts.inter(
+                          color: context.getColor(ThemeEnum.accent), fontSize: 12.r, fontWeight: FontWeight.w600)),
                 ),
               ),
             ],
