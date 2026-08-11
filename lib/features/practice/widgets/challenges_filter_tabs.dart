@@ -22,8 +22,7 @@ class ChallengesFilterTabs extends ConsumerWidget {
         child: Row(
           children: ChallengesNotifier.filters.map((f) {
             final active = activeFilter == f;
-            final color =
-                f == ProblemDifficulty.all ? context.accent : ProblemStyle.difficultyColor(context, f);
+            final color = f == ProblemDifficulty.all ? context.accent : ProblemStyle.difficultyColor(context, f);
             final count = ref.watch(difficultyCountProvider(f));
 
             return GestureDetector(
