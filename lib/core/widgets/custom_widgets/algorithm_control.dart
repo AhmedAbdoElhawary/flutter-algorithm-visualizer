@@ -1,4 +1,4 @@
-import 'package:algorithm_visualizer/core/helpers/playback_speed.dart';
+import 'package:algorithm_visualizer/features/visualize/helper/playback_speed.dart';
 import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
 import 'package:algorithm_visualizer/core/widgets/adaptive/text/adaptive_text.dart';
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/glass_card.dart';
@@ -91,7 +91,7 @@ class _PlayButton extends StatelessWidget {
           borderRadius: BorderRadius.circular(14),
           boxShadow: [
             BoxShadow(
-              color: context.accent.withValues(alpha: 0.25),
+              color: context.getColor(ThemeEnum.accent).withValues(alpha: 0.25),
               blurRadius: 1,
               spreadRadius: 0.4,
               offset: const Offset(0, 0),
@@ -187,13 +187,13 @@ class _BuildChildForSpeedSelector extends StatelessWidget {
         decoration: speed != selectedSpeed
             ? null
             : BoxDecoration(
-                color: context.accentBg,
+                color: context.getColor(ThemeEnum.accentBg),
                 borderRadius: BorderRadius.circular(5),
               ),
         child: Center(
           child: MediumText(
             '${speed.level}×',
-            color: speed != selectedSpeed ? ThemeEnum.textDarkColor : ThemeEnum.mainDarkColor,
+            color: speed != selectedSpeed ? ThemeEnum.textDarkColor : ThemeEnum.accent,
             fontSize: 10,
           ),
         ),
