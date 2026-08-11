@@ -77,10 +77,15 @@ class LineNumbers extends StatelessWidget {
                 fontWeight: FontWeight.bold,
               );
             }
+            if (highlight != null) {
+              style = style.copyWith(
+                color: highlight,
+                fontWeight: FontWeight.bold,
+              );
+            }
             return Container(
               padding: REdgeInsets.only(top: numbersPadding),
               height: lineHeight,
-              color: highlight?.withValues(alpha: 0.18),
               child: Center(child: Text('${index + 1}'.padLeft(digits), style: style)),
             );
           }),
