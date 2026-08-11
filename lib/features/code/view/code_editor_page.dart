@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:algorithm_visualizer/core/custom_packages/custom_code_editor/src/editor/code_controller.dart';
+import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/code_editor.dart';
 import 'package:algorithm_visualizer/lib-temp/theme/app_theme.dart';
 import 'package:flutter/material.dart';
@@ -114,7 +115,6 @@ class _CodeEditorPageState extends State<CodeEditorPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: context.bg,
       body: SafeArea(
         child: CustomScrollView(
           slivers: [
@@ -148,7 +148,7 @@ class _CodeEditorPageState extends State<CodeEditorPage> {
           Container(
             padding: const EdgeInsets.symmetric(vertical: 3, horizontal: 10),
             decoration: BoxDecoration(
-              color: context.bgCard,
+              color: context.getColor(ThemeEnum.card),
               borderRadius: BorderRadius.circular(10),
               border: Border.all(color: context.borderColor),
               boxShadow: context.cardShadow,
@@ -156,13 +156,13 @@ class _CodeEditorPageState extends State<CodeEditorPage> {
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 5),
               decoration: BoxDecoration(
-                color: context.accentBg,
+                color: context.getColor(ThemeEnum.accentBg),
                 borderRadius: BorderRadius.circular(7),
               ),
               child: Text(
                 "Dart",
                 style: GoogleFonts.inter(
-                  color: context.accent,
+                  color: context.getColor(ThemeEnum.accent),
                   fontSize: 12,
                   fontWeight: FontWeight.w600,
                 ),
@@ -177,7 +177,7 @@ class _CodeEditorPageState extends State<CodeEditorPage> {
               width: 32,
               height: 32,
               decoration: BoxDecoration(
-                color: context.bgCard,
+                color: context.getColor(ThemeEnum.card),
                 borderRadius: BorderRadius.circular(8),
                 border: Border.all(color: context.borderColor),
                 boxShadow: context.cardShadow,
@@ -185,7 +185,7 @@ class _CodeEditorPageState extends State<CodeEditorPage> {
               child: Icon(
                 _copied ? Icons.check_rounded : Icons.copy_rounded,
                 size: 15,
-                color: _copied ? context.accentGreen : context.textMuted,
+                color: _copied ? context.getColor(ThemeEnum.accentGreen) : context.textMuted,
               ),
             ),
           ),
@@ -197,16 +197,13 @@ class _CodeEditorPageState extends State<CodeEditorPage> {
               duration: const Duration(milliseconds: 200),
               padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
               decoration: BoxDecoration(
-                color: _running ? context.bgCard : null,
+                color: _running ? context.getColor(ThemeEnum.card) : null,
                 gradient: _running
                     ? null
                     : LinearGradient(
                         begin: Alignment.topLeft,
                         end: Alignment.bottomRight,
-                        colors: [
-                          context.accentGreen,
-                          isDark ? const Color(0xFF10B981) : const Color(0xFF059669)
-                        ],
+                        colors: [context.getColor(ThemeEnum.accentGreen), context.getColor(ThemeEnum.accentGreen)],
                       ),
                 borderRadius: BorderRadius.circular(9),
                 border: _running ? Border.all(color: context.borderColor) : null,
@@ -214,7 +211,7 @@ class _CodeEditorPageState extends State<CodeEditorPage> {
                     ? context.cardShadow
                     : [
                         BoxShadow(
-                            color: context.accentGreen.withValues(alpha: isDark ? 0.3 : 0.22),
+                            color: context.getColor(ThemeEnum.accentGreen).withValues(alpha: isDark ? 0.3 : 0.22),
                             blurRadius: 14,
                             offset: const Offset(0, 4)),
                       ],
@@ -253,10 +250,7 @@ class _HeaderInfo extends StatelessWidget {
           Row(children: [
             Text("Two Sum",
                 style: GoogleFonts.inter(
-                    color: context.textPrimary,
-                    fontSize: 18,
-                    fontWeight: FontWeight.w700,
-                    letterSpacing: -0.4)),
+                    color: context.textPrimary, fontSize: 18, fontWeight: FontWeight.w700, letterSpacing: -0.4)),
             const Spacer(),
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
@@ -265,7 +259,7 @@ class _HeaderInfo extends StatelessWidget {
                   borderRadius: BorderRadius.circular(6)),
               child: Text('Easy',
                   style: GoogleFonts.inter(
-                      color: context.accentBlue, fontSize: 11, fontWeight: FontWeight.w600)),
+                      color: context.getColor(ThemeEnum.accentBlue), fontSize: 11, fontWeight: FontWeight.w600)),
             )
           ]),
         ]),
@@ -286,31 +280,31 @@ class _OutputCard extends StatelessWidget {
           duration: const Duration(milliseconds: 250),
           child: Container(
             decoration: BoxDecoration(
-              color: context.bgCard,
+              color: context.getColor(ThemeEnum.card),
               borderRadius: BorderRadius.circular(14),
-              border: Border.all(color: context.accentGreen.withValues(alpha: 0.18)),
+              border: Border.all(color: context.getColor(ThemeEnum.accentGreen).withValues(alpha: 0.18)),
               boxShadow: context.cardShadow,
             ),
             clipBehavior: Clip.hardEdge,
             child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
               // Header
               Container(
-                color: context.bgElevated,
+                color: context.getColor(ThemeEnum.outputHeader),
                 padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
                 child: Row(children: [
-                  Icon(Icons.terminal_rounded, size: 14, color: context.accentGreen),
+                  Icon(Icons.terminal_rounded, size: 14, color: context.getColor(ThemeEnum.accentGreen)),
                   const SizedBox(width: 6),
                   Text('Output',
                       style: GoogleFonts.inter(
-                          color: context.accentGreen, fontSize: 12, fontWeight: FontWeight.w600)),
+                          color: context.getColor(ThemeEnum.accentGreen), fontSize: 12, fontWeight: FontWeight.w600)),
                   const Spacer(),
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-                    decoration:
-                        BoxDecoration(color: context.accentGreenBg, borderRadius: BorderRadius.circular(6)),
+                    decoration: BoxDecoration(
+                        color: context.getColor(ThemeEnum.accentGreenBg), borderRadius: BorderRadius.circular(6)),
                     child: Text('All tests passed ✓',
                         style: GoogleFonts.inter(
-                            color: context.accentGreen, fontSize: 11, fontWeight: FontWeight.w600)),
+                            color: context.getColor(ThemeEnum.accentGreen), fontSize: 11, fontWeight: FontWeight.w600)),
                   ),
                 ]),
               ),
@@ -320,18 +314,17 @@ class _OutputCard extends StatelessWidget {
                 final tc = e.value;
                 return Container(
                   padding: const EdgeInsets.fromLTRB(14, 9, 14, 9),
-                  decoration: i > 0
-                      ? BoxDecoration(border: Border(top: BorderSide(color: context.borderColor)))
-                      : null,
+                  decoration: i > 0 ? BoxDecoration(border: Border(top: BorderSide(color: context.borderColor))) : null,
                   child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
                     Container(
                       width: 18,
                       height: 18,
                       decoration: BoxDecoration(
-                          color: context.accentGreenBg,
+                          color: context.getColor(ThemeEnum.accentGreenBg),
                           shape: BoxShape.circle,
-                          border: Border.all(color: context.accentGreen.withValues(alpha: 0.6), width: 1.4)),
-                      child: Icon(Icons.check_rounded, size: 10, color: context.accentGreen),
+                          border: Border.all(
+                              color: context.getColor(ThemeEnum.accentGreen).withValues(alpha: 0.6), width: 1.4)),
+                      child: Icon(Icons.check_rounded, size: 10, color: context.getColor(ThemeEnum.accentGreen)),
                     ),
                     const SizedBox(width: 10),
                     Expanded(
@@ -341,7 +334,7 @@ class _OutputCard extends StatelessWidget {
                       RichText(
                           text: TextSpan(style: GoogleFonts.jetBrainsMono(fontSize: 11), children: [
                         TextSpan(text: '→ ', style: TextStyle(color: context.textMuted)),
-                        TextSpan(text: tc.expected, style: TextStyle(color: context.accentGreen)),
+                        TextSpan(text: tc.expected, style: TextStyle(color: context.getColor(ThemeEnum.accentGreen))),
                       ])),
                     ])),
                   ]),
