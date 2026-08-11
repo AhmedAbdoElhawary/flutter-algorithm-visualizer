@@ -202,8 +202,7 @@ class BaseViewModel {
       SearchingAlgoCards.aStar => AlgoSearchingCard(
           page: SearchingAlgoCards.aStar,
           title: StringsManager.aStarSearch,
-          instance:
-              StateNotifierProvider<SearchingNotifier, SearchingState>((ref) => AStarSearchingNotifier()),
+          instance: StateNotifierProvider<SearchingNotifier, SearchingState>((ref) => AStarSearchingNotifier()),
           card: AlgorithmGlassCard(
             algoComplexity: AStarSearchingNotifier.algorithmComplexity,
             color: Color(0xFF66BB6A),
