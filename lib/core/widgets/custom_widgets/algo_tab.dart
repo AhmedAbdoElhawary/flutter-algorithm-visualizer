@@ -31,11 +31,14 @@ class AlgoTab extends ConsumerWidget {
         ),
       ),
       child: Padding(
-        padding: REdgeInsets.symmetric(horizontal: 10,vertical: verticalPadding),
+        padding: REdgeInsets.symmetric(horizontal: 10, vertical: verticalPadding),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            if (icon != null) ...[Icon(icon!,color: isSelected ? context.accent : context.textMuted,size: 20.r), RSizedBox(width: 5)],
+            if (icon != null) ...[
+              Icon(icon!, color: isSelected ? context.accent : context.textMuted, size: 20.r),
+              RSizedBox(width: 5)
+            ],
             Text(
               label,
               textAlign: TextAlign.center,
