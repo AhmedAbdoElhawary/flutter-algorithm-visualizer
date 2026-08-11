@@ -42,11 +42,12 @@ class ChallengesHeader extends ConsumerWidget {
                 ),
               ),
               const Spacer(),
-              CustomIcon(Icons.local_fire_department_rounded, size: 14, color: ThemeEnum.red2Color),
+              CustomIcon(Icons.local_fire_department_rounded, size: 14, color: ThemeEnum.accentRed),
               const RSizedBox(width: 3),
               Text(
                 '$solved',
-                style: GoogleFonts.inter(color: context.accentRed, fontSize: 13.r, fontWeight: FontWeight.w600),
+                style: GoogleFonts.inter(
+                    color: context.getColor(ThemeEnum.accentBg), fontSize: 13.r, fontWeight: FontWeight.w600),
               ),
               Text(' / $total solved', style: GoogleFonts.inter(color: context.textMuted, fontSize: 13.r)),
             ],
@@ -61,8 +62,8 @@ class ChallengesHeader extends ConsumerWidget {
               builder: (_, v, __) => LinearProgressIndicator(
                 value: v,
                 minHeight: 4.r,
-                backgroundColor: context.bgElevated,
-                valueColor: AlwaysStoppedAnimation(context.accentGreen),
+                backgroundColor: context.getColor(ThemeEnum.outputHeader),
+                valueColor: AlwaysStoppedAnimation(context.getColor(ThemeEnum.accentGreen)),
               ),
             ),
           ),
