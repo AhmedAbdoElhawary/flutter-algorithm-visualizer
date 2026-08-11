@@ -42,7 +42,7 @@ class PracticePage extends ConsumerWidget {
             filtered.isEmpty
                 ? SliverToBoxAdapter(child: const ChallengesEmptyState())
                 : SliverPadding(
-                    padding:  REdgeInsets.fromLTRB(16, 0, 16, 60),
+                    padding: REdgeInsets.fromLTRB(16, 0, 16, 60),
                     sliver: SliverList.builder(
                       itemCount: filtered.length,
                       itemBuilder: (ctx, i) => ProblemTile(
