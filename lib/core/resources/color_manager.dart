@@ -102,6 +102,7 @@ abstract final class ColorManager {
 
   /// ------------------------------------------>
 
+  static const Color highlightCodeLineColor = Color.fromRGBO(122, 132, 229, 1);
   static const Color finishedSearcherBlue = Color.fromRGBO(0, 187, 255, 1.0);
   static const Color wallBlack = Color.fromRGBO(22, 68, 101, 1.0);
   static const Color dividerBlue = Color.fromRGBO(175, 216, 248, 1.0);
@@ -115,7 +116,7 @@ abstract final class ColorManager {
   static const Color blackL3Blue = Color.fromRGBO(14, 14, 19, 1.0);
   static const Color darkPurple = Color.fromRGBO(66, 8, 99, 1.0);
 
-  static const Color green = Color.fromRGBO(25, 189, 98, 1.0);
+  static const Color green = Color.fromRGBO(52, 211, 153, 1.0);
   static const Color purple = Color.fromRGBO(160, 4, 238, 1);
   static const Color purple2 = Color.fromRGBO(198, 0, 229, 1.0);
   static const Color red = Color.fromRGBO(224, 60, 31, 1.0);
