@@ -22,7 +22,10 @@ class _MainNavigationShellState extends State<MainNavigationShell> {
     return CupertinoPageScaffold(
       child: Stack(
         children: [
-          widget.navigationShell,
+          Padding(
+            padding:  REdgeInsets.only(bottom: 50),
+            child: widget.navigationShell,
+          ),
           Positioned(
             left: 0,
             right: 0,
