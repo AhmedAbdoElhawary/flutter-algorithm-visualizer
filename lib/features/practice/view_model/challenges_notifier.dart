@@ -16,9 +16,13 @@ class ChallengesNotifier extends Notifier<ChallengesState> {
   void clearSearch() => state = state.copyWith(search: '');
 
   void toggleExpanded(int problemId) {
-    state = state.copyWith(expandedIds: problemId);
+    if (state.expandedId == problemId) {
+      state = state.copyWith(expandedIds: 0);
+    }else{
+
+      state = state.copyWith(expandedIds: problemId);
+    }
   }
 }
 
-final challengesProvider =
-NotifierProvider<ChallengesNotifier, ChallengesState>(ChallengesNotifier.new);
+final challengesProvider = NotifierProvider<ChallengesNotifier, ChallengesState>(ChallengesNotifier.new);
