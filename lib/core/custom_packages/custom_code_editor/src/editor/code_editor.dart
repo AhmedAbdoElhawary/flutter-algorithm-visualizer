@@ -58,6 +58,7 @@ class CodeEditor extends StatefulWidget {
 }
 
 class _CodeEditorState extends State<CodeEditor> {
+  final ScrollController _horizontalScrollController = ScrollController();
   late FocusNode _focusNode;
   final ScrollController _scrollController = ScrollController();
   final double _numbersPadding = 5;
@@ -113,6 +114,7 @@ class _CodeEditorState extends State<CodeEditor> {
     if (widget.focusNode == null) _focusNode.dispose();
     _scrollController.dispose();
     _gutterController?.dispose();
+    _horizontalScrollController.dispose();
     super.dispose();
   }
 
@@ -156,6 +158,7 @@ class _CodeEditorState extends State<CodeEditor> {
         readOnly: widget.readOnly,
         maxLines: null,
         minLines: null,
+        expands: false,
         keyboardType: TextInputType.multiline,
         textInputAction: widget.textInputAction,
         autocorrect: false,
@@ -196,7 +199,18 @@ class _CodeEditorState extends State<CodeEditor> {
             activeLine: _activeLine,
             errorLine: _errorLine,
           ),
-          Expanded(child: editableArea),
+          Expanded(
+            child: SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              controller: _horizontalScrollController,
+              child: SingleChildScrollView(
+                controller: _scrollController,
+                child: IntrinsicWidth(
+                  child: editableArea,
+                ),
+              ),
+            ),
+          ),
         ],
       ),
     );
