@@ -13,8 +13,8 @@ class ProblemStyle {
         return context.accentYellow;
       case ProblemDifficulty.hard:
         return context.accentRed;
-        default:
-          return context.textVMuted;
+      default:
+        return context.textVMuted;
     }
   }
 
