@@ -6,7 +6,7 @@ class MediumText extends _AdaptiveText {
     super.fontSize = 16,
     super.decoration = TextDecoration.none,
     super.fontStyle = FontStyle.normal,
-    super.color = ThemeEnum.focusColor,
+    super.color = ThemeEnum.focus,
     super.textAlign,
     super.maxLines,
     super.translate,
