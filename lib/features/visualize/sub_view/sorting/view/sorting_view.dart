@@ -1,5 +1,5 @@
-import 'package:algorithm_visualizer/core/draggable_progress.dart' show DraggableProgressBar;
-import 'package:algorithm_visualizer/core/helpers/playback_speed.dart';
+import 'package:algorithm_visualizer/core/widgets/custom_widgets/draggable_progress.dart' show DraggableProgressBar;
+import 'package:algorithm_visualizer/features/visualize/helper/playback_speed.dart';
 import 'package:algorithm_visualizer/core/resources/color_manager.dart';
 import 'package:algorithm_visualizer/core/resources/strings_manager.dart';
 import 'package:algorithm_visualizer/core/resources/styles_manager.dart';
