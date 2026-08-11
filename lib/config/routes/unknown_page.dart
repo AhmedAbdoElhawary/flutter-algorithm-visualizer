@@ -13,9 +13,7 @@ class _UnknownPage extends StatelessWidget {
 }
 
 class UnknownView extends StatelessWidget {
-  const UnknownView({
-    super.key
-  });
+  const UnknownView({super.key});
 
   @override
   Widget build(BuildContext context) {
