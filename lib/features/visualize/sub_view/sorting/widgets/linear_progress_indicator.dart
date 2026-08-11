@@ -26,11 +26,11 @@ class GradientLinearProgressIndicator extends StatelessWidget {
               widthFactor: value,
               child: Container(
                 decoration: BoxDecoration(
-                  gradient: const LinearGradient(
+                  gradient: LinearGradient(
                     begin: AlignmentDirectional.centerStart,
                     end: AlignmentDirectional.centerEnd,
                     colors: [
-                      ColorManager.mainDarkColor,
+                      context.getColor(ThemeEnum.accent),
                       ColorManager.main2DarkColor,
                     ],
                   ),
