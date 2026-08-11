@@ -21,7 +21,7 @@ class CustomSwitch extends ConsumerWidget {
       child: Switch.adaptive(
         value: value,
         onChanged: onChanged,
-        activeTrackColor: context.getColor(ThemeEnum.focusColor),
+        activeTrackColor: context.getColor(ThemeEnum.focus),
         activeThumbColor: context.getColor(ThemeEnum.whiteD1Color),
         inactiveThumbColor: context.getColor(ThemeEnum.whiteColor),
         thumbIcon: WidgetStatePropertyAll(
