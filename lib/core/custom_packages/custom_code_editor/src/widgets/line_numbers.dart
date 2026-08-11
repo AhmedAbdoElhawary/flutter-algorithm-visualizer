@@ -20,6 +20,7 @@ class LineNumbers extends StatelessWidget {
     this.activeLine,
     this.borderRadius,
     this.errorLine,
+    this.highlightedLines,
   });
 
   final int lineCount;
@@ -36,6 +37,11 @@ class LineNumbers extends StatelessWidget {
   /// set, that line's number is painted in [CodeEditorTheme.errorColor].
   final int? errorLine;
   final BorderRadiusGeometry? borderRadius;
+
+  /// Mirrors `CodeController.highlightedLines`: a translucent background
+  /// per gutter row for lines highlighted via `CodeController.highlightLine`.
+  final Map<int, Color>? highlightedLines;
+
   @override
   Widget build(BuildContext context) {
     final int digits = '$lineCount'.length;
@@ -60,6 +66,7 @@ class LineNumbers extends StatelessWidget {
           children: List<Widget>.generate(lineCount, (int index) {
             final bool isActive = index == activeLine;
             final bool isError = index == errorLine;
+            final Color? highlight = isError ? null : highlightedLines?[index];
             TextStyle style = theme.lineNumberStyle;
             if (isActive) {
               style = style.copyWith(color: theme.textStyle.color);
@@ -73,6 +80,7 @@ class LineNumbers extends StatelessWidget {
             return Container(
               padding: REdgeInsets.only(top: numbersPadding),
               height: lineHeight,
+              color: highlight?.withValues(alpha: 0.18),
               child: Center(child: Text('${index + 1}'.padLeft(digits), style: style)),
             );
           }),
