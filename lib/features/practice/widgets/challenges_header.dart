@@ -1,7 +1,6 @@
 import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/custom_icon.dart';
 import 'package:algorithm_visualizer/features/practice/view_model/challenges_providers.dart';
-import 'package:algorithm_visualizer/lib-temp/theme/app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -23,7 +22,7 @@ class ChallengesHeader extends ConsumerWidget {
           Text(
             'PRACTICE',
             style: GoogleFonts.inter(
-              color: context.textMuted,
+              color: context.getColor(ThemeEnum.hover),
               fontSize: 12.r,
               fontWeight: FontWeight.w500,
               letterSpacing: 0.5,
@@ -35,7 +34,7 @@ class ChallengesHeader extends ConsumerWidget {
               Text(
                 'Challenges',
                 style: GoogleFonts.inter(
-                  color: context.textPrimary,
+                  color: context.getColor(ThemeEnum.textPrimary),
                   fontSize: 20.r,
                   fontWeight: FontWeight.w700,
                   letterSpacing: -0.4,
@@ -49,7 +48,7 @@ class ChallengesHeader extends ConsumerWidget {
                 style: GoogleFonts.inter(
                     color: context.getColor(ThemeEnum.accentBg), fontSize: 13.r, fontWeight: FontWeight.w600),
               ),
-              Text(' / $total solved', style: GoogleFonts.inter(color: context.textMuted, fontSize: 13.r)),
+              Text(' / $total solved', style: GoogleFonts.inter(color: context.getColor(ThemeEnum.hover), fontSize: 13.r)),
             ],
           ),
           const RSizedBox(height: 10),
