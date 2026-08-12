@@ -9,20 +9,17 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../view_model/searching_notifier.dart';
 
-final Color kGridDarkBg = const Color(0xFF060C1A);
-final Color kGridLightBg = const Color(0xFFF0F4FF);
+const Color kWallGridColor = ColorManager.wallBlack;
+const Color kPathGridColor = ColorManager.accentYellowDk;
 
-final Color kWallGridColor = ColorManager.wallBlack;
-final Color kPathGridColor = ColorManager.accentYellowDk;
+const Color kSearcherStartColor = ColorManager.main2DarkColor;
+const Color kSearcherMediumColor = kSearcherStartColor;
+const Color kSearcherFinishedColor = ColorManager.accentBlueDk;
 
-final Color kSearcherStartColor = ColorManager.accentDk;
-final Color kSearcherMediumColor = ColorManager.mediumBlue;
-final Color kSearcherFinishedColor = ColorManager.accentBlueDk;
-
-final Color kStartPointIconColor = ColorManager.white;
-final Color kTargetOuterColor = ColorManager.darkPurple;
-final Color kTargetMidColor = ColorManager.white;
-final Color kTargetInnerColor = ColorManager.darkPurple;
+const Color kStartPointIconColor = ColorManager.white;
+const Color kTargetOuterColor = ColorManager.targetSearchingPoint;
+const Color kTargetMidColor = ColorManager.white;
+const Color kTargetInnerColor = ColorManager.targetSearchingPoint;
 
 enum _DragMode { none, start, end, wall }
 
@@ -156,7 +153,7 @@ class _PFGridState extends ConsumerState<PFGrid> with SingleTickerProviderStateM
             width: constraints.maxWidth,
             height: gridHeight,
             decoration: BoxDecoration(
-              color: context.isThemeDark ? kGridDarkBg : kGridLightBg,
+              color: context.getColor(ThemeEnum.primary),
               borderRadius: BorderRadius.circular(14),
               border: Border.all(color: context.getColor(ThemeEnum.border)),
             ),
