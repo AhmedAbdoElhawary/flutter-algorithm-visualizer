@@ -1,9 +1,9 @@
 import 'package:algorithm_visualizer/core/resources/color_manager.dart';
+import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
 import 'package:algorithm_visualizer/features/visualize/sub_view/searching/helper/pf_constants.dart';
 import 'package:algorithm_visualizer/features/visualize/sub_view/searching/widgets/end_point.dart';
 import 'package:algorithm_visualizer/features/visualize/sub_view/searching/widgets/pf_grid_painter.dart';
 import 'package:algorithm_visualizer/features/visualize/sub_view/searching/widgets/start_point.dart';
-import 'package:algorithm_visualizer/lib-temp/theme/app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -156,9 +156,9 @@ class _PFGridState extends ConsumerState<PFGrid> with SingleTickerProviderStateM
             width: constraints.maxWidth,
             height: gridHeight,
             decoration: BoxDecoration(
-              color: context.isDark ? kGridDarkBg : kGridLightBg,
+              color: context.isThemeDark ? kGridDarkBg : kGridLightBg,
               borderRadius: BorderRadius.circular(14),
-              border: Border.all(color: context.borderColor),
+              border: Border.all(color: context.getColor(ThemeEnum.border)),
             ),
             child: ClipRRect(
               borderRadius: BorderRadius.circular(14),
@@ -169,7 +169,7 @@ class _PFGridState extends ConsumerState<PFGrid> with SingleTickerProviderStateM
                     painter: PFGridPainter(
                       walls: state.walls,
                       step: state.currentStep,
-                      isDark: context.isDark,
+                      isDark: context.isThemeDark,
                       wallAnims: _wallAnimations,
                       frontierAnims: _frontierAnimations,
                       visitedAnims: _visitedAnimations,
