@@ -1,9 +1,9 @@
 import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
-import 'package:algorithm_visualizer/lib-temp/theme/app_theme.dart';
+import 'package:algorithm_visualizer/core/widgets/adaptive/text/adaptive_text.dart';
+import 'package:algorithm_visualizer/core/widgets/custom_widgets/custom_icon.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 class AlgoTab extends ConsumerWidget {
   const AlgoTab({
@@ -28,7 +28,7 @@ class AlgoTab extends ConsumerWidget {
         color: isSelected ? context.getColor(ThemeEnum.accentBg) : context.getColor(ThemeEnum.card),
         borderRadius: BorderRadius.circular(10),
         border: Border.all(
-          color: isSelected ? context.getColor(ThemeEnum.borderAccent) : context.borderColor,
+          color: isSelected ? context.getColor(ThemeEnum.borderAccent) : context.getColor(ThemeEnum.border),
         ),
       ),
       child: Padding(
@@ -37,17 +37,15 @@ class AlgoTab extends ConsumerWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             if (icon != null) ...[
-              Icon(icon!, color: isSelected ? context.getColor(ThemeEnum.accent) : context.textMuted, size: 20.r),
+              CustomIcon(icon!, color: isSelected ? ThemeEnum.accent : ThemeEnum.hover, size: 20),
               RSizedBox(width: 5)
             ],
-            Text(
+            BoldText(
               label,
               textAlign: TextAlign.center,
-              style: GoogleFonts.jetBrainsMono(
-                color: isSelected ? context.getColor(ThemeEnum.accent) : context.textMuted,
-                fontSize: 13.r,
-                fontWeight: FontWeight.w700,
-              ),
+              fontFamily: "jetBrainsMono",
+              color: isSelected ? ThemeEnum.accent : ThemeEnum.hover,
+              fontSize: 13,
             ),
           ],
         ),
