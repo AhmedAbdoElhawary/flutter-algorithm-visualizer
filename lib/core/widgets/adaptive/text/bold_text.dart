@@ -11,6 +11,7 @@ class BoldText extends _AdaptiveText {
     super.fontWeight = FontWeightManager.bold,
     super.textAlign,
     super.maxLines = 2,
+    super.fontFamily,
     super.key,
   });
 }
