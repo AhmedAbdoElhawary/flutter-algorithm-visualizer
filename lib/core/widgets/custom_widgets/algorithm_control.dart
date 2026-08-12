@@ -1,9 +1,9 @@
+import 'package:algorithm_visualizer/core/resources/color_manager.dart';
 import 'package:algorithm_visualizer/features/visualize/helper/playback_speed.dart';
 import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
 import 'package:algorithm_visualizer/core/widgets/adaptive/text/adaptive_text.dart';
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/glass_card.dart';
 import 'package:algorithm_visualizer/features/base/view_model/algorithm_control_interface.dart';
-import 'package:algorithm_visualizer/lib-temp/theme/app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -86,7 +86,10 @@ class _PlayButton extends StatelessWidget {
           gradient: LinearGradient(
             begin: AlignmentDirectional.topStart,
             end: AlignmentDirectional.bottomEnd,
-            colors: context.accentGradient,
+            colors: [
+              context.getColor(ThemeEnum.accent),
+              ColorManager.main2DarkColor,
+            ],
           ),
           borderRadius: BorderRadius.circular(14),
           boxShadow: [
@@ -122,7 +125,7 @@ class CtrlButton extends StatelessWidget {
     return SimpleGlassButton(
       onTap: onTap,
       messageTip: messageTip,
-      child: Icon(icon, size: size.r, color: _disabled ? context.textVMuted : context.textSec),
+      child: Icon(icon, size: size.r, color: _disabled ? context.getColor(ThemeEnum.hoverSecond) : context.getColor(ThemeEnum.textSecond)),
     );
   }
 }
