@@ -99,7 +99,7 @@ class GlassContainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final borderColor = context.getColor(highlightCard ? ThemeEnum.borderPurpleColor : ThemeEnum.shadowColor);
+    final borderColor = context.getColor(highlightCard ? ThemeEnum.borderPurpleColor : ThemeEnum.border);
 
     return ClipRRect(
       borderRadius: BorderRadius.circular(borderRadius),
@@ -143,7 +143,7 @@ class SimpleGlassButton extends StatelessWidget {
         decoration: BoxDecoration(
           color: context.getColor(ThemeEnum.card),
           borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: context.getColor(ThemeEnum.shadowColor)),
+          border: Border.all(color: context.getColor(ThemeEnum.border)),
           boxShadow: context.isThemeDark
               ? []
               : [
