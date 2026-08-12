@@ -2,7 +2,6 @@ import 'dart:async';
 import 'package:algorithm_visualizer/core/custom_packages/custom_code_editor/src/editor/code_controller.dart';
 import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/code_editor.dart';
-import 'package:algorithm_visualizer/lib-temp/theme/app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -140,7 +139,7 @@ class _CodeEditorPageState extends State<CodeEditorPage> {
   }
 
   Widget _buildLangBar(BuildContext context) {
-    final isDark = context.isDark;
+    final isDark = context.isThemeDark;
     return SliverPadding(
       padding: const EdgeInsets.fromLTRB(16, 0, 16, 10),
       sliver: SliverToBoxAdapter(
@@ -150,7 +149,7 @@ class _CodeEditorPageState extends State<CodeEditorPage> {
             decoration: BoxDecoration(
               color: context.getColor(ThemeEnum.card),
               borderRadius: BorderRadius.circular(10),
-              border: Border.all(color: context.borderColor),
+              border: Border.all(color: context.getColor(ThemeEnum.border)),
               boxShadow: context.cardShadow,
             ),
             child: Container(
@@ -179,13 +178,13 @@ class _CodeEditorPageState extends State<CodeEditorPage> {
               decoration: BoxDecoration(
                 color: context.getColor(ThemeEnum.card),
                 borderRadius: BorderRadius.circular(8),
-                border: Border.all(color: context.borderColor),
+                border: Border.all(color: context.getColor(ThemeEnum.border)),
                 boxShadow: context.cardShadow,
               ),
               child: Icon(
                 _copied ? Icons.check_rounded : Icons.copy_rounded,
                 size: 15,
-                color: _copied ? context.getColor(ThemeEnum.accentGreen) : context.textMuted,
+                color: _copied ? context.getColor(ThemeEnum.accentGreen) : context.getColor(ThemeEnum.hover),
               ),
             ),
           ),
@@ -206,7 +205,7 @@ class _CodeEditorPageState extends State<CodeEditorPage> {
                         colors: [context.getColor(ThemeEnum.accentGreen), context.getColor(ThemeEnum.accentGreen)],
                       ),
                 borderRadius: BorderRadius.circular(9),
-                border: _running ? Border.all(color: context.borderColor) : null,
+                border: _running ? Border.all(color: context.getColor(ThemeEnum.border)) : null,
                 boxShadow: _running
                     ? context.cardShadow
                     : [
@@ -217,11 +216,11 @@ class _CodeEditorPageState extends State<CodeEditorPage> {
                       ],
               ),
               child: Row(mainAxisSize: MainAxisSize.min, children: [
-                Icon(Icons.play_arrow_rounded, size: 14, color: _running ? context.textMuted : Colors.white),
+                Icon(Icons.play_arrow_rounded, size: 14, color: _running ? context.getColor(ThemeEnum.hover) : Colors.white),
                 const SizedBox(width: 4),
                 Text(_running ? 'Running…' : 'Run',
                     style: GoogleFonts.inter(
-                      color: _running ? context.textMuted : Colors.white,
+                      color: _running ? context.getColor(ThemeEnum.hover) : Colors.white,
                       fontSize: 13,
                       fontWeight: FontWeight.w600,
                     )),
@@ -245,17 +244,17 @@ class _HeaderInfo extends StatelessWidget {
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           Text('CODE EDITOR',
               style: GoogleFonts.inter(
-                  color: context.textMuted, fontSize: 12, fontWeight: FontWeight.w500, letterSpacing: 0.5)),
+                  color: context.getColor(ThemeEnum.hover), fontSize: 12, fontWeight: FontWeight.w500, letterSpacing: 0.5)),
           const SizedBox(height: 2),
           Row(children: [
             Text("Two Sum",
                 style: GoogleFonts.inter(
-                    color: context.textPrimary, fontSize: 18, fontWeight: FontWeight.w700, letterSpacing: -0.4)),
+                    color: context.getColor(ThemeEnum.textPrimary), fontSize: 18, fontWeight: FontWeight.w700, letterSpacing: -0.4)),
             const Spacer(),
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
               decoration: BoxDecoration(
-                  color: context.isDark ? const Color(0xFF1E3A5F) : const Color(0xFFDBEAFE),
+                  color: context.isThemeDark ? const Color(0xFF1E3A5F) : const Color(0xFFDBEAFE),
                   borderRadius: BorderRadius.circular(6)),
               child: Text('Easy',
                   style: GoogleFonts.inter(
@@ -314,7 +313,7 @@ class _OutputCard extends StatelessWidget {
                 final tc = e.value;
                 return Container(
                   padding: const EdgeInsets.fromLTRB(14, 9, 14, 9),
-                  decoration: i > 0 ? BoxDecoration(border: Border(top: BorderSide(color: context.borderColor))) : null,
+                  decoration: i > 0 ? BoxDecoration(border: Border(top: BorderSide(color: context.getColor(ThemeEnum.border)))) : null,
                   child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
                     Container(
                       width: 18,
@@ -329,11 +328,11 @@ class _OutputCard extends StatelessWidget {
                     const SizedBox(width: 10),
                     Expanded(
                         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                      Text(tc.label, style: GoogleFonts.inter(color: context.textSec, fontSize: 12)),
+                      Text(tc.label, style: GoogleFonts.inter(color: context.getColor(ThemeEnum.textSecond), fontSize: 12)),
                       const SizedBox(height: 2),
                       RichText(
                           text: TextSpan(style: GoogleFonts.jetBrainsMono(fontSize: 11), children: [
-                        TextSpan(text: '→ ', style: TextStyle(color: context.textMuted)),
+                        TextSpan(text: '→ ', style: TextStyle(color: context.getColor(ThemeEnum.hover))),
                         TextSpan(text: tc.expected, style: TextStyle(color: context.getColor(ThemeEnum.accentGreen))),
                       ])),
                     ])),
