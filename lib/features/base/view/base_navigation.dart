@@ -35,7 +35,7 @@ class _MainNavigationShellState extends State<MainNavigationShell> {
               inactiveColor: context.getColor(ThemeEnum.codeEditorNumberColor),
               iconSize: 22.r,
               backgroundColor: context.getColor(ThemeEnum.primary),
-              border: Border(top: BorderSide(width: 1, color: context.getColor(ThemeEnum.shadowColor))),
+              border: Border(top: BorderSide(width: 1, color: context.getColor(ThemeEnum.border))),
               currentIndex: widget.navigationShell.currentIndex,
               onTap: (index) {
                 widget.navigationShell.goBranch(
