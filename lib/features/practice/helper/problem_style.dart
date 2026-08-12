@@ -1,6 +1,5 @@
 import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
 import 'package:algorithm_visualizer/features/practice/helper/problem.dart';
-import 'package:algorithm_visualizer/lib-temp/theme/app_theme.dart';
 import 'package:flutter/material.dart';
 
 class ProblemStyle {
@@ -15,7 +14,7 @@ class ProblemStyle {
       case ProblemDifficulty.hard:
         return context.getColor(ThemeEnum.accentRed);
       default:
-        return context.textVMuted;
+        return context.getColor(ThemeEnum.hoverSecond);
     }
   }
 
@@ -26,7 +25,7 @@ class ProblemStyle {
       case ProblemStatus.attempted:
         return context.getColor(ThemeEnum.accentYellow);
       default:
-        return context.textVMuted;
+        return context.getColor(ThemeEnum.hoverSecond);
     }
   }
 
