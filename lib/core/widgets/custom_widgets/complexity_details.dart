@@ -46,9 +46,9 @@ class TimeComplexityData extends StatelessWidget {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          CustomIcon(Icons.access_time_rounded, size: 14, color: ThemeEnum.hoverColor),
+          CustomIcon(Icons.access_time_rounded, size: 14, color: ThemeEnum.hover),
           RSizedBox(width: 4),
-          RegularText(StringsManager.time, color: ThemeEnum.hoverColor, fontSize: 14),
+          RegularText(StringsManager.time, color: ThemeEnum.hover, fontSize: 14),
           RSizedBox(width: 2),
           SemiBoldText(complexity.worstTimeComplexity.getText, color: ThemeEnum.accent, fontSize: 14),
         ],
@@ -71,9 +71,9 @@ class SpaceComplexityData extends StatelessWidget {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          CustomIcon(Icons.storage_rounded, size: 14, color: ThemeEnum.hoverColor),
+          CustomIcon(Icons.storage_rounded, size: 14, color: ThemeEnum.hover),
           RSizedBox(width: 4),
-          RegularText(StringsManager.space, color: ThemeEnum.hoverColor, fontSize: 14),
+          RegularText(StringsManager.space, color: ThemeEnum.hover, fontSize: 14),
           RSizedBox(width: 2),
           SemiBoldText(complexity.spaceComplexity.getText, color: ThemeEnum.accent, fontSize: 14),
         ],
@@ -96,9 +96,9 @@ class StabilityData extends StatelessWidget {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          CustomIcon(Icons.balance_rounded, size: 14, color: ThemeEnum.hoverColor),
+          CustomIcon(Icons.balance_rounded, size: 14, color: ThemeEnum.hover),
           RSizedBox(width: 4),
-          RegularText(StringsManager.stable, color: ThemeEnum.hoverColor, fontSize: 14),
+          RegularText(StringsManager.stable, color: ThemeEnum.hover, fontSize: 14),
           RSizedBox(width: 2),
           SemiBoldText(complexity.getStabilityText, color: ThemeEnum.accentGreen, fontSize: 14),
         ],
