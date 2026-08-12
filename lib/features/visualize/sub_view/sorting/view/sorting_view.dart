@@ -243,7 +243,7 @@ class _ShowUpSortingListState extends ConsumerState<ShowUpSortingList> {
           // size: Size(double.infinity, 200.r),
           painter: _GridBgPainter(
             backgroundColor: context.getColor(ThemeEnum.backgroundForSortingColor),
-            borderColor: context.getColor(ThemeEnum.shadowColor),
+            borderColor: context.getColor(ThemeEnum.border),
           ),
           child: Container(
             padding: REdgeInsets.only(bottom: SortingNotifier.bottomInsidePadding),
