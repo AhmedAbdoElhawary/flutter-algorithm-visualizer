@@ -15,13 +15,16 @@ enum ThemeEnum {
   accentYellow,
   accentRed,
   accentBlue,
+  textSecond,
+  textPrimary,
+  hover,
+  hoverSecond,
+  border,
 
   /// --------------
   howItWorksColor,
   columnColor,
   backgroundForSortingColor,
-  shadowColor,
-  greyD6Color,
   white2DarkColor,
   textDarkColor,
   text2DarkColor,
@@ -29,39 +32,25 @@ enum ThemeEnum {
   lightPurpleColor,
   codeEditorNumberColor,
 
-  whiteD1Color,
-  whiteD2Color,
-  whiteD3Color,
   whiteD4Color,
   whiteD5Color,
   whiteD7Color,
   whiteColor,
-  transparentWhiteColor,
   transparentColor,
-  blackColor,
-  whiteOp60Color,
-  solidWhiteOp60Color,
-  whiteOp50Color,
-  whiteOp20Color,
-  greyColor,
-  grey5Color,
-  darkGreyColor,
-  trendsRankingColor,
-  hoverColor,
-  blackOp80,
-  blackOp50,
-  blackOp20,
-  blackOp10,
-  bottomSheetColor,
 
-  darkPurpleColor,
   mediumBlueColor,
   //
-  comparedColor,
 }
 
 extension ThemeExtension on BuildContext {
   bool get isThemeDark => Theme.of(this).brightness == Brightness.dark;
+
+  List<BoxShadow> get cardShadow => isThemeDark
+      ? []
+      : [
+          BoxShadow(color: Colors.black.withValues(alpha: 0.05), blurRadius: 12, offset: const Offset(0, 2)),
+          BoxShadow(color: Colors.black.withValues(alpha: 0.04), spreadRadius: 1),
+        ];
 
   Map<ThemeEnum, Color> get _colors {
     return {
@@ -71,10 +60,12 @@ extension ThemeExtension on BuildContext {
       ThemeEnum.mainCard: ColorManager.mainCardDk,
       ThemeEnum.outputHeader: isThemeDark ? ColorManager.outputHeaderDk : ColorManager.outputHeaderLt,
       ThemeEnum.accent: isThemeDark ? ColorManager.accentDk : ColorManager.accentLt,
-      ThemeEnum.borderAccent:
-          isThemeDark ? ColorManager.accentDk.withValues(alpha: 0.22) : ColorManager.accentLt.withValues(alpha: 0.25),
-      ThemeEnum.accentBg:
-          isThemeDark ? ColorManager.accentDk.withValues(alpha: 0.12) : ColorManager.accentLt.withValues(alpha: 0.08),
+      ThemeEnum.borderAccent: isThemeDark
+          ? ColorManager.accentDk.withValues(alpha: 0.22)
+          : ColorManager.accentLt.withValues(alpha: 0.25),
+      ThemeEnum.accentBg: isThemeDark
+          ? ColorManager.accentDk.withValues(alpha: 0.12)
+          : ColorManager.accentLt.withValues(alpha: 0.08),
       ThemeEnum.accentGreen: isThemeDark ? ColorManager.accentGreenDk : ColorManager.accentGreenLt,
       ThemeEnum.accentGreenBg: isThemeDark
           ? ColorManager.accentGreenDk.withValues(alpha: 0.12)
@@ -82,9 +73,13 @@ extension ThemeExtension on BuildContext {
       ThemeEnum.accentYellow: isThemeDark ? ColorManager.accentYellowDk : ColorManager.accentYellowLt,
       ThemeEnum.accentRed: isThemeDark ? ColorManager.accentRedDk : ColorManager.accentRedLt,
       ThemeEnum.accentBlue: isThemeDark ? ColorManager.accentBlueDk : ColorManager.accentBlueLt,
+      ThemeEnum.textSecond: isThemeDark ? ColorManager.textSecondDk : ColorManager.textSecondLt,
+      ThemeEnum.textPrimary: isThemeDark ? ColorManager.textPrimaryDk : ColorManager.textPrimaryLt,
+      ThemeEnum.hover: isThemeDark ? ColorManager.hoverDk : ColorManager.hoverLt,
+      ThemeEnum.hoverSecond: isThemeDark ? ColorManager.hoverSecondDk : ColorManager.hoverSecondLt,
+      ThemeEnum.border: isThemeDark ? ColorManager.borderDk : ColorManager.borderLt,
 
       ///-------------------->
-      ThemeEnum.shadowColor: Theme.of(this).shadowColor,
       ThemeEnum.howItWorksColor: ColorManager.howItWorksColor,
       ThemeEnum.white2DarkColor: ColorManager.white2DarkColor,
       ThemeEnum.columnColor: ColorManager.columnSortColor,
@@ -95,38 +90,14 @@ extension ThemeExtension on BuildContext {
       ThemeEnum.borderPurpleColor: ColorManager.borderPurpleColor,
 
       /// what ever dark or light. Maybe if we have multiple themes, it will save a lot of time.
-      ThemeEnum.whiteD1Color: Theme.of(this).dialogTheme.backgroundColor!,
-      ThemeEnum.whiteD2Color: Theme.of(this).primaryColorLight,
-      ThemeEnum.bottomSheetColor: Theme.of(this).bottomSheetTheme.backgroundColor ?? Theme.of(this).primaryColorLight,
-      ThemeEnum.whiteD3Color: Theme.of(this).textTheme.headlineLarge?.color ?? ColorManager.grey,
-      ThemeEnum.whiteD4Color: Theme.of(this).colorScheme.primaryContainer,
+      ThemeEnum.whiteD4Color: ColorManager.grey,
+
       ThemeEnum.whiteD5Color: ColorManager.whiteD5,
       ThemeEnum.whiteD7Color: ColorManager.whiteD7,
       ThemeEnum.transparentColor: ColorManager.transparent,
-      ThemeEnum.transparentWhiteColor: ColorManager.whiteOp20,
-      ThemeEnum.blackOp20: ColorManager.blackOp20,
-      ThemeEnum.trendsRankingColor: ColorManager.rankingGrey,
-
-      ThemeEnum.blackOp10: Theme.of(this).dividerColor,
-
       ThemeEnum.whiteColor: ColorManager.white,
-      ThemeEnum.blackColor: ColorManager.black,
-      ThemeEnum.whiteOp60Color: ColorManager.whiteOp60,
-      ThemeEnum.solidWhiteOp60Color: ColorManager.whiteOp60,
-      ThemeEnum.whiteOp50Color: ColorManager.whiteOp50,
-      ThemeEnum.whiteOp20Color: ColorManager.whiteOp20,
       ThemeEnum.codeEditorNumberColor: ColorManager.codeEditorNumberColor,
-      ThemeEnum.blackOp80: ColorManager.blackOp80,
-      ThemeEnum.blackOp50: ColorManager.blackOp50,
-      ThemeEnum.hoverColor: Theme.of(this).hoverColor,
-
-      ThemeEnum.greyColor: ColorManager.grey,
-      ThemeEnum.greyD6Color: ColorManager.greyD6,
-      ThemeEnum.grey5Color: ColorManager.greyD9,
-      ThemeEnum.darkGreyColor: Theme.of(this).textTheme.bodyLarge?.color ?? ColorManager.greyD3,
       ThemeEnum.mediumBlueColor: ColorManager.mediumBlue,
-      ThemeEnum.comparedColor: ColorManager.dividerBlue,
-      ThemeEnum.darkPurpleColor: ColorManager.darkPurple,
     };
   }
 
