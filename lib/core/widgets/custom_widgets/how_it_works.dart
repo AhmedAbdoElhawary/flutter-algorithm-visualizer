@@ -1,7 +1,6 @@
 import 'dart:ui' show ImageFilter;
 
 import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
-import 'package:algorithm_visualizer/lib-temp/theme/app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -183,7 +182,7 @@ class _HowItWorks extends ConsumerWidget {
                 Text(
                   'Adjacent elements are compared and swapped if out of order. Each pass bubbles the largest element to the end.',
                   style: GoogleFonts.inter(
-                    color: context.textMuted,
+                    color: context.getColor(ThemeEnum.hover),
                     fontSize: 12,
                     height: 1.5,
                   ),
