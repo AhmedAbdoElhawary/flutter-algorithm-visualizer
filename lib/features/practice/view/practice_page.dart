@@ -29,18 +29,21 @@ class PracticePage extends ConsumerWidget {
               leadingWidth: 16.r,
               leading: SizedBox(),
               bottom: PreferredSize(
-                preferredSize: Size.fromHeight(140.r),
-                child: Column(
-                  children: [
-                    const ChallengesHeader(),
-                    const ChallengesSearchField(),
-                    const ChallengesFilterTabs(),
-                  ],
+                preferredSize: Size.fromHeight(145.r),
+                child: SingleChildScrollView(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const ChallengesHeader(),
+                      const ChallengesSearchField(),
+                      const ChallengesFilterTabs(),
+                    ],
+                  ),
                 ),
               ),
             ),
             filtered.isEmpty
-                ? SliverToBoxAdapter(child: const ChallengesEmptyState())
+                ? SliverFillRemaining(child: const ChallengesEmptyState())
                 : SliverPadding(
                     padding: REdgeInsets.fromLTRB(16, 0, 16, 60),
                     sliver: SliverList.builder(
