@@ -1,9 +1,12 @@
+import 'package:algorithm_visualizer/core/resources/strings_manager.dart';
+
 enum ProblemStatus { solved, attempted, none }
 
-enum ProblemDifficulty { easy, medium, hard, none }
+enum ProblemDifficulty { none, easy, medium, hard }
 
 extension ProblemDifficultyX on ProblemDifficulty {
-  String get difficultyString => _capitalizeFirstLetter(name);
+  String get difficultyString =>
+      this == ProblemDifficulty.none ? StringsManager.all : _capitalizeFirstLetter(name);
 }
 
 extension ProblemStatusXX on ProblemStatus {
