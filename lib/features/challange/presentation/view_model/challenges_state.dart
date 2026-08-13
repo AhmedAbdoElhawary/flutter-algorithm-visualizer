@@ -1,14 +1,14 @@
-import 'package:algorithm_visualizer/features/practice/helper/problem.dart';
+import 'package:algorithm_visualizer/features/challange/domain/enums/problem.dart';
 import 'package:flutter/foundation.dart';
 
 @immutable
 class ChallengesState {
-  final ProblemDifficulty filter;
+  final ProblemDifficulty? filter;
   final String search;
   final int expandedId;
 
   const ChallengesState({
-    this.filter = ProblemDifficulty.all,
+    this.filter,
     this.search = '',
     this.expandedId = 0,
   });
@@ -19,7 +19,7 @@ class ChallengesState {
     int? expandedId,
   }) {
     return ChallengesState(
-      filter: filter ?? this.filter,
+      filter: search == null && expandedId == null ? filter : this.filter,
       search: search ?? this.search,
       expandedId: expandedId ?? this.expandedId,
     );
