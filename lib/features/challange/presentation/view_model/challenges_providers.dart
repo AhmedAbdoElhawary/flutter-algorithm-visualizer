@@ -4,6 +4,7 @@ import 'package:algorithm_visualizer/features/challange/data/repositories/proble
 import 'package:algorithm_visualizer/features/challange/domain/entities/coding_problem.dart';
 import 'package:algorithm_visualizer/features/challange/domain/enums/problem.dart';
 import 'package:algorithm_visualizer/features/challange/domain/repositories/problem_repository.dart';
+import 'package:collection/collection.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get_storage/get_storage.dart';
 
@@ -21,7 +22,7 @@ final _challengeDatasetProvider = FutureProvider<List<CodingProblem>>(
   },
 );
 
-final problemsProvider = Provider<AsyncValue<List<CodingProblem>>>((ref) {
+final filteredProblemsProvider = Provider<AsyncValue<List<CodingProblem>>>((ref) {
   final problemsAsync = ref.watch(_challengeDatasetProvider);
   final state = ref.watch(challengesProvider);
 
@@ -41,6 +42,20 @@ final problemsProvider = Provider<AsyncValue<List<CodingProblem>>>((ref) {
     },
   );
 });
+
+final getProblem = Provider.family<AsyncValue<CodingProblem?>, int>(
+  (ref, problemId) {
+    final problems = ref.watch(_challengeDatasetProvider);
+
+    return problems.whenData(
+      (problems) {
+        if (problemId <= 0) return null;
+
+        return problems.firstWhereOrNull((problem) => problem.problemId == problemId);
+      },
+    );
+  },
+);
 
 final solvedCountProvider = Provider<AsyncValue<int>>((ref) {
   final problems = ref.watch(_challengeDatasetProvider);
