@@ -20,9 +20,9 @@ SimilarQuestion _$SimilarQuestionFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$SimilarQuestion {
-  int get problemId => throw _privateConstructorUsedError;
-  String get name => throw _privateConstructorUsedError;
-  String get reason => throw _privateConstructorUsedError;
+  int? get problemId => throw _privateConstructorUsedError;
+  String? get name => throw _privateConstructorUsedError;
+  String? get reason => throw _privateConstructorUsedError;
 
   /// Serializes this SimilarQuestion to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -40,7 +40,7 @@ abstract class $SimilarQuestionCopyWith<$Res> {
           SimilarQuestion value, $Res Function(SimilarQuestion) then) =
       _$SimilarQuestionCopyWithImpl<$Res, SimilarQuestion>;
   @useResult
-  $Res call({int problemId, String name, String reason});
+  $Res call({int? problemId, String? name, String? reason});
 }
 
 /// @nodoc
@@ -58,23 +58,23 @@ class _$SimilarQuestionCopyWithImpl<$Res, $Val extends SimilarQuestion>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? problemId = null,
-    Object? name = null,
-    Object? reason = null,
+    Object? problemId = freezed,
+    Object? name = freezed,
+    Object? reason = freezed,
   }) {
     return _then(_value.copyWith(
-      problemId: null == problemId
+      problemId: freezed == problemId
           ? _value.problemId
           : problemId // ignore: cast_nullable_to_non_nullable
-              as int,
-      name: null == name
+              as int?,
+      name: freezed == name
           ? _value.name
           : name // ignore: cast_nullable_to_non_nullable
-              as String,
-      reason: null == reason
+              as String?,
+      reason: freezed == reason
           ? _value.reason
           : reason // ignore: cast_nullable_to_non_nullable
-              as String,
+              as String?,
     ) as $Val);
   }
 }
@@ -87,7 +87,7 @@ abstract class _$$SimilarQuestionImplCopyWith<$Res>
       __$$SimilarQuestionImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({int problemId, String name, String reason});
+  $Res call({int? problemId, String? name, String? reason});
 }
 
 /// @nodoc
@@ -103,23 +103,23 @@ class __$$SimilarQuestionImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? problemId = null,
-    Object? name = null,
-    Object? reason = null,
+    Object? problemId = freezed,
+    Object? name = freezed,
+    Object? reason = freezed,
   }) {
     return _then(_$SimilarQuestionImpl(
-      problemId: null == problemId
+      problemId: freezed == problemId
           ? _value.problemId
           : problemId // ignore: cast_nullable_to_non_nullable
-              as int,
-      name: null == name
+              as int?,
+      name: freezed == name
           ? _value.name
           : name // ignore: cast_nullable_to_non_nullable
-              as String,
-      reason: null == reason
+              as String?,
+      reason: freezed == reason
           ? _value.reason
           : reason // ignore: cast_nullable_to_non_nullable
-              as String,
+              as String?,
     ));
   }
 }
@@ -134,11 +134,11 @@ class _$SimilarQuestionImpl implements _SimilarQuestion {
       _$$SimilarQuestionImplFromJson(json);
 
   @override
-  final int problemId;
+  final int? problemId;
   @override
-  final String name;
+  final String? name;
   @override
-  final String reason;
+  final String? reason;
 
   @override
   String toString() {
@@ -179,19 +179,19 @@ class _$SimilarQuestionImpl implements _SimilarQuestion {
 
 abstract class _SimilarQuestion implements SimilarQuestion {
   const factory _SimilarQuestion(
-      {required final int problemId,
-      required final String name,
-      required final String reason}) = _$SimilarQuestionImpl;
+      {required final int? problemId,
+      required final String? name,
+      required final String? reason}) = _$SimilarQuestionImpl;
 
   factory _SimilarQuestion.fromJson(Map<String, dynamic> json) =
       _$SimilarQuestionImpl.fromJson;
 
   @override
-  int get problemId;
+  int? get problemId;
   @override
-  String get name;
+  String? get name;
   @override
-  String get reason;
+  String? get reason;
 
   /// Create a copy of SimilarQuestion
   /// with the given fields replaced by the non-null parameter values.
