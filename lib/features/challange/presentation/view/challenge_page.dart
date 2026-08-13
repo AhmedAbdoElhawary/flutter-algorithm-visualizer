@@ -1,20 +1,21 @@
+import 'package:algorithm_visualizer/features/challange/presentation/widgets/error_state.dart';
+import 'package:algorithm_visualizer/features/challange/presentation/widgets/loading_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../view_model/challenges_providers.dart';
-import '../widgets/challenges_filter_tabs.dart';
 import '../widgets/challenges_header.dart';
 import '../widgets/challenges_search_field.dart';
 import '../widgets/empty_state.dart';
 import '../widgets/problem_tile.dart';
 
-class PracticePage extends ConsumerWidget {
-  const PracticePage({super.key});
+class ChallengePage extends ConsumerWidget {
+  const ChallengePage({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final filtered = ref.watch(filteredProblemsProvider);
+    final problems = ref.watch(challengeDatasetProvider);
 
     return Scaffold(
       body: SafeArea(
@@ -36,24 +37,29 @@ class PracticePage extends ConsumerWidget {
                     children: [
                       const ChallengesHeader(),
                       const ChallengesSearchField(),
-                      const ChallengesFilterTabs(),
+                      // const ChallengesFilterTabs(),
                     ],
                   ),
                 ),
               ),
             ),
-            filtered.isEmpty
-                ? SliverFillRemaining(child: const ChallengesEmptyState())
-                : SliverPadding(
-                    padding: REdgeInsets.fromLTRB(16, 0, 16, 60),
-                    sliver: SliverList.builder(
-                      itemCount: filtered.length,
-                      itemBuilder: (ctx, i) => ProblemTile(
-                        problem: filtered[i],
-                        onSolve: () {},
-                      ),
+            problems.when(
+              loading: () => SliverFillRemaining(child: const ChallengesLoadingState()),
+              error: (error, stackTrace) => SliverFillRemaining(child: ChallengesErrorState()),
+              data: (data) {
+                if (data.isEmpty) return SliverFillRemaining(child: const ChallengesEmptyState());
+                return SliverPadding(
+                  padding: REdgeInsets.fromLTRB(16, 0, 16, 60),
+                  sliver: SliverList.builder(
+                    itemCount: data.length,
+                    itemBuilder: (ctx, i) => ProblemTile(
+                      problem: data[i],
+                      onSolveTap: () {},
                     ),
                   ),
+                );
+              },
+            )
           ],
         ),
       ),
