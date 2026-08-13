@@ -1,4 +1,4 @@
-import 'package:algorithm_visualizer/core/helpers/playback_speed.dart';
+import 'package:algorithm_visualizer/features/visualize/helper/playback_speed.dart';
 import 'package:algorithm_visualizer/core/resources/strings_manager.dart';
 import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
 import 'package:algorithm_visualizer/features/base/view_model/algorithm_control_interface.dart';
@@ -27,11 +27,11 @@ abstract class SortingNotifier extends StateNotifier<SortingNotifierState>
   SortingNotifier() : super(SortingNotifierState(list: _generateList(_defaultSize))) {
     _initializePositions();
   }
-  static const ThemeEnum swappingColor = ThemeEnum.redColor;
-  static const ThemeEnum comparedColor = ThemeEnum.lightBlueColor;
+  static const ThemeEnum swappingColor = ThemeEnum.accentRed;
+  static const ThemeEnum comparedColor = ThemeEnum.accentBlue;
   static const ThemeEnum itemColor = ThemeEnum.columnColor;
   static const ThemeEnum backgroundForSortingColor = ThemeEnum.backgroundForSortingColor;
-  static const ThemeEnum doneSortingColor = ThemeEnum.greenColor;
+  static const ThemeEnum doneSortingColor = ThemeEnum.accentGreen;
 
   static const int _defaultSize = 7;
   static const int _maxSize = 15;

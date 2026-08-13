@@ -1,7 +1,4 @@
-import 'package:algorithm_visualizer/core/draggable_progress.dart' show DraggableProgressBar;
-import 'package:algorithm_visualizer/core/helpers/playback_speed.dart';
-import 'package:algorithm_visualizer/core/resources/color_manager.dart';
-import 'package:algorithm_visualizer/core/resources/strings_manager.dart';
+import 'package:algorithm_visualizer/features/visualize/helper/playback_speed.dart';
 import 'package:algorithm_visualizer/core/resources/styles_manager.dart';
 import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
 import 'package:algorithm_visualizer/core/widgets/adaptive/text/adaptive_text.dart';
@@ -14,9 +11,9 @@ import 'package:algorithm_visualizer/core/widgets/custom_widgets/algo_tab.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+
 part '../widgets/sorting_app_bar.dart';
 part '../widgets/control_buttons.dart';
-part '../widgets/size_draggable.dart';
 
 class SortingView extends ConsumerStatefulWidget {
   const SortingView({this.card = SortingAlgoCards.bubble, required this.onAlgoChanged, super.key});
@@ -243,7 +240,7 @@ class _ShowUpSortingListState extends ConsumerState<ShowUpSortingList> {
           // size: Size(double.infinity, 200.r),
           painter: _GridBgPainter(
             backgroundColor: context.getColor(ThemeEnum.backgroundForSortingColor),
-            borderColor: context.getColor(ThemeEnum.shadowColor),
+            borderColor: context.getColor(ThemeEnum.border),
           ),
           child: Container(
             padding: REdgeInsets.only(bottom: SortingNotifier.bottomInsidePadding),

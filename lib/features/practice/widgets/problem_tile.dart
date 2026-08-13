@@ -1,7 +1,7 @@
+import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
 import 'package:algorithm_visualizer/features/practice/helper/problem.dart';
 import 'package:algorithm_visualizer/features/practice/helper/problem_style.dart';
 import 'package:algorithm_visualizer/features/practice/view_model/challenges_notifier.dart';
-import 'package:algorithm_visualizer/lib-temp/theme/app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -27,9 +27,9 @@ class ProblemTile extends ConsumerWidget {
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 200),
         decoration: BoxDecoration(
-          color: context.bgCard,
+          color: context.getColor(ThemeEnum.card),
           borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: expanded ? context.borderAccent : context.borderColor),
+          border: Border.all(color: expanded ? context.getColor(ThemeEnum.borderAccent) : context.getColor(ThemeEnum.border)),
           boxShadow: context.cardShadow,
         ),
         clipBehavior: Clip.hardEdge,
@@ -88,14 +88,14 @@ class _MainRow extends StatelessWidget {
             const RSizedBox(width: 8),
             Text(
               '${problem.num}.',
-              style: GoogleFonts.jetBrainsMono(color: context.textMuted, fontSize: 11.r, fontWeight: FontWeight.w600),
+              style: GoogleFonts.jetBrainsMono(color: context.getColor(ThemeEnum.hover), fontSize: 11.r, fontWeight: FontWeight.w600),
             ),
             const RSizedBox(width: 6),
             Expanded(
               child: Text(
                 problem.name,
                 overflow: TextOverflow.ellipsis,
-                style: GoogleFonts.inter(color: context.textSec, fontSize: 13.r, fontWeight: FontWeight.w500),
+                style: GoogleFonts.inter(color: context.getColor(ThemeEnum.textSecond), fontSize: 13.r, fontWeight: FontWeight.w500),
               ),
             ),
             Text(problem.difficulty.difficultyString,
@@ -104,7 +104,7 @@ class _MainRow extends StatelessWidget {
             AnimatedRotation(
               turns: expanded ? 0.25 : 0,
               duration: const Duration(milliseconds: 200),
-              child: Icon(Icons.chevron_right_rounded, size: 16.r, color: context.textVMuted),
+              child: Icon(Icons.chevron_right_rounded, size: 16.r, color: context.getColor(ThemeEnum.hoverSecond)),
             ),
           ],
         ),
@@ -124,7 +124,7 @@ class _DetailsPanel extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
-      decoration: BoxDecoration(border: Border(top: BorderSide(color: context.borderColor))),
+      decoration: BoxDecoration(border: Border(top: BorderSide(color: context.getColor(ThemeEnum.border)))),
       padding: REdgeInsets.fromLTRB(14, 10, 14, 12),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -136,18 +136,19 @@ class _DetailsPanel extends StatelessWidget {
                 .map((t) => Container(
                       padding: REdgeInsets.symmetric(horizontal: 8, vertical: 3),
                       decoration: BoxDecoration(
-                        color: context.accentBg,
+                        color: context.getColor(ThemeEnum.accentBg),
                         borderRadius: BorderRadius.circular(6),
-                        border: Border.all(color: context.borderAccent),
+                        border: Border.all(color: context.getColor(ThemeEnum.borderAccent)),
                       ),
-                      child: Text(t, style: GoogleFonts.inter(color: context.accent, fontSize: 11.r)),
+                      child:
+                          Text(t, style: GoogleFonts.inter(color: context.getColor(ThemeEnum.accent), fontSize: 11.r)),
                     ))
                 .toList(),
           ),
           const RSizedBox(height: 10),
           Row(
             children: [
-              _StatColumn(label: 'Acceptance', value: '${problem.acceptance}%', color: context.textSec),
+              _StatColumn(label: 'Acceptance', value: '${problem.acceptance}%', color: context.getColor(ThemeEnum.textSecond)),
               const RSizedBox(width: 20),
               _StatColumn(
                 label: 'Status',
@@ -160,12 +161,13 @@ class _DetailsPanel extends StatelessWidget {
                 child: Container(
                   padding: REdgeInsets.symmetric(horizontal: 14, vertical: 7),
                   decoration: BoxDecoration(
-                    color: context.accentBg,
+                    color: context.getColor(ThemeEnum.accentBg),
                     borderRadius: BorderRadius.circular(9),
-                    border: Border.all(color: context.borderAccent),
+                    border: Border.all(color: context.getColor(ThemeEnum.borderAccent)),
                   ),
                   child: Text('Solve →',
-                      style: GoogleFonts.inter(color: context.accent, fontSize: 12.r, fontWeight: FontWeight.w600)),
+                      style: GoogleFonts.inter(
+                          color: context.getColor(ThemeEnum.accent), fontSize: 12.r, fontWeight: FontWeight.w600)),
                 ),
               ),
             ],
@@ -188,7 +190,7 @@ class _StatColumn extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(label, style: GoogleFonts.inter(color: context.textMuted, fontSize: 10.r)),
+        Text(label, style: GoogleFonts.inter(color: context.getColor(ThemeEnum.hover), fontSize: 10.r)),
         const RSizedBox(height: 2),
         Text(value, style: GoogleFonts.inter(color: color, fontSize: 13.r, fontWeight: FontWeight.w600)),
       ],

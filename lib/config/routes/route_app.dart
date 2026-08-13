@@ -1,4 +1,3 @@
-import 'package:algorithm_visualizer/core/helpers/app_bar/app_bar.dart';
 import 'package:algorithm_visualizer/core/resources/strings_manager.dart';
 import 'package:algorithm_visualizer/core/widgets/adaptive/text/adaptive_text.dart';
 import 'package:algorithm_visualizer/features/base/view/base_navigation.dart';
