@@ -20,32 +20,31 @@ ProblemDTO _$ProblemDTOFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$ProblemDTO {
-  int get problemId => throw _privateConstructorUsedError;
-  String get name => throw _privateConstructorUsedError;
-  String get source => throw _privateConstructorUsedError;
+  int? get problemId => throw _privateConstructorUsedError;
+  int? get number => throw _privateConstructorUsedError;
+  String? get name => throw _privateConstructorUsedError;
+  String? get source => throw _privateConstructorUsedError;
   int? get sourceProblemNumber => throw _privateConstructorUsedError;
-  String get difficulty => throw _privateConstructorUsedError;
-  String get category => throw _privateConstructorUsedError;
-  List<String> get tags => throw _privateConstructorUsedError;
-  List<String> get patterns => throw _privateConstructorUsedError;
-  String get description => throw _privateConstructorUsedError;
-  List<String> get constraints => throw _privateConstructorUsedError;
-  FunctionSignature get functionSignature => throw _privateConstructorUsedError;
-  List<Example> get examples => throw _privateConstructorUsedError;
-  List<String> get edgeCases => throw _privateConstructorUsedError;
-  List<TestCase> get testCases => throw _privateConstructorUsedError;
-  List<HiddenTestCase> get hiddenTestCases =>
-      throw _privateConstructorUsedError;
-  List<String> get hints => throw _privateConstructorUsedError;
-  SolutionApproach get solutionApproach => throw _privateConstructorUsedError;
-  String get expectedTimeComplexity => throw _privateConstructorUsedError;
-  String get expectedSpaceComplexity => throw _privateConstructorUsedError;
-  String get whatYouLearn => throw _privateConstructorUsedError;
-  String get keyPattern => throw _privateConstructorUsedError;
-  List<String> get prerequisites => throw _privateConstructorUsedError;
-  List<String> get followUpConcepts => throw _privateConstructorUsedError;
-  List<String> get commonMistakes => throw _privateConstructorUsedError;
-  List<SimilarQuestion> get similarQuestions =>
+  ProblemDifficulty? get difficulty => throw _privateConstructorUsedError;
+  String? get category => throw _privateConstructorUsedError;
+  List<String>? get tags => throw _privateConstructorUsedError;
+  List<String>? get patterns => throw _privateConstructorUsedError;
+  String? get description => throw _privateConstructorUsedError;
+  List<String>? get constraints => throw _privateConstructorUsedError;
+  List<Example>? get examples => throw _privateConstructorUsedError;
+  List<String>? get edgeCases => throw _privateConstructorUsedError;
+  List<TestCase>? get testCases => throw _privateConstructorUsedError;
+  List<TestCase>? get hiddenTestCases => throw _privateConstructorUsedError;
+  List<String>? get hints => throw _privateConstructorUsedError;
+  SolutionApproach? get solutionApproach => throw _privateConstructorUsedError;
+  String? get expectedTimeComplexity => throw _privateConstructorUsedError;
+  String? get expectedSpaceComplexity => throw _privateConstructorUsedError;
+  String? get whatYouLearn => throw _privateConstructorUsedError;
+  String? get keyPattern => throw _privateConstructorUsedError;
+  List<String>? get prerequisites => throw _privateConstructorUsedError;
+  List<String>? get followUpConcepts => throw _privateConstructorUsedError;
+  List<String>? get commonMistakes => throw _privateConstructorUsedError;
+  List<SimilarQuestion>? get similarQuestions =>
       throw _privateConstructorUsedError;
 
   /// Serializes this ProblemDTO to a JSON map.
@@ -65,34 +64,33 @@ abstract class $ProblemDTOCopyWith<$Res> {
       _$ProblemDTOCopyWithImpl<$Res, ProblemDTO>;
   @useResult
   $Res call(
-      {int problemId,
-      String name,
-      String source,
+      {int? problemId,
+      int? number,
+      String? name,
+      String? source,
       int? sourceProblemNumber,
-      String difficulty,
-      String category,
-      List<String> tags,
-      List<String> patterns,
-      String description,
-      List<String> constraints,
-      FunctionSignature functionSignature,
-      List<Example> examples,
-      List<String> edgeCases,
-      List<TestCase> testCases,
-      List<HiddenTestCase> hiddenTestCases,
-      List<String> hints,
-      SolutionApproach solutionApproach,
-      String expectedTimeComplexity,
-      String expectedSpaceComplexity,
-      String whatYouLearn,
-      String keyPattern,
-      List<String> prerequisites,
-      List<String> followUpConcepts,
-      List<String> commonMistakes,
-      List<SimilarQuestion> similarQuestions});
+      ProblemDifficulty? difficulty,
+      String? category,
+      List<String>? tags,
+      List<String>? patterns,
+      String? description,
+      List<String>? constraints,
+      List<Example>? examples,
+      List<String>? edgeCases,
+      List<TestCase>? testCases,
+      List<TestCase>? hiddenTestCases,
+      List<String>? hints,
+      SolutionApproach? solutionApproach,
+      String? expectedTimeComplexity,
+      String? expectedSpaceComplexity,
+      String? whatYouLearn,
+      String? keyPattern,
+      List<String>? prerequisites,
+      List<String>? followUpConcepts,
+      List<String>? commonMistakes,
+      List<SimilarQuestion>? similarQuestions});
 
-  $FunctionSignatureCopyWith<$Res> get functionSignature;
-  $SolutionApproachCopyWith<$Res> get solutionApproach;
+  $SolutionApproachCopyWith<$Res>? get solutionApproach;
 }
 
 /// @nodoc
@@ -110,133 +108,133 @@ class _$ProblemDTOCopyWithImpl<$Res, $Val extends ProblemDTO>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? problemId = null,
-    Object? name = null,
-    Object? source = null,
+    Object? problemId = freezed,
+    Object? number = freezed,
+    Object? name = freezed,
+    Object? source = freezed,
     Object? sourceProblemNumber = freezed,
-    Object? difficulty = null,
-    Object? category = null,
-    Object? tags = null,
-    Object? patterns = null,
-    Object? description = null,
-    Object? constraints = null,
-    Object? functionSignature = null,
-    Object? examples = null,
-    Object? edgeCases = null,
-    Object? testCases = null,
-    Object? hiddenTestCases = null,
-    Object? hints = null,
-    Object? solutionApproach = null,
-    Object? expectedTimeComplexity = null,
-    Object? expectedSpaceComplexity = null,
-    Object? whatYouLearn = null,
-    Object? keyPattern = null,
-    Object? prerequisites = null,
-    Object? followUpConcepts = null,
-    Object? commonMistakes = null,
-    Object? similarQuestions = null,
+    Object? difficulty = freezed,
+    Object? category = freezed,
+    Object? tags = freezed,
+    Object? patterns = freezed,
+    Object? description = freezed,
+    Object? constraints = freezed,
+    Object? examples = freezed,
+    Object? edgeCases = freezed,
+    Object? testCases = freezed,
+    Object? hiddenTestCases = freezed,
+    Object? hints = freezed,
+    Object? solutionApproach = freezed,
+    Object? expectedTimeComplexity = freezed,
+    Object? expectedSpaceComplexity = freezed,
+    Object? whatYouLearn = freezed,
+    Object? keyPattern = freezed,
+    Object? prerequisites = freezed,
+    Object? followUpConcepts = freezed,
+    Object? commonMistakes = freezed,
+    Object? similarQuestions = freezed,
   }) {
     return _then(_value.copyWith(
-      problemId: null == problemId
+      problemId: freezed == problemId
           ? _value.problemId
           : problemId // ignore: cast_nullable_to_non_nullable
-              as int,
-      name: null == name
+              as int?,
+      number: freezed == number
+          ? _value.number
+          : number // ignore: cast_nullable_to_non_nullable
+              as int?,
+      name: freezed == name
           ? _value.name
           : name // ignore: cast_nullable_to_non_nullable
-              as String,
-      source: null == source
+              as String?,
+      source: freezed == source
           ? _value.source
           : source // ignore: cast_nullable_to_non_nullable
-              as String,
+              as String?,
       sourceProblemNumber: freezed == sourceProblemNumber
           ? _value.sourceProblemNumber
           : sourceProblemNumber // ignore: cast_nullable_to_non_nullable
               as int?,
-      difficulty: null == difficulty
+      difficulty: freezed == difficulty
           ? _value.difficulty
           : difficulty // ignore: cast_nullable_to_non_nullable
-              as String,
-      category: null == category
+              as ProblemDifficulty?,
+      category: freezed == category
           ? _value.category
           : category // ignore: cast_nullable_to_non_nullable
-              as String,
-      tags: null == tags
+              as String?,
+      tags: freezed == tags
           ? _value.tags
           : tags // ignore: cast_nullable_to_non_nullable
-              as List<String>,
-      patterns: null == patterns
+              as List<String>?,
+      patterns: freezed == patterns
           ? _value.patterns
           : patterns // ignore: cast_nullable_to_non_nullable
-              as List<String>,
-      description: null == description
+              as List<String>?,
+      description: freezed == description
           ? _value.description
           : description // ignore: cast_nullable_to_non_nullable
-              as String,
-      constraints: null == constraints
+              as String?,
+      constraints: freezed == constraints
           ? _value.constraints
           : constraints // ignore: cast_nullable_to_non_nullable
-              as List<String>,
-      functionSignature: null == functionSignature
-          ? _value.functionSignature
-          : functionSignature // ignore: cast_nullable_to_non_nullable
-              as FunctionSignature,
-      examples: null == examples
+              as List<String>?,
+      examples: freezed == examples
           ? _value.examples
           : examples // ignore: cast_nullable_to_non_nullable
-              as List<Example>,
-      edgeCases: null == edgeCases
+              as List<Example>?,
+      edgeCases: freezed == edgeCases
           ? _value.edgeCases
           : edgeCases // ignore: cast_nullable_to_non_nullable
-              as List<String>,
-      testCases: null == testCases
+              as List<String>?,
+      testCases: freezed == testCases
           ? _value.testCases
           : testCases // ignore: cast_nullable_to_non_nullable
-              as List<TestCase>,
-      hiddenTestCases: null == hiddenTestCases
+              as List<TestCase>?,
+      hiddenTestCases: freezed == hiddenTestCases
           ? _value.hiddenTestCases
           : hiddenTestCases // ignore: cast_nullable_to_non_nullable
-              as List<HiddenTestCase>,
-      hints: null == hints
+              as List<TestCase>?,
+      hints: freezed == hints
           ? _value.hints
           : hints // ignore: cast_nullable_to_non_nullable
-              as List<String>,
-      solutionApproach: null == solutionApproach
+              as List<String>?,
+      solutionApproach: freezed == solutionApproach
           ? _value.solutionApproach
           : solutionApproach // ignore: cast_nullable_to_non_nullable
-              as SolutionApproach,
-      expectedTimeComplexity: null == expectedTimeComplexity
+              as SolutionApproach?,
+      expectedTimeComplexity: freezed == expectedTimeComplexity
           ? _value.expectedTimeComplexity
           : expectedTimeComplexity // ignore: cast_nullable_to_non_nullable
-              as String,
-      expectedSpaceComplexity: null == expectedSpaceComplexity
+              as String?,
+      expectedSpaceComplexity: freezed == expectedSpaceComplexity
           ? _value.expectedSpaceComplexity
           : expectedSpaceComplexity // ignore: cast_nullable_to_non_nullable
-              as String,
-      whatYouLearn: null == whatYouLearn
+              as String?,
+      whatYouLearn: freezed == whatYouLearn
           ? _value.whatYouLearn
           : whatYouLearn // ignore: cast_nullable_to_non_nullable
-              as String,
-      keyPattern: null == keyPattern
+              as String?,
+      keyPattern: freezed == keyPattern
           ? _value.keyPattern
           : keyPattern // ignore: cast_nullable_to_non_nullable
-              as String,
-      prerequisites: null == prerequisites
+              as String?,
+      prerequisites: freezed == prerequisites
           ? _value.prerequisites
           : prerequisites // ignore: cast_nullable_to_non_nullable
-              as List<String>,
-      followUpConcepts: null == followUpConcepts
+              as List<String>?,
+      followUpConcepts: freezed == followUpConcepts
           ? _value.followUpConcepts
           : followUpConcepts // ignore: cast_nullable_to_non_nullable
-              as List<String>,
-      commonMistakes: null == commonMistakes
+              as List<String>?,
+      commonMistakes: freezed == commonMistakes
           ? _value.commonMistakes
           : commonMistakes // ignore: cast_nullable_to_non_nullable
-              as List<String>,
-      similarQuestions: null == similarQuestions
+              as List<String>?,
+      similarQuestions: freezed == similarQuestions
           ? _value.similarQuestions
           : similarQuestions // ignore: cast_nullable_to_non_nullable
-              as List<SimilarQuestion>,
+              as List<SimilarQuestion>?,
     ) as $Val);
   }
 
@@ -244,18 +242,12 @@ class _$ProblemDTOCopyWithImpl<$Res, $Val extends ProblemDTO>
   /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
-  $FunctionSignatureCopyWith<$Res> get functionSignature {
-    return $FunctionSignatureCopyWith<$Res>(_value.functionSignature, (value) {
-      return _then(_value.copyWith(functionSignature: value) as $Val);
-    });
-  }
+  $SolutionApproachCopyWith<$Res>? get solutionApproach {
+    if (_value.solutionApproach == null) {
+      return null;
+    }
 
-  /// Create a copy of ProblemDTO
-  /// with the given fields replaced by the non-null parameter values.
-  @override
-  @pragma('vm:prefer-inline')
-  $SolutionApproachCopyWith<$Res> get solutionApproach {
-    return $SolutionApproachCopyWith<$Res>(_value.solutionApproach, (value) {
+    return $SolutionApproachCopyWith<$Res>(_value.solutionApproach!, (value) {
       return _then(_value.copyWith(solutionApproach: value) as $Val);
     });
   }
@@ -270,36 +262,34 @@ abstract class _$$ProblemDTOImplCopyWith<$Res>
   @override
   @useResult
   $Res call(
-      {int problemId,
-      String name,
-      String source,
+      {int? problemId,
+      int? number,
+      String? name,
+      String? source,
       int? sourceProblemNumber,
-      String difficulty,
-      String category,
-      List<String> tags,
-      List<String> patterns,
-      String description,
-      List<String> constraints,
-      FunctionSignature functionSignature,
-      List<Example> examples,
-      List<String> edgeCases,
-      List<TestCase> testCases,
-      List<HiddenTestCase> hiddenTestCases,
-      List<String> hints,
-      SolutionApproach solutionApproach,
-      String expectedTimeComplexity,
-      String expectedSpaceComplexity,
-      String whatYouLearn,
-      String keyPattern,
-      List<String> prerequisites,
-      List<String> followUpConcepts,
-      List<String> commonMistakes,
-      List<SimilarQuestion> similarQuestions});
+      ProblemDifficulty? difficulty,
+      String? category,
+      List<String>? tags,
+      List<String>? patterns,
+      String? description,
+      List<String>? constraints,
+      List<Example>? examples,
+      List<String>? edgeCases,
+      List<TestCase>? testCases,
+      List<TestCase>? hiddenTestCases,
+      List<String>? hints,
+      SolutionApproach? solutionApproach,
+      String? expectedTimeComplexity,
+      String? expectedSpaceComplexity,
+      String? whatYouLearn,
+      String? keyPattern,
+      List<String>? prerequisites,
+      List<String>? followUpConcepts,
+      List<String>? commonMistakes,
+      List<SimilarQuestion>? similarQuestions});
 
   @override
-  $FunctionSignatureCopyWith<$Res> get functionSignature;
-  @override
-  $SolutionApproachCopyWith<$Res> get solutionApproach;
+  $SolutionApproachCopyWith<$Res>? get solutionApproach;
 }
 
 /// @nodoc
@@ -315,133 +305,133 @@ class __$$ProblemDTOImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? problemId = null,
-    Object? name = null,
-    Object? source = null,
+    Object? problemId = freezed,
+    Object? number = freezed,
+    Object? name = freezed,
+    Object? source = freezed,
     Object? sourceProblemNumber = freezed,
-    Object? difficulty = null,
-    Object? category = null,
-    Object? tags = null,
-    Object? patterns = null,
-    Object? description = null,
-    Object? constraints = null,
-    Object? functionSignature = null,
-    Object? examples = null,
-    Object? edgeCases = null,
-    Object? testCases = null,
-    Object? hiddenTestCases = null,
-    Object? hints = null,
-    Object? solutionApproach = null,
-    Object? expectedTimeComplexity = null,
-    Object? expectedSpaceComplexity = null,
-    Object? whatYouLearn = null,
-    Object? keyPattern = null,
-    Object? prerequisites = null,
-    Object? followUpConcepts = null,
-    Object? commonMistakes = null,
-    Object? similarQuestions = null,
+    Object? difficulty = freezed,
+    Object? category = freezed,
+    Object? tags = freezed,
+    Object? patterns = freezed,
+    Object? description = freezed,
+    Object? constraints = freezed,
+    Object? examples = freezed,
+    Object? edgeCases = freezed,
+    Object? testCases = freezed,
+    Object? hiddenTestCases = freezed,
+    Object? hints = freezed,
+    Object? solutionApproach = freezed,
+    Object? expectedTimeComplexity = freezed,
+    Object? expectedSpaceComplexity = freezed,
+    Object? whatYouLearn = freezed,
+    Object? keyPattern = freezed,
+    Object? prerequisites = freezed,
+    Object? followUpConcepts = freezed,
+    Object? commonMistakes = freezed,
+    Object? similarQuestions = freezed,
   }) {
     return _then(_$ProblemDTOImpl(
-      problemId: null == problemId
+      problemId: freezed == problemId
           ? _value.problemId
           : problemId // ignore: cast_nullable_to_non_nullable
-              as int,
-      name: null == name
+              as int?,
+      number: freezed == number
+          ? _value.number
+          : number // ignore: cast_nullable_to_non_nullable
+              as int?,
+      name: freezed == name
           ? _value.name
           : name // ignore: cast_nullable_to_non_nullable
-              as String,
-      source: null == source
+              as String?,
+      source: freezed == source
           ? _value.source
           : source // ignore: cast_nullable_to_non_nullable
-              as String,
+              as String?,
       sourceProblemNumber: freezed == sourceProblemNumber
           ? _value.sourceProblemNumber
           : sourceProblemNumber // ignore: cast_nullable_to_non_nullable
               as int?,
-      difficulty: null == difficulty
+      difficulty: freezed == difficulty
           ? _value.difficulty
           : difficulty // ignore: cast_nullable_to_non_nullable
-              as String,
-      category: null == category
+              as ProblemDifficulty?,
+      category: freezed == category
           ? _value.category
           : category // ignore: cast_nullable_to_non_nullable
-              as String,
-      tags: null == tags
+              as String?,
+      tags: freezed == tags
           ? _value._tags
           : tags // ignore: cast_nullable_to_non_nullable
-              as List<String>,
-      patterns: null == patterns
+              as List<String>?,
+      patterns: freezed == patterns
           ? _value._patterns
           : patterns // ignore: cast_nullable_to_non_nullable
-              as List<String>,
-      description: null == description
+              as List<String>?,
+      description: freezed == description
           ? _value.description
           : description // ignore: cast_nullable_to_non_nullable
-              as String,
-      constraints: null == constraints
+              as String?,
+      constraints: freezed == constraints
           ? _value._constraints
           : constraints // ignore: cast_nullable_to_non_nullable
-              as List<String>,
-      functionSignature: null == functionSignature
-          ? _value.functionSignature
-          : functionSignature // ignore: cast_nullable_to_non_nullable
-              as FunctionSignature,
-      examples: null == examples
+              as List<String>?,
+      examples: freezed == examples
           ? _value._examples
           : examples // ignore: cast_nullable_to_non_nullable
-              as List<Example>,
-      edgeCases: null == edgeCases
+              as List<Example>?,
+      edgeCases: freezed == edgeCases
           ? _value._edgeCases
           : edgeCases // ignore: cast_nullable_to_non_nullable
-              as List<String>,
-      testCases: null == testCases
+              as List<String>?,
+      testCases: freezed == testCases
           ? _value._testCases
           : testCases // ignore: cast_nullable_to_non_nullable
-              as List<TestCase>,
-      hiddenTestCases: null == hiddenTestCases
+              as List<TestCase>?,
+      hiddenTestCases: freezed == hiddenTestCases
           ? _value._hiddenTestCases
           : hiddenTestCases // ignore: cast_nullable_to_non_nullable
-              as List<HiddenTestCase>,
-      hints: null == hints
+              as List<TestCase>?,
+      hints: freezed == hints
           ? _value._hints
           : hints // ignore: cast_nullable_to_non_nullable
-              as List<String>,
-      solutionApproach: null == solutionApproach
+              as List<String>?,
+      solutionApproach: freezed == solutionApproach
           ? _value.solutionApproach
           : solutionApproach // ignore: cast_nullable_to_non_nullable
-              as SolutionApproach,
-      expectedTimeComplexity: null == expectedTimeComplexity
+              as SolutionApproach?,
+      expectedTimeComplexity: freezed == expectedTimeComplexity
           ? _value.expectedTimeComplexity
           : expectedTimeComplexity // ignore: cast_nullable_to_non_nullable
-              as String,
-      expectedSpaceComplexity: null == expectedSpaceComplexity
+              as String?,
+      expectedSpaceComplexity: freezed == expectedSpaceComplexity
           ? _value.expectedSpaceComplexity
           : expectedSpaceComplexity // ignore: cast_nullable_to_non_nullable
-              as String,
-      whatYouLearn: null == whatYouLearn
+              as String?,
+      whatYouLearn: freezed == whatYouLearn
           ? _value.whatYouLearn
           : whatYouLearn // ignore: cast_nullable_to_non_nullable
-              as String,
-      keyPattern: null == keyPattern
+              as String?,
+      keyPattern: freezed == keyPattern
           ? _value.keyPattern
           : keyPattern // ignore: cast_nullable_to_non_nullable
-              as String,
-      prerequisites: null == prerequisites
+              as String?,
+      prerequisites: freezed == prerequisites
           ? _value._prerequisites
           : prerequisites // ignore: cast_nullable_to_non_nullable
-              as List<String>,
-      followUpConcepts: null == followUpConcepts
+              as List<String>?,
+      followUpConcepts: freezed == followUpConcepts
           ? _value._followUpConcepts
           : followUpConcepts // ignore: cast_nullable_to_non_nullable
-              as List<String>,
-      commonMistakes: null == commonMistakes
+              as List<String>?,
+      commonMistakes: freezed == commonMistakes
           ? _value._commonMistakes
           : commonMistakes // ignore: cast_nullable_to_non_nullable
-              as List<String>,
-      similarQuestions: null == similarQuestions
+              as List<String>?,
+      similarQuestions: freezed == similarQuestions
           ? _value._similarQuestions
           : similarQuestions // ignore: cast_nullable_to_non_nullable
-              as List<SimilarQuestion>,
+              as List<SimilarQuestion>?,
     ));
   }
 }
@@ -451,30 +441,30 @@ class __$$ProblemDTOImplCopyWithImpl<$Res>
 class _$ProblemDTOImpl implements _ProblemDTO {
   const _$ProblemDTOImpl(
       {required this.problemId,
+      required this.number,
       required this.name,
       required this.source,
       this.sourceProblemNumber,
       required this.difficulty,
       required this.category,
-      required final List<String> tags,
-      required final List<String> patterns,
+      required final List<String>? tags,
+      required final List<String>? patterns,
       required this.description,
-      required final List<String> constraints,
-      required this.functionSignature,
-      required final List<Example> examples,
-      required final List<String> edgeCases,
-      required final List<TestCase> testCases,
-      required final List<HiddenTestCase> hiddenTestCases,
-      required final List<String> hints,
+      required final List<String>? constraints,
+      required final List<Example>? examples,
+      required final List<String>? edgeCases,
+      required final List<TestCase>? testCases,
+      required final List<TestCase>? hiddenTestCases,
+      required final List<String>? hints,
       required this.solutionApproach,
       required this.expectedTimeComplexity,
       required this.expectedSpaceComplexity,
       required this.whatYouLearn,
       required this.keyPattern,
-      required final List<String> prerequisites,
-      required final List<String> followUpConcepts,
-      required final List<String> commonMistakes,
-      required final List<SimilarQuestion> similarQuestions})
+      required final List<String>? prerequisites,
+      required final List<String>? followUpConcepts,
+      required final List<String>? commonMistakes,
+      required final List<SimilarQuestion>? similarQuestions})
       : _tags = tags,
         _patterns = patterns,
         _constraints = constraints,
@@ -492,132 +482,156 @@ class _$ProblemDTOImpl implements _ProblemDTO {
       _$$ProblemDTOImplFromJson(json);
 
   @override
-  final int problemId;
+  final int? problemId;
   @override
-  final String name;
+  final int? number;
   @override
-  final String source;
+  final String? name;
+  @override
+  final String? source;
   @override
   final int? sourceProblemNumber;
   @override
-  final String difficulty;
+  final ProblemDifficulty? difficulty;
   @override
-  final String category;
-  final List<String> _tags;
+  final String? category;
+  final List<String>? _tags;
   @override
-  List<String> get tags {
+  List<String>? get tags {
+    final value = _tags;
+    if (value == null) return null;
     if (_tags is EqualUnmodifiableListView) return _tags;
     // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_tags);
+    return EqualUnmodifiableListView(value);
   }
 
-  final List<String> _patterns;
+  final List<String>? _patterns;
   @override
-  List<String> get patterns {
+  List<String>? get patterns {
+    final value = _patterns;
+    if (value == null) return null;
     if (_patterns is EqualUnmodifiableListView) return _patterns;
     // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_patterns);
+    return EqualUnmodifiableListView(value);
   }
 
   @override
-  final String description;
-  final List<String> _constraints;
+  final String? description;
+  final List<String>? _constraints;
   @override
-  List<String> get constraints {
+  List<String>? get constraints {
+    final value = _constraints;
+    if (value == null) return null;
     if (_constraints is EqualUnmodifiableListView) return _constraints;
     // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_constraints);
+    return EqualUnmodifiableListView(value);
   }
 
+  final List<Example>? _examples;
   @override
-  final FunctionSignature functionSignature;
-  final List<Example> _examples;
-  @override
-  List<Example> get examples {
+  List<Example>? get examples {
+    final value = _examples;
+    if (value == null) return null;
     if (_examples is EqualUnmodifiableListView) return _examples;
     // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_examples);
+    return EqualUnmodifiableListView(value);
   }
 
-  final List<String> _edgeCases;
+  final List<String>? _edgeCases;
   @override
-  List<String> get edgeCases {
+  List<String>? get edgeCases {
+    final value = _edgeCases;
+    if (value == null) return null;
     if (_edgeCases is EqualUnmodifiableListView) return _edgeCases;
     // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_edgeCases);
+    return EqualUnmodifiableListView(value);
   }
 
-  final List<TestCase> _testCases;
+  final List<TestCase>? _testCases;
   @override
-  List<TestCase> get testCases {
+  List<TestCase>? get testCases {
+    final value = _testCases;
+    if (value == null) return null;
     if (_testCases is EqualUnmodifiableListView) return _testCases;
     // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_testCases);
+    return EqualUnmodifiableListView(value);
   }
 
-  final List<HiddenTestCase> _hiddenTestCases;
+  final List<TestCase>? _hiddenTestCases;
   @override
-  List<HiddenTestCase> get hiddenTestCases {
+  List<TestCase>? get hiddenTestCases {
+    final value = _hiddenTestCases;
+    if (value == null) return null;
     if (_hiddenTestCases is EqualUnmodifiableListView) return _hiddenTestCases;
     // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_hiddenTestCases);
+    return EqualUnmodifiableListView(value);
   }
 
-  final List<String> _hints;
+  final List<String>? _hints;
   @override
-  List<String> get hints {
+  List<String>? get hints {
+    final value = _hints;
+    if (value == null) return null;
     if (_hints is EqualUnmodifiableListView) return _hints;
     // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_hints);
+    return EqualUnmodifiableListView(value);
   }
 
   @override
-  final SolutionApproach solutionApproach;
+  final SolutionApproach? solutionApproach;
   @override
-  final String expectedTimeComplexity;
+  final String? expectedTimeComplexity;
   @override
-  final String expectedSpaceComplexity;
+  final String? expectedSpaceComplexity;
   @override
-  final String whatYouLearn;
+  final String? whatYouLearn;
   @override
-  final String keyPattern;
-  final List<String> _prerequisites;
+  final String? keyPattern;
+  final List<String>? _prerequisites;
   @override
-  List<String> get prerequisites {
+  List<String>? get prerequisites {
+    final value = _prerequisites;
+    if (value == null) return null;
     if (_prerequisites is EqualUnmodifiableListView) return _prerequisites;
     // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_prerequisites);
+    return EqualUnmodifiableListView(value);
   }
 
-  final List<String> _followUpConcepts;
+  final List<String>? _followUpConcepts;
   @override
-  List<String> get followUpConcepts {
+  List<String>? get followUpConcepts {
+    final value = _followUpConcepts;
+    if (value == null) return null;
     if (_followUpConcepts is EqualUnmodifiableListView)
       return _followUpConcepts;
     // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_followUpConcepts);
+    return EqualUnmodifiableListView(value);
   }
 
-  final List<String> _commonMistakes;
+  final List<String>? _commonMistakes;
   @override
-  List<String> get commonMistakes {
+  List<String>? get commonMistakes {
+    final value = _commonMistakes;
+    if (value == null) return null;
     if (_commonMistakes is EqualUnmodifiableListView) return _commonMistakes;
     // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_commonMistakes);
+    return EqualUnmodifiableListView(value);
   }
 
-  final List<SimilarQuestion> _similarQuestions;
+  final List<SimilarQuestion>? _similarQuestions;
   @override
-  List<SimilarQuestion> get similarQuestions {
+  List<SimilarQuestion>? get similarQuestions {
+    final value = _similarQuestions;
+    if (value == null) return null;
     if (_similarQuestions is EqualUnmodifiableListView)
       return _similarQuestions;
     // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_similarQuestions);
+    return EqualUnmodifiableListView(value);
   }
 
   @override
   String toString() {
-    return 'ProblemDTO(problemId: $problemId, name: $name, source: $source, sourceProblemNumber: $sourceProblemNumber, difficulty: $difficulty, category: $category, tags: $tags, patterns: $patterns, description: $description, constraints: $constraints, functionSignature: $functionSignature, examples: $examples, edgeCases: $edgeCases, testCases: $testCases, hiddenTestCases: $hiddenTestCases, hints: $hints, solutionApproach: $solutionApproach, expectedTimeComplexity: $expectedTimeComplexity, expectedSpaceComplexity: $expectedSpaceComplexity, whatYouLearn: $whatYouLearn, keyPattern: $keyPattern, prerequisites: $prerequisites, followUpConcepts: $followUpConcepts, commonMistakes: $commonMistakes, similarQuestions: $similarQuestions)';
+    return 'ProblemDTO(problemId: $problemId, number: $number, name: $name, source: $source, sourceProblemNumber: $sourceProblemNumber, difficulty: $difficulty, category: $category, tags: $tags, patterns: $patterns, description: $description, constraints: $constraints, examples: $examples, edgeCases: $edgeCases, testCases: $testCases, hiddenTestCases: $hiddenTestCases, hints: $hints, solutionApproach: $solutionApproach, expectedTimeComplexity: $expectedTimeComplexity, expectedSpaceComplexity: $expectedSpaceComplexity, whatYouLearn: $whatYouLearn, keyPattern: $keyPattern, prerequisites: $prerequisites, followUpConcepts: $followUpConcepts, commonMistakes: $commonMistakes, similarQuestions: $similarQuestions)';
   }
 
   @override
@@ -627,6 +641,7 @@ class _$ProblemDTOImpl implements _ProblemDTO {
             other is _$ProblemDTOImpl &&
             (identical(other.problemId, problemId) ||
                 other.problemId == problemId) &&
+            (identical(other.number, number) || other.number == number) &&
             (identical(other.name, name) || other.name == name) &&
             (identical(other.source, source) || other.source == source) &&
             (identical(other.sourceProblemNumber, sourceProblemNumber) ||
@@ -641,8 +656,6 @@ class _$ProblemDTOImpl implements _ProblemDTO {
                 other.description == description) &&
             const DeepCollectionEquality()
                 .equals(other._constraints, _constraints) &&
-            (identical(other.functionSignature, functionSignature) ||
-                other.functionSignature == functionSignature) &&
             const DeepCollectionEquality().equals(other._examples, _examples) &&
             const DeepCollectionEquality()
                 .equals(other._edgeCases, _edgeCases) &&
@@ -677,6 +690,7 @@ class _$ProblemDTOImpl implements _ProblemDTO {
   int get hashCode => Object.hashAll([
         runtimeType,
         problemId,
+        number,
         name,
         source,
         sourceProblemNumber,
@@ -686,7 +700,6 @@ class _$ProblemDTOImpl implements _ProblemDTO {
         const DeepCollectionEquality().hash(_patterns),
         description,
         const DeepCollectionEquality().hash(_constraints),
-        functionSignature,
         const DeepCollectionEquality().hash(_examples),
         const DeepCollectionEquality().hash(_edgeCases),
         const DeepCollectionEquality().hash(_testCases),
@@ -721,86 +734,86 @@ class _$ProblemDTOImpl implements _ProblemDTO {
 
 abstract class _ProblemDTO implements ProblemDTO {
   const factory _ProblemDTO(
-          {required final int problemId,
-          required final String name,
-          required final String source,
+          {required final int? problemId,
+          required final int? number,
+          required final String? name,
+          required final String? source,
           final int? sourceProblemNumber,
-          required final String difficulty,
-          required final String category,
-          required final List<String> tags,
-          required final List<String> patterns,
-          required final String description,
-          required final List<String> constraints,
-          required final FunctionSignature functionSignature,
-          required final List<Example> examples,
-          required final List<String> edgeCases,
-          required final List<TestCase> testCases,
-          required final List<HiddenTestCase> hiddenTestCases,
-          required final List<String> hints,
-          required final SolutionApproach solutionApproach,
-          required final String expectedTimeComplexity,
-          required final String expectedSpaceComplexity,
-          required final String whatYouLearn,
-          required final String keyPattern,
-          required final List<String> prerequisites,
-          required final List<String> followUpConcepts,
-          required final List<String> commonMistakes,
-          required final List<SimilarQuestion> similarQuestions}) =
+          required final ProblemDifficulty? difficulty,
+          required final String? category,
+          required final List<String>? tags,
+          required final List<String>? patterns,
+          required final String? description,
+          required final List<String>? constraints,
+          required final List<Example>? examples,
+          required final List<String>? edgeCases,
+          required final List<TestCase>? testCases,
+          required final List<TestCase>? hiddenTestCases,
+          required final List<String>? hints,
+          required final SolutionApproach? solutionApproach,
+          required final String? expectedTimeComplexity,
+          required final String? expectedSpaceComplexity,
+          required final String? whatYouLearn,
+          required final String? keyPattern,
+          required final List<String>? prerequisites,
+          required final List<String>? followUpConcepts,
+          required final List<String>? commonMistakes,
+          required final List<SimilarQuestion>? similarQuestions}) =
       _$ProblemDTOImpl;
 
   factory _ProblemDTO.fromJson(Map<String, dynamic> json) =
       _$ProblemDTOImpl.fromJson;
 
   @override
-  int get problemId;
+  int? get problemId;
   @override
-  String get name;
+  int? get number;
   @override
-  String get source;
+  String? get name;
+  @override
+  String? get source;
   @override
   int? get sourceProblemNumber;
   @override
-  String get difficulty;
+  ProblemDifficulty? get difficulty;
   @override
-  String get category;
+  String? get category;
   @override
-  List<String> get tags;
+  List<String>? get tags;
   @override
-  List<String> get patterns;
+  List<String>? get patterns;
   @override
-  String get description;
+  String? get description;
   @override
-  List<String> get constraints;
+  List<String>? get constraints;
   @override
-  FunctionSignature get functionSignature;
+  List<Example>? get examples;
   @override
-  List<Example> get examples;
+  List<String>? get edgeCases;
   @override
-  List<String> get edgeCases;
+  List<TestCase>? get testCases;
   @override
-  List<TestCase> get testCases;
+  List<TestCase>? get hiddenTestCases;
   @override
-  List<HiddenTestCase> get hiddenTestCases;
+  List<String>? get hints;
   @override
-  List<String> get hints;
+  SolutionApproach? get solutionApproach;
   @override
-  SolutionApproach get solutionApproach;
+  String? get expectedTimeComplexity;
   @override
-  String get expectedTimeComplexity;
+  String? get expectedSpaceComplexity;
   @override
-  String get expectedSpaceComplexity;
+  String? get whatYouLearn;
   @override
-  String get whatYouLearn;
+  String? get keyPattern;
   @override
-  String get keyPattern;
+  List<String>? get prerequisites;
   @override
-  List<String> get prerequisites;
+  List<String>? get followUpConcepts;
   @override
-  List<String> get followUpConcepts;
+  List<String>? get commonMistakes;
   @override
-  List<String> get commonMistakes;
-  @override
-  List<SimilarQuestion> get similarQuestions;
+  List<SimilarQuestion>? get similarQuestions;
 
   /// Create a copy of ProblemDTO
   /// with the given fields replaced by the non-null parameter values.
