@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../view_model/challenges_providers.dart';
+import '../widgets/challenges_filter_tabs.dart';
 import '../widgets/challenges_header.dart';
 import '../widgets/challenges_search_field.dart';
 import '../widgets/empty_state.dart';
@@ -37,7 +38,7 @@ class ChallengePage extends ConsumerWidget {
                     children: [
                       const ChallengesHeader(),
                       const ChallengesSearchField(),
-                      // const ChallengesFilterTabs(),
+                      const ChallengesFilterTabs(),
                     ],
                   ),
                 ),
