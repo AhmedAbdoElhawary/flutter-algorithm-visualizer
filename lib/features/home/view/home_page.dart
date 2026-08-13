@@ -1,6 +1,5 @@
 import 'package:algorithm_visualizer/config/routes/route_app.dart';
 import 'package:algorithm_visualizer/core/extensions/navigators.dart';
-import 'package:algorithm_visualizer/core/helpers/screen_size.dart';
 import 'package:algorithm_visualizer/core/resources/color_manager.dart';
 import 'package:algorithm_visualizer/core/resources/strings_manager.dart';
 import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
@@ -21,14 +20,6 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin {
   late final controller = TabController(length: 2, vsync: this);
-
-  @override
-  void initState() {
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      ScreenSize.initContext(context);
-    });
-    super.initState();
-  }
 
   @override
   void dispose() {
@@ -55,7 +46,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
                   SliverAppBar(
                     pinned: true,
                     shadowColor: ColorManager.transparent,
-                    backgroundColor: context.getColor(ThemeEnum.primaryColor).withValues(alpha: 0.7),
+                    backgroundColor: context.getColor(ThemeEnum.primary).withValues(alpha: 0.7),
                     title: Padding(
                       padding: REdgeInsets.symmetric(horizontal: 20),
                       child: _TabView(controller),
@@ -81,7 +72,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
                                   start: index % 2 == 0 ? 20 : 0, end: index % 2 != 0 ? 20 : 0),
                               child: InkWell(
                                   borderRadius: BorderRadius.circular(20),
-                                  highlightColor: context.getColor(ThemeEnum.primaryColor),
+                                  highlightColor: context.getColor(ThemeEnum.primary),
                                   onTap: () {
                                     context.pushTo(Routes.visualize, queryParameters: card.page.name);
                                   },
@@ -104,7 +95,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
                                   start: index % 2 == 0 ? 20 : 0, end: index % 2 != 0 ? 20 : 0),
                               child: InkWell(
                                   borderRadius: BorderRadius.circular(20),
-                                  highlightColor: context.getColor(ThemeEnum.primaryColor),
+                                  highlightColor: context.getColor(ThemeEnum.primary),
                                   onTap: () {
                                     context.pushTo(Routes.visualize, queryParameters: card.page.name);
                                   },
@@ -158,14 +149,14 @@ class _TabViewState extends State<_TabView> {
 
   @override
   Widget build(BuildContext context) {
-    final text1Color = value == 0 ? ThemeEnum.mainDarkColor : ThemeEnum.textDarkColor;
-    final text2Color = value == 1 ? ThemeEnum.mainDarkColor : ThemeEnum.textDarkColor;
+    final text1Color = value == 0 ? ThemeEnum.accent : ThemeEnum.textDarkColor;
+    final text2Color = value == 1 ? ThemeEnum.accent : ThemeEnum.textDarkColor;
     return Row(
       children: [
         Expanded(
           child: InkWell(
             borderRadius: BorderRadius.circular(10),
-            highlightColor: context.getColor(ThemeEnum.primaryColor),
+            highlightColor: context.getColor(ThemeEnum.primary),
             onTap: () {
               widget.controller.animateTo(0);
             },
@@ -184,7 +175,7 @@ class _TabViewState extends State<_TabView> {
         Expanded(
           child: InkWell(
             borderRadius: BorderRadius.circular(10),
-            highlightColor: context.getColor(ThemeEnum.primaryColor),
+            highlightColor: context.getColor(ThemeEnum.primary),
             onTap: () {
               widget.controller.animateTo(1);
             },

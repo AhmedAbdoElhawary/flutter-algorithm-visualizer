@@ -185,8 +185,8 @@ class CodeController extends TextEditingController {
       );
     }
     final CodeDocument doc = document;
-    final List<List<Token>> tokens = highlighter?.highlight(doc.lines) ??
-        List<List<Token>>.generate(doc.lineCount, (_) => const <Token>[]);
+    final List<List<Token>> tokens =
+        highlighter?.highlight(doc.lines) ?? List<List<Token>>.generate(doc.lineCount, (_) => const <Token>[]);
     return CodeSpanBuilder.build(
       lines: doc.lines,
       lineTokens: tokens,

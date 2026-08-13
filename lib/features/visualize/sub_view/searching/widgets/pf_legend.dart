@@ -1,8 +1,8 @@
 import 'package:algorithm_visualizer/core/resources/strings_manager.dart';
+import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
 import 'package:algorithm_visualizer/features/visualize/sub_view/searching/widgets/end_point.dart';
 import 'package:algorithm_visualizer/features/visualize/sub_view/searching/widgets/pf_grid.dart';
 import 'package:algorithm_visualizer/features/visualize/sub_view/searching/widgets/start_point.dart';
-import 'package:algorithm_visualizer/lib-temp/theme/app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -13,8 +13,8 @@ class PFLegend extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final items = [
-      (context.accentGreen, StringsManager.start),
-      (context.accentRed, StringsManager.end),
+      (context.getColor(ThemeEnum.accentGreen), StringsManager.start),
+      (context.getColor(ThemeEnum.accentGreen), StringsManager.end),
       (kWallGridColor, StringsManager.wall),
       (kSearcherFinishedColor, StringsManager.visited),
       (kSearcherStartColor, StringsManager.frontier),
@@ -41,7 +41,7 @@ class PFLegend extends StatelessWidget {
                   decoration: BoxDecoration(color: color, borderRadius: BorderRadius.circular(2)),
                 ),
               const SizedBox(width: 4),
-              Text(label, style: GoogleFonts.inter(color: context.textMuted, fontSize: 10)),
+              Text(label, style: GoogleFonts.inter(color: context.getColor(ThemeEnum.hover), fontSize: 10)),
             ]);
           }).toList(),
         ),

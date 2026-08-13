@@ -8,7 +8,7 @@ class CustomAssetsSvg extends StatelessWidget {
     this.path, {
     this.size,
     this.semanticLabel,
-    this.color = ThemeEnum.focusColor,
+    this.color = ThemeEnum.focus,
     super.key,
   });
   final String path;

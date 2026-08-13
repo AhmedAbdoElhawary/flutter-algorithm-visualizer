@@ -1,8 +1,8 @@
 import 'dart:async';
 import 'dart:math' as math;
 
-import 'package:algorithm_visualizer/core/helpers/o_notation.dart';
-import 'package:algorithm_visualizer/core/helpers/playback_speed.dart';
+import 'package:algorithm_visualizer/features/visualize/helper/o_notation.dart';
+import 'package:algorithm_visualizer/features/visualize/helper/playback_speed.dart';
 import 'package:algorithm_visualizer/core/resources/strings_manager.dart';
 import 'package:algorithm_visualizer/features/base/view_model/algorithm_control_interface.dart';
 import 'package:algorithm_visualizer/features/base/view_model/algorithm_description_interface.dart';

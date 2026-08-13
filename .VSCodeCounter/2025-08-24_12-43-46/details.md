@@ -37,7 +37,7 @@ Total : 133 files,  6259 codes, 411 comments, 1006 blanks, all 7676 lines
 | [ios/RunnerTests/RunnerTests.swift](/ios/RunnerTests/RunnerTests.swift) | Swift | 7 | 2 | 4 | 13 |
 | [lib/config/routes/route\_app.dart](/lib/config/routes/route_app.dart) | Dart | 125 | 1 | 9 | 135 |
 | [lib/config/themes/app\_theme.dart](/lib/config/themes/app_theme.dart) | Dart | 239 | 2 | 14 | 255 |
-| [lib/core/draggable\_progress.dart](/lib/core/draggable_progress.dart) | Dart | 42 | 0 | 4 | 46 |
+| [lib/core/draggable\_progress.dart](/lib/core/widgets/custom_widgets/draggable_progress.dart) | Dart | 42 | 0 | 4 | 46 |
 | [lib/core/enums/app\_settings\_enum.dart](/lib/core/enums/app_settings_enum.dart) | Dart | 1 | 0 | 2 | 3 |
 | [lib/core/extensions/language.dart](/lib/core/extensions/language.dart) | Dart | 20 | 0 | 5 | 25 |
 | [lib/core/extensions/navigators.dart](/lib/core/extensions/navigators.dart) | Dart | 126 | 3 | 16 | 145 |
