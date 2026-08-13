@@ -8,9 +8,9 @@ part of 'example.dart';
 
 _$ExampleImpl _$$ExampleImplFromJson(Map<String, dynamic> json) =>
     _$ExampleImpl(
-      input: json['input'] as Map<String, dynamic>,
+      input: json['input'] as Map<String, dynamic>?,
       output: json['output'],
-      explanation: json['explanation'] as String,
+      explanation: json['explanation'] as String?,
     );
 
 Map<String, dynamic> _$$ExampleImplToJson(_$ExampleImpl instance) =>
