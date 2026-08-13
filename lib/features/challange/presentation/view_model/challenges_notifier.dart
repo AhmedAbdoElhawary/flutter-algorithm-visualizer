@@ -1,4 +1,4 @@
-import 'package:algorithm_visualizer/features/practice/helper/problem.dart';
+import 'package:algorithm_visualizer/features/challange/domain/enums/problem.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'challenges_state.dart';
