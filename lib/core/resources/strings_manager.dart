@@ -98,4 +98,14 @@ class StringsManager {
   static const String hard = "Hard";
   static const String searchProblem = "Search problems…";
   static const String executing = "executing";
+  static const String noProblemsFound = 'No problems found';
+  static const String tryADifferentSearchOrFilter = 'Try a different search or filter';
+  static const String loading = 'Loading challenges...';
+  static const String errorText = 'Not able to load challenges...';
+  static const String tryInDifferentTime = 'Try in different time';
+  static const String practice = 'practice';
+  static const String challenges = 'Challenges';
+  static const String nan = "NAN";
+  static const String solveWithArrow = "Solve →";
+  static const String status = "Status";
 }
