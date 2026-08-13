@@ -1,4 +1,5 @@
 import 'dart:async';
+
 import 'package:algorithm_visualizer/core/custom_packages/custom_code_editor/src/editor/code_controller.dart';
 import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/code_editor.dart';
@@ -54,7 +55,8 @@ const _codeBg = Color(0xFF0D1117);
 // ─── Screen ───────────────────────────────────────────────────────────────────
 
 class CodeEditorPage extends StatefulWidget {
-  const CodeEditorPage({super.key});
+  const CodeEditorPage({required this.problemId,super.key});
+  final int problemId;
   @override
   State<CodeEditorPage> createState() => _CodeEditorPageState();
 }
