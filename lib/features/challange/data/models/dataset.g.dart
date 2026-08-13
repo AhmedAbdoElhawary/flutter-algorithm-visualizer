@@ -8,13 +8,13 @@ part of 'dataset.dart';
 
 _$DatasetImpl _$$DatasetImplFromJson(Map<String, dynamic> json) =>
     _$DatasetImpl(
-      name: json['name'] as String,
-      version: json['version'] as String,
-      totalProblems: (json['total_problems'] as num).toInt(),
-      source: json['source'] as String,
-      description: json['description'] as String,
-      problems: (json['problems'] as List<dynamic>)
-          .map((e) => ProblemDTO.fromJson(e as Map<String, dynamic>))
+      name: json['name'] as String?,
+      version: json['version'] as String?,
+      totalProblems: (json['total_problems'] as num?)?.toInt(),
+      source: json['source'] as String?,
+      description: json['description'] as String?,
+      problems: (json['problems'] as List<dynamic>?)
+          ?.map((e) => ProblemDTO.fromJson(e as Map<String, dynamic>))
           .toList(),
     );
 
