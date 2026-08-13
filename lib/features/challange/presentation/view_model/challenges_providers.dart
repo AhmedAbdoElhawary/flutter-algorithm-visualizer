@@ -43,11 +43,7 @@ final problemsProvider = Provider<AsyncValue<List<CodingProblem>>>((ref) {
 final solvedCountProvider = Provider<AsyncValue<int>>((ref) {
   final problems = ref.watch(challengeDatasetProvider);
 
-  return problems.whenData(
-    (problems) {
-      return problems.where((problem) => problem.problemId == 1).length;
-    },
-  );
+  return problems.whenData((problems) => problems.where((problem) => problem.isSolved).length);
 });
 
 final difficultyCountProvider = Provider.family<AsyncValue<int>, ProblemDifficulty?>(
