@@ -13,7 +13,7 @@ class ChallengesHeader extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final total =
-        ref.watch(problemsProvider).maybeWhen(data: (data) => data.length, orElse: () => -1);
+        ref.watch(filteredProblemsProvider).maybeWhen(data: (data) => data.length, orElse: () => -1);
     final totalText = total == -1 ? StringsManager.nan : "$total";
 
     final solved = ref.watch(solvedCountProvider).maybeWhen(data: (data) => data, orElse: () => -1);
