@@ -1,26 +1,26 @@
+import 'package:algorithm_visualizer/core/resources/strings_manager.dart';
 import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
-import 'package:algorithm_visualizer/features/practice/helper/problem.dart';
-import 'package:algorithm_visualizer/features/practice/helper/problem_style.dart';
-import 'package:algorithm_visualizer/features/practice/view_model/challenges_notifier.dart';
+import 'package:algorithm_visualizer/core/widgets/adaptive/text/adaptive_text.dart';
+import 'package:algorithm_visualizer/core/widgets/custom_widgets/custom_icon.dart';
+import 'package:algorithm_visualizer/features/challange/domain/entities/coding_problem.dart';
+import 'package:algorithm_visualizer/features/challange/domain/enums/problem.dart';
+import 'package:algorithm_visualizer/features/challange/presentation/helper/problem_style.dart';
+import 'package:algorithm_visualizer/features/challange/presentation/view_model/challenges_notifier.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 class ProblemTile extends ConsumerWidget {
-  final Problem problem;
-  final VoidCallback onSolve;
+  final CodingProblem problem;
+  final VoidCallback onSolveTap;
 
-  const ProblemTile({super.key, required this.problem, required this.onSolve});
+  const ProblemTile({super.key, required this.problem, required this.onSolveTap});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final expanded = ref.watch(
-      challengesProvider.select((s) => s.expandedId == problem.id),
-    );
-    final diffColor = ProblemStyle.difficultyColor(context, problem.difficulty);
-    final statusColor = ProblemStyle.statusColor(context, problem.status);
-    final statusIcon = ProblemStyle.statusIcon(problem.status);
+    final expanded = ref.watch(challengesProvider.select((s) => s.expandedId == problem.problemId));
+    final diffColor = ProblemStyle.difficultyColor(problem.getDifficulty);
+    final (statusColor, statusIcon) = ProblemStyle.getStatus(problem.problemStatus);
 
     return Padding(
       padding: REdgeInsets.only(bottom: 6),
@@ -29,7 +29,9 @@ class ProblemTile extends ConsumerWidget {
         decoration: BoxDecoration(
           color: context.getColor(ThemeEnum.card),
           borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: expanded ? context.getColor(ThemeEnum.borderAccent) : context.getColor(ThemeEnum.border)),
+          border: Border.all(
+              color:
+                  expanded ? context.getColor(ThemeEnum.borderAccent) : context.getColor(ThemeEnum.border)),
           boxShadow: context.cardShadow,
         ),
         clipBehavior: Clip.hardEdge,
@@ -42,13 +44,13 @@ class ProblemTile extends ConsumerWidget {
               statusColor: statusColor,
               statusIcon: statusIcon,
               diffColor: diffColor,
-              onTap: () => ref.read(challengesProvider.notifier).toggleExpanded(problem.id),
+              onTap: () => ref.read(challengesProvider.notifier).toggleExpanded(problem.getProblemId),
             ),
             AnimatedSize(
               duration: const Duration(milliseconds: 220),
               curve: Curves.easeInOut,
               child: expanded
-                  ? _DetailsPanel(problem: problem, statusColor: statusColor, onSolve: onSolve)
+                  ? _DetailsPanel(problem: problem, statusColor: statusColor, onSolve: onSolveTap)
                   : const SizedBox.shrink(),
             ),
           ],
@@ -59,10 +61,10 @@ class ProblemTile extends ConsumerWidget {
 }
 
 class _MainRow extends StatelessWidget {
-  final Problem problem;
+  final CodingProblem problem;
   final bool expanded;
-  final Color statusColor;
-  final Color diffColor;
+  final ThemeEnum statusColor;
+  final ThemeEnum diffColor;
   final IconData statusIcon;
   final VoidCallback onTap;
 
@@ -84,27 +86,17 @@ class _MainRow extends StatelessWidget {
         padding: REdgeInsets.symmetric(horizontal: 14, vertical: 11),
         child: Row(
           children: [
-            Icon(statusIcon, size: 16, color: statusColor),
+            CustomIcon(statusIcon, size: 16, color: statusColor),
             const RSizedBox(width: 8),
-            Text(
-              '${problem.num}.',
-              style: GoogleFonts.jetBrainsMono(color: context.getColor(ThemeEnum.hover), fontSize: 11.r, fontWeight: FontWeight.w600),
-            ),
+            SemiBoldText('${problem.number}.', color: ThemeEnum.hover, fontSize: 11),
             const RSizedBox(width: 6),
-            Expanded(
-              child: Text(
-                problem.name,
-                overflow: TextOverflow.ellipsis,
-                style: GoogleFonts.inter(color: context.getColor(ThemeEnum.textSecond), fontSize: 13.r, fontWeight: FontWeight.w500),
-              ),
-            ),
-            Text(problem.difficulty.difficultyString,
-                style: GoogleFonts.inter(color: diffColor, fontSize: 11.r, fontWeight: FontWeight.w600)),
+            Expanded(child: MediumText(problem.getName, color: ThemeEnum.textSecond, fontSize: 13)),
+            SemiBoldText(problem.getDifficulty.difficultyString, color: diffColor, fontSize: 11),
             const RSizedBox(width: 6),
             AnimatedRotation(
               turns: expanded ? 0.25 : 0,
               duration: const Duration(milliseconds: 200),
-              child: Icon(Icons.chevron_right_rounded, size: 16.r, color: context.getColor(ThemeEnum.hoverSecond)),
+              child: CustomIcon(Icons.chevron_right_rounded, size: 16, color: ThemeEnum.hoverSecond),
             ),
           ],
         ),
@@ -114,8 +106,8 @@ class _MainRow extends StatelessWidget {
 }
 
 class _DetailsPanel extends StatelessWidget {
-  final Problem problem;
-  final Color statusColor;
+  final CodingProblem problem;
+  final ThemeEnum statusColor;
   final VoidCallback onSolve;
 
   const _DetailsPanel({required this.problem, required this.statusColor, required this.onSolve});
@@ -132,7 +124,7 @@ class _DetailsPanel extends StatelessWidget {
           Wrap(
             spacing: 5,
             runSpacing: 5,
-            children: problem.tags
+            children: problem.getTags
                 .map((t) => Container(
                       padding: REdgeInsets.symmetric(horizontal: 8, vertical: 3),
                       decoration: BoxDecoration(
@@ -140,19 +132,21 @@ class _DetailsPanel extends StatelessWidget {
                         borderRadius: BorderRadius.circular(6),
                         border: Border.all(color: context.getColor(ThemeEnum.borderAccent)),
                       ),
-                      child:
-                          Text(t, style: GoogleFonts.inter(color: context.getColor(ThemeEnum.accent), fontSize: 11.r)),
+                      child: RegularText(t, color: ThemeEnum.accent, fontSize: 11),
                     ))
                 .toList(),
           ),
           const RSizedBox(height: 10),
           Row(
             children: [
-              _StatColumn(label: 'Acceptance', value: '${problem.acceptance}%', color: context.getColor(ThemeEnum.textSecond)),
-              const RSizedBox(width: 20),
+              // _StatColumn(
+              //     label: 'Acceptance',
+              //     value: '${problem.acceptance}%',
+              //     color: context.getColor(ThemeEnum.textSecond)),
+              // const RSizedBox(width: 20),
               _StatColumn(
-                label: 'Status',
-                value: problem.status.difficultyString,
+                label: StringsManager.status,
+                value: problem.getProblemStatus.difficultyString,
                 color: statusColor,
               ),
               const Spacer(),
@@ -165,9 +159,7 @@ class _DetailsPanel extends StatelessWidget {
                     borderRadius: BorderRadius.circular(9),
                     border: Border.all(color: context.getColor(ThemeEnum.borderAccent)),
                   ),
-                  child: Text('Solve →',
-                      style: GoogleFonts.inter(
-                          color: context.getColor(ThemeEnum.accent), fontSize: 12.r, fontWeight: FontWeight.w600)),
+                  child: SemiBoldText(StringsManager.solveWithArrow, color: ThemeEnum.accent, fontSize: 12),
                 ),
               ),
             ],
@@ -181,7 +173,7 @@ class _DetailsPanel extends StatelessWidget {
 class _StatColumn extends StatelessWidget {
   final String label;
   final String value;
-  final Color color;
+  final ThemeEnum color;
 
   const _StatColumn({required this.label, required this.value, required this.color});
 
@@ -190,9 +182,9 @@ class _StatColumn extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(label, style: GoogleFonts.inter(color: context.getColor(ThemeEnum.hover), fontSize: 10.r)),
+        RegularText(label, color: ThemeEnum.hover, fontSize: 10),
         const RSizedBox(height: 2),
-        Text(value, style: GoogleFonts.inter(color: color, fontSize: 13.r, fontWeight: FontWeight.w600)),
+        SemiBoldText(value, color: color, fontSize: 13),
       ],
     );
   }
