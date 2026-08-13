@@ -20,12 +20,12 @@ Dataset _$DatasetFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$Dataset {
-  String get name => throw _privateConstructorUsedError;
-  String get version => throw _privateConstructorUsedError;
-  int get totalProblems => throw _privateConstructorUsedError;
-  String get source => throw _privateConstructorUsedError;
-  String get description => throw _privateConstructorUsedError;
-  List<ProblemDTO> get problems => throw _privateConstructorUsedError;
+  String? get name => throw _privateConstructorUsedError;
+  String? get version => throw _privateConstructorUsedError;
+  int? get totalProblems => throw _privateConstructorUsedError;
+  String? get source => throw _privateConstructorUsedError;
+  String? get description => throw _privateConstructorUsedError;
+  List<ProblemDTO>? get problems => throw _privateConstructorUsedError;
 
   /// Serializes this Dataset to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -42,12 +42,12 @@ abstract class $DatasetCopyWith<$Res> {
       _$DatasetCopyWithImpl<$Res, Dataset>;
   @useResult
   $Res call(
-      {String name,
-      String version,
-      int totalProblems,
-      String source,
-      String description,
-      List<ProblemDTO> problems});
+      {String? name,
+      String? version,
+      int? totalProblems,
+      String? source,
+      String? description,
+      List<ProblemDTO>? problems});
 }
 
 /// @nodoc
@@ -65,38 +65,38 @@ class _$DatasetCopyWithImpl<$Res, $Val extends Dataset>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? name = null,
-    Object? version = null,
-    Object? totalProblems = null,
-    Object? source = null,
-    Object? description = null,
-    Object? problems = null,
+    Object? name = freezed,
+    Object? version = freezed,
+    Object? totalProblems = freezed,
+    Object? source = freezed,
+    Object? description = freezed,
+    Object? problems = freezed,
   }) {
     return _then(_value.copyWith(
-      name: null == name
+      name: freezed == name
           ? _value.name
           : name // ignore: cast_nullable_to_non_nullable
-              as String,
-      version: null == version
+              as String?,
+      version: freezed == version
           ? _value.version
           : version // ignore: cast_nullable_to_non_nullable
-              as String,
-      totalProblems: null == totalProblems
+              as String?,
+      totalProblems: freezed == totalProblems
           ? _value.totalProblems
           : totalProblems // ignore: cast_nullable_to_non_nullable
-              as int,
-      source: null == source
+              as int?,
+      source: freezed == source
           ? _value.source
           : source // ignore: cast_nullable_to_non_nullable
-              as String,
-      description: null == description
+              as String?,
+      description: freezed == description
           ? _value.description
           : description // ignore: cast_nullable_to_non_nullable
-              as String,
-      problems: null == problems
+              as String?,
+      problems: freezed == problems
           ? _value.problems
           : problems // ignore: cast_nullable_to_non_nullable
-              as List<ProblemDTO>,
+              as List<ProblemDTO>?,
     ) as $Val);
   }
 }
@@ -109,12 +109,12 @@ abstract class _$$DatasetImplCopyWith<$Res> implements $DatasetCopyWith<$Res> {
   @override
   @useResult
   $Res call(
-      {String name,
-      String version,
-      int totalProblems,
-      String source,
-      String description,
-      List<ProblemDTO> problems});
+      {String? name,
+      String? version,
+      int? totalProblems,
+      String? source,
+      String? description,
+      List<ProblemDTO>? problems});
 }
 
 /// @nodoc
@@ -130,38 +130,38 @@ class __$$DatasetImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? name = null,
-    Object? version = null,
-    Object? totalProblems = null,
-    Object? source = null,
-    Object? description = null,
-    Object? problems = null,
+    Object? name = freezed,
+    Object? version = freezed,
+    Object? totalProblems = freezed,
+    Object? source = freezed,
+    Object? description = freezed,
+    Object? problems = freezed,
   }) {
     return _then(_$DatasetImpl(
-      name: null == name
+      name: freezed == name
           ? _value.name
           : name // ignore: cast_nullable_to_non_nullable
-              as String,
-      version: null == version
+              as String?,
+      version: freezed == version
           ? _value.version
           : version // ignore: cast_nullable_to_non_nullable
-              as String,
-      totalProblems: null == totalProblems
+              as String?,
+      totalProblems: freezed == totalProblems
           ? _value.totalProblems
           : totalProblems // ignore: cast_nullable_to_non_nullable
-              as int,
-      source: null == source
+              as int?,
+      source: freezed == source
           ? _value.source
           : source // ignore: cast_nullable_to_non_nullable
-              as String,
-      description: null == description
+              as String?,
+      description: freezed == description
           ? _value.description
           : description // ignore: cast_nullable_to_non_nullable
-              as String,
-      problems: null == problems
+              as String?,
+      problems: freezed == problems
           ? _value._problems
           : problems // ignore: cast_nullable_to_non_nullable
-              as List<ProblemDTO>,
+              as List<ProblemDTO>?,
     ));
   }
 }
@@ -175,28 +175,30 @@ class _$DatasetImpl implements _Dataset {
       required this.totalProblems,
       required this.source,
       required this.description,
-      required final List<ProblemDTO> problems})
+      required final List<ProblemDTO>? problems})
       : _problems = problems;
 
   factory _$DatasetImpl.fromJson(Map<String, dynamic> json) =>
       _$$DatasetImplFromJson(json);
 
   @override
-  final String name;
+  final String? name;
   @override
-  final String version;
+  final String? version;
   @override
-  final int totalProblems;
+  final int? totalProblems;
   @override
-  final String source;
+  final String? source;
   @override
-  final String description;
-  final List<ProblemDTO> _problems;
+  final String? description;
+  final List<ProblemDTO>? _problems;
   @override
-  List<ProblemDTO> get problems {
+  List<ProblemDTO>? get problems {
+    final value = _problems;
+    if (value == null) return null;
     if (_problems is EqualUnmodifiableListView) return _problems;
     // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_problems);
+    return EqualUnmodifiableListView(value);
   }
 
   @override
@@ -242,27 +244,27 @@ class _$DatasetImpl implements _Dataset {
 
 abstract class _Dataset implements Dataset {
   const factory _Dataset(
-      {required final String name,
-      required final String version,
-      required final int totalProblems,
-      required final String source,
-      required final String description,
-      required final List<ProblemDTO> problems}) = _$DatasetImpl;
+      {required final String? name,
+      required final String? version,
+      required final int? totalProblems,
+      required final String? source,
+      required final String? description,
+      required final List<ProblemDTO>? problems}) = _$DatasetImpl;
 
   factory _Dataset.fromJson(Map<String, dynamic> json) = _$DatasetImpl.fromJson;
 
   @override
-  String get name;
+  String? get name;
   @override
-  String get version;
+  String? get version;
   @override
-  int get totalProblems;
+  int? get totalProblems;
   @override
-  String get source;
+  String? get source;
   @override
-  String get description;
+  String? get description;
   @override
-  List<ProblemDTO> get problems;
+  List<ProblemDTO>? get problems;
 
   /// Create a copy of Dataset
   /// with the given fields replaced by the non-null parameter values.
