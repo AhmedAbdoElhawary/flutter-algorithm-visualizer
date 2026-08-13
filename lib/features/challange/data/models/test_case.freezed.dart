@@ -20,7 +20,6 @@ TestCase _$TestCaseFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$TestCase {
-  String get type => throw _privateConstructorUsedError;
   Map<String, dynamic> get input => throw _privateConstructorUsedError;
   dynamic get expectedOutput => throw _privateConstructorUsedError;
 
@@ -39,7 +38,7 @@ abstract class $TestCaseCopyWith<$Res> {
   factory $TestCaseCopyWith(TestCase value, $Res Function(TestCase) then) =
       _$TestCaseCopyWithImpl<$Res, TestCase>;
   @useResult
-  $Res call({String type, Map<String, dynamic> input, dynamic expectedOutput});
+  $Res call({Map<String, dynamic> input, dynamic expectedOutput});
 }
 
 /// @nodoc
@@ -57,15 +56,10 @@ class _$TestCaseCopyWithImpl<$Res, $Val extends TestCase>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? type = null,
     Object? input = null,
     Object? expectedOutput = freezed,
   }) {
     return _then(_value.copyWith(
-      type: null == type
-          ? _value.type
-          : type // ignore: cast_nullable_to_non_nullable
-              as String,
       input: null == input
           ? _value.input
           : input // ignore: cast_nullable_to_non_nullable
@@ -86,7 +80,7 @@ abstract class _$$TestCaseImplCopyWith<$Res>
       __$$TestCaseImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({String type, Map<String, dynamic> input, dynamic expectedOutput});
+  $Res call({Map<String, dynamic> input, dynamic expectedOutput});
 }
 
 /// @nodoc
@@ -102,15 +96,10 @@ class __$$TestCaseImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? type = null,
     Object? input = null,
     Object? expectedOutput = freezed,
   }) {
     return _then(_$TestCaseImpl(
-      type: null == type
-          ? _value.type
-          : type // ignore: cast_nullable_to_non_nullable
-              as String,
       input: null == input
           ? _value._input
           : input // ignore: cast_nullable_to_non_nullable
@@ -127,16 +116,12 @@ class __$$TestCaseImplCopyWithImpl<$Res>
 @JsonSerializable()
 class _$TestCaseImpl implements _TestCase {
   const _$TestCaseImpl(
-      {required this.type,
-      required final Map<String, dynamic> input,
-      required this.expectedOutput})
+      {required final Map<String, dynamic> input, required this.expectedOutput})
       : _input = input;
 
   factory _$TestCaseImpl.fromJson(Map<String, dynamic> json) =>
       _$$TestCaseImplFromJson(json);
 
-  @override
-  final String type;
   final Map<String, dynamic> _input;
   @override
   Map<String, dynamic> get input {
@@ -150,7 +135,7 @@ class _$TestCaseImpl implements _TestCase {
 
   @override
   String toString() {
-    return 'TestCase(type: $type, input: $input, expectedOutput: $expectedOutput)';
+    return 'TestCase(input: $input, expectedOutput: $expectedOutput)';
   }
 
   @override
@@ -158,7 +143,6 @@ class _$TestCaseImpl implements _TestCase {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$TestCaseImpl &&
-            (identical(other.type, type) || other.type == type) &&
             const DeepCollectionEquality().equals(other._input, _input) &&
             const DeepCollectionEquality()
                 .equals(other.expectedOutput, expectedOutput));
@@ -168,7 +152,6 @@ class _$TestCaseImpl implements _TestCase {
   @override
   int get hashCode => Object.hash(
       runtimeType,
-      type,
       const DeepCollectionEquality().hash(_input),
       const DeepCollectionEquality().hash(expectedOutput));
 
@@ -190,15 +173,12 @@ class _$TestCaseImpl implements _TestCase {
 
 abstract class _TestCase implements TestCase {
   const factory _TestCase(
-      {required final String type,
-      required final Map<String, dynamic> input,
+      {required final Map<String, dynamic> input,
       required final dynamic expectedOutput}) = _$TestCaseImpl;
 
   factory _TestCase.fromJson(Map<String, dynamic> json) =
       _$TestCaseImpl.fromJson;
 
-  @override
-  String get type;
   @override
   Map<String, dynamic> get input;
   @override
