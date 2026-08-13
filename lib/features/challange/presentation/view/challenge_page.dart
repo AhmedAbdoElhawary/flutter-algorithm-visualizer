@@ -16,7 +16,7 @@ class ChallengePage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final problems = ref.watch(challengeDatasetProvider);
+    final problems = ref.watch(problemsProvider);
 
     return Scaffold(
       body: SafeArea(
