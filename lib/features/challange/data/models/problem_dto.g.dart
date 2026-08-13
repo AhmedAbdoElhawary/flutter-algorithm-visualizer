@@ -8,67 +8,71 @@ part of 'problem_dto.dart';
 
 _$ProblemDTOImpl _$$ProblemDTOImplFromJson(Map<String, dynamic> json) =>
     _$ProblemDTOImpl(
-      problemId: (json['problem_id'] as num).toInt(),
-      name: json['name'] as String,
-      source: json['source'] as String,
+      problemId: (json['problem_id'] as num?)?.toInt(),
+      number: (json['number'] as num?)?.toInt(),
+      name: json['name'] as String?,
+      source: json['source'] as String?,
       sourceProblemNumber: (json['source_problem_number'] as num?)?.toInt(),
-      difficulty: json['difficulty'] as String,
-      category: json['category'] as String,
-      tags: (json['tags'] as List<dynamic>).map((e) => e as String).toList(),
-      patterns:
-          (json['patterns'] as List<dynamic>).map((e) => e as String).toList(),
-      description: json['description'] as String,
-      constraints: (json['constraints'] as List<dynamic>)
-          .map((e) => e as String)
+      difficulty:
+          $enumDecodeNullable(_$ProblemDifficultyEnumMap, json['difficulty']),
+      category: json['category'] as String?,
+      tags: (json['tags'] as List<dynamic>?)?.map((e) => e as String).toList(),
+      patterns: (json['patterns'] as List<dynamic>?)
+          ?.map((e) => e as String)
           .toList(),
-      functionSignature: FunctionSignature.fromJson(
-          json['function_signature'] as Map<String, dynamic>),
-      examples: (json['examples'] as List<dynamic>)
-          .map((e) => Example.fromJson(e as Map<String, dynamic>))
+      description: json['description'] as String?,
+      constraints: (json['constraints'] as List<dynamic>?)
+          ?.map((e) => e as String)
           .toList(),
-      edgeCases: (json['edge_cases'] as List<dynamic>)
-          .map((e) => e as String)
+      examples: (json['examples'] as List<dynamic>?)
+          ?.map((e) => Example.fromJson(e as Map<String, dynamic>))
           .toList(),
-      testCases: (json['test_cases'] as List<dynamic>)
-          .map((e) => TestCase.fromJson(e as Map<String, dynamic>))
+      edgeCases: (json['edge_cases'] as List<dynamic>?)
+          ?.map((e) => e as String)
           .toList(),
-      hiddenTestCases: (json['hidden_test_cases'] as List<dynamic>)
-          .map((e) => HiddenTestCase.fromJson(e as Map<String, dynamic>))
+      testCases: (json['test_cases'] as List<dynamic>?)
+          ?.map((e) => TestCase.fromJson(e as Map<String, dynamic>))
           .toList(),
-      hints: (json['hints'] as List<dynamic>).map((e) => e as String).toList(),
-      solutionApproach: SolutionApproach.fromJson(
-          json['solution_approach'] as Map<String, dynamic>),
-      expectedTimeComplexity: json['expected_time_complexity'] as String,
-      expectedSpaceComplexity: json['expected_space_complexity'] as String,
-      whatYouLearn: json['what_you_learn'] as String,
-      keyPattern: json['key_pattern'] as String,
-      prerequisites: (json['prerequisites'] as List<dynamic>)
-          .map((e) => e as String)
+      hiddenTestCases: (json['hidden_test_cases'] as List<dynamic>?)
+          ?.map((e) => TestCase.fromJson(e as Map<String, dynamic>))
           .toList(),
-      followUpConcepts: (json['follow_up_concepts'] as List<dynamic>)
-          .map((e) => e as String)
+      hints:
+          (json['hints'] as List<dynamic>?)?.map((e) => e as String).toList(),
+      solutionApproach: json['solution_approach'] == null
+          ? null
+          : SolutionApproach.fromJson(
+              json['solution_approach'] as Map<String, dynamic>),
+      expectedTimeComplexity: json['expected_time_complexity'] as String?,
+      expectedSpaceComplexity: json['expected_space_complexity'] as String?,
+      whatYouLearn: json['what_you_learn'] as String?,
+      keyPattern: json['key_pattern'] as String?,
+      prerequisites: (json['prerequisites'] as List<dynamic>?)
+          ?.map((e) => e as String)
           .toList(),
-      commonMistakes: (json['common_mistakes'] as List<dynamic>)
-          .map((e) => e as String)
+      followUpConcepts: (json['follow_up_concepts'] as List<dynamic>?)
+          ?.map((e) => e as String)
           .toList(),
-      similarQuestions: (json['similar_questions'] as List<dynamic>)
-          .map((e) => SimilarQuestion.fromJson(e as Map<String, dynamic>))
+      commonMistakes: (json['common_mistakes'] as List<dynamic>?)
+          ?.map((e) => e as String)
+          .toList(),
+      similarQuestions: (json['similar_questions'] as List<dynamic>?)
+          ?.map((e) => SimilarQuestion.fromJson(e as Map<String, dynamic>))
           .toList(),
     );
 
 Map<String, dynamic> _$$ProblemDTOImplToJson(_$ProblemDTOImpl instance) =>
     <String, dynamic>{
       'problem_id': instance.problemId,
+      'number': instance.number,
       'name': instance.name,
       'source': instance.source,
       'source_problem_number': instance.sourceProblemNumber,
-      'difficulty': instance.difficulty,
+      'difficulty': _$ProblemDifficultyEnumMap[instance.difficulty],
       'category': instance.category,
       'tags': instance.tags,
       'patterns': instance.patterns,
       'description': instance.description,
       'constraints': instance.constraints,
-      'function_signature': instance.functionSignature,
       'examples': instance.examples,
       'edge_cases': instance.edgeCases,
       'test_cases': instance.testCases,
@@ -84,3 +88,10 @@ Map<String, dynamic> _$$ProblemDTOImplToJson(_$ProblemDTOImpl instance) =>
       'common_mistakes': instance.commonMistakes,
       'similar_questions': instance.similarQuestions,
     };
+
+const _$ProblemDifficultyEnumMap = {
+  ProblemDifficulty.easy: 'easy',
+  ProblemDifficulty.medium: 'medium',
+  ProblemDifficulty.hard: 'hard',
+  ProblemDifficulty.none: 'none',
+};
