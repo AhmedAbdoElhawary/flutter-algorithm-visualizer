@@ -1,4 +1,3 @@
-import 'package:algorithm_visualizer/core/resources/strings_manager.dart';
 import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
 import 'package:algorithm_visualizer/core/widgets/adaptive/text/adaptive_text.dart';
 import 'package:algorithm_visualizer/features/challange/domain/enums/problem.dart';
@@ -24,9 +23,8 @@ class ChallengesFilterTabs extends ConsumerWidget {
           children: ChallengesNotifier.filters.map((f) {
             final active = activeFilter == f;
             final color = f == ProblemDifficulty.none ? ThemeEnum.accent : ProblemStyle.difficultyColor(f);
-            final count = ref
-                .watch(difficultyCountProvider(f))
-                .maybeWhen(data: (data) => "$data", orElse: () => StringsManager.nan);
+            final count =
+                ref.watch(difficultyCountProvider(f)).maybeWhen(data: (data) => "$data", orElse: () => "");
 
             return GestureDetector(
               onTap: () => ref.read(challengesProvider.notifier).setFilter(f),
