@@ -6,7 +6,7 @@ class _UnknownPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: GlobalAppBar(),
+      appBar: AppBar(),
       body: UnknownView(),
     );
   }

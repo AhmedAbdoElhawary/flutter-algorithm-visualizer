@@ -1,7 +1,6 @@
 import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
 import 'package:algorithm_visualizer/core/widgets/adaptive/text/adaptive_text.dart';
 import 'package:algorithm_visualizer/features/visualize/sub_view/sorting/widgets/linear_progress_indicator.dart';
-import 'package:algorithm_visualizer/lib-temp/theme/app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -19,11 +18,16 @@ class AlgorithmStatusText extends ConsumerWidget {
       child: Container(
         width: double.infinity,
         padding: const EdgeInsets.all(12),
-        decoration: context.cardDecoration(),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(14),
+          border: Border.all(color: context.getColor(ThemeEnum.border)),
+          boxShadow: context.cardShadow,
+        ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            RegularText(statusText, color: ThemeEnum.white2DarkColor, fontFamily: 'JetBrainsMono', fontSize: 12),
+            RegularText(statusText,
+                color: ThemeEnum.white2DarkColor, fontFamily: 'JetBrainsMono', fontSize: 12),
             const SizedBox(height: 8),
             Row(
               children: [
@@ -40,7 +44,7 @@ class AlgorithmStatusText extends ConsumerWidget {
                     key: ValueKey(progressLabel),
                     progressLabel,
                     fontSize: 12,
-                    color: ThemeEnum.hoverColor,
+                    color: ThemeEnum.hover,
                   ),
                 ),
               ],

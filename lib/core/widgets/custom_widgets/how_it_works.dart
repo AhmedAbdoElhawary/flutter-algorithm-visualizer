@@ -1,7 +1,6 @@
 import 'dart:ui' show ImageFilter;
 
 import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
-import 'package:algorithm_visualizer/lib-temp/theme/app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -165,7 +164,7 @@ class _HowItWorks extends ConsumerWidget {
             decoration: BoxDecoration(
               color: context.getColor(ThemeEnum.howItWorksColor),
               borderRadius: BorderRadius.circular(10),
-              border: Border.all(color: context.borderAccent),
+              border: Border.all(color: context.getColor(ThemeEnum.borderAccent)),
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -174,7 +173,7 @@ class _HowItWorks extends ConsumerWidget {
                 Text(
                   '💡 How it works',
                   style: GoogleFonts.inter(
-                    color: context.accent,
+                    color: context.getColor(ThemeEnum.accent),
                     fontSize: 11,
                     fontWeight: FontWeight.w600,
                   ),
@@ -183,7 +182,7 @@ class _HowItWorks extends ConsumerWidget {
                 Text(
                   'Adjacent elements are compared and swapped if out of order. Each pass bubbles the largest element to the end.',
                   style: GoogleFonts.inter(
-                    color: context.textMuted,
+                    color: context.getColor(ThemeEnum.hover),
                     fontSize: 12,
                     height: 1.5,
                   ),
@@ -198,8 +197,8 @@ class _HowItWorks extends ConsumerWidget {
           child: CustomPaint(
             size: Size(26.r, 14.r),
             painter: _PopupArrowPainter(
-              fillColor: context.accentBg,
-              borderColor: context.borderAccent,
+              fillColor: context.getColor(ThemeEnum.accentBg),
+              borderColor: context.getColor(ThemeEnum.borderAccent),
             ),
           ),
         ),

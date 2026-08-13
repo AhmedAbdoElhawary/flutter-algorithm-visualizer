@@ -6,11 +6,12 @@ class BoldText extends _AdaptiveText {
     super.fontSize = 16,
     super.decoration = TextDecoration.none,
     super.fontStyle = FontStyle.normal,
-    super.color = ThemeEnum.focusColor,
+    super.color = ThemeEnum.focus,
     super.shadows,
     super.fontWeight = FontWeightManager.bold,
     super.textAlign,
     super.maxLines = 2,
+    super.fontFamily,
     super.key,
   });
 }

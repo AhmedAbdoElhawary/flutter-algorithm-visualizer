@@ -1,4 +1,4 @@
-import 'package:algorithm_visualizer/core/helpers/playback_speed.dart';
+import 'package:algorithm_visualizer/features/visualize/helper/playback_speed.dart';
 import 'package:algorithm_visualizer/core/resources/strings_manager.dart';
 import 'package:algorithm_visualizer/features/visualize/sub_view/sorting/view_model/sorting_notifier.dart';
 import 'package:algorithm_visualizer/features/visualize/sub_view/sorting/view_model/sub_sorting/bubble_sort_notifier.dart';

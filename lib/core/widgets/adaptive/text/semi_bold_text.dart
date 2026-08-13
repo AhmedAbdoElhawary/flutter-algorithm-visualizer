@@ -6,7 +6,7 @@ class SemiBoldText extends _AdaptiveText {
     super.fontSize = 16,
     super.decoration = TextDecoration.none,
     super.fontStyle = FontStyle.normal,
-    super.color = ThemeEnum.focusColor,
+    super.color = ThemeEnum.focus,
     super.maxLines = 2,
     super.shadows,
     super.textAlign,

@@ -1,28 +1,25 @@
 import 'package:algorithm_visualizer/core/resources/color_manager.dart';
+import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
 import 'package:algorithm_visualizer/features/visualize/sub_view/searching/helper/pf_constants.dart';
 import 'package:algorithm_visualizer/features/visualize/sub_view/searching/widgets/end_point.dart';
 import 'package:algorithm_visualizer/features/visualize/sub_view/searching/widgets/pf_grid_painter.dart';
 import 'package:algorithm_visualizer/features/visualize/sub_view/searching/widgets/start_point.dart';
-import 'package:algorithm_visualizer/lib-temp/theme/app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../view_model/searching_notifier.dart';
 
-final Color kGridDarkBg = const Color(0xFF060C1A);
-final Color kGridLightBg = const Color(0xFFF0F4FF);
+const Color kWallGridColor = ColorManager.wallBlack;
+const Color kPathGridColor = ColorManager.accentYellowDk;
 
-final Color kWallGridColor = ColorManager.wallBlack;
-final Color kPathGridColor = ColorManager.light2Yellow;
+const Color kSearcherStartColor = ColorManager.main2DarkColor;
+const Color kSearcherMediumColor = kSearcherStartColor;
+const Color kSearcherFinishedColor = ColorManager.accentBlueDk;
 
-final Color kSearcherStartColor = ColorManager.darkBlue;
-final Color kSearcherMediumColor = ColorManager.mediumBlue;
-final Color kSearcherFinishedColor = ColorManager.finishedSearcherBlue;
-
-final Color kStartPointIconColor = ColorManager.white;
-final Color kTargetOuterColor = ColorManager.darkPurple;
-final Color kTargetMidColor = ColorManager.white;
-final Color kTargetInnerColor = ColorManager.darkPurple;
+const Color kStartPointIconColor = ColorManager.white;
+const Color kTargetOuterColor = ColorManager.targetSearchingPoint;
+const Color kTargetMidColor = ColorManager.white;
+const Color kTargetInnerColor = ColorManager.targetSearchingPoint;
 
 enum _DragMode { none, start, end, wall }
 
@@ -156,9 +153,9 @@ class _PFGridState extends ConsumerState<PFGrid> with SingleTickerProviderStateM
             width: constraints.maxWidth,
             height: gridHeight,
             decoration: BoxDecoration(
-              color: context.isDark ? kGridDarkBg : kGridLightBg,
+              color: context.getColor(ThemeEnum.primary),
               borderRadius: BorderRadius.circular(14),
-              border: Border.all(color: context.borderColor),
+              border: Border.all(color: context.getColor(ThemeEnum.border)),
             ),
             child: ClipRRect(
               borderRadius: BorderRadius.circular(14),
@@ -169,7 +166,7 @@ class _PFGridState extends ConsumerState<PFGrid> with SingleTickerProviderStateM
                     painter: PFGridPainter(
                       walls: state.walls,
                       step: state.currentStep,
-                      isDark: context.isDark,
+                      isDark: context.isThemeDark,
                       wallAnims: _wallAnimations,
                       frontierAnims: _frontierAnimations,
                       visitedAnims: _visitedAnimations,

@@ -22,7 +22,7 @@ class SystemOverlay extends StatelessWidget {
     return const SystemUiOverlayStyle(
         statusBarColor: ColorManager.black,
         statusBarIconBrightness: Brightness.light,
-        systemNavigationBarColor: ColorManager.blackL2,
+        systemNavigationBarColor: ColorManager.black,
         systemNavigationBarIconBrightness: Brightness.light);
   }
 

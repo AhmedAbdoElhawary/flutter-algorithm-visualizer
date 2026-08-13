@@ -1,6 +1,5 @@
 import 'dart:ui';
-import 'package:algorithm_visualizer/core/extensions/theme.dart';
-import 'package:algorithm_visualizer/core/helpers/o_notation.dart';
+import 'package:algorithm_visualizer/features/visualize/helper/o_notation.dart';
 import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
 import 'package:algorithm_visualizer/core/widgets/adaptive/text/adaptive_text.dart';
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/custom_icon.dart';
@@ -22,7 +21,7 @@ class AlgorithmGlassCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GlassContainer(
-      color: ThemeEnum.cardGlassColor,
+      color: ThemeEnum.mainCard,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -90,7 +89,7 @@ class GlassContainer extends StatelessWidget {
   const GlassContainer({
     super.key,
     required this.child,
-    this.color = ThemeEnum.glassColor,
+    this.color = ThemeEnum.card,
     this.borderRadius = 20,
     this.borderWidth = 0.5,
     this.withAboveShadow = true,
@@ -100,7 +99,7 @@ class GlassContainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final borderColor = context.getColor(highlightCard ? ThemeEnum.borderPurpleColor : ThemeEnum.shadowColor);
+    final borderColor = context.getColor(highlightCard ? ThemeEnum.borderPurpleColor : ThemeEnum.border);
 
     return ClipRRect(
       borderRadius: BorderRadius.circular(borderRadius),
@@ -142,9 +141,9 @@ class SimpleGlassButton extends StatelessWidget {
       child: Container(
         padding: REdgeInsets.all(padding),
         decoration: BoxDecoration(
-          color: context.getColor(ThemeEnum.glassColor),
+          color: context.getColor(ThemeEnum.card),
           borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: context.getColor(ThemeEnum.shadowColor)),
+          border: Border.all(color: context.getColor(ThemeEnum.border)),
           boxShadow: context.isThemeDark
               ? []
               : [
