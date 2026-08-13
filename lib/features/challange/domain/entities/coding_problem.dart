@@ -76,6 +76,7 @@ extension CodingProblemX on CodingProblem {
   List<String> get getCommonMistakes => commonMistakes ?? [];
   List<SimilarQuestion> get getSimilarQuestions => similarQuestions ?? [];
   ProblemStatus get getProblemStatus => problemStatus ?? ProblemStatus.none;
+  bool get isSolved => getProblemStatus == ProblemStatus.solved;
   bool get getIsBookmarked => isBookmarked ?? false;
   List<ProblemSolutionStatusDTO> get getSolutionsStatus => solutionsStatus ?? [];
 }
