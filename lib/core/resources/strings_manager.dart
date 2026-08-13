@@ -108,4 +108,5 @@ class StringsManager {
   static const String nan = "NAN";
   static const String solveWithArrow = "Solve →";
   static const String status = "Status";
+  static const String all = "All";
 }
