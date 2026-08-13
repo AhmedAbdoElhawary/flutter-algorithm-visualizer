@@ -20,9 +20,9 @@ Example _$ExampleFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$Example {
-  Map<String, dynamic> get input => throw _privateConstructorUsedError;
+  Map<String, dynamic>? get input => throw _privateConstructorUsedError;
   dynamic get output => throw _privateConstructorUsedError;
-  String get explanation => throw _privateConstructorUsedError;
+  String? get explanation => throw _privateConstructorUsedError;
 
   /// Serializes this Example to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -38,7 +38,7 @@ abstract class $ExampleCopyWith<$Res> {
   factory $ExampleCopyWith(Example value, $Res Function(Example) then) =
       _$ExampleCopyWithImpl<$Res, Example>;
   @useResult
-  $Res call({Map<String, dynamic> input, dynamic output, String explanation});
+  $Res call({Map<String, dynamic>? input, dynamic output, String? explanation});
 }
 
 /// @nodoc
@@ -56,23 +56,23 @@ class _$ExampleCopyWithImpl<$Res, $Val extends Example>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? input = null,
+    Object? input = freezed,
     Object? output = freezed,
-    Object? explanation = null,
+    Object? explanation = freezed,
   }) {
     return _then(_value.copyWith(
-      input: null == input
+      input: freezed == input
           ? _value.input
           : input // ignore: cast_nullable_to_non_nullable
-              as Map<String, dynamic>,
+              as Map<String, dynamic>?,
       output: freezed == output
           ? _value.output
           : output // ignore: cast_nullable_to_non_nullable
               as dynamic,
-      explanation: null == explanation
+      explanation: freezed == explanation
           ? _value.explanation
           : explanation // ignore: cast_nullable_to_non_nullable
-              as String,
+              as String?,
     ) as $Val);
   }
 }
@@ -84,7 +84,7 @@ abstract class _$$ExampleImplCopyWith<$Res> implements $ExampleCopyWith<$Res> {
       __$$ExampleImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({Map<String, dynamic> input, dynamic output, String explanation});
+  $Res call({Map<String, dynamic>? input, dynamic output, String? explanation});
 }
 
 /// @nodoc
@@ -100,23 +100,23 @@ class __$$ExampleImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? input = null,
+    Object? input = freezed,
     Object? output = freezed,
-    Object? explanation = null,
+    Object? explanation = freezed,
   }) {
     return _then(_$ExampleImpl(
-      input: null == input
+      input: freezed == input
           ? _value._input
           : input // ignore: cast_nullable_to_non_nullable
-              as Map<String, dynamic>,
+              as Map<String, dynamic>?,
       output: freezed == output
           ? _value.output
           : output // ignore: cast_nullable_to_non_nullable
               as dynamic,
-      explanation: null == explanation
+      explanation: freezed == explanation
           ? _value.explanation
           : explanation // ignore: cast_nullable_to_non_nullable
-              as String,
+              as String?,
     ));
   }
 }
@@ -125,7 +125,7 @@ class __$$ExampleImplCopyWithImpl<$Res>
 @JsonSerializable()
 class _$ExampleImpl implements _Example {
   const _$ExampleImpl(
-      {required final Map<String, dynamic> input,
+      {required final Map<String, dynamic>? input,
       required this.output,
       required this.explanation})
       : _input = input;
@@ -133,18 +133,20 @@ class _$ExampleImpl implements _Example {
   factory _$ExampleImpl.fromJson(Map<String, dynamic> json) =>
       _$$ExampleImplFromJson(json);
 
-  final Map<String, dynamic> _input;
+  final Map<String, dynamic>? _input;
   @override
-  Map<String, dynamic> get input {
+  Map<String, dynamic>? get input {
+    final value = _input;
+    if (value == null) return null;
     if (_input is EqualUnmodifiableMapView) return _input;
     // ignore: implicit_dynamic_type
-    return EqualUnmodifiableMapView(_input);
+    return EqualUnmodifiableMapView(value);
   }
 
   @override
   final dynamic output;
   @override
-  final String explanation;
+  final String? explanation;
 
   @override
   String toString() {
@@ -188,18 +190,18 @@ class _$ExampleImpl implements _Example {
 
 abstract class _Example implements Example {
   const factory _Example(
-      {required final Map<String, dynamic> input,
+      {required final Map<String, dynamic>? input,
       required final dynamic output,
-      required final String explanation}) = _$ExampleImpl;
+      required final String? explanation}) = _$ExampleImpl;
 
   factory _Example.fromJson(Map<String, dynamic> json) = _$ExampleImpl.fromJson;
 
   @override
-  Map<String, dynamic> get input;
+  Map<String, dynamic>? get input;
   @override
   dynamic get output;
   @override
-  String get explanation;
+  String? get explanation;
 
   /// Create a copy of Example
   /// with the given fields replaced by the non-null parameter values.
