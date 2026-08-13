@@ -20,10 +20,10 @@ SolutionApproach _$SolutionApproachFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$SolutionApproach {
-  String get keyObservation => throw _privateConstructorUsedError;
-  String get algorithm => throw _privateConstructorUsedError;
-  String get whyItWorks => throw _privateConstructorUsedError;
-  String get implementationNotes => throw _privateConstructorUsedError;
+  String? get keyObservation => throw _privateConstructorUsedError;
+  String? get algorithm => throw _privateConstructorUsedError;
+  String? get whyItWorks => throw _privateConstructorUsedError;
+  String? get implementationNotes => throw _privateConstructorUsedError;
 
   /// Serializes this SolutionApproach to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -42,10 +42,10 @@ abstract class $SolutionApproachCopyWith<$Res> {
       _$SolutionApproachCopyWithImpl<$Res, SolutionApproach>;
   @useResult
   $Res call(
-      {String keyObservation,
-      String algorithm,
-      String whyItWorks,
-      String implementationNotes});
+      {String? keyObservation,
+      String? algorithm,
+      String? whyItWorks,
+      String? implementationNotes});
 }
 
 /// @nodoc
@@ -63,28 +63,28 @@ class _$SolutionApproachCopyWithImpl<$Res, $Val extends SolutionApproach>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? keyObservation = null,
-    Object? algorithm = null,
-    Object? whyItWorks = null,
-    Object? implementationNotes = null,
+    Object? keyObservation = freezed,
+    Object? algorithm = freezed,
+    Object? whyItWorks = freezed,
+    Object? implementationNotes = freezed,
   }) {
     return _then(_value.copyWith(
-      keyObservation: null == keyObservation
+      keyObservation: freezed == keyObservation
           ? _value.keyObservation
           : keyObservation // ignore: cast_nullable_to_non_nullable
-              as String,
-      algorithm: null == algorithm
+              as String?,
+      algorithm: freezed == algorithm
           ? _value.algorithm
           : algorithm // ignore: cast_nullable_to_non_nullable
-              as String,
-      whyItWorks: null == whyItWorks
+              as String?,
+      whyItWorks: freezed == whyItWorks
           ? _value.whyItWorks
           : whyItWorks // ignore: cast_nullable_to_non_nullable
-              as String,
-      implementationNotes: null == implementationNotes
+              as String?,
+      implementationNotes: freezed == implementationNotes
           ? _value.implementationNotes
           : implementationNotes // ignore: cast_nullable_to_non_nullable
-              as String,
+              as String?,
     ) as $Val);
   }
 }
@@ -98,10 +98,10 @@ abstract class _$$SolutionApproachImplCopyWith<$Res>
   @override
   @useResult
   $Res call(
-      {String keyObservation,
-      String algorithm,
-      String whyItWorks,
-      String implementationNotes});
+      {String? keyObservation,
+      String? algorithm,
+      String? whyItWorks,
+      String? implementationNotes});
 }
 
 /// @nodoc
@@ -117,28 +117,28 @@ class __$$SolutionApproachImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? keyObservation = null,
-    Object? algorithm = null,
-    Object? whyItWorks = null,
-    Object? implementationNotes = null,
+    Object? keyObservation = freezed,
+    Object? algorithm = freezed,
+    Object? whyItWorks = freezed,
+    Object? implementationNotes = freezed,
   }) {
     return _then(_$SolutionApproachImpl(
-      keyObservation: null == keyObservation
+      keyObservation: freezed == keyObservation
           ? _value.keyObservation
           : keyObservation // ignore: cast_nullable_to_non_nullable
-              as String,
-      algorithm: null == algorithm
+              as String?,
+      algorithm: freezed == algorithm
           ? _value.algorithm
           : algorithm // ignore: cast_nullable_to_non_nullable
-              as String,
-      whyItWorks: null == whyItWorks
+              as String?,
+      whyItWorks: freezed == whyItWorks
           ? _value.whyItWorks
           : whyItWorks // ignore: cast_nullable_to_non_nullable
-              as String,
-      implementationNotes: null == implementationNotes
+              as String?,
+      implementationNotes: freezed == implementationNotes
           ? _value.implementationNotes
           : implementationNotes // ignore: cast_nullable_to_non_nullable
-              as String,
+              as String?,
     ));
   }
 }
@@ -156,13 +156,13 @@ class _$SolutionApproachImpl implements _SolutionApproach {
       _$$SolutionApproachImplFromJson(json);
 
   @override
-  final String keyObservation;
+  final String? keyObservation;
   @override
-  final String algorithm;
+  final String? algorithm;
   @override
-  final String whyItWorks;
+  final String? whyItWorks;
   @override
-  final String implementationNotes;
+  final String? implementationNotes;
 
   @override
   String toString() {
@@ -208,22 +208,22 @@ class _$SolutionApproachImpl implements _SolutionApproach {
 
 abstract class _SolutionApproach implements SolutionApproach {
   const factory _SolutionApproach(
-      {required final String keyObservation,
-      required final String algorithm,
-      required final String whyItWorks,
-      required final String implementationNotes}) = _$SolutionApproachImpl;
+      {required final String? keyObservation,
+      required final String? algorithm,
+      required final String? whyItWorks,
+      required final String? implementationNotes}) = _$SolutionApproachImpl;
 
   factory _SolutionApproach.fromJson(Map<String, dynamic> json) =
       _$SolutionApproachImpl.fromJson;
 
   @override
-  String get keyObservation;
+  String? get keyObservation;
   @override
-  String get algorithm;
+  String? get algorithm;
   @override
-  String get whyItWorks;
+  String? get whyItWorks;
   @override
-  String get implementationNotes;
+  String? get implementationNotes;
 
   /// Create a copy of SolutionApproach
   /// with the given fields replaced by the non-null parameter values.
