@@ -12,8 +12,11 @@ enum ThemeEnum {
   accentBg,
   accentGreen,
   accentGreenBg,
+  accentGreenRc,
   accentYellow,
+  accentYellowRc,
   accentRed,
+  accentRedRc,
   accentBlue,
   textSecond,
   textPrimary,
@@ -64,12 +67,15 @@ extension ThemeExtension on BuildContext {
       ThemeEnum.accentBg: isThemeDark
           ? ColorManager.accentDk.withValues(alpha: 0.12)
           : ColorManager.accentLt.withValues(alpha: 0.08),
+      ThemeEnum.accentGreenRc:  ColorManager.accentGreenBgDk,
       ThemeEnum.accentGreen: isThemeDark ? ColorManager.accentGreenDk : ColorManager.accentGreenLt,
       ThemeEnum.accentGreenBg: isThemeDark
           ? ColorManager.accentGreenDk.withValues(alpha: 0.12)
           : ColorManager.accentGreenLt.withValues(alpha: 0.08),
       ThemeEnum.accentYellow: isThemeDark ? ColorManager.accentYellowDk : ColorManager.accentYellowLt,
+      ThemeEnum.accentYellowRc:  ColorManager.accentYellowBgDk ,
       ThemeEnum.accentRed: isThemeDark ? ColorManager.accentRedDk : ColorManager.accentRedLt,
+      ThemeEnum.accentRedRc:  ColorManager.accentRedBgDk ,
       ThemeEnum.accentBlue: isThemeDark ? ColorManager.accentBlueDk : ColorManager.accentBlueLt,
       ThemeEnum.textSecond: isThemeDark ? ColorManager.textSecondDk : ColorManager.textSecondLt,
       ThemeEnum.textPrimary: isThemeDark ? ColorManager.textPrimaryDk : ColorManager.textPrimaryLt,
