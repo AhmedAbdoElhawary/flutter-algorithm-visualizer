@@ -2,9 +2,9 @@ import 'package:algorithm_visualizer/core/resources/strings_manager.dart';
 import 'package:algorithm_visualizer/core/widgets/adaptive/text/adaptive_text.dart';
 import 'package:algorithm_visualizer/features/base/view/base_navigation.dart';
 import 'package:algorithm_visualizer/features/base/view_model/base_view_model.dart';
+import 'package:algorithm_visualizer/features/challange/presentation/view/challenge_page.dart';
 import 'package:algorithm_visualizer/features/code/view/code_editor_page.dart';
 import 'package:algorithm_visualizer/features/home/view/home_page.dart';
-import 'package:algorithm_visualizer/features/challange/presentation/view/challenge_page.dart';
 import 'package:algorithm_visualizer/features/visualize/view/visualize_page.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
@@ -33,6 +33,7 @@ class Routes {
   static const RouteConfig code = RouteConfig(
     name: 'code',
     path: '/code',
+    queryParamsName: "problem_id",
   );
   static const RouteConfig practice = RouteConfig(
     name: 'practice',
@@ -88,7 +89,8 @@ class AppRoutes {
                 name: Routes.visualize.name,
                 builder: (context, state) {
                   final instance = state.uri.queryParameters["instance"];
-                  final sortingAlgo = SortingAlgoCards.values.firstWhereOrNull((element) => element.name == instance);
+                  final sortingAlgo =
+                      SortingAlgoCards.values.firstWhereOrNull((element) => element.name == instance);
                   final searchingAlgo =
                       SearchingAlgoCards.values.firstWhereOrNull((element) => element.name == instance);
                   if (instance != null && (sortingAlgo == null && searchingAlgo == null)) {
@@ -105,7 +107,13 @@ class AppRoutes {
               GoRoute(
                 path: Routes.code.path,
                 name: Routes.code.name,
-                builder: (context, state) => CodeEditorPage(),
+                builder: (context, state) {
+                  final id = int.tryParse(state.uri.queryParameters["problem_id"] ?? "");
+
+                  if (id == null) return _UnknownPage();
+
+                  return CodeEditorPage(problemId: id);
+                },
               ),
             ],
           ),
