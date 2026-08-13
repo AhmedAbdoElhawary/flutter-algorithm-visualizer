@@ -1,5 +1,6 @@
 import 'package:algorithm_visualizer/core/resources/strings_manager.dart';
 import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
+import 'package:algorithm_visualizer/core/widgets/adaptive/text/adaptive_text.dart';
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/custom_icon.dart';
 import 'package:algorithm_visualizer/features/challange/presentation/view_model/challenges_notifier.dart';
 import 'package:flutter/material.dart';
@@ -60,8 +61,7 @@ class _ChallengesSearchFieldState extends ConsumerState<ChallengesSearchField> {
                   _controller.clear();
                   ref.read(challengesProvider.notifier).clearSearch();
                 },
-                child: Text('×',
-                    style: GoogleFonts.inter(color: context.getColor(ThemeEnum.hover), fontSize: 18.r)),
+                child: RegularText('×', color: ThemeEnum.hover, fontSize: 18),
               ),
           ],
         ),
