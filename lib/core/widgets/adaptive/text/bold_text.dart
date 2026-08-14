@@ -12,6 +12,7 @@ class BoldText extends _AdaptiveText {
     super.textAlign,
     super.maxLines = 2,
     super.fontFamily,
+    super.letterSpacing,
     super.key,
   });
 }

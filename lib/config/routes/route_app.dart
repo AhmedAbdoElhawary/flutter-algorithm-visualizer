@@ -4,7 +4,7 @@ import 'package:algorithm_visualizer/features/base/view/base_navigation.dart';
 import 'package:algorithm_visualizer/features/base/view_model/base_view_model.dart';
 import 'package:algorithm_visualizer/features/code/view/code_editor_page.dart';
 import 'package:algorithm_visualizer/features/home/view/home_page.dart';
-import 'package:algorithm_visualizer/features/practice/view/practice_page.dart';
+import 'package:algorithm_visualizer/features/challange/presentation/view/challenge_page.dart';
 import 'package:algorithm_visualizer/features/visualize/view/visualize_page.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
@@ -115,7 +115,7 @@ class AppRoutes {
               GoRoute(
                 path: Routes.practice.path,
                 name: Routes.practice.name,
-                builder: (context, state) => PracticePage(),
+                builder: (context, state) => ChallengePage(),
               ),
             ],
           ),
@@ -125,7 +125,7 @@ class AppRoutes {
               GoRoute(
                 path: Routes.profile.path,
                 name: Routes.profile.name,
-                builder: (context, state) => PracticePage(),
+                builder: (context, state) => ChallengePage(),
               ),
             ],
           ),
