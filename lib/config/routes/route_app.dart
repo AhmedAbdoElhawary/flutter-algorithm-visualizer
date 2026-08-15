@@ -108,9 +108,7 @@ class AppRoutes {
                 path: Routes.code.path,
                 name: Routes.code.name,
                 builder: (context, state) {
-                  final id = int.tryParse(state.uri.queryParameters["problem_id"] ?? "");
-
-                  if (id == null) return _UnknownPage();
+                  final id = int.tryParse(state.uri.queryParameters["problem_id"] ?? "")??-1;
 
                   return CodeEditorPage(problemId: id);
                 },
