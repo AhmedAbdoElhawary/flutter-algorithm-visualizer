@@ -3,6 +3,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 part 'similar_question.freezed.dart';
 part 'similar_question.g.dart';
 
+
 @freezed
 class SimilarQuestion with _$SimilarQuestion {
   const factory SimilarQuestion({
