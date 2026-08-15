@@ -1,8 +1,8 @@
+import 'package:algorithm_visualizer/core/resources/strings_manager.dart';
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/code_editor.dart';
 import 'package:algorithm_visualizer/features/challange/challange/presentation/providers/code_editor_providers.dart';
 import 'package:algorithm_visualizer/features/challange/challange/presentation/widgets/code_editor_header.dart';
 import 'package:algorithm_visualizer/features/challange/challange/presentation/widgets/code_editor_lang_bar.dart';
-import 'package:algorithm_visualizer/features/challange/challange/presentation/widgets/code_editor_output_card.dart';
 import 'package:algorithm_visualizer/features/challange/presentation/view_model/challenges_providers.dart';
 import 'package:algorithm_visualizer/features/challange/presentation/widgets/empty_state.dart';
 import 'package:algorithm_visualizer/features/challange/presentation/widgets/error_state.dart';
@@ -59,8 +59,13 @@ class _VisualizerScreenState extends ConsumerState<CodeEditorPage> {
       body: SafeArea(
         child: codingProblem.when(
           data: (data) {
-            if (data == null) return const ChallengesEmptyState();
-
+            if (data == null) {
+              return const ChallengesEmptyState(
+                showIcon: false,
+                title: StringsManager.noChallengeSelected,
+                subTitle: StringsManager.tryToPracticeAChallenge,
+              );
+            }
             final provider = codeEditorControllerProvider(data);
             final state = ref.watch(provider);
             final notifier = ref.read(provider.notifier);
@@ -85,7 +90,7 @@ class _VisualizerScreenState extends ConsumerState<CodeEditorPage> {
                     ),
                   ),
                 ),
-                if (state.showOutput && state.result != null) CodeEditorOutputCard(result: state.result!),
+                // if (state.showOutput && state.result != null) CodeEditorOutputCard(result: state.result!),
                 SliverToBoxAdapter(child: RSizedBox(height: 20)),
               ],
             );
