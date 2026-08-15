@@ -31,6 +31,8 @@ mixin _$CodingProblem {
   List<String>? get patterns => throw _privateConstructorUsedError;
   String? get description => throw _privateConstructorUsedError;
   List<String>? get constraints => throw _privateConstructorUsedError;
+  FunctionSignature? get functionSignature =>
+      throw _privateConstructorUsedError;
   List<Example>? get examples => throw _privateConstructorUsedError;
   List<String>? get edgeCases => throw _privateConstructorUsedError;
   List<TestCase>? get testCases => throw _privateConstructorUsedError;
@@ -79,6 +81,7 @@ abstract class $CodingProblemCopyWith<$Res> {
       List<String>? patterns,
       String? description,
       List<String>? constraints,
+      FunctionSignature? functionSignature,
       List<Example>? examples,
       List<String>? edgeCases,
       List<TestCase>? testCases,
@@ -97,6 +100,7 @@ abstract class $CodingProblemCopyWith<$Res> {
       bool? isBookmarked,
       List<ProblemSolutionStatusDTO>? solutionsStatus});
 
+  $FunctionSignatureCopyWith<$Res>? get functionSignature;
   $SolutionApproachCopyWith<$Res>? get solutionApproach;
 }
 
@@ -126,6 +130,7 @@ class _$CodingProblemCopyWithImpl<$Res, $Val extends CodingProblem>
     Object? patterns = freezed,
     Object? description = freezed,
     Object? constraints = freezed,
+    Object? functionSignature = freezed,
     Object? examples = freezed,
     Object? edgeCases = freezed,
     Object? testCases = freezed,
@@ -189,6 +194,10 @@ class _$CodingProblemCopyWithImpl<$Res, $Val extends CodingProblem>
           ? _value.constraints
           : constraints // ignore: cast_nullable_to_non_nullable
               as List<String>?,
+      functionSignature: freezed == functionSignature
+          ? _value.functionSignature
+          : functionSignature // ignore: cast_nullable_to_non_nullable
+              as FunctionSignature?,
       examples: freezed == examples
           ? _value.examples
           : examples // ignore: cast_nullable_to_non_nullable
@@ -264,6 +273,20 @@ class _$CodingProblemCopyWithImpl<$Res, $Val extends CodingProblem>
   /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
+  $FunctionSignatureCopyWith<$Res>? get functionSignature {
+    if (_value.functionSignature == null) {
+      return null;
+    }
+
+    return $FunctionSignatureCopyWith<$Res>(_value.functionSignature!, (value) {
+      return _then(_value.copyWith(functionSignature: value) as $Val);
+    });
+  }
+
+  /// Create a copy of CodingProblem
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @pragma('vm:prefer-inline')
   $SolutionApproachCopyWith<$Res>? get solutionApproach {
     if (_value.solutionApproach == null) {
       return null;
@@ -295,6 +318,7 @@ abstract class _$$CodingProblemImplCopyWith<$Res>
       List<String>? patterns,
       String? description,
       List<String>? constraints,
+      FunctionSignature? functionSignature,
       List<Example>? examples,
       List<String>? edgeCases,
       List<TestCase>? testCases,
@@ -313,6 +337,8 @@ abstract class _$$CodingProblemImplCopyWith<$Res>
       bool? isBookmarked,
       List<ProblemSolutionStatusDTO>? solutionsStatus});
 
+  @override
+  $FunctionSignatureCopyWith<$Res>? get functionSignature;
   @override
   $SolutionApproachCopyWith<$Res>? get solutionApproach;
 }
@@ -341,6 +367,7 @@ class __$$CodingProblemImplCopyWithImpl<$Res>
     Object? patterns = freezed,
     Object? description = freezed,
     Object? constraints = freezed,
+    Object? functionSignature = freezed,
     Object? examples = freezed,
     Object? edgeCases = freezed,
     Object? testCases = freezed,
@@ -404,6 +431,10 @@ class __$$CodingProblemImplCopyWithImpl<$Res>
           ? _value._constraints
           : constraints // ignore: cast_nullable_to_non_nullable
               as List<String>?,
+      functionSignature: freezed == functionSignature
+          ? _value.functionSignature
+          : functionSignature // ignore: cast_nullable_to_non_nullable
+              as FunctionSignature?,
       examples: freezed == examples
           ? _value._examples
           : examples // ignore: cast_nullable_to_non_nullable
@@ -491,6 +522,7 @@ class _$CodingProblemImpl implements _CodingProblem {
       required final List<String>? patterns,
       required this.description,
       required final List<String>? constraints,
+      required this.functionSignature,
       required final List<Example>? examples,
       required final List<String>? edgeCases,
       required final List<TestCase>? testCases,
@@ -571,6 +603,8 @@ class _$CodingProblemImpl implements _CodingProblem {
     return EqualUnmodifiableListView(value);
   }
 
+  @override
+  final FunctionSignature? functionSignature;
   final List<Example>? _examples;
   @override
   List<Example>? get examples {
@@ -690,7 +724,7 @@ class _$CodingProblemImpl implements _CodingProblem {
 
   @override
   String toString() {
-    return 'CodingProblem(number: $number, problemId: $problemId, name: $name, source: $source, sourceProblemNumber: $sourceProblemNumber, difficulty: $difficulty, category: $category, tags: $tags, patterns: $patterns, description: $description, constraints: $constraints, examples: $examples, edgeCases: $edgeCases, testCases: $testCases, hiddenTestCases: $hiddenTestCases, hints: $hints, solutionApproach: $solutionApproach, expectedTimeComplexity: $expectedTimeComplexity, expectedSpaceComplexity: $expectedSpaceComplexity, whatYouLearn: $whatYouLearn, keyPattern: $keyPattern, prerequisites: $prerequisites, followUpConcepts: $followUpConcepts, commonMistakes: $commonMistakes, similarQuestions: $similarQuestions, problemStatus: $problemStatus, isBookmarked: $isBookmarked, solutionsStatus: $solutionsStatus)';
+    return 'CodingProblem(number: $number, problemId: $problemId, name: $name, source: $source, sourceProblemNumber: $sourceProblemNumber, difficulty: $difficulty, category: $category, tags: $tags, patterns: $patterns, description: $description, constraints: $constraints, functionSignature: $functionSignature, examples: $examples, edgeCases: $edgeCases, testCases: $testCases, hiddenTestCases: $hiddenTestCases, hints: $hints, solutionApproach: $solutionApproach, expectedTimeComplexity: $expectedTimeComplexity, expectedSpaceComplexity: $expectedSpaceComplexity, whatYouLearn: $whatYouLearn, keyPattern: $keyPattern, prerequisites: $prerequisites, followUpConcepts: $followUpConcepts, commonMistakes: $commonMistakes, similarQuestions: $similarQuestions, problemStatus: $problemStatus, isBookmarked: $isBookmarked, solutionsStatus: $solutionsStatus)';
   }
 
   @override
@@ -715,6 +749,8 @@ class _$CodingProblemImpl implements _CodingProblem {
                 other.description == description) &&
             const DeepCollectionEquality()
                 .equals(other._constraints, _constraints) &&
+            (identical(other.functionSignature, functionSignature) ||
+                other.functionSignature == functionSignature) &&
             const DeepCollectionEquality().equals(other._examples, _examples) &&
             const DeepCollectionEquality()
                 .equals(other._edgeCases, _edgeCases) &&
@@ -765,6 +801,7 @@ class _$CodingProblemImpl implements _CodingProblem {
         const DeepCollectionEquality().hash(_patterns),
         description,
         const DeepCollectionEquality().hash(_constraints),
+        functionSignature,
         const DeepCollectionEquality().hash(_examples),
         const DeepCollectionEquality().hash(_edgeCases),
         const DeepCollectionEquality().hash(_testCases),
@@ -813,6 +850,7 @@ abstract class _CodingProblem implements CodingProblem {
           required final List<String>? patterns,
           required final String? description,
           required final List<String>? constraints,
+          required final FunctionSignature? functionSignature,
           required final List<Example>? examples,
           required final List<String>? edgeCases,
           required final List<TestCase>? testCases,
@@ -857,6 +895,8 @@ abstract class _CodingProblem implements CodingProblem {
   String? get description;
   @override
   List<String>? get constraints;
+  @override
+  FunctionSignature? get functionSignature;
   @override
   List<Example>? get examples;
   @override
