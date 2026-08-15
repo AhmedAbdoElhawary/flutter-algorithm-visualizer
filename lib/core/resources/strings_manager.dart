@@ -112,4 +112,8 @@ class StringsManager {
 
   static const String noChallengeSelected = "No challenge selected";
   static const String tryToPracticeAChallenge = "Try to practice a challenge";
+
+  static const String dart = "Dart";
+  static const String run = "Run";
+  static const String running = "Running...";
 }
