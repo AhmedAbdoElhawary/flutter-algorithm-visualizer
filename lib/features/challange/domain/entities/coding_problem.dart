@@ -1,4 +1,5 @@
 import 'package:algorithm_visualizer/features/challange/data/models/example.dart';
+import 'package:algorithm_visualizer/features/challange/data/models/function_signature.dart';
 import 'package:algorithm_visualizer/features/challange/data/models/problem_storage.dart';
 import 'package:algorithm_visualizer/features/challange/data/models/similar_question.dart';
 import 'package:algorithm_visualizer/features/challange/data/models/solution_approach.dart';
@@ -25,6 +26,7 @@ class CodingProblem with _$CodingProblem {
     required List<String>? patterns,
     required String? description,
     required List<String>? constraints,
+    required FunctionSignature? functionSignature,
     required List<Example>? examples,
     required List<String>? edgeCases,
     required List<TestCase>? testCases,
@@ -61,6 +63,14 @@ extension CodingProblemX on CodingProblem {
   List<String> get getPatterns => patterns ?? [];
   String get getDescription => description ?? '';
   List<String> get getConstraints => constraints ?? [];
+
+  String get getFunctionInDart {
+    final sign = functionSignature?.dart;
+    if (sign == null) return "";
+
+    return "$sign{\n\n}";
+  }
+
   List<Example> get getExamples => examples ?? [];
   List<String> get getEdgeCases => edgeCases ?? [];
   List<TestCase> get getTestCases => testCases ?? [];
