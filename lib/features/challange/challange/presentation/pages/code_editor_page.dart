@@ -3,6 +3,7 @@ import 'package:algorithm_visualizer/core/widgets/custom_widgets/code_editor.dar
 import 'package:algorithm_visualizer/features/challange/challange/presentation/providers/code_editor_providers.dart';
 import 'package:algorithm_visualizer/features/challange/challange/presentation/widgets/code_editor_header.dart';
 import 'package:algorithm_visualizer/features/challange/challange/presentation/widgets/code_editor_lang_bar.dart';
+import 'package:algorithm_visualizer/features/challange/domain/entities/coding_problem.dart';
 import 'package:algorithm_visualizer/features/challange/presentation/view_model/challenges_providers.dart';
 import 'package:algorithm_visualizer/features/challange/presentation/widgets/empty_state.dart';
 import 'package:algorithm_visualizer/features/challange/presentation/widgets/error_state.dart';
@@ -58,15 +59,15 @@ class _VisualizerScreenState extends ConsumerState<CodeEditorPage> {
     return Scaffold(
       body: SafeArea(
         child: codingProblem.when(
-          data: (data) {
-            if (data == null) {
+          data: (problem) {
+            if (problem == null) {
               return const ChallengesEmptyState(
                 showIcon: false,
                 title: StringsManager.noChallengeSelected,
                 subTitle: StringsManager.tryToPracticeAChallenge,
               );
             }
-            final provider = codeEditorControllerProvider(data);
+            final provider = codeEditorControllerProvider(problem);
             final state = ref.watch(provider);
             final notifier = ref.read(provider.notifier);
 
@@ -83,7 +84,7 @@ class _VisualizerScreenState extends ConsumerState<CodeEditorPage> {
                   padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
                   sliver: SliverToBoxAdapter(
                     child: CodeEditorBlock(
-                      code: _dartCode,
+                      code: problem.getFunctionInDart,
                       highlightLineNumber: state.highlightedLine ?? -1,
                       executing: state.isRunning,
                       controllerCallback: notifier.attachCodeController,
