@@ -1,3 +1,4 @@
+import 'package:algorithm_visualizer/core/resources/font_manager.dart';
 import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
 import 'package:algorithm_visualizer/core/widgets/adaptive/text/adaptive_text.dart';
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/custom_icon.dart';
@@ -43,7 +44,7 @@ class AlgoTab extends ConsumerWidget {
             BoldText(
               label,
               textAlign: TextAlign.center,
-              fontFamily: "jetBrainsMono",
+              fontFamily: FontConstants.fontJetBrainsMono,
               color: isSelected ? ThemeEnum.accent : ThemeEnum.hover,
               fontSize: 13,
             ),
