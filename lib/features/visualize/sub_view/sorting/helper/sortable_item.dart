@@ -31,6 +31,19 @@ class SortableItem {
         return SortingNotifier.itemColor;
     }
   }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+
+    return other is SortableItem &&
+        other.id == id &&
+        other.value == value &&
+        other.sortedStatus.name == sortedStatus.name;
+  }
+
+  @override
+  int get hashCode => id.hashCode ^ value.hashCode ^ sortedStatus.name.hashCode;
 }
 
 class SortingStep {
@@ -43,6 +56,19 @@ class SortingStep {
     required this.index2,
     required this.action,
   });
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+
+    return other is SortingStep &&
+        other.index1 == index1 &&
+        other.index2 == index2 &&
+        other.action.name == action.name;
+  }
+
+  @override
+  int get hashCode => index1.hashCode ^ index2.hashCode ^ action.name.hashCode;
 
   static SortingStep noneStep() => SortingStep(index1: -1, index2: -2, action: SortingStatus.none);
 }
