@@ -15,7 +15,7 @@ class ChallengesErrorState extends StatelessWidget {
         children: [
           RegularText('ⓘ', fontSize: 40, color: ThemeEnum.accentRedRc),
           const RSizedBox(height: 12),
-          SemiBoldText(StringsManager.errorText, color: ThemeEnum.textSecond, fontSize: 15),
+          SemiBoldText(StringsManager.notAbleToLoadAnyChallenge, color: ThemeEnum.textSecond, fontSize: 15),
           const RSizedBox(height: 4),
           RegularText(StringsManager.tryInDifferentTime, color: ThemeEnum.hover, fontSize: 13),
         ],
