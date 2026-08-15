@@ -59,7 +59,7 @@ class CodeEditorController extends StateNotifier<CodeEditorState> {
       isRunning: false,
       showOutput: true,
       highlightedLine: null,
-      result: result,
+      // result: result,
     );
   }
 
