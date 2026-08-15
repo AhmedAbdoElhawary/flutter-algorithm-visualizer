@@ -2,6 +2,9 @@ import 'package:algorithm_visualizer/core/resources/color_manager.dart';
 import 'package:flutter/material.dart';
 
 enum ThemeEnum {
+  /// static colors
+  solidWhite,
+  /// ----------------
   primary,
   focus,
   card,
@@ -55,6 +58,7 @@ extension ThemeExtension on BuildContext {
 
   Map<ThemeEnum, Color> get _colors {
     return {
+      ThemeEnum.solidWhite: ColorManager.white,
       ThemeEnum.primary: Theme.of(this).primaryColor,
       ThemeEnum.focus: Theme.of(this).focusColor,
       ThemeEnum.card: Theme.of(this).hintColor,

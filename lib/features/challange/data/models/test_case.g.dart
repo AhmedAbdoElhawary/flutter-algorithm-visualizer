@@ -8,8 +8,8 @@ part of 'test_case.dart';
 
 _$TestCaseImpl _$$TestCaseImplFromJson(Map<String, dynamic> json) =>
     _$TestCaseImpl(
-      input: json['input'] as Map<String, dynamic>,
-      expectedOutput: json['expected_output'],
+      input: json['input'] as String?,
+      expectedOutput: json['expected_output'] as String?,
     );
 
 Map<String, dynamic> _$$TestCaseImplToJson(_$TestCaseImpl instance) =>
