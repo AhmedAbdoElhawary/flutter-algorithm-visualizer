@@ -16,6 +16,7 @@ class ProblemMapper {
       patterns: dto.patterns,
       description: dto.description,
       constraints: dto.constraints,
+      functionSignature: dto.functionSignature,
       examples: dto.examples,
       edgeCases: dto.edgeCases,
       testCases: dto.testCases,
