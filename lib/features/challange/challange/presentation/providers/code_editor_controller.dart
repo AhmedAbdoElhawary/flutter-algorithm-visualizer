@@ -3,12 +3,11 @@ import 'dart:async';
 import 'package:algorithm_visualizer/core/custom_packages/custom_code_editor/src/editor/code_controller.dart';
 import 'package:algorithm_visualizer/features/challange/challange/presentation/providers/code_editor_state.dart';
 import 'package:algorithm_visualizer/features/challange/domain/entities/coding_problem.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class CodeEditorController extends StateNotifier<CodeEditorState> {
-  CodeEditorController({
-    required this.codingProblem,
-  })  :super(CodeEditorState.initial()) {
+  CodeEditorController({required this.codingProblem}) : super(CodeEditorState.initial()) {
     _loadTestCases();
   }
 
@@ -21,46 +20,62 @@ class CodeEditorController extends StateNotifier<CodeEditorState> {
 
   Timer? _highlightTimer;
 
+  void attachCodeController(CodeController controller) {
+    _codeController = controller;
+  }
+  Future<void> copyCode() async {
+    final text = _codeController?.text;
+    if (text == null) return;
+
+    state = state.copyWith(copied: true);
+    await Clipboard.setData(ClipboardData(text: text));
+
+    Future.delayed(const Duration(milliseconds: 1000), () {
+      if (mounted) state = state.copyWith(copied: false);
+    });
+  }
+
+  CodeController get _getCodeController  {
+    final con=_codeController;
+    if(con==null){
+    /// todo: test this
+
+      throw StateError(
+        'CodeControllerRunnerRepository: no CodeController attached yet.',
+      )
+      ;
+    }
+    return con;
+
+  }
+  /// not done yet===============================
   /// todo: implement this
   Future<void> _loadTestCases() async {
+final controller = _getCodeController;
+codingProblem.getTestCases;
     // final testCases = await _getTestCasesUseCase(problemId);
     // if (!mounted) return;
     // state = state.copyWith(testCases: testCases, loadingTestCases: false);
   }
 
-  void attachCodeController(CodeController controller) {
-    _codeController = controller;
-  }
 
-  void copyCode() {
-    state = state.copyWith(copied: true);
-    Future.delayed(const Duration(milliseconds: 1500), () {
-      if (mounted) state = state.copyWith(copied: false);
-    });
-  }
 
   Future<void> runCode() async {
-    final controller = _codeController;
-    if (state.isRunning) return;
-    if (controller == null) {
-      /// todo: test this
-      throw StateError(
-        'CodeControllerRunnerRepository: no CodeController attached yet.',
-      );
-    }
-    state = state.copyWith(isRunning: true, showOutput: false, highlightedLine: null);
-
-    final totalLines = controller.text.split('\n').length;
-    await _animateLineByLine(totalLines);
-
-    final result = controller.execute().stdout.join('\n');
-
-    state = state.copyWith(
-      isRunning: false,
-      showOutput: true,
-      highlightedLine: null,
-      // result: result,
-    );
+    // final controller = _getCodeController;
+    // if (state.isRunning) return;
+    // state = state.copyWith(isRunning: true, showOutput: false, highlightedLine: null);
+    //
+    // final totalLines = controller.text.split('\n').length;
+    // await _animateLineByLine(totalLines);
+    //
+    // final result = controller.execute().stdout.join('\n');
+    //
+    // state = state.copyWith(
+    //   isRunning: false,
+    //   showOutput: true,
+    //   highlightedLine: null,
+    //   // result: result,
+    // );
   }
 
   /// Purely cosmetic "line highlight sweep" while the code "runs" — kept in
