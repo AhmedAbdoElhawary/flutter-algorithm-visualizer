@@ -3,12 +3,9 @@ import 'package:algorithm_visualizer/features/challange/challange/presentation/p
 import 'package:algorithm_visualizer/features/challange/domain/entities/coding_problem.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-
 /// Scoped per `problemId` — each problem screen gets its own controller,
 /// runner repository and disposes when the screen is popped.
 final codeEditorControllerProvider = StateNotifierProvider.autoDispose
     .family<CodeEditorController, CodeEditorState, CodingProblem>((ref, codingProblem) {
-  return CodeEditorController(
-    codingProblem: codingProblem,
-  );
+  return CodeEditorController(codingProblem: codingProblem);
 });
