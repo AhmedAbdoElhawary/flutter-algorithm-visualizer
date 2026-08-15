@@ -1,5 +1,6 @@
 import 'package:algorithm_visualizer/core/custom_packages/custom_code_editor/code_editor.dart';
 import 'package:algorithm_visualizer/core/resources/color_manager.dart';
+import 'package:algorithm_visualizer/core/resources/font_manager.dart';
 import 'package:algorithm_visualizer/core/resources/strings_manager.dart';
 import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
 import 'package:algorithm_visualizer/core/widgets/adaptive/text/adaptive_text.dart';
@@ -47,12 +48,12 @@ class _CodeEditorBlockState extends State<CodeEditorBlock> with SingleTickerProv
           color: ColorManager.codeEditorNumberColor,
           fontSize: 12.sp,
           height: 1.5,
-          fontFamily: 'JetBrainsMono',
+          fontFamily: FontConstants.fontJetBrainsMono,
         ),
         selectionColor: Color.fromRGBO(54, 83, 116, 1),
         textStyle: TextStyle(
           color: Color(0xFFD4D4D4),
-          fontFamily: 'JetBrainsMono',
+          fontFamily: FontConstants.fontJetBrainsMono,
           fontSize: 14.sp,
           height: 1.5,
         ),
@@ -73,16 +74,7 @@ class _CodeEditorBlockState extends State<CodeEditorBlock> with SingleTickerProv
     _highlightLine();
 
     final resultCallback = widget.controllerCallback;
-    if (resultCallback != null) {
-      widget.controllerCallback?.call(controller);
-
-      // final result = controller.execute();
-      // if (result.success) {
-      //   print(result.stdout.join('\n')); // everything the code printed
-      // } else {
-      //   print('Line ${result.error!.line}: ${result.error!.message}');
-      // }
-    }
+    if (resultCallback != null) widget.controllerCallback?.call(controller);
   }
 
   @override
