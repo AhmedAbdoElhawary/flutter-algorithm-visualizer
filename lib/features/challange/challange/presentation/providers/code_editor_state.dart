@@ -1,6 +1,3 @@
-
-import 'package:algorithm_visualizer/features/challange/challange/domain/entities/execution_result.dart';
-
 /// Sentinel so `copyWith` can tell "leave unchanged" apart from "set this
 /// nullable field to null".
 class _Unset {
@@ -17,7 +14,7 @@ class CodeEditorState {
     required this.highlightedLine,
     // required this.testCases,
     required this.loadingTestCases,
-    required this.result,
+    // required this.result,
   });
 
   factory CodeEditorState.initial() => const CodeEditorState(
@@ -27,7 +24,7 @@ class CodeEditorState {
         highlightedLine: null,
         // testCases: [],
         loadingTestCases: true,
-        result: null,
+        // result: null,
       );
 
   final bool isRunning;
@@ -36,7 +33,7 @@ class CodeEditorState {
   final int? highlightedLine;
   // final List<CodeTestCase> testCases;
   final bool loadingTestCases;
-  final ExecutionResult? result;
+  // final ExecutionResult? result;
 
   CodeEditorState copyWith({
     bool? isRunning,
@@ -45,7 +42,7 @@ class CodeEditorState {
     Object? highlightedLine = _unset,
     // List<CodeTestCase>? testCases,
     bool? loadingTestCases,
-    Object? result = _unset,
+    // Object? result = _unset,
   }) {
     return CodeEditorState(
       isRunning: isRunning ?? this.isRunning,
@@ -56,7 +53,7 @@ class CodeEditorState {
           : highlightedLine as int?,
       // testCases: testCases ?? this.testCases,
       loadingTestCases: loadingTestCases ?? this.loadingTestCases,
-      result: identical(result, _unset) ? this.result : result as ExecutionResult?,
+      // result: identical(result, _unset) ? this.result : result as ExecutionResult?,
     );
   }
 }
