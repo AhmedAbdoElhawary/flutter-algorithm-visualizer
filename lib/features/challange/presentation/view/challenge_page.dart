@@ -47,7 +47,7 @@ class ChallengePage extends ConsumerWidget {
               ),
             ),
             problems.when(
-              loading: () => const ChallengesLoadingState(),
+              loading: () => const SliverChallengesLoadingState(),
               error: (error, stackTrace) => SliverFillRemaining(child: ChallengesErrorState()),
               data: (data) {
                 if (data.isEmpty) return SliverFillRemaining(child: const ChallengesEmptyState());
