@@ -43,7 +43,7 @@ final filteredProblemsProvider = Provider<AsyncValue<List<CodingProblem>>>((ref)
   );
 });
 
-final getProblem = Provider.family<AsyncValue<CodingProblem?>, int>(
+final getProblemProvider = Provider.family<AsyncValue<CodingProblem?>, int>(
   (ref, problemId) {
     final problems = ref.watch(_challengeDatasetProvider);
 
