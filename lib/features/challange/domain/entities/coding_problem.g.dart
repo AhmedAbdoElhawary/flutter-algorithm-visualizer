@@ -24,6 +24,10 @@ _$CodingProblemImpl _$$CodingProblemImplFromJson(Map<String, dynamic> json) =>
       constraints: (json['constraints'] as List<dynamic>?)
           ?.map((e) => e as String)
           .toList(),
+      functionSignature: json['function_signature'] == null
+          ? null
+          : FunctionSignature.fromJson(
+              json['function_signature'] as Map<String, dynamic>),
       examples: (json['examples'] as List<dynamic>?)
           ?.map((e) => Example.fromJson(e as Map<String, dynamic>))
           .toList(),
@@ -80,6 +84,7 @@ Map<String, dynamic> _$$CodingProblemImplToJson(_$CodingProblemImpl instance) =>
       'patterns': instance.patterns,
       'description': instance.description,
       'constraints': instance.constraints,
+      'function_signature': instance.functionSignature,
       'examples': instance.examples,
       'edge_cases': instance.edgeCases,
       'test_cases': instance.testCases,
@@ -100,10 +105,10 @@ Map<String, dynamic> _$$CodingProblemImplToJson(_$CodingProblemImpl instance) =>
     };
 
 const _$ProblemDifficultyEnumMap = {
+  ProblemDifficulty.none: 'none',
   ProblemDifficulty.easy: 'easy',
   ProblemDifficulty.medium: 'medium',
   ProblemDifficulty.hard: 'hard',
-  ProblemDifficulty.none: 'none',
 };
 
 const _$ProblemStatusEnumMap = {
