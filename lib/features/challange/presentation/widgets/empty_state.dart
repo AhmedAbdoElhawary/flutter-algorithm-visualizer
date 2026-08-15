@@ -5,8 +5,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class ChallengesEmptyState extends StatelessWidget {
-  const ChallengesEmptyState({super.key});
-
+  const ChallengesEmptyState({
+    super.key,
+    this.showIcon = true,
+    this.title = StringsManager.noProblemsFound,
+    this.subTitle = StringsManager.tryADifferentSearchOrFilter,
+  });
+  final String title;
+  final String subTitle;
+  final bool showIcon;
   @override
   Widget build(BuildContext context) {
     return Center(
@@ -15,11 +22,13 @@ class ChallengesEmptyState extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            RegularText('🔍', fontSize: 40),
-            const RSizedBox(height: 12),
-            SemiBoldText(StringsManager.noProblemsFound, color: ThemeEnum.textSecond, fontSize: 15),
+            if (showIcon) ...[
+              RegularText('🔍', fontSize: 40),
+              const RSizedBox(height: 12),
+            ],
+            SemiBoldText(title, color: ThemeEnum.textSecond, fontSize: 15),
             const RSizedBox(height: 4),
-            RegularText(StringsManager.tryADifferentSearchOrFilter, color: ThemeEnum.hover, fontSize: 13),
+            RegularText(subTitle, color: ThemeEnum.hover, fontSize: 13),
           ],
         ),
       ),
