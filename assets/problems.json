@@ -12,7 +12,7 @@
       "name": "Two Sum",
       "source": "LeetCode",
       "source_problem_number": 1,
-      "difficulty": "Easy",
+      "difficulty": "easy",
       "category": "Arrays",
       "tags": [
         "Array",
@@ -32,6 +32,12 @@
       "function_signature": {
         "generic": "twoSum(nums, target) -> List[int]",
         "dart": "List<int> twoSum(List<int> nums, int target)"
+      },
+      "default_code": {
+        "dart": "class Solution {\n  List<int> twoSum(List<int> nums, int target) {\n\n\n  }\n}"
+      },
+      "custom_objects": {
+        "dart": []
       },
       "examples": [
         {
@@ -71,7 +77,7 @@
         {
           "type": "basic",
           "input": "nums=[1,5,3,8], target=11",
-          "expected_output": "[1,2]"
+          "expected_output": "[2,3]"
         },
         {
           "type": "boundary",
@@ -169,7 +175,7 @@
       "name": "Valid Anagram",
       "source": "LeetCode",
       "source_problem_number": 242,
-      "difficulty": "Easy",
+      "difficulty": "easy",
       "category": "Hashing",
       "tags": [
         "String",
@@ -318,7 +324,7 @@
       "name": "Contains Duplicate",
       "source": "LeetCode",
       "source_problem_number": 217,
-      "difficulty": "Easy",
+      "difficulty": "easy",
       "category": "Hashing",
       "tags": [
         "Array",
@@ -335,6 +341,12 @@
       "function_signature": {
         "generic": "containsDuplicate(nums) -> bool",
         "dart": "bool containsDuplicate(List<int> nums)"
+      },
+      "default_code": {
+        "dart": "class Solution {\n  bool containsDuplicate(List<int> nums) {\n\n\n  }\n}"
+      },
+      "custom_objects": {
+        "dart": []
       },
       "examples": [
         {
@@ -461,7 +473,7 @@
       "name": "Valid Parentheses",
       "source": "LeetCode",
       "source_problem_number": 20,
-      "difficulty": "Easy",
+      "difficulty": "easy",
       "category": "Stack",
       "tags": [
         "String",
@@ -614,7 +626,7 @@
       "name": "Best Time to Buy and Sell Stock",
       "source": "LeetCode",
       "source_problem_number": 121,
-      "difficulty": "Easy",
+      "difficulty": "easy",
       "category": "Arrays",
       "tags": [
         "Array",
@@ -762,7 +774,7 @@
       "name": "Majority Element",
       "source": "LeetCode",
       "source_problem_number": 169,
-      "difficulty": "Easy",
+      "difficulty": "easy",
       "category": "Arrays",
       "tags": [
         "Array",
@@ -906,7 +918,7 @@
       "name": "Move Zeroes",
       "source": "LeetCode",
       "source_problem_number": 283,
-      "difficulty": "Easy",
+      "difficulty": "easy",
       "category": "Two Pointers",
       "tags": [
         "Array",
@@ -1049,7 +1061,7 @@
       "name": "Reverse String",
       "source": "LeetCode",
       "source_problem_number": 344,
-      "difficulty": "Easy",
+      "difficulty": "easy",
       "category": "Two Pointers",
       "tags": [
         "String",
@@ -1194,7 +1206,7 @@
       "name": "Valid Palindrome",
       "source": "LeetCode",
       "source_problem_number": 125,
-      "difficulty": "Easy",
+      "difficulty": "easy",
       "category": "Two Pointers",
       "tags": [
         "String",
@@ -1347,7 +1359,7 @@
       "name": "Merge Sorted Array",
       "source": "LeetCode",
       "source_problem_number": 88,
-      "difficulty": "Easy",
+      "difficulty": "easy",
       "category": "Two Pointers",
       "tags": [
         "Array",
@@ -1500,7 +1512,7 @@
       "name": "Single Number",
       "source": "LeetCode",
       "source_problem_number": 136,
-      "difficulty": "Easy",
+      "difficulty": "easy",
       "category": "Bit Manipulation",
       "tags": [
         "Array",
@@ -1644,7 +1656,7 @@
       "name": "Missing Number",
       "source": "LeetCode",
       "source_problem_number": 268,
-      "difficulty": "Easy",
+      "difficulty": "easy",
       "category": "Bit Manipulation",
       "tags": [
         "Array",
@@ -1796,7 +1808,7 @@
       "name": "Number of 1 Bits",
       "source": "LeetCode",
       "source_problem_number": 191,
-      "difficulty": "Easy",
+      "difficulty": "easy",
       "category": "Bit Manipulation",
       "tags": [
         "Bit Manipulation"
@@ -1947,7 +1959,7 @@
       "name": "Climbing Stairs",
       "source": "LeetCode",
       "source_problem_number": 70,
-      "difficulty": "Easy",
+      "difficulty": "easy",
       "category": "Dynamic Programming",
       "tags": [
         "Dynamic Programming",
@@ -2089,7 +2101,7 @@
       "name": "Maximum Subarray",
       "source": "LeetCode",
       "source_problem_number": 53,
-      "difficulty": "Easy",
+      "difficulty": "easy",
       "category": "Dynamic Programming",
       "tags": [
         "Array",
@@ -2244,7 +2256,7 @@
       "name": "Linked List Cycle",
       "source": "LeetCode",
       "source_problem_number": 141,
-      "difficulty": "Easy",
+      "difficulty": "easy",
       "category": "Linked Lists",
       "tags": [
         "Linked List",
@@ -2394,7 +2406,7 @@
       "name": "Merge Two Sorted Lists",
       "source": "LeetCode",
       "source_problem_number": 21,
-      "difficulty": "Easy",
+      "difficulty": "easy",
       "category": "Linked Lists",
       "tags": [
         "Linked List",
@@ -2413,6 +2425,17 @@
       "function_signature": {
         "generic": "mergeTwoLists(list1, list2) -> ListNode",
         "dart": "ListNode? mergeTwoLists(ListNode? list1, ListNode? list2)"
+      },
+      "default_code": {
+        "dart": "/**\n * Definition for singly-linked list.\n * class ListNode {\n *   int val;\n *   ListNode? next;\n *   ListNode([this.val = 0, this.next]);\n * }\n */\nclass Solution {\n  ListNode? mergeTwoLists(ListNode? list1, ListNode? list2) {\n\n\n  }\n}"
+      },
+      "custom_objects": {
+        "dart": [
+          {
+            "code": "class ListNode {\n  int val;\n  ListNode? next;\n  ListNode([this.val = 0, this.next]);\n}",
+            "shape": "linked_list"
+          }
+        ]
       },
       "examples": [
         {
@@ -2544,7 +2567,7 @@
       "name": "Binary Search",
       "source": "LeetCode",
       "source_problem_number": 704,
-      "difficulty": "Easy",
+      "difficulty": "easy",
       "category": "Binary Search",
       "tags": [
         "Array",
@@ -2694,7 +2717,7 @@
       "name": "First Bad Version",
       "source": "LeetCode",
       "source_problem_number": 278,
-      "difficulty": "Easy",
+      "difficulty": "easy",
       "category": "Binary Search",
       "tags": [
         "Binary Search",
@@ -2837,7 +2860,7 @@
       "name": "Symmetric Tree",
       "source": "LeetCode",
       "source_problem_number": 101,
-      "difficulty": "Easy",
+      "difficulty": "easy",
       "category": "Trees",
       "tags": [
         "Tree",
@@ -2984,7 +3007,7 @@
       "name": "Maximum Depth of Binary Tree",
       "source": "LeetCode",
       "source_problem_number": 104,
-      "difficulty": "Easy",
+      "difficulty": "easy",
       "category": "Trees",
       "tags": [
         "Tree",
@@ -3136,7 +3159,7 @@
       "name": "Invert Binary Tree",
       "source": "LeetCode",
       "source_problem_number": 226,
-      "difficulty": "Easy",
+      "difficulty": "easy",
       "category": "Trees",
       "tags": [
         "Tree",
@@ -3287,7 +3310,7 @@
       "name": "Same Tree",
       "source": "LeetCode",
       "source_problem_number": 100,
-      "difficulty": "Easy",
+      "difficulty": "easy",
       "category": "Trees",
       "tags": [
         "Tree",
@@ -3443,7 +3466,7 @@
       "name": "Path Sum",
       "source": "LeetCode",
       "source_problem_number": 112,
-      "difficulty": "Easy",
+      "difficulty": "easy",
       "category": "Trees",
       "tags": [
         "Tree",
@@ -3594,7 +3617,7 @@
       "name": "Balanced Binary Tree",
       "source": "LeetCode",
       "source_problem_number": 110,
-      "difficulty": "Easy",
+      "difficulty": "easy",
       "category": "Trees",
       "tags": [
         "Tree",
@@ -3745,7 +3768,7 @@
       "name": "Diameter of Binary Tree",
       "source": "LeetCode",
       "source_problem_number": 543,
-      "difficulty": "Easy",
+      "difficulty": "easy",
       "category": "Trees",
       "tags": [
         "Tree",
@@ -3885,7 +3908,7 @@
       "name": "Convert Sorted Array to Binary Search Tree",
       "source": "LeetCode",
       "source_problem_number": 108,
-      "difficulty": "Easy",
+      "difficulty": "easy",
       "category": "Binary Search Tree",
       "tags": [
         "Array",
@@ -4027,7 +4050,7 @@
       "name": "Min Stack",
       "source": "LeetCode",
       "source_problem_number": 155,
-      "difficulty": "Easy",
+      "difficulty": "easy",
       "category": "Stack",
       "tags": [
         "Stack",
@@ -4170,7 +4193,7 @@
       "name": "Implement Queue using Stacks",
       "source": "LeetCode",
       "source_problem_number": 232,
-      "difficulty": "Easy",
+      "difficulty": "easy",
       "category": "Stack",
       "tags": [
         "Stack",
@@ -4314,7 +4337,7 @@
       "name": "Binary Tree Level Order Traversal",
       "source": "LeetCode",
       "source_problem_number": 102,
-      "difficulty": "Easy",
+      "difficulty": "easy",
       "category": "Trees",
       "tags": [
         "Tree",
@@ -4460,7 +4483,7 @@
       "name": "Group Anagrams",
       "source": "LeetCode",
       "source_problem_number": 49,
-      "difficulty": "Medium",
+      "difficulty": "medium",
       "category": "Hashing",
       "tags": [
         "Array",
@@ -4613,7 +4636,7 @@
       "name": "Top K Frequent Elements",
       "source": "LeetCode",
       "source_problem_number": 347,
-      "difficulty": "Medium",
+      "difficulty": "medium",
       "category": "Heap",
       "tags": [
         "Array",
@@ -4762,7 +4785,7 @@
       "name": "Product of Array Except Self",
       "source": "LeetCode",
       "source_problem_number": 238,
-      "difficulty": "Medium",
+      "difficulty": "medium",
       "category": "Arrays",
       "tags": [
         "Array",
@@ -4907,7 +4930,7 @@
       "name": "Longest Substring Without Repeating Characters",
       "source": "LeetCode",
       "source_problem_number": 3,
-      "difficulty": "Medium",
+      "difficulty": "medium",
       "category": "Sliding Window",
       "tags": [
         "String",
@@ -5063,7 +5086,7 @@
       "name": "Longest Repeating Character Replacement",
       "source": "LeetCode",
       "source_problem_number": 424,
-      "difficulty": "Medium",
+      "difficulty": "medium",
       "category": "Sliding Window",
       "tags": [
         "String",
@@ -5213,7 +5236,7 @@
       "name": "Minimum Size Subarray Sum",
       "source": "LeetCode",
       "source_problem_number": 209,
-      "difficulty": "Medium",
+      "difficulty": "medium",
       "category": "Sliding Window",
       "tags": [
         "Array",
@@ -5365,7 +5388,7 @@
       "name": "Permutation in String",
       "source": "LeetCode",
       "source_problem_number": 567,
-      "difficulty": "Medium",
+      "difficulty": "medium",
       "category": "Sliding Window",
       "tags": [
         "String",
@@ -5509,7 +5532,7 @@
       "name": "3Sum",
       "source": "LeetCode",
       "source_problem_number": 15,
-      "difficulty": "Medium",
+      "difficulty": "medium",
       "category": "Two Pointers",
       "tags": [
         "Array",
@@ -5660,7 +5683,7 @@
       "name": "Container With Most Water",
       "source": "LeetCode",
       "source_problem_number": 11,
-      "difficulty": "Medium",
+      "difficulty": "medium",
       "category": "Two Pointers",
       "tags": [
         "Array",
@@ -5804,7 +5827,7 @@
       "name": "Sort Colors",
       "source": "LeetCode",
       "source_problem_number": 75,
-      "difficulty": "Medium",
+      "difficulty": "medium",
       "category": "Two Pointers",
       "tags": [
         "Array",
@@ -5950,7 +5973,7 @@
       "name": "Search in Rotated Sorted Array",
       "source": "LeetCode",
       "source_problem_number": 33,
-      "difficulty": "Medium",
+      "difficulty": "medium",
       "category": "Binary Search",
       "tags": [
         "Array",
@@ -6105,7 +6128,7 @@
       "name": "Find Minimum in Rotated Sorted Array",
       "source": "LeetCode",
       "source_problem_number": 153,
-      "difficulty": "Medium",
+      "difficulty": "medium",
       "category": "Binary Search",
       "tags": [
         "Array",
@@ -6260,7 +6283,7 @@
       "name": "Search a 2D Matrix",
       "source": "LeetCode",
       "source_problem_number": 74,
-      "difficulty": "Medium",
+      "difficulty": "medium",
       "category": "Binary Search",
       "tags": [
         "Array",
@@ -6407,7 +6430,7 @@
       "name": "Koko Eating Bananas",
       "source": "LeetCode",
       "source_problem_number": 875,
-      "difficulty": "Medium",
+      "difficulty": "medium",
       "category": "Binary Search",
       "tags": [
         "Array",
@@ -6561,7 +6584,7 @@
       "name": "Daily Temperatures",
       "source": "LeetCode",
       "source_problem_number": 739,
-      "difficulty": "Medium",
+      "difficulty": "medium",
       "category": "Stack",
       "tags": [
         "Array",
@@ -6710,7 +6733,7 @@
       "name": "Evaluate Reverse Polish Notation",
       "source": "LeetCode",
       "source_problem_number": 150,
-      "difficulty": "Medium",
+      "difficulty": "medium",
       "category": "Stack",
       "tags": [
         "Array",
@@ -6859,7 +6882,7 @@
       "name": "Generate Parentheses",
       "source": "LeetCode",
       "source_problem_number": 22,
-      "difficulty": "Medium",
+      "difficulty": "medium",
       "category": "Backtracking",
       "tags": [
         "String",
@@ -6997,7 +7020,7 @@
       "name": "Add Two Numbers",
       "source": "LeetCode",
       "source_problem_number": 2,
-      "difficulty": "Medium",
+      "difficulty": "medium",
       "category": "Linked Lists",
       "tags": [
         "Linked List",
@@ -7147,7 +7170,7 @@
       "name": "Remove Nth Node From End of List",
       "source": "LeetCode",
       "source_problem_number": 19,
-      "difficulty": "Medium",
+      "difficulty": "medium",
       "category": "Linked Lists",
       "tags": [
         "Linked List",
@@ -7297,7 +7320,7 @@
       "name": "Reorder List",
       "source": "LeetCode",
       "source_problem_number": 143,
-      "difficulty": "Medium",
+      "difficulty": "medium",
       "category": "Linked Lists",
       "tags": [
         "Linked List",
@@ -7444,7 +7467,7 @@
       "name": "LRU Cache",
       "source": "LeetCode",
       "source_problem_number": 146,
-      "difficulty": "Medium",
+      "difficulty": "medium",
       "category": "Advanced Algorithms",
       "tags": [
         "Hash Map",
@@ -7587,7 +7610,7 @@
       "name": "Binary Tree Zigzag Level Order Traversal",
       "source": "LeetCode",
       "source_problem_number": 103,
-      "difficulty": "Medium",
+      "difficulty": "medium",
       "category": "Trees",
       "tags": [
         "Tree",
@@ -7732,7 +7755,7 @@
       "name": "Validate Binary Search Tree",
       "source": "LeetCode",
       "source_problem_number": 98,
-      "difficulty": "Medium",
+      "difficulty": "medium",
       "category": "Binary Search Tree",
       "tags": [
         "Tree",
@@ -7879,7 +7902,7 @@
       "name": "Kth Smallest Element in a BST",
       "source": "LeetCode",
       "source_problem_number": 230,
-      "difficulty": "Medium",
+      "difficulty": "medium",
       "category": "Binary Search Tree",
       "tags": [
         "Tree",
@@ -8026,7 +8049,7 @@
       "name": "Lowest Common Ancestor of a Binary Search Tree",
       "source": "LeetCode",
       "source_problem_number": 235,
-      "difficulty": "Medium",
+      "difficulty": "medium",
       "category": "Binary Search Tree",
       "tags": [
         "Tree",
@@ -8173,7 +8196,7 @@
       "name": "Construct Binary Tree from Preorder and Inorder Traversal",
       "source": "LeetCode",
       "source_problem_number": 105,
-      "difficulty": "Medium",
+      "difficulty": "medium",
       "category": "Trees",
       "tags": [
         "Array",
@@ -8318,7 +8341,7 @@
       "name": "Binary Tree Right Side View",
       "source": "LeetCode",
       "source_problem_number": 199,
-      "difficulty": "Medium",
+      "difficulty": "medium",
       "category": "Trees",
       "tags": [
         "Tree",
@@ -8469,7 +8492,7 @@
       "name": "Number of Islands",
       "source": "LeetCode",
       "source_problem_number": 200,
-      "difficulty": "Medium",
+      "difficulty": "medium",
       "category": "Graphs",
       "tags": [
         "Array",
@@ -8620,7 +8643,7 @@
       "name": "Clone Graph",
       "source": "LeetCode",
       "source_problem_number": 133,
-      "difficulty": "Medium",
+      "difficulty": "medium",
       "category": "Graphs",
       "tags": [
         "Graph",
@@ -8768,7 +8791,7 @@
       "name": "Course Schedule",
       "source": "LeetCode",
       "source_problem_number": 207,
-      "difficulty": "Medium",
+      "difficulty": "medium",
       "category": "Graphs",
       "tags": [
         "Graph",
@@ -8916,7 +8939,7 @@
       "name": "Course Schedule II",
       "source": "LeetCode",
       "source_problem_number": 210,
-      "difficulty": "Medium",
+      "difficulty": "medium",
       "category": "Graphs",
       "tags": [
         "Graph",
@@ -9071,7 +9094,7 @@
       "name": "Pacific Atlantic Water Flow",
       "source": "LeetCode",
       "source_problem_number": 417,
-      "difficulty": "Medium",
+      "difficulty": "medium",
       "category": "Graphs",
       "tags": [
         "Array",
@@ -9215,7 +9238,7 @@
       "name": "Rotting Oranges",
       "source": "LeetCode",
       "source_problem_number": 994,
-      "difficulty": "Medium",
+      "difficulty": "medium",
       "category": "Graphs",
       "tags": [
         "Array",
@@ -9372,7 +9395,7 @@
       "name": "Number of Provinces",
       "source": "LeetCode",
       "source_problem_number": 547,
-      "difficulty": "Medium",
+      "difficulty": "medium",
       "category": "Union Find",
       "tags": [
         "Graph",
@@ -9516,7 +9539,7 @@
       "name": "Redundant Connection",
       "source": "LeetCode",
       "source_problem_number": 684,
-      "difficulty": "Medium",
+      "difficulty": "medium",
       "category": "Union Find",
       "tags": [
         "Graph",
@@ -9659,7 +9682,7 @@
       "name": "Subsets",
       "source": "LeetCode",
       "source_problem_number": 78,
-      "difficulty": "Medium",
+      "difficulty": "medium",
       "category": "Backtracking",
       "tags": [
         "Array",
@@ -9800,7 +9823,7 @@
       "name": "Permutations",
       "source": "LeetCode",
       "source_problem_number": 46,
-      "difficulty": "Medium",
+      "difficulty": "medium",
       "category": "Backtracking",
       "tags": [
         "Array",
@@ -9936,7 +9959,7 @@
       "name": "Combination Sum",
       "source": "LeetCode",
       "source_problem_number": 39,
-      "difficulty": "Medium",
+      "difficulty": "medium",
       "category": "Backtracking",
       "tags": [
         "Array",
@@ -10078,7 +10101,7 @@
       "name": "Word Search",
       "source": "LeetCode",
       "source_problem_number": 79,
-      "difficulty": "Medium",
+      "difficulty": "medium",
       "category": "Backtracking",
       "tags": [
         "Array",
@@ -10232,7 +10255,7 @@
       "name": "Letter Combinations of a Phone Number",
       "source": "LeetCode",
       "source_problem_number": 17,
-      "difficulty": "Medium",
+      "difficulty": "medium",
       "category": "Backtracking",
       "tags": [
         "String",
@@ -10382,7 +10405,7 @@
       "name": "Palindrome Partitioning",
       "source": "LeetCode",
       "source_problem_number": 131,
-      "difficulty": "Medium",
+      "difficulty": "medium",
       "category": "Backtracking",
       "tags": [
         "String",
@@ -10522,7 +10545,7 @@
       "name": "Kth Largest Element in an Array",
       "source": "LeetCode",
       "source_problem_number": 215,
-      "difficulty": "Medium",
+      "difficulty": "medium",
       "category": "Heap",
       "tags": [
         "Array",
@@ -10669,7 +10692,7 @@
       "name": "Task Scheduler",
       "source": "LeetCode",
       "source_problem_number": 621,
-      "difficulty": "Medium",
+      "difficulty": "medium",
       "category": "Greedy",
       "tags": [
         "Array",
@@ -10821,7 +10844,7 @@
       "name": "Merge Intervals",
       "source": "LeetCode",
       "source_problem_number": 56,
-      "difficulty": "Medium",
+      "difficulty": "medium",
       "category": "Intervals",
       "tags": [
         "Array",
@@ -10967,7 +10990,7 @@
       "name": "Insert Interval",
       "source": "LeetCode",
       "source_problem_number": 57,
-      "difficulty": "Medium",
+      "difficulty": "medium",
       "category": "Intervals",
       "tags": [
         "Array",
@@ -11115,7 +11138,7 @@
       "name": "Jump Game",
       "source": "LeetCode",
       "source_problem_number": 55,
-      "difficulty": "Medium",
+      "difficulty": "medium",
       "category": "Greedy",
       "tags": [
         "Array",
@@ -11259,7 +11282,7 @@
       "name": "Gas Station",
       "source": "LeetCode",
       "source_problem_number": 134,
-      "difficulty": "Medium",
+      "difficulty": "medium",
       "category": "Greedy",
       "tags": [
         "Array",
@@ -11403,7 +11426,7 @@
       "name": "House Robber",
       "source": "LeetCode",
       "source_problem_number": 198,
-      "difficulty": "Medium",
+      "difficulty": "medium",
       "category": "Dynamic Programming",
       "tags": [
         "Array",
@@ -11546,7 +11569,7 @@
       "name": "House Robber II",
       "source": "LeetCode",
       "source_problem_number": 213,
-      "difficulty": "Medium",
+      "difficulty": "medium",
       "category": "Dynamic Programming",
       "tags": [
         "Array",
@@ -11693,7 +11716,7 @@
       "name": "Coin Change",
       "source": "LeetCode",
       "source_problem_number": 322,
-      "difficulty": "Medium",
+      "difficulty": "medium",
       "category": "Dynamic Programming",
       "tags": [
         "Array",
@@ -11844,7 +11867,7 @@
       "name": "Longest Increasing Subsequence",
       "source": "LeetCode",
       "source_problem_number": 300,
-      "difficulty": "Medium",
+      "difficulty": "medium",
       "category": "Dynamic Programming",
       "tags": [
         "Array",
@@ -11995,7 +12018,7 @@
       "name": "Word Break",
       "source": "LeetCode",
       "source_problem_number": 139,
-      "difficulty": "Medium",
+      "difficulty": "medium",
       "category": "Dynamic Programming",
       "tags": [
         "String",
@@ -12148,7 +12171,7 @@
       "name": "Longest Common Subsequence",
       "source": "LeetCode",
       "source_problem_number": 1143,
-      "difficulty": "Medium",
+      "difficulty": "medium",
       "category": "Dynamic Programming",
       "tags": [
         "String",
@@ -12302,7 +12325,7 @@
       "name": "Partition Equal Subset Sum",
       "source": "LeetCode",
       "source_problem_number": 416,
-      "difficulty": "Medium",
+      "difficulty": "medium",
       "category": "Dynamic Programming",
       "tags": [
         "Array",
@@ -12446,7 +12469,7 @@
       "name": "Maximum Product Subarray",
       "source": "LeetCode",
       "source_problem_number": 152,
-      "difficulty": "Medium",
+      "difficulty": "medium",
       "category": "Dynamic Programming",
       "tags": [
         "Array",
@@ -12599,7 +12622,7 @@
       "name": "Decode Ways",
       "source": "LeetCode",
       "source_problem_number": 91,
-      "difficulty": "Medium",
+      "difficulty": "medium",
       "category": "Dynamic Programming",
       "tags": [
         "String",
@@ -12753,7 +12776,7 @@
       "name": "Unique Paths",
       "source": "LeetCode",
       "source_problem_number": 62,
-      "difficulty": "Medium",
+      "difficulty": "medium",
       "category": "Dynamic Programming",
       "tags": [
         "Math",
@@ -12896,7 +12919,7 @@
       "name": "Edit Distance",
       "source": "LeetCode",
       "source_problem_number": 72,
-      "difficulty": "Hard",
+      "difficulty": "hard",
       "category": "Dynamic Programming",
       "tags": [
         "String",
@@ -13044,7 +13067,7 @@
       "name": "Trapping Rain Water",
       "source": "LeetCode",
       "source_problem_number": 42,
-      "difficulty": "Hard",
+      "difficulty": "hard",
       "category": "Two Pointers",
       "tags": [
         "Array",
@@ -13196,7 +13219,7 @@
       "name": "Median of Two Sorted Arrays",
       "source": "LeetCode",
       "source_problem_number": 4,
-      "difficulty": "Hard",
+      "difficulty": "hard",
       "category": "Binary Search",
       "tags": [
         "Array",
@@ -13344,7 +13367,7 @@
       "name": "Merge k Sorted Lists",
       "source": "LeetCode",
       "source_problem_number": 23,
-      "difficulty": "Hard",
+      "difficulty": "hard",
       "category": "Heap",
       "tags": [
         "Linked List",
@@ -13498,7 +13521,7 @@
       "name": "Sliding Window Maximum",
       "source": "LeetCode",
       "source_problem_number": 239,
-      "difficulty": "Hard",
+      "difficulty": "hard",
       "category": "Stack",
       "tags": [
         "Array",
@@ -13645,7 +13668,7 @@
       "name": "Minimum Window Substring",
       "source": "LeetCode",
       "source_problem_number": 76,
-      "difficulty": "Hard",
+      "difficulty": "hard",
       "category": "Sliding Window",
       "tags": [
         "String",
@@ -13795,7 +13818,7 @@
       "name": "Largest Rectangle in Histogram",
       "source": "LeetCode",
       "source_problem_number": 84,
-      "difficulty": "Hard",
+      "difficulty": "hard",
       "category": "Stack",
       "tags": [
         "Array",
@@ -13944,7 +13967,7 @@
       "name": "Serialize and Deserialize Binary Tree",
       "source": "LeetCode",
       "source_problem_number": 297,
-      "difficulty": "Hard",
+      "difficulty": "hard",
       "category": "Trees",
       "tags": [
         "Tree",
@@ -14087,7 +14110,7 @@
       "name": "Binary Tree Maximum Path Sum",
       "source": "LeetCode",
       "source_problem_number": 124,
-      "difficulty": "Hard",
+      "difficulty": "hard",
       "category": "Trees",
       "tags": [
         "Tree",
@@ -14233,7 +14256,7 @@
       "name": "Word Ladder",
       "source": "LeetCode",
       "source_problem_number": 127,
-      "difficulty": "Hard",
+      "difficulty": "hard",
       "category": "Graphs",
       "tags": [
         "String",
@@ -14379,7 +14402,7 @@
       "name": "N-Queens",
       "source": "LeetCode",
       "source_problem_number": 51,
-      "difficulty": "Hard",
+      "difficulty": "hard",
       "category": "Backtracking",
       "tags": [
         "Array",
@@ -14521,7 +14544,7 @@
       "name": "Network Delay Time",
       "source": "LeetCode",
       "source_problem_number": 743,
-      "difficulty": "Medium",
+      "difficulty": "medium",
       "category": "Graphs",
       "tags": [
         "Graph",
@@ -14678,7 +14701,7 @@
       "name": "Longest Consecutive Sequence",
       "source": "LeetCode",
       "source_problem_number": 128,
-      "difficulty": "Medium",
+      "difficulty": "medium",
       "category": "Hashing",
       "tags": [
         "Array",
