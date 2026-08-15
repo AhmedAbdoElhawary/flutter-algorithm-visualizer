@@ -101,7 +101,7 @@ class StringsManager {
   static const String noProblemsFound = 'No problems found';
   static const String tryADifferentSearchOrFilter = 'Try a different search or filter';
   static const String loading = 'Loading challenges...';
-  static const String errorText = 'Not able to load challenges...';
+  static const String notAbleToLoadAnyChallenge = 'Not able to load any challenge...';
   static const String tryInDifferentTime = 'Try in different time';
   static const String practice = 'practice';
   static const String challenges = 'Challenges';
@@ -109,4 +109,7 @@ class StringsManager {
   static const String solveWithArrow = "Solve →";
   static const String status = "Status";
   static const String all = "All";
+
+  static const String noChallengeSelected = "No challenge selected";
+  static const String tryToPracticeAChallenge = "Try to practice a challenge";
 }
