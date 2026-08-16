@@ -251,7 +251,8 @@ ProblemSolutionStatusDTO _$ProblemSolutionStatusDTOFromJson(
 /// @nodoc
 mixin _$ProblemSolutionStatusDTO {
   String? get code => throw _privateConstructorUsedError;
-  TestCase? get failedTestCase => throw _privateConstructorUsedError;
+  List<TestCaseResult>? get allTestCaseResults =>
+      throw _privateConstructorUsedError;
   bool? get isCorrect => throw _privateConstructorUsedError;
 
   /// Serializes this ProblemSolutionStatusDTO to a JSON map.
@@ -270,9 +271,10 @@ abstract class $ProblemSolutionStatusDTOCopyWith<$Res> {
           $Res Function(ProblemSolutionStatusDTO) then) =
       _$ProblemSolutionStatusDTOCopyWithImpl<$Res, ProblemSolutionStatusDTO>;
   @useResult
-  $Res call({String? code, TestCase? failedTestCase, bool? isCorrect});
-
-  $TestCaseCopyWith<$Res>? get failedTestCase;
+  $Res call(
+      {String? code,
+      List<TestCaseResult>? allTestCaseResults,
+      bool? isCorrect});
 }
 
 /// @nodoc
@@ -292,7 +294,7 @@ class _$ProblemSolutionStatusDTOCopyWithImpl<$Res,
   @override
   $Res call({
     Object? code = freezed,
-    Object? failedTestCase = freezed,
+    Object? allTestCaseResults = freezed,
     Object? isCorrect = freezed,
   }) {
     return _then(_value.copyWith(
@@ -300,29 +302,15 @@ class _$ProblemSolutionStatusDTOCopyWithImpl<$Res,
           ? _value.code
           : code // ignore: cast_nullable_to_non_nullable
               as String?,
-      failedTestCase: freezed == failedTestCase
-          ? _value.failedTestCase
-          : failedTestCase // ignore: cast_nullable_to_non_nullable
-              as TestCase?,
+      allTestCaseResults: freezed == allTestCaseResults
+          ? _value.allTestCaseResults
+          : allTestCaseResults // ignore: cast_nullable_to_non_nullable
+              as List<TestCaseResult>?,
       isCorrect: freezed == isCorrect
           ? _value.isCorrect
           : isCorrect // ignore: cast_nullable_to_non_nullable
               as bool?,
     ) as $Val);
-  }
-
-  /// Create a copy of ProblemSolutionStatusDTO
-  /// with the given fields replaced by the non-null parameter values.
-  @override
-  @pragma('vm:prefer-inline')
-  $TestCaseCopyWith<$Res>? get failedTestCase {
-    if (_value.failedTestCase == null) {
-      return null;
-    }
-
-    return $TestCaseCopyWith<$Res>(_value.failedTestCase!, (value) {
-      return _then(_value.copyWith(failedTestCase: value) as $Val);
-    });
   }
 }
 
@@ -335,10 +323,10 @@ abstract class _$$ProblemSolutionStatusDTOImplCopyWith<$Res>
       __$$ProblemSolutionStatusDTOImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({String? code, TestCase? failedTestCase, bool? isCorrect});
-
-  @override
-  $TestCaseCopyWith<$Res>? get failedTestCase;
+  $Res call(
+      {String? code,
+      List<TestCaseResult>? allTestCaseResults,
+      bool? isCorrect});
 }
 
 /// @nodoc
@@ -357,7 +345,7 @@ class __$$ProblemSolutionStatusDTOImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? code = freezed,
-    Object? failedTestCase = freezed,
+    Object? allTestCaseResults = freezed,
     Object? isCorrect = freezed,
   }) {
     return _then(_$ProblemSolutionStatusDTOImpl(
@@ -365,10 +353,10 @@ class __$$ProblemSolutionStatusDTOImplCopyWithImpl<$Res>
           ? _value.code
           : code // ignore: cast_nullable_to_non_nullable
               as String?,
-      failedTestCase: freezed == failedTestCase
-          ? _value.failedTestCase
-          : failedTestCase // ignore: cast_nullable_to_non_nullable
-              as TestCase?,
+      allTestCaseResults: freezed == allTestCaseResults
+          ? _value._allTestCaseResults
+          : allTestCaseResults // ignore: cast_nullable_to_non_nullable
+              as List<TestCaseResult>?,
       isCorrect: freezed == isCorrect
           ? _value.isCorrect
           : isCorrect // ignore: cast_nullable_to_non_nullable
@@ -382,22 +370,32 @@ class __$$ProblemSolutionStatusDTOImplCopyWithImpl<$Res>
 class _$ProblemSolutionStatusDTOImpl implements _ProblemSolutionStatusDTO {
   const _$ProblemSolutionStatusDTOImpl(
       {required this.code,
-      required this.failedTestCase,
-      required this.isCorrect});
+      required final List<TestCaseResult>? allTestCaseResults,
+      required this.isCorrect})
+      : _allTestCaseResults = allTestCaseResults;
 
   factory _$ProblemSolutionStatusDTOImpl.fromJson(Map<String, dynamic> json) =>
       _$$ProblemSolutionStatusDTOImplFromJson(json);
 
   @override
   final String? code;
+  final List<TestCaseResult>? _allTestCaseResults;
   @override
-  final TestCase? failedTestCase;
+  List<TestCaseResult>? get allTestCaseResults {
+    final value = _allTestCaseResults;
+    if (value == null) return null;
+    if (_allTestCaseResults is EqualUnmodifiableListView)
+      return _allTestCaseResults;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(value);
+  }
+
   @override
   final bool? isCorrect;
 
   @override
   String toString() {
-    return 'ProblemSolutionStatusDTO(code: $code, failedTestCase: $failedTestCase, isCorrect: $isCorrect)';
+    return 'ProblemSolutionStatusDTO(code: $code, allTestCaseResults: $allTestCaseResults, isCorrect: $isCorrect)';
   }
 
   @override
@@ -406,15 +404,16 @@ class _$ProblemSolutionStatusDTOImpl implements _ProblemSolutionStatusDTO {
         (other.runtimeType == runtimeType &&
             other is _$ProblemSolutionStatusDTOImpl &&
             (identical(other.code, code) || other.code == code) &&
-            (identical(other.failedTestCase, failedTestCase) ||
-                other.failedTestCase == failedTestCase) &&
+            const DeepCollectionEquality()
+                .equals(other._allTestCaseResults, _allTestCaseResults) &&
             (identical(other.isCorrect, isCorrect) ||
                 other.isCorrect == isCorrect));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(runtimeType, code, failedTestCase, isCorrect);
+  int get hashCode => Object.hash(runtimeType, code,
+      const DeepCollectionEquality().hash(_allTestCaseResults), isCorrect);
 
   /// Create a copy of ProblemSolutionStatusDTO
   /// with the given fields replaced by the non-null parameter values.
@@ -436,7 +435,7 @@ class _$ProblemSolutionStatusDTOImpl implements _ProblemSolutionStatusDTO {
 abstract class _ProblemSolutionStatusDTO implements ProblemSolutionStatusDTO {
   const factory _ProblemSolutionStatusDTO(
       {required final String? code,
-      required final TestCase? failedTestCase,
+      required final List<TestCaseResult>? allTestCaseResults,
       required final bool? isCorrect}) = _$ProblemSolutionStatusDTOImpl;
 
   factory _ProblemSolutionStatusDTO.fromJson(Map<String, dynamic> json) =
@@ -445,7 +444,7 @@ abstract class _ProblemSolutionStatusDTO implements ProblemSolutionStatusDTO {
   @override
   String? get code;
   @override
-  TestCase? get failedTestCase;
+  List<TestCaseResult>? get allTestCaseResults;
   @override
   bool? get isCorrect;
 
