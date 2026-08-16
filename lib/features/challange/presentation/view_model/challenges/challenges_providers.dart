@@ -3,23 +3,21 @@ import 'package:algorithm_visualizer/features/challange/data/data_sources/local/
 import 'package:algorithm_visualizer/features/challange/data/repositories/problem_repository_impl.dart';
 import 'package:algorithm_visualizer/features/challange/domain/entities/coding_problem.dart';
 import 'package:algorithm_visualizer/features/challange/domain/enums/problem.dart';
-import 'package:algorithm_visualizer/features/challange/domain/repositories/problem_repository.dart';
-import 'package:collection/collection.dart';
+import 'package:algorithm_visualizer/features/challange/domain/usecases/update_problem_solution_usecase.dart';
+import 'package:collection/collection.dart' show IterableExtension;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get_storage/get_storage.dart';
 
 import 'challenges_notifier.dart';
+import 'challenges_state.dart';
 
-final _challengeRepositoryProvider = Provider<ProblemRepository>(
-  (ref) => ProblemRepositoryImpl(ProblemLocalDataSource(GetStorageService(GetStorage()))),
-);
+final challengesProvider = StateNotifierProvider.autoDispose<ChallengesNotifier, ChallengesState>((ref) {
+  final repo = ProblemRepositoryImpl(ProblemLocalDataSource(GetStorageService(GetStorage())));
+  return ChallengesNotifier(repo, UpdateProblemSolutionUseCase(repo));
+});
 
 final _challengeDatasetProvider = FutureProvider<List<CodingProblem>>(
-  (ref) {
-    final dataSource = ref.read(_challengeRepositoryProvider);
-
-    return dataSource.getAllProblems();
-  },
+  (ref) => ref.read(challengesProvider.notifier).getAllProblems(),
 );
 
 final filteredProblemsProvider = Provider<AsyncValue<List<CodingProblem>>>((ref) {
