@@ -6,6 +6,7 @@ import 'package:algorithm_visualizer/features/challange/data/models/example.dart
 import 'package:algorithm_visualizer/features/challange/domain/entities/coding_problem.dart';
 import 'package:algorithm_visualizer/features/challange/domain/enums/problem.dart';
 import 'package:algorithm_visualizer/features/challange/presentation/helper/problem_style.dart';
+import 'package:algorithm_visualizer/features/challange/presentation/widgets/challenge_tags.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -61,26 +62,7 @@ class CodeProblemDescriptionCard extends StatelessWidget {
                     ],
                   ),
                 ),
-              if (tags.isNotEmpty)
-                _Section(
-                  title: StringsManager.tags,
-                  child: Wrap(
-                    spacing: 6.r,
-                    runSpacing: 6.r,
-                    children: [
-                      for (final tag in tags)
-                        Container(
-                          padding: REdgeInsets.symmetric(horizontal: 10, vertical: 3),
-                          decoration: BoxDecoration(
-                            color: context.getColor(ThemeEnum.accentBg),
-                            borderRadius: BorderRadius.circular(999),
-                            border: Border.all(color: context.getColor(ThemeEnum.borderAccent)),
-                          ),
-                          child: SemiBoldText(tag, fontSize: 11, color: ThemeEnum.accentBlue, maxLines: 5),
-                        ),
-                    ],
-                  ),
-                ),
+              if (tags.isNotEmpty) _Section(title: StringsManager.tags, child: ChallengeTags(tags: tags)),
             ],
           ),
         ),
@@ -109,7 +91,7 @@ class _Header extends StatelessWidget {
           padding: REdgeInsets.symmetric(horizontal: 10, vertical: 3),
           decoration: BoxDecoration(
             color: context.getColor(color).withValues(alpha: 0.12),
-            borderRadius: BorderRadius.circular(999),
+            borderRadius: BorderRadius.circular(6),
             border: Border.all(color: context.getColor(color).withValues(alpha: 0.5)),
           ),
           child: SemiBoldText(difficulty.difficultyString, fontSize: 11, color: color, maxLines: 2),
