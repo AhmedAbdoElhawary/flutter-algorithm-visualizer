@@ -62,12 +62,9 @@ class CodeEditorController extends StateNotifier<CodeEditorState> {
     state = state.copyWith(isRunning: false, grade: result);
   }
 
-  /// Purely cosmetic "line highlight sweep" while the code "runs" — kept in
-  /// the presentation layer since it's an animation detail, not a business
-  /// rule.
   Future<void> _animateLineByLine(int totalLines) {
     final completer = Completer<void>();
-    var line = 0;
+    int line = 0;
     _highlightTimer?.cancel();
     _highlightTimer = Timer.periodic(const Duration(milliseconds: 100), (timer) {
       if (!mounted) {
@@ -79,6 +76,8 @@ class CodeEditorController extends StateNotifier<CodeEditorState> {
       if (line <= totalLines) {
         state = state.copyWith(highlightedLine: line);
       } else {
+        state = state.copyWith(highlightedLine: -1);
+
         timer.cancel();
         if (!completer.isCompleted) completer.complete();
       }
