@@ -180,3 +180,254 @@ abstract class _TestCase implements TestCase {
   _$$TestCaseImplCopyWith<_$TestCaseImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
+
+TestCaseResult _$TestCaseResultFromJson(Map<String, dynamic> json) {
+  return _SingleTestCaseResult.fromJson(json);
+}
+
+/// @nodoc
+mixin _$TestCaseResult {
+  /// The raw `input` string straight from the JSON, e.g. `nums=[2,7,11,15], target=9`.
+  String? get input => throw _privateConstructorUsedError;
+  String? get expectedOutput => throw _privateConstructorUsedError;
+  String get actualOutput => throw _privateConstructorUsedError;
+  bool get passed => throw _privateConstructorUsedError;
+
+  /// Set when this single run failed to parse/execute (not when the output
+  /// simply didn't match). Null on a clean run.
+  String? get errorMessage => throw _privateConstructorUsedError;
+
+  /// Serializes this TestCaseResult to a JSON map.
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+
+  /// Create a copy of TestCaseResult
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  $TestCaseResultCopyWith<TestCaseResult> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $TestCaseResultCopyWith<$Res> {
+  factory $TestCaseResultCopyWith(
+          TestCaseResult value, $Res Function(TestCaseResult) then) =
+      _$TestCaseResultCopyWithImpl<$Res, TestCaseResult>;
+  @useResult
+  $Res call(
+      {String? input,
+      String? expectedOutput,
+      String actualOutput,
+      bool passed,
+      String? errorMessage});
+}
+
+/// @nodoc
+class _$TestCaseResultCopyWithImpl<$Res, $Val extends TestCaseResult>
+    implements $TestCaseResultCopyWith<$Res> {
+  _$TestCaseResultCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  /// Create a copy of TestCaseResult
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? input = freezed,
+    Object? expectedOutput = freezed,
+    Object? actualOutput = null,
+    Object? passed = null,
+    Object? errorMessage = freezed,
+  }) {
+    return _then(_value.copyWith(
+      input: freezed == input
+          ? _value.input
+          : input // ignore: cast_nullable_to_non_nullable
+              as String?,
+      expectedOutput: freezed == expectedOutput
+          ? _value.expectedOutput
+          : expectedOutput // ignore: cast_nullable_to_non_nullable
+              as String?,
+      actualOutput: null == actualOutput
+          ? _value.actualOutput
+          : actualOutput // ignore: cast_nullable_to_non_nullable
+              as String,
+      passed: null == passed
+          ? _value.passed
+          : passed // ignore: cast_nullable_to_non_nullable
+              as bool,
+      errorMessage: freezed == errorMessage
+          ? _value.errorMessage
+          : errorMessage // ignore: cast_nullable_to_non_nullable
+              as String?,
+    ) as $Val);
+  }
+}
+
+/// @nodoc
+abstract class _$$SingleTestCaseResultImplCopyWith<$Res>
+    implements $TestCaseResultCopyWith<$Res> {
+  factory _$$SingleTestCaseResultImplCopyWith(_$SingleTestCaseResultImpl value,
+          $Res Function(_$SingleTestCaseResultImpl) then) =
+      __$$SingleTestCaseResultImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call(
+      {String? input,
+      String? expectedOutput,
+      String actualOutput,
+      bool passed,
+      String? errorMessage});
+}
+
+/// @nodoc
+class __$$SingleTestCaseResultImplCopyWithImpl<$Res>
+    extends _$TestCaseResultCopyWithImpl<$Res, _$SingleTestCaseResultImpl>
+    implements _$$SingleTestCaseResultImplCopyWith<$Res> {
+  __$$SingleTestCaseResultImplCopyWithImpl(_$SingleTestCaseResultImpl _value,
+      $Res Function(_$SingleTestCaseResultImpl) _then)
+      : super(_value, _then);
+
+  /// Create a copy of TestCaseResult
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? input = freezed,
+    Object? expectedOutput = freezed,
+    Object? actualOutput = null,
+    Object? passed = null,
+    Object? errorMessage = freezed,
+  }) {
+    return _then(_$SingleTestCaseResultImpl(
+      input: freezed == input
+          ? _value.input
+          : input // ignore: cast_nullable_to_non_nullable
+              as String?,
+      expectedOutput: freezed == expectedOutput
+          ? _value.expectedOutput
+          : expectedOutput // ignore: cast_nullable_to_non_nullable
+              as String?,
+      actualOutput: null == actualOutput
+          ? _value.actualOutput
+          : actualOutput // ignore: cast_nullable_to_non_nullable
+              as String,
+      passed: null == passed
+          ? _value.passed
+          : passed // ignore: cast_nullable_to_non_nullable
+              as bool,
+      errorMessage: freezed == errorMessage
+          ? _value.errorMessage
+          : errorMessage // ignore: cast_nullable_to_non_nullable
+              as String?,
+    ));
+  }
+}
+
+/// @nodoc
+@JsonSerializable()
+class _$SingleTestCaseResultImpl implements _SingleTestCaseResult {
+  const _$SingleTestCaseResultImpl(
+      {required this.input,
+      required this.expectedOutput,
+      required this.actualOutput,
+      required this.passed,
+      this.errorMessage});
+
+  factory _$SingleTestCaseResultImpl.fromJson(Map<String, dynamic> json) =>
+      _$$SingleTestCaseResultImplFromJson(json);
+
+  /// The raw `input` string straight from the JSON, e.g. `nums=[2,7,11,15], target=9`.
+  @override
+  final String? input;
+  @override
+  final String? expectedOutput;
+  @override
+  final String actualOutput;
+  @override
+  final bool passed;
+
+  /// Set when this single run failed to parse/execute (not when the output
+  /// simply didn't match). Null on a clean run.
+  @override
+  final String? errorMessage;
+
+  @override
+  String toString() {
+    return 'TestCaseResult(input: $input, expectedOutput: $expectedOutput, actualOutput: $actualOutput, passed: $passed, errorMessage: $errorMessage)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$SingleTestCaseResultImpl &&
+            (identical(other.input, input) || other.input == input) &&
+            (identical(other.expectedOutput, expectedOutput) ||
+                other.expectedOutput == expectedOutput) &&
+            (identical(other.actualOutput, actualOutput) ||
+                other.actualOutput == actualOutput) &&
+            (identical(other.passed, passed) || other.passed == passed) &&
+            (identical(other.errorMessage, errorMessage) ||
+                other.errorMessage == errorMessage));
+  }
+
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  int get hashCode => Object.hash(
+      runtimeType, input, expectedOutput, actualOutput, passed, errorMessage);
+
+  /// Create a copy of TestCaseResult
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$SingleTestCaseResultImplCopyWith<_$SingleTestCaseResultImpl>
+      get copyWith =>
+          __$$SingleTestCaseResultImplCopyWithImpl<_$SingleTestCaseResultImpl>(
+              this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$SingleTestCaseResultImplToJson(
+      this,
+    );
+  }
+}
+
+abstract class _SingleTestCaseResult implements TestCaseResult {
+  const factory _SingleTestCaseResult(
+      {required final String? input,
+      required final String? expectedOutput,
+      required final String actualOutput,
+      required final bool passed,
+      final String? errorMessage}) = _$SingleTestCaseResultImpl;
+
+  factory _SingleTestCaseResult.fromJson(Map<String, dynamic> json) =
+      _$SingleTestCaseResultImpl.fromJson;
+
+  /// The raw `input` string straight from the JSON, e.g. `nums=[2,7,11,15], target=9`.
+  @override
+  String? get input;
+  @override
+  String? get expectedOutput;
+  @override
+  String get actualOutput;
+  @override
+  bool get passed;
+
+  /// Set when this single run failed to parse/execute (not when the output
+  /// simply didn't match). Null on a clean run.
+  @override
+  String? get errorMessage;
+
+  /// Create a copy of TestCaseResult
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  _$$SingleTestCaseResultImplCopyWith<_$SingleTestCaseResultImpl>
+      get copyWith => throw _privateConstructorUsedError;
+}
