@@ -73,9 +73,8 @@ class _CodeEditorBlockState extends State<CodeEditorBlock> with SingleTickerProv
 
     _highlightLine();
 
-
+    widget.controllerCallback?.call(controller);
   }
-
 
   @override
   void didUpdateWidget(covariant CodeEditorBlock oldWidget) {
@@ -130,7 +129,8 @@ class _CodeEditorBlockState extends State<CodeEditorBlock> with SingleTickerProv
                 RSizedBox(width: 5),
                 CircleAvatar(radius: 5.r, backgroundColor: Color.fromRGBO(46, 156, 117, 1)),
                 Spacer(),
-                if (widget.executing) MediumText(StringsManager.executing, color: ThemeEnum.accentGreen, fontSize: 10)
+                if (widget.executing)
+                  MediumText(StringsManager.executing, color: ThemeEnum.accentGreen, fontSize: 10)
               ],
             ),
           ),
