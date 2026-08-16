@@ -102,7 +102,11 @@ class Parser {
     return false;
   }
 
-  void _skipType() {
+  /// Consumes a type (keyword type, `var`/`final`/`const`, custom identifier
+  /// type, optional generics and nullable marker) and returns its source text,
+  /// e.g. `List<int>`, `ListNode?` or `void`.
+  String _skipType() {
+    final int start = pos;
     if (_check(TokKind.keyword) && _typeKeywords.contains(_peek.text)) {
       _advance();
     } else if (_check(TokKind.keyword) && (_peek.text == 'var' || _peek.text == 'final' || _peek.text == 'const')) {
@@ -132,6 +136,7 @@ class Parser {
     }
     // Nullable type marker (e.g. `ListNode?`, `int?`).
     if (_checkSymbol('?')) _advance();
+    return tokens.sublist(start, pos).map((t) => t.text).join();
   }
 
   // ---------------------------------------------------------------------
@@ -154,11 +159,12 @@ class Parser {
         );
       }
       final int startLine = _peek.line;
-      _skipType();
+      final String returnType = _skipType();
       final Tok nameTok = _consumeIdentifier('Expected a name after the type');
       if (_checkSymbol('(')) {
         final List<Param> params = _parseParamList();
         final Block body = _parseBlock();
+        _assertReturnTypeSatisfied(returnType, body, nameTok.text, startLine);
         fns.add(FunctionDecl(nameTok.text, params, body, startLine));
       } else {
         Expr? init;
@@ -168,6 +174,40 @@ class Parser {
       }
     }
     return Program(fns, vars, classes, 1);
+  }
+
+  /// Mirrors Dart's own "doesn't end with a return statement" compile error:
+  /// a function whose return type is non-void, non-nullable and not `dynamic`
+  /// must contain a `return` somewhere in its body. An empty body (the seeded
+  /// default state) fails this, which is reported as a syntax error before
+  /// the program ever runs.
+  void _assertReturnTypeSatisfied(String returnType, Block body, String name, int line) {
+    final t = returnType.trim();
+    if (t == 'void' || t == 'dynamic' || t.endsWith('?') || _containsReturn(body)) return;
+    throw ParseError(
+      "This function has a return type of '$t', but doesn't end with a return statement.",
+      line,
+    );
+  }
+
+  bool _containsReturn(Block block) {
+    for (final stmt in block.statements) {
+      if (_stmtContainsReturn(stmt)) return true;
+    }
+    return false;
+  }
+
+  bool _stmtContainsReturn(Stmt stmt) {
+    if (stmt is ReturnStmt) return true;
+    if (stmt is Block) return _containsReturn(stmt);
+    if (stmt is IfStmt) {
+      return _stmtContainsReturn(stmt.thenBranch) ||
+          (stmt.elseBranch != null && _stmtContainsReturn(stmt.elseBranch!));
+    }
+    if (stmt is WhileStmt) return _stmtContainsReturn(stmt.body);
+    if (stmt is ForStmt) return _stmtContainsReturn(stmt.body);
+    if (stmt is ForInStmt) return _stmtContainsReturn(stmt.body);
+    return false;
   }
 
   ClassDecl _parseClassDecl() {

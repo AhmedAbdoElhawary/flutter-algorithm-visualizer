@@ -89,17 +89,25 @@ class ProblemRunner {
       final expected = testCase.expectedOutput.trim();
 
       final argValues = parseTestCaseInput(input);
-      final program = _buildProgram(problem, sig, userCode, argValues);
-      final run = runner.run(program);
+      final built = _buildProgram(problem, sig, userCode, argValues);
+      final run = runner.run(built.program);
 
       if (run.error != null) {
+        // Rebase the reported line so it points at the user's original code
+        // (e.g. the function's signature inside `class Solution { ... }`)
+        // instead of the generated program.
+        final error = RunError(
+          line: run.error!.line + built.lineOffset,
+          message: run.error!.message,
+          kind: run.error!.kind,
+        );
         results.add(SingleTestCaseResult(
           testCase: testCase,
           passed: false,
           actualOutput: run.stdout.isEmpty ? '' : run.stdout.join('\n'),
-          errorMessage: run.error.toString(),
+          errorMessage: error.toString(),
         ));
-        firstError ??= run.error.toString();
+        firstError ??= error.toString();
         continue;
       }
 
@@ -132,20 +140,24 @@ class ProblemRunner {
   // Program construction
   // ---------------------------------------------------------------------
 
-  String _buildProgram(
+  ({String program, int lineOffset}) _buildProgram(
     ProblemData problem,
     ParsedFunctionSignature sig,
     String userCode,
     Map<String, TestValue> argValues,
   ) {
-    final code = _stripSolutionWrapper(userCode).trim();
+    final (code, strippedLines) = _stripSolutionWrapper(userCode);
 
     final headers = _customObjectHeaders(problem, code);
 
     // The user provided their own main(): run it as-is (whatever it prints
     // last is treated as the result).
     if (RegExp(r'\bvoid\s+main\s*\(').hasMatch(code)) {
-      return headers.isEmpty ? code : '${headers.join('\n\n')}\n\n$code';
+      final program = headers.isEmpty ? code : '${headers.join('\n\n')}\n\n$code';
+      return (
+        program: program,
+        lineOffset: _offsetToOriginal(program, code, strippedLines),
+      );
     }
 
     final argDecls = <String>[];
@@ -169,10 +181,25 @@ class ProblemRunner {
     }
     buf.writeln('}');
 
-    if (headers.isEmpty) {
-      return '$code\n\n${buf.toString()}';
-    }
-    return '${headers.join('\n\n')}\n\n$code\n\n${buf.toString()}';
+    final program = headers.isEmpty
+        ? '$code\n\n${buf.toString()}'
+        : '${headers.join('\n\n')}\n\n$code\n\n${buf.toString()}';
+    return (
+      program: program,
+      lineOffset: _offsetToOriginal(program, code, strippedLines),
+    );
+  }
+
+  /// Maps a line in the generated [program] back to the user's original code.
+  ///
+  /// The stripped user code starts at some program line; its first line was at
+  /// `strippedLines + 1` in the original source. Adding the returned offset to
+  /// any error line reported against [program] rebases it onto that source.
+  int _offsetToOriginal(String program, String code, int strippedLines) {
+    if (code.isEmpty) return 0;
+    final idx = program.indexOf(code);
+    final linesBeforeCode = '\n'.allMatches(program.substring(0, idx)).length;
+    return strippedLines - linesBeforeCode;
   }
 
   /// Custom-object class sources that the user code doesn't already define.
@@ -268,6 +295,9 @@ class ProblemRunner {
   /// (LeetCode style), sometimes preceded by a `/** ... */` doc comment.
   /// Peel that wrapper off, keeping only its body.
   ///
+  /// Returns the body and how many source lines it started after (so error
+  /// lines reported against the body can be rebased onto the original code).
+  ///
   /// Only a class named exactly `Solution` is treated as the wrapper:
   /// class-based problems (`MinStack`, `LRUCache`, ...) define the solution
   /// class itself and must be left intact.
@@ -276,10 +306,11 @@ class ProblemRunner {
   /// wrapper detection isn't fooled by a leading doc comment and the class
   /// check in [ProblemRunner._definesClass] can't match class names that only
   /// appear inside comments.
-  String _stripSolutionWrapper(String code) {
-    final commentFree = _stripComments(code).trim();
-    final match = RegExp(r'^class\s+Solution\s*\{').firstMatch(commentFree);
-    if (match == null) return commentFree;
+  (String, int) _stripSolutionWrapper(String code) {
+    final commentFree = _stripComments(code);
+    final match = RegExp(r'^[ \t]*class\s+Solution\s*\{', multiLine: true)
+        .firstMatch(commentFree);
+    if (match == null) return _trimmed(commentFree);
 
     final open = commentFree.indexOf('{', match.start);
     var depth = 0;
@@ -289,15 +320,32 @@ class ProblemRunner {
         depth++;
       } else if (c == '}') {
         depth--;
-        if (depth == 0) return commentFree.substring(open + 1, i).trim();
+        if (depth == 0) {
+          return _trimmed(commentFree, from: open + 1, to: i);
+        }
       }
     }
-    return commentFree;
+    return _trimmed(commentFree);
+  }
+
+  /// Trims [source] (optionally the slice `[from, to)`) and returns the trimmed
+  /// string plus the number of newlines before it in the original [source],
+  /// i.e. how many lines were consumed before the kept text.
+  (String, int) _trimmed(String source, {int? from, int? to}) {
+    final kept = source.substring(from ?? 0, to ?? source.length).trim();
+    final start = source.indexOf(kept, from ?? 0);
+    return (
+      kept,
+      '\n'.allMatches(source.substring(0, start)).length,
+    );
   }
 
   /// Removes `//` line comments and (nested) `/* ... */` block comments,
   /// leaving string literals untouched. Mirrors the lexer's comment rules so
   /// the surrounding code is unchanged.
+  ///
+  /// Newlines inside block comments are preserved so line numbers in the
+  /// stripped code still match the original source.
   String _stripComments(String source) {
     final buf = StringBuffer();
     var i = 0;
@@ -325,6 +373,7 @@ class ProblemRunner {
             i += 2;
             continue;
           }
+          if (source[i] == '\n') buf.write('\n');
           i++;
         }
         continue;
