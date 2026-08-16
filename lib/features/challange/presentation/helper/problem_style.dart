@@ -5,6 +5,18 @@ import 'package:flutter/material.dart';
 class ProblemStyle {
   const ProblemStyle._();
 
+  static ThemeEnum difficultyCodeDescriptionColor(ProblemDifficulty difficulty) {
+    switch (difficulty) {
+      case ProblemDifficulty.easy:
+        return ThemeEnum.accentGreen;
+      case ProblemDifficulty.medium:
+        return ThemeEnum.accentYellow;
+      case ProblemDifficulty.hard:
+        return ThemeEnum.accentRed;
+      case ProblemDifficulty.none:
+        return ThemeEnum.accentBlue;
+    }
+  }
   static ThemeEnum difficultyColor(ProblemDifficulty difficulty) {
     switch (difficulty) {
       case ProblemDifficulty.easy:
