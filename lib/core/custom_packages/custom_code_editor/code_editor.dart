@@ -12,11 +12,18 @@ library;
 export 'src/editor/code_controller.dart';
 export 'src/editor/code_document.dart';
 export 'src/editor/code_editor.dart';
-
+// Execution ("run this code" support)
+export 'src/execution/ast.dart';
+export 'src/execution/interpreter.dart';
+export 'src/execution/lexer.dart';
+export 'src/execution/object_instance.dart';
+export 'src/execution/parser.dart';
+export 'src/execution/runner.dart';
+// Formatting
+export 'src/formatting/formatter.dart';
 // Models
 export 'src/models/code_editor_config.dart';
 export 'src/models/code_editor_theme.dart';
-
 // Syntax
 export 'src/syntax/dart/dart_highlighter.dart';
 export 'src/syntax/python/python_highlighter.dart';
@@ -24,20 +31,18 @@ export 'src/syntax/syntax_highlighter.dart';
 export 'src/syntax/token.dart';
 export 'src/syntax/token_type.dart';
 export 'src/syntax/tokenizer.dart';
-
-// Formatting
-export 'src/formatting/formatter.dart';
-
-// Execution ("run this code" support)
-export 'src/execution/ast.dart';
-export 'src/execution/interpreter.dart';
-export 'src/execution/lexer.dart';
-export 'src/execution/parser.dart';
-export 'src/execution/runner.dart';
-
-// Widgets
-export 'src/widgets/line_numbers.dart';
-
+// Test-case grading
+export 'src/testcase/custom_object_shape.dart';
+export 'src/testcase/function_signature.dart';
+export 'src/testcase/object_builder.dart';
+export 'src/testcase/object_serializer.dart';
+export 'src/testcase/parsing_utils.dart';
+export 'src/testcase/problem_runner.dart';
+export 'src/testcase/test_case.dart';
+export 'src/testcase/test_value.dart';
+export 'src/testcase/value_parser.dart';
 // Utils (exposed for advanced/custom-language use cases and testing)
 export 'src/utils/bracket_utils.dart';
 export 'src/utils/indentation.dart';
+// Widgets
+export 'src/widgets/line_numbers.dart';
