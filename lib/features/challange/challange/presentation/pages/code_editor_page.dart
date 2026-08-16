@@ -57,6 +57,7 @@ class _VisualizerScreenState extends ConsumerState<CodeEditorPage> {
                       padding: REdgeInsets.fromLTRB(16, 0, 16, 0),
                       sliver: SliverToBoxAdapter(
                         child: CodeEditorBlock(
+                          title: problem.getNameWithLanguageName,
                           code: problem.getDefaultCode,
                           highlightLineNumber: highlightedLine ?? -1,
                           executing: isRunning,
