@@ -1,4 +1,4 @@
-import 'package:algorithm_visualizer/features/challange/challange/domain/usecases/grade_code_usecase.dart';
+import 'package:algorithm_visualizer/features/challange/domain/usecases/grade_code_usecase.dart';
 
 class CodeEditorState {
   const CodeEditorState({
