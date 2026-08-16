@@ -29,22 +29,35 @@ class SingleTestCaseResult {
 /// (visible `test_cases` + `hidden_test_cases`).
 class CodeGradeResult {
   const CodeGradeResult({
-    required this.testCaseResults,
+    required this.allTestCaseResults,
     required this.totalCount,
     this.error,
   });
 
-  final List<SingleTestCaseResult> testCaseResults;
+  final List<SingleTestCaseResult> allTestCaseResults;
   final int totalCount;
 
   /// A whole-program failure (e.g. the user code never compiles), which
   /// invalidates every test case at once. Null when each test ran.
   final String? error;
 
-  int get passedCount => testCaseResults.where((r) => r.passed).length;
+  int get passedCount => allTestCaseResults.where((r) => r.passed).length;
+
+  int get failedCount => allTestCaseResults.where((r) => !r.passed).length;
+
+  /// it just need to be simple not showing all test cases results
+  List<SingleTestCaseResult> get firstThreeTestCaseResults {
+    if (allPassed) return allTestCaseResults.take(3).toList();
+
+    final failedResults = allTestCaseResults.where((r) => !r.passed).take(3).toList();
+    final passedResults = allTestCaseResults.where((r) => r.passed).take(3 - failedResults.length).toList();
+    final failed = [...failedResults, ...passedResults];
+
+    return failed;
+  }
 
   /// True only when the code ran cleanly AND every test case passed.
-  bool get allPassed => error == null && testCaseResults.isNotEmpty && passedCount == totalCount;
+  bool get allPassed => error == null && allTestCaseResults.isNotEmpty && passedCount == totalCount;
 }
 
 /// Grades user-written Dart code against a coding problem using the on-device
@@ -64,7 +77,7 @@ class GradeCodeUseCase {
   }) {
     final allCases = <TestCase>[...problem.getTestCases, ...problem.getHiddenTestCases];
     if (allCases.isEmpty) {
-      return const CodeGradeResult(testCaseResults: <SingleTestCaseResult>[], totalCount: 0);
+      return const CodeGradeResult(allTestCaseResults: <SingleTestCaseResult>[], totalCount: 0);
     }
 
     final problemData = ProblemData(
@@ -82,7 +95,7 @@ class GradeCodeUseCase {
     final result = const ProblemRunner().runAll(problem: problemData, userCode: userCode);
 
     return CodeGradeResult(
-      testCaseResults: [
+      allTestCaseResults: [
         for (final r in result.testCaseResults)
           SingleTestCaseResult(
             input: r.testCase.input,
