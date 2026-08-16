@@ -73,14 +73,20 @@ class _CodeEditorBlockState extends State<CodeEditorBlock> with SingleTickerProv
 
     _highlightLine();
 
-    final resultCallback = widget.controllerCallback;
-    if (resultCallback != null) widget.controllerCallback?.call(controller);
+
   }
+
 
   @override
   void didUpdateWidget(covariant CodeEditorBlock oldWidget) {
     if (oldWidget.highlightLineNumber != widget.highlightLineNumber) _highlightLine();
-
+    if (oldWidget.code != widget.code) {
+      final resultCallback = widget.controllerCallback;
+      if (resultCallback != null) {
+        controller.text = widget.code;
+        resultCallback(controller);
+      }
+    }
     super.didUpdateWidget(oldWidget);
   }
 
