@@ -1,15 +1,14 @@
 import 'dart:async';
 
 import 'package:algorithm_visualizer/core/custom_packages/custom_code_editor/src/editor/code_controller.dart';
+import 'package:algorithm_visualizer/features/challange/challange/domain/usecases/grade_code_usecase.dart';
 import 'package:algorithm_visualizer/features/challange/challange/presentation/providers/code_editor_state.dart';
 import 'package:algorithm_visualizer/features/challange/domain/entities/coding_problem.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class CodeEditorController extends StateNotifier<CodeEditorState> {
-  CodeEditorController({required this.codingProblem}) : super(CodeEditorState.initial()) {
-    _loadTestCases();
-  }
+  CodeEditorController({required this.codingProblem}) : super(CodeEditorState.initial());
 
   final CodingProblem codingProblem;
 
@@ -21,8 +20,10 @@ class CodeEditorController extends StateNotifier<CodeEditorState> {
   Timer? _highlightTimer;
 
   void attachCodeController(CodeController controller) {
+    if (_codeController != null && _codeController?.text == controller.text) return;
     _codeController = controller;
   }
+
   Future<void> copyCode() async {
     final text = _codeController?.text;
     if (text == null) return;
@@ -35,47 +36,29 @@ class CodeEditorController extends StateNotifier<CodeEditorState> {
     });
   }
 
-  CodeController get _getCodeController  {
-    final con=_codeController;
-    if(con==null){
-    /// todo: test this
+  CodeController get _getCodeController {
+    final con = _codeController;
+    if (con == null) {
+      /// todo: test this
 
       throw StateError(
         'CodeControllerRunnerRepository: no CodeController attached yet.',
-      )
-      ;
+      );
     }
     return con;
-
   }
-  /// not done yet===============================
-  /// todo: implement this
-  Future<void> _loadTestCases() async {
-final controller = _getCodeController;
-codingProblem.getTestCases;
-    // final testCases = await _getTestCasesUseCase(problemId);
-    // if (!mounted) return;
-    // state = state.copyWith(testCases: testCases, loadingTestCases: false);
-  }
-
-
 
   Future<void> runCode() async {
-    // final controller = _getCodeController;
-    // if (state.isRunning) return;
-    // state = state.copyWith(isRunning: true, showOutput: false, highlightedLine: null);
-    //
-    // final totalLines = controller.text.split('\n').length;
-    // await _animateLineByLine(totalLines);
-    //
-    // final result = controller.execute().stdout.join('\n');
-    //
-    // state = state.copyWith(
-    //   isRunning: false,
-    //   showOutput: true,
-    //   highlightedLine: null,
-    //   // result: result,
-    // );
+    if (state.isRunning) return;
+    state = state.copyWith(isRunning: true, grade: null);
+
+    final controller = _getCodeController;
+    final result = const GradeCodeUseCase().grade(
+      problem: codingProblem,
+      userCode: controller.text,
+    );
+
+    state = state.copyWith(isRunning: false, grade: result);
   }
 
   /// Purely cosmetic "line highlight sweep" while the code "runs" — kept in
