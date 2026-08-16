@@ -29,7 +29,7 @@ class CodeEditorLangBar extends ConsumerWidget {
         child: Row(
           children: [
             Container(
-              padding: REdgeInsets.symmetric(vertical: 3, horizontal: 10),
+              padding: REdgeInsets.symmetric(vertical: 4, horizontal: 4),
               decoration: BoxDecoration(
                 color: context.getColor(ThemeEnum.card),
                 borderRadius: BorderRadius.circular(10),
@@ -77,8 +77,7 @@ class CodeEditorLangBar extends ConsumerWidget {
 
                 return GestureDetector(
                   onTap: isRunning ? null : notifier.runCode,
-                  child: AnimatedContainer(
-                    duration: const Duration(milliseconds: 200),
+                  child: Container(
                     padding: REdgeInsets.symmetric(horizontal: 14, vertical: 6),
                     decoration: BoxDecoration(
                       color: isRunning ? context.getColor(ThemeEnum.card) : null,
@@ -105,16 +104,19 @@ class CodeEditorLangBar extends ConsumerWidget {
                                   offset: const Offset(0, 4)),
                             ],
                     ),
-                    child: Row(mainAxisSize: MainAxisSize.min, children: [
-                      CustomIcon(Icons.play_arrow_rounded,
-                          size: 14, color: isRunning ? ThemeEnum.hover : ThemeEnum.solidWhite),
-                      const RSizedBox(width: 4),
-                      SemiBoldText(
-                        isRunning ? StringsManager.running : StringsManager.run,
-                        color: isRunning ? ThemeEnum.hover : ThemeEnum.solidWhite,
-                        fontSize: 13,
-                      ),
-                    ]),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        CustomIcon(Icons.play_arrow_rounded,
+                            size: 14, color: isRunning ? ThemeEnum.hover : ThemeEnum.solidWhite),
+                        const RSizedBox(width: 4),
+                        BoldText(
+                          isRunning ? StringsManager.running : StringsManager.run,
+                          color: isRunning ? ThemeEnum.hover : ThemeEnum.solidWhite,
+                          fontSize: 13,
+                        ),
+                      ],
+                    ),
                   ),
                 );
               },
