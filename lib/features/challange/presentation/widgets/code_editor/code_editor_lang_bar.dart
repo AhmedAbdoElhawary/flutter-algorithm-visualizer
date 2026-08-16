@@ -3,6 +3,7 @@ import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
 import 'package:algorithm_visualizer/core/widgets/adaptive/text/adaptive_text.dart';
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/custom_icon.dart';
 import 'package:algorithm_visualizer/features/challange/domain/entities/coding_problem.dart';
+import 'package:algorithm_visualizer/features/challange/presentation/view_model/challenges/challenges_providers.dart';
 import 'package:algorithm_visualizer/features/challange/presentation/view_model/code_editor/code_editor_providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -76,7 +77,39 @@ class CodeEditorLangBar extends ConsumerWidget {
                 final isRunning = ref.watch(provider.select((value) => value.isRunning));
 
                 return GestureDetector(
-                  onTap: isRunning ? null : notifier.runCode,
+                  onTap: isRunning
+                      ? null
+                      : () async {
+                          await notifier.runCode(
+                            (result) async {
+                              // if passed or failed
+                              if (result == null) return;
+
+                              // // not passed and initial saved
+                              // if(!result.allPassed&&!problem.isThereAnyCorrectCodeSaved);
+                              // ///save
+                              // // all passed and initial saved
+                              // if(result.allPassed&&!problem.isThereAnyCorrectCodeSaved);
+                              // ///save
+                              // // not passed and not correct saved
+                              // if(!result.allPassed&&!problem.isThereAnyCorrectCodeSaved);
+                              // ///save
+                              // // // not passed and all correct saved
+                              // // if(!result.allPassed&&problem.isThereAnyCorrectCodeSaved);
+                              // /// not saved
+                              // // all passed and not correct saved
+                              // if(result.allPassed&&!problem.isThereAnyCorrectCodeSaved);
+                              // ///save
+                              // // all passed and correct saved
+                              // if(result.allPassed&&problem.isThereAnyCorrectCodeSaved);
+                              // ///save
+
+                              if (!(!result.allPassed && problem.isThereAnyCorrectCodeSaved)) {
+                                  await ref.read(challengesProvider.notifier).updateProblem(problem,result);
+                              }
+                            },
+                          );
+                        },
                   child: Container(
                     padding: REdgeInsets.symmetric(horizontal: 14, vertical: 6),
                     decoration: BoxDecoration(
