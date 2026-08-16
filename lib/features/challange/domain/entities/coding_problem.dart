@@ -1,4 +1,8 @@
+import 'package:algorithm_visualizer/core/extensions/string.dart';
+import 'package:algorithm_visualizer/core/resources/strings_manager.dart';
+import 'package:algorithm_visualizer/features/challange/data/models/custom_object.dart';
 import 'package:algorithm_visualizer/features/challange/data/models/example.dart';
+import 'package:algorithm_visualizer/features/challange/data/models/function_signature.dart';
 import 'package:algorithm_visualizer/features/challange/data/models/problem_storage.dart';
 import 'package:algorithm_visualizer/features/challange/data/models/similar_question.dart';
 import 'package:algorithm_visualizer/features/challange/data/models/solution_approach.dart';
@@ -25,6 +29,9 @@ class CodingProblem with _$CodingProblem {
     required List<String>? patterns,
     required String? description,
     required List<String>? constraints,
+    required FunctionSignature? functionSignature,
+    Map<String, String>? defaultCode,
+    Map<String, List<CustomObject>>? customObjects,
     required List<Example>? examples,
     required List<String>? edgeCases,
     required List<TestCase>? testCases,
@@ -52,6 +59,20 @@ extension CodingProblemX on CodingProblem {
   int get getNumber => number ?? -1;
   int get getProblemId => problemId ?? -1;
   String get getName => name ?? '';
+
+  String get getNameWithLanguageName {
+    final snakeCase = getName.toSnakeCase
+        .replaceAll(RegExp(r'\s+'), '_')
+        .toLowerCase();
+
+    final parts = snakeCase.split('_');
+
+    while (parts.join('_').length >= 20 && parts.length > 1) {
+      parts.removeLast();
+    }
+
+    return "${parts.join('_')}.${StringsManager.dart.toLowerCase()}";
+  }
   String get getSource => source ?? '';
 
   int get getSourceProblemNumber => sourceProblemNumber ?? -1;
@@ -61,6 +82,24 @@ extension CodingProblemX on CodingProblem {
   List<String> get getPatterns => patterns ?? [];
   String get getDescription => description ?? '';
   List<String> get getConstraints => constraints ?? [];
+
+  String get getFunctionInDart {
+    final sign = functionSignature?.dart;
+    if (sign == null) return "";
+
+    return "$sign{\n\n}";
+  }
+
+  /// The problem's starter code (the `dart` entry of `default_code`), or a
+  /// bare function stub when the JSON doesn't provide one.
+  String get getDefaultCode {
+    final code = defaultCode?['dart'];
+    if (code == null || code.trim().isEmpty) return getFunctionInDart;
+    return code;
+  }
+
+  List<CustomObject> get getCustomObjects => customObjects?['dart'] ?? [];
+
   List<Example> get getExamples => examples ?? [];
   List<String> get getEdgeCases => edgeCases ?? [];
   List<TestCase> get getTestCases => testCases ?? [];

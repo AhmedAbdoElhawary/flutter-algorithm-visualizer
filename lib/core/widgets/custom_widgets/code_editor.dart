@@ -1,5 +1,6 @@
 import 'package:algorithm_visualizer/core/custom_packages/custom_code_editor/code_editor.dart';
 import 'package:algorithm_visualizer/core/resources/color_manager.dart';
+import 'package:algorithm_visualizer/core/resources/font_manager.dart';
 import 'package:algorithm_visualizer/core/resources/strings_manager.dart';
 import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
 import 'package:algorithm_visualizer/core/widgets/adaptive/text/adaptive_text.dart';
@@ -8,12 +9,14 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class CodeEditorBlock extends StatefulWidget {
   const CodeEditorBlock({
+    required this.title,
     required this.code,
     this.highlightLineNumber = -1,
     this.executing = false,
     this.controllerCallback,
     super.key,
   });
+  final String title;
   final String code;
   final int highlightLineNumber;
   final bool executing;
@@ -47,12 +50,12 @@ class _CodeEditorBlockState extends State<CodeEditorBlock> with SingleTickerProv
           color: ColorManager.codeEditorNumberColor,
           fontSize: 12.sp,
           height: 1.5,
-          fontFamily: 'JetBrainsMono',
+          fontFamily: FontConstants.fontJetBrainsMono,
         ),
         selectionColor: Color.fromRGBO(54, 83, 116, 1),
         textStyle: TextStyle(
           color: Color(0xFFD4D4D4),
-          fontFamily: 'JetBrainsMono',
+          fontFamily: FontConstants.fontJetBrainsMono,
           fontSize: 14.sp,
           height: 1.5,
         ),
@@ -72,29 +75,26 @@ class _CodeEditorBlockState extends State<CodeEditorBlock> with SingleTickerProv
 
     _highlightLine();
 
-    final resultCallback = widget.controllerCallback;
-    if (resultCallback != null) {
-      widget.controllerCallback?.call(controller);
-
-      // final result = controller.execute();
-      // if (result.success) {
-      //   print(result.stdout.join('\n')); // everything the code printed
-      // } else {
-      //   print('Line ${result.error!.line}: ${result.error!.message}');
-      // }
-    }
+    widget.controllerCallback?.call(controller);
   }
 
   @override
   void didUpdateWidget(covariant CodeEditorBlock oldWidget) {
     if (oldWidget.highlightLineNumber != widget.highlightLineNumber) _highlightLine();
-
+    if (oldWidget.code != widget.code) {
+      final resultCallback = widget.controllerCallback;
+      if (resultCallback != null) {
+        controller.text = widget.code;
+        resultCallback(controller);
+      }
+    }
     super.didUpdateWidget(oldWidget);
   }
 
   void _highlightLine() {
-    if (widget.highlightLineNumber < 1) return;
     controller.clearHighlights();
+
+    if (widget.highlightLineNumber < 1) return;
 
     controller.highlightLine(widget.highlightLineNumber, ColorManager.accentDk);
   }
@@ -122,6 +122,7 @@ class _CodeEditorBlockState extends State<CodeEditorBlock> with SingleTickerProv
               border: Border(top: border.top, left: border.left, right: border.right),
             ),
             child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Padding(
                   padding: REdgeInsetsDirectional.only(top: 12, bottom: 12),
@@ -131,8 +132,42 @@ class _CodeEditorBlockState extends State<CodeEditorBlock> with SingleTickerProv
                 CircleAvatar(radius: 5.r, backgroundColor: Color.fromRGBO(182, 142, 43, 1)),
                 RSizedBox(width: 5),
                 CircleAvatar(radius: 5.r, backgroundColor: Color.fromRGBO(46, 156, 117, 1)),
-                Spacer(),
-                if (widget.executing) MediumText(StringsManager.executing, color: ThemeEnum.accentGreen, fontSize: 10)
+                Spacer(flex: 1),
+                if (widget.title.isNotEmpty) ...[
+                  if (widget.executing) ...[
+                    SizedBox(
+                      width: widget.executing ? ScreenUtil().screenWidth * 0.45 : null,
+                      child: Center(
+                        child: SingleChildScrollView(
+                          scrollDirection: Axis.horizontal,
+                          child: MediumText(
+                            widget.title,
+                            color: ThemeEnum.hover,
+                            fontSize: 11,
+                            maxLines: 1,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ] else ...[
+                    MediumText(
+                      widget.title,
+                      color: ThemeEnum.hover,
+                      fontSize: 11,
+                      maxLines: 1,
+                    ),
+                  ]
+                ],
+                if (widget.executing) ...[
+                  Spacer(flex: 1),
+                  Padding(
+                    padding: REdgeInsets.only(top: 2.5),
+                    child:
+                        CircleAvatar(radius: 3.r, backgroundColor: context.getColor(ThemeEnum.accentGreen)),
+                  ),
+                  RSizedBox(width: 5),
+                  MediumText(StringsManager.executing, color: ThemeEnum.accentGreen, fontSize: 10),
+                ]
               ],
             ),
           ),

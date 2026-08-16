@@ -8,7 +8,7 @@ class ChallengesState {
   final int expandedId;
 
   const ChallengesState({
-    this.filter,
+    this.filter=ProblemDifficulty.none,
     this.search = '',
     this.expandedId = 0,
   });

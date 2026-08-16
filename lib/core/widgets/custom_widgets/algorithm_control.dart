@@ -1,9 +1,9 @@
 import 'package:algorithm_visualizer/core/resources/color_manager.dart';
-import 'package:algorithm_visualizer/features/visualize/helper/playback_speed.dart';
 import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
 import 'package:algorithm_visualizer/core/widgets/adaptive/text/adaptive_text.dart';
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/glass_card.dart';
 import 'package:algorithm_visualizer/features/base/view_model/algorithm_control_interface.dart';
+import 'package:algorithm_visualizer/features/visualize/helper/playback_speed.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -88,7 +88,7 @@ class _PlayButton extends StatelessWidget {
             end: AlignmentDirectional.bottomEnd,
             colors: [
               context.getColor(ThemeEnum.accent),
-              ColorManager.main2DarkColor,
+              ColorManager.pinkColor,
             ],
           ),
           borderRadius: BorderRadius.circular(14),

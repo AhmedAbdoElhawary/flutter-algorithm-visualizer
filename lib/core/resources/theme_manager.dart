@@ -24,7 +24,10 @@ enum ThemeEnum {
   hoverSecond,
   border,
 
-  /// --------------
+  /// static colors
+  solidWhite,
+  purple,
+  pink,lightPink,
   howItWorksColor,
   columnColor,
   backgroundForSortingColor,
@@ -34,7 +37,6 @@ enum ThemeEnum {
   borderPurpleColor,
   lightPurpleColor,
   codeEditorNumberColor,
-
   whiteD4Color,
   whiteD5Color,
   whiteColor,
@@ -84,6 +86,10 @@ extension ThemeExtension on BuildContext {
       ThemeEnum.border: isThemeDark ? ColorManager.borderDk : ColorManager.borderLt,
 
       ///-------------------->
+      ThemeEnum.solidWhite: ColorManager.white,
+      ThemeEnum.purple:  ColorManager.targetSearchingPoint,
+      ThemeEnum.pink:  ColorManager.pinkColor,
+      ThemeEnum.lightPink:  ColorManager.lightPinkColor,
       ThemeEnum.howItWorksColor: ColorManager.howItWorksColor,
       ThemeEnum.white2DarkColor: ColorManager.white2DarkColor,
       ThemeEnum.columnColor: ColorManager.columnSortColor,

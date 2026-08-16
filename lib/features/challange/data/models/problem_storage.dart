@@ -5,6 +5,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 part 'problem_storage.freezed.dart';
 part 'problem_storage.g.dart';
 
+/// [ProblemStorageDTO] it saved in local storage
 @freezed
 class ProblemStorageDTO with _$ProblemStorageDTO {
   const factory ProblemStorageDTO({

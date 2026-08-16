@@ -1,16 +1,16 @@
-import 'package:algorithm_visualizer/features/visualize/helper/playback_speed.dart';
 import 'package:algorithm_visualizer/core/resources/strings_manager.dart';
 import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
 import 'package:algorithm_visualizer/features/base/view_model/algorithm_control_interface.dart';
 import 'package:algorithm_visualizer/features/base/view_model/algorithm_description_interface.dart';
+import 'package:algorithm_visualizer/features/visualize/helper/playback_speed.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-part 'sorting_state.dart';
-part '../helper/sorting_enums.dart';
 part '../helper/sortable_item.dart';
+part '../helper/sorting_enums.dart';
+part 'sorting_state.dart';
 
 /// Immutable snapshot of the visual state after N steps have been applied.
 /// Precomputed once per sort so stepForward/stepBackward can jump directly
@@ -360,9 +360,6 @@ abstract class SortingNotifier extends StateNotifier<SortingNotifierState>
         case SortingStatus.swapping:
           list[step.index1] = list[step.index1].copyWith(sortedStatus: SortingStatus.swapping);
           list[step.index2] = list[step.index2].copyWith(sortedStatus: SortingStatus.swapping);
-          state = state.copyWith(list: List.of(list), positions: positions, currentStep: step);
-          await Future.delayed(_speedDuration);
-
           list.swap(step.index1, step.index2);
           positions = Map<int, Offset>.from(positions);
           final id1 = list[step.index1].id;
@@ -371,6 +368,8 @@ abstract class SortingNotifier extends StateNotifier<SortingNotifierState>
           positions[id1] = positions[id2]!;
           positions[id2] = tempPosition;
           state = state.copyWith(list: List.of(list), positions: positions, currentStep: step);
+          await Future.delayed(_speedDuration);
+
           break;
 
         case SortingStatus.allSorted:

@@ -6,8 +6,8 @@ part 'test_case.g.dart';
 @freezed
 class TestCase with _$TestCase {
   const factory TestCase({
-    required Map<String, dynamic> input,
-    required dynamic expectedOutput,
+   required String? input,
+   required  String? expectedOutput,
   }) = _TestCase;
 
   factory TestCase.fromJson(Map<String, dynamic> json) => _$TestCaseFromJson(json);

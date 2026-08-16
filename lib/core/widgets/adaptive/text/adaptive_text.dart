@@ -4,11 +4,11 @@ import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+part 'bold_text.dart';
 part 'light_text.dart';
+part 'medium_text.dart';
 part 'regular_text.dart';
 part 'semi_bold_text.dart';
-part 'bold_text.dart';
-part 'medium_text.dart';
 
 class _AdaptiveText extends StatelessWidget {
   const _AdaptiveText(
@@ -19,6 +19,7 @@ class _AdaptiveText extends StatelessWidget {
     this.color,
     this.shadows,
     this.fontFamily,
+    this.height,
     this.fontWeight = FontWeightManager.regular,
     this.maxLines = 2,
     this.letterSpacing = 0,
@@ -26,7 +27,7 @@ class _AdaptiveText extends StatelessWidget {
     required this.textAlign,
     super.key,
   });
-
+  final double? height;
   final String text;
   final String? fontFamily;
   final bool translate;
@@ -60,6 +61,7 @@ class _AdaptiveText extends StatelessWidget {
       textAlign: textAlign,
       style: GetTextStyle(
         fontSize: fontSize.sp,
+        height: height,
         color: color == null ? null : context.getColor(color),
         fontWeight: actualWeight,
         fontStyle: fontStyle,

@@ -12,7 +12,7 @@ import '../view_model/searching_notifier.dart';
 const Color kWallGridColor = ColorManager.wallBlack;
 const Color kPathGridColor = ColorManager.accentYellowDk;
 
-const Color kSearcherStartColor = ColorManager.main2DarkColor;
+const Color kSearcherStartColor = ColorManager.pinkColor;
 const Color kSearcherMediumColor = kSearcherStartColor;
 const Color kSearcherFinishedColor = ColorManager.accentBlueDk;
 

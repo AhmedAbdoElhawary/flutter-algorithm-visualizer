@@ -1,3 +1,4 @@
+import 'package:algorithm_visualizer/core/resources/font_manager.dart';
 import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
 import 'package:algorithm_visualizer/core/widgets/adaptive/text/adaptive_text.dart';
 import 'package:algorithm_visualizer/features/visualize/sub_view/sorting/widgets/linear_progress_indicator.dart';
@@ -27,7 +28,7 @@ class AlgorithmStatusText extends ConsumerWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             RegularText(statusText,
-                color: ThemeEnum.white2DarkColor, fontFamily: 'JetBrainsMono', fontSize: 12),
+                color: ThemeEnum.white2DarkColor, fontFamily: FontConstants.fontJetBrainsMono, fontSize: 12),
             const SizedBox(height: 8),
             Row(
               children: [

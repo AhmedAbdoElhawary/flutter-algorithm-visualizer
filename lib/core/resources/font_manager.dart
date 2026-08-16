@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 class FontConstants {
   static const String fontFamily = "Sf_UI_Display";
+  static const String fontJetBrainsMono = "JetBrainsMono";
 }
 
 class FontWeightManager {

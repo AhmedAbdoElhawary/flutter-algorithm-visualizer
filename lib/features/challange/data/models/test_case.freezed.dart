@@ -20,8 +20,8 @@ TestCase _$TestCaseFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$TestCase {
-  Map<String, dynamic> get input => throw _privateConstructorUsedError;
-  dynamic get expectedOutput => throw _privateConstructorUsedError;
+  String? get input => throw _privateConstructorUsedError;
+  String? get expectedOutput => throw _privateConstructorUsedError;
 
   /// Serializes this TestCase to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -38,7 +38,7 @@ abstract class $TestCaseCopyWith<$Res> {
   factory $TestCaseCopyWith(TestCase value, $Res Function(TestCase) then) =
       _$TestCaseCopyWithImpl<$Res, TestCase>;
   @useResult
-  $Res call({Map<String, dynamic> input, dynamic expectedOutput});
+  $Res call({String? input, String? expectedOutput});
 }
 
 /// @nodoc
@@ -56,18 +56,18 @@ class _$TestCaseCopyWithImpl<$Res, $Val extends TestCase>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? input = null,
+    Object? input = freezed,
     Object? expectedOutput = freezed,
   }) {
     return _then(_value.copyWith(
-      input: null == input
+      input: freezed == input
           ? _value.input
           : input // ignore: cast_nullable_to_non_nullable
-              as Map<String, dynamic>,
+              as String?,
       expectedOutput: freezed == expectedOutput
           ? _value.expectedOutput
           : expectedOutput // ignore: cast_nullable_to_non_nullable
-              as dynamic,
+              as String?,
     ) as $Val);
   }
 }
@@ -80,7 +80,7 @@ abstract class _$$TestCaseImplCopyWith<$Res>
       __$$TestCaseImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({Map<String, dynamic> input, dynamic expectedOutput});
+  $Res call({String? input, String? expectedOutput});
 }
 
 /// @nodoc
@@ -96,18 +96,18 @@ class __$$TestCaseImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? input = null,
+    Object? input = freezed,
     Object? expectedOutput = freezed,
   }) {
     return _then(_$TestCaseImpl(
-      input: null == input
-          ? _value._input
+      input: freezed == input
+          ? _value.input
           : input // ignore: cast_nullable_to_non_nullable
-              as Map<String, dynamic>,
+              as String?,
       expectedOutput: freezed == expectedOutput
           ? _value.expectedOutput
           : expectedOutput // ignore: cast_nullable_to_non_nullable
-              as dynamic,
+              as String?,
     ));
   }
 }
@@ -115,23 +115,15 @@ class __$$TestCaseImplCopyWithImpl<$Res>
 /// @nodoc
 @JsonSerializable()
 class _$TestCaseImpl implements _TestCase {
-  const _$TestCaseImpl(
-      {required final Map<String, dynamic> input, required this.expectedOutput})
-      : _input = input;
+  const _$TestCaseImpl({required this.input, required this.expectedOutput});
 
   factory _$TestCaseImpl.fromJson(Map<String, dynamic> json) =>
       _$$TestCaseImplFromJson(json);
 
-  final Map<String, dynamic> _input;
   @override
-  Map<String, dynamic> get input {
-    if (_input is EqualUnmodifiableMapView) return _input;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableMapView(_input);
-  }
-
+  final String? input;
   @override
-  final dynamic expectedOutput;
+  final String? expectedOutput;
 
   @override
   String toString() {
@@ -143,17 +135,14 @@ class _$TestCaseImpl implements _TestCase {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$TestCaseImpl &&
-            const DeepCollectionEquality().equals(other._input, _input) &&
-            const DeepCollectionEquality()
-                .equals(other.expectedOutput, expectedOutput));
+            (identical(other.input, input) || other.input == input) &&
+            (identical(other.expectedOutput, expectedOutput) ||
+                other.expectedOutput == expectedOutput));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(
-      runtimeType,
-      const DeepCollectionEquality().hash(_input),
-      const DeepCollectionEquality().hash(expectedOutput));
+  int get hashCode => Object.hash(runtimeType, input, expectedOutput);
 
   /// Create a copy of TestCase
   /// with the given fields replaced by the non-null parameter values.
@@ -173,16 +162,16 @@ class _$TestCaseImpl implements _TestCase {
 
 abstract class _TestCase implements TestCase {
   const factory _TestCase(
-      {required final Map<String, dynamic> input,
-      required final dynamic expectedOutput}) = _$TestCaseImpl;
+      {required final String? input,
+      required final String? expectedOutput}) = _$TestCaseImpl;
 
   factory _TestCase.fromJson(Map<String, dynamic> json) =
       _$TestCaseImpl.fromJson;
 
   @override
-  Map<String, dynamic> get input;
+  String? get input;
   @override
-  dynamic get expectedOutput;
+  String? get expectedOutput;
 
   /// Create a copy of TestCase
   /// with the given fields replaced by the non-null parameter values.

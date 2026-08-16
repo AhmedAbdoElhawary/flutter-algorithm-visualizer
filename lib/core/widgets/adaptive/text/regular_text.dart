@@ -11,6 +11,8 @@ class RegularText extends _AdaptiveText {
     super.shadows,
     super.maxLines = 2,
     super.textAlign,
+    super.letterSpacing,
+    super.height,
     super.key,
   }) : super(fontWeight: FontWeightManager.regular);
 }
