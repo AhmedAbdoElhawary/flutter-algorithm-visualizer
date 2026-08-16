@@ -6,7 +6,7 @@ import 'package:algorithm_visualizer/features/challange/data/models/example.dart
 import 'package:algorithm_visualizer/features/challange/domain/entities/coding_problem.dart';
 import 'package:algorithm_visualizer/features/challange/domain/enums/problem.dart';
 import 'package:algorithm_visualizer/features/challange/presentation/helper/problem_style.dart';
-import 'package:algorithm_visualizer/features/challange/presentation/widgets/challenge_tags.dart';
+import 'package:algorithm_visualizer/features/challange/presentation/widgets/challenges/challenge_tags.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
