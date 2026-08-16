@@ -70,7 +70,7 @@ class _VisualizerScreenState extends ConsumerState<CodeEditorPage> {
                   builder: (context, ref, child) {
                     final grade = ref.watch(provider.select((value) => value.grade));
 
-                    if (grade != null) CodeGradeResultCard(grade: grade);
+                    if (grade != null) return CodeGradeResultCard(grade: grade);
 
                     return SliverToBoxAdapter(child: SizedBox.shrink());
                   },
