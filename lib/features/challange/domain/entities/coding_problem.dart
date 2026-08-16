@@ -17,7 +17,6 @@ part 'coding_problem.g.dart';
 /// todo: remove what you don't use them
 
 @freezed
-@JsonSerializable(explicitToJson: true)
 class CodingProblem with _$CodingProblem {
   const factory CodingProblem({
     required int? number,

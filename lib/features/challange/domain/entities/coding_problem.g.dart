@@ -91,15 +91,17 @@ Map<String, dynamic> _$$CodingProblemImplToJson(_$CodingProblemImpl instance) =>
       'patterns': instance.patterns,
       'description': instance.description,
       'constraints': instance.constraints,
-      'function_signature': instance.functionSignature,
+      'function_signature': instance.functionSignature?.toJson(),
       'default_code': instance.defaultCode,
-      'custom_objects': instance.customObjects,
-      'examples': instance.examples,
+      'custom_objects': instance.customObjects
+          ?.map((k, e) => MapEntry(k, e.map((e) => e.toJson()).toList())),
+      'examples': instance.examples?.map((e) => e.toJson()).toList(),
       'edge_cases': instance.edgeCases,
-      'test_cases': instance.testCases,
-      'hidden_test_cases': instance.hiddenTestCases,
+      'test_cases': instance.testCases?.map((e) => e.toJson()).toList(),
+      'hidden_test_cases':
+          instance.hiddenTestCases?.map((e) => e.toJson()).toList(),
       'hints': instance.hints,
-      'solution_approach': instance.solutionApproach,
+      'solution_approach': instance.solutionApproach?.toJson(),
       'expected_time_complexity': instance.expectedTimeComplexity,
       'expected_space_complexity': instance.expectedSpaceComplexity,
       'what_you_learn': instance.whatYouLearn,
@@ -107,10 +109,12 @@ Map<String, dynamic> _$$CodingProblemImplToJson(_$CodingProblemImpl instance) =>
       'prerequisites': instance.prerequisites,
       'follow_up_concepts': instance.followUpConcepts,
       'common_mistakes': instance.commonMistakes,
-      'similar_questions': instance.similarQuestions,
+      'similar_questions':
+          instance.similarQuestions?.map((e) => e.toJson()).toList(),
       'problem_status': _$ProblemStatusEnumMap[instance.problemStatus],
       'is_bookmarked': instance.isBookmarked,
-      'solutions_status': instance.solutionsStatus,
+      'solutions_status':
+          instance.solutionsStatus?.map((e) => e.toJson()).toList(),
     };
 
 const _$ProblemDifficultyEnumMap = {
