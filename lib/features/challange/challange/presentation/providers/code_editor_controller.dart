@@ -12,12 +12,10 @@ class CodeEditorController extends StateNotifier<CodeEditorState> {
 
   final CodingProblem codingProblem;
 
-  // Kept directly (in addition to being handed to the repository) purely so
-  // the line-count animation below can read `.text` — that's a UI concern,
-  // not business logic, so it doesn't need to go through the repository.
   CodeController? _codeController;
-
   Timer? _highlightTimer;
+
+  final _gradeCodeUseCase = const GradeCodeUseCase();
 
   void attachCodeController(CodeController controller) {
     if (_codeController != null && _codeController?.text == controller.text) return;
@@ -53,7 +51,7 @@ class CodeEditorController extends StateNotifier<CodeEditorState> {
     state = state.copyWith(isRunning: true, grade: null);
 
     final controller = _getCodeController;
-    final result = const GradeCodeUseCase().grade(
+    final result = _gradeCodeUseCase.grade(
       problem: codingProblem,
       userCode: controller.text,
     );
