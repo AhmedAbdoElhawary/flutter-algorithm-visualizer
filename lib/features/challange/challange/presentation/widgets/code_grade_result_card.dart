@@ -32,7 +32,7 @@ class CodeGradeResultCard extends StatelessWidget {
               if (grade.error != null)
                 _ErrorBox(error: grade.error!)
               else
-                ...grade.testCaseResults
+                ...grade.firstThreeTestCaseResults
                     .asMap()
                     .entries
                     .map((e) => _TestCaseRow(index: e.key, result: e.value)),
@@ -73,7 +73,7 @@ class _Header extends StatelessWidget {
           child: MediumText(
             allPassed
                 ? StringsManager.allTestsPassed
-                : '${grade.passedCount}/${grade.totalCount} ${StringsManager.passed}',
+                : '${grade.failedCount} ${StringsManager.failed}',
             color: allPassed ? ThemeEnum.accentGreen : ThemeEnum.accentRedRc,
             fontSize: 12,
           ),
@@ -142,7 +142,7 @@ class _TestCaseRow extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 SemiBoldText(
-                  '${StringsManager.test} ${index + 1}${result.errorMessage != null ? ' - ${result.errorMessage}' : ''}',
+                  '${StringsManager.caseS} ${index + 1}${result.errorMessage != null ? ' - ${result.errorMessage}' : ''}',
                   color: ThemeEnum.textSecond,
                   fontSize: 12,
                 ),
