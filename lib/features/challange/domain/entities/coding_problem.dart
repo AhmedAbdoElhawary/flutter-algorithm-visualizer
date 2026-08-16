@@ -98,6 +98,8 @@ extension CodingProblemX on CodingProblem {
     return code;
   }
 
+  String get getCode => solutionsStatus?.lastOrNull?.code ?? getDefaultCode;
+
   List<CustomObject> get getCustomObjects => customObjects?['dart'] ?? [];
 
   List<Example> get getExamples => examples ?? [];

@@ -58,7 +58,7 @@ class _VisualizerScreenState extends ConsumerState<CodeEditorPage> {
                       sliver: SliverToBoxAdapter(
                         child: CodeEditorBlock(
                           title: problem.getNameWithLanguageName,
-                          code: problem.getDefaultCode,
+                          code: problem.getCode,
                           highlightLineNumber: highlightedLine ?? -1,
                           executing: isRunning,
                           controllerCallback: notifier.attachCodeController,
