@@ -7,6 +7,8 @@ import 'package:algorithm_visualizer/features/challange/domain/usecases/grade_co
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import '../../../data/models/test_case.dart' show TestCaseResult;
+
 class CodeGradeResultCard extends StatelessWidget {
   const CodeGradeResultCard({super.key, required this.grade});
 
@@ -71,9 +73,7 @@ class _Header extends StatelessWidget {
             borderRadius: BorderRadius.circular(6),
           ),
           child: MediumText(
-            allPassed
-                ? StringsManager.allTestsPassed
-                : '${grade.failedCount} ${StringsManager.failed}',
+            allPassed ? StringsManager.allTestsPassed : '${grade.failedCount} ${StringsManager.failed}',
             color: allPassed ? ThemeEnum.accentGreen : ThemeEnum.accentRedRc,
             fontSize: 12,
           ),
@@ -110,7 +110,7 @@ class _TestCaseRow extends StatelessWidget {
   const _TestCaseRow({required this.index, required this.result});
 
   final int index;
-  final SingleTestCaseResult result;
+  final TestCaseResult result;
 
   @override
   Widget build(BuildContext context) {
@@ -148,7 +148,7 @@ class _TestCaseRow extends StatelessWidget {
                 ),
                 RSizedBox(height: 2),
                 RegularText(
-                  result.input,
+                  result.input ?? "",
                   maxLines: 2,
                   color: ThemeEnum.textSecond,
                   fontFamily: FontConstants.fontJetBrainsMono,
@@ -164,7 +164,7 @@ class _TestCaseRow extends StatelessWidget {
                   ),
                 ] else ...[
                   RegularText(
-                    '${StringsManager.expected}: ${result.expectedOutput}',
+                    '${StringsManager.expected}: ${result.expectedOutput ?? ""}',
                     maxLines: 2,
                     color: ThemeEnum.hover,
                     fontFamily: FontConstants.fontJetBrainsMono,
