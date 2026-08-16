@@ -2,6 +2,7 @@ import 'package:algorithm_visualizer/features/challange/data/models/function_sig
 import 'package:algorithm_visualizer/features/challange/domain/enums/problem.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
+import 'custom_object.dart';
 import 'example.dart';
 import 'similar_question.dart';
 import 'solution_approach.dart';
@@ -25,6 +26,8 @@ class ProblemDTO with _$ProblemDTO {
     required String? description,
     required List<String>? constraints,
     required FunctionSignature? functionSignature,
+    Map<String, String>? defaultCode,
+    Map<String, List<CustomObject>>? customObjects,
     required List<Example>? examples,
     required List<String>? edgeCases,
     required List<TestCase>? testCases,
