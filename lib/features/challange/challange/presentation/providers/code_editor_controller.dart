@@ -58,6 +58,7 @@ class CodeEditorController extends StateNotifier<CodeEditorState> {
       userCode: controller.text,
     );
 
+    await _animateLineByLine(controller.text.split('\n').length);
     state = state.copyWith(isRunning: false, grade: result);
   }
 
@@ -68,7 +69,7 @@ class CodeEditorController extends StateNotifier<CodeEditorState> {
     final completer = Completer<void>();
     var line = 0;
     _highlightTimer?.cancel();
-    _highlightTimer = Timer.periodic(const Duration(milliseconds: 60), (timer) {
+    _highlightTimer = Timer.periodic(const Duration(milliseconds: 100), (timer) {
       if (!mounted) {
         timer.cancel();
         if (!completer.isCompleted) completer.complete();
