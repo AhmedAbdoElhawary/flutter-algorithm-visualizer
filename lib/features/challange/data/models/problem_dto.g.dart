@@ -28,6 +28,13 @@ _$ProblemDTOImpl _$$ProblemDTOImplFromJson(Map<String, dynamic> json) =>
           ? null
           : FunctionSignature.fromJson(
               json['function_signature'] as Map<String, dynamic>),
+      defaultCode: (json['default_code'] as Map<String, dynamic>?)?.map(
+        (k, e) => MapEntry(k, e as String),
+      ),
+      customObjects: (json['custom_objects'] as Map<String, dynamic>?)?.map(
+        (k, e) => MapEntry(
+            k, (e as List<dynamic>).map(CustomObject.fromJson).toList()),
+      ),
       examples: (json['examples'] as List<dynamic>?)
           ?.map((e) => Example.fromJson(e as Map<String, dynamic>))
           .toList(),
@@ -78,6 +85,8 @@ Map<String, dynamic> _$$ProblemDTOImplToJson(_$ProblemDTOImpl instance) =>
       'description': instance.description,
       'constraints': instance.constraints,
       'function_signature': instance.functionSignature,
+      'default_code': instance.defaultCode,
+      'custom_objects': instance.customObjects,
       'examples': instance.examples,
       'edge_cases': instance.edgeCases,
       'test_cases': instance.testCases,
