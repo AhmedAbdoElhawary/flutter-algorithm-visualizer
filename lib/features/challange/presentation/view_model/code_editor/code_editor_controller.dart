@@ -46,18 +46,20 @@ class CodeEditorController extends StateNotifier<CodeEditorState> {
     return con;
   }
 
-  Future<void> runCode() async {
-    if (state.isRunning) return;
+  Future<void> runCode(void Function(CodeGradeResult? result) result) async {
+    if (state.isRunning) return result.call(null);
     state = state.copyWith(isRunning: true, grade: null);
 
     final controller = _getCodeController;
-    final result = _gradeCodeUseCase.grade(
+    final resultGrade = _gradeCodeUseCase.grade(
       problem: codingProblem,
       userCode: controller.text,
     );
 
+    result.call(resultGrade);
     await _animateLineByLine(controller.text.split('\n').length);
-    state = state.copyWith(isRunning: false, grade: result);
+
+    state = state.copyWith(isRunning: false, grade: resultGrade);
   }
 
   Future<void> _animateLineByLine(int totalLines) {
