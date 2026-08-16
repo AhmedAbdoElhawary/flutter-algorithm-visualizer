@@ -4,7 +4,6 @@ import 'package:algorithm_visualizer/features/challange/data/models/problem_stor
 import 'package:algorithm_visualizer/features/challange/domain/entities/coding_problem.dart';
 import 'package:algorithm_visualizer/features/challange/domain/repositories/problem_repository.dart';
 import 'package:collection/collection.dart';
-import 'package:flutter/cupertino.dart';
 
 class ProblemRepositoryImpl implements ProblemRepository {
   final ProblemLocalDataSource dataSource;
@@ -13,7 +12,6 @@ class ProblemRepositoryImpl implements ProblemRepository {
 
   @override
   Future<List<CodingProblem>> getAllProblems() async {
-    debugPrint("==================> it's called getAllProblems");
     final assetsProblems = await dataSource.loadProblemsAssets();
     final localProblems = dataSource.getProblems();
 
