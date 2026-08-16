@@ -20,8 +20,8 @@ Example _$ExampleFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$Example {
-  Map<String, dynamic>? get input => throw _privateConstructorUsedError;
-  dynamic get output => throw _privateConstructorUsedError;
+  String? get input => throw _privateConstructorUsedError;
+  String? get output => throw _privateConstructorUsedError;
   String? get explanation => throw _privateConstructorUsedError;
 
   /// Serializes this Example to a JSON map.
@@ -38,7 +38,7 @@ abstract class $ExampleCopyWith<$Res> {
   factory $ExampleCopyWith(Example value, $Res Function(Example) then) =
       _$ExampleCopyWithImpl<$Res, Example>;
   @useResult
-  $Res call({Map<String, dynamic>? input, dynamic output, String? explanation});
+  $Res call({String? input, String? output, String? explanation});
 }
 
 /// @nodoc
@@ -64,11 +64,11 @@ class _$ExampleCopyWithImpl<$Res, $Val extends Example>
       input: freezed == input
           ? _value.input
           : input // ignore: cast_nullable_to_non_nullable
-              as Map<String, dynamic>?,
+              as String?,
       output: freezed == output
           ? _value.output
           : output // ignore: cast_nullable_to_non_nullable
-              as dynamic,
+              as String?,
       explanation: freezed == explanation
           ? _value.explanation
           : explanation // ignore: cast_nullable_to_non_nullable
@@ -84,7 +84,7 @@ abstract class _$$ExampleImplCopyWith<$Res> implements $ExampleCopyWith<$Res> {
       __$$ExampleImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({Map<String, dynamic>? input, dynamic output, String? explanation});
+  $Res call({String? input, String? output, String? explanation});
 }
 
 /// @nodoc
@@ -106,13 +106,13 @@ class __$$ExampleImplCopyWithImpl<$Res>
   }) {
     return _then(_$ExampleImpl(
       input: freezed == input
-          ? _value._input
+          ? _value.input
           : input // ignore: cast_nullable_to_non_nullable
-              as Map<String, dynamic>?,
+              as String?,
       output: freezed == output
           ? _value.output
           : output // ignore: cast_nullable_to_non_nullable
-              as dynamic,
+              as String?,
       explanation: freezed == explanation
           ? _value.explanation
           : explanation // ignore: cast_nullable_to_non_nullable
@@ -125,26 +125,15 @@ class __$$ExampleImplCopyWithImpl<$Res>
 @JsonSerializable()
 class _$ExampleImpl implements _Example {
   const _$ExampleImpl(
-      {required final Map<String, dynamic>? input,
-      required this.output,
-      required this.explanation})
-      : _input = input;
+      {required this.input, required this.output, required this.explanation});
 
   factory _$ExampleImpl.fromJson(Map<String, dynamic> json) =>
       _$$ExampleImplFromJson(json);
 
-  final Map<String, dynamic>? _input;
   @override
-  Map<String, dynamic>? get input {
-    final value = _input;
-    if (value == null) return null;
-    if (_input is EqualUnmodifiableMapView) return _input;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableMapView(value);
-  }
-
+  final String? input;
   @override
-  final dynamic output;
+  final String? output;
   @override
   final String? explanation;
 
@@ -158,19 +147,15 @@ class _$ExampleImpl implements _Example {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$ExampleImpl &&
-            const DeepCollectionEquality().equals(other._input, _input) &&
-            const DeepCollectionEquality().equals(other.output, output) &&
+            (identical(other.input, input) || other.input == input) &&
+            (identical(other.output, output) || other.output == output) &&
             (identical(other.explanation, explanation) ||
                 other.explanation == explanation));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(
-      runtimeType,
-      const DeepCollectionEquality().hash(_input),
-      const DeepCollectionEquality().hash(output),
-      explanation);
+  int get hashCode => Object.hash(runtimeType, input, output, explanation);
 
   /// Create a copy of Example
   /// with the given fields replaced by the non-null parameter values.
@@ -190,16 +175,16 @@ class _$ExampleImpl implements _Example {
 
 abstract class _Example implements Example {
   const factory _Example(
-      {required final Map<String, dynamic>? input,
-      required final dynamic output,
+      {required final String? input,
+      required final String? output,
       required final String? explanation}) = _$ExampleImpl;
 
   factory _Example.fromJson(Map<String, dynamic> json) = _$ExampleImpl.fromJson;
 
   @override
-  Map<String, dynamic>? get input;
+  String? get input;
   @override
-  dynamic get output;
+  String? get output;
   @override
   String? get explanation;
 

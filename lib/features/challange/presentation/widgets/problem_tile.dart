@@ -6,6 +6,7 @@ import 'package:algorithm_visualizer/features/challange/domain/entities/coding_p
 import 'package:algorithm_visualizer/features/challange/domain/enums/problem.dart';
 import 'package:algorithm_visualizer/features/challange/presentation/helper/problem_style.dart';
 import 'package:algorithm_visualizer/features/challange/presentation/view_model/challenges_notifier.dart';
+import 'package:algorithm_visualizer/features/challange/presentation/widgets/challenge_tags.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -121,21 +122,7 @@ class _DetailsPanel extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Wrap(
-            spacing: 5,
-            runSpacing: 5,
-            children: problem.getTags
-                .map((t) => Container(
-                      padding: REdgeInsets.symmetric(horizontal: 8, vertical: 3),
-                      decoration: BoxDecoration(
-                        color: context.getColor(ThemeEnum.accentBg),
-                        borderRadius: BorderRadius.circular(6),
-                        border: Border.all(color: context.getColor(ThemeEnum.borderAccent)),
-                      ),
-                      child: RegularText(t, color: ThemeEnum.accent, fontSize: 11),
-                    ))
-                .toList(),
-          ),
+          ChallengeTags(tags: problem.getTags),
           const RSizedBox(height: 10),
           Row(
             children: [

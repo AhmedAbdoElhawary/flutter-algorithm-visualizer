@@ -22,6 +22,7 @@ const Set<String> _typeKeywords = <String>{
   'num',
   'dynamic',
   'List',
+  'Map',
 };
 
 /// A hand-written recursive-descent parser for a deliberately small
@@ -77,10 +78,26 @@ class Parser {
     throw ParseError(errMsg, _peek.line);
   }
 
+  Tok _consumeKeyword(String keyword) {
+    if (_checkKeyword(keyword)) return _advance();
+    throw ParseError('Expected "$keyword"', _peek.line);
+  }
+
   bool _isVarDeclStart() {
     if (_check(TokKind.keyword) &&
         (_peek.text == 'var' || _peek.text == 'final' || _peek.text == 'const' || _typeKeywords.contains(_peek.text))) {
       return true;
+    }
+    // Custom (identifier) type names: `ListNode head`, `ListNode? next`, etc.
+    if (_check(TokKind.identifier)) {
+      if (pos + 1 >= tokens.length) return false;
+      if (tokens[pos + 1].kind == TokKind.identifier) return true;
+      if (tokens[pos + 1].kind == TokKind.symbol &&
+          tokens[pos + 1].text == '?' &&
+          pos + 2 < tokens.length &&
+          tokens[pos + 2].kind == TokKind.identifier) {
+        return true;
+      }
     }
     return false;
   }
@@ -113,6 +130,8 @@ class Parser {
         _advance();
       }
     }
+    // Nullable type marker (e.g. `ListNode?`, `int?`).
+    if (_checkSymbol('?')) _advance();
   }
 
   // ---------------------------------------------------------------------
@@ -122,7 +141,12 @@ class Parser {
   Program parseProgram() {
     final List<FunctionDecl> fns = <FunctionDecl>[];
     final List<VarDeclStmt> vars = <VarDeclStmt>[];
+    final List<ClassDecl> classes = <ClassDecl>[];
     while (!_isAtEnd()) {
+      if (_checkKeyword('class')) {
+        classes.add(_parseClassDecl());
+        continue;
+      }
       if (!_isVarDeclStart()) {
         throw ParseError(
           'Expected a function or variable declaration, found "${_peek.text}"',
@@ -143,7 +167,52 @@ class Parser {
         vars.add(VarDeclStmt(nameTok.text, init, startLine));
       }
     }
-    return Program(fns, vars, 1);
+    return Program(fns, vars, classes, 1);
+  }
+
+  ClassDecl _parseClassDecl() {
+    final int line = _peek.line;
+    _advance(); // 'class'
+    final Tok nameTok = _consumeIdentifier('Expected a class name');
+    _consumeSymbol('{', "Expected '{' after class name");
+    final List<FieldDecl> fields = <FieldDecl>[];
+    List<ConstructorParam>? constructorParams;
+    while (!_checkSymbol('}') && !_isAtEnd()) {
+      final int memberLine = _peek.line;
+      _skipType();
+      if (_checkSymbol('(')) {
+        constructorParams = _parseConstructorParams();
+      } else {
+        final Tok fieldTok = _consumeIdentifier('Expected a field name');
+        Expr? fieldDefault;
+        if (_matchSymbol('=')) fieldDefault = _parseExpr();
+        _consumeSymbol(';', "Expected ';' after field declaration");
+        fields.add(FieldDecl(fieldTok.text, fieldDefault, memberLine));
+      }
+    }
+    _consumeSymbol('}', "Expected '}' after class body");
+    return ClassDecl(nameTok.text, fields, constructorParams ?? const <ConstructorParam>[], line);
+  }
+
+  List<ConstructorParam> _parseConstructorParams() {
+    _consumeSymbol('(', "Expected '('");
+    final List<ConstructorParam> params = <ConstructorParam>[];
+    final bool optional = _matchSymbol('[');
+    if (!_checkSymbol(')')) {
+      do {
+        if (_checkSymbol(']') || _checkSymbol(')')) break;
+        _consumeKeyword('this');
+        _consumeSymbol('.', "Expected '.' after 'this'");
+        final Tok fieldTok = _consumeIdentifier('Expected a field name after "this."');
+        Expr? def;
+        if (_matchSymbol('=')) def = _parseExpr();
+        params.add(ConstructorParam(fieldTok.text, def));
+      } while (_matchSymbol(','));
+    }
+    if (optional) _consumeSymbol(']', "Expected ']' after optional constructor params");
+    _consumeSymbol(')', "Expected ')' after constructor params");
+    _consumeSymbol(';', "Expected ';' after constructor");
+    return params;
   }
 
   List<Param> _parseParamList() {
@@ -284,7 +353,7 @@ class Parser {
     if (_checkSymbol('=') || _checkSymbol('+=') || _checkSymbol('-=') || _checkSymbol('*=') || _checkSymbol('/=')) {
       final Tok opTok = _advance();
       final Expr value = _parseAssignment();
-      if (expr is! Identifier && expr is! IndexExpr) {
+      if (expr is! Identifier && expr is! IndexExpr && expr is! PropertyAccess) {
         throw ParseError('Invalid assignment target', opTok.line);
       }
       return AssignExpr(expr, opTok.text, value, opTok.line);
@@ -293,7 +362,7 @@ class Parser {
   }
 
   Expr _parseConditional() {
-    final Expr cond = _parseOr();
+    final Expr cond = _parseNullCoalesce();
     if (_matchSymbol('?')) {
       final Expr thenExpr = _parseAssignment();
       _consumeSymbol(':', "Expected ':' in conditional expression");
@@ -301,6 +370,15 @@ class Parser {
       return ConditionalExpr(cond, thenExpr, elseExpr, cond.line);
     }
     return cond;
+  }
+
+  Expr _parseNullCoalesce() {
+    Expr expr = _parseOr();
+    while (_checkSymbol('??')) {
+      final Tok opTok = _advance();
+      expr = BinaryExpr('??', expr, _parseOr(), opTok.line);
+    }
+    return expr;
   }
 
   Expr _parseOr() {
@@ -373,6 +451,9 @@ class Parser {
         final Expr index = _parseExpr();
         _consumeSymbol(']', "Expected ']'");
         expr = IndexExpr(expr, index, opTok.line);
+      } else if (_checkSymbol('!')) {
+        // Null assertion `x!` — a no-op for our dynamic interpreter.
+        _advance();
       } else if (_checkSymbol('.')) {
         final Tok opTok = _advance();
         final Tok nameTok = _consumeIdentifier('Expected a member name after "."');
@@ -438,6 +519,34 @@ class Parser {
       return NullLiteral(tok.line);
     }
     if (_checkSymbol('[')) return _parseListLiteral();
+    if (_checkSymbol('{')) return _parseMapLiteral();
+    // Type-annotated literals: `<int>[]` (list), `<int>{}` (set),
+    // `<String, int>{}` (map).
+    if (_checkSymbol('<')) {
+      _advance();
+      int depth = 1;
+      var topLevelCommas = 0;
+      while (depth > 0) {
+        if (_isAtEnd()) throw ParseError('Unterminated type argument list', _peek.line);
+        if (_checkSymbol('<')) {
+          depth++;
+          _advance();
+          continue;
+        }
+        if (_checkSymbol('>')) {
+          depth--;
+          _advance();
+          continue;
+        }
+        if (_checkSymbol(',') && depth == 1) topLevelCommas++;
+        _advance();
+      }
+      if (_checkSymbol('[')) return _parseListLiteral();
+      if (_checkSymbol('{')) {
+        return topLevelCommas == 0 ? _parseSetLiteral() : _parseMapLiteral();
+      }
+      throw ParseError('Expected a list, set or map literal after type arguments', _peek.line);
+    }
     if (_checkSymbol('(')) {
       _advance();
       final Expr expr = _parseExpr();
@@ -463,6 +572,37 @@ class Parser {
     }
     _consumeSymbol(']', "Expected ']'");
     return ListLiteral(elements, line);
+  }
+
+  Expr _parseSetLiteral() {
+    final int line = _peek.line;
+    _consumeSymbol('{', "Expected '{'");
+    final List<Expr> elements = <Expr>[];
+    if (!_checkSymbol('}')) {
+      do {
+        if (_checkSymbol('}')) break; // trailing comma
+        elements.add(_parseAssignment());
+      } while (_matchSymbol(','));
+    }
+    _consumeSymbol('}', "Expected '}'");
+    return SetLiteral(elements, line);
+  }
+
+  Expr _parseMapLiteral() {
+    final int line = _peek.line;
+    _consumeSymbol('{', "Expected '{'");
+    final List<MapLiteralEntry> entries = <MapLiteralEntry>[];
+    if (!_checkSymbol('}')) {
+      do {
+        if (_checkSymbol('}')) break; // trailing comma
+        final Expr key = _parseExpr();
+        _consumeSymbol(':', "Expected ':' in map literal");
+        final Expr value = _parseAssignment();
+        entries.add(MapLiteralEntry(key, value));
+      } while (_matchSymbol(','));
+    }
+    _consumeSymbol('}', "Expected '}'");
+    return MapLiteral(entries, line);
   }
 
   // ---------------------------------------------------------------------

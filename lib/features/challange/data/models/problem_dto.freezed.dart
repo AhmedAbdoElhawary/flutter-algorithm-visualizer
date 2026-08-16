@@ -31,6 +31,11 @@ mixin _$ProblemDTO {
   List<String>? get patterns => throw _privateConstructorUsedError;
   String? get description => throw _privateConstructorUsedError;
   List<String>? get constraints => throw _privateConstructorUsedError;
+  FunctionSignature? get functionSignature =>
+      throw _privateConstructorUsedError;
+  Map<String, String>? get defaultCode => throw _privateConstructorUsedError;
+  Map<String, List<CustomObject>>? get customObjects =>
+      throw _privateConstructorUsedError;
   List<Example>? get examples => throw _privateConstructorUsedError;
   List<String>? get edgeCases => throw _privateConstructorUsedError;
   List<TestCase>? get testCases => throw _privateConstructorUsedError;
@@ -75,6 +80,9 @@ abstract class $ProblemDTOCopyWith<$Res> {
       List<String>? patterns,
       String? description,
       List<String>? constraints,
+      FunctionSignature? functionSignature,
+      Map<String, String>? defaultCode,
+      Map<String, List<CustomObject>>? customObjects,
       List<Example>? examples,
       List<String>? edgeCases,
       List<TestCase>? testCases,
@@ -90,6 +98,7 @@ abstract class $ProblemDTOCopyWith<$Res> {
       List<String>? commonMistakes,
       List<SimilarQuestion>? similarQuestions});
 
+  $FunctionSignatureCopyWith<$Res>? get functionSignature;
   $SolutionApproachCopyWith<$Res>? get solutionApproach;
 }
 
@@ -119,6 +128,9 @@ class _$ProblemDTOCopyWithImpl<$Res, $Val extends ProblemDTO>
     Object? patterns = freezed,
     Object? description = freezed,
     Object? constraints = freezed,
+    Object? functionSignature = freezed,
+    Object? defaultCode = freezed,
+    Object? customObjects = freezed,
     Object? examples = freezed,
     Object? edgeCases = freezed,
     Object? testCases = freezed,
@@ -179,6 +191,18 @@ class _$ProblemDTOCopyWithImpl<$Res, $Val extends ProblemDTO>
           ? _value.constraints
           : constraints // ignore: cast_nullable_to_non_nullable
               as List<String>?,
+      functionSignature: freezed == functionSignature
+          ? _value.functionSignature
+          : functionSignature // ignore: cast_nullable_to_non_nullable
+              as FunctionSignature?,
+      defaultCode: freezed == defaultCode
+          ? _value.defaultCode
+          : defaultCode // ignore: cast_nullable_to_non_nullable
+              as Map<String, String>?,
+      customObjects: freezed == customObjects
+          ? _value.customObjects
+          : customObjects // ignore: cast_nullable_to_non_nullable
+              as Map<String, List<CustomObject>>?,
       examples: freezed == examples
           ? _value.examples
           : examples // ignore: cast_nullable_to_non_nullable
@@ -242,6 +266,20 @@ class _$ProblemDTOCopyWithImpl<$Res, $Val extends ProblemDTO>
   /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
+  $FunctionSignatureCopyWith<$Res>? get functionSignature {
+    if (_value.functionSignature == null) {
+      return null;
+    }
+
+    return $FunctionSignatureCopyWith<$Res>(_value.functionSignature!, (value) {
+      return _then(_value.copyWith(functionSignature: value) as $Val);
+    });
+  }
+
+  /// Create a copy of ProblemDTO
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @pragma('vm:prefer-inline')
   $SolutionApproachCopyWith<$Res>? get solutionApproach {
     if (_value.solutionApproach == null) {
       return null;
@@ -273,6 +311,9 @@ abstract class _$$ProblemDTOImplCopyWith<$Res>
       List<String>? patterns,
       String? description,
       List<String>? constraints,
+      FunctionSignature? functionSignature,
+      Map<String, String>? defaultCode,
+      Map<String, List<CustomObject>>? customObjects,
       List<Example>? examples,
       List<String>? edgeCases,
       List<TestCase>? testCases,
@@ -288,6 +329,8 @@ abstract class _$$ProblemDTOImplCopyWith<$Res>
       List<String>? commonMistakes,
       List<SimilarQuestion>? similarQuestions});
 
+  @override
+  $FunctionSignatureCopyWith<$Res>? get functionSignature;
   @override
   $SolutionApproachCopyWith<$Res>? get solutionApproach;
 }
@@ -316,6 +359,9 @@ class __$$ProblemDTOImplCopyWithImpl<$Res>
     Object? patterns = freezed,
     Object? description = freezed,
     Object? constraints = freezed,
+    Object? functionSignature = freezed,
+    Object? defaultCode = freezed,
+    Object? customObjects = freezed,
     Object? examples = freezed,
     Object? edgeCases = freezed,
     Object? testCases = freezed,
@@ -376,6 +422,18 @@ class __$$ProblemDTOImplCopyWithImpl<$Res>
           ? _value._constraints
           : constraints // ignore: cast_nullable_to_non_nullable
               as List<String>?,
+      functionSignature: freezed == functionSignature
+          ? _value.functionSignature
+          : functionSignature // ignore: cast_nullable_to_non_nullable
+              as FunctionSignature?,
+      defaultCode: freezed == defaultCode
+          ? _value._defaultCode
+          : defaultCode // ignore: cast_nullable_to_non_nullable
+              as Map<String, String>?,
+      customObjects: freezed == customObjects
+          ? _value._customObjects
+          : customObjects // ignore: cast_nullable_to_non_nullable
+              as Map<String, List<CustomObject>>?,
       examples: freezed == examples
           ? _value._examples
           : examples // ignore: cast_nullable_to_non_nullable
@@ -451,6 +509,9 @@ class _$ProblemDTOImpl implements _ProblemDTO {
       required final List<String>? patterns,
       required this.description,
       required final List<String>? constraints,
+      required this.functionSignature,
+      final Map<String, String>? defaultCode,
+      final Map<String, List<CustomObject>>? customObjects,
       required final List<Example>? examples,
       required final List<String>? edgeCases,
       required final List<TestCase>? testCases,
@@ -468,6 +529,8 @@ class _$ProblemDTOImpl implements _ProblemDTO {
       : _tags = tags,
         _patterns = patterns,
         _constraints = constraints,
+        _defaultCode = defaultCode,
+        _customObjects = customObjects,
         _examples = examples,
         _edgeCases = edgeCases,
         _testCases = testCases,
@@ -525,6 +588,28 @@ class _$ProblemDTOImpl implements _ProblemDTO {
     if (_constraints is EqualUnmodifiableListView) return _constraints;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(value);
+  }
+
+  @override
+  final FunctionSignature? functionSignature;
+  final Map<String, String>? _defaultCode;
+  @override
+  Map<String, String>? get defaultCode {
+    final value = _defaultCode;
+    if (value == null) return null;
+    if (_defaultCode is EqualUnmodifiableMapView) return _defaultCode;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableMapView(value);
+  }
+
+  final Map<String, List<CustomObject>>? _customObjects;
+  @override
+  Map<String, List<CustomObject>>? get customObjects {
+    final value = _customObjects;
+    if (value == null) return null;
+    if (_customObjects is EqualUnmodifiableMapView) return _customObjects;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableMapView(value);
   }
 
   final List<Example>? _examples;
@@ -631,7 +716,7 @@ class _$ProblemDTOImpl implements _ProblemDTO {
 
   @override
   String toString() {
-    return 'ProblemDTO(problemId: $problemId, number: $number, name: $name, source: $source, sourceProblemNumber: $sourceProblemNumber, difficulty: $difficulty, category: $category, tags: $tags, patterns: $patterns, description: $description, constraints: $constraints, examples: $examples, edgeCases: $edgeCases, testCases: $testCases, hiddenTestCases: $hiddenTestCases, hints: $hints, solutionApproach: $solutionApproach, expectedTimeComplexity: $expectedTimeComplexity, expectedSpaceComplexity: $expectedSpaceComplexity, whatYouLearn: $whatYouLearn, keyPattern: $keyPattern, prerequisites: $prerequisites, followUpConcepts: $followUpConcepts, commonMistakes: $commonMistakes, similarQuestions: $similarQuestions)';
+    return 'ProblemDTO(problemId: $problemId, number: $number, name: $name, source: $source, sourceProblemNumber: $sourceProblemNumber, difficulty: $difficulty, category: $category, tags: $tags, patterns: $patterns, description: $description, constraints: $constraints, functionSignature: $functionSignature, defaultCode: $defaultCode, customObjects: $customObjects, examples: $examples, edgeCases: $edgeCases, testCases: $testCases, hiddenTestCases: $hiddenTestCases, hints: $hints, solutionApproach: $solutionApproach, expectedTimeComplexity: $expectedTimeComplexity, expectedSpaceComplexity: $expectedSpaceComplexity, whatYouLearn: $whatYouLearn, keyPattern: $keyPattern, prerequisites: $prerequisites, followUpConcepts: $followUpConcepts, commonMistakes: $commonMistakes, similarQuestions: $similarQuestions)';
   }
 
   @override
@@ -656,6 +741,12 @@ class _$ProblemDTOImpl implements _ProblemDTO {
                 other.description == description) &&
             const DeepCollectionEquality()
                 .equals(other._constraints, _constraints) &&
+            (identical(other.functionSignature, functionSignature) ||
+                other.functionSignature == functionSignature) &&
+            const DeepCollectionEquality()
+                .equals(other._defaultCode, _defaultCode) &&
+            const DeepCollectionEquality()
+                .equals(other._customObjects, _customObjects) &&
             const DeepCollectionEquality().equals(other._examples, _examples) &&
             const DeepCollectionEquality()
                 .equals(other._edgeCases, _edgeCases) &&
@@ -700,6 +791,9 @@ class _$ProblemDTOImpl implements _ProblemDTO {
         const DeepCollectionEquality().hash(_patterns),
         description,
         const DeepCollectionEquality().hash(_constraints),
+        functionSignature,
+        const DeepCollectionEquality().hash(_defaultCode),
+        const DeepCollectionEquality().hash(_customObjects),
         const DeepCollectionEquality().hash(_examples),
         const DeepCollectionEquality().hash(_edgeCases),
         const DeepCollectionEquality().hash(_testCases),
@@ -745,6 +839,9 @@ abstract class _ProblemDTO implements ProblemDTO {
           required final List<String>? patterns,
           required final String? description,
           required final List<String>? constraints,
+          required final FunctionSignature? functionSignature,
+          final Map<String, String>? defaultCode,
+          final Map<String, List<CustomObject>>? customObjects,
           required final List<Example>? examples,
           required final List<String>? edgeCases,
           required final List<TestCase>? testCases,
@@ -786,6 +883,12 @@ abstract class _ProblemDTO implements ProblemDTO {
   String? get description;
   @override
   List<String>? get constraints;
+  @override
+  FunctionSignature? get functionSignature;
+  @override
+  Map<String, String>? get defaultCode;
+  @override
+  Map<String, List<CustomObject>>? get customObjects;
   @override
   List<Example>? get examples;
   @override

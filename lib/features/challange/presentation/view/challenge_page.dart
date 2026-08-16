@@ -1,3 +1,5 @@
+import 'package:algorithm_visualizer/config/routes/route_app.dart';
+import 'package:algorithm_visualizer/core/extensions/navigators.dart';
 import 'package:algorithm_visualizer/features/challange/presentation/widgets/error_state.dart';
 import 'package:algorithm_visualizer/features/challange/presentation/widgets/loading_state.dart';
 import 'package:flutter/material.dart';
@@ -16,7 +18,7 @@ class ChallengePage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final problems = ref.watch(challengeDatasetProvider);
+    final problems = ref.watch(filteredProblemsProvider);
 
     return Scaffold(
       body: SafeArea(
@@ -45,7 +47,7 @@ class ChallengePage extends ConsumerWidget {
               ),
             ),
             problems.when(
-              loading: () => const ChallengesLoadingState(),
+              loading: () => const SliverChallengesLoadingState(),
               error: (error, stackTrace) => SliverFillRemaining(child: ChallengesErrorState()),
               data: (data) {
                 if (data.isEmpty) return SliverFillRemaining(child: const ChallengesEmptyState());
@@ -55,7 +57,9 @@ class ChallengePage extends ConsumerWidget {
                     itemCount: data.length,
                     itemBuilder: (ctx, i) => ProblemTile(
                       problem: data[i],
-                      onSolveTap: () {},
+                      onSolveTap: () {
+                        context.pushTo(Routes.code, queryParameters: "${data[i].problemId}");
+                      },
                     ),
                   ),
                 );

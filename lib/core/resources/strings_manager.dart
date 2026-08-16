@@ -101,11 +101,38 @@ class StringsManager {
   static const String noProblemsFound = 'No problems found';
   static const String tryADifferentSearchOrFilter = 'Try a different search or filter';
   static const String loading = 'Loading challenges...';
-  static const String errorText = 'Not able to load challenges...';
+  static const String notAbleToLoadAnyChallenge = 'Not able to load any challenge...';
   static const String tryInDifferentTime = 'Try in different time';
   static const String practice = 'practice';
   static const String challenges = 'Challenges';
   static const String nan = "NAN";
   static const String solveWithArrow = "Solve →";
   static const String status = "Status";
+  static const String all = "All";
+
+  static const String noChallengeSelected = "No challenge selected";
+  static const String tryToPracticeAChallenge = "Try to practice a challenge";
+
+  static const String dart = "Dart";
+  static const String run = "Run";
+  static const String running = "Running...";
+
+  static const String codeEditor = "CODE EDITOR";
+  static const String description = "Description";
+  static const String input = "Input";
+  static const String output = "Output";
+  static const String explanation = "Explanation:  ";
+  static const String example = "Example";
+  static const String examples = "Examples";
+  static const String constraints = "Constraints";
+  static const String tags = "Tags";
+  static const String allTestsPassed = "All tests passed ✓";
+  static const String someTestsFailed = "Some tests failed";
+  static const String passed = "Passed";
+  static const String failed = "Failed";
+  static const String expected = "expected";
+  static const String actual = "actual";
+  static const String test = "Test";
+  static const String caseS = "Case";
+
 }
