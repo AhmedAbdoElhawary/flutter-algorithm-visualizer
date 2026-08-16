@@ -3,6 +3,8 @@ import 'package:algorithm_visualizer/core/widgets/custom_widgets/code_editor.dar
 import 'package:algorithm_visualizer/features/challange/challange/presentation/providers/code_editor_providers.dart';
 import 'package:algorithm_visualizer/features/challange/challange/presentation/widgets/code_editor_header.dart';
 import 'package:algorithm_visualizer/features/challange/challange/presentation/widgets/code_editor_lang_bar.dart';
+import 'package:algorithm_visualizer/features/challange/challange/presentation/widgets/code_grade_result_card.dart';
+import 'package:algorithm_visualizer/features/challange/challange/presentation/widgets/code_problem_description_card.dart';
 import 'package:algorithm_visualizer/features/challange/domain/entities/coding_problem.dart';
 import 'package:algorithm_visualizer/features/challange/presentation/view_model/challenges_providers.dart';
 import 'package:algorithm_visualizer/features/challange/presentation/widgets/empty_state.dart';
@@ -11,36 +13,6 @@ import 'package:algorithm_visualizer/features/challange/presentation/widgets/loa
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-
-// TODO: source this from the real `CodingProblem` entity once it's fetched
-// (title / difficulty in CodeEditorHeader should come from the same place).
-const _dartCode = r'''
-// Binary Search Algorithm
-int binarySearch(List<int> arr, int target) {
-  int left = 0;
-  int right = arr.length - 1;
-
-  while (left <= right) {
-    int mid = (left + right) ~/ 2;
-
-    if (arr[mid] == target) {
-      return mid;
-    } else if (arr[mid] < target) {
-      left = mid + 1;
-    } else {
-      right = mid - 1;
-    }
-  }
-
-  return -1;
-}
-
-void main() {
-  final arr = [2, 5, 8, 12, 16, 23, 38, 56, 72, 91];
-  final idx = binarySearch(arr, 23);
-  print(idx);
-}
-''';
 
 class CodeEditorPage extends ConsumerStatefulWidget {
   const CodeEditorPage({required this.problemId, super.key});
@@ -73,7 +45,8 @@ class _VisualizerScreenState extends ConsumerState<CodeEditorPage> {
 
             return CustomScrollView(
               slivers: [
-                const CodeEditorHeader(),
+                CodeEditorHeader(),
+                CodeProblemDescriptionCard(problem: problem),
                 CodeEditorLangBar(
                   isRunning: state.isRunning,
                   copied: state.copied,
@@ -81,17 +54,17 @@ class _VisualizerScreenState extends ConsumerState<CodeEditorPage> {
                   onRun: notifier.runCode,
                 ),
                 SliverPadding(
-                  padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
+                  padding: REdgeInsets.fromLTRB(16, 0, 16, 0),
                   sliver: SliverToBoxAdapter(
                     child: CodeEditorBlock(
-                      code: problem.getFunctionInDart,
+                      code: problem.getDefaultCode,
                       highlightLineNumber: state.highlightedLine ?? -1,
                       executing: state.isRunning,
                       controllerCallback: notifier.attachCodeController,
                     ),
                   ),
                 ),
-                // if (state.showOutput && state.result != null) CodeEditorOutputCard(result: state.result!),
+                if (state.grade != null) CodeGradeResultCard(grade: state.grade!),
                 SliverToBoxAdapter(child: RSizedBox(height: 20)),
               ],
             );
