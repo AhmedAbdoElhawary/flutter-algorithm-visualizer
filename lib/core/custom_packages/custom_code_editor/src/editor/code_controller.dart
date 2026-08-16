@@ -8,6 +8,7 @@ import '../rendering/code_painter.dart';
 import '../syntax/syntax_highlighter.dart';
 import '../syntax/token.dart';
 import '../syntax/tokenizer.dart';
+import '../testcase/problem_runner.dart';
 import '../utils/bracket_utils.dart';
 import '../utils/indentation.dart';
 import 'code_document.dart';
@@ -45,6 +46,10 @@ class CodeController extends TextEditingController {
   /// Optional runner used by [execute]. No-op (returns a failed
   /// [RunResult]) when null.
   CodeRunner? runner;
+
+  /// When set, [runAllTests] grades the current text against this problem's
+  /// test cases instead of treating the code as a standalone snippet.
+  ProblemData? problem;
 
   /// Theme used for syntax-highlight coloring in [buildTextSpan].
   ///
@@ -108,6 +113,9 @@ class CodeController extends TextEditingController {
   /// The most recent result from [execute], if any.
   RunResult? lastRunResult;
 
+  /// The most recent result from [runAllTests], if any.
+  ProblemRunResult? lastTestRunResult;
+
   /// Runs [runner] on the current text and updates [errorLine] /
   /// [lastRunResult] accordingly, notifying listeners so [CodeEditor] and
   /// [LineNumbers] can repaint. Returns a no-op successful [RunResult]
@@ -133,6 +141,22 @@ class CodeController extends TextEditingController {
       errorLine = null;
       notifyListeners();
     }
+  }
+
+  /// Grades the current text against [problem]'s test cases (visible +
+  /// hidden) using the on-device interpreter, updating [errorLine] and
+  /// [lastTestRunResult] and notifying listeners.
+  ///
+  /// Returns null when no [problem] is attached; use [execute] in that case.
+  ProblemRunResult? runAllTests() {
+    final ProblemData? p = problem;
+    if (p == null) return null;
+    final ProblemRunResult result =
+        const ProblemRunner().runAll(problem: p, userCode: text);
+    errorLine = result.error != null ? 0 : null;
+    lastTestRunResult = result;
+    notifyListeners();
+    return result;
   }
 
   /// The current text as a [CodeDocument], for line-oriented access.
