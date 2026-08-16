@@ -25,7 +25,8 @@ Map<String, dynamic> _$$ProblemStorageDTOImplToJson(
       'problem_id': instance.problemId,
       'problem_status': _$ProblemStatusEnumMap[instance.problemStatus],
       'is_bookmarked': instance.isBookmarked,
-      'solutions_status': instance.solutionsStatus,
+      'solutions_status':
+          instance.solutionsStatus?.map((e) => e.toJson()).toList(),
     };
 
 const _$ProblemStatusEnumMap = {
@@ -48,6 +49,7 @@ Map<String, dynamic> _$$ProblemSolutionStatusDTOImplToJson(
         _$ProblemSolutionStatusDTOImpl instance) =>
     <String, dynamic>{
       'code': instance.code,
-      'all_test_case_results': instance.allTestCaseResults,
+      'all_test_case_results':
+          instance.allTestCaseResults?.map((e) => e.toJson()).toList(),
       'is_correct': instance.isCorrect,
     };
