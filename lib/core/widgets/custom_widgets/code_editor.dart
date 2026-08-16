@@ -9,12 +9,14 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class CodeEditorBlock extends StatefulWidget {
   const CodeEditorBlock({
+    required this.title,
     required this.code,
     this.highlightLineNumber = -1,
     this.executing = false,
     this.controllerCallback,
     super.key,
   });
+  final String title;
   final String code;
   final int highlightLineNumber;
   final bool executing;
@@ -120,6 +122,7 @@ class _CodeEditorBlockState extends State<CodeEditorBlock> with SingleTickerProv
               border: Border(top: border.top, left: border.left, right: border.right),
             ),
             child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Padding(
                   padding: REdgeInsetsDirectional.only(top: 12, bottom: 12),
@@ -129,9 +132,42 @@ class _CodeEditorBlockState extends State<CodeEditorBlock> with SingleTickerProv
                 CircleAvatar(radius: 5.r, backgroundColor: Color.fromRGBO(182, 142, 43, 1)),
                 RSizedBox(width: 5),
                 CircleAvatar(radius: 5.r, backgroundColor: Color.fromRGBO(46, 156, 117, 1)),
-                Spacer(),
-                if (widget.executing)
-                  MediumText(StringsManager.executing, color: ThemeEnum.accentGreen, fontSize: 10)
+                Spacer(flex: 1),
+                if (widget.title.isNotEmpty) ...[
+                  if (widget.executing) ...[
+                    SizedBox(
+                      width: widget.executing ? ScreenUtil().screenWidth * 0.45 : null,
+                      child: Center(
+                        child: SingleChildScrollView(
+                          scrollDirection: Axis.horizontal,
+                          child: MediumText(
+                            widget.title,
+                            color: ThemeEnum.hover,
+                            fontSize: 11,
+                            maxLines: 1,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ] else ...[
+                    MediumText(
+                      widget.title,
+                      color: ThemeEnum.hover,
+                      fontSize: 11,
+                      maxLines: 1,
+                    ),
+                  ]
+                ],
+                if (widget.executing) ...[
+                  Spacer(flex: 1),
+                  Padding(
+                    padding: REdgeInsets.only(top: 2.5),
+                    child:
+                        CircleAvatar(radius: 3.r, backgroundColor: context.getColor(ThemeEnum.accentGreen)),
+                  ),
+                  RSizedBox(width: 5),
+                  MediumText(StringsManager.executing, color: ThemeEnum.accentGreen, fontSize: 10),
+                ]
               ],
             ),
           ),
