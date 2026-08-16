@@ -4,38 +4,18 @@ import 'package:algorithm_visualizer/features/challange/data/models/custom_objec
 import 'package:algorithm_visualizer/features/challange/data/models/test_case.dart';
 import 'package:algorithm_visualizer/features/challange/domain/entities/coding_problem.dart';
 
-/// Result of grading the user's code against a single test case.
-class SingleTestCaseResult {
-  const SingleTestCaseResult({
-    required this.input,
-    required this.expectedOutput,
-    required this.actualOutput,
-    required this.passed,
-    this.errorMessage,
-  });
-
-  /// The raw `input` string straight from the JSON, e.g. `nums=[2,7,11,15], target=9`.
-  final String input;
-  final String expectedOutput;
-  final String actualOutput;
-  final bool passed;
-
-  /// Set when this single run failed to parse/execute (not when the output
-  /// simply didn't match). Null on a clean run.
-  final String? errorMessage;
-}
-
 /// Aggregate result of grading user code against every test case
 /// (visible `test_cases` + `hidden_test_cases`).
 class CodeGradeResult {
   const CodeGradeResult({
     required this.allTestCaseResults,
     required this.totalCount,
+    required this.code,
     this.error,
   });
-
-  final List<SingleTestCaseResult> allTestCaseResults;
+  final List<TestCaseResult> allTestCaseResults;
   final int totalCount;
+  final String code;
 
   /// A whole-program failure (e.g. the user code never compiles), which
   /// invalidates every test case at once. Null when each test ran.
@@ -46,7 +26,7 @@ class CodeGradeResult {
   int get failedCount => allTestCaseResults.where((r) => !r.passed).length;
 
   /// it just need to be simple not showing all test cases results
-  List<SingleTestCaseResult> get firstThreeTestCaseResults {
+  List<TestCaseResult> get firstThreeTestCaseResults {
     if (allPassed) return allTestCaseResults.take(3).toList();
 
     final failedResults = allTestCaseResults.where((r) => !r.passed).take(3).toList();
@@ -77,7 +57,7 @@ class GradeCodeUseCase {
   }) {
     final allCases = <TestCase>[...problem.getTestCases, ...problem.getHiddenTestCases];
     if (allCases.isEmpty) {
-      return const CodeGradeResult(allTestCaseResults: <SingleTestCaseResult>[], totalCount: 0);
+      return CodeGradeResult(allTestCaseResults: <TestCaseResult>[], totalCount: 0, code: userCode);
     }
 
     final problemData = ProblemData(
@@ -95,9 +75,10 @@ class GradeCodeUseCase {
     final result = const ProblemRunner().runAll(problem: problemData, userCode: userCode);
 
     return CodeGradeResult(
+      code: userCode,
       allTestCaseResults: [
         for (final r in result.testCaseResults)
-          SingleTestCaseResult(
+          TestCaseResult(
             input: r.testCase.input,
             expectedOutput: r.testCase.expectedOutput,
             actualOutput: r.actualOutput,
