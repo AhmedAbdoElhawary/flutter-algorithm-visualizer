@@ -8,10 +8,13 @@ class ChallengesState {
   final int expandedId;
 
   const ChallengesState({
-    this.filter=ProblemDifficulty.none,
-    this.search = '',
-    this.expandedId = 0,
+    required this.filter,
+    required this.search,
+    required this.expandedId,
   });
+
+  factory ChallengesState.initial() =>
+      const ChallengesState(filter: ProblemDifficulty.none, search: "", expandedId: 0);
 
   ChallengesState copyWith({
     ProblemDifficulty? filter,
