@@ -2,9 +2,6 @@ import 'package:algorithm_visualizer/core/resources/color_manager.dart';
 import 'package:flutter/material.dart';
 
 enum ThemeEnum {
-  /// static colors
-  solidWhite,
-  /// ----------------
   primary,
   focus,
   card,
@@ -27,7 +24,10 @@ enum ThemeEnum {
   hoverSecond,
   border,
 
-  /// --------------
+  /// static colors
+  solidWhite,
+  purple,
+  pink,lightPink,
   howItWorksColor,
   columnColor,
   backgroundForSortingColor,
@@ -37,7 +37,6 @@ enum ThemeEnum {
   borderPurpleColor,
   lightPurpleColor,
   codeEditorNumberColor,
-
   whiteD4Color,
   whiteD5Color,
   whiteColor,
@@ -58,7 +57,6 @@ extension ThemeExtension on BuildContext {
 
   Map<ThemeEnum, Color> get _colors {
     return {
-      ThemeEnum.solidWhite: ColorManager.white,
       ThemeEnum.primary: Theme.of(this).primaryColor,
       ThemeEnum.focus: Theme.of(this).focusColor,
       ThemeEnum.card: Theme.of(this).hintColor,
@@ -88,6 +86,10 @@ extension ThemeExtension on BuildContext {
       ThemeEnum.border: isThemeDark ? ColorManager.borderDk : ColorManager.borderLt,
 
       ///-------------------->
+      ThemeEnum.solidWhite: ColorManager.white,
+      ThemeEnum.purple:  ColorManager.targetSearchingPoint,
+      ThemeEnum.pink:  ColorManager.pinkColor,
+      ThemeEnum.lightPink:  ColorManager.lightPinkColor,
       ThemeEnum.howItWorksColor: ColorManager.howItWorksColor,
       ThemeEnum.white2DarkColor: ColorManager.white2DarkColor,
       ThemeEnum.columnColor: ColorManager.columnSortColor,
