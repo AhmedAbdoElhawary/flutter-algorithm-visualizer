@@ -128,10 +128,11 @@ class StringsManager {
   static const String tags = "Tags";
   static const String allTestsPassed = "All tests passed ✓";
   static const String someTestsFailed = "Some tests failed";
-  static const String passed = "passed";
-  static const String failed = "failed";
+  static const String passed = "Passed";
+  static const String failed = "Failed";
   static const String expected = "expected";
   static const String actual = "actual";
   static const String test = "Test";
+  static const String caseS = "Case";
 
 }
