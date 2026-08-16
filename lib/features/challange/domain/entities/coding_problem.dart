@@ -1,3 +1,4 @@
+import 'package:algorithm_visualizer/features/challange/data/models/custom_object.dart';
 import 'package:algorithm_visualizer/features/challange/data/models/example.dart';
 import 'package:algorithm_visualizer/features/challange/data/models/function_signature.dart';
 import 'package:algorithm_visualizer/features/challange/data/models/problem_storage.dart';
@@ -27,6 +28,8 @@ class CodingProblem with _$CodingProblem {
     required String? description,
     required List<String>? constraints,
     required FunctionSignature? functionSignature,
+    Map<String, String>? defaultCode,
+    Map<String, List<CustomObject>>? customObjects,
     required List<Example>? examples,
     required List<String>? edgeCases,
     required List<TestCase>? testCases,
@@ -70,6 +73,16 @@ extension CodingProblemX on CodingProblem {
 
     return "$sign{\n\n}";
   }
+
+  /// The problem's starter code (the `dart` entry of `default_code`), or a
+  /// bare function stub when the JSON doesn't provide one.
+  String get getDefaultCode {
+    final code = defaultCode?['dart'];
+    if (code == null || code.trim().isEmpty) return getFunctionInDart;
+    return code;
+  }
+
+  List<CustomObject> get getCustomObjects => customObjects?['dart'] ?? [];
 
   List<Example> get getExamples => examples ?? [];
   List<String> get getEdgeCases => edgeCases ?? [];
