@@ -33,7 +33,7 @@ class _ChallengesSearchFieldState extends ConsumerState<ChallengesSearchField> {
       child: Container(
         padding: REdgeInsets.symmetric(horizontal: 14, vertical: 10),
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(14),
+          borderRadius: BorderRadius.circular(10),
           border: Border.all(color: context.getColor(ThemeEnum.border)),
           boxShadow: context.cardShadow,
         ),
