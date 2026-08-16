@@ -1,13 +1,5 @@
 import 'package:algorithm_visualizer/features/challange/challange/domain/usecases/grade_code_usecase.dart';
 
-/// Sentinel so `copyWith` can tell "leave unchanged" apart from "set this
-/// nullable field to null".
-class _Unset {
-  const _Unset();
-}
-
-const _unset = _Unset();
-
 class CodeEditorState {
   const CodeEditorState({
     required this.isRunning,
@@ -44,8 +36,8 @@ class CodeEditorState {
     bool? isRunning,
     // bool? showOutput,
     bool? copied,
-    Object? highlightedLine = _unset,
-    Object? grade = _unset,
+    int? highlightedLine,
+    CodeGradeResult? grade,
     // List<CodeTestCase>? testCases,
     // bool? loadingTestCases,
     // Object? result = _unset,
@@ -54,10 +46,8 @@ class CodeEditorState {
       isRunning: isRunning ?? this.isRunning,
       // showOutput: showOutput ?? this.showOutput,
       copied: copied ?? this.copied,
-      highlightedLine: identical(highlightedLine, _unset)
-          ? this.highlightedLine
-          : highlightedLine as int?,
-      grade: identical(grade, _unset) ? this.grade : grade as CodeGradeResult?,
+      highlightedLine: highlightedLine ?? this.highlightedLine,
+      grade: grade ?? this.grade,
       // testCases: testCases ?? this.testCases,
       // loadingTestCases: loadingTestCases ?? this.loadingTestCases,
       // result: identical(result, _unset) ? this.result : result as ExecutionResult?,
