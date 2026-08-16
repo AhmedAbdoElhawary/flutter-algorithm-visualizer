@@ -31,10 +31,15 @@ class RunError {
 /// what you want for debugging ("it printed these 3 things, then blew up
 /// on line 12").
 class RunResult {
-  const RunResult({required this.stdout, this.error});
+  const RunResult({required this.stdout, this.error, this.rawOutput = const <dynamic>[]});
 
   final List<String> stdout;
   final RunError? error;
+
+  /// The raw evaluated value of each `print(...)` argument, parallel to
+  /// [stdout]. Used by the problem runner to grade real values (e.g.
+  /// [ObjectInstance]s) rather than their stringified forms.
+  final List<dynamic> rawOutput;
 
   bool get success => error == null;
 }
@@ -62,8 +67,8 @@ abstract class CodeRunner {
 /// list literals & indexing, `.length`, basic `List`/`String` methods,
 /// string interpolation, and `print()`.
 ///
-/// Not supported: classes, `async`/`await`, imports, maps/sets, full
-/// generics, most of `dart:core`. Code using those fails with a normal
+/// Not supported: methods, `async`/`await`, imports, sets, full generics,
+/// most of `dart:core`. Code using those fails with a normal
 /// [RunError] rather than crashing the app.
 class DartInterpreterRunner extends CodeRunner {
   const DartInterpreterRunner({this.maxSteps = 2000000});
@@ -79,7 +84,7 @@ class DartInterpreterRunner extends CodeRunner {
       final program = Parser(tokens).parseProgram();
       interpreter = Interpreter(maxSteps: maxSteps);
       interpreter.run(program);
-      return RunResult(stdout: interpreter.output);
+      return RunResult(stdout: interpreter.output, rawOutput: interpreter.rawOutput);
     } on LexError catch (e) {
       return RunResult(
         stdout: const <String>[],
