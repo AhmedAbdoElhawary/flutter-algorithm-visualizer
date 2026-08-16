@@ -52,7 +52,7 @@ class _Header extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final allPassed = grade.allPassed;
-    final color = allPassed ? ThemeEnum.accentGreen : ThemeEnum.hover;
+    final color = allPassed ? ThemeEnum.accentGreen : ThemeEnum.accentRedRc;
 
     return Container(
       padding: REdgeInsets.symmetric(horizontal: 14, vertical: 8),
@@ -60,20 +60,22 @@ class _Header extends StatelessWidget {
       child: Row(children: [
         CustomIcon(Icons.terminal_rounded, size: 14, color: color),
         RSizedBox(width: 6),
-        SemiBoldText(StringsManager.output, color: color, fontSize: 12),
+        BoldText(StringsManager.output, color: color, fontSize: 12),
         const Spacer(),
         Container(
           padding: REdgeInsets.symmetric(horizontal: 8, vertical: 2),
           decoration: BoxDecoration(
-            color: context.getColor(ThemeEnum.accentGreenBg),
+            color: allPassed
+                ? context.getColor(ThemeEnum.accentGreenBg)
+                : context.getColor(ThemeEnum.accentRedRc).withValues(alpha: 0.1),
             borderRadius: BorderRadius.circular(6),
           ),
-          child: SemiBoldText(
+          child: MediumText(
             allPassed
                 ? StringsManager.allTestsPassed
                 : '${grade.passedCount}/${grade.totalCount} ${StringsManager.passed}',
-            color: allPassed ? ThemeEnum.accentGreen : ThemeEnum.hover,
-            fontSize: 11,
+            color: allPassed ? ThemeEnum.accentGreen : ThemeEnum.accentRedRc,
+            fontSize: 12,
           ),
         ),
       ]),
@@ -94,7 +96,7 @@ class _ErrorBox extends StatelessWidget {
       decoration: BoxDecoration(border: Border(top: BorderSide(color: context.getColor(ThemeEnum.border)))),
       child: RegularText(
         error,
-        maxLines: 4,
+        maxLines: 20,
         color: ThemeEnum.accentRedRc,
         fontFamily: FontConstants.fontJetBrainsMono,
         fontSize: 12,
@@ -112,61 +114,77 @@ class _TestCaseRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final color = result.passed ? ThemeEnum.accentGreen : ThemeEnum.hover;
+    final color = result.passed ? ThemeEnum.accentGreen : ThemeEnum.accentRedRc;
 
     return Container(
       padding: REdgeInsets.fromLTRB(14, 9, 14, 9),
       decoration: BoxDecoration(border: Border(top: BorderSide(color: context.getColor(ThemeEnum.border)))),
-      child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        Container(
-          width: 18.r,
-          height: 18.r,
-          decoration: BoxDecoration(
-            color: context.getColor(ThemeEnum.accentGreenBg),
-            shape: BoxShape.circle,
-            border: Border.all(color: context.getColor(color).withValues(alpha: 0.6), width: 1.4),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            width: 18.r,
+            height: 18.r,
+            decoration: BoxDecoration(
+              color: context.getColor(color).withValues(alpha: 0.15),
+              shape: BoxShape.circle,
+              border: Border.all(color: context.getColor(color).withValues(alpha: 0.6), width: 1.4),
+            ),
+            child: CustomIcon(
+              result.passed ? Icons.check_rounded : Icons.close_rounded,
+              size: 10.r,
+              color: color,
+            ),
           ),
-          child: CustomIcon(
-            result.passed ? Icons.check_rounded : Icons.close_rounded,
-            size: 10.r,
-            color: color,
+          RSizedBox(width: 10),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SemiBoldText(
+                  '${StringsManager.test} ${index + 1}${result.errorMessage != null ? ' - ${result.errorMessage}' : ''}',
+                  color: ThemeEnum.textSecond,
+                  fontSize: 12,
+                ),
+                RSizedBox(height: 2),
+                RegularText(
+                  result.input,
+                  maxLines: 2,
+                  color: ThemeEnum.textSecond,
+                  fontFamily: FontConstants.fontJetBrainsMono,
+                  fontSize: 11,
+                ),
+                if (result.passed) ...[
+                  RegularText(
+                    '${StringsManager.reset.toLowerCase()}: ${result.actualOutput}',
+                    maxLines: 2,
+                    color: ThemeEnum.accentGreen,
+                    fontFamily: FontConstants.fontJetBrainsMono,
+                    fontSize: 11,
+                  ),
+                ] else ...[
+                  RegularText(
+                    '${StringsManager.expected}: ${result.expectedOutput}',
+                    maxLines: 2,
+                    color: ThemeEnum.hover,
+                    fontFamily: FontConstants.fontJetBrainsMono,
+                    fontSize: 11,
+                  ),
+                ],
+                if (!result.passed && result.errorMessage == null) ...[
+                  RegularText(
+                    '${StringsManager.actual}:   ${result.actualOutput}',
+                    maxLines: 2,
+                    color: ThemeEnum.accentRedRc,
+                    fontFamily: FontConstants.fontJetBrainsMono,
+                    fontSize: 11,
+                  ),
+                ],
+              ],
+            ),
           ),
-        ),
-        RSizedBox(width: 10),
-        Expanded(
-          child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            SemiBoldText(
-              '${StringsManager.test} ${index + 1}${result.errorMessage != null ? ' - ${result.errorMessage}' : ''}',
-              color: ThemeEnum.textSecond,
-              fontSize: 12,
-            ),
-            RSizedBox(height: 2),
-            RegularText(
-              result.input,
-              maxLines: 2,
-              color: ThemeEnum.textSecond,
-              fontFamily: FontConstants.fontJetBrainsMono,
-              fontSize: 11,
-            ),
-            RegularText(
-              '${StringsManager.expected}: ${result.expectedOutput}',
-              maxLines: 2,
-              color: ThemeEnum.accentGreen,
-              fontFamily: FontConstants.fontJetBrainsMono,
-              fontSize: 11,
-            ),
-            if (!result.passed && result.errorMessage == null) ...[
-              RegularText(
-                '${StringsManager.actual}:   ${result.actualOutput}',
-                maxLines: 2,
-                color: ThemeEnum.hover,
-                fontFamily: FontConstants.fontJetBrainsMono,
-                fontSize: 11.sp,
-              ),
-            ],
-          ]),
-        ),
-      ]),
+        ],
+      ),
     );
   }
 }
