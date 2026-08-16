@@ -90,8 +90,9 @@ class _CodeEditorBlockState extends State<CodeEditorBlock> with SingleTickerProv
   }
 
   void _highlightLine() {
-    if (widget.highlightLineNumber < 1) return;
     controller.clearHighlights();
+
+    if (widget.highlightLineNumber < 1) return;
 
     controller.highlightLine(widget.highlightLineNumber, ColorManager.accentDk);
   }
