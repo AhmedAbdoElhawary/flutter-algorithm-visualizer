@@ -1,4 +1,5 @@
 import 'ast.dart';
+import 'object_instance.dart';
 
 /// Thrown for any error that occurs while *running* already-parsed code:
 /// undefined variables/functions, type mismatches, index-out-of-range,
@@ -80,10 +81,16 @@ class Interpreter {
   int _steps = 0;
 
   final Map<String, FunctionDecl> _functions = <String, FunctionDecl>{};
+  final Map<String, ClassDecl> _classes = <String, ClassDecl>{};
   late Environment _globals;
 
   /// Captured `print(...)` output, one entry per call, in call order.
   final List<String> output = <String>[];
+
+  /// The raw evaluated value of each `print(...)` argument, parallel to
+  /// [output]. Lets grading code read actual values (including
+  /// [ObjectInstance]s) instead of only their stringified form.
+  final List<dynamic> rawOutput = <dynamic>[];
 
   /// Runs [program]'s `main()` function. Throws [InterpreterError] on any
   /// runtime failure (undefined name, type mismatch, index error,
@@ -91,6 +98,9 @@ class Interpreter {
   void run(Program program) {
     for (final FunctionDecl fn in program.functions) {
       _functions[fn.name] = fn;
+    }
+    for (final ClassDecl cls in program.classes) {
+      _classes[cls.name] = cls;
     }
 
     _globals = Environment();
@@ -146,6 +156,23 @@ class Interpreter {
       return r.value;
     }
     return null;
+  }
+
+  ObjectInstance _construct(ClassDecl cls, List<dynamic> args, int line) {
+    final Map<String, dynamic> fields = <String, dynamic>{};
+    for (final FieldDecl f in cls.fields) {
+      fields[f.name] = f.defaultExpr == null ? null : _eval(f.defaultExpr!, _globals);
+    }
+    final List<ConstructorParam> ctor = cls.constructorParams;
+    for (int i = 0; i < ctor.length; i++) {
+      final ConstructorParam cp = ctor[i];
+      if (i < args.length) {
+        fields[cp.fieldName] = args[i];
+      } else if (cp.defaultExpr != null) {
+        fields[cp.fieldName] = _eval(cp.defaultExpr!, _globals);
+      }
+    }
+    return ObjectInstance(cls.name, fields);
   }
 
   // ---------------------------------------------------------------------
@@ -285,6 +312,18 @@ class Interpreter {
       return expr.elements.map((Expr e) => _eval(e, env)).toList();
     }
 
+    if (expr is SetLiteral) {
+      return expr.elements.map((Expr e) => _eval(e, env)).toSet();
+    }
+
+    if (expr is MapLiteral) {
+      final map = <dynamic, dynamic>{};
+      for (final MapLiteralEntry entry in expr.entries) {
+        map[_eval(entry.key, env)] = _eval(entry.value, env);
+      }
+      return map;
+    }
+
     if (expr is Identifier) return env.get(expr.name, expr.line);
 
     if (expr is UnaryExpr) return _evalUnary(expr, env);
@@ -358,6 +397,8 @@ class Interpreter {
           return l == r;
         case '!=':
           return l != r;
+        case '??':
+          return l ?? r;
         case '<':
           return l < r;
         case '>':
@@ -412,6 +453,7 @@ class Interpreter {
 
   dynamic _evalTarget(Expr target, Environment env) {
     if (target is Identifier) return env.get(target.name, target.line);
+    if (target is PropertyAccess) return _evalProperty(target, env);
     if (target is IndexExpr) {
       final dynamic t = _eval(target.target, env);
       final dynamic idx = _eval(target.index, env);
@@ -429,6 +471,17 @@ class Interpreter {
       env.assign(target.name, value, line);
       return;
     }
+    if (target is PropertyAccess) {
+      final dynamic t = _eval(target.target, env);
+      if (t is ObjectInstance) {
+        t.fields[target.name] = value;
+        return;
+      }
+      throw InterpreterError(
+        '"${_typeName(t)}" cannot have field "${target.name}" assigned',
+        line,
+      );
+    }
     if (target is IndexExpr) {
       final dynamic t = _eval(target.target, env);
       final dynamic idx = _eval(target.index, env);
@@ -444,19 +497,27 @@ class Interpreter {
 
   dynamic _evalProperty(PropertyAccess expr, Environment env) {
     final dynamic target = _eval(expr.target, env);
+    if (target is ObjectInstance) {
+      final ObjectInstance inst = target;
+      if (inst.fields.containsKey(expr.name)) return inst.fields[expr.name];
+      throw InterpreterError(
+        '"${inst.type}" has no field "${expr.name}"',
+        expr.line,
+      );
+    }
     switch (expr.name) {
       case 'length':
-        if (target is List || target is String) {
+        if (target is List || target is String || target is Map || target is Set) {
           return (target as dynamic).length;
         }
         break;
       case 'isEmpty':
-        if (target is List || target is String) {
+        if (target is List || target is String || target is Map || target is Set) {
           return (target as dynamic).isEmpty;
         }
         break;
       case 'isNotEmpty':
-        if (target is List || target is String) {
+        if (target is List || target is String || target is Map || target is Set) {
           return (target as dynamic).isNotEmpty;
         }
         break;
@@ -477,6 +538,7 @@ class Interpreter {
     if (expr.callee is Identifier && (expr.callee as Identifier).name == 'print') {
       final List<dynamic> args = expr.args.map((Expr a) => _eval(a, env)).toList();
       output.add(args.isEmpty ? '' : _stringify(args.first));
+      rawOutput.add(args.isEmpty ? null : args.first);
       return null;
     }
 
@@ -489,6 +551,11 @@ class Interpreter {
 
     if (expr.callee is Identifier) {
       final String name = (expr.callee as Identifier).name;
+      final ClassDecl? cls = _classes[name];
+      if (cls != null) {
+        final List<dynamic> args = expr.args.map((Expr a) => _eval(a, env)).toList();
+        return _construct(cls, args, expr.line);
+      }
       final FunctionDecl? fn = _functions[name];
       if (fn == null) {
         throw InterpreterError("Undefined function '$name'", expr.line);
@@ -548,6 +615,29 @@ class Interpreter {
             return target;
         }
       }
+      if (target is Map) {
+        switch (name) {
+          case 'containsKey':
+            return target.containsKey(args[0]);
+          case 'containsValue':
+            return target.containsValue(args[0]);
+          case 'toString':
+            return _stringify(target);
+        }
+      }
+      if (target is Set) {
+        switch (name) {
+          case 'add':
+            target.add(args[0]);
+            return null;
+          case 'contains':
+            return target.contains(args[0]);
+          case 'remove':
+            return target.remove(args[0]);
+          case 'toString':
+            return _stringify(target);
+        }
+      }
       if (name == 'toString') return _stringify(target);
     } catch (e) {
       throw InterpreterError('Error calling "$name": $e', line);
@@ -569,6 +659,11 @@ class Interpreter {
   String _stringify(dynamic v) {
     if (v == null) return 'null';
     if (v is List) return '[${v.map(_stringify).join(', ')}]';
+    if (v is Set) return '{${v.map(_stringify).join(', ')}}';
+    if (v is Map) {
+      return '{${v.entries.map((e) => '${_stringify(e.key)}: ${_stringify(e.value)}').join(', ')}}';
+    }
+    if (v is ObjectInstance) return v.toString();
     return v.toString();
   }
 
@@ -579,6 +674,9 @@ class Interpreter {
     if (v is bool) return 'bool';
     if (v is String) return 'String';
     if (v is List) return 'List';
+    if (v is Set) return 'Set';
+    if (v is Map) return 'Map';
+    if (v is ObjectInstance) return v.type;
     return v.runtimeType.toString();
   }
 }
