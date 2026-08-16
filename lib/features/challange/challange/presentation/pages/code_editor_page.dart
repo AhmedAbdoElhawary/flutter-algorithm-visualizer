@@ -40,31 +40,41 @@ class _VisualizerScreenState extends ConsumerState<CodeEditorPage> {
               );
             }
             final provider = codeEditorControllerProvider(problem);
-            final state = ref.watch(provider);
-            final notifier = ref.read(provider.notifier);
 
             return CustomScrollView(
               slivers: [
                 CodeEditorHeader(),
                 CodeProblemDescriptionCard(problem: problem),
-                CodeEditorLangBar(
-                  isRunning: state.isRunning,
-                  copied: state.copied,
-                  onCopy: notifier.copyCode,
-                  onRun: notifier.runCode,
+                CodeEditorLangBar(problem: problem),
+                Consumer(
+                  builder: (context, ref, child) {
+                    final notifier = ref.read(provider.notifier);
+
+                    final highlightedLine = ref.watch(provider.select((value) => value.highlightedLine));
+                    final isRunning = ref.watch(provider.select((value) => value.isRunning));
+
+                    return SliverPadding(
+                      padding: REdgeInsets.fromLTRB(16, 0, 16, 0),
+                      sliver: SliverToBoxAdapter(
+                        child: CodeEditorBlock(
+                          code: problem.getDefaultCode,
+                          highlightLineNumber: highlightedLine ?? -1,
+                          executing: isRunning,
+                          controllerCallback: notifier.attachCodeController,
+                        ),
+                      ),
+                    );
+                  },
                 ),
-                SliverPadding(
-                  padding: REdgeInsets.fromLTRB(16, 0, 16, 0),
-                  sliver: SliverToBoxAdapter(
-                    child: CodeEditorBlock(
-                      code: problem.getDefaultCode,
-                      highlightLineNumber: state.highlightedLine ?? -1,
-                      executing: state.isRunning,
-                      controllerCallback: notifier.attachCodeController,
-                    ),
-                  ),
+                Consumer(
+                  builder: (context, ref, child) {
+                    final grade = ref.watch(provider.select((value) => value.grade));
+
+                    if (grade != null) CodeGradeResultCard(grade: grade);
+
+                    return SliverToBoxAdapter(child: SizedBox.shrink());
+                  },
                 ),
-                if (state.grade != null) CodeGradeResultCard(grade: state.grade!),
                 SliverToBoxAdapter(child: RSizedBox(height: 20)),
               ],
             );
