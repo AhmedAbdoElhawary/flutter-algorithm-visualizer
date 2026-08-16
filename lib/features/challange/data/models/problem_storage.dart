@@ -7,6 +7,7 @@ part 'problem_storage.g.dart';
 
 /// [ProblemStorageDTO] it saved in local storage
 @freezed
+@JsonSerializable(explicitToJson: true)
 class ProblemStorageDTO with _$ProblemStorageDTO {
   const factory ProblemStorageDTO({
     required int? problemId,
@@ -22,7 +23,7 @@ class ProblemStorageDTO with _$ProblemStorageDTO {
 class ProblemSolutionStatusDTO with _$ProblemSolutionStatusDTO {
   const factory ProblemSolutionStatusDTO({
     required String? code,
-    required TestCase? failedTestCase,
+    required List<TestCaseResult>? allTestCaseResults,
     required bool? isCorrect,
   }) = _ProblemSolutionStatusDTO;
 
