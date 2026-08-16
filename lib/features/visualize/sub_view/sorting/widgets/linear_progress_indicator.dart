@@ -31,7 +31,7 @@ class GradientLinearProgressIndicator extends StatelessWidget {
                     end: AlignmentDirectional.centerEnd,
                     colors: [
                       context.getColor(ThemeEnum.accent),
-                      ColorManager.main2DarkColor,
+                      ColorManager.pinkColor,
                     ],
                   ),
                   borderRadius: BorderRadius.circular(12),
