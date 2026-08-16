@@ -5,7 +5,7 @@ import 'package:algorithm_visualizer/core/widgets/custom_widgets/custom_icon.dar
 import 'package:algorithm_visualizer/features/challange/domain/entities/coding_problem.dart';
 import 'package:algorithm_visualizer/features/challange/domain/enums/problem.dart';
 import 'package:algorithm_visualizer/features/challange/presentation/helper/problem_style.dart';
-import 'package:algorithm_visualizer/features/challange/presentation/view_model/challenges/challenges_notifier.dart';
+import 'package:algorithm_visualizer/features/challange/presentation/view_model/challenges/challenges_providers.dart';
 import 'package:algorithm_visualizer/features/challange/presentation/widgets/challenges/challenge_tags.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
