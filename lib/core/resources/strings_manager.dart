@@ -126,7 +126,7 @@ class StringsManager {
   static const String examples = "Examples";
   static const String constraints = "Constraints";
   static const String tags = "Tags";
-  static const String allTestsPassed = "All tests passed";
+  static const String allTestsPassed = "All tests passed ✓";
   static const String someTestsFailed = "Some tests failed";
   static const String passed = "passed";
   static const String failed = "failed";
