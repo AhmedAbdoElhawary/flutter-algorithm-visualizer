@@ -116,4 +116,22 @@ class StringsManager {
   static const String dart = "Dart";
   static const String run = "Run";
   static const String running = "Running...";
+
+  static const String codeEditor = "CODE EDITOR";
+  static const String description = "Description";
+  static const String input = "Input";
+  static const String output = "Output";
+  static const String explanation = "Explanation:  ";
+  static const String example = "Example";
+  static const String examples = "Examples";
+  static const String constraints = "Constraints";
+  static const String tags = "Tags";
+  static const String allTestsPassed = "All tests passed";
+  static const String someTestsFailed = "Some tests failed";
+  static const String passed = "passed";
+  static const String failed = "failed";
+  static const String expected = "expected";
+  static const String actual = "actual";
+  static const String test = "Test";
+
 }
