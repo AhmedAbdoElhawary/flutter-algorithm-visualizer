@@ -25,5 +25,5 @@ Map<String, dynamic> _$$DatasetImplToJson(_$DatasetImpl instance) =>
       'total_problems': instance.totalProblems,
       'source': instance.source,
       'description': instance.description,
-      'problems': instance.problems,
+      'problems': instance.problems?.map((e) => e.toJson()).toList(),
     };
