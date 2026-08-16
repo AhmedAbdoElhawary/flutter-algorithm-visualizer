@@ -14,9 +14,10 @@ abstract class Node {
 // ---------------------------------------------------------------------
 
 class Program extends Node {
-  Program(this.functions, this.topLevelVars, int line) : super(line);
+  Program(this.functions, this.topLevelVars, this.classes, int line) : super(line);
   final List<FunctionDecl> functions;
   final List<VarDeclStmt> topLevelVars;
+  final List<ClassDecl> classes;
 }
 
 class Param {
@@ -29,6 +30,32 @@ class FunctionDecl extends Node {
   final String name;
   final List<Param> params;
   final Block body;
+}
+
+/// A `class` declaration. Only the subset needed for LeetCode-style
+/// node types is supported: instance fields, an optional `this.field`
+/// constructor with optional positional params and default values.
+class ClassDecl extends Node {
+  ClassDecl(this.name, this.fields, this.constructorParams, int line) : super(line);
+  final String name;
+  final List<FieldDecl> fields;
+
+  /// Constructor parameters in declaration order (`this.val = 0`, ...).
+  final List<ConstructorParam> constructorParams;
+}
+
+class FieldDecl extends Node {
+  FieldDecl(this.name, this.defaultExpr, int line) : super(line);
+  final String name;
+  final Expr? defaultExpr;
+}
+
+/// A single constructor parameter of the form `this.field` with an
+/// optional default value.
+class ConstructorParam {
+  const ConstructorParam(this.fieldName, [this.defaultExpr]);
+  final String fieldName;
+  final Expr? defaultExpr;
 }
 
 // ---------------------------------------------------------------------
@@ -137,6 +164,22 @@ class StringLiteral extends Expr {
 class ListLiteral extends Expr {
   ListLiteral(this.elements, int line) : super(line);
   final List<Expr> elements;
+}
+
+class SetLiteral extends Expr {
+  SetLiteral(this.elements, int line) : super(line);
+  final List<Expr> elements;
+}
+
+class MapLiteral extends Expr {
+  MapLiteral(this.entries, int line) : super(line);
+  final List<MapLiteralEntry> entries;
+}
+
+class MapLiteralEntry {
+  const MapLiteralEntry(this.key, this.value);
+  final Expr key;
+  final Expr value;
 }
 
 class Identifier extends Expr {
