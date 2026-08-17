@@ -49,24 +49,23 @@ class ProfilePracticeHistory extends ConsumerWidget {
               ),
             ]),
           ),
-          ...preview.map((entry) => _PracticeHistoryRow(entry: entry)),
+          ...preview.map((entry) => PracticeHistoryRow(entry: entry)),
         ]),
       ),
     );
   }
 }
 
-class _PracticeHistoryRow extends StatefulWidget {
-  const _PracticeHistoryRow({required this.entry});
+class PracticeHistoryRow extends StatefulWidget {
+  const PracticeHistoryRow({super.key, this.isFullPage = false, required this.entry});
 
   final PracticeHistoryEntry entry;
-
+  final bool isFullPage;
   @override
-  State<_PracticeHistoryRow> createState() => _PracticeHistoryRowState();
+  State<PracticeHistoryRow> createState() => _PracticeHistoryRowState();
 }
 
-class _PracticeHistoryRowState extends State<_PracticeHistoryRow>
-    with SingleTickerProviderStateMixin {
+class _PracticeHistoryRowState extends State<PracticeHistoryRow> with SingleTickerProviderStateMixin {
   bool _expanded = false;
   late final AnimationController _controller;
   late final Animation<double> _scaleAnim;
@@ -104,141 +103,152 @@ class _PracticeHistoryRowState extends State<_PracticeHistoryRow>
     final entry = widget.entry;
     final isCorrect = entry.lastResult;
 
-    return Container(
-      decoration: BoxDecoration(
-        border: Border(top: BorderSide(color: context.getColor(ThemeEnum.border))),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Padding(
-            padding: REdgeInsets.symmetric(horizontal: 14, vertical: 10),
-            child: Row(children: [
-              Container(
-                width: 28.r,
-                height: 28.r,
-                decoration: BoxDecoration(
-                  color: context.getColor(ThemeEnum.accentBg),
-                  borderRadius: BorderRadius.circular(8),
+    return InkWell(
+      onTap: _toggle,
+      child: Container(
+        decoration:widget.isFullPage?null: BoxDecoration(
+          border: Border(top: BorderSide(color: context.getColor(ThemeEnum.border))),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: REdgeInsets.symmetric(horizontal: widget.isFullPage ? 0 : 14, vertical: 10),
+              child: Row(children: [
+                Container(
+                  width: 28.r,
+                  height: 28.r,
+                  decoration: BoxDecoration(
+                    color: context.getColor(ThemeEnum.accentBg),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Center(
+                      child: Icon(
+                    isCorrect ? Icons.check_rounded : Icons.close_rounded,
+                    size: 14.r,
+                    color: context.getColor(isCorrect ? ThemeEnum.accentGreen : ThemeEnum.accentRed),
+                  )),
                 ),
-                child: Center(child: Icon(
-                  isCorrect ? Icons.check_rounded : Icons.close_rounded,
-                  size: 14.r,
-                  color: context.getColor(isCorrect ? ThemeEnum.accentGreen : ThemeEnum.accentRed),
-                )),
-              ),
-              RSizedBox(width: 10),
-              Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                SemiBoldText(entry.problemName, color: ThemeEnum.textSecond, fontSize: 13),
-                RSizedBox(height: 2),
-                Row(children: [
-                  RegularText(_difficultyLabel(entry.difficulty), color: _difficultyColor(entry.difficulty), fontSize: 11),
-                  RegularText(' · ', color: ThemeEnum.hoverSecond, fontSize: 11),
-                  RegularText('${entry.attempts.length} ${StringsManager.problems.toLowerCase()}', color: ThemeEnum.hoverSecond, fontSize: 11),
-                ]),
-              ])),
-              GestureDetector(
-                onTap: _toggle,
-                child: AnimatedRotation(
-                  turns: _expanded ? 0.5 : 0,
-                  duration: const Duration(milliseconds: 200),
-                  child: CustomIcon(
-                    Icons.keyboard_arrow_down_rounded,
-                    size: 18,
-                    color: ThemeEnum.hoverSecond,
+                RSizedBox(width: 10),
+                Expanded(
+                    child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                  SemiBoldText(entry.problemName, color: ThemeEnum.textSecond, fontSize: 13),
+                  RSizedBox(height: 2),
+                  Row(children: [
+                    RegularText(_difficultyLabel(entry.difficulty),
+                        color: _difficultyColor(entry.difficulty), fontSize: 11),
+                    RegularText(' · ', color: ThemeEnum.hoverSecond, fontSize: 11),
+                    RegularText('${entry.attempts.length} ${StringsManager.problems.toLowerCase()}',
+                        color: ThemeEnum.hoverSecond, fontSize: 11),
+                  ]),
+                ])),
+                GestureDetector(
+                  child: AnimatedRotation(
+                    turns: _expanded ? 0.5 : 0,
+                    duration: const Duration(milliseconds: 200),
+                    child: CustomIcon(
+                      Icons.keyboard_arrow_down_rounded,
+                      size: 18,
+                      color: ThemeEnum.hoverSecond,
+                    ),
                   ),
                 ),
-              ),
-            ]),
-          ),
-          AnimatedSize(
-            duration: const Duration(milliseconds: 250),
-            curve: Curves.easeInOut,
-            child: _expanded
-                ? ScaleTransition(
-                    scale: _scaleAnim,
-                    child: FadeTransition(
-                      opacity: _opacityAnim,
-                      child: Container(
-                        width: double.infinity,
-                        margin: REdgeInsets.fromLTRB(14, 0, 14, 10),
-                        padding: REdgeInsets.all(10),
-                        decoration: BoxDecoration(
-                          color: context.getColor(ThemeEnum.mainCard),
-                          borderRadius: BorderRadius.circular(10),
-                          border: Border.all(color: context.getColor(ThemeEnum.border)),
-                        ),
-                        child: Column(
-                          children: [
-                            Row(children: [
-                              Expanded(
-                                child: RegularText(
-                                  'Date',
-                                  color: ThemeEnum.hover,
-                                  fontSize: 11,
-                                ),
-                              ),
-                              Expanded(
-                                child: RegularText(
-                                  'Result',
-                                  color: ThemeEnum.hover,
-                                  fontSize: 11,
-                                ),
-                              ),
-                            ]),
-                            RSizedBox(height: 6),
-                            for (final attempt in entry.attempts) ...[
-                              Row(children: [
-                                Expanded(
-                                  child: RegularText(
-                                    _formatDate(attempt.submittedAt),
-                                    color: ThemeEnum.textSecond,
-                                    fontSize: 12,
+              ]),
+            ),
+            AnimatedSize(
+              duration: const Duration(milliseconds: 250),
+              curve: Curves.easeInOut,
+              child: _expanded
+                  ? ScaleTransition(
+                      scale: _scaleAnim,
+                      child: FadeTransition(
+                        opacity: _opacityAnim,
+                        child: Container(
+                          width: double.infinity,
+                          margin: REdgeInsetsDirectional.only(bottom: 10, start: widget.isFullPage?37: 50, end: widget.isFullPage?5: 20),
+                          padding: REdgeInsets.symmetric(vertical: 10, horizontal: 10),
+                          decoration: BoxDecoration(
+                            color: context.getColor(ThemeEnum.mainCard),
+                            borderRadius: BorderRadius.circular(10),
+                            border: Border.all(color: context.getColor(ThemeEnum.border)),
+                          ),
+                          child: Column(
+                            children: [
+                              Row(
+                                children: [
+                                  Expanded(
+                                    child: RegularText(
+                                      StringsManager.date,
+                                      color: ThemeEnum.hover,
+                                      fontSize: 11,
+                                    ),
                                   ),
-                                ),
-                                Expanded(
-                                  child: RegularText(
+                                  RegularText(
+                                    StringsManager.result,
+                                    color: ThemeEnum.hover,
+                                    fontSize: 11,
+                                  ),
+                                ],
+                              ),
+                              RSizedBox(height: 6),
+                              for (final attempt in entry.attempts) ...[
+                                Row(children: [
+                                  Expanded(
+                                    child: RegularText(
+                                      _formatDate(attempt.submittedAt),
+                                      color: ThemeEnum.textSecond,
+                                      fontSize: 12,
+                                    ),
+                                  ),
+                                  RegularText(
                                     attempt.isCorrect ? StringsManager.passed : StringsManager.failed,
                                     color: attempt.isCorrect ? ThemeEnum.accentGreen : ThemeEnum.accentRed,
                                     fontSize: 12,
                                   ),
-                                ),
-                              ]),
-                              if (attempt != entry.attempts.last)
-                                RSizedBox(height: 4),
+                                ]),
+                                if (attempt != entry.attempts.last) RSizedBox(height: 4),
+                              ],
                             ],
-                          ],
+                          ),
                         ),
                       ),
-                    ),
-                  )
-                : const SizedBox.shrink(),
-          ),
-        ],
+                    )
+                  : const SizedBox.shrink(),
+            ),
+          ],
+        ),
       ),
     );
   }
 
   String _formatDate(DateTime dt) {
-    final months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    final months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
     return '${months[dt.month - 1]} ${dt.day}, ${dt.year}  ${dt.hour.toString().padLeft(2, '0')}:${dt.minute.toString().padLeft(2, '0')}';
   }
 
   String _difficultyLabel(ProblemDifficulty diff) {
     switch (diff) {
-      case ProblemDifficulty.easy: return StringsManager.easy;
-      case ProblemDifficulty.medium: return StringsManager.medium;
-      case ProblemDifficulty.hard: return StringsManager.hard;
-      case ProblemDifficulty.none: return StringsManager.all;
+      case ProblemDifficulty.easy:
+        return StringsManager.easy;
+      case ProblemDifficulty.medium:
+        return StringsManager.medium;
+      case ProblemDifficulty.hard:
+        return StringsManager.hard;
+      case ProblemDifficulty.none:
+        return StringsManager.all;
     }
   }
 
   ThemeEnum _difficultyColor(ProblemDifficulty diff) {
     switch (diff) {
-      case ProblemDifficulty.easy: return ThemeEnum.accentGreen;
-      case ProblemDifficulty.medium: return ThemeEnum.accentYellow;
-      case ProblemDifficulty.hard: return ThemeEnum.accentRed;
-      case ProblemDifficulty.none: return ThemeEnum.hoverSecond;
+      case ProblemDifficulty.easy:
+        return ThemeEnum.accentGreen;
+      case ProblemDifficulty.medium:
+        return ThemeEnum.accentYellow;
+      case ProblemDifficulty.hard:
+        return ThemeEnum.accentRed;
+      case ProblemDifficulty.none:
+        return ThemeEnum.hoverSecond;
     }
   }
 }
