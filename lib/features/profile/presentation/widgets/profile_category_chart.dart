@@ -1,11 +1,8 @@
-import 'package:algorithm_visualizer/core/resources/color_manager.dart';
 import 'package:algorithm_visualizer/core/resources/strings_manager.dart';
-import 'package:algorithm_visualizer/core/resources/styles_manager.dart';
 import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
 import 'package:algorithm_visualizer/core/widgets/adaptive/padding/adaptive_padding.dart';
 import 'package:algorithm_visualizer/core/widgets/adaptive/text/adaptive_text.dart';
 import 'package:algorithm_visualizer/features/profile/data/profile_stats_provider.dart';
-import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -17,86 +14,62 @@ class ProfileCategoryChart extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final stats = ref.watch(profileStatsProvider);
 
-    if (stats.categorySolved.isEmpty) return const SizedBox.shrink();
-
-    final sorted = stats.categorySolved.entries.toList()
+    final entries = stats.categorySolved.entries.where((e) => e.value > 0).toList()
       ..sort((a, b) => b.value.compareTo(a.value));
-    final top = sorted.take(6).toList();
-    final maxVal = top.first.value;
+
+    if (entries.isEmpty) return const SizedBox.shrink();
 
     return HorizontalPadding(
       padding: 16,
       child: Container(
         padding: REdgeInsets.all(14),
+        width: double.infinity,
         decoration: BoxDecoration(
           color: context.getColor(ThemeEnum.card),
           borderRadius: BorderRadius.circular(12),
           border: Border.all(color: context.getColor(ThemeEnum.border)),
           boxShadow: context.cardShadow,
         ),
-        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          BoldText(StringsManager.categoryBreakdown, color: ThemeEnum.textSecond, fontSize: 13),
-          RSizedBox(height: 12),
-          SizedBox(
-            height: 160.h,
-            child: BarChart(
-              BarChartData(
-                alignment: BarChartAlignment.spaceAround,
-                maxY: maxVal.toDouble(),
-                barGroups: top.asMap().entries.map((e) {
-                  final i = e.key;
-                  final entry = e.value;
-                  return BarChartGroupData(
-                    x: i,
-                    barRods: [
-                      BarChartRodData(
-                        toY: entry.value.toDouble(),
-                        color: context.getColor(ThemeEnum.accent).withValues(alpha: 0.7),
-                        borderRadius: BorderRadius.vertical(top: Radius.circular(4.r)),
-                        width: 18.w,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            BoldText(StringsManager.solvedTopics, color: ThemeEnum.textSecond, fontSize: 13),
+            RSizedBox(height: 10),
+            Wrap(
+              spacing: 6,
+              runSpacing: 6,
+              children: entries.map((e) {
+                return Container(
+                  padding: REdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                  decoration: BoxDecoration(
+                    color: context.getColor(ThemeEnum.accentBg),
+                    borderRadius: BorderRadius.circular(8),
+                    border: Border.all(color: context.getColor(ThemeEnum.borderAccent)),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      SemiBoldText(e.key, color: ThemeEnum.accent, fontSize: 12),
+                      RSizedBox(width: 6),
+                      Container(
+                        padding: REdgeInsets.symmetric(horizontal: 6, vertical: 1),
+                        decoration: BoxDecoration(
+                          color: context.getColor(ThemeEnum.accent).withValues(alpha: 0.15),
+                          borderRadius: BorderRadius.circular(6),
+                        ),
+                        child: MediumText(
+                          '${e.value}',
+                          color: ThemeEnum.accent,
+                          fontSize: 11,
+                        ),
                       ),
                     ],
-                  );
-                }).toList(),
-                gridData: const FlGridData(show: false),
-                borderData: FlBorderData(show: false),
-                barTouchData: BarTouchData(
-                    touchTooltipData: BarTouchTooltipData(
-                        getTooltipColor: (group) => context.getColor(ThemeEnum.outputHeader),
-                    getTooltipItem: (group, gIdx, rod, rIdx) {
-                      final name = top[group.x].key;
-                      return BarTooltipItem(
-                        '$name (${rod.toY.toInt()})',
-                        GetSemiBoldStyle(color:context.isThemeDark? ColorManager.textPrimaryDk: ColorManager.textPrimaryLt, fontSize: 11),
-
-                      );
-                    },
                   ),
-                ),
-                titlesData: FlTitlesData(
-                  bottomTitles: AxisTitles(
-                    sideTitles: SideTitles(
-                      showTitles: true,
-                      getTitlesWidget: (v, _) {
-                        final i = v.toInt();
-                        if (i < 0 || i >= top.length) return const SizedBox();
-                        final label = top[i].key;
-                        final short = label.length > 8 ? label.substring(0, 8) : label;
-                        return Padding(
-                          padding: REdgeInsets.only(top: 4),
-                          child: MediumText(short, color: ThemeEnum.hoverSecond, fontSize: 9),
-                        );
-                      },
-                    ),
-                  ),
-                  leftTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
-                  topTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
-                  rightTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
-                ),
-              ),
+                );
+              }).toList(),
             ),
-          ),
-        ]),
+          ],
+        ),
       ),
     );
   }
