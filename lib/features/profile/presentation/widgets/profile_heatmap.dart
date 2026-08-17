@@ -1,3 +1,4 @@
+import 'package:algorithm_visualizer/core/resources/color_manager.dart';
 import 'package:algorithm_visualizer/core/resources/strings_manager.dart';
 import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
 import 'package:algorithm_visualizer/core/widgets/adaptive/padding/adaptive_padding.dart';
@@ -16,8 +17,8 @@ class ProfileHeatmap extends ConsumerWidget {
     final isDark = context.isThemeDark;
 
     final heatColors = isDark
-        ? [const Color(0xFF0F1729), const Color(0xFF1A3A2A), const Color(0xFF1E5C3A), const Color(0xFF34D399)]
-        : [const Color(0xFFEEF2FF), const Color(0xFFBBF7D0), const Color(0xFF86EFAC), const Color(0xFF22C55E)];
+        ? [ColorManager.outputHeaderDk.withValues(alpha: 0.5), const Color.fromRGBO(26, 58, 42, 1), const Color.fromRGBO(30, 92, 58, 1), const Color.fromRGBO(52, 211, 153, 1)]
+        : [const Color.fromRGBO(238, 242, 255, 1), const Color.fromRGBO(187, 247, 208, 1), const Color.fromRGBO(134, 239, 172, 1), const Color.fromRGBO(34, 197, 94, 1)];
 
     return HorizontalPadding(
       padding: 16,
@@ -59,9 +60,9 @@ class ProfileHeatmap extends ConsumerWidget {
               decoration: BoxDecoration(
                 color: heatColors[level],
                 borderRadius: BorderRadius.circular(2),
-                border: level == 0 ? Border.all(color: context.getColor(ThemeEnum.border)) : null,
+                border: level == 0 ? Border.all(color: context.getColor(ThemeEnum.border),width: 0.5.r) : null,
                 boxShadow: level == 3 && isDark
-                    ? [BoxShadow(color: const Color(0xFF34D399).withValues(alpha: 0.3), blurRadius: 4)]
+                    ? [BoxShadow(color: const Color.fromRGBO(52, 211, 153, 1).withValues(alpha: 0.3), blurRadius: 4)]
                     : null,
               ),
             )).toList(),
