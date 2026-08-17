@@ -35,7 +35,6 @@ class _VisualizerScreenState extends ConsumerState<CodeEditorPage> {
 
   void _listenToRunResult() {
     final provider = codeEditorControllerProvider(widget.problemId);
-    WidgetsBinding.instance.addPostFrameCallback((_) {
       ref.listen(provider.select((s) => (s.isRunning, s.grade)), (prev, next) {
         final wasRunning = prev?.$1 ?? false;
         final isRunning = next.$1;
@@ -44,7 +43,6 @@ class _VisualizerScreenState extends ConsumerState<CodeEditorPage> {
           _scrollToResult();
         }
       });
-    });
 
   }
 
