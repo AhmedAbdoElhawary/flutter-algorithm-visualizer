@@ -11,16 +11,37 @@ import 'package:algorithm_visualizer/features/challange/presentation/widgets/cha
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-class CodeProblemDescriptionCard extends StatelessWidget {
+class CodeProblemDescriptionCard extends StatefulWidget {
   const CodeProblemDescriptionCard({super.key, required this.problem});
 
   final CodingProblem problem;
 
   @override
+  State<CodeProblemDescriptionCard> createState() => _CodeProblemDescriptionCardState();
+}
+
+class _CodeProblemDescriptionCardState extends State<CodeProblemDescriptionCard> {
+  final Set<String> _expanded = {};
+
+  bool _isExpanded(String key) => _expanded.contains(key);
+
+  void _toggle(String key) {
+    setState(() {
+      if (_expanded.contains(key)) {
+        _expanded.remove(key);
+      } else {
+        _expanded.add(key);
+      }
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final problem = widget.problem;
     final examples = problem.getExamples;
     final constraints = problem.getConstraints;
     final tags = problem.getTags;
+    final hints = problem.getHints;
 
     return SliverPadding(
       padding: REdgeInsets.fromLTRB(16, 0, 16, 10),
@@ -63,27 +84,25 @@ class CodeProblemDescriptionCard extends StatelessWidget {
                     ],
                   ),
                 ),
-              if (tags.isNotEmpty) _Section(title: StringsManager.tags, child: ChallengeTags(tags: tags)),
-              if (problem.getHints.isNotEmpty)
-                _Section(
-                  title: StringsManager.hints,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      for (var i = 0; i < problem.getHints.length; i++)
-                        Padding(
-                          padding: REdgeInsets.only(bottom: 4),
-                          child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                            _BodyText('${i + 1}. '),
-                            Expanded(child: _BodyText(problem.getHints[i])),
-                          ]),
-                        ),
-                    ],
-                  ),
+              if (tags.isNotEmpty)
+                _CollapsibleSection(
+                  title: StringsManager.tags,
+                  expanded: _isExpanded('tags'),
+                  onToggle: () => _toggle('tags'),
+                  child: ChallengeTags(tags: tags),
+                ),
+              for (var i = 0; i < hints.length; i++)
+                _CollapsibleSection(
+                  title: 'HINT ${i + 1}',
+                  expanded: _isExpanded('hint_$i'),
+                  onToggle: () => _toggle('hint_$i'),
+                  child: _BodyText(hints[i]),
                 ),
               if (problem.getSimilarQuestions.isNotEmpty)
-                _Section(
+                _CollapsibleSection(
                   title: StringsManager.similarQuestions,
+                  expanded: _isExpanded('similar'),
+                  onToggle: () => _toggle('similar'),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -104,6 +123,53 @@ class CodeProblemDescriptionCard extends StatelessWidget {
             ],
           ),
         ),
+      ),
+    );
+  }
+}
+
+class _CollapsibleSection extends StatelessWidget {
+  const _CollapsibleSection({
+    required this.title,
+    required this.expanded,
+    required this.onToggle,
+    required this.child,
+  });
+
+  final String title;
+  final bool expanded;
+  final VoidCallback onToggle;
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onToggle,
+      behavior: HitTestBehavior.opaque,
+      child: Container(
+        width: double.infinity,
+        padding: REdgeInsets.fromLTRB(14, 10, 14, 12),
+        decoration: BoxDecoration(border: Border(top: BorderSide(color: context.getColor(ThemeEnum.border)))),
+        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          Row(children: [
+            Expanded(
+              child: SemiBoldText(title.toUpperCase(),
+                  fontSize: 11, color: ThemeEnum.hover, maxLines: 2, letterSpacing: 0.5),
+            ),
+            AnimatedRotation(
+              turns: expanded ? 0.5 : 0,
+              duration: const Duration(milliseconds: 200),
+              child: CustomIcon(Icons.expand_more_rounded, size: 16, color: ThemeEnum.hoverSecond),
+            ),
+          ]),
+          AnimatedSize(
+            duration: const Duration(milliseconds: 220),
+            curve: Curves.easeInOut,
+            child: expanded
+                ? Padding(padding: REdgeInsets.only(top: 6), child: child)
+                : const SizedBox.shrink(),
+          ),
+        ]),
       ),
     );
   }
