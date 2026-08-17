@@ -24,6 +24,71 @@ class CodeEditorPage extends ConsumerStatefulWidget {
 }
 
 class _VisualizerScreenState extends ConsumerState<CodeEditorPage> {
+  final ScrollController _scrollController = ScrollController();
+  final GlobalKey _resultKey = GlobalKey();
+
+  @override
+  void initState() {
+    super.initState();
+    _listenToRunResult();
+  }
+
+  void _listenToRunResult() {
+    final provider = codeEditorControllerProvider(widget.problemId);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref.listen(provider.select((s) => (s.isRunning, s.grade)), (prev, next) {
+        final wasRunning = prev?.$1 ?? false;
+        final isRunning = next.$1;
+        final grade = next.$2;
+        if (wasRunning && !isRunning && grade != null) {
+          _scrollToResult();
+        }
+      });
+    });
+
+  }
+
+  @override
+  void didUpdateWidget(covariant CodeEditorPage oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.problemId != widget.problemId) {
+      _scrollToTop();
+      _listenToRunResult();
+    }
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  void _scrollToResult() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final ctx = _resultKey.currentContext;
+      if (ctx != null) {
+        Scrollable.ensureVisible(
+          ctx,
+          duration: const Duration(milliseconds: 400),
+          curve: Curves.easeInOut,
+          alignment: 1.0,
+        );
+      }
+    });
+  }
+
+  void _scrollToTop() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (_scrollController.hasClients) {
+        _scrollController.animateTo(
+          0,
+          duration: const Duration(milliseconds: 300),
+          curve: Curves.easeOut,
+        );
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final codingProblem = ref.watch(getProblemProvider(widget.problemId));
@@ -42,6 +107,7 @@ class _VisualizerScreenState extends ConsumerState<CodeEditorPage> {
             final provider = codeEditorControllerProvider(widget.problemId);
 
             return CustomScrollView(
+              controller: _scrollController,
               slivers: [
                 CodeEditorHeader(),
                 CodeProblemDescriptionCard(problem: problem),
@@ -71,7 +137,13 @@ class _VisualizerScreenState extends ConsumerState<CodeEditorPage> {
                   builder: (context, ref, child) {
                     final grade = ref.watch(provider.select((value) => value.grade));
 
-                    if (grade != null) return CodeGradeResultCard(grade: grade);
+                    if (grade != null) {
+                      return SliverPadding(
+                        key: _resultKey,
+                        padding: EdgeInsets.zero,
+                        sliver: CodeGradeResultCard(grade: grade),
+                      );
+                    }
 
                     return SliverToBoxAdapter(child: SizedBox.shrink());
                   },
