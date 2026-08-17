@@ -232,6 +232,14 @@ class PropertyAccess extends Expr {
   final String name;
 }
 
+/// A null-shorting member access `a?.b` (also covers `a?.b()`). Evaluates to
+/// `null` when the target is `null`, otherwise behaves like [PropertyAccess].
+class NullAwareAccess extends Expr {
+  NullAwareAccess(this.target, this.name, int line) : super(line);
+  final Expr target;
+  final String name;
+}
+
 class CallExpr extends Expr {
   CallExpr(this.callee, this.args, int line) : super(line);
   final Expr callee; // Identifier or PropertyAccess
