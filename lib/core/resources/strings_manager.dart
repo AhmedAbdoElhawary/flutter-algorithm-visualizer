@@ -141,7 +141,7 @@ class StringsManager {
   static const String problemsSolved = "Problems Solved";
   static const String dayStreak = "Day\nStreak";
   static const String accuracyRate = "Accuracy\nRate";
-  static const String bookmarked = "Bookmarked\n";
+  static const String bookmarked = "Bookmarked";
   static const String difficultyBreakdown = "Difficulty Breakdown";
   static const String categoryBreakdown = "Category Breakdown";
   static const String activityHeatmap = "Activity (12 weeks)";
