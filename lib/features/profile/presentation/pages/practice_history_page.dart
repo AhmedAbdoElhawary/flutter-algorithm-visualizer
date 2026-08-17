@@ -3,7 +3,7 @@ import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
 import 'package:algorithm_visualizer/core/widgets/adaptive/text/adaptive_text.dart';
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/custom_icon.dart';
 import 'package:algorithm_visualizer/features/profile/data/profile_stats_provider.dart';
-import 'package:algorithm_visualizer/features/profile/presentation/widgets/profile_recent_submissions.dart';
+import 'package:algorithm_visualizer/features/profile/presentation/widgets/profile_practice_history.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
