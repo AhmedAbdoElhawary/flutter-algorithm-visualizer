@@ -1,5 +1,6 @@
 import 'package:algorithm_visualizer/config/routes/route_app.dart';
 import 'package:algorithm_visualizer/core/extensions/navigators.dart';
+import 'package:algorithm_visualizer/core/resources/font_manager.dart';
 import 'package:algorithm_visualizer/core/resources/strings_manager.dart';
 import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
 import 'package:algorithm_visualizer/core/widgets/adaptive/padding/adaptive_padding.dart';
@@ -38,12 +39,12 @@ class ProfilePracticeHistory extends ConsumerWidget {
           Padding(
             padding: REdgeInsets.fromLTRB(14, 14, 14, 10),
             child: Row(children: [
-              BoldText(StringsManager.practiceHistory, color: ThemeEnum.textSecond, fontSize: 13),
+              BoldText(StringsManager.practiceHistory, color: ThemeEnum.textSecond, fontSize: 13,fontWeight: FontWeightManager.bold800),
               const Spacer(),
               GestureDetector(
                 onTap: () => context.pushTo(Routes.recentSubmissions),
                 child: Row(children: [
-                  RegularText(StringsManager.viewAll, color: ThemeEnum.accent, fontSize: 12),
+                  SemiBoldText(StringsManager.viewAll, color: ThemeEnum.accent, fontSize: 12),
                   CustomIcon(Icons.chevron_right_rounded, size: 14, color: ThemeEnum.accent),
                 ]),
               ),
@@ -132,14 +133,14 @@ class _PracticeHistoryRowState extends State<PracticeHistoryRow> with SingleTick
                 RSizedBox(width: 10),
                 Expanded(
                     child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                  SemiBoldText(entry.problemName, color: ThemeEnum.textSecond, fontSize: 13),
+                      BoldText(entry.problemName, color: ThemeEnum.textSecond, fontSize: 13),
                   RSizedBox(height: 2),
                   Row(children: [
-                    RegularText(_difficultyLabel(entry.difficulty),
+                    SemiBoldText(_difficultyLabel(entry.difficulty),
                         color: _difficultyColor(entry.difficulty), fontSize: 11),
-                    RegularText(' · ', color: ThemeEnum.hoverSecond, fontSize: 11),
-                    RegularText('${entry.attempts.length} ${StringsManager.problems.toLowerCase()}',
-                        color: ThemeEnum.hoverSecond, fontSize: 11),
+                    RegularText('   ·   ', color: ThemeEnum.hover, fontSize: 11),
+                    MediumText('${entry.attempts.length} ${StringsManager.problems.toLowerCase()}',
+                        color: ThemeEnum.hover, fontSize: 11),
                   ]),
                 ])),
                 GestureDetector(
@@ -177,13 +178,13 @@ class _PracticeHistoryRowState extends State<PracticeHistoryRow> with SingleTick
                               Row(
                                 children: [
                                   Expanded(
-                                    child: RegularText(
+                                    child: SemiBoldText(
                                       StringsManager.date,
                                       color: ThemeEnum.hover,
                                       fontSize: 11,
                                     ),
                                   ),
-                                  RegularText(
+                                  SemiBoldText(
                                     StringsManager.result,
                                     color: ThemeEnum.hover,
                                     fontSize: 11,
@@ -194,18 +195,19 @@ class _PracticeHistoryRowState extends State<PracticeHistoryRow> with SingleTick
                               for (final attempt in entry.attempts) ...[
                                 Row(children: [
                                   Expanded(
-                                    child: RegularText(
+                                    child: SemiBoldText(
                                       _formatDate(attempt.submittedAt),
                                       color: ThemeEnum.textSecond,
                                       fontSize: 12,
                                     ),
                                   ),
-                                  RegularText(
+                                  SemiBoldText(
                                     attempt.isCorrect ? StringsManager.passed : StringsManager.failed,
                                     color: attempt.isCorrect ? ThemeEnum.accentGreen : ThemeEnum.accentRed,
                                     fontSize: 12,
                                   ),
                                 ]),
+
                                 if (attempt != entry.attempts.last) RSizedBox(height: 4),
                               ],
                             ],
