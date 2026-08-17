@@ -4,6 +4,7 @@ import 'package:algorithm_visualizer/core/widgets/adaptive/text/adaptive_text.da
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/custom_icon.dart';
 import 'package:algorithm_visualizer/features/challange/domain/entities/coding_problem.dart';
 import 'package:algorithm_visualizer/features/challange/presentation/view_model/challenges/challenges_providers.dart';
+import 'package:algorithm_visualizer/features/challange/presentation/view_model/code_editor/code_editor_controller.dart';
 import 'package:algorithm_visualizer/features/challange/presentation/view_model/code_editor/code_editor_providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -69,6 +70,21 @@ class CodeEditorLangBar extends ConsumerWidget {
                     );
                   },
                 ),
+              ),
+            ),
+            const RSizedBox(width: 8),
+            GestureDetector(
+              onTap: () => _showResetDialog(context, notifier),
+              child: Container(
+                width: 32.r,
+                height: 32.r,
+                decoration: BoxDecoration(
+                  color: context.getColor(ThemeEnum.card),
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(color: context.getColor(ThemeEnum.border)),
+                  boxShadow: context.cardShadow,
+                ),
+                child: CustomIcon(Icons.restore_rounded, color: ThemeEnum.hover, size: 15),
               ),
             ),
             const RSizedBox(width: 8),
@@ -159,4 +175,41 @@ class CodeEditorLangBar extends ConsumerWidget {
       ),
     );
   }
+}
+
+void _showResetDialog(BuildContext context, CodeEditorController notifier) {
+  showDialog(
+    context: context,
+    builder: (ctx) => AlertDialog(
+      backgroundColor: context.getColor(ThemeEnum.card),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(14),
+        side: BorderSide(color: context.getColor(ThemeEnum.border)),
+      ),
+      title: Row(children: [
+        CustomIcon(Icons.restore_rounded, size: 18, color: ThemeEnum.accentRed),
+        const RSizedBox(width: 8),
+        BoldText(StringsManager.resetCode, color: ThemeEnum.textSecond, fontSize: 16),
+      ]),
+      content: RegularText(
+        StringsManager.resetCodeDesc,
+        color: ThemeEnum.hover,
+        fontSize: 13,
+        height: 1.5,
+      ),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.of(ctx).pop(),
+          child: RegularText(StringsManager.noCancel, color: ThemeEnum.hoverSecond, fontSize: 13),
+        ),
+        TextButton(
+          onPressed: () {
+            notifier.resetCode();
+            Navigator.of(ctx).pop();
+          },
+          child: SemiBoldText(StringsManager.yesReset, color: ThemeEnum.accentRed, fontSize: 13),
+        ),
+      ],
+    ),
+  );
 }
