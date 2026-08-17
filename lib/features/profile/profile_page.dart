@@ -32,12 +32,11 @@ class ProfileScreen extends ConsumerWidget {
             spacing: 14.r,
             children: [
               _ProfileHeader(name: profileName, ref: ref),
-
               const ProfileStatsGrid(),
-              const ProfileWeeklyChart(),
               const ProfileDifficultyBreakdown(),
-              const ProfileCategoryChart(),
+              const ProfileWeeklyChart(),
               const ProfileHeatmap(),
+              const ProfileCategoryChart(),
               const ProfileRecentSubmissions(),
             ],
           ),
@@ -71,11 +70,12 @@ class _ProfileHeader extends StatelessWidget {
               height: 64.r,
               decoration: BoxDecoration(
                 gradient: LinearGradient(
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                  colors: context.isThemeDark
-                      ? [const Color.fromRGBO(129, 140, 248, 1), const Color(0xFFC084FC)]
-                      : [const Color.fromRGBO(99, 102, 241, 1), const Color.fromRGBO(168, 85, 247, 1)],
+                  begin: AlignmentDirectional.centerStart,
+                  end: AlignmentDirectional.centerEnd,
+                  colors: [
+                    context.getColor(ThemeEnum.accent),
+                    context.getColor(ThemeEnum.pink),
+                  ],
                 ),
                 borderRadius: BorderRadius.circular(20.r),
               ),
@@ -90,23 +90,20 @@ class _ProfileHeader extends StatelessWidget {
               bottom: -6.r,
               right: -6.r,
               child: Container(
-                padding: REdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                padding: REdgeInsets.all(1),
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                    colors: context.isThemeDark
-                        ? [const Color.fromRGBO(129, 140, 248, 1), const Color(0xFFC084FC)]
-                        : [const Color.fromRGBO(99, 102, 241, 1), const Color.fromRGBO(168, 85, 247, 1)],
+                    begin: AlignmentDirectional.centerStart,
+                    end: AlignmentDirectional.centerEnd,
+                    colors: [
+                      context.getColor(ThemeEnum.accent),
+                      context.getColor(ThemeEnum.pink),
+                    ],
                   ),
-                  borderRadius: BorderRadius.circular(8.r),
-                  border: Border.all(color: context.getColor(ThemeEnum.primary), width: 2),
+                  borderRadius: BorderRadius.circular(7.r),
+                  border: Border.all(color: context.getColor(ThemeEnum.primary), width: 2.r),
                 ),
-                child: Row(mainAxisSize: MainAxisSize.min, children: [
-                  CustomIcon(Icons.bolt_rounded, size: 9, color: ThemeEnum.solidWhite),
-                  RSizedBox(width: 2),
-                  BoldText('1', color: ThemeEnum.solidWhite, fontSize: 10),
-                ]),
+                child: CustomIcon(Icons.bolt_rounded, size: 14, color: ThemeEnum.solidWhite),
               ),
             ),
           ]),
