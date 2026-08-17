@@ -18,7 +18,7 @@ class ChallengePage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final problems = ref.watch(filteredProblemsProvider);
+    final problems = ref.watch(filteredProblemIdsProvider);
 
     return Scaffold(
       body: SafeArea(
@@ -50,17 +50,20 @@ class ChallengePage extends ConsumerWidget {
               loading: () => const SliverChallengesLoadingState(),
               error: (error, stackTrace) => SliverFillRemaining(child: ChallengesErrorState()),
               data: (data) {
-                if (data.isEmpty) return SliverFillRemaining(child: const ChallengesEmptyState());
+                if (data.ids.isEmpty) return SliverFillRemaining(child: const ChallengesEmptyState());
                 return SliverPadding(
                   padding: REdgeInsets.fromLTRB(16, 0, 16, 60),
                   sliver: SliverList.builder(
-                    itemCount: data.length,
-                    itemBuilder: (ctx, i) => ProblemTile(
-                      problem: data[i],
-                      onSolveTap: () {
-                        context.pushTo(Routes.code, queryParameters: "${data[i].problemId}");
-                      },
-                    ),
+                    itemCount: data.ids.length,
+                    itemBuilder: (ctx, i) {
+                      final problemId = data.ids[i];
+                      return ProblemTile(
+                        problemId: problemId,
+                        onSolveTap: () {
+                          context.pushTo(Routes.code, queryParameters: "$problemId");
+                        },
+                      );
+                    },
                   ),
                 );
               },
