@@ -1,4 +1,5 @@
 import 'package:algorithm_visualizer/core/resources/strings_manager.dart';
+import 'package:algorithm_visualizer/core/resources/styles_manager.dart';
 import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
 import 'package:algorithm_visualizer/core/widgets/adaptive/text/adaptive_text.dart';
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/custom_icon.dart';
@@ -33,6 +34,7 @@ class _ChallengesSearchFieldState extends ConsumerState<ChallengesSearchField> {
       child: Container(
         padding: REdgeInsets.symmetric(horizontal: 14, vertical: 10),
         decoration: BoxDecoration(
+          color: context.getColor(ThemeEnum.card),
           borderRadius: BorderRadius.circular(10),
           border: Border.all(color: context.getColor(ThemeEnum.border)),
           boxShadow: context.cardShadow,
@@ -45,11 +47,13 @@ class _ChallengesSearchFieldState extends ConsumerState<ChallengesSearchField> {
               child: TextField(
                 controller: _controller,
                 onChanged: (v) => ref.read(challengesProvider.notifier).setSearch(v),
-                style: GoogleFonts.inter(color: context.getColor(ThemeEnum.textPrimary), fontSize: 14.r),
+                style: GetSemiBoldStyle(color: context.getColor(ThemeEnum.textPrimary), fontSize: 14,letterSpacing: 0.2),
+
                 decoration: InputDecoration(
                   isDense: true,
                   hintText: StringsManager.searchProblem,
-                  hintStyle: GoogleFonts.inter(color: context.getColor(ThemeEnum.hover), fontSize: 14.r),
+                  hintStyle: GoogleFonts.inter(color: context.getColor(ThemeEnum.textSecond), fontSize: 14.r),
+
                   border: InputBorder.none,
                   contentPadding: EdgeInsets.zero,
                 ),
