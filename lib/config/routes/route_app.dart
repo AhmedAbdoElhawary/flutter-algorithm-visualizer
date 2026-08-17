@@ -6,7 +6,7 @@ import 'package:algorithm_visualizer/features/challange/presentation/view/challe
 import 'package:algorithm_visualizer/features/challange/presentation/view/code_editor_page.dart';
 import 'package:algorithm_visualizer/features/home/view/home_page.dart';
 import 'package:algorithm_visualizer/features/profile/presentation/pages/bookmarked_problems_page.dart';
-import 'package:algorithm_visualizer/features/profile/presentation/pages/recent_submissions_page.dart';
+import 'package:algorithm_visualizer/features/profile/presentation/pages/practice_history_page.dart';
 import 'package:algorithm_visualizer/features/profile/profile_page.dart';
 import 'package:algorithm_visualizer/features/visualize/view/visualize_page.dart';
 import 'package:collection/collection.dart';
