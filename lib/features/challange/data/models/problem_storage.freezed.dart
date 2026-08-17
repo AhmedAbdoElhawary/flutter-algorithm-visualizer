@@ -254,6 +254,7 @@ mixin _$ProblemSolutionStatusDTO {
   List<TestCaseResult>? get allTestCaseResults =>
       throw _privateConstructorUsedError;
   bool? get isCorrect => throw _privateConstructorUsedError;
+  DateTime? get submittedAt => throw _privateConstructorUsedError;
 
   /// Serializes this ProblemSolutionStatusDTO to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -274,7 +275,8 @@ abstract class $ProblemSolutionStatusDTOCopyWith<$Res> {
   $Res call(
       {String? code,
       List<TestCaseResult>? allTestCaseResults,
-      bool? isCorrect});
+      bool? isCorrect,
+      DateTime? submittedAt});
 }
 
 /// @nodoc
@@ -296,6 +298,7 @@ class _$ProblemSolutionStatusDTOCopyWithImpl<$Res,
     Object? code = freezed,
     Object? allTestCaseResults = freezed,
     Object? isCorrect = freezed,
+    Object? submittedAt = freezed,
   }) {
     return _then(_value.copyWith(
       code: freezed == code
@@ -310,6 +313,10 @@ class _$ProblemSolutionStatusDTOCopyWithImpl<$Res,
           ? _value.isCorrect
           : isCorrect // ignore: cast_nullable_to_non_nullable
               as bool?,
+      submittedAt: freezed == submittedAt
+          ? _value.submittedAt
+          : submittedAt // ignore: cast_nullable_to_non_nullable
+              as DateTime?,
     ) as $Val);
   }
 }
@@ -326,7 +333,8 @@ abstract class _$$ProblemSolutionStatusDTOImplCopyWith<$Res>
   $Res call(
       {String? code,
       List<TestCaseResult>? allTestCaseResults,
-      bool? isCorrect});
+      bool? isCorrect,
+      DateTime? submittedAt});
 }
 
 /// @nodoc
@@ -347,6 +355,7 @@ class __$$ProblemSolutionStatusDTOImplCopyWithImpl<$Res>
     Object? code = freezed,
     Object? allTestCaseResults = freezed,
     Object? isCorrect = freezed,
+    Object? submittedAt = freezed,
   }) {
     return _then(_$ProblemSolutionStatusDTOImpl(
       code: freezed == code
@@ -361,6 +370,10 @@ class __$$ProblemSolutionStatusDTOImplCopyWithImpl<$Res>
           ? _value.isCorrect
           : isCorrect // ignore: cast_nullable_to_non_nullable
               as bool?,
+      submittedAt: freezed == submittedAt
+          ? _value.submittedAt
+          : submittedAt // ignore: cast_nullable_to_non_nullable
+              as DateTime?,
     ));
   }
 }
@@ -371,7 +384,8 @@ class _$ProblemSolutionStatusDTOImpl implements _ProblemSolutionStatusDTO {
   const _$ProblemSolutionStatusDTOImpl(
       {required this.code,
       required final List<TestCaseResult>? allTestCaseResults,
-      required this.isCorrect})
+      required this.isCorrect,
+      this.submittedAt})
       : _allTestCaseResults = allTestCaseResults;
 
   factory _$ProblemSolutionStatusDTOImpl.fromJson(Map<String, dynamic> json) =>
@@ -392,10 +406,12 @@ class _$ProblemSolutionStatusDTOImpl implements _ProblemSolutionStatusDTO {
 
   @override
   final bool? isCorrect;
+  @override
+  final DateTime? submittedAt;
 
   @override
   String toString() {
-    return 'ProblemSolutionStatusDTO(code: $code, allTestCaseResults: $allTestCaseResults, isCorrect: $isCorrect)';
+    return 'ProblemSolutionStatusDTO(code: $code, allTestCaseResults: $allTestCaseResults, isCorrect: $isCorrect, submittedAt: $submittedAt)';
   }
 
   @override
@@ -407,13 +423,19 @@ class _$ProblemSolutionStatusDTOImpl implements _ProblemSolutionStatusDTO {
             const DeepCollectionEquality()
                 .equals(other._allTestCaseResults, _allTestCaseResults) &&
             (identical(other.isCorrect, isCorrect) ||
-                other.isCorrect == isCorrect));
+                other.isCorrect == isCorrect) &&
+            (identical(other.submittedAt, submittedAt) ||
+                other.submittedAt == submittedAt));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(runtimeType, code,
-      const DeepCollectionEquality().hash(_allTestCaseResults), isCorrect);
+  int get hashCode => Object.hash(
+      runtimeType,
+      code,
+      const DeepCollectionEquality().hash(_allTestCaseResults),
+      isCorrect,
+      submittedAt);
 
   /// Create a copy of ProblemSolutionStatusDTO
   /// with the given fields replaced by the non-null parameter values.
@@ -436,7 +458,8 @@ abstract class _ProblemSolutionStatusDTO implements ProblemSolutionStatusDTO {
   const factory _ProblemSolutionStatusDTO(
       {required final String? code,
       required final List<TestCaseResult>? allTestCaseResults,
-      required final bool? isCorrect}) = _$ProblemSolutionStatusDTOImpl;
+      required final bool? isCorrect,
+      final DateTime? submittedAt}) = _$ProblemSolutionStatusDTOImpl;
 
   factory _ProblemSolutionStatusDTO.fromJson(Map<String, dynamic> json) =
       _$ProblemSolutionStatusDTOImpl.fromJson;
@@ -447,6 +470,8 @@ abstract class _ProblemSolutionStatusDTO implements ProblemSolutionStatusDTO {
   List<TestCaseResult>? get allTestCaseResults;
   @override
   bool? get isCorrect;
+  @override
+  DateTime? get submittedAt;
 
   /// Create a copy of ProblemSolutionStatusDTO
   /// with the given fields replaced by the non-null parameter values.
