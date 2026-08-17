@@ -5,6 +5,7 @@ import 'package:algorithm_visualizer/features/base/view_model/base_view_model.da
 import 'package:algorithm_visualizer/features/challange/presentation/view/challenge_page.dart';
 import 'package:algorithm_visualizer/features/challange/presentation/view/code_editor_page.dart';
 import 'package:algorithm_visualizer/features/home/view/home_page.dart';
+import 'package:algorithm_visualizer/features/profile/presentation/pages/bookmarked_problems_page.dart';
 import 'package:algorithm_visualizer/features/profile/presentation/pages/recent_submissions_page.dart';
 import 'package:algorithm_visualizer/features/profile/profile_page.dart';
 import 'package:algorithm_visualizer/features/visualize/view/visualize_page.dart';
@@ -48,6 +49,10 @@ class Routes {
   static const RouteConfig recentSubmissions = RouteConfig(
     name: 'recentSubmissions',
     path: 'recent-submissions',
+  );
+  static const RouteConfig bookmarkedProblems = RouteConfig(
+    name: 'bookmarkedProblems',
+    path: 'bookmarked',
   );
 }
 
@@ -143,6 +148,11 @@ class AppRoutes {
                     path: Routes.recentSubmissions.path,
                     name: Routes.recentSubmissions.name,
                     builder: (context, state) => const RecentSubmissionsPage(),
+                  ),
+                  GoRoute(
+                    path: Routes.bookmarkedProblems.path,
+                    name: Routes.bookmarkedProblems.name,
+                    builder: (context, state) => const BookmarkedProblemsPage(),
                   ),
                 ],
               ),
