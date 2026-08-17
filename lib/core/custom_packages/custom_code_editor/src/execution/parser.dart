@@ -494,6 +494,21 @@ class Parser {
       } else if (_checkSymbol('!')) {
         // Null assertion `x!` — a no-op for our dynamic interpreter.
         _advance();
+      } else if (_checkSymbol('?.')) {
+        // Null-shorting member access `a?.b` / call `a?.b()`. The `?.`
+        // token is lexed as a unit so the ternary `?` can't steal it.
+        final Tok opTok = _advance();
+        final Tok nameTok = _consumeIdentifier('Expected a member name after "?."');
+        if (_checkSymbol('(')) {
+          final List<Expr> args = _parseArgs();
+          expr = CallExpr(
+            NullAwareAccess(expr, nameTok.text, opTok.line),
+            args,
+            opTok.line,
+          );
+        } else {
+          expr = NullAwareAccess(expr, nameTok.text, opTok.line);
+        }
       } else if (_checkSymbol('.')) {
         final Tok opTok = _advance();
         final Tok nameTok = _consumeIdentifier('Expected a member name after "."');
