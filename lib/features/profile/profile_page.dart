@@ -6,9 +6,9 @@ import 'package:algorithm_visualizer/core/widgets/adaptive/text/adaptive_text.da
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/custom_icon.dart';
 import 'package:algorithm_visualizer/features/profile/data/profile_provider.dart';
 import 'package:algorithm_visualizer/features/profile/presentation/widgets/profile_category_chart.dart';
-import 'package:algorithm_visualizer/features/profile/presentation/widgets/profile_difficulty_breakdown.dart';
 import 'package:algorithm_visualizer/features/profile/presentation/widgets/profile_heatmap.dart';
-import 'package:algorithm_visualizer/features/profile/presentation/widgets/profile_recent_submissions.dart';
+import 'package:algorithm_visualizer/features/profile/presentation/widgets/profile_practice_history.dart';
+import 'package:algorithm_visualizer/features/profile/presentation/widgets/profile_problems_solved.dart';
 import 'package:algorithm_visualizer/features/profile/presentation/widgets/profile_stats_grid.dart';
 import 'package:algorithm_visualizer/features/profile/presentation/widgets/profile_weekly_chart.dart';
 import 'package:flutter/material.dart';
