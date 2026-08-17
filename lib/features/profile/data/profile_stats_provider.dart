@@ -19,6 +19,24 @@ class RecentSubmission {
   final DateTime submittedAt;
 }
 
+class PracticeHistoryEntry {
+  const PracticeHistoryEntry({
+    required this.problemId,
+    required this.problemName,
+    required this.difficulty,
+    required this.lastResult,
+    required this.lastSubmittedAt,
+    required this.attempts,
+  });
+
+  final int problemId;
+  final String problemName;
+  final ProblemDifficulty difficulty;
+  final bool lastResult;
+  final DateTime lastSubmittedAt;
+  final List<RecentSubmission> attempts;
+}
+
 class ProfileStats {
   const ProfileStats({
     required this.totalProblems,
@@ -39,6 +57,7 @@ class ProfileStats {
     required this.heatmapData,
     required this.categorySolved,
     required this.recentSubmissions,
+    required this.practiceHistory,
   });
 
   final int totalProblems;
@@ -59,6 +78,7 @@ class ProfileStats {
   final List<int> heatmapData;
   final Map<String, int> categorySolved;
   final List<RecentSubmission> recentSubmissions;
+  final List<PracticeHistoryEntry> practiceHistory;
 
   double get easyRatio => easyTotal == 0 ? 0 : easySolved / easyTotal;
   double get mediumRatio => mediumTotal == 0 ? 0 : mediumSolved / mediumTotal;
@@ -76,7 +96,7 @@ final profileStatsProvider = Provider<ProfileStats>((ref) {
       bookmarkedCount: 0, currentStreak: 0, bestStreak: 0,
       weeklyActivity: [0, 0, 0, 0, 0, 0, 0],
       heatmapData: List<int>.filled(84, 0),
-      categorySolved: {}, recentSubmissions: [],
+      categorySolved: {}, recentSubmissions: [], practiceHistory: [],
     ),
     error: (_, __) => ProfileStats(
       totalProblems: 0, solvedCount: 0, easySolved: 0, mediumSolved: 0,
@@ -85,7 +105,7 @@ final profileStatsProvider = Provider<ProfileStats>((ref) {
       bookmarkedCount: 0, currentStreak: 0, bestStreak: 0,
       weeklyActivity: [0, 0, 0, 0, 0, 0, 0],
       heatmapData: List<int>.filled(84, 0),
-      categorySolved: {}, recentSubmissions: [],
+      categorySolved: {}, recentSubmissions: [], practiceHistory: [],
     ),
   );
 });
@@ -145,6 +165,8 @@ ProfileStats _computeStats(List<CodingProblem> problems) {
   submissions.sort((a, b) => b.submittedAt.compareTo(a.submittedAt));
   final recent = submissions.take(8).toList();
 
+  final practiceHistory = _computePracticeHistory(submissions);
+
   final accuracyRate = totalAttempts == 0 ? 0.0 : correctAttempts / totalAttempts;
 
   final (currentStreak, bestStreak) = _computeStreaks(submissions);
@@ -170,6 +192,7 @@ ProfileStats _computeStats(List<CodingProblem> problems) {
     heatmapData: heatmapData,
     categorySolved: categorySolved,
     recentSubmissions: recent,
+    practiceHistory: practiceHistory,
   );
 }
 
@@ -218,6 +241,7 @@ List<int> _computeWeekly(List<RecentSubmission> submissions) {
 
   final counts = List<int>.filled(7, 0);
   for (final s in submissions) {
+    if (!s.isCorrect) continue;
     final d = DateTime(s.submittedAt.year, s.submittedAt.month, s.submittedAt.day);
     if (!d.isBefore(start)) {
       final idx = s.submittedAt.weekday - 1;
@@ -254,4 +278,29 @@ List<int> _computeHeatmap(List<RecentSubmission> submissions) {
     }
   }
   return data;
+}
+
+List<PracticeHistoryEntry> _computePracticeHistory(List<RecentSubmission> submissions) {
+  final grouped = <int, List<RecentSubmission>>{};
+  for (final s in submissions) {
+    grouped.putIfAbsent(s.problemId, () => []).add(s);
+  }
+
+  final entries = <PracticeHistoryEntry>[];
+  for (final entry in grouped.entries) {
+    final attempts = entry.value;
+    attempts.sort((a, b) => b.submittedAt.compareTo(a.submittedAt));
+    final last = attempts.first;
+    entries.add(PracticeHistoryEntry(
+      problemId: last.problemId,
+      problemName: last.problemName,
+      difficulty: last.difficulty,
+      lastResult: last.isCorrect,
+      lastSubmittedAt: last.submittedAt,
+      attempts: attempts,
+    ));
+  }
+
+  entries.sort((a, b) => b.lastSubmittedAt.compareTo(a.lastSubmittedAt));
+  return entries;
 }
