@@ -293,7 +293,9 @@ class ProblemRunner {
 
   /// The `default_code` in the JSON wraps the function in `class Solution`
   /// (LeetCode style), sometimes preceded by a `/** ... */` doc comment.
-  /// Peel that wrapper off, keeping only its body.
+  /// Peel that wrapper off, keeping only its body (which becomes a set of
+  /// top-level functions the interpreter can run — it can't parse class
+  /// methods).
   ///
   /// Returns the body and how many source lines it started after (so error
   /// lines reported against the body can be rebased onto the original code).
@@ -313,19 +315,38 @@ class ProblemRunner {
     if (match == null) return _trimmed(commentFree);
 
     final open = commentFree.indexOf('{', match.start);
+    final close = _matchingBrace(commentFree, open);
+    if (close == -1) return _trimmed(commentFree);
+    return _trimmed(commentFree, from: open + 1, to: close);
+  }
+
+  /// Returns the index of the `}` that closes the `{` at [open], skipping
+  /// braces that appear inside string literals (e.g. `char == '{'`).
+  /// Returns -1 when the braces don't balance.
+  int _matchingBrace(String source, int open) {
     var depth = 0;
-    for (var i = open; i < commentFree.length; i++) {
-      final c = commentFree[i];
-      if (c == '{') {
-        depth++;
-      } else if (c == '}') {
-        depth--;
-        if (depth == 0) {
-          return _trimmed(commentFree, from: open + 1, to: i);
+    var i = open;
+    while (i < source.length) {
+      final ch = source[i];
+      if (ch == '"' || ch == "'") {
+        final quote = ch;
+        i++;
+        while (i < source.length && source[i] != quote) {
+          if (source[i] == '\\' && i + 1 < source.length) i++;
+          i++;
         }
+        i++;
+        continue;
       }
+      if (ch == '{') {
+        depth++;
+      } else if (ch == '}') {
+        depth--;
+        if (depth == 0) return i;
+      }
+      i++;
     }
-    return _trimmed(commentFree);
+    return -1;
   }
 
   /// Trims [source] (optionally the slice `[from, to)`) and returns the trimmed
