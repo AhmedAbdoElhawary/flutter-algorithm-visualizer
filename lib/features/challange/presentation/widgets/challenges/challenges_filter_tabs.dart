@@ -30,7 +30,7 @@ class ChallengesFilterTabs extends ConsumerWidget {
               onTap: () => ref.read(challengesProvider.notifier).setFilter(f),
               child: Container(
                 margin: REdgeInsetsDirectional.only(end: 8),
-                padding: REdgeInsets.symmetric(horizontal: 14, vertical: 7),
+                padding: REdgeInsets.symmetric(horizontal: 10, vertical: 7),
                 decoration: BoxDecoration(
                   color: active
                       ? context.getColor(color).withValues(alpha: 0.10)
@@ -45,9 +45,9 @@ class ChallengesFilterTabs extends ConsumerWidget {
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    SemiBoldText(f.difficultyString, color: active ? color : ThemeEnum.hover, fontSize: 13),
+                    BoldText(f.difficultyString, color: active ? color : ThemeEnum.hover, fontSize: 13),
                     const SizedBox(width: 5),
-                    RegularText(count, color: active ? color : ThemeEnum.hoverSecond, fontSize: 11),
+                    SemiBoldText(count, color: active ? color : ThemeEnum.hoverSecond, fontSize: 11),
                   ],
                 ),
               ),
