@@ -98,7 +98,9 @@ extension CodingProblemX on CodingProblem {
     return code;
   }
 
-  String get getCode => solutionsStatus?.lastOrNull?.code ?? getDefaultCode;
+  /// The most recent saved solution (new attempts are prepended in
+  /// `solutionsStatus`), falling back to the starter code.
+  String get getCode => solutionsStatus?.firstOrNull?.code ?? getDefaultCode;
 
   List<CustomObject> get getCustomObjects => customObjects?['dart'] ?? [];
 
