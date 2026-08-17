@@ -2,6 +2,7 @@ import 'package:algorithm_visualizer/core/resources/font_manager.dart';
 import 'package:algorithm_visualizer/core/resources/strings_manager.dart';
 import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
 import 'package:algorithm_visualizer/core/widgets/adaptive/text/adaptive_text.dart';
+import 'package:algorithm_visualizer/core/widgets/custom_widgets/custom_icon.dart';
 import 'package:algorithm_visualizer/features/challange/data/models/example.dart';
 import 'package:algorithm_visualizer/features/challange/domain/entities/coding_problem.dart';
 import 'package:algorithm_visualizer/features/challange/domain/enums/problem.dart';
@@ -63,6 +64,43 @@ class CodeProblemDescriptionCard extends StatelessWidget {
                   ),
                 ),
               if (tags.isNotEmpty) _Section(title: StringsManager.tags, child: ChallengeTags(tags: tags)),
+              if (problem.getHints.isNotEmpty)
+                _Section(
+                  title: StringsManager.hints,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      for (var i = 0; i < problem.getHints.length; i++)
+                        Padding(
+                          padding: REdgeInsets.only(bottom: 4),
+                          child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                            _BodyText('${i + 1}. '),
+                            Expanded(child: _BodyText(problem.getHints[i])),
+                          ]),
+                        ),
+                    ],
+                  ),
+                ),
+              if (problem.getSimilarQuestions.isNotEmpty)
+                _Section(
+                  title: StringsManager.similarQuestions,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      for (final sq in problem.getSimilarQuestions)
+                        Padding(
+                          padding: REdgeInsets.only(bottom: 4),
+                          child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                            CustomIcon(Icons.arrow_outward_rounded, size: 14, color: ThemeEnum.hover),
+                            RSizedBox(width: 6),
+                            Expanded(child: _BodyText(sq.name ?? '')),
+                            if ((sq.reason ?? '').isNotEmpty)
+                              Expanded(flex: 2, child: _BodyText(' — ${sq.reason}')),
+                          ]),
+                        ),
+                    ],
+                  ),
+                ),
             ],
           ),
         ),
