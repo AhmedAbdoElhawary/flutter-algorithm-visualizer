@@ -1,4 +1,6 @@
+import 'package:algorithm_visualizer/core/resources/color_manager.dart';
 import 'package:algorithm_visualizer/core/resources/strings_manager.dart';
+import 'package:algorithm_visualizer/core/resources/styles_manager.dart';
 import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
 import 'package:algorithm_visualizer/core/widgets/adaptive/padding/adaptive_padding.dart';
 import 'package:algorithm_visualizer/core/widgets/adaptive/text/adaptive_text.dart';
@@ -59,12 +61,14 @@ class ProfileCategoryChart extends ConsumerWidget {
                 gridData: const FlGridData(show: false),
                 borderData: FlBorderData(show: false),
                 barTouchData: BarTouchData(
-                  touchTooltipData: BarTouchTooltipData(
+                    touchTooltipData: BarTouchTooltipData(
+                        getTooltipColor: (group) => context.getColor(ThemeEnum.outputHeader),
                     getTooltipItem: (group, gIdx, rod, rIdx) {
                       final name = top[group.x].key;
                       return BarTooltipItem(
                         '$name (${rod.toY.toInt()})',
-                        TextStyle(color: Colors.white, fontSize: 11.sp, fontWeight: FontWeight.w600),
+                        GetSemiBoldStyle(color:context.isThemeDark? ColorManager.textPrimaryDk: ColorManager.textPrimaryLt, fontSize: 11),
+
                       );
                     },
                   ),
