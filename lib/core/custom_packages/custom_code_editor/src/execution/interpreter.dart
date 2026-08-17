@@ -172,7 +172,11 @@ class Interpreter {
         fields[cp.fieldName] = _eval(cp.defaultExpr!, _globals);
       }
     }
-    return ObjectInstance(cls.name, fields);
+    final inst = ObjectInstance(cls.name, fields);
+    for (final m in cls.methods) {
+      inst.methods[m.name] = ObjectInstanceMethod(m, inst);
+    }
+    return inst;
   }
 
   // ---------------------------------------------------------------------
@@ -512,8 +516,9 @@ class Interpreter {
     if (target is ObjectInstance) {
       final ObjectInstance inst = target;
       if (inst.fields.containsKey(name)) return inst.fields[name];
+      if (inst.methods.containsKey(name)) return inst.methods[name];
       throw InterpreterError(
-        '"${inst.type}" has no field "$name"',
+        '"${inst.type}" has no field or method "$name"',
         line,
       );
     }
@@ -566,6 +571,9 @@ class Interpreter {
       final PropertyAccess prop = expr.callee as PropertyAccess;
       final dynamic target = _eval(prop.target, env);
       final List<dynamic> args = expr.args.map((Expr a) => _eval(a, env)).toList();
+      if (target is ObjectInstanceMethod) {
+        return _callInstanceMethod(target, args, expr.line);
+      }
       return _callBuiltinMethod(target, prop.name, args, expr.line);
     }
 
@@ -591,6 +599,29 @@ class Interpreter {
     }
 
     throw InterpreterError('Expression is not callable', expr.line);
+  }
+
+  /// Calls a user-defined instance method (e.g. `obj.twoSum(...)`) with
+  /// `this` bound to the owning [ObjectInstanceMethod.instance].
+  dynamic _callInstanceMethod(ObjectInstanceMethod method, List<dynamic> args, int line) {
+    final FunctionDecl fn = method.decl as FunctionDecl;
+    if (args.length != fn.params.length) {
+      throw InterpreterError(
+        "'${fn.name}' expects ${fn.params.length} argument(s) but got ${args.length}",
+        line,
+      );
+    }
+    final Environment env = Environment(_globals);
+    env.define('this', method.instance);
+    for (int i = 0; i < fn.params.length; i++) {
+      env.define(fn.params[i].name, args[i]);
+    }
+    try {
+      _execBlock(fn.body, env);
+    } on _ReturnSignal catch (r) {
+      return r.value;
+    }
+    return null;
   }
 
   dynamic _callBuiltinMethod(
