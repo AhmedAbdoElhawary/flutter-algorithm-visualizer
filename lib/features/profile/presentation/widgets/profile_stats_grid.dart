@@ -8,6 +8,7 @@ import 'package:algorithm_visualizer/features/profile/data/profile_stats_provide
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 
 class ProfileStatsGrid extends ConsumerWidget {
   const ProfileStatsGrid({super.key});
@@ -25,7 +26,7 @@ class ProfileStatsGrid extends ConsumerWidget {
       (
         icon: Icons.check_circle_outline_rounded,
         value: '${stats.solvedCount}',
-        label: "${StringsManager.problems} ${StringsManager.solved}",
+        label: "${StringsManager.problems}\n${StringsManager.solved}",
         colorKey: ThemeEnum.accentGreen,
         sub: solvedSub
       ),
@@ -58,8 +59,13 @@ class ProfileStatsGrid extends ConsumerWidget {
         runSpacing: 10.r,
         spacing: 10.r,
         children: statsList
+            .asMap()
+            .entries
             .map(
-              (s) => Container(
+              (entry) {
+                final i = entry.key;
+                final s = entry.value;
+                final card = Container(
                 padding: REdgeInsets.all(14),
                 width: (ScreenUtil().screenWidth / 2) - 21.r,
                 decoration: BoxDecoration(
@@ -82,7 +88,15 @@ class ProfileStatsGrid extends ConsumerWidget {
                     MediumText(s.label, color: ThemeEnum.hover, fontSize: 11),
                   ],
                 ),
-              ),
+              );
+                if (i == 3) {
+                  return GestureDetector(
+                    onTap: () => context.push('/profile/bookmarked'),
+                    child: card,
+                  );
+                }
+                return card;
+              },
             )
             .toList(),
       ),
