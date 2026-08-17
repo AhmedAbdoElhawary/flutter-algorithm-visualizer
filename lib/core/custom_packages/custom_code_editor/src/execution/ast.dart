@@ -32,16 +32,18 @@ class FunctionDecl extends Node {
   final Block body;
 }
 
-/// A `class` declaration. Only the subset needed for LeetCode-style
-/// node types is supported: instance fields, an optional `this.field`
-/// constructor with optional positional params and default values.
+/// A `class` declaration. Supports instance fields, an optional `this.field`
+/// constructor, and methods (e.g. `int twoSum(List<int> nums, int target) { ... }`).
 class ClassDecl extends Node {
-  ClassDecl(this.name, this.fields, this.constructorParams, int line) : super(line);
+  ClassDecl(this.name, this.fields, this.constructorParams, this.methods, int line) : super(line);
   final String name;
   final List<FieldDecl> fields;
 
   /// Constructor parameters in declaration order (`this.val = 0`, ...).
   final List<ConstructorParam> constructorParams;
+
+  /// Instance methods defined in the class body.
+  final List<FunctionDecl> methods;
 }
 
 class FieldDecl extends Node {
