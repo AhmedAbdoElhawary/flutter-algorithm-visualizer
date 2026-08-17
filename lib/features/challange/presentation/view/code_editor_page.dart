@@ -28,30 +28,10 @@ class _VisualizerScreenState extends ConsumerState<CodeEditorPage> {
   final GlobalKey _resultKey = GlobalKey();
 
   @override
-  void initState() {
-    super.initState();
-    _listenToRunResult();
-  }
-
-  void _listenToRunResult() {
-    final provider = codeEditorControllerProvider(widget.problemId);
-      ref.listen(provider.select((s) => (s.isRunning, s.grade)), (prev, next) {
-        final wasRunning = prev?.$1 ?? false;
-        final isRunning = next.$1;
-        final grade = next.$2;
-        if (wasRunning && !isRunning && grade != null) {
-          _scrollToResult();
-        }
-      });
-
-  }
-
-  @override
   void didUpdateWidget(covariant CodeEditorPage oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (oldWidget.problemId != widget.problemId) {
       _scrollToTop();
-      _listenToRunResult();
     }
   }
 
@@ -89,6 +69,17 @@ class _VisualizerScreenState extends ConsumerState<CodeEditorPage> {
 
   @override
   Widget build(BuildContext context) {
+    final provider = codeEditorControllerProvider(widget.problemId);
+
+    ref.listen(provider.select((s) => (s.isRunning, s.grade)), (prev, next) {
+      final wasRunning = prev?.$1 ?? false;
+      final isRunning = next.$1;
+      final grade = next.$2;
+      if (wasRunning && !isRunning && grade != null) {
+        _scrollToResult();
+      }
+    });
+
     final codingProblem = ref.watch(getProblemProvider(widget.problemId));
 
     return Scaffold(
@@ -102,7 +93,6 @@ class _VisualizerScreenState extends ConsumerState<CodeEditorPage> {
                 subTitle: StringsManager.tryToPracticeAChallenge,
               );
             }
-            final provider = codeEditorControllerProvider(widget.problemId);
 
             return CustomScrollView(
               controller: _scrollController,
