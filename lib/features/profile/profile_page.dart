@@ -37,7 +37,7 @@ class ProfileScreen extends ConsumerWidget {
               const ProfileWeeklyChart(),
               const ProfileHeatmap(),
               const ProfileCategoryChart(),
-              const ProfileRecentSubmissions(),
+              const ProfilePracticeHistory(),
             ],
           ),
         ),
