@@ -105,6 +105,7 @@ class _PracticeHistoryRowState extends State<PracticeHistoryRow> with SingleTick
   Widget build(BuildContext context) {
     final entry = widget.entry;
     return ProblemRow(
+      isFullPage: widget.isFullPage,
       problemName: entry.problemName,
       difficulty: entry.difficulty,
       isCorrect: entry.lastResult,
