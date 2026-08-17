@@ -12,6 +12,16 @@ class CodeEditorController extends StateNotifier<CodeEditorState> {
 
   final CodingProblem codingProblem;
 
+  /// The code the editor was seeded with when this controller was created.
+  ///
+  /// Immutable for the lifetime of the controller: the text the user is
+  /// editing lives in the attached `CodeController`, so the editor page must
+  /// not be re-seeded from `codingProblem.getCode` on every rebuild (e.g. when
+  /// a save publishes an updated problem) — doing so resets the focused
+  /// editor's value mid-edit and can tear down its `EditableText` while the
+  /// cursor is blinking.
+  late final String initialCode = codingProblem.getCode;
+
   CodeController? _codeController;
   Timer? _highlightTimer;
 
