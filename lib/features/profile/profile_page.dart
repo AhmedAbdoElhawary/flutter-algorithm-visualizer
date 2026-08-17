@@ -1,3 +1,4 @@
+import 'package:algorithm_visualizer/core/resources/font_manager.dart';
 import 'package:algorithm_visualizer/core/resources/strings_manager.dart';
 import 'package:algorithm_visualizer/core/resources/styles_manager.dart';
 import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
@@ -157,8 +158,8 @@ class _EditableNameState extends State<_EditableName> {
         controller: _controller,
         autofocus: true,
         style: GetBoldStyle(
-          color: context.getColor(ThemeEnum.textSecond),
-          fontSize: 20,
+          color: context.getColor(ThemeEnum.textPrimary),
+          fontSize: 22,
           letterSpacing: -0.4,
         ),
         decoration: InputDecoration(
@@ -177,6 +178,12 @@ class _EditableNameState extends State<_EditableName> {
             widget.ref.read(profileNameProvider.notifier).updateName(trimmed);
           }
           setState(() => _editing = false);
+        },onTapOutside: (event) {
+        final trimmed = _controller.text.trim();
+        if (trimmed.isNotEmpty) {
+          widget.ref.read(profileNameProvider.notifier).updateName(trimmed);
+        }
+        setState(() => _editing = false);
         },
       );
     }
@@ -184,7 +191,7 @@ class _EditableNameState extends State<_EditableName> {
     return GestureDetector(
       onTap: () => setState(() => _editing = true),
       child: Row(children: [
-        BoldText(widget.name, color: ThemeEnum.textSecond, fontSize: 20),
+        BoldText(widget.name, color: ThemeEnum.textPrimary, fontSize: 22,fontWeight: FontWeightManager.bold800),
         RSizedBox(width: 6),
         CustomIcon(Icons.edit_rounded, size: 14, color: ThemeEnum.hoverSecond),
       ]),
