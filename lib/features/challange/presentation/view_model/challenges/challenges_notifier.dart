@@ -6,14 +6,17 @@ import 'package:algorithm_visualizer/features/challange/domain/usecases/update_p
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'challenges_state.dart';
+import 'problems_notifier.dart';
 
 class ChallengesNotifier extends StateNotifier<ChallengesState> {
   static const filters = ProblemDifficulty.values;
 
-  ChallengesNotifier(this._problemRepository, this._updateProblemSolutionUseCase)
+  ChallengesNotifier(this._problemRepository, this._updateProblemSolutionUseCase, this._ref)
       : super(ChallengesState.initial());
   final ProblemRepository _problemRepository;
   final UpdateProblemSolutionUseCase _updateProblemSolutionUseCase;
+  final Ref _ref;
+
   void setFilter(ProblemDifficulty filter) => state = state.copyWith(filter: filter);
 
   void setSearch(String query) => state = state.copyWith(search: query);
@@ -28,15 +31,15 @@ class ChallengesNotifier extends StateNotifier<ChallengesState> {
     }
   }
 
-  Future<List<CodingProblem>> getAllProblems() async {
-    return await _problemRepository.getAllProblems();
-  }
-
   Future<void> updateProblem(CodingProblem problem, CodeGradeResult result) async {
-    return await _updateProblemSolutionUseCase.call(problem, result);
+    final updatedProblem = await _updateProblemSolutionUseCase.call(problem, result);
+    // Publish the returned problem into the shared cache (replacing just that
+    // element) so the challenges page reflects the change without a refetch.
+    _ref.read(problemsProvider.notifier).updateProblem(updatedProblem);
   }
 
   Future<void> deleteProblem(int problemId) async {
-    return await _problemRepository.deleteProblem(problemId);
+    await _problemRepository.deleteProblem(problemId);
+    _ref.read(problemsProvider.notifier).deleteProblem(problemId);
   }
 }
