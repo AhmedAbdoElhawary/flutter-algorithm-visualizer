@@ -18,6 +18,8 @@ enum ThemeEnum {
   accentRed,
   accentRedRc,
   accentBlue,
+  accentBlueBg,
+  borderAccentBlue,
   textSecond,
   textPrimary,
   hover,
@@ -27,7 +29,8 @@ enum ThemeEnum {
   /// static colors
   solidWhite,
   purple,
-  pink,lightPink,
+  pink,
+  lightPink,
   howItWorksColor,
   columnColor,
   backgroundForSortingColor,
@@ -69,15 +72,21 @@ extension ThemeExtension on BuildContext {
       ThemeEnum.accentBg: isThemeDark
           ? ColorManager.accentDk.withValues(alpha: 0.12)
           : ColorManager.accentLt.withValues(alpha: 0.08),
-      ThemeEnum.accentGreenRc:  ColorManager.accentGreenBgDk,
+      ThemeEnum.accentGreenRc: ColorManager.accentGreenBgDk,
       ThemeEnum.accentGreen: isThemeDark ? ColorManager.accentGreenDk : ColorManager.accentGreenLt,
       ThemeEnum.accentGreenBg: isThemeDark
           ? ColorManager.accentGreenDk.withValues(alpha: 0.12)
           : ColorManager.accentGreenLt.withValues(alpha: 0.08),
       ThemeEnum.accentYellow: isThemeDark ? ColorManager.accentYellowDk : ColorManager.accentYellowLt,
-      ThemeEnum.accentYellowRc:  ColorManager.accentYellowBgDk ,
+      ThemeEnum.accentYellowRc: ColorManager.accentYellowBgDk,
       ThemeEnum.accentRed: isThemeDark ? ColorManager.accentRedDk : ColorManager.accentRedLt,
-      ThemeEnum.accentRedRc:  ColorManager.accentRedBgDk ,
+      ThemeEnum.accentRedRc: ColorManager.accentRedBgDk,
+      ThemeEnum.accentBlueBg: isThemeDark
+          ? ColorManager.accentBlueDk.withValues(alpha: 0.1)
+          : ColorManager.accentBlueLt.withValues(alpha: 0.1),
+      ThemeEnum.borderAccentBlue: isThemeDark
+          ? ColorManager.accentBlueDk.withValues(alpha: 0.3)
+          : ColorManager.accentBlueLt.withValues(alpha: 0.3),
       ThemeEnum.accentBlue: isThemeDark ? ColorManager.accentBlueDk : ColorManager.accentBlueLt,
       ThemeEnum.textSecond: isThemeDark ? ColorManager.textSecondDk : ColorManager.textSecondLt,
       ThemeEnum.textPrimary: isThemeDark ? ColorManager.textPrimaryDk : ColorManager.textPrimaryLt,
@@ -87,9 +96,9 @@ extension ThemeExtension on BuildContext {
 
       ///-------------------->
       ThemeEnum.solidWhite: ColorManager.white,
-      ThemeEnum.purple:  ColorManager.targetSearchingPoint,
-      ThemeEnum.pink:  ColorManager.pinkColor,
-      ThemeEnum.lightPink:  ColorManager.lightPinkColor,
+      ThemeEnum.purple: ColorManager.targetSearchingPoint,
+      ThemeEnum.pink: ColorManager.pinkColor,
+      ThemeEnum.lightPink: ColorManager.lightPinkColor,
       ThemeEnum.howItWorksColor: ColorManager.howItWorksColor,
       ThemeEnum.white2DarkColor: ColorManager.white2DarkColor,
       ThemeEnum.columnColor: ColorManager.columnSortColor,

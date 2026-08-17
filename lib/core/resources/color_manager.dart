@@ -32,7 +32,7 @@ abstract final class ColorManager {
   static const accentYellowBgDk = Color.fromRGBO(245, 158, 11, 1);
   static const accentRedDk = Color.fromRGBO(248, 113, 113, 1);
   static const accentRedBgDk = Color.fromRGBO(239, 68, 68, 1);
-  static const accentBlueDk = Color.fromRGBO(96, 165, 250, 1);
+  static const accentBlueDk = Color.fromRGBO(97, 165, 250, 1);
   static const textPrimaryDk = Color.fromRGBO(226, 232, 240, 1);
   static const textSecondDk = Color.fromRGBO(148, 163, 184, 1);
   static const hoverDk = Color.fromRGBO(74, 92, 126, 1);
