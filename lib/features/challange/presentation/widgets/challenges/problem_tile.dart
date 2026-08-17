@@ -112,7 +112,7 @@ class _MainRow extends StatelessWidget {
   }
 }
 
-class _DetailsPanel extends StatelessWidget {
+class _DetailsPanel extends ConsumerWidget {
   final CodingProblem problem;
   final ThemeEnum statusColor;
   final VoidCallback onSolve;
@@ -120,7 +120,9 @@ class _DetailsPanel extends StatelessWidget {
   const _DetailsPanel({required this.problem, required this.statusColor, required this.onSolve});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final isBookmarked = problem.getIsBookmarked;
+
     return Container(
       width: double.infinity,
       decoration: BoxDecoration(border: Border(top: BorderSide(color: context.getColor(ThemeEnum.border)))),
@@ -132,15 +134,21 @@ class _DetailsPanel extends StatelessWidget {
           const RSizedBox(height: 10),
           Row(
             children: [
-              // _StatColumn(
-              //     label: 'Acceptance',
-              //     value: '${problem.acceptance}%',
-              //     color: context.getColor(ThemeEnum.textSecond)),
-              // const RSizedBox(width: 20),
               _StatColumn(
                 label: StringsManager.status,
                 value: problem.getProblemStatus.difficultyString,
                 color: statusColor,
+              ),
+              const RSizedBox(width: 16),
+              GestureDetector(
+                onTap: () {
+                  ref.read(challengesProvider.notifier).toggleBookmark(problem);
+                },
+                child: Icon(
+                  isBookmarked ? Icons.bookmark_rounded : Icons.bookmark_border_rounded,
+                  size: 18,
+                  color: context.getColor(isBookmarked ? ThemeEnum.accent : ThemeEnum.hoverSecond),
+                ),
               ),
               const Spacer(),
               GestureDetector(
