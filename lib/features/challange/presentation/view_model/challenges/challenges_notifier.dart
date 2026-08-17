@@ -33,9 +33,13 @@ class ChallengesNotifier extends StateNotifier<ChallengesState> {
 
   Future<void> updateProblem(CodingProblem problem, CodeGradeResult result) async {
     final updatedProblem = await _updateProblemSolutionUseCase.call(problem, result);
-    // Publish the returned problem into the shared cache (replacing just that
-    // element) so the challenges page reflects the change without a refetch.
     _ref.read(problemsProvider.notifier).updateProblem(updatedProblem);
+  }
+
+  Future<void> toggleBookmark(CodingProblem problem) async {
+    final updated = problem.copyWith(isBookmarked: !problem.getIsBookmarked);
+    await _problemRepository.updateProblem(updated);
+    _ref.read(problemsProvider.notifier).updateProblem(updated);
   }
 
   Future<void> deleteProblem(int problemId) async {
