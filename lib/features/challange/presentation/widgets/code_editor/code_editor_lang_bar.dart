@@ -21,7 +21,7 @@ class CodeEditorLangBar extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final isDark = context.isThemeDark;
-    final provider = codeEditorControllerProvider(problem);
+    final provider = codeEditorControllerProvider(problem.problemId ?? 0);
     final notifier = ref.read(provider.notifier);
 
     return SliverPadding(
