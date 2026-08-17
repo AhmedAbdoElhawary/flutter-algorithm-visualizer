@@ -166,4 +166,6 @@ class StringsManager {
   static const String noCancel = "Cancel";
 
   static const String solvedTopics = "Solved Topics";
+  static const String date = "Date";
+  static const String result = "Result";
 }
