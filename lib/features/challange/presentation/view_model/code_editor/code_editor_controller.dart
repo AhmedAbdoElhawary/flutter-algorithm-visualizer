@@ -44,6 +44,13 @@ class CodeEditorController extends StateNotifier<CodeEditorState> {
     });
   }
 
+  void resetCode() {
+    final controller = _codeController;
+    if (controller == null) return;
+    controller.text = codingProblem.getDefaultCode;
+    state = state.copyWith(grade: null, highlightedLine: null);
+  }
+
   CodeController get _getCodeController {
     final con = _codeController;
     if (con == null) {
