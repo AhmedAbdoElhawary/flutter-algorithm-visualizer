@@ -5,6 +5,7 @@ abstract final class ColorManager {
 
   static const Color targetSearchingPoint = Color.fromRGBO(66, 8, 99, 1.0);
   static const Color wallBlack = Color.fromRGBO(22, 68, 101, 1.0);
+
   /// -------- dark theme Only------------>
   static const Color pinkColor = Color.fromRGBO(192, 132, 252, 1);
   static const Color lightPinkColor = Color.fromRGBO(192, 132, 252, 0.1);
@@ -26,7 +27,7 @@ abstract final class ColorManager {
   static const outputHeaderDk = Color.fromRGBO(22, 32, 53, 1);
   static const accentDk = Color.fromRGBO(129, 140, 248, 1);
   static const accentGreenDk = Color.fromRGBO(52, 211, 153, 1);
-  static const accentGreenBgDk = Color.fromRGBO(17, 185, 129, 1);
+  static const accentGreenBgDk = accentGreenDk;
   static const accentYellowDk = Color.fromRGBO(251, 191, 36, 1);
   static const accentYellowBgDk = Color.fromRGBO(245, 158, 11, 1);
   static const accentRedDk = Color.fromRGBO(248, 113, 113, 1);
