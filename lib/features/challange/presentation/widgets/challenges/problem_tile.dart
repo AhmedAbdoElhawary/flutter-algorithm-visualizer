@@ -12,14 +12,20 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class ProblemTile extends ConsumerWidget {
-  final CodingProblem problem;
+  final int problemId;
   final VoidCallback onSolveTap;
 
-  const ProblemTile({super.key, required this.problem, required this.onSolveTap});
+  const ProblemTile({super.key, required this.problemId, required this.onSolveTap});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final expanded = ref.watch(challengesProvider.select((s) => s.expandedId == problem.problemId));
+    // Watch only this problem: when another problem's solution changes the
+    // value recomputes to a freezed-equal instance and Riverpod skips this
+    // tile's rebuild — only the updated problem's tile is notified.
+    final problem = ref.watch(getProblemProvider(problemId).select((async) => async.valueOrNull));
+    if (problem == null) return const SizedBox.shrink();
+
+    final expanded = ref.watch(challengesProvider.select((s) => s.expandedId == problemId));
     final diffColor = ProblemStyle.difficultyColor(problem.getDifficulty);
     final (statusColor, statusIcon) = ProblemStyle.getStatus(problem.problemStatus);
 
