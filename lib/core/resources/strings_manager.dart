@@ -78,7 +78,7 @@ class StringsManager {
   static const String size = "Size";
   static const String time = "Time: ";
   static const String space = "Space: ";
-  static const String best = "Best: ";
+  static const String best = "Best:";
   static const String average = "Average: ";
   static const String worst = "Worst: ";
   static const String pseudocode = "pseudocode";
@@ -138,7 +138,7 @@ class StringsManager {
 
   // Profile
   static const String profile = "PROFILE";
-  static const String problemsSolved = "Problems\nSolved";
+  static const String problemsSolved = "Problems Solved";
   static const String dayStreak = "Day\nStreak";
   static const String accuracyRate = "Accuracy\nRate";
   static const String bookmarked = "Bookmarked\n";
@@ -153,5 +153,7 @@ class StringsManager {
   static const String solvedLabel = "solved";
   static const String total = "Total";
   static const String viewAll = "View All";
+  static const String days = "days";
+  static const String problems = "problems";
 
 }
