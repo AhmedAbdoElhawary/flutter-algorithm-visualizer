@@ -104,13 +104,33 @@ class Parser {
 
   /// Consumes a type (keyword type, `var`/`final`/`const`, custom identifier
   /// type, optional generics and nullable marker) and returns its source text,
-  /// e.g. `List<int>`, `ListNode?` or `void`.
+  /// e.g. `List<int>`, `ListNode?`, `final Map<int, int>` or `void`.
   String _skipType() {
     final int start = pos;
     if (_check(TokKind.keyword) && _typeKeywords.contains(_peek.text)) {
       _advance();
-    } else if (_check(TokKind.keyword) && (_peek.text == 'var' || _peek.text == 'final' || _peek.text == 'const')) {
+    } else if (_check(TokKind.keyword) &&
+        (_peek.text == 'var' || _peek.text == 'final' || _peek.text == 'const')) {
       _advance();
+      // After `var`/`final`/`const`, consume the actual type only if the
+      // next token looks like a type (not a variable name):
+      //   - keyword type: `final Map<int, int> seen`
+      //   - custom type followed by identifier: `final ListNode head`
+      // But NOT when followed by `=` or `(` or `;` (it's a var name):
+      //   - `final s = Solution()`
+      if (_check(TokKind.keyword) && _typeKeywords.contains(_peek.text)) {
+        _advance();
+      } else if (_check(TokKind.identifier) && pos + 1 < tokens.length) {
+        final next = tokens[pos + 1];
+        // Custom type: identifier followed by another identifier (`ListNode head`)
+        // or by `?` then identifier (`ListNode? next`).
+        if (next.kind == TokKind.identifier) {
+          _advance();
+        } else if (next.kind == TokKind.symbol && next.text == '?' &&
+            pos + 2 < tokens.length && tokens[pos + 2].kind == TokKind.identifier) {
+          _advance();
+        }
+      }
     } else if (_check(TokKind.identifier)) {
       _advance();
     } else {
@@ -216,6 +236,7 @@ class Parser {
     final Tok nameTok = _consumeIdentifier('Expected a class name');
     _consumeSymbol('{', "Expected '{' after class name");
     final List<FieldDecl> fields = <FieldDecl>[];
+    final List<FunctionDecl> methods = <FunctionDecl>[];
     List<ConstructorParam>? constructorParams;
     while (!_checkSymbol('}') && !_isAtEnd()) {
       final int memberLine = _peek.line;
@@ -223,15 +244,22 @@ class Parser {
       if (_checkSymbol('(')) {
         constructorParams = _parseConstructorParams();
       } else {
-        final Tok fieldTok = _consumeIdentifier('Expected a field name');
-        Expr? fieldDefault;
-        if (_matchSymbol('=')) fieldDefault = _parseExpr();
-        _consumeSymbol(';', "Expected ';' after field declaration");
-        fields.add(FieldDecl(fieldTok.text, fieldDefault, memberLine));
+        final Tok memberTok = _consumeIdentifier('Expected a field or method name');
+        if (_checkSymbol('(')) {
+          // Method declaration: ReturnType methodName(params) { body }
+          final List<Param> mParams = _parseParamList();
+          final Block mBody = _parseBlock();
+          methods.add(FunctionDecl(memberTok.text, mParams, mBody, memberLine));
+        } else {
+          Expr? fieldDefault;
+          if (_matchSymbol('=')) fieldDefault = _parseExpr();
+          _consumeSymbol(';', "Expected ';' after field declaration");
+          fields.add(FieldDecl(memberTok.text, fieldDefault, memberLine));
+        }
       }
     }
     _consumeSymbol('}', "Expected '}' after class body");
-    return ClassDecl(nameTok.text, fields, constructorParams ?? const <ConstructorParam>[], line);
+    return ClassDecl(nameTok.text, fields, constructorParams ?? const <ConstructorParam>[], methods, line);
   }
 
   List<ConstructorParam> _parseConstructorParams() {
