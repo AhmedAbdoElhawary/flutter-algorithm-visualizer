@@ -81,7 +81,11 @@ class _CodeEditorBlockState extends State<CodeEditorBlock> with SingleTickerProv
   @override
   void didUpdateWidget(covariant CodeEditorBlock oldWidget) {
     if (oldWidget.highlightLineNumber != widget.highlightLineNumber) _highlightLine();
-    if (oldWidget.code != widget.code) {
+    // Skip the reset when the requested code already matches the controller:
+    // reloading identical text still notifies listeners and rebuilds the
+    // editable mid-edit, which can dispose its RenderEditable while the caret
+    // is blinking ("_CaretPainter was used after being disposed").
+    if (oldWidget.code != widget.code && widget.code != controller.text) {
       final resultCallback = widget.controllerCallback;
       if (resultCallback != null) {
         controller.text = widget.code;
