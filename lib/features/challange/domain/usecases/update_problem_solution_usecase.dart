@@ -9,7 +9,7 @@ class UpdateProblemSolutionUseCase {
   final ProblemRepository repository;
   UpdateProblemSolutionUseCase(this.repository);
 
-  Future<void> call(CodingProblem problem, CodeGradeResult result) async {
+  Future<CodingProblem> call(CodingProblem problem, CodeGradeResult result) async {
     final dto = ProblemStorageDTO.fromJson(problem.toJson());
 
     final status = ProblemSolutionStatusDTO(
@@ -20,11 +20,13 @@ class UpdateProblemSolutionUseCase {
 
     final solution = dto.solutionsStatus ?? [];
 
-    final re = problem.copyWith(
+    final updatedProblem = problem.copyWith(
       problemStatus: result.allPassed ? ProblemStatus.solved : ProblemStatus.attempted,
       solutionsStatus: [status, ...solution],
       isBookmarked: null,
     );
-    await repository.updateProblem(re);
+    await repository.updateProblem(updatedProblem);
+
+    return updatedProblem;
   }
 }
