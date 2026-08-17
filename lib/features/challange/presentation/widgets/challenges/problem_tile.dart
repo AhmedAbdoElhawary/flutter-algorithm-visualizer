@@ -7,6 +7,7 @@ import 'package:algorithm_visualizer/features/challange/domain/entities/coding_p
 import 'package:algorithm_visualizer/features/challange/domain/enums/problem.dart';
 import 'package:algorithm_visualizer/features/challange/presentation/helper/problem_style.dart';
 import 'package:algorithm_visualizer/features/challange/presentation/view_model/challenges/challenges_providers.dart';
+import 'package:algorithm_visualizer/features/challange/presentation/widgets/challenges/bookmark_button.dart';
 import 'package:algorithm_visualizer/features/challange/presentation/widgets/challenges/challenge_tags.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -149,16 +150,7 @@ class _DetailsPanel extends ConsumerWidget {
                     child: MediumText(StringsManager.bookmarked, color: ThemeEnum.hover, fontSize: 10),
                   ),
                   const RSizedBox(height: 2),
-                  GestureDetector(
-                    onTap: () {
-                      ref.read(challengesProvider.notifier).toggleBookmark(problem);
-                    },
-                    child: CustomIcon(
-                      isBookmarked ? Icons.bookmark_rounded : Icons.bookmark_border_rounded,
-                      color: isBookmarked ? ThemeEnum.accent : ThemeEnum.hoverSecond,
-                      size: 18,
-                    ),
-                  ),
+                  BookmarkButton(isBookmarked: isBookmarked, problem: problem),
                 ],
               ),
               const Spacer(),
