@@ -32,15 +32,13 @@ class RecentSubmissionsPage extends ConsumerWidget {
           ? Center(
               child: RegularText(StringsManager.noProblemsFound, color: ThemeEnum.hoverSecond, fontSize: 14))
           : ListView.separated(
-              padding: REdgeInsetsDirectional.only(start: 16, top: 8,bottom: 8),
+              padding: REdgeInsetsDirectional.only(start: 16, top: 8, bottom: 50),
               itemCount: all.length,
               separatorBuilder: (_, __) => Divider(height: 1, color: context.getColor(ThemeEnum.border)),
-              itemBuilder: (context, i) =>
-                 Padding(
-                   padding:  REdgeInsetsDirectional.only(end: 16),
-                   child: PracticeHistoryRow(entry: all[i],isFullPage: true),
-                 )
-              ,
+              itemBuilder: (context, i) => Padding(
+                padding: REdgeInsetsDirectional.only(end: 16),
+                child: PracticeHistoryRow(entry: all[i], isFullPage: true),
+              ),
             ),
     );
   }
