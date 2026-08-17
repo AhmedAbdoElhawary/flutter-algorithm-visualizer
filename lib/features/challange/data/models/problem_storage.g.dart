@@ -43,6 +43,9 @@ _$ProblemSolutionStatusDTOImpl _$$ProblemSolutionStatusDTOImplFromJson(
           ?.map((e) => TestCaseResult.fromJson(e as Map<String, dynamic>))
           .toList(),
       isCorrect: json['is_correct'] as bool?,
+      submittedAt: json['submitted_at'] == null
+          ? null
+          : DateTime.parse(json['submitted_at'] as String),
     );
 
 Map<String, dynamic> _$$ProblemSolutionStatusDTOImplToJson(
@@ -52,4 +55,5 @@ Map<String, dynamic> _$$ProblemSolutionStatusDTOImplToJson(
       'all_test_case_results':
           instance.allTestCaseResults?.map((e) => e.toJson()).toList(),
       'is_correct': instance.isCorrect,
+      'submitted_at': instance.submittedAt?.toIso8601String(),
     };
