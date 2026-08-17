@@ -95,10 +95,10 @@ class _MainRow extends StatelessWidget {
           children: [
             CustomIcon(statusIcon, size: 16, color: statusColor),
             const RSizedBox(width: 8),
-            SemiBoldText('${problem.number}.', color: ThemeEnum.hover, fontSize: 11),
+            BoldText('${problem.number}.', color: ThemeEnum.hover, fontSize: 11),
             const RSizedBox(width: 6),
-            Expanded(child: MediumText(problem.getName, color: ThemeEnum.textSecond, fontSize: 13)),
-            SemiBoldText(problem.getDifficulty.difficultyString, color: diffColor, fontSize: 11),
+            Expanded(child: BoldText(problem.getName, color: ThemeEnum.textSecond, fontSize: 13)),
+            BoldText(problem.getDifficulty.difficultyString, color: diffColor, fontSize: 11),
             const RSizedBox(width: 6),
             AnimatedRotation(
               turns: expanded ? 0.25 : 0,
@@ -152,7 +152,7 @@ class _DetailsPanel extends StatelessWidget {
                     borderRadius: BorderRadius.circular(9),
                     border: Border.all(color: context.getColor(ThemeEnum.borderAccent)),
                   ),
-                  child: SemiBoldText(StringsManager.solveWithArrow, color: ThemeEnum.accent, fontSize: 12),
+                  child: BoldText(StringsManager.solveWithArrow, color: ThemeEnum.accent, fontSize: 12),
                 ),
               ),
             ],
