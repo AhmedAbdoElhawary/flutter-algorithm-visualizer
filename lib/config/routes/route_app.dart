@@ -48,7 +48,7 @@ class Routes {
   );
   static const RouteConfig recentSubmissions = RouteConfig(
     name: 'recentSubmissions',
-    path: 'recent-submissions',
+    path: 'recent_submissions',
   );
   static const RouteConfig bookmarkedProblems = RouteConfig(
     name: 'bookmarkedProblems',
