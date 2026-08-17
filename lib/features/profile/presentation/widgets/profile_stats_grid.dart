@@ -47,7 +47,7 @@ class ProfileStatsGrid extends ConsumerWidget {
       (
         icon: Icons.bookmark_outline_rounded,
         value: '${stats.bookmarkedCount}',
-        label: StringsManager.bookmarked,
+        label: "${StringsManager.bookmarked}\n",
         colorKey: ThemeEnum.accentBlue,
         sub: bookmarkSub
       ),
