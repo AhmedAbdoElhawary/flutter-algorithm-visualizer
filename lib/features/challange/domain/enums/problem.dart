@@ -10,7 +10,7 @@ extension ProblemDifficultyX on ProblemDifficulty {
 }
 
 extension ProblemStatusXX on ProblemStatus {
-  String get difficultyString => _capitalizeFirstLetter(name);
+  String get difficultyString =>this == ProblemStatus.none ? StringsManager.notSolved : _capitalizeFirstLetter(name);
 }
 
 String _capitalizeFirstLetter(String text) {
