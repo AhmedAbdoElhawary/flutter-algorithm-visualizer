@@ -1,5 +1,6 @@
 import 'package:algorithm_visualizer/core/resources/strings_manager.dart';
 import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
+import 'package:algorithm_visualizer/core/widgets/adaptive/padding/adaptive_padding.dart';
 import 'package:algorithm_visualizer/core/widgets/adaptive/text/adaptive_text.dart';
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/custom_icon.dart';
 import 'package:algorithm_visualizer/features/challange/domain/entities/coding_problem.dart';
@@ -139,16 +140,26 @@ class _DetailsPanel extends ConsumerWidget {
                 value: problem.getProblemStatus.difficultyString,
                 color: statusColor,
               ),
-              const RSizedBox(width: 16),
-              GestureDetector(
-                onTap: () {
-                  ref.read(challengesProvider.notifier).toggleBookmark(problem);
-                },
-                child: Icon(
-                  isBookmarked ? Icons.bookmark_rounded : Icons.bookmark_border_rounded,
-                  size: 18,
-                  color: context.getColor(isBookmarked ? ThemeEnum.accent : ThemeEnum.hoverSecond),
-                ),
+              RSizedBox(width: 36),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  OnlyPadding(
+                    startPadding: 3,
+                    child: MediumText(StringsManager.bookmarked, color: ThemeEnum.hover, fontSize: 10),
+                  ),
+                  const RSizedBox(height: 2),
+                  GestureDetector(
+                    onTap: () {
+                      ref.read(challengesProvider.notifier).toggleBookmark(problem);
+                    },
+                    child: CustomIcon(
+                      isBookmarked ? Icons.bookmark_rounded : Icons.bookmark_border_rounded,
+                      color: isBookmarked ? ThemeEnum.accent : ThemeEnum.hoverSecond,
+                      size: 18,
+                    ),
+                  ),
+                ],
               ),
               const Spacer(),
               GestureDetector(
@@ -183,7 +194,7 @@ class _StatColumn extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        RegularText(label, color: ThemeEnum.hover, fontSize: 10),
+        MediumText(label, color: ThemeEnum.hover, fontSize: 10),
         const RSizedBox(height: 2),
         SemiBoldText(value, color: color, fontSize: 13),
       ],
