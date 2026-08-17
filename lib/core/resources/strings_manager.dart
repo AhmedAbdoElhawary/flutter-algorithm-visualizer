@@ -136,4 +136,22 @@ class StringsManager {
   static const String caseS = "Case";
   static const String notSolved = "Not Solved";
 
+  // Profile
+  static const String profile = "PROFILE";
+  static const String problemsSolved = "Problems\nSolved";
+  static const String dayStreak = "Day\nStreak";
+  static const String accuracyRate = "Accuracy\nRate";
+  static const String bookmarked = "Bookmarked\n";
+  static const String difficultyBreakdown = "Difficulty Breakdown";
+  static const String categoryBreakdown = "Category Breakdown";
+  static const String activityHeatmap = "Activity (12 weeks)";
+  static const String recentSubmissions = "Recent Submissions";
+  static const String thisWeek = "This Week";
+  static const String less = "Less";
+  static const String more = "More";
+  static const String bestLabel = "Best";
+  static const String solvedLabel = "solved";
+  static const String total = "Total";
+  static const String viewAll = "View All";
+
 }
