@@ -6,14 +6,14 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class HowItWorksPopup extends StatefulWidget {
-  const HowItWorksPopup({super.key});
-
+class AnimatedPopup extends StatefulWidget {
+  const AnimatedPopup({super.key, required this.child});
+final Widget child;
   @override
-  State<HowItWorksPopup> createState() => _HowItWorksPopupState();
+  State<AnimatedPopup> createState() => _AnimatedPopupState();
 }
 
-class _HowItWorksPopupState extends State<HowItWorksPopup> with SingleTickerProviderStateMixin {
+class _AnimatedPopupState extends State<AnimatedPopup> with SingleTickerProviderStateMixin {
   final LayerLink _layerLink = LayerLink();
 
   OverlayEntry? _overlay;
@@ -139,11 +139,7 @@ class _HowItWorksPopupState extends State<HowItWorksPopup> with SingleTickerProv
       child: InkWell(
         borderRadius: BorderRadius.circular(20),
         onTap: _togglePopup,
-        child: Icon(
-          Icons.lightbulb,
-          size: 16.r,
-          color: const Color.fromRGBO(213, 209, 17, 1),
-        ),
+        child: widget.child,
       ),
     );
   }
