@@ -39,7 +39,7 @@ class _VisualizerScreenState extends ConsumerState<CodeEditorPage> {
                 subTitle: StringsManager.tryToPracticeAChallenge,
               );
             }
-            final provider = codeEditorControllerProvider(problem);
+            final provider = codeEditorControllerProvider(widget.problemId);
 
             return CustomScrollView(
               slivers: [
@@ -58,7 +58,7 @@ class _VisualizerScreenState extends ConsumerState<CodeEditorPage> {
                       sliver: SliverToBoxAdapter(
                         child: CodeEditorBlock(
                           title: problem.getNameWithLanguageName,
-                          code: problem.getCode,
+                          code: notifier.initialCode,
                           highlightLineNumber: highlightedLine ?? -1,
                           executing: isRunning,
                           controllerCallback: notifier.attachCodeController,
