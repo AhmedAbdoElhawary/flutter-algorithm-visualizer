@@ -40,10 +40,10 @@ class CodeEditorLangBar extends ConsumerWidget {
               child: Container(
                 padding: REdgeInsets.symmetric(horizontal: 14, vertical: 5),
                 decoration: BoxDecoration(
-                  color: context.getColor(ThemeEnum.lightPink),
+                  color: context.getColor(ThemeEnum.accentBlueBg),
                   borderRadius: BorderRadius.circular(7),
                 ),
-                child: SemiBoldText(language, color: ThemeEnum.pink, fontSize: 12),
+                child: SemiBoldText(language, color: ThemeEnum.accentBlue, fontSize: 12),
               ),
             ),
             const Spacer(),

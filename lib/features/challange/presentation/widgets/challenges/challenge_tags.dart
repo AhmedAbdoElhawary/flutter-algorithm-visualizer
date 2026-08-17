@@ -22,7 +22,7 @@ class ChallengeTags extends StatelessWidget {
                 borderRadius: BorderRadius.circular(6),
                 border: Border.all(color: context.getColor(ThemeEnum.borderAccent)),
               ),
-              child: MediumText(t, color: ThemeEnum.accent, fontSize: 11),
+              child: SemiBoldText(t, color: ThemeEnum.accent, fontSize: 11),
             ),
           )
           .toList(),
