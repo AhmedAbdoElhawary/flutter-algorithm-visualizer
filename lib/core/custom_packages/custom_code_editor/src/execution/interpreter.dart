@@ -330,7 +330,9 @@ class Interpreter {
     if (expr is BinaryExpr) return _evalBinary(expr, env);
 
     if (expr is ConditionalExpr) {
-      return _truthy(_eval(expr.condition, env), expr.line) ? _eval(expr.thenExpr, env) : _eval(expr.elseExpr, env);
+      return _truthy(_eval(expr.condition, env), expr.line)
+          ? _eval(expr.thenExpr, env)
+          : _eval(expr.elseExpr, env);
     }
 
     if (expr is AssignExpr) return _evalAssign(expr, env);
@@ -347,6 +349,7 @@ class Interpreter {
     }
 
     if (expr is PropertyAccess) return _evalProperty(expr, env);
+    if (expr is NullAwareAccess) return _evalNullAwareAccess(expr, env);
     if (expr is CallExpr) return _evalCall(expr, env);
 
     throw InterpreterError('Unsupported expression', expr.line);
@@ -496,16 +499,25 @@ class Interpreter {
   }
 
   dynamic _evalProperty(PropertyAccess expr, Environment env) {
+    return _readProperty(_eval(expr.target, env), expr.name, expr.line);
+  }
+
+  dynamic _evalNullAwareAccess(NullAwareAccess expr, Environment env) {
     final dynamic target = _eval(expr.target, env);
+    if (target == null) return null;
+    return _readProperty(target, expr.name, expr.line);
+  }
+
+  dynamic _readProperty(dynamic target, String name, int line) {
     if (target is ObjectInstance) {
       final ObjectInstance inst = target;
-      if (inst.fields.containsKey(expr.name)) return inst.fields[expr.name];
+      if (inst.fields.containsKey(name)) return inst.fields[name];
       throw InterpreterError(
-        '"${inst.type}" has no field "${expr.name}"',
-        expr.line,
+        '"${inst.type}" has no field "$name"',
+        line,
       );
     }
-    switch (expr.name) {
+    switch (name) {
       case 'length':
         if (target is List || target is String || target is Map || target is Set) {
           return (target as dynamic).length;
@@ -529,8 +541,8 @@ class Interpreter {
         break;
     }
     throw InterpreterError(
-      '"${_typeName(target)}" has no property "${expr.name}"',
-      expr.line,
+      '"${_typeName(target)}" has no property "$name"',
+      line,
     );
   }
 
@@ -540,6 +552,14 @@ class Interpreter {
       output.add(args.isEmpty ? '' : _stringify(args.first));
       rawOutput.add(args.isEmpty ? null : args.first);
       return null;
+    }
+
+    if (expr.callee is NullAwareAccess) {
+      final NullAwareAccess access = expr.callee as NullAwareAccess;
+      final dynamic target = _eval(access.target, env);
+      if (target == null) return null;
+      final List<dynamic> args = expr.args.map((Expr a) => _eval(a, env)).toList();
+      return _callBuiltinMethod(target, access.name, args, expr.line);
     }
 
     if (expr.callee is PropertyAccess) {
@@ -587,6 +607,8 @@ class Interpreter {
             return null;
           case 'removeAt':
             return target.removeAt(args[0] as int);
+          case 'removeLast':
+            return target.isEmpty ? null : target.removeLast();
           case 'remove':
             return target.remove(args[0]);
           case 'contains':
@@ -611,6 +633,10 @@ class Interpreter {
             return args.length == 1
                 ? target.substring(args[0] as int)
                 : target.substring(args[0] as int, args[1] as int);
+          case 'split':
+            return args.isEmpty ? <String>[target] : target.split(args[0] as String);
+          case 'indexOf':
+            return target.indexOf(args[0] as String);
           case 'toString':
             return target;
         }
