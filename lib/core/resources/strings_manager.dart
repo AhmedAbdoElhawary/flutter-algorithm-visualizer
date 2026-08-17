@@ -134,5 +134,6 @@ class StringsManager {
   static const String actual = "actual";
   static const String test = "Test";
   static const String caseS = "Case";
+  static const String notSolved = "Not Solved";
 
 }
