@@ -8,14 +8,15 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'challenges_state.dart';
 import 'problems_notifier.dart';
 
-class ChallengesNotifier extends StateNotifier<ChallengesState> {
+class ChallengesNotifier extends Notifier<ChallengesState> {
   static const filters = ProblemDifficulty.values;
 
-  ChallengesNotifier(this._problemRepository, this._updateProblemSolutionUseCase, this._ref)
-      : super(ChallengesState.initial());
-  final ProblemRepository _problemRepository;
-  final UpdateProblemSolutionUseCase _updateProblemSolutionUseCase;
-  final Ref _ref;
+  @override
+  ChallengesState build() => ChallengesState.initial();
+
+  ProblemRepository get _problemRepository => ref.read(problemRepositoryProvider);
+  UpdateProblemSolutionUseCase get _updateProblemSolutionUseCase =>
+      UpdateProblemSolutionUseCase(_problemRepository);
 
   void setFilter(ProblemDifficulty filter) => state = state.copyWith(filter: filter);
 
@@ -33,17 +34,17 @@ class ChallengesNotifier extends StateNotifier<ChallengesState> {
 
   Future<void> updateProblem(CodingProblem problem, CodeGradeResult result) async {
     final updatedProblem = await _updateProblemSolutionUseCase.call(problem, result);
-    _ref.read(problemsProvider.notifier).updateProblem(updatedProblem);
+    ref.read(problemsProvider.notifier).updateProblem(updatedProblem);
   }
 
   Future<void> toggleBookmark(CodingProblem problem) async {
     final updated = problem.copyWith(isBookmarked: !problem.getIsBookmarked);
     await _problemRepository.updateProblem(updated);
-    _ref.read(problemsProvider.notifier).updateProblem(updated);
+    ref.read(problemsProvider.notifier).updateProblem(updated);
   }
 
   Future<void> deleteProblem(int problemId) async {
     await _problemRepository.deleteProblem(problemId);
-    _ref.read(problemsProvider.notifier).deleteProblem(problemId);
+    ref.read(problemsProvider.notifier).deleteProblem(problemId);
   }
 }
