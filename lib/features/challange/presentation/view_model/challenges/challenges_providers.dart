@@ -1,6 +1,5 @@
 import 'package:algorithm_visualizer/features/challange/domain/entities/coding_problem.dart';
 import 'package:algorithm_visualizer/features/challange/domain/enums/problem.dart';
-import 'package:algorithm_visualizer/features/challange/domain/usecases/update_problem_solution_usecase.dart';
 import 'package:collection/collection.dart' show IterableExtension, ListEquality;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -8,9 +7,8 @@ import 'challenges_notifier.dart';
 import 'challenges_state.dart';
 import 'problems_notifier.dart';
 
-final challengesProvider = StateNotifierProvider.autoDispose<ChallengesNotifier, ChallengesState>((ref) {
-  final repo = ref.watch(problemRepositoryProvider);
-  return ChallengesNotifier(repo, UpdateProblemSolutionUseCase(repo), ref);
+final challengesProvider = NotifierProvider.autoDispose<ChallengesNotifier, ChallengesState>(() {
+  return ChallengesNotifier();
 });
 
 /// The ids of the problems matching the current filter/search, in dataset
