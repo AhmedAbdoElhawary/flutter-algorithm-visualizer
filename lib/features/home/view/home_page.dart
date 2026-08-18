@@ -1,196 +1,49 @@
-import 'package:algorithm_visualizer/config/routes/route_app.dart';
-import 'package:algorithm_visualizer/core/extensions/navigators.dart';
-import 'package:algorithm_visualizer/core/resources/color_manager.dart';
-import 'package:algorithm_visualizer/core/resources/strings_manager.dart';
 import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
-import 'package:algorithm_visualizer/core/widgets/adaptive/text/adaptive_text.dart';
-import 'package:algorithm_visualizer/core/widgets/custom_widgets/glass_card.dart';
-import 'package:algorithm_visualizer/features/base/view_model/base_view_model.dart';
+import 'package:algorithm_visualizer/features/home/view/movable_pins.dart';
+import 'package:algorithm_visualizer/features/home/view/widgets/home_category_grid.dart';
+import 'package:algorithm_visualizer/features/home/view/widgets/home_continue_card.dart';
+import 'package:algorithm_visualizer/features/home/view/widgets/home_difficulty_progress.dart';
+import 'package:algorithm_visualizer/features/home/view/widgets/home_header.dart';
+import 'package:algorithm_visualizer/features/home/view/widgets/home_recent_activity.dart';
+import 'package:algorithm_visualizer/features/home/view/widgets/home_stats_strip.dart';
+import 'package:algorithm_visualizer/features/home/view_model/home_providers.dart';
+import 'package:algorithm_visualizer/features/profile/presentation/widgets/profile_weekly_chart.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'movable_pins.dart';
-
-class HomePage extends StatefulWidget {
+class HomePage extends ConsumerWidget {
   const HomePage({super.key});
 
   @override
-  State<HomePage> createState() => _HomePageState();
-}
-
-class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin {
-  late final controller = TabController(length: 2, vsync: this);
-
-  @override
-  void dispose() {
-    controller.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final sortingCardValues = SortingAlgoCards.values;
-    final searchingCardValues = SearchingAlgoCards.values;
+  Widget build(BuildContext context, WidgetRef ref) {
+    final data = ref.watch(homeDataProvider);
 
     return Scaffold(
+      backgroundColor: context.getColor(ThemeEnum.primary),
       body: SafeArea(
-        bottom: false,
-        child: Center(
-          child: MovablePinsBackground(
-            pinColor: ThemeEnum.whiteD4Color,
-            child: DefaultTabController(
-              length: 2,
-              child: CustomScrollView(
-                physics: BouncingScrollPhysics(),
-                slivers: [
-                  SliverAppBar(
-                    pinned: true,
-                    shadowColor: ColorManager.transparent,
-                    backgroundColor: context.getColor(ThemeEnum.primary).withValues(alpha: 0.7),
-                    title: Padding(
-                      padding: REdgeInsets.symmetric(horizontal: 20),
-                      child: _TabView(controller),
-                    ),
-                  ),
-                  SliverFillRemaining(
-                    child: TabBarView(
-                      controller: controller,
-                      children: [
-                        GridView.builder(
-                          itemCount: sortingCardValues.length,
-                          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 2,
-                            crossAxisSpacing: 20,
-                            mainAxisSpacing: 20,
-                            childAspectRatio: 1.1,
-                          ),
-                          itemBuilder: (context, index) {
-                            final card = BaseViewModel.sortingCards(sortingCardValues[index]);
-
-                            return Padding(
-                              padding: REdgeInsetsDirectional.only(
-                                  start: index % 2 == 0 ? 20 : 0, end: index % 2 != 0 ? 20 : 0),
-                              child: InkWell(
-                                  borderRadius: BorderRadius.circular(20),
-                                  highlightColor: context.getColor(ThemeEnum.primary),
-                                  onTap: () {
-                                    context.pushTo(Routes.visualize, queryParameters: card.page.name);
-                                  },
-                                  child: card.card),
-                            );
-                          },
-                        ),
-                        GridView.builder(
-                          itemCount: searchingCardValues.length,
-                          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 2,
-                            crossAxisSpacing: 20,
-                            mainAxisSpacing: 20,
-                            childAspectRatio: 1.1,
-                          ),
-                          itemBuilder: (context, index) {
-                            final card = BaseViewModel.searchingCards(searchingCardValues[index]);
-                            return Padding(
-                              padding: REdgeInsetsDirectional.only(
-                                  start: index % 2 == 0 ? 20 : 0, end: index % 2 != 0 ? 20 : 0),
-                              child: InkWell(
-                                  borderRadius: BorderRadius.circular(20),
-                                  highlightColor: context.getColor(ThemeEnum.primary),
-                                  onTap: () {
-                                    context.pushTo(Routes.visualize, queryParameters: card.page.name);
-                                  },
-                                  child: card.card),
-                            );
-                          },
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
+        child: MovablePinsBackground(
+          pinColor: ThemeEnum.whiteD4Color,
+          child: CustomScrollView(
+            physics: const BouncingScrollPhysics(),
+            slivers: [
+              SliverToBoxAdapter(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    HomeHeader(greeting: data.greeting),
+                    const HomeStatsStrip(),
+                    const ProfileWeeklyChart(),
+                    const HomeDifficultyProgress(),
+                    const HomeContinueCard(),
+                    const HomeCategoryGrid(),
+                    const HomeRecentActivity(),
+                  ],
+                ),
               ),
-            ),
+            ],
           ),
         ),
       ),
-    );
-  }
-}
-
-class _TabView extends StatefulWidget {
-  const _TabView(this.controller);
-  final TabController controller;
-
-  @override
-  State<_TabView> createState() => _TabViewState();
-}
-
-class _TabViewState extends State<_TabView> {
-  int value = 0;
-  @override
-  void initState() {
-    widget.controller.addListener(listener);
-    super.initState();
-  }
-
-  void listener() {
-    final currentIndex = widget.controller.index;
-    if (currentIndex != value) {
-      setState(() {
-        value = currentIndex;
-      });
-    }
-  }
-
-  @override
-  void dispose() {
-    widget.controller.removeListener(listener);
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final text1Color = value == 0 ? ThemeEnum.accent : ThemeEnum.textDarkColor;
-    final text2Color = value == 1 ? ThemeEnum.accent : ThemeEnum.textDarkColor;
-    return Row(
-      children: [
-        Expanded(
-          child: InkWell(
-            borderRadius: BorderRadius.circular(10),
-            highlightColor: context.getColor(ThemeEnum.primary),
-            onTap: () {
-              widget.controller.animateTo(0);
-            },
-            child: GlassContainer(
-              borderRadius: 10,
-              withAboveShadow: false,
-              highlightCard: value == 0,
-              padding: REdgeInsets.symmetric(horizontal: 15, vertical: 10),
-              child: Center(
-                child: BoldText(StringsManager.sorting, fontSize: 14, color: text1Color),
-              ),
-            ),
-          ),
-        ),
-        RSizedBox(width: 20),
-        Expanded(
-          child: InkWell(
-            borderRadius: BorderRadius.circular(10),
-            highlightColor: context.getColor(ThemeEnum.primary),
-            onTap: () {
-              widget.controller.animateTo(1);
-            },
-            child: GlassContainer(
-              borderRadius: 10,
-              withAboveShadow: false,
-              highlightCard: value == 1,
-              padding: REdgeInsets.symmetric(horizontal: 15, vertical: 10),
-              child: Center(
-                child: BoldText(StringsManager.searching, fontSize: 14, color: text2Color),
-              ),
-            ),
-          ),
-        ),
-      ],
     );
   }
 }
