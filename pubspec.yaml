@@ -11,12 +11,12 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  go_router: ^17.3.0
+  go_router: ^17.5.0
   get_it: ^9.2.1
   flutter_screenutil: ^5.9.3
   flutter_svg: ^2.3.0
-  riverpod: ^2.5.1 # not used yet
-  flutter_riverpod: ^2.5.1
+  riverpod: ^3.4.2 # not used yet
+  flutter_riverpod: ^3.4.2
   get_storage: ^2.1.1
   animations: ^2.2.0 # not used yet
   collection: ^1.19.1
