@@ -9,8 +9,7 @@ class FunctionSignature {
   final String? generic;
   final String? dart;
 
-  factory FunctionSignature.fromJson(Map<String, dynamic> json) =>
-      _$FunctionSignatureFromJson(json);
+  factory FunctionSignature.fromJson(Map<String, dynamic> json) => _$FunctionSignatureFromJson(json);
 
   Map<String, dynamic> toJson() => _$FunctionSignatureToJson(this);
 

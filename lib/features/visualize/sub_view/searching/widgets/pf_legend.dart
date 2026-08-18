@@ -7,7 +7,6 @@ import 'package:algorithm_visualizer/features/visualize/sub_view/searching/widge
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-
 class PFLegend extends StatelessWidget {
   const PFLegend({super.key});
 
@@ -42,7 +41,11 @@ class PFLegend extends StatelessWidget {
                   decoration: BoxDecoration(color: color, borderRadius: BorderRadius.circular(2)),
                 ),
               const SizedBox(width: 4),
-              Text(label, style: TextStyle(color: context.getColor(ThemeEnum.hover), fontSize: 10, fontFamily: FontConstants.fontFamily)),
+              Text(label,
+                  style: TextStyle(
+                      color: context.getColor(ThemeEnum.hover),
+                      fontSize: 10,
+                      fontFamily: FontConstants.fontFamily)),
             ]);
           }).toList(),
         ),

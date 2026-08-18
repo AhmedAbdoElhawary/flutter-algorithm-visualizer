@@ -21,13 +21,16 @@ class TreeNode {
 
 void main() {
   // 1. Two Sum
-  grade('Two Sum', ProblemData(
-    functionSignature: 'List<int> twoSum(List<int> nums, int target)',
-    testCases: [
-      const ProblemTestCase(input: 'nums=[2,7,11,15], target=9', expectedOutput: '[0,1]'),
-      const ProblemTestCase(input: 'nums=[1,5,3,8], target=11', expectedOutput: '[2,3]'),
-    ],
-  ), '''
+  grade(
+      'Two Sum',
+      ProblemData(
+        functionSignature: 'List<int> twoSum(List<int> nums, int target)',
+        testCases: [
+          const ProblemTestCase(input: 'nums=[2,7,11,15], target=9', expectedOutput: '[0,1]'),
+          const ProblemTestCase(input: 'nums=[1,5,3,8], target=11', expectedOutput: '[2,3]'),
+        ],
+      ),
+      '''
 List<int> twoSum(List<int> nums, int target) {
   final seen = <int, int>{};
   for (int i = 0; i < nums.length; i++) {
@@ -40,13 +43,16 @@ List<int> twoSum(List<int> nums, int target) {
 ''');
 
   // 2. Contains Duplicate
-  grade('Contains Duplicate', ProblemData(
-    functionSignature: 'bool containsDuplicate(List<int> nums)',
-    testCases: [
-      const ProblemTestCase(input: 'nums=[1,2,3,1]', expectedOutput: 'true'),
-      const ProblemTestCase(input: 'nums=[1,2,3,4]', expectedOutput: 'false'),
-    ],
-  ), '''
+  grade(
+      'Contains Duplicate',
+      ProblemData(
+        functionSignature: 'bool containsDuplicate(List<int> nums)',
+        testCases: [
+          const ProblemTestCase(input: 'nums=[1,2,3,1]', expectedOutput: 'true'),
+          const ProblemTestCase(input: 'nums=[1,2,3,4]', expectedOutput: 'false'),
+        ],
+      ),
+      '''
 bool containsDuplicate(List<int> nums) {
   final set = <int>{};
   for (final n in nums) {
@@ -58,16 +64,19 @@ bool containsDuplicate(List<int> nums) {
 ''');
 
   // 3. Merge Two Sorted Lists (custom object)
-  grade('Merge Two Sorted Lists', ProblemData(
-    functionSignature: 'ListNode? mergeTwoLists(ListNode? list1, ListNode? list2)',
-    customObjects: const {'ListNode': CustomObjectShape.linkedList},
-    customObjectSources: const [listNodeSource],
-    testCases: [
-      const ProblemTestCase(input: 'list1=[1,2,4], list2=[1,3,4]', expectedOutput: '[1,1,2,3,4,4]'),
-      const ProblemTestCase(input: 'list1=[], list2=[]', expectedOutput: '[]'),
-      const ProblemTestCase(input: 'list1=[], list2=[0]', expectedOutput: '[0]'),
-    ],
-  ), '''
+  grade(
+      'Merge Two Sorted Lists',
+      ProblemData(
+        functionSignature: 'ListNode? mergeTwoLists(ListNode? list1, ListNode? list2)',
+        customObjects: const {'ListNode': CustomObjectShape.linkedList},
+        customObjectSources: const [listNodeSource],
+        testCases: [
+          const ProblemTestCase(input: 'list1=[1,2,4], list2=[1,3,4]', expectedOutput: '[1,1,2,3,4,4]'),
+          const ProblemTestCase(input: 'list1=[], list2=[]', expectedOutput: '[]'),
+          const ProblemTestCase(input: 'list1=[], list2=[0]', expectedOutput: '[0]'),
+        ],
+      ),
+      '''
 ListNode? mergeTwoLists(ListNode? list1, ListNode? list2) {
   final dummy = ListNode();
   var tail = dummy;
@@ -87,13 +96,17 @@ ListNode? mergeTwoLists(ListNode? list1, ListNode? list2) {
 ''');
 
   // 4. Reverse String (void, List<String> in-place)
-  grade('Reverse String', ProblemData(
-    functionSignature: 'void reverseString(List<String> s)',
-    testCases: [
-      const ProblemTestCase(input: 's=["h","e","l","l","o"]', expectedOutput: '["o","l","l","e","h"]'),
-      const ProblemTestCase(input: 's=["H","a","n","n","a","h"]', expectedOutput: '["h","a","n","n","a","H"]'),
-    ],
-  ), '''
+  grade(
+      'Reverse String',
+      ProblemData(
+        functionSignature: 'void reverseString(List<String> s)',
+        testCases: [
+          const ProblemTestCase(input: 's=["h","e","l","l","o"]', expectedOutput: '["o","l","l","e","h"]'),
+          const ProblemTestCase(
+              input: 's=["H","a","n","n","a","h"]', expectedOutput: '["h","a","n","n","a","H"]'),
+        ],
+      ),
+      '''
 void reverseString(List<String> s) {
   int i = 0;
   int j = s.length - 1;
@@ -108,13 +121,16 @@ void reverseString(List<String> s) {
 ''');
 
   // 5. Move Zeroes (void, List<int> in-place)
-  grade('Move Zeroes', ProblemData(
-    functionSignature: 'void moveZeroes(List<int> nums)',
-    testCases: [
-      const ProblemTestCase(input: 'nums=[0,1,0,3,12]', expectedOutput: '[1,3,12,0,0]'),
-      const ProblemTestCase(input: 'nums=[0]', expectedOutput: '[0]'),
-    ],
-  ), '''
+  grade(
+      'Move Zeroes',
+      ProblemData(
+        functionSignature: 'void moveZeroes(List<int> nums)',
+        testCases: [
+          const ProblemTestCase(input: 'nums=[0,1,0,3,12]', expectedOutput: '[1,3,12,0,0]'),
+          const ProblemTestCase(input: 'nums=[0]', expectedOutput: '[0]'),
+        ],
+      ),
+      '''
 void moveZeroes(List<int> nums) {
   var write = 0;
   for (final n in nums) {
@@ -131,15 +147,18 @@ void moveZeroes(List<int> nums) {
 ''');
 
   // 6. Reorder List (void, custom object in-place)
-  grade('Reorder List', ProblemData(
-    functionSignature: 'void reorderList(ListNode? head)',
-    customObjects: const {'ListNode': CustomObjectShape.linkedList},
-    customObjectSources: const [listNodeSource],
-    testCases: [
-      const ProblemTestCase(input: 'head=[1,2,3,4]', expectedOutput: '[1,4,2,3]'),
-      const ProblemTestCase(input: 'head=[1,2,3,4,5]', expectedOutput: '[1,5,2,4,3]'),
-    ],
-  ), '''
+  grade(
+      'Reorder List',
+      ProblemData(
+        functionSignature: 'void reorderList(ListNode? head)',
+        customObjects: const {'ListNode': CustomObjectShape.linkedList},
+        customObjectSources: const [listNodeSource],
+        testCases: [
+          const ProblemTestCase(input: 'head=[1,2,3,4]', expectedOutput: '[1,4,2,3]'),
+          const ProblemTestCase(input: 'head=[1,2,3,4,5]', expectedOutput: '[1,5,2,4,3]'),
+        ],
+      ),
+      '''
 void reorderList(ListNode? head) {
   if (head == null) return;
   final nodes = <ListNode>[];
@@ -162,16 +181,19 @@ void reorderList(ListNode? head) {
 ''');
 
   // 7. Is Same Tree (TreeNode params, bool return)
-  grade('Is Same Tree', ProblemData(
-    functionSignature: 'bool isSameTree(TreeNode? p, TreeNode? q)',
-    customObjects: const {'TreeNode': CustomObjectShape.binaryTree},
-    customObjectSources: const [treeNodeSource],
-    testCases: [
-      const ProblemTestCase(input: 'p=[1,2,3], q=[1,2,3]', expectedOutput: 'true'),
-      const ProblemTestCase(input: 'p=[1,2], q=[1,null,2]', expectedOutput: 'false'),
-      const ProblemTestCase(input: 'p=[1,2,1], q=[1,1,2]', expectedOutput: 'false'),
-    ],
-  ), '''
+  grade(
+      'Is Same Tree',
+      ProblemData(
+        functionSignature: 'bool isSameTree(TreeNode? p, TreeNode? q)',
+        customObjects: const {'TreeNode': CustomObjectShape.binaryTree},
+        customObjectSources: const [treeNodeSource],
+        testCases: [
+          const ProblemTestCase(input: 'p=[1,2,3], q=[1,2,3]', expectedOutput: 'true'),
+          const ProblemTestCase(input: 'p=[1,2], q=[1,null,2]', expectedOutput: 'false'),
+          const ProblemTestCase(input: 'p=[1,2,1], q=[1,1,2]', expectedOutput: 'false'),
+        ],
+      ),
+      '''
 bool isSameTree(TreeNode? p, TreeNode? q) {
   if (p == null && q == null) return true;
   if (p == null || q == null) return false;
@@ -181,16 +203,19 @@ bool isSameTree(TreeNode? p, TreeNode? q) {
 ''');
 
   // 8. Max Depth of Binary Tree
-  grade('Max Depth', ProblemData(
-    functionSignature: 'int maxDepth(TreeNode? root)',
-    customObjects: const {'TreeNode': CustomObjectShape.binaryTree},
-    customObjectSources: const [treeNodeSource],
-    testCases: [
-      const ProblemTestCase(input: 'root=[3,9,20,null,null,15,7]', expectedOutput: '3'),
-      const ProblemTestCase(input: 'root=[1,null,2]', expectedOutput: '2'),
-      const ProblemTestCase(input: 'root=[]', expectedOutput: '0'),
-    ],
-  ), '''
+  grade(
+      'Max Depth',
+      ProblemData(
+        functionSignature: 'int maxDepth(TreeNode? root)',
+        customObjects: const {'TreeNode': CustomObjectShape.binaryTree},
+        customObjectSources: const [treeNodeSource],
+        testCases: [
+          const ProblemTestCase(input: 'root=[3,9,20,null,null,15,7]', expectedOutput: '3'),
+          const ProblemTestCase(input: 'root=[1,null,2]', expectedOutput: '2'),
+          const ProblemTestCase(input: 'root=[]', expectedOutput: '0'),
+        ],
+      ),
+      '''
 int maxDepth(TreeNode? root) {
   if (root == null) return 0;
   final l = maxDepth(root.left);
@@ -200,16 +225,19 @@ int maxDepth(TreeNode? root) {
 ''');
 
   // 9. Merge K Sorted Lists (List<ListNode?> param)
-  grade('Merge K Sorted Lists', ProblemData(
-    functionSignature: 'ListNode? mergeKLists(List<ListNode?> lists)',
-    customObjects: const {'ListNode': CustomObjectShape.linkedList},
-    customObjectSources: const [listNodeSource],
-    testCases: [
-      const ProblemTestCase(input: 'lists=[[1,4,5],[1,3,4],[2,6]]', expectedOutput: '[1,1,2,3,4,4,5,6]'),
-      const ProblemTestCase(input: 'lists=[]', expectedOutput: '[]'),
-      const ProblemTestCase(input: 'lists=[[]]', expectedOutput: '[]'),
-    ],
-  ), '''
+  grade(
+      'Merge K Sorted Lists',
+      ProblemData(
+        functionSignature: 'ListNode? mergeKLists(List<ListNode?> lists)',
+        customObjects: const {'ListNode': CustomObjectShape.linkedList},
+        customObjectSources: const [listNodeSource],
+        testCases: [
+          const ProblemTestCase(input: 'lists=[[1,4,5],[1,3,4],[2,6]]', expectedOutput: '[1,1,2,3,4,4,5,6]'),
+          const ProblemTestCase(input: 'lists=[]', expectedOutput: '[]'),
+          const ProblemTestCase(input: 'lists=[[]]', expectedOutput: '[]'),
+        ],
+      ),
+      '''
 ListNode? mergeKLists(List<ListNode?> lists) {
   if (lists.isEmpty) return null;
   ListNode? dummy = ListNode();

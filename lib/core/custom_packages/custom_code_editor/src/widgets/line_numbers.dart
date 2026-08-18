@@ -56,7 +56,9 @@ class LineNumbers extends StatelessWidget {
       decoration: BoxDecoration(
         borderRadius: borderRadius,
         color: theme.lineNumberBackground ?? theme.background,
-        border: theme.borderBetweenNumbersAndEditor && border != null ? BorderDirectional(end: border.left) : null,
+        border: theme.borderBetweenNumbersAndEditor && border != null
+            ? BorderDirectional(end: border.left)
+            : null,
       ),
       child: SingleChildScrollView(
         controller: scrollController,
