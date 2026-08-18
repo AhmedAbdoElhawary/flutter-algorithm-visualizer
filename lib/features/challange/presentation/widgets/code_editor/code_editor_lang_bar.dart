@@ -1,7 +1,6 @@
 import 'package:algorithm_visualizer/core/resources/strings_manager.dart';
 import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
 import 'package:algorithm_visualizer/core/widgets/adaptive/text/adaptive_text.dart';
-import 'package:algorithm_visualizer/core/widgets/custom_widgets/animated_popup.dart';
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/custom_icon.dart';
 import 'package:algorithm_visualizer/features/challange/domain/entities/coding_problem.dart';
 import 'package:algorithm_visualizer/features/challange/presentation/view_model/challenges/challenges_providers.dart';
@@ -74,27 +73,29 @@ class CodeEditorLangBar extends ConsumerWidget {
               ),
             ),
             const RSizedBox(width: 8),
-            AnimatedPopup(
-              builder: (removeOverlay) => _ResetPopupContent(
-                onCancel: removeOverlay,
-                onConfirm: () {
-                  notifier.resetCode();
-                  removeOverlay();
-                },
-              ),
-              child: Container(
-                width: 32.r,
-                height: 32.r,
-                decoration: BoxDecoration(
-                  color: context.getColor(ThemeEnum.card),
-                  borderRadius: BorderRadius.circular(8),
-                  border: Border.all(color: context.getColor(ThemeEnum.border)),
-                  boxShadow: context.cardShadow,
-                ),
-                child: CustomIcon(Icons.restore_rounded, color: ThemeEnum.hover, size: 15),
-              ),
-            ),
-            const RSizedBox(width: 8),
+
+            /// TODO: add this button, but make sure you saved every time user write a code (auto save)
+            // AnimatedPopup(
+            //   builder: (removeOverlay) => _ResetPopupContent(
+            //     onCancel: removeOverlay,
+            //     onConfirm: () {
+            //       notifier.resetCode();
+            //       removeOverlay();
+            //     },
+            //   ),
+            //   child: Container(
+            //     width: 32.r,
+            //     height: 32.r,
+            //     decoration: BoxDecoration(
+            //       color: context.getColor(ThemeEnum.card),
+            //       borderRadius: BorderRadius.circular(8),
+            //       border: Border.all(color: context.getColor(ThemeEnum.border)),
+            //       boxShadow: context.cardShadow,
+            //     ),
+            //     child: CustomIcon(Icons.restore_rounded, color: ThemeEnum.hover, size: 15),
+            //   ),
+            // ),
+            // const RSizedBox(width: 8),
             Consumer(
               builder: (context, ref, child) {
                 final isRunning = ref.watch(provider.select((value) => value.isRunning));
@@ -162,81 +163,81 @@ class CodeEditorLangBar extends ConsumerWidget {
     );
   }
 }
-
-class _ResetPopupContent extends StatelessWidget {
-  const _ResetPopupContent({required this.onConfirm, required this.onCancel});
-
-  final VoidCallback onConfirm;
-  final VoidCallback onCancel;
-
-  @override
-  Widget build(BuildContext context) {
-    final width = MediaQuery.sizeOf(context).width * 0.82;
-
-    return SizedBox(
-      width: width,
-      child: Container(
-        padding: REdgeInsets.all(16),
-        decoration: BoxDecoration(
-          color: context.getColor(ThemeEnum.card),
-          borderRadius: BorderRadius.circular(14),
-          border: Border.all(color: context.getColor(ThemeEnum.border)),
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(children: [
-              Container(
-                padding: REdgeInsets.all(6),
-                decoration: BoxDecoration(
-                  color: context.getColor(ThemeEnum.accentRedRc).withValues(alpha: 0.12),
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: CustomIcon(Icons.restore_rounded, size: 18, color: ThemeEnum.accentRed),
-              ),
-              RSizedBox(width: 10),
-              Expanded(child: BoldText(StringsManager.resetCode, color: ThemeEnum.textSecond, fontSize: 15)),
-            ]),
-            RSizedBox(height: 12),
-            RegularText(
-              StringsManager.resetCodeDesc,
-              color: ThemeEnum.hover,
-              fontSize: 13,
-              height: 1.5,
-            ),
-            RSizedBox(height: 16),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                InkWell(
-                  onTap: onCancel,
-                  child: Container(
-                    padding: REdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(8),
-                      border: Border.all(color: context.getColor(ThemeEnum.border)),
-                    ),
-                    child: RegularText(StringsManager.noCancel, color: ThemeEnum.hoverSecond, fontSize: 13),
-                  ),
-                ),
-                RSizedBox(width: 8),
-                InkWell(
-                  onTap: onConfirm,
-                  child: Container(
-                    padding: REdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                    decoration: BoxDecoration(
-                      color: context.getColor(ThemeEnum.accentRedRc),
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: SemiBoldText(StringsManager.yesReset, color: ThemeEnum.solidWhite, fontSize: 13),
-                  ),
-                ),
-              ],
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
+//
+// class _ResetPopupContent extends StatelessWidget {
+//   const _ResetPopupContent({required this.onConfirm, required this.onCancel});
+//
+//   final VoidCallback onConfirm;
+//   final VoidCallback onCancel;
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     final width = MediaQuery.sizeOf(context).width * 0.82;
+//
+//     return SizedBox(
+//       width: width,
+//       child: Container(
+//         padding: REdgeInsets.all(16),
+//         decoration: BoxDecoration(
+//           color: context.getColor(ThemeEnum.card),
+//           borderRadius: BorderRadius.circular(14),
+//           border: Border.all(color: context.getColor(ThemeEnum.border)),
+//         ),
+//         child: Column(
+//           mainAxisSize: MainAxisSize.min,
+//           crossAxisAlignment: CrossAxisAlignment.start,
+//           children: [
+//             Row(children: [
+//               Container(
+//                 padding: REdgeInsets.all(6),
+//                 decoration: BoxDecoration(
+//                   color: context.getColor(ThemeEnum.accentRedRc).withValues(alpha: 0.12),
+//                   borderRadius: BorderRadius.circular(8),
+//                 ),
+//                 child: CustomIcon(Icons.restore_rounded, size: 18, color: ThemeEnum.accentRed),
+//               ),
+//               RSizedBox(width: 10),
+//               Expanded(child: BoldText(StringsManager.resetCode, color: ThemeEnum.textSecond, fontSize: 15)),
+//             ]),
+//             RSizedBox(height: 12),
+//             RegularText(
+//               StringsManager.resetCodeDesc,
+//               color: ThemeEnum.hover,
+//               fontSize: 13,
+//               height: 1.5,
+//             ),
+//             RSizedBox(height: 16),
+//             Row(
+//               mainAxisAlignment: MainAxisAlignment.end,
+//               children: [
+//                 InkWell(
+//                   onTap: onCancel,
+//                   child: Container(
+//                     padding: REdgeInsets.symmetric(horizontal: 16, vertical: 8),
+//                     decoration: BoxDecoration(
+//                       borderRadius: BorderRadius.circular(8),
+//                       border: Border.all(color: context.getColor(ThemeEnum.border)),
+//                     ),
+//                     child: RegularText(StringsManager.noCancel, color: ThemeEnum.hoverSecond, fontSize: 13),
+//                   ),
+//                 ),
+//                 RSizedBox(width: 8),
+//                 InkWell(
+//                   onTap: onConfirm,
+//                   child: Container(
+//                     padding: REdgeInsets.symmetric(horizontal: 16, vertical: 8),
+//                     decoration: BoxDecoration(
+//                       color: context.getColor(ThemeEnum.accentRedRc),
+//                       borderRadius: BorderRadius.circular(8),
+//                     ),
+//                     child: SemiBoldText(StringsManager.yesReset, color: ThemeEnum.solidWhite, fontSize: 13),
+//                   ),
+//                 ),
+//               ],
+//             ),
+//           ],
+//         ),
+//       ),
+//     );
+//   }
+// }
