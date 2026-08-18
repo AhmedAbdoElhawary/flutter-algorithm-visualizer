@@ -21,7 +21,7 @@ enum SearchingAlgoCards { bfs, dfs, aStar }
 
 class AlgoSortingCard {
   final AlgorithmGlassCard card;
-  final StateNotifierProvider<SortingNotifier, SortingNotifierState> instance;
+  final NotifierProvider<SortingNotifier, SortingNotifierState> instance;
   final SortingAlgoCards page;
   final String title;
   AlgoSortingCard({required this.page, required this.title, required this.card, required this.instance});
@@ -29,7 +29,7 @@ class AlgoSortingCard {
 
 class AlgoSearchingCard {
   final AlgorithmGlassCard card;
-  final StateNotifierProvider<SearchingNotifier, SearchingState> instance;
+  final NotifierProvider<SearchingNotifier, SearchingState> instance;
   final SearchingAlgoCards page;
   final String title;
   AlgoSearchingCard({required this.page, required this.title, required this.card, required this.instance});
@@ -48,8 +48,8 @@ class BaseViewModel {
         return AlgoSortingCard(
           page: SortingAlgoCards.bubble,
           title: StringsManager.bubbleSort,
-          instance: StateNotifierProvider<SortingNotifier, SortingNotifierState>(
-            (ref) => BubbleSortNotifier(),
+          instance: NotifierProvider<SortingNotifier, SortingNotifierState>(
+            () => BubbleSortNotifier(),
           ),
           card: AlgorithmGlassCard(
             algoComplexity: BubbleSortNotifier.algorithmComplexity,
@@ -61,8 +61,8 @@ class BaseViewModel {
         return AlgoSortingCard(
           page: SortingAlgoCards.selection,
           title: StringsManager.selectionSort,
-          instance: StateNotifierProvider<SortingNotifier, SortingNotifierState>(
-            (ref) => SelectionSortNotifier(),
+          instance: NotifierProvider<SortingNotifier, SortingNotifierState>(
+            () => SelectionSortNotifier(),
           ),
           card: AlgorithmGlassCard(
             algoComplexity: SelectionSortNotifier.algorithmComplexity,
@@ -74,8 +74,8 @@ class BaseViewModel {
         return AlgoSortingCard(
           page: SortingAlgoCards.insertion,
           title: StringsManager.insertionSort,
-          instance: StateNotifierProvider<SortingNotifier, SortingNotifierState>(
-            (ref) => InsertionSortNotifier(),
+          instance: NotifierProvider<SortingNotifier, SortingNotifierState>(
+            () => InsertionSortNotifier(),
           ),
           card: AlgorithmGlassCard(
             algoComplexity: InsertionSortNotifier.algorithmComplexity,
@@ -87,8 +87,8 @@ class BaseViewModel {
         return AlgoSortingCard(
           page: SortingAlgoCards.merge,
           title: StringsManager.mergeSort,
-          instance: StateNotifierProvider<SortingNotifier, SortingNotifierState>(
-            (ref) => MergeSortNotifier(),
+          instance: NotifierProvider<SortingNotifier, SortingNotifierState>(
+            () => MergeSortNotifier(),
           ),
           card: AlgorithmGlassCard(
             algoComplexity: MergeSortNotifier.algorithmComplexity,
@@ -100,8 +100,8 @@ class BaseViewModel {
         return AlgoSortingCard(
           page: SortingAlgoCards.quick,
           title: StringsManager.quickSort,
-          instance: StateNotifierProvider<SortingNotifier, SortingNotifierState>(
-            (ref) => QuickSortNotifier(),
+          instance: NotifierProvider<SortingNotifier, SortingNotifierState>(
+            () => QuickSortNotifier(),
           ),
           card: AlgorithmGlassCard(
             algoComplexity: QuickSortNotifier.algorithmComplexity,
@@ -113,8 +113,8 @@ class BaseViewModel {
         return AlgoSortingCard(
           page: SortingAlgoCards.heap,
           title: StringsManager.heapSort,
-          instance: StateNotifierProvider<SortingNotifier, SortingNotifierState>(
-            (ref) => HeapSortNotifier(),
+          instance: NotifierProvider<SortingNotifier, SortingNotifierState>(
+            () => HeapSortNotifier(),
           ),
           card: AlgorithmGlassCard(
             algoComplexity: HeapSortNotifier.algorithmComplexity,
@@ -126,8 +126,8 @@ class BaseViewModel {
         return AlgoSortingCard(
           page: SortingAlgoCards.shell,
           title: StringsManager.shellSort,
-          instance: StateNotifierProvider<SortingNotifier, SortingNotifierState>(
-            (ref) => ShellSortNotifier(),
+          instance: NotifierProvider<SortingNotifier, SortingNotifierState>(
+            () => ShellSortNotifier(),
           ),
           card: AlgorithmGlassCard(
             algoComplexity: ShellSortNotifier.algorithmComplexity,
@@ -139,8 +139,8 @@ class BaseViewModel {
         return AlgoSortingCard(
           page: SortingAlgoCards.radix,
           title: StringsManager.radixSort,
-          instance: StateNotifierProvider<SortingNotifier, SortingNotifierState>(
-            (ref) => RadixSortNotifier(),
+          instance: NotifierProvider<SortingNotifier, SortingNotifierState>(
+            () => RadixSortNotifier(),
           ),
           card: AlgorithmGlassCard(
             algoComplexity: RadixSortNotifier.algorithmComplexity,
@@ -152,8 +152,8 @@ class BaseViewModel {
         return AlgoSortingCard(
           page: SortingAlgoCards.counting,
           title: StringsManager.countingSort,
-          instance: StateNotifierProvider<SortingNotifier, SortingNotifierState>(
-            (ref) => CountingSortNotifier(),
+          instance: NotifierProvider<SortingNotifier, SortingNotifierState>(
+            () => CountingSortNotifier(),
           ),
           card: AlgorithmGlassCard(
             algoComplexity: CountingSortNotifier.algorithmComplexity,
@@ -165,8 +165,8 @@ class BaseViewModel {
         return AlgoSortingCard(
           page: SortingAlgoCards.bucket,
           title: StringsManager.bucketSort,
-          instance: StateNotifierProvider<SortingNotifier, SortingNotifierState>(
-            (ref) => BucketSortNotifier(),
+          instance: NotifierProvider<SortingNotifier, SortingNotifierState>(
+            () => BucketSortNotifier(),
           ),
           card: AlgorithmGlassCard(
             algoComplexity: BucketSortNotifier.algorithmComplexity,
@@ -181,7 +181,7 @@ class BaseViewModel {
     return switch (cards) {
       SearchingAlgoCards.bfs => AlgoSearchingCard(
           page: SearchingAlgoCards.bfs,
-          instance: StateNotifierProvider<SearchingNotifier, SearchingState>((ref) => BFSSearchingNotifier()),
+          instance: NotifierProvider<SearchingNotifier, SearchingState>(() => BFSSearchingNotifier()),
           title: StringsManager.bFS,
           card: AlgorithmGlassCard(
             algoComplexity: BFSSearchingNotifier.algorithmComplexity,
@@ -191,7 +191,7 @@ class BaseViewModel {
         ),
       SearchingAlgoCards.dfs => AlgoSearchingCard(
           page: SearchingAlgoCards.dfs,
-          instance: StateNotifierProvider<SearchingNotifier, SearchingState>((ref) => DFSSearchingNotifier()),
+          instance: NotifierProvider<SearchingNotifier, SearchingState>(() => DFSSearchingNotifier()),
           title: StringsManager.dFS,
           card: AlgorithmGlassCard(
             algoComplexity: DFSSearchingNotifier.algorithmComplexity,
@@ -202,7 +202,7 @@ class BaseViewModel {
       SearchingAlgoCards.aStar => AlgoSearchingCard(
           page: SearchingAlgoCards.aStar,
           title: StringsManager.aStarSearch,
-          instance: StateNotifierProvider<SearchingNotifier, SearchingState>((ref) => AStarSearchingNotifier()),
+          instance: NotifierProvider<SearchingNotifier, SearchingState>(() => AStarSearchingNotifier()),
           card: AlgorithmGlassCard(
             algoComplexity: AStarSearchingNotifier.algorithmComplexity,
             color: Color(0xFF66BB6A),
