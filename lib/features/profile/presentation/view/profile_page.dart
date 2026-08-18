@@ -58,12 +58,22 @@ class _ProfileHeader extends StatelessWidget {
     return HorizontalPadding(
       padding: 16,
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        Row(children: [
-          RegularText(StringsManager.profile, color: ThemeEnum.hoverSecond, fontSize: 12),
-          const Spacer(),
-          CustomIcon(Icons.settings_rounded, size: 18, color: ThemeEnum.hoverSecond),
-        ]),
-        RSizedBox(height: 12),
+        Padding(
+          padding: REdgeInsets.fromLTRB(0, 16, 0, 0),
+          child: Row(
+            children: [
+              MediumText(
+                StringsManager.profile.toUpperCase(),
+                color: ThemeEnum.hover,
+                letterSpacing: 0.5,
+                fontSize: 12,
+              ),
+              const Spacer(),
+              CustomIcon(Icons.settings_rounded, size: 18, color: ThemeEnum.hoverSecond),
+            ],
+          ),
+        ),
+        RSizedBox(height: 10),
         Row(children: [
           Stack(clipBehavior: Clip.none, children: [
             Container(
@@ -178,12 +188,13 @@ class _EditableNameState extends State<_EditableName> {
             widget.ref.read(profileNameProvider.notifier).updateName(trimmed);
           }
           setState(() => _editing = false);
-        },onTapOutside: (event) {
-        final trimmed = _controller.text.trim();
-        if (trimmed.isNotEmpty) {
-          widget.ref.read(profileNameProvider.notifier).updateName(trimmed);
-        }
-        setState(() => _editing = false);
+        },
+        onTapOutside: (event) {
+          final trimmed = _controller.text.trim();
+          if (trimmed.isNotEmpty) {
+            widget.ref.read(profileNameProvider.notifier).updateName(trimmed);
+          }
+          setState(() => _editing = false);
         },
       );
     }
@@ -191,7 +202,8 @@ class _EditableNameState extends State<_EditableName> {
     return GestureDetector(
       onTap: () => setState(() => _editing = true),
       child: Row(children: [
-        BoldText(widget.name, color: ThemeEnum.textPrimary, fontSize: 22,fontWeight: FontWeightManager.bold800),
+        BoldText(widget.name,
+            color: ThemeEnum.textPrimary, fontSize: 22, fontWeight: FontWeightManager.bold800),
         RSizedBox(width: 6),
         CustomIcon(Icons.edit_rounded, size: 14, color: ThemeEnum.hoverSecond),
       ]),
