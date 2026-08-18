@@ -9,7 +9,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 /// publishes a fresh problem instance doesn't recreate the controller and wipe
 /// the editor session mid-run. The problem snapshot is read once at creation;
 /// it only holds the (immutable) problem definition used for grading.
-final codeEditorControllerProvider = NotifierProvider.autoDispose
-    .family<CodeEditorController, CodeEditorState, int>((int problemId) {
+final codeEditorControllerProvider =
+    NotifierProvider.autoDispose.family<CodeEditorController, CodeEditorState, int>((int problemId) {
   return CodeEditorController(problemId: problemId);
 });

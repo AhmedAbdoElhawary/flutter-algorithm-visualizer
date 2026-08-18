@@ -15,7 +15,7 @@ class CodeEditorController extends Notifier<CodeEditorState> {
 
   CodingProblem? get codingProblem => ref.read(getProblemProvider(problemId)).value;
 
-  late final String initialCode = codingProblem?.getCode??"";
+  late final String initialCode = codingProblem?.getCode ?? "";
 
   CodeController? _codeController;
   Timer? _highlightTimer;
@@ -48,7 +48,7 @@ class CodeEditorController extends Notifier<CodeEditorState> {
   void resetCode() {
     final controller = _codeController;
     if (controller == null) return;
-    controller.text = codingProblem?.getDefaultCode??"";
+    controller.text = codingProblem?.getDefaultCode ?? "";
     state = state.copyWith(grade: null, highlightedLine: null);
   }
 
@@ -65,8 +65,8 @@ class CodeEditorController extends Notifier<CodeEditorState> {
   }
 
   Future<void> runCode(void Function(CodeGradeResult? result) result) async {
-    final codingProblem=this.codingProblem;
-    if (state.isRunning||codingProblem==null) return result.call(null);
+    final codingProblem = this.codingProblem;
+    if (state.isRunning || codingProblem == null) return result.call(null);
     state = state.copyWith(isRunning: true, grade: null);
 
     final controller = _getCodeController;

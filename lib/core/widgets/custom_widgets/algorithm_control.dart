@@ -61,7 +61,8 @@ class AlgorithmControls extends ConsumerWidget {
                   child: button,
                 ),
               ),
-              SpeedSelector(interface: interface, getSpeed: getSpeed, expandSpeedEscalator: expandSpeedEscalator),
+              SpeedSelector(
+                  interface: interface, getSpeed: getSpeed, expandSpeedEscalator: expandSpeedEscalator),
             ],
           ),
         ),
@@ -125,13 +126,17 @@ class CtrlButton extends StatelessWidget {
     return SimpleGlassButton(
       onTap: onTap,
       messageTip: messageTip,
-      child: Icon(icon, size: size.r, color: _disabled ? context.getColor(ThemeEnum.hoverSecond) : context.getColor(ThemeEnum.textSecond)),
+      child: Icon(icon,
+          size: size.r,
+          color:
+              _disabled ? context.getColor(ThemeEnum.hoverSecond) : context.getColor(ThemeEnum.textSecond)),
     );
   }
 }
 
 class SpeedSelector extends ConsumerWidget {
-  const SpeedSelector({required this.interface, required this.expandSpeedEscalator, required this.getSpeed, super.key});
+  const SpeedSelector(
+      {required this.interface, required this.expandSpeedEscalator, required this.getSpeed, super.key});
   final AlgorithmControlInterface interface;
   final PlaybackSpeed getSpeed;
   final bool expandSpeedEscalator;
