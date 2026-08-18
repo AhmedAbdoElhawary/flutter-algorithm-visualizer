@@ -80,7 +80,8 @@ void main() {
       _ScreenUtilSetup(
         child: MaterialApp(
           home: Scaffold(
-            body: CodeEditorBlock(title: 'test', code: 'void main() {}', controllerCallback: (c) => controller = c),
+            body: CodeEditorBlock(
+                title: 'test', code: 'void main() {}', controllerCallback: (c) => controller = c),
           ),
         ),
       ),

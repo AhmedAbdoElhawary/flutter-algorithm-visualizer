@@ -10,7 +10,8 @@ class AStarSearchingNotifier extends SearchingNotifier {
     final start = pfEncode(kPFStartRow, kPFStartCol);
     final end = pfEncode(kPFEndRow, kPFEndCol);
 
-    int heuristic(int encoded) => (pfDecodeRow(encoded) - kPFEndRow).abs() + (pfDecodeCol(encoded) - kPFEndCol).abs();
+    int heuristic(int encoded) =>
+        (pfDecodeRow(encoded) - kPFEndRow).abs() + (pfDecodeCol(encoded) - kPFEndCol).abs();
 
     final gScore = <int, int>{start: 0};
     final fScore = <int, int>{start: heuristic(start)};
