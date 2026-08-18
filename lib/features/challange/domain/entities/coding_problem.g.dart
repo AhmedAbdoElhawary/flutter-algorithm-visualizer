@@ -6,8 +6,8 @@ part of 'coding_problem.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$CodingProblemImpl _$$CodingProblemImplFromJson(Map<String, dynamic> json) =>
-    _$CodingProblemImpl(
+CodingProblem _$CodingProblemFromJson(Map<String, dynamic> json) =>
+    CodingProblem(
       number: (json['number'] as num?)?.toInt(),
       problemId: (json['problem_id'] as num?)?.toInt(),
       name: json['name'] as String?,
@@ -78,7 +78,7 @@ _$CodingProblemImpl _$$CodingProblemImplFromJson(Map<String, dynamic> json) =>
           .toList(),
     );
 
-Map<String, dynamic> _$$CodingProblemImplToJson(_$CodingProblemImpl instance) =>
+Map<String, dynamic> _$CodingProblemToJson(CodingProblem instance) =>
     <String, dynamic>{
       'number': instance.number,
       'problem_id': instance.problemId,
