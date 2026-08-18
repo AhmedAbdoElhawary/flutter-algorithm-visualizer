@@ -15,19 +15,21 @@ final problemRepositoryProvider = Provider<ProblemRepository>((ref) {
 /// Owns the fetched list so consumers can patch a single problem in place
 /// (via [_ProblemsNotifier.updateProblem]) instead of re-fetching everything.
 /// Non-`autoDispose`: this is the source of truth every screen reads from.
-final problemsProvider = StateNotifierProvider<_ProblemsNotifier, AsyncValue<List<CodingProblem>>>((ref) {
-  final notifier = _ProblemsNotifier(ref.watch(problemRepositoryProvider));
-  notifier.load();
-  return notifier;
+final problemsProvider = NotifierProvider<_ProblemsNotifier, AsyncValue<List<CodingProblem>>>(() {
+  return _ProblemsNotifier();
 });
 
-class _ProblemsNotifier extends StateNotifier<AsyncValue<List<CodingProblem>>> {
-  _ProblemsNotifier(this._repository) : super(const AsyncLoading());
+class _ProblemsNotifier extends Notifier<AsyncValue<List<CodingProblem>>> {
+  late final ProblemRepository _repository;
 
-  final ProblemRepository _repository;
+  @override
+  AsyncValue<List<CodingProblem>> build() {
+    _repository = ref.watch(problemRepositoryProvider);
+    _load();
+    return const AsyncLoading();
+  }
 
-  Future<void> load() async {
-    state = const AsyncLoading();
+  Future<void> _load() async {
     state = await AsyncValue.guard(() => _repository.getAllProblems());
   }
 
