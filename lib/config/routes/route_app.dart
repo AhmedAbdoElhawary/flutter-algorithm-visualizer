@@ -5,9 +5,9 @@ import 'package:algorithm_visualizer/features/base/view_model/base_view_model.da
 import 'package:algorithm_visualizer/features/challange/presentation/view/challenge_page.dart';
 import 'package:algorithm_visualizer/features/challange/presentation/view/code_editor_page.dart';
 import 'package:algorithm_visualizer/features/home/view/home_page.dart';
-import 'package:algorithm_visualizer/features/profile/presentation/pages/bookmarked_problems_page.dart';
-import 'package:algorithm_visualizer/features/profile/presentation/pages/practice_history_page.dart';
-import 'package:algorithm_visualizer/features/profile/profile_page.dart';
+import 'package:algorithm_visualizer/features/profile/presentation/view/profile_page.dart';
+import 'package:algorithm_visualizer/features/profile/presentation/view/sub_views/bookmarked_problems_page.dart';
+import 'package:algorithm_visualizer/features/profile/presentation/view/sub_views/practice_history_page.dart';
 import 'package:algorithm_visualizer/features/visualize/view/visualize_page.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
