@@ -1,10 +1,10 @@
 import 'package:algorithm_visualizer/core/resources/strings_manager.dart';
 import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
 import 'package:algorithm_visualizer/core/widgets/adaptive/text/adaptive_text.dart';
+import 'package:algorithm_visualizer/core/widgets/custom_widgets/animated_popup.dart';
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/custom_icon.dart';
 import 'package:algorithm_visualizer/features/challange/domain/entities/coding_problem.dart';
 import 'package:algorithm_visualizer/features/challange/presentation/view_model/challenges/challenges_providers.dart';
-import 'package:algorithm_visualizer/features/challange/presentation/view_model/code_editor/code_editor_controller.dart';
 import 'package:algorithm_visualizer/features/challange/presentation/view_model/code_editor/code_editor_providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -19,6 +19,7 @@ class CodeEditorLangBar extends ConsumerWidget {
 
   final String language;
   final CodingProblem problem;
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final isDark = context.isThemeDark;
@@ -73,8 +74,14 @@ class CodeEditorLangBar extends ConsumerWidget {
               ),
             ),
             const RSizedBox(width: 8),
-            GestureDetector(
-              onTap: () => _showResetDialog(context, notifier),
+            AnimatedPopup(
+              builder: (removeOverlay) => _ResetPopupContent(
+                onCancel: removeOverlay,
+                onConfirm: () {
+                  notifier.resetCode();
+                  removeOverlay();
+                },
+              ),
               child: Container(
                 width: 32.r,
                 height: 32.r,
@@ -98,28 +105,7 @@ class CodeEditorLangBar extends ConsumerWidget {
                       : () async {
                           await notifier.runCode(
                             (result) async {
-                              // if passed or failed
                               if (result == null) return;
-
-                              // // not passed and initial saved
-                              // if(!result.allPassed&&!problem.isThereAnyCorrectCodeSaved);
-                              // ///save
-                              // // all passed and initial saved
-                              // if(result.allPassed&&!problem.isThereAnyCorrectCodeSaved);
-                              // ///save
-                              // // not passed and not correct saved
-                              // if(!result.allPassed&&!problem.isThereAnyCorrectCodeSaved);
-                              // ///save
-                              // // // not passed and all correct saved
-                              // // if(!result.allPassed&&problem.isThereAnyCorrectCodeSaved);
-                              // /// not saved
-                              // // all passed and not correct saved
-                              // if(result.allPassed&&!problem.isThereAnyCorrectCodeSaved);
-                              // ///save
-                              // // all passed and correct saved
-                              // if(result.allPassed&&problem.isThereAnyCorrectCodeSaved);
-                              // ///save
-
                               if (!(!result.allPassed && problem.isThereAnyCorrectCodeSaved)) {
                                 await ref.read(challengesProvider.notifier).updateProblem(problem, result);
                               }
@@ -177,39 +163,80 @@ class CodeEditorLangBar extends ConsumerWidget {
   }
 }
 
-void _showResetDialog(BuildContext context, CodeEditorController notifier) {
-  showDialog(
-    context: context,
-    builder: (ctx) => AlertDialog(
-      backgroundColor: context.getColor(ThemeEnum.card),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(14),
-        side: BorderSide(color: context.getColor(ThemeEnum.border)),
-      ),
-      title: Row(children: [
-        CustomIcon(Icons.restore_rounded, size: 18, color: ThemeEnum.accentRed),
-        const RSizedBox(width: 8),
-        BoldText(StringsManager.resetCode, color: ThemeEnum.textSecond, fontSize: 16),
-      ]),
-      content: RegularText(
-        StringsManager.resetCodeDesc,
-        color: ThemeEnum.hover,
-        fontSize: 13,
-        height: 1.5,
-      ),
-      actions: [
-        TextButton(
-          onPressed: () => Navigator.of(ctx).pop(),
-          child: RegularText(StringsManager.noCancel, color: ThemeEnum.hoverSecond, fontSize: 13),
+class _ResetPopupContent extends StatelessWidget {
+  const _ResetPopupContent({required this.onConfirm, required this.onCancel});
+
+  final VoidCallback onConfirm;
+  final VoidCallback onCancel;
+
+  @override
+  Widget build(BuildContext context) {
+    final width = MediaQuery.sizeOf(context).width * 0.82;
+
+    return SizedBox(
+      width: width,
+      child: Container(
+        padding: REdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: context.getColor(ThemeEnum.card),
+          borderRadius: BorderRadius.circular(14),
+          border: Border.all(color: context.getColor(ThemeEnum.border)),
         ),
-        TextButton(
-          onPressed: () {
-            notifier.resetCode();
-            Navigator.of(ctx).pop();
-          },
-          child: SemiBoldText(StringsManager.yesReset, color: ThemeEnum.accentRed, fontSize: 13),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(children: [
+              Container(
+                padding: REdgeInsets.all(6),
+                decoration: BoxDecoration(
+                  color: context.getColor(ThemeEnum.accentRedRc).withValues(alpha: 0.12),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: CustomIcon(Icons.restore_rounded, size: 18, color: ThemeEnum.accentRed),
+              ),
+              RSizedBox(width: 10),
+              Expanded(child: BoldText(StringsManager.resetCode, color: ThemeEnum.textSecond, fontSize: 15)),
+            ]),
+            RSizedBox(height: 12),
+            RegularText(
+              StringsManager.resetCodeDesc,
+              color: ThemeEnum.hover,
+              fontSize: 13,
+              height: 1.5,
+            ),
+            RSizedBox(height: 16),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                InkWell(
+                  onTap: onCancel,
+                  child: Container(
+                    padding: REdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(8),
+                      border: Border.all(color: context.getColor(ThemeEnum.border)),
+                    ),
+                    child: RegularText(StringsManager.noCancel, color: ThemeEnum.hoverSecond, fontSize: 13),
+                  ),
+                ),
+                RSizedBox(width: 8),
+                InkWell(
+                  onTap: onConfirm,
+                  child: Container(
+                    padding: REdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                    decoration: BoxDecoration(
+                      color: context.getColor(ThemeEnum.accentRedRc),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: SemiBoldText(StringsManager.yesReset, color: ThemeEnum.solidWhite, fontSize: 13),
+                  ),
+                ),
+              ],
+            ),
+          ],
         ),
-      ],
-    ),
-  );
+      ),
+    );
+  }
 }
