@@ -7,7 +7,7 @@ import 'package:algorithm_visualizer/core/widgets/adaptive/padding/adaptive_padd
 import 'package:algorithm_visualizer/core/widgets/adaptive/text/adaptive_text.dart';
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/custom_icon.dart';
 import 'package:algorithm_visualizer/features/challange/domain/enums/problem.dart';
-import 'package:algorithm_visualizer/features/profile/data/profile_stats_provider.dart';
+import 'package:algorithm_visualizer/features/profile/presentation/view_model/profile_stats_provider.dart';
 import 'package:algorithm_visualizer/features/profile/presentation/widgets/status_box.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';

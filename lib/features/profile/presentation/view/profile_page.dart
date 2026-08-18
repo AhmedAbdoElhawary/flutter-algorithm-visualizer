@@ -5,7 +5,7 @@ import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
 import 'package:algorithm_visualizer/core/widgets/adaptive/padding/adaptive_padding.dart';
 import 'package:algorithm_visualizer/core/widgets/adaptive/text/adaptive_text.dart';
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/custom_icon.dart';
-import 'package:algorithm_visualizer/features/profile/data/profile_provider.dart';
+import 'package:algorithm_visualizer/features/profile/presentation/view_model/profile_provider.dart';
 import 'package:algorithm_visualizer/features/profile/presentation/widgets/profile_category_chart.dart';
 import 'package:algorithm_visualizer/features/profile/presentation/widgets/profile_heatmap.dart';
 import 'package:algorithm_visualizer/features/profile/presentation/widgets/profile_practice_history.dart';
