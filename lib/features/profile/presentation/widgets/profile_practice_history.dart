@@ -7,7 +7,8 @@ import 'package:algorithm_visualizer/core/widgets/adaptive/padding/adaptive_padd
 import 'package:algorithm_visualizer/core/widgets/adaptive/text/adaptive_text.dart';
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/custom_icon.dart';
 import 'package:algorithm_visualizer/features/challange/domain/enums/problem.dart';
-import 'package:algorithm_visualizer/features/profile/presentation/view_model/profile_stats_provider.dart';
+import 'package:algorithm_visualizer/features/profile/presentation/entities/practice_history_entry.dart';
+import 'package:algorithm_visualizer/features/profile/presentation/view_model/statistics/profile_statistics_provider.dart';
 import 'package:algorithm_visualizer/features/profile/presentation/widgets/status_box.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -20,11 +21,11 @@ class ProfilePracticeHistory extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final stats = ref.watch(profileStatsProvider);
+    final practiceHistory = ref.watch(profileStatisticsProvider.select((value) => value.practiceHistory));
 
-    if (stats.practiceHistory.isEmpty) return const SizedBox.shrink();
+    if (practiceHistory.isEmpty) return const SizedBox.shrink();
 
-    final preview = stats.practiceHistory.take(_maxPreview).toList();
+    final preview = practiceHistory.take(_maxPreview).toList();
 
     return HorizontalPadding(
       padding: 16,
@@ -37,24 +38,33 @@ class ProfilePracticeHistory extends ConsumerWidget {
         ),
         clipBehavior: Clip.hardEdge,
         child: Column(children: [
-          Padding(
-            padding: REdgeInsets.fromLTRB(14, 14, 14, 10),
-            child: Row(children: [
-              BoldText(StringsManager.practiceHistory,
-                  color: ThemeEnum.textSecond, fontSize: 13, fontWeight: FontWeightManager.bold800),
-              const Spacer(),
-              GestureDetector(
-                onTap: () => context.pushTo(Routes.recentSubmissions),
-                child: Row(children: [
-                  SemiBoldText(StringsManager.viewAll, color: ThemeEnum.accent, fontSize: 12),
-                  CustomIcon(Icons.chevron_right_rounded, size: 14, color: ThemeEnum.accent),
-                ]),
-              ),
-            ]),
-          ),
+          _HeaderOfCard(),
           ...preview.map((entry) => PracticeHistoryRow(entry: entry)),
         ]),
       ),
+    );
+  }
+}
+
+class _HeaderOfCard extends StatelessWidget {
+  const _HeaderOfCard();
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: REdgeInsets.fromLTRB(14, 14, 14, 10),
+      child: Row(children: [
+        BoldText(StringsManager.practiceHistory,
+            color: ThemeEnum.textSecond, fontSize: 13, fontWeight: FontWeightManager.bold800),
+        const Spacer(),
+        GestureDetector(
+          onTap: () => context.pushTo(Routes.recentSubmissions),
+          child: Row(children: [
+            SemiBoldText(StringsManager.viewAll, color: ThemeEnum.accent, fontSize: 12),
+            CustomIcon(Icons.chevron_right_rounded, size: 14, color: ThemeEnum.accent),
+          ]),
+        ),
+      ]),
     );
   }
 }
