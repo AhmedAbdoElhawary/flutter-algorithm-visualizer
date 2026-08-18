@@ -17,6 +17,7 @@ class ProblemStyle {
         return ThemeEnum.accentBlue;
     }
   }
+
   static ThemeEnum difficultyColor(ProblemDifficulty difficulty) {
     switch (difficulty) {
       case ProblemDifficulty.easy:
