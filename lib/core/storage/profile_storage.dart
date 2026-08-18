@@ -4,7 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get_storage/get_storage.dart';
 
 const _profileNameKey = 'profile_name';
-const _defaultName = 'Alex Chen';
+const _defaultName = 'A';
 
 final profileStorageProvider = Provider<ProfileStorage>((ref) {
   return ProfileStorage(GetStorageService(GetStorage()));
