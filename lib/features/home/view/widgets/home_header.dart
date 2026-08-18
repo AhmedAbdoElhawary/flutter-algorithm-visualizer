@@ -16,9 +16,9 @@ class HomeHeader extends ConsumerWidget {
     final name = ref.watch(profileNameProvider);
 
     return OnlyPadding(
-      startPadding: 20,
-      endPadding: 20,
-      topPadding: 18,
+      startPadding: 16,
+      endPadding: 16,
+      topPadding: 16,
       bottomPadding: 14,
       child: Row(
         children: [
