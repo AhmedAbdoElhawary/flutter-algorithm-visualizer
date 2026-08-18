@@ -103,7 +103,7 @@ class StringsManager {
   static const String loading = 'Loading challenges...';
   static const String notAbleToLoadAnyChallenge = 'Not able to load any challenge...';
   static const String tryInDifferentTime = 'Try in different time';
-  static const String practice = 'practice';
+  static const String practice = 'Practice';
   static const String challenges = 'Challenges';
   static const String nan = "NAN";
   static const String solveWithArrow = "Solve →";
@@ -170,5 +170,22 @@ class StringsManager {
   static const String date = "Date";
   static const String result = "Result";
   static const String difficultyProgress = "Difficulty Progress";
+  static const String home = "Home";
+  static const String visual = "Visual";
+  static const String code = "Code";
+  static const String goodMorning = "Good morning";
+  static const String goodAfternoon = "Good afternoon";
+  static const String goodEvening = "Good evening";
+  static const String recentActivity = "Recent Activity";
+  static const String justNow = "Just now";
+  static const String mAgo = "m ago";
+  static const String hAgo = "h ago";
+  static const String dAgo = "d ago";
+  static const String yesterday = "Yesterday";
+
+  static const String streak = "Streak";
+  static const String accuracy = "Accuracy";
+  static const String attempts = "Attempts";
+  static const String continueLabel = "Continue Learning";
 
 }
