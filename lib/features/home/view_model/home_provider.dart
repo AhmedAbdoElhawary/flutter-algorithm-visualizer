@@ -4,6 +4,8 @@ import 'package:algorithm_visualizer/features/challange/presentation/view_model/
 import 'package:algorithm_visualizer/features/profile/presentation/view_model/profile_stats_provider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+/// no needed to over engineer and separate theme, just to be different than others view model, but it's clear and not complicated here
+/// so, i didn't seperated it to provider and notifier
 class HomeData {
   const HomeData({
     required this.greeting,
