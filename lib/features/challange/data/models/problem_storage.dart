@@ -18,8 +18,7 @@ class ProblemStorageDTO {
   final bool? isBookmarked;
   final List<ProblemSolutionStatusDTO>? solutionsStatus;
 
-  factory ProblemStorageDTO.fromJson(Map<String, dynamic> json) =>
-      _$ProblemStorageDTOFromJson(json);
+  factory ProblemStorageDTO.fromJson(Map<String, dynamic> json) => _$ProblemStorageDTOFromJson(json);
 
   Map<String, dynamic> toJson() => _$ProblemStorageDTOToJson(this);
 

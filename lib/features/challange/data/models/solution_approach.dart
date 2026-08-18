@@ -16,8 +16,7 @@ class SolutionApproach {
   final String? whyItWorks;
   final String? implementationNotes;
 
-  factory SolutionApproach.fromJson(Map<String, dynamic> json) =>
-      _$SolutionApproachFromJson(json);
+  factory SolutionApproach.fromJson(Map<String, dynamic> json) => _$SolutionApproachFromJson(json);
 
   Map<String, dynamic> toJson() => _$SolutionApproachToJson(this);
 

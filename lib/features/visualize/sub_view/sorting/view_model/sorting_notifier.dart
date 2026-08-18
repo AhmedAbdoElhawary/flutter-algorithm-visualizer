@@ -35,6 +35,7 @@ abstract class SortingNotifier extends Notifier<SortingNotifierState>
     _snapshots = [];
     return initState();
   }
+
   static const ThemeEnum swappingColor = ThemeEnum.accentRed;
   static const ThemeEnum comparedColor = ThemeEnum.accentBlue;
   static const ThemeEnum itemColor = ThemeEnum.columnColor;

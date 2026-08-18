@@ -284,11 +284,7 @@ class ProblemRunner {
   }
 
   String _baseTypeName(String type) {
-    return type
-        .trim()
-        .replaceAll(RegExp(r'\s+'), '')
-        .replaceAll(RegExp(r'<.*>'), '')
-        .replaceAll('?', '');
+    return type.trim().replaceAll(RegExp(r'\s+'), '').replaceAll(RegExp(r'<.*>'), '').replaceAll('?', '');
   }
 
   /// The `default_code` in the JSON wraps the function in `class Solution`
@@ -310,8 +306,7 @@ class ProblemRunner {
   /// appear inside comments.
   (String, int) _stripSolutionWrapper(String code) {
     final commentFree = _stripComments(code);
-    final match = RegExp(r'^[ \t]*class\s+Solution\s*\{', multiLine: true)
-        .firstMatch(commentFree);
+    final match = RegExp(r'^[ \t]*class\s+Solution\s*\{', multiLine: true).firstMatch(commentFree);
     if (match == null) return _trimmed(commentFree);
 
     final open = commentFree.indexOf('{', match.start);

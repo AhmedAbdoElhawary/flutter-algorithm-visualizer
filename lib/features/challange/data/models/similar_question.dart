@@ -10,8 +10,7 @@ class SimilarQuestion {
   final String? name;
   final String? reason;
 
-  factory SimilarQuestion.fromJson(Map<String, dynamic> json) =>
-      _$SimilarQuestionFromJson(json);
+  factory SimilarQuestion.fromJson(Map<String, dynamic> json) => _$SimilarQuestionFromJson(json);
 
   Map<String, dynamic> toJson() => _$SimilarQuestionToJson(this);
 
