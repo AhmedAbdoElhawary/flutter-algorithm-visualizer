@@ -1,6 +1,8 @@
+import 'package:algorithm_visualizer/core/resources/strings_manager.dart';
 import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
 import 'package:algorithm_visualizer/core/widgets/adaptive/padding/adaptive_padding.dart';
 import 'package:algorithm_visualizer/core/widgets/adaptive/text/adaptive_text.dart';
+import 'package:algorithm_visualizer/core/widgets/custom_widgets/glass_card.dart';
 import 'package:algorithm_visualizer/features/home/view_model/home_providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -14,10 +16,10 @@ class HomeStatsStrip extends ConsumerWidget {
     final stats = ref.watch(homeDataProvider.select((s) => s.stats));
 
     final items = [
-      (icon: Icons.local_fire_department_rounded, value: '${stats.currentStreak}', label: 'Streak', color: ThemeEnum.accentYellow),
-      (icon: Icons.check_circle_outline_rounded, value: '${stats.solvedCount}', label: 'Solved', color: ThemeEnum.accentGreen),
-      (icon: Icons.gps_fixed_rounded, value: '${(stats.accuracyRate * 100).round()}%', label: 'Accuracy', color: ThemeEnum.accent),
-      (icon: Icons.trending_up_rounded, value: '${stats.totalAttempts}', label: 'Attempts', color: ThemeEnum.accentBlue),
+      (icon: Icons.local_fire_department_rounded, value: '${stats.currentStreak}', label: StringsManager.streak, color: ThemeEnum.accentYellow),
+      (icon: Icons.check_circle_outline_rounded, value: '${stats.solvedCount}', label: StringsManager.solved, color: ThemeEnum.accentGreen),
+      (icon: Icons.gps_fixed_rounded, value: '${(stats.accuracyRate * 100).round()}%', label:StringsManager.accuracy, color: ThemeEnum.accent),
+      (icon: Icons.trending_up_rounded, value: '${stats.totalAttempts}', label: StringsManager.attempts, color: ThemeEnum.accentBlue),
     ];
 
     return OnlyPadding(
@@ -31,7 +33,7 @@ class HomeStatsStrip extends ConsumerWidget {
             child: Container(
               margin: EdgeInsets.only(right: isLast ? 0 : 8.w),
               padding: REdgeInsets.symmetric(vertical: 12, horizontal: 8),
-              decoration: _cardDecoration(context),
+              decoration: SimpleGlassButton.cardDecoration(context),
               child: Column(
                 children: [
                   Icon(s.icon, size: 18.r, color: context.getColor(s.color)),
@@ -57,11 +59,4 @@ class HomeStatsStrip extends ConsumerWidget {
       ),
     );
   }
-
-  BoxDecoration _cardDecoration(BuildContext context) => BoxDecoration(
-        color: context.getColor(ThemeEnum.mainCard),
-        borderRadius: BorderRadius.circular(14.r),
-        border: Border.all(color: context.getColor(ThemeEnum.border)),
-        boxShadow: context.cardShadow,
-      );
 }
