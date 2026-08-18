@@ -2,128 +2,84 @@ import 'package:algorithm_visualizer/core/resources/strings_manager.dart';
 import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
 import 'package:algorithm_visualizer/core/widgets/adaptive/padding/adaptive_padding.dart';
 import 'package:algorithm_visualizer/core/widgets/adaptive/text/adaptive_text.dart';
-import 'package:algorithm_visualizer/features/profile/presentation/view_model/profile_stats_provider.dart';
-import 'package:fl_chart/fl_chart.dart';
+import 'package:algorithm_visualizer/features/home/view_model/home_providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-class ProfileWeeklyChart extends ConsumerStatefulWidget {
+class ProfileWeeklyChart extends ConsumerWidget {
   const ProfileWeeklyChart({super.key});
 
-  @override
-  ConsumerState<ProfileWeeklyChart> createState() => _ProfileWeeklyChartState();
-}
-
-class _ProfileWeeklyChartState extends ConsumerState<ProfileWeeklyChart> {
-  int? _selectedDay;
+  static const _dayLabels = ['M', 'T', 'W', 'T', 'F', 'S', 'S'];
 
   @override
-  Widget build(BuildContext context) {
-    final stats = ref.watch(profileStatsProvider);
-    final weekly = stats.weeklyActivity;
+  Widget build(BuildContext context, WidgetRef ref) {
+    final weekly = ref.watch(homeDataProvider.select((s) => s.stats.weeklyActivity));
+    final maxVal = weekly.isEmpty ? 1 : (weekly.reduce((a, b) => a > b ? a : b)).clamp(1, 999);
     final total = weekly.fold<int>(0, (a, b) => a + b);
-    final isDark = context.isThemeDark;
 
-    const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
-
-    return HorizontalPadding(
-      padding: 16,
+    return OnlyPadding(
+      startPadding: 16,
+      endPadding: 16,
+      bottomPadding: 14,
       child: Container(
         padding: REdgeInsets.all(14),
-        decoration: BoxDecoration(
-          color: context.getColor(ThemeEnum.card),
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: context.getColor(ThemeEnum.border)),
-          boxShadow: context.cardShadow,
-        ),
+        decoration: _cardDecoration(context),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-              BoldText(StringsManager.thisWeek, color: ThemeEnum.textSecond, fontSize: 13),
+              BoldText(StringsManager.thisWeek, color: ThemeEnum.textSecond, fontSize: 14),
+              // RSizedBox(height: 12),
               SemiBoldText(
-                _selectedDay != null
-                    ? '${days[_selectedDay!]}: ${weekly[_selectedDay!]} ${StringsManager.solvedLabel}'
-                    : '$total ${StringsManager.solvedLabel}',
+                '$total ${StringsManager.solvedLabel}',
                 color: ThemeEnum.accent,
                 fontSize: 12,
               ),
             ]),
-            RSizedBox(height: 12),
-            SizedBox(
-              height: 70.r,
-              child: BarChart(
-                BarChartData(
-                  barGroups: weekly.asMap().entries.map((e) {
-                    final i = e.key;
-                    final value = e.value;
-                    final isSelected = _selectedDay == i;
-                    final isToday = i == DateTime.now().weekday - 1;
-                    return BarChartGroupData(x: i, barRods: [
-                      BarChartRodData(
-                        toY: value.toDouble(),
-                        color: isSelected
-                            ? context.getColor(ThemeEnum.accent)
-                            : isToday
-                                ? context.getColor(ThemeEnum.accent)
-                                    .withValues(alpha: isDark ? 0.5 : 0.4)
-                                : context.getColor(ThemeEnum.accent)
-                                    .withValues(alpha: isDark ? 0.22 : 0.15),
-                        borderRadius: BorderRadius.vertical(top: Radius.circular(4.r)),
-                        width: 18.w,
+            SizedBox(height: 12.h),
+            RSizedBox(
+              height: 90,
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: List.generate(7, (i) {
+                  final val = i < weekly.length ? weekly[i] : 0;
+                  final fraction = val / maxVal;
+                  final isToday = i == (DateTime.now().weekday - 1);
+
+                  return Expanded(
+                    child: Padding(
+                      padding: REdgeInsets.symmetric(horizontal: 3),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          if (val > 0)
+                            MediumText(
+                              '$val',
+                              fontSize: 9,
+                              color: ThemeEnum.textSecond,
+                            ),
+                          RSizedBox(height: 4),
+                          Container(
+                            height: (50.h * fraction).clamp(4.0, 50.0),
+                            decoration: BoxDecoration(
+                              color: isToday
+                                  ? context.getColor(ThemeEnum.accent)
+                                  : context.getColor(ThemeEnum.accent).withValues(alpha: 0.3),
+                              borderRadius: BorderRadius.circular(4.r),
+                            ),
+                          ),
+                          RSizedBox(height: 6),
+                          RegularText(
+                            _dayLabels[i],
+                            fontSize: 10,
+                            color: isToday ? ThemeEnum.accent : ThemeEnum.textSecond,
+                          ),
+                        ],
                       ),
-                    ]);
-                  }).toList(),
-                  gridData: const FlGridData(show: false),
-                  borderData: FlBorderData(show: false),
-                  barTouchData: BarTouchData(
-                    touchTooltipData: BarTouchTooltipData(
-                      getTooltipColor: (_) => context.getColor(ThemeEnum.outputHeader),
-                      getTooltipItem: (group, gIdx, rod, rIdx) {
-                        final dayName = days[group.x];
-                        return BarTooltipItem(
-                          '$dayName: ${rod.toY.toInt()}',
-                          TextStyle(
-                            color: context.getColor(ThemeEnum.textPrimary),
-                            fontSize: 11,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        );
-                      },
                     ),
-                    touchCallback: (event, response) {
-                      if (response?.spot != null && event is FlTapUpEvent) {
-                        final idx = response!.spot!.touchedBarGroupIndex;
-                        setState(() {
-                          _selectedDay = _selectedDay == idx ? null : idx;
-                        });
-                      }
-                    },
-                  ),
-                  titlesData: FlTitlesData(
-                    bottomTitles: AxisTitles(
-                        sideTitles: SideTitles(
-                      showTitles: true,
-                      getTitlesWidget: (v, _) {
-                        const dayLetters = ['M', 'T', 'W', 'T', 'F', 'S', 'S'];
-                        final i = v.toInt();
-                        if (i < 0 || i >= dayLetters.length) return const SizedBox();
-                        final isToday = i == DateTime.now().weekday - 1;
-                        return Padding(
-                          padding: REdgeInsets.only(top: 4),
-                          child: MediumText(
-                            dayLetters[i],
-                            color: isToday ? ThemeEnum.accent : ThemeEnum.hoverSecond,
-                            fontSize: 11,
-                          ),
-                        );
-                      },
-                    )),
-                    leftTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
-                    topTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
-                    rightTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
-                  ),
-                ),
+                  );
+                }),
               ),
             ),
           ],
@@ -131,4 +87,11 @@ class _ProfileWeeklyChartState extends ConsumerState<ProfileWeeklyChart> {
       ),
     );
   }
+
+  BoxDecoration _cardDecoration(BuildContext context) => BoxDecoration(
+        color: context.getColor(ThemeEnum.mainCard),
+        borderRadius: BorderRadius.circular(14.r),
+        border: Border.all(color: context.getColor(ThemeEnum.border)),
+        boxShadow: context.cardShadow,
+      );
 }
