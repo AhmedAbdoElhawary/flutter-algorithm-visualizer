@@ -36,10 +36,14 @@ class AlgorithmGlassCard extends StatelessWidget {
                 color: color.withValues(alpha: .24),
               ),
             ),
-            child: Icon(icon, color: color,size: 20,),
+            child: Icon(
+              icon,
+              color: color,
+              size: 20,
+            ),
           ),
           const Spacer(flex: 1),
-          SemiBoldText(algoComplexity.name,fontSize: 14,color: ThemeEnum.textPrimary),
+          SemiBoldText(algoComplexity.name, fontSize: 14, color: ThemeEnum.textPrimary),
           const SizedBox(height: 6),
           RSizedBox(
             height: 20,
@@ -136,11 +140,11 @@ class SimpleGlassButton extends StatelessWidget {
   const SimpleGlassButton({super.key, required this.child, this.padding = 10, this.onTap, this.messageTip});
 
   static BoxDecoration cardDecoration(BuildContext context) => BoxDecoration(
-    color: context.getColor(ThemeEnum.mainCard),
-    borderRadius: BorderRadius.circular(14.r),
-    border: Border.all(color: context.getColor(ThemeEnum.border)),
-    boxShadow: context.cardShadow,
-  );
+        color: context.getColor(ThemeEnum.mainCard),
+        borderRadius: BorderRadius.circular(14.r),
+        border: Border.all(color: context.getColor(ThemeEnum.border)),
+        boxShadow: context.cardShadow,
+      );
   @override
   Widget build(BuildContext context) {
     final button = GestureDetector(
