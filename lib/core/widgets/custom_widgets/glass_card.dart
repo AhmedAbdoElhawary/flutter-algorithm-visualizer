@@ -135,23 +135,19 @@ class SimpleGlassButton extends StatelessWidget {
   final double padding;
   const SimpleGlassButton({super.key, required this.child, this.padding = 10, this.onTap, this.messageTip});
 
+  static BoxDecoration cardDecoration(BuildContext context) => BoxDecoration(
+    color: context.getColor(ThemeEnum.mainCard),
+    borderRadius: BorderRadius.circular(14.r),
+    border: Border.all(color: context.getColor(ThemeEnum.border)),
+    boxShadow: context.cardShadow,
+  );
   @override
   Widget build(BuildContext context) {
     final button = GestureDetector(
       onTap: onTap,
       child: Container(
         padding: REdgeInsets.all(padding),
-        decoration: BoxDecoration(
-          color: context.getColor(ThemeEnum.card),
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: context.getColor(ThemeEnum.border)),
-          boxShadow: context.isThemeDark
-              ? []
-              : [
-                  BoxShadow(color: Colors.black.withValues(alpha: 0.05), blurRadius: 12, offset: const Offset(0, 2)),
-                  BoxShadow(color: Colors.black.withValues(alpha: 0.04), spreadRadius: 1),
-                ],
-        ),
+        decoration: cardDecoration(context),
         child: child,
       ),
     );
