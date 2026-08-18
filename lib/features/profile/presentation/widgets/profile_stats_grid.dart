@@ -6,7 +6,7 @@ import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
 import 'package:algorithm_visualizer/core/widgets/adaptive/padding/adaptive_padding.dart';
 import 'package:algorithm_visualizer/core/widgets/adaptive/text/adaptive_text.dart';
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/custom_icon.dart';
-import 'package:algorithm_visualizer/features/profile/presentation/view_model/profile_stats_provider.dart';
+import 'package:algorithm_visualizer/features/profile/presentation/view_model/statistics/profile_statistics_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -16,7 +16,7 @@ class ProfileStatsGrid extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final stats = ref.watch(profileStatsProvider);
+    final stats = ref.watch(profileStatisticsProvider);
 
     final solvedSub = '${stats.easySolved}E · ${stats.mediumSolved}M · ${stats.hardSolved}H';
     final streakSub = '${StringsManager.best} ${stats.bestStreak} ${StringsManager.days}';
@@ -84,7 +84,7 @@ class ProfileStatsGrid extends ConsumerWidget {
                       if (s.sub.isNotEmpty) MediumText(s.sub, color: ThemeEnum.hover, fontSize: 10),
                     ]),
                     RSizedBox(height: 6),
-                    BoldText(s.value, color: ThemeEnum.textPrimary, fontSize: 20,fontWeight: FontWeightManager.bold900,),
+                    BoldText(s.value, color: ThemeEnum.textPrimary, fontSize: 20,fontWeight: FontWeightManager.bold900),
                     RSizedBox(height: 2),
                     MediumText(s.label, color: ThemeEnum.hover, fontSize: 11),
                   ],
