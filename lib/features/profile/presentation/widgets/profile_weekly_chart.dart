@@ -3,7 +3,7 @@ import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
 import 'package:algorithm_visualizer/core/widgets/adaptive/padding/adaptive_padding.dart';
 import 'package:algorithm_visualizer/core/widgets/adaptive/text/adaptive_text.dart';
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/glass_card.dart';
-import 'package:algorithm_visualizer/features/home/view_model/home_providers.dart';
+import 'package:algorithm_visualizer/features/home/view_model/home_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
