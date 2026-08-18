@@ -37,9 +37,7 @@ class BookmarkedProblemsPage extends ConsumerWidget {
         data: (all) {
           final bookmarked = all.where((p) => p.getIsBookmarked).toList();
           if (bookmarked.isEmpty) {
-            return Center(
-              child: RegularText(StringsManager.noProblemsFound, color: ThemeEnum.hoverSecond, fontSize: 14),
-            );
+            return Center(child: MediumText(StringsManager.noProblemsFound, color: ThemeEnum.hoverSecond));
           }
           return ListView.separated(
             padding: REdgeInsetsDirectional.only(start: 16, top: 8, bottom: 50),
@@ -64,9 +62,9 @@ class BookmarkedProblemsPage extends ConsumerWidget {
             },
           );
         },
-        loading: () => const Center(child: CircularProgressIndicator()),
-        error: (_, __) => Center(
-            child: RegularText(StringsManager.notAbleToLoadAnyChallenge, color: ThemeEnum.hoverSecond)),
+        loading: () => Center(child: CircularProgressIndicator(strokeWidth: 2.r)),
+        error: (_, __) =>
+            Center(child: MediumText(StringsManager.notAbleToLoadAnyChallenge, color: ThemeEnum.hover)),
       ),
     );
   }
