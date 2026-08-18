@@ -220,8 +220,8 @@ ProfileStats _computeStats(List<CodingProblem> problems) {
     if (i == 0) {
       streak = 1;
     } else {
-      final prev = DateTime.parse(allDays[i - 1]);
-      final curr = DateTime.parse(allDays[i]);
+      final prev = _parseDate(allDays[i - 1]);
+      final curr = _parseDate(allDays[i]);
       if (curr.difference(prev).inDays == 1) {
         streak++;
       } else {
@@ -232,6 +232,11 @@ ProfileStats _computeStats(List<CodingProblem> problems) {
   }
 
   return (currentStreak, bestStreak);
+}
+
+DateTime _parseDate(String s) {
+  final parts = s.split('-');
+  return DateTime(int.parse(parts[0]), int.parse(parts[1]), int.parse(parts[2]));
 }
 
 List<int> _computeWeekly(List<RecentSubmission> submissions) {
