@@ -2,7 +2,6 @@ import 'package:algorithm_visualizer/core/resources/strings_manager.dart';
 import 'package:algorithm_visualizer/features/challange/domain/entities/coding_problem.dart';
 import 'package:algorithm_visualizer/features/challange/presentation/view_model/challenges/problems_notifier.dart';
 import 'package:algorithm_visualizer/features/profile/presentation/view_model/profile_stats_provider.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class HomeData {
@@ -17,20 +16,6 @@ class HomeData {
   final ProfileStats stats;
   final CodingProblem? continueProblem;
   final List<RecentSubmission> recentActivity;
-}
-
-class CategoryItem {
-  const CategoryItem({
-    required this.name,
-    required this.solved,
-    required this.total,
-    required this.icon,
-  });
-
-  final String name;
-  final int solved;
-  final int total;
-  final IconData icon;
 }
 
 final homeDataProvider = Provider<HomeData>((ref) {
