@@ -1,3 +1,4 @@
+import 'package:algorithm_visualizer/core/resources/font_manager.dart';
 import 'package:algorithm_visualizer/core/resources/strings_manager.dart';
 import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
 import 'package:algorithm_visualizer/features/visualize/sub_view/searching/widgets/end_point.dart';
@@ -5,7 +6,7 @@ import 'package:algorithm_visualizer/features/visualize/sub_view/searching/widge
 import 'package:algorithm_visualizer/features/visualize/sub_view/searching/widgets/start_point.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:google_fonts/google_fonts.dart';
+
 
 class PFLegend extends StatelessWidget {
   const PFLegend({super.key});
@@ -41,7 +42,7 @@ class PFLegend extends StatelessWidget {
                   decoration: BoxDecoration(color: color, borderRadius: BorderRadius.circular(2)),
                 ),
               const SizedBox(width: 4),
-              Text(label, style: GoogleFonts.inter(color: context.getColor(ThemeEnum.hover), fontSize: 10)),
+              Text(label, style: TextStyle(color: context.getColor(ThemeEnum.hover), fontSize: 10, fontFamily: FontConstants.fontFamily)),
             ]);
           }).toList(),
         ),
