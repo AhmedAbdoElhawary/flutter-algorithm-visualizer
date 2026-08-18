@@ -1,7 +1,9 @@
 import 'package:algorithm_visualizer/core/resources/strings_manager.dart';
 import 'package:algorithm_visualizer/features/challange/domain/entities/coding_problem.dart';
 import 'package:algorithm_visualizer/features/challange/presentation/view_model/challenges/problems_notifier.dart';
-import 'package:algorithm_visualizer/features/profile/presentation/view_model/profile_stats_provider.dart';
+import 'package:algorithm_visualizer/features/profile/presentation/entities/profile_statistics.dart';
+import 'package:algorithm_visualizer/features/profile/presentation/entities/recent_submission.dart';
+import 'package:algorithm_visualizer/features/profile/presentation/view_model/statistics/profile_statistics_provider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 /// no needed to over engineer and separate theme, just to be different than others view model, but it's clear and not complicated here
@@ -15,14 +17,14 @@ class HomeData {
   });
 
   final String greeting;
-  final ProfileStats stats;
+  final ProfileStatistics stats;
   final CodingProblem? continueProblem;
   final List<RecentSubmission> recentActivity;
 }
 
 final homeDataProvider = Provider<HomeData>((ref) {
   final asyncProblems = ref.watch(problemsProvider);
-  final stats = ref.watch(profileStatsProvider);
+  final stats = ref.watch(profileStatisticsProvider);
 
   return asyncProblems.when(
     data: (problems) {
