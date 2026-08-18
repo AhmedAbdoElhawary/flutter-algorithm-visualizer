@@ -187,5 +187,5 @@ class StringsManager {
   static const String accuracy = "Accuracy";
   static const String attempts = "Attempts";
   static const String continueLabel = "Continue Learning";
-
+  static const String anonymous = "Anonymous";
 }
