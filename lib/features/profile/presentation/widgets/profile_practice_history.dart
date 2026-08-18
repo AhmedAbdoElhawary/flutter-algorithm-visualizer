@@ -105,7 +105,7 @@ class _PracticeHistoryRowState extends State<PracticeHistoryRow> with SingleTick
   Widget build(BuildContext context) {
     final entry = widget.entry;
     return ProblemRow(
-      isFullPage: widget.isFullPage,
+      addTopBorder: !widget.isFullPage,
       problemName: entry.problemName,
       difficulty: entry.difficulty,
       isCorrect: entry.lastResult,
@@ -197,7 +197,7 @@ class _PracticeHistoryRowState extends State<PracticeHistoryRow> with SingleTick
 class ProblemRow extends StatefulWidget {
   const ProblemRow({
     super.key,
-    this.isFullPage = false,
+    this.addTopBorder = false,
     required this.onTapTitle,
     required this.onTapCard,
     required this.trailing,
@@ -208,7 +208,7 @@ class ProblemRow extends StatefulWidget {
     required this.isCorrect,
   });
 
-  final bool isFullPage;
+  final bool addTopBorder;
   final VoidCallback onTapTitle;
   final VoidCallback onTapCard;
   final Widget trailing;
@@ -227,16 +227,16 @@ class _ProblemRowState extends State<ProblemRow> with SingleTickerProviderStateM
     return InkWell(
       onTap: widget.onTapCard,
       child: Container(
-        decoration: widget.isFullPage
-            ? null
-            : BoxDecoration(
-                border: Border(top: BorderSide(color: context.getColor(ThemeEnum.border))),
-              ),
+        decoration: widget.addTopBorder
+            ?BoxDecoration(
+          border: Border(top: BorderSide(color: context.getColor(ThemeEnum.border))),
+        )
+            :null ,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Padding(
-              padding: REdgeInsets.symmetric(horizontal: widget.isFullPage ? 0 : 14, vertical: 10),
+              padding: REdgeInsets.symmetric(horizontal: widget.addTopBorder ? 14 : 0, vertical: 10),
               child: Row(
                 children: [
                   InkWell(onTap: widget.onTapTitle, child: StatusBox(isCorrect: widget.isCorrect)),
