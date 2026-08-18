@@ -30,15 +30,15 @@ class AlgorithmGlassCard extends StatelessWidget {
             width: 30.r,
             height: 30.r,
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: BorderRadius.circular(10),
               color: color.withValues(alpha: .14),
               border: Border.all(
                 color: color.withValues(alpha: .24),
               ),
             ),
-            child: Icon(icon, color: color),
+            child: Icon(icon, color: color,size: 20,),
           ),
-          const Spacer(flex: 6),
+          const Spacer(flex: 1),
           SemiBoldText(algoComplexity.name,fontSize: 14,color: ThemeEnum.textPrimary),
           const SizedBox(height: 6),
           RSizedBox(
