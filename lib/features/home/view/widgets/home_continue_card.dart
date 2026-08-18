@@ -1,10 +1,12 @@
 import 'package:algorithm_visualizer/config/routes/route_app.dart';
 import 'package:algorithm_visualizer/core/extensions/navigators.dart';
+import 'package:algorithm_visualizer/core/resources/strings_manager.dart';
 import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
 import 'package:algorithm_visualizer/core/widgets/adaptive/padding/adaptive_padding.dart';
 import 'package:algorithm_visualizer/core/widgets/adaptive/text/adaptive_text.dart';
 import 'package:algorithm_visualizer/features/challange/domain/entities/coding_problem.dart';
 import 'package:algorithm_visualizer/features/challange/domain/enums/problem.dart';
+import 'package:algorithm_visualizer/features/challange/presentation/helper/problem_style.dart';
 import 'package:algorithm_visualizer/features/home/view_model/home_providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -19,19 +21,8 @@ class HomeContinueCard extends ConsumerWidget {
 
     if (problem == null) return const SizedBox.shrink();
 
-    final diff = problem.getDifficulty;
-    final diffLabel = switch (diff) {
-      ProblemDifficulty.easy => 'Easy',
-      ProblemDifficulty.medium => 'Medium',
-      ProblemDifficulty.hard => 'Hard',
-      _ => '',
-    };
-    final diffColor = switch (diff) {
-      ProblemDifficulty.easy => ThemeEnum.accentGreen,
-      ProblemDifficulty.medium => ThemeEnum.accentYellow,
-      ProblemDifficulty.hard => ThemeEnum.accentRed,
-      _ => ThemeEnum.accent,
-    };
+    final diffColor = ProblemStyle.difficultyColor(problem.getDifficulty);
+    final diffLabel = problem.getDifficulty.difficultyString;
 
     return OnlyPadding(
       startPadding: 16,
@@ -64,7 +55,7 @@ class HomeContinueCard extends ConsumerWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    RegularText('CONTINUE LEARNING', fontSize: 11, color: ThemeEnum.textSecond),
+                    RegularText(StringsManager.continueLabel, fontSize: 11, color: ThemeEnum.textSecond),
                     SizedBox(height: 2.h),
                     BoldText(
                       problem.getName,
