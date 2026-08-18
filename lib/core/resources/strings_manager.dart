@@ -137,7 +137,7 @@ class StringsManager {
   static const String notSolved = "Not Solved";
 
   // Profile
-  static const String profile = "PROFILE";
+  static const String profile = "Profile";
   static const String problemsSolved = "Problems Solved";
   static const String dayStreak = "Day\nStreak";
   static const String accuracyRate = "Accuracy\nRate";
