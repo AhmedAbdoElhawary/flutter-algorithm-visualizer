@@ -33,7 +33,7 @@ class ChallengePage extends ConsumerWidget {
               leadingWidth: 16.r,
               leading: SizedBox(),
               bottom: PreferredSize(
-                preferredSize: Size.fromHeight(145.r),
+                preferredSize: Size.fromHeight(138.r),
                 child: SingleChildScrollView(
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
