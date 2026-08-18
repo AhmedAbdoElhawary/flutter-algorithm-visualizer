@@ -7,9 +7,9 @@ import 'package:algorithm_visualizer/core/widgets/adaptive/text/adaptive_text.da
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/custom_icon.dart';
 import 'package:algorithm_visualizer/features/profile/presentation/view_model/profile_provider.dart';
 import 'package:algorithm_visualizer/features/profile/presentation/widgets/profile_category_chart.dart';
+import 'package:algorithm_visualizer/features/profile/presentation/widgets/profile_difficulty_progress.dart';
 import 'package:algorithm_visualizer/features/profile/presentation/widgets/profile_heatmap.dart';
 import 'package:algorithm_visualizer/features/profile/presentation/widgets/profile_practice_history.dart';
-import 'package:algorithm_visualizer/features/profile/presentation/widgets/profile_problems_solved.dart';
 import 'package:algorithm_visualizer/features/profile/presentation/widgets/profile_stats_grid.dart';
 import 'package:algorithm_visualizer/features/profile/presentation/widgets/profile_weekly_chart.dart';
 import 'package:flutter/material.dart';
@@ -34,7 +34,7 @@ class ProfileScreen extends ConsumerWidget {
             children: [
               _ProfileHeader(name: profileName, ref: ref),
               const ProfileStatsGrid(),
-              const ProfileDifficultyBreakdown(),
+              const ProfileDifficultyProgress(),
               const ProfileWeeklyChart(),
               const ProfileHeatmap(),
               const ProfileCategoryChart(),
