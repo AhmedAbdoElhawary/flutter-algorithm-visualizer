@@ -22,8 +22,8 @@ abstract final class ColorManager {
 
   /// -------- dark theme ------------>
   static const primaryDk = Color.fromRGBO(8, 13, 26, 1);
-  static const cardDk = Color.fromRGBO(14, 23, 41, 0.8);
-  static const mainCardDk = Color.fromRGBO(24, 29, 43, 0.7);
+  static const cardDk = mainCardDk;
+  static const mainCardDk = Color.fromRGBO(24, 29, 43, 0.8);
   static const outputHeaderDk = Color.fromRGBO(22, 32, 53, 1);
   static const accentDk = Color.fromRGBO(129, 140, 248, 1);
   static const accentGreenDk = Color.fromRGBO(52, 211, 153, 1);
