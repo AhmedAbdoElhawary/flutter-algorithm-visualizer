@@ -165,9 +165,8 @@ class _CollapsibleSection extends StatelessWidget {
           AnimatedSize(
             duration: const Duration(milliseconds: 220),
             curve: Curves.easeInOut,
-            child: expanded
-                ? Padding(padding: REdgeInsets.only(top: 6), child: child)
-                : const SizedBox.shrink(),
+            child:
+                expanded ? Padding(padding: REdgeInsets.only(top: 6), child: child) : const SizedBox.shrink(),
           ),
         ]),
       ),

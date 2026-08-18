@@ -81,8 +81,7 @@ class CodingProblem {
   final bool? isBookmarked;
   final List<ProblemSolutionStatusDTO>? solutionsStatus;
 
-  factory CodingProblem.fromJson(Map<String, dynamic> json) =>
-      _$CodingProblemFromJson(json);
+  factory CodingProblem.fromJson(Map<String, dynamic> json) => _$CodingProblemFromJson(json);
 
   Map<String, dynamic> toJson() => _$CodingProblemToJson(this);
 
@@ -210,11 +209,13 @@ extension CodingProblemX on CodingProblem {
     if (sign == null) return "";
     return "$sign{\n\n}";
   }
+
   String get getDefaultCode {
     final code = defaultCode?['dart'];
     if (code == null || code.trim().isEmpty) return getFunctionInDart;
     return code;
   }
+
   String get getCode => solutionsStatus?.firstOrNull?.code ?? getDefaultCode;
   List<CustomObject> get getCustomObjects => customObjects?['dart'] ?? [];
   List<Example> get getExamples => examples ?? [];
