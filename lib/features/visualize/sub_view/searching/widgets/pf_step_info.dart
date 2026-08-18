@@ -6,7 +6,7 @@ import '../view_model/searching_notifier.dart';
 
 class PFStepInfo extends ConsumerWidget {
   const PFStepInfo({required this.instance, super.key});
-  final StateNotifierProvider<SearchingNotifier, SearchingState> instance;
+  final NotifierProvider<SearchingNotifier, SearchingState> instance;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
