@@ -228,10 +228,10 @@ class _ProblemRowState extends State<ProblemRow> with SingleTickerProviderStateM
       onTap: widget.onTapCard,
       child: Container(
         decoration: widget.addTopBorder
-            ?BoxDecoration(
-          border: Border(top: BorderSide(color: context.getColor(ThemeEnum.border))),
-        )
-            :null ,
+            ? BoxDecoration(
+                border: Border(top: BorderSide(color: context.getColor(ThemeEnum.border))),
+              )
+            : null,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [

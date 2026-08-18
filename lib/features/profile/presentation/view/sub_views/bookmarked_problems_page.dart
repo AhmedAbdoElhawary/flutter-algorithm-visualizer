@@ -55,7 +55,10 @@ class BookmarkedProblemsPage extends ConsumerWidget {
                 onTapCard: () => context.pushTo(Routes.code, queryParameters: "${problem.getProblemId}"),
                 onTapTitle: () => context.pushTo(Routes.code, queryParameters: "${problem.getProblemId}"),
                 subTitle: ChallengeTags(tags: problem.getTags.take(2).toList()),
-                trailing: BookmarkButton(isBookmarked: problem.getIsBookmarked, problem: problem),
+                trailing: Padding(
+                  padding: REdgeInsets.symmetric(horizontal: 16),
+                  child: BookmarkButton(isBookmarked: problem.getIsBookmarked, problem: problem),
+                ),
                 subUnderWidget: SizedBox.shrink(),
               );
             },
