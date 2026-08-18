@@ -45,8 +45,7 @@ Future<void> _pumpCard(WidgetTester tester, CodingProblem problem) async {
 void main() {
   final problems = _load();
 
-  testWidgets('renders title, difficulty, description, example, constraints and tags',
-      (tester) async {
+  testWidgets('renders title, difficulty, description, example, constraints and tags', (tester) async {
     final twoSum = _byName(problems, 'Two Sum');
     await _pumpCard(tester, twoSum);
 

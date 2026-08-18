@@ -13,6 +13,7 @@ class SliverChallengesLoadingState extends StatelessWidget {
     );
   }
 }
+
 class ChallengesLoadingState extends StatelessWidget {
   const ChallengesLoadingState({super.key});
 

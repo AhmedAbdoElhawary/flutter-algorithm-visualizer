@@ -253,7 +253,7 @@ List<List<int>> permute(List<int> nums) {
   return res;
 }
 ''',
-   17: r'''
+  17: r'''
 String sortWord(String w) {
   final chars = <String>[];
   for (int i = 0; i < w.length; i++) chars.add(w.substring(i, i + 1));
@@ -1213,7 +1213,8 @@ void main() {
       if (!r.passed) {
         final exp = r.testCase.expectedOutput;
         final act = r.actualOutput;
-        debugPrint('   [${all[i]['kind']}#$i] expected: ${exp.length > 120 ? '${exp.substring(0, 120)}...' : exp}');
+        debugPrint(
+            '   [${all[i]['kind']}#$i] expected: ${exp.length > 120 ? '${exp.substring(0, 120)}...' : exp}');
         debugPrint('            actual:   ${act.length > 120 ? '${act.substring(0, 120)}...' : act}');
         if (r.errorMessage != null) debugPrint('            error:   ${r.errorMessage}');
       }
