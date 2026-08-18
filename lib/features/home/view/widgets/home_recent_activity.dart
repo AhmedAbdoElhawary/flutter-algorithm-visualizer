@@ -1,9 +1,12 @@
 import 'package:algorithm_visualizer/config/routes/route_app.dart';
 import 'package:algorithm_visualizer/core/extensions/navigators.dart';
+import 'package:algorithm_visualizer/core/resources/strings_manager.dart';
 import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
 import 'package:algorithm_visualizer/core/widgets/adaptive/padding/adaptive_padding.dart';
 import 'package:algorithm_visualizer/core/widgets/adaptive/text/adaptive_text.dart';
+import 'package:algorithm_visualizer/core/widgets/custom_widgets/glass_card.dart';
 import 'package:algorithm_visualizer/features/challange/domain/enums/problem.dart';
+import 'package:algorithm_visualizer/features/challange/presentation/helper/problem_style.dart';
 import 'package:algorithm_visualizer/features/home/view_model/home_providers.dart';
 import 'package:algorithm_visualizer/features/profile/presentation/view_model/profile_stats_provider.dart';
 import 'package:flutter/material.dart';
@@ -27,7 +30,7 @@ class HomeRecentActivity extends ConsumerWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          BoldText('Recent Activity', fontSize: 15, color: ThemeEnum.textPrimary),
+          BoldText(StringsManager.recentActivity, fontSize: 15, color: ThemeEnum.textPrimary),
           SizedBox(height: 10.h),
           ...recent.take(5).map((item) => _ActivityTile(item: item)),
         ],
@@ -43,18 +46,9 @@ class _ActivityTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final diffColor = switch (item.difficulty) {
-      ProblemDifficulty.easy => ThemeEnum.accentGreen,
-      ProblemDifficulty.medium => ThemeEnum.accentYellow,
-      ProblemDifficulty.hard => ThemeEnum.accentRed,
-      _ => ThemeEnum.accent,
-    };
-    final diffLabel = switch (item.difficulty) {
-      ProblemDifficulty.easy => 'Easy',
-      ProblemDifficulty.medium => 'Medium',
-      ProblemDifficulty.hard => 'Hard',
-      _ => '',
-    };
+    final diffColor = ProblemStyle.difficultyColor(item.difficulty);
+    final diffLabel = item.difficulty.difficultyString;
+
     final timeAgo = _formatTimeAgo(item.submittedAt);
 
     return GestureDetector(
@@ -62,7 +56,7 @@ class _ActivityTile extends StatelessWidget {
       child: Container(
         margin: REdgeInsets.only(bottom: 8),
         padding: REdgeInsets.symmetric(horizontal: 14, vertical: 10),
-        decoration: _cardDecoration(context),
+        decoration: SimpleGlassButton.cardDecoration(context),
         child: Row(
           children: [
             Container(
@@ -100,17 +94,10 @@ class _ActivityTile extends StatelessWidget {
 
   String _formatTimeAgo(DateTime dt) {
     final diff = DateTime.now().difference(dt);
-    if (diff.inMinutes < 1) return 'Just now';
-    if (diff.inMinutes < 60) return '${diff.inMinutes}m ago';
-    if (diff.inHours < 24) return '${diff.inHours}h ago';
-    if (diff.inDays == 1) return 'Yesterday';
-    return '${diff.inDays}d ago';
+    if (diff.inMinutes < 1) return StringsManager.justNow;
+    if (diff.inMinutes < 60) return '${diff.inMinutes}${StringsManager.mAgo}';
+    if (diff.inHours < 24) return '${diff.inHours}${StringsManager.hAgo}';
+    if (diff.inDays == 1) return StringsManager.yesterday;
+    return '${diff.inDays}${StringsManager.dAgo}';
   }
-
-  BoxDecoration _cardDecoration(BuildContext context) => BoxDecoration(
-        color: context.getColor(ThemeEnum.mainCard),
-        borderRadius: BorderRadius.circular(14.r),
-        border: Border.all(color: context.getColor(ThemeEnum.border)),
-        boxShadow: context.cardShadow,
-      );
 }
