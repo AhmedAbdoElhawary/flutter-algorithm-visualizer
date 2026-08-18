@@ -1,8 +1,9 @@
 import 'dart:ui';
-import 'package:algorithm_visualizer/features/visualize/helper/o_notation.dart';
+
 import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
 import 'package:algorithm_visualizer/core/widgets/adaptive/text/adaptive_text.dart';
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/custom_icon.dart';
+import 'package:algorithm_visualizer/features/visualize/helper/o_notation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -26,19 +27,19 @@ class AlgorithmGlassCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
-            width: 42.r,
-            height: 42.r,
+            width: 30.r,
+            height: 30.r,
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: BorderRadius.circular(10),
               color: color.withValues(alpha: .14),
               border: Border.all(
                 color: color.withValues(alpha: .24),
               ),
             ),
-            child: Icon(icon, color: color),
+            child: Icon(icon, color: color,size: 20,),
           ),
-          const Spacer(flex: 6),
-          SemiBoldText(algoComplexity.name),
+          const Spacer(flex: 1),
+          SemiBoldText(algoComplexity.name,fontSize: 14,color: ThemeEnum.textPrimary),
           const SizedBox(height: 6),
           RSizedBox(
             height: 20,
@@ -134,23 +135,19 @@ class SimpleGlassButton extends StatelessWidget {
   final double padding;
   const SimpleGlassButton({super.key, required this.child, this.padding = 10, this.onTap, this.messageTip});
 
+  static BoxDecoration cardDecoration(BuildContext context) => BoxDecoration(
+    color: context.getColor(ThemeEnum.mainCard),
+    borderRadius: BorderRadius.circular(14.r),
+    border: Border.all(color: context.getColor(ThemeEnum.border)),
+    boxShadow: context.cardShadow,
+  );
   @override
   Widget build(BuildContext context) {
     final button = GestureDetector(
       onTap: onTap,
       child: Container(
         padding: REdgeInsets.all(padding),
-        decoration: BoxDecoration(
-          color: context.getColor(ThemeEnum.card),
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: context.getColor(ThemeEnum.border)),
-          boxShadow: context.isThemeDark
-              ? []
-              : [
-                  BoxShadow(color: Colors.black.withValues(alpha: 0.05), blurRadius: 12, offset: const Offset(0, 2)),
-                  BoxShadow(color: Colors.black.withValues(alpha: 0.04), spreadRadius: 1),
-                ],
-        ),
+        decoration: cardDecoration(context),
         child: child,
       ),
     );

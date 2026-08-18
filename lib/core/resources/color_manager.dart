@@ -5,6 +5,7 @@ abstract final class ColorManager {
 
   static const Color targetSearchingPoint = Color.fromRGBO(66, 8, 99, 1.0);
   static const Color wallBlack = Color.fromRGBO(22, 68, 101, 1.0);
+
   /// -------- dark theme Only------------>
   static const Color pinkColor = Color.fromRGBO(192, 132, 252, 1);
   static const Color lightPinkColor = Color.fromRGBO(192, 132, 252, 0.1);
@@ -21,17 +22,17 @@ abstract final class ColorManager {
 
   /// -------- dark theme ------------>
   static const primaryDk = Color.fromRGBO(8, 13, 26, 1);
-  static const cardDk = Color.fromRGBO(14, 23, 41, 0.8);
-  static const mainCardDk = Color.fromRGBO(24, 29, 43, 0.7);
+  static const cardDk = mainCardDk;
+  static const mainCardDk = Color.fromRGBO(24, 29, 43, 0.8);
   static const outputHeaderDk = Color.fromRGBO(22, 32, 53, 1);
   static const accentDk = Color.fromRGBO(129, 140, 248, 1);
   static const accentGreenDk = Color.fromRGBO(52, 211, 153, 1);
-  static const accentGreenBgDk = Color.fromRGBO(17, 185, 129, 1);
+  static const accentGreenBgDk = accentGreenDk;
   static const accentYellowDk = Color.fromRGBO(251, 191, 36, 1);
   static const accentYellowBgDk = Color.fromRGBO(245, 158, 11, 1);
   static const accentRedDk = Color.fromRGBO(248, 113, 113, 1);
   static const accentRedBgDk = Color.fromRGBO(239, 68, 68, 1);
-  static const accentBlueDk = Color.fromRGBO(96, 165, 250, 1);
+  static const accentBlueDk = Color.fromRGBO(97, 165, 250, 1);
   static const textPrimaryDk = Color.fromRGBO(226, 232, 240, 1);
   static const textSecondDk = Color.fromRGBO(148, 163, 184, 1);
   static const hoverDk = Color.fromRGBO(74, 92, 126, 1);

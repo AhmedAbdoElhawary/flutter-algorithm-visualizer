@@ -102,11 +102,35 @@ class Parser {
     return false;
   }
 
-  void _skipType() {
+  /// Consumes a type (keyword type, `var`/`final`/`const`, custom identifier
+  /// type, optional generics and nullable marker) and returns its source text,
+  /// e.g. `List<int>`, `ListNode?`, `final Map<int, int>` or `void`.
+  String _skipType() {
+    final int start = pos;
     if (_check(TokKind.keyword) && _typeKeywords.contains(_peek.text)) {
       _advance();
-    } else if (_check(TokKind.keyword) && (_peek.text == 'var' || _peek.text == 'final' || _peek.text == 'const')) {
+    } else if (_check(TokKind.keyword) &&
+        (_peek.text == 'var' || _peek.text == 'final' || _peek.text == 'const')) {
       _advance();
+      // After `var`/`final`/`const`, consume the actual type only if the
+      // next token looks like a type (not a variable name):
+      //   - keyword type: `final Map<int, int> seen`
+      //   - custom type followed by identifier: `final ListNode head`
+      // But NOT when followed by `=` or `(` or `;` (it's a var name):
+      //   - `final s = Solution()`
+      if (_check(TokKind.keyword) && _typeKeywords.contains(_peek.text)) {
+        _advance();
+      } else if (_check(TokKind.identifier) && pos + 1 < tokens.length) {
+        final next = tokens[pos + 1];
+        // Custom type: identifier followed by another identifier (`ListNode head`)
+        // or by `?` then identifier (`ListNode? next`).
+        if (next.kind == TokKind.identifier) {
+          _advance();
+        } else if (next.kind == TokKind.symbol && next.text == '?' &&
+            pos + 2 < tokens.length && tokens[pos + 2].kind == TokKind.identifier) {
+          _advance();
+        }
+      }
     } else if (_check(TokKind.identifier)) {
       _advance();
     } else {
@@ -132,6 +156,7 @@ class Parser {
     }
     // Nullable type marker (e.g. `ListNode?`, `int?`).
     if (_checkSymbol('?')) _advance();
+    return tokens.sublist(start, pos).map((t) => t.text).join();
   }
 
   // ---------------------------------------------------------------------
@@ -154,11 +179,12 @@ class Parser {
         );
       }
       final int startLine = _peek.line;
-      _skipType();
+      final String returnType = _skipType();
       final Tok nameTok = _consumeIdentifier('Expected a name after the type');
       if (_checkSymbol('(')) {
         final List<Param> params = _parseParamList();
         final Block body = _parseBlock();
+        _assertReturnTypeSatisfied(returnType, body, nameTok.text, startLine);
         fns.add(FunctionDecl(nameTok.text, params, body, startLine));
       } else {
         Expr? init;
@@ -170,12 +196,47 @@ class Parser {
     return Program(fns, vars, classes, 1);
   }
 
+  /// Mirrors Dart's own "doesn't end with a return statement" compile error:
+  /// a function whose return type is non-void, non-nullable and not `dynamic`
+  /// must contain a `return` somewhere in its body. An empty body (the seeded
+  /// default state) fails this, which is reported as a syntax error before
+  /// the program ever runs.
+  void _assertReturnTypeSatisfied(String returnType, Block body, String name, int line) {
+    final t = returnType.trim();
+    if (t == 'void' || t == 'dynamic' || t.endsWith('?') || _containsReturn(body)) return;
+    throw ParseError(
+      "This function has a return type of '$t', but doesn't end with a return statement.",
+      line,
+    );
+  }
+
+  bool _containsReturn(Block block) {
+    for (final stmt in block.statements) {
+      if (_stmtContainsReturn(stmt)) return true;
+    }
+    return false;
+  }
+
+  bool _stmtContainsReturn(Stmt stmt) {
+    if (stmt is ReturnStmt) return true;
+    if (stmt is Block) return _containsReturn(stmt);
+    if (stmt is IfStmt) {
+      return _stmtContainsReturn(stmt.thenBranch) ||
+          (stmt.elseBranch != null && _stmtContainsReturn(stmt.elseBranch!));
+    }
+    if (stmt is WhileStmt) return _stmtContainsReturn(stmt.body);
+    if (stmt is ForStmt) return _stmtContainsReturn(stmt.body);
+    if (stmt is ForInStmt) return _stmtContainsReturn(stmt.body);
+    return false;
+  }
+
   ClassDecl _parseClassDecl() {
     final int line = _peek.line;
     _advance(); // 'class'
     final Tok nameTok = _consumeIdentifier('Expected a class name');
     _consumeSymbol('{', "Expected '{' after class name");
     final List<FieldDecl> fields = <FieldDecl>[];
+    final List<FunctionDecl> methods = <FunctionDecl>[];
     List<ConstructorParam>? constructorParams;
     while (!_checkSymbol('}') && !_isAtEnd()) {
       final int memberLine = _peek.line;
@@ -183,15 +244,22 @@ class Parser {
       if (_checkSymbol('(')) {
         constructorParams = _parseConstructorParams();
       } else {
-        final Tok fieldTok = _consumeIdentifier('Expected a field name');
-        Expr? fieldDefault;
-        if (_matchSymbol('=')) fieldDefault = _parseExpr();
-        _consumeSymbol(';', "Expected ';' after field declaration");
-        fields.add(FieldDecl(fieldTok.text, fieldDefault, memberLine));
+        final Tok memberTok = _consumeIdentifier('Expected a field or method name');
+        if (_checkSymbol('(')) {
+          // Method declaration: ReturnType methodName(params) { body }
+          final List<Param> mParams = _parseParamList();
+          final Block mBody = _parseBlock();
+          methods.add(FunctionDecl(memberTok.text, mParams, mBody, memberLine));
+        } else {
+          Expr? fieldDefault;
+          if (_matchSymbol('=')) fieldDefault = _parseExpr();
+          _consumeSymbol(';', "Expected ';' after field declaration");
+          fields.add(FieldDecl(memberTok.text, fieldDefault, memberLine));
+        }
       }
     }
     _consumeSymbol('}', "Expected '}' after class body");
-    return ClassDecl(nameTok.text, fields, constructorParams ?? const <ConstructorParam>[], line);
+    return ClassDecl(nameTok.text, fields, constructorParams ?? const <ConstructorParam>[], methods, line);
   }
 
   List<ConstructorParam> _parseConstructorParams() {
@@ -454,6 +522,21 @@ class Parser {
       } else if (_checkSymbol('!')) {
         // Null assertion `x!` — a no-op for our dynamic interpreter.
         _advance();
+      } else if (_checkSymbol('?.')) {
+        // Null-shorting member access `a?.b` / call `a?.b()`. The `?.`
+        // token is lexed as a unit so the ternary `?` can't steal it.
+        final Tok opTok = _advance();
+        final Tok nameTok = _consumeIdentifier('Expected a member name after "?."');
+        if (_checkSymbol('(')) {
+          final List<Expr> args = _parseArgs();
+          expr = CallExpr(
+            NullAwareAccess(expr, nameTok.text, opTok.line),
+            args,
+            opTok.line,
+          );
+        } else {
+          expr = NullAwareAccess(expr, nameTok.text, opTok.line);
+        }
       } else if (_checkSymbol('.')) {
         final Tok opTok = _advance();
         final Tok nameTok = _consumeIdentifier('Expected a member name after "."');
