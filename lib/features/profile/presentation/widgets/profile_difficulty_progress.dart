@@ -1,4 +1,3 @@
-import 'package:algorithm_visualizer/core/resources/font_manager.dart';
 import 'package:algorithm_visualizer/core/resources/strings_manager.dart';
 import 'package:algorithm_visualizer/core/resources/styles_manager.dart';
 import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
@@ -9,9 +8,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-class ProfileDifficultyBreakdown extends ConsumerWidget {
-  const ProfileDifficultyBreakdown({super.key});
-
+class ProfileDifficultyProgress extends ConsumerWidget {
+  const ProfileDifficultyProgress({super.key,  this.titleColor=ThemeEnum.textSecond});
+final ThemeEnum titleColor;
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final stats = ref.watch(profileStatsProvider);
@@ -50,26 +49,25 @@ class ProfileDifficultyBreakdown extends ConsumerWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            BoldText(StringsManager.problemsSolved, color: ThemeEnum.textSecond, fontSize: 13),
+            BoldText(StringsManager.difficultyProgress, color: titleColor, fontSize: 14),
             RSizedBox(height: 12),
             ...bars.map(
               (b) => Padding(
-                padding: REdgeInsets.only(bottom: 8),
+                padding: REdgeInsets.only(bottom: 10),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        BoldText(b.label,
-                            color: b.color, fontSize: 12, fontWeight: FontWeightManager.bold800),
+                        SemiBoldText(b.label, color: b.color, fontSize: 12),
                         RichText(
                           text: TextSpan(
-                            style: GetSemiBoldStyle(color: context.getColor(ThemeEnum.hover), fontSize: 12),
+                            style: GetMediumStyle(color: context.getColor(ThemeEnum.hover), fontSize: 12),
                             children: [
                               TextSpan(
                                   text: '${b.solved}',
-                                  style: GetSemiBoldStyle(
+                                  style: GetMediumStyle(
                                       color: context.getColor(ThemeEnum.textSecond), fontSize: 12)),
                               TextSpan(text: ' / ${b.total}'),
                             ],
@@ -87,7 +85,7 @@ class ProfileDifficultyBreakdown extends ConsumerWidget {
                         builder: (_, v, __) => LinearProgressIndicator(
                           value: v,
                           minHeight: 6.h,
-                          backgroundColor: context.getColor(ThemeEnum.outputHeader),
+                          backgroundColor: context.getColor(ThemeEnum.border),
                           valueColor:
                               AlwaysStoppedAnimation(context.getColor(b.color).withValues(alpha: 0.85)),
                         ),
