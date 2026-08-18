@@ -12,15 +12,18 @@ class TreeNode {
 ''';
 
 void main() {
-  grade('LCA', ProblemData(
-    functionSignature: 'TreeNode? lowestCommonAncestor(TreeNode? root, TreeNode? p, TreeNode? q)',
-    customObjects: const {'TreeNode': CustomObjectShape.binaryTree},
-    customObjectSources: const [treeNodeSource],
-    testCases: const [
-      ProblemTestCase(input: 'root=[6,2,8,0,4,7,9,null,null,3,5], p=2, q=8', expectedOutput: '6'),
-      ProblemTestCase(input: 'root=[6,2,8,0,4,7,9,null,null,3,5], p=0, q=5', expectedOutput: '2'),
-    ],
-  ), '''
+  grade(
+      'LCA',
+      ProblemData(
+        functionSignature: 'TreeNode? lowestCommonAncestor(TreeNode? root, TreeNode? p, TreeNode? q)',
+        customObjects: const {'TreeNode': CustomObjectShape.binaryTree},
+        customObjectSources: const [treeNodeSource],
+        testCases: const [
+          ProblemTestCase(input: 'root=[6,2,8,0,4,7,9,null,null,3,5], p=2, q=8', expectedOutput: '6'),
+          ProblemTestCase(input: 'root=[6,2,8,0,4,7,9,null,null,3,5], p=0, q=5', expectedOutput: '2'),
+        ],
+      ),
+      '''
 TreeNode? lowestCommonAncestor(TreeNode? root, int p, int q) {
   var cur = root;
   while (cur != null) {
