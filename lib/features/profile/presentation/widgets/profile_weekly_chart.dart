@@ -2,6 +2,7 @@ import 'package:algorithm_visualizer/core/resources/strings_manager.dart';
 import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
 import 'package:algorithm_visualizer/core/widgets/adaptive/padding/adaptive_padding.dart';
 import 'package:algorithm_visualizer/core/widgets/adaptive/text/adaptive_text.dart';
+import 'package:algorithm_visualizer/core/widgets/custom_widgets/glass_card.dart';
 import 'package:algorithm_visualizer/features/home/view_model/home_providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -22,15 +23,13 @@ class ProfileWeeklyChart extends ConsumerWidget {
       startPadding: 16,
       endPadding: 16,
       bottomPadding: 14,
-      child: Container(
-        padding: REdgeInsets.all(14),
-        decoration: _cardDecoration(context),
+      child: SimpleGlassButton(
+        padding: 14,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
               BoldText(StringsManager.thisWeek, color: ThemeEnum.textSecond, fontSize: 14),
-              // RSizedBox(height: 12),
               SemiBoldText(
                 '$total ${StringsManager.solvedLabel}',
                 color: ThemeEnum.accent,
@@ -88,10 +87,4 @@ class ProfileWeeklyChart extends ConsumerWidget {
     );
   }
 
-  BoxDecoration _cardDecoration(BuildContext context) => BoxDecoration(
-        color: context.getColor(ThemeEnum.mainCard),
-        borderRadius: BorderRadius.circular(14.r),
-        border: Border.all(color: context.getColor(ThemeEnum.border)),
-        boxShadow: context.cardShadow,
-      );
 }
