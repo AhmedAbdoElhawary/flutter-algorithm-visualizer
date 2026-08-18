@@ -1,3 +1,4 @@
+import 'package:algorithm_visualizer/core/resources/strings_manager.dart';
 import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -47,27 +48,27 @@ class _MainNavigationShellState extends State<MainNavigationShell> {
                 BottomNavigationBarItem(
                   icon: Icon(Icons.home_outlined),
                   activeIcon: Icon(Icons.home_rounded),
-                  label: 'Home',
+                  label: StringsManager.home,
                 ),
                 BottomNavigationBarItem(
                   icon: Icon(Icons.bar_chart_rounded),
                   activeIcon: Icon(Icons.bar_chart_rounded),
-                  label: 'Visual',
+                  label: StringsManager.visual,
                 ),
                 BottomNavigationBarItem(
                   icon: Icon(Icons.code_rounded),
                   activeIcon: Icon(Icons.code_rounded),
-                  label: 'Code',
+                  label: StringsManager.code,
                 ),
                 BottomNavigationBarItem(
                   icon: Icon(Icons.emoji_events_outlined),
                   activeIcon: Icon(Icons.emoji_events_rounded),
-                  label: 'Practice',
+                  label: StringsManager.practice,
                 ),
                 BottomNavigationBarItem(
                   icon: Icon(Icons.person_outline_rounded),
                   activeIcon: Icon(Icons.person_rounded),
-                  label: 'Profile',
+                  label: StringsManager.profile ,
                 ),
               ],
             ),

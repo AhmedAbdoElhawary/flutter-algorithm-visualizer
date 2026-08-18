@@ -25,7 +25,8 @@ Map<String, dynamic> _$$ProblemStorageDTOImplToJson(
       'problem_id': instance.problemId,
       'problem_status': _$ProblemStatusEnumMap[instance.problemStatus],
       'is_bookmarked': instance.isBookmarked,
-      'solutions_status': instance.solutionsStatus,
+      'solutions_status':
+          instance.solutionsStatus?.map((e) => e.toJson()).toList(),
     };
 
 const _$ProblemStatusEnumMap = {
@@ -38,16 +39,21 @@ _$ProblemSolutionStatusDTOImpl _$$ProblemSolutionStatusDTOImplFromJson(
         Map<String, dynamic> json) =>
     _$ProblemSolutionStatusDTOImpl(
       code: json['code'] as String?,
-      failedTestCase: json['failed_test_case'] == null
-          ? null
-          : TestCase.fromJson(json['failed_test_case'] as Map<String, dynamic>),
+      allTestCaseResults: (json['all_test_case_results'] as List<dynamic>?)
+          ?.map((e) => TestCaseResult.fromJson(e as Map<String, dynamic>))
+          .toList(),
       isCorrect: json['is_correct'] as bool?,
+      submittedAt: json['submitted_at'] == null
+          ? null
+          : DateTime.parse(json['submitted_at'] as String),
     );
 
 Map<String, dynamic> _$$ProblemSolutionStatusDTOImplToJson(
         _$ProblemSolutionStatusDTOImpl instance) =>
     <String, dynamic>{
       'code': instance.code,
-      'failed_test_case': instance.failedTestCase,
+      'all_test_case_results':
+          instance.allTestCaseResults?.map((e) => e.toJson()).toList(),
       'is_correct': instance.isCorrect,
+      'submitted_at': instance.submittedAt?.toIso8601String(),
     };
