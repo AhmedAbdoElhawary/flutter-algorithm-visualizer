@@ -6,16 +6,14 @@ part of 'similar_question.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$SimilarQuestionImpl _$$SimilarQuestionImplFromJson(
-        Map<String, dynamic> json) =>
-    _$SimilarQuestionImpl(
+SimilarQuestion _$SimilarQuestionFromJson(Map<String, dynamic> json) =>
+    SimilarQuestion(
       problemId: (json['problem_id'] as num?)?.toInt(),
       name: json['name'] as String?,
       reason: json['reason'] as String?,
     );
 
-Map<String, dynamic> _$$SimilarQuestionImplToJson(
-        _$SimilarQuestionImpl instance) =>
+Map<String, dynamic> _$SimilarQuestionToJson(SimilarQuestion instance) =>
     <String, dynamic>{
       'problem_id': instance.problemId,
       'name': instance.name,
