@@ -2,7 +2,7 @@ part of '../view/sorting_view.dart';
 
 class _SortingControlButtons extends ConsumerWidget {
   const _SortingControlButtons(this.notifier);
-  final StateNotifierProvider<SortingNotifier, SortingNotifierState> notifier;
+  final NotifierProvider<SortingNotifier, SortingNotifierState> notifier;
 
   @override
   Widget build(BuildContext context, ref) {
