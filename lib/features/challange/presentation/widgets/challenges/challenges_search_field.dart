@@ -1,3 +1,4 @@
+import 'package:algorithm_visualizer/core/resources/font_manager.dart';
 import 'package:algorithm_visualizer/core/resources/strings_manager.dart';
 import 'package:algorithm_visualizer/core/resources/styles_manager.dart';
 import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
@@ -7,7 +8,6 @@ import 'package:algorithm_visualizer/features/challange/presentation/view_model/
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 class ChallengesSearchField extends ConsumerStatefulWidget {
   const ChallengesSearchField({super.key});
@@ -52,7 +52,7 @@ class _ChallengesSearchFieldState extends ConsumerState<ChallengesSearchField> {
                 decoration: InputDecoration(
                   isDense: true,
                   hintText: StringsManager.searchProblem,
-                  hintStyle: GoogleFonts.inter(color: context.getColor(ThemeEnum.textSecond), fontSize: 14.r),
+                  hintStyle: TextStyle(color: context.getColor(ThemeEnum.textSecond), fontSize: 14.r, fontFamily: FontConstants.fontFamily),
 
                   border: InputBorder.none,
                   contentPadding: EdgeInsets.zero,
