@@ -30,46 +30,49 @@ class _MainNavigationShellState extends State<MainNavigationShell> {
             left: 0,
             right: 0,
             bottom: 0,
-            child: CupertinoTabBar(
-              activeColor: context.getColor(ThemeEnum.accent),
-              inactiveColor: context.getColor(ThemeEnum.codeEditorNumberColor),
-              iconSize: 22.r,
-              backgroundColor: context.getColor(ThemeEnum.primary),
-              border: Border(top: BorderSide(width: 1, color: context.getColor(ThemeEnum.border))),
-              currentIndex: widget.navigationShell.currentIndex,
-              onTap: (index) {
-                widget.navigationShell.goBranch(
-                  index,
-                  initialLocation: index == widget.navigationShell.currentIndex,
-                );
-              },
-              items: const [
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.home_outlined),
-                  activeIcon: Icon(Icons.home_rounded),
-                  label: 'Home',
-                ),
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.bar_chart_rounded),
-                  activeIcon: Icon(Icons.bar_chart_rounded),
-                  label: 'Visual',
-                ),
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.code_rounded),
-                  activeIcon: Icon(Icons.code_rounded),
-                  label: 'Code',
-                ),
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.emoji_events_outlined),
-                  activeIcon: Icon(Icons.emoji_events_rounded),
-                  label: 'Practice',
-                ),
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.person_outline_rounded),
-                  activeIcon: Icon(Icons.person_rounded),
-                  label: 'Profile',
-                ),
-              ],
+            child: Padding(
+              padding: REdgeInsetsDirectional.only(bottom: 0),
+              child: CupertinoTabBar(
+                activeColor: context.getColor(ThemeEnum.accent),
+                inactiveColor: context.getColor(ThemeEnum.codeEditorNumberColor),
+                iconSize: 22.r,
+                backgroundColor: context.getColor(ThemeEnum.primary),
+                border: Border(top: BorderSide(width: 1, color: context.getColor(ThemeEnum.border))),
+                currentIndex: widget.navigationShell.currentIndex,
+                onTap: (index) {
+                  widget.navigationShell.goBranch(
+                    index,
+                    initialLocation: index == widget.navigationShell.currentIndex,
+                  );
+                },
+                items: const [
+                  BottomNavigationBarItem(
+                    icon: Icon(Icons.home_outlined),
+                    activeIcon: Icon(Icons.home_rounded),
+                    label: 'Home',
+                  ),
+                  BottomNavigationBarItem(
+                    icon: Icon(Icons.bar_chart_rounded),
+                    activeIcon: Icon(Icons.bar_chart_rounded),
+                    label: 'Visual',
+                  ),
+                  BottomNavigationBarItem(
+                    icon: Icon(Icons.code_rounded),
+                    activeIcon: Icon(Icons.code_rounded),
+                    label: 'Code',
+                  ),
+                  BottomNavigationBarItem(
+                    icon: Icon(Icons.emoji_events_outlined),
+                    activeIcon: Icon(Icons.emoji_events_rounded),
+                    label: 'Practice',
+                  ),
+                  BottomNavigationBarItem(
+                    icon: Icon(Icons.person_outline_rounded),
+                    activeIcon: Icon(Icons.person_rounded),
+                    label: 'Profile',
+                  ),
+                ],
+              ),
             ),
           ),
         ],
