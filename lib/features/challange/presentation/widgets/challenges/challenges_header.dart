@@ -23,7 +23,7 @@ class ChallengesHeader extends ConsumerWidget {
 
     final isLoaded = solved != -1 && total != -1;
     return Padding(
-      padding: REdgeInsets.fromLTRB(16, 16, 16, 12),
+      padding: REdgeInsets.fromLTRB(16, 0, 16, 12),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
