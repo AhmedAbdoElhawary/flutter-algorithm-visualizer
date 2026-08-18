@@ -1,10 +1,11 @@
-import 'package:algorithm_visualizer/core/widgets/custom_widgets/complexity_details.dart';
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/algo_tab.dart';
+import 'package:algorithm_visualizer/core/widgets/custom_widgets/complexity_details.dart';
 import 'package:algorithm_visualizer/features/base/view_model/base_view_model.dart';
 import 'package:algorithm_visualizer/features/visualize/sub_view/searching/view_model/searching_notifier.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+
 import '../widgets/pf_controls.dart';
 import '../widgets/pf_grid.dart';
 import '../widgets/pf_legend.dart';
@@ -20,12 +21,12 @@ class SearchingView extends ConsumerStatefulWidget {
 }
 
 class _VisualizerScreenState extends ConsumerState<SearchingView> {
-  late StateNotifierProvider<SearchingNotifier, SearchingState> instance =
+  late NotifierProvider<SearchingNotifier, SearchingState> instance =
       BaseViewModel.searchingCards(widget.card).instance;
 
   late SearchingAlgoCards card = widget.card;
 
-  void deleteInstance(StateNotifierProvider<SearchingNotifier, SearchingState> instance) {
+  void deleteInstance(NotifierProvider<SearchingNotifier, SearchingState> instance) {
     ref.read(instance.notifier).reset();
     ref.invalidate(instance);
   }
