@@ -8,6 +8,7 @@ import 'package:algorithm_visualizer/features/challange/data/models/similar_ques
 import 'package:algorithm_visualizer/features/challange/data/models/solution_approach.dart';
 import 'package:algorithm_visualizer/features/challange/data/models/test_case.dart';
 import 'package:algorithm_visualizer/features/challange/domain/enums/problem.dart';
+import 'package:collection/collection.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'coding_problem.freezed.dart';
@@ -61,9 +62,7 @@ extension CodingProblemX on CodingProblem {
   String get getName => name ?? '';
 
   String get getNameWithLanguageName {
-    final snakeCase = getName.toSnakeCase
-        .replaceAll(RegExp(r'\s+'), '_')
-        .toLowerCase();
+    final snakeCase = getName.toSnakeCase.replaceAll(RegExp(r'\s+'), '_').toLowerCase();
 
     final parts = snakeCase.split('_');
 
@@ -73,6 +72,7 @@ extension CodingProblemX on CodingProblem {
 
     return "${parts.join('_')}.${StringsManager.dart.toLowerCase()}";
   }
+
   String get getSource => source ?? '';
 
   int get getSourceProblemNumber => sourceProblemNumber ?? -1;
@@ -98,6 +98,10 @@ extension CodingProblemX on CodingProblem {
     return code;
   }
 
+  /// The most recent saved solution (new attempts are prepended in
+  /// `solutionsStatus`), falling back to the starter code.
+  String get getCode => solutionsStatus?.firstOrNull?.code ?? getDefaultCode;
+
   List<CustomObject> get getCustomObjects => customObjects?['dart'] ?? [];
 
   List<Example> get getExamples => examples ?? [];
@@ -118,4 +122,6 @@ extension CodingProblemX on CodingProblem {
   bool get isSolved => getProblemStatus == ProblemStatus.solved;
   bool get getIsBookmarked => isBookmarked ?? false;
   List<ProblemSolutionStatusDTO> get getSolutionsStatus => solutionsStatus ?? [];
+  bool get isThereAnyCorrectCodeSaved =>
+      getSolutionsStatus.firstWhereOrNull((element) => element.isCorrect == true) != null;
 }

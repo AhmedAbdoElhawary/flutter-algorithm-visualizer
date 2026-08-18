@@ -1,4 +1,5 @@
 import 'dart:convert';
+
 import 'package:algorithm_visualizer/core/storage/get_storage_service.dart';
 import 'package:algorithm_visualizer/features/challange/data/models/dataset.dart';
 import 'package:algorithm_visualizer/features/challange/data/models/problem_storage.dart';
@@ -37,11 +38,9 @@ class ProblemLocalDataSource {
   Future<void> updateProblem(ProblemStorageDTO problem) async {
     final problems = getProblems();
 
-    final index = problems.indexWhere(
-      (item) => item.problemId == problem.problemId,
-    );
+    final index = problems.indexWhere((item) => item.problemId == problem.problemId);
 
-    if (index == -1) throw StateError('Problem with id ${problem.problemId} does not exist.');
+    if (index == -1) return await saveProblem(problem);
 
     problems[index] = problem;
 

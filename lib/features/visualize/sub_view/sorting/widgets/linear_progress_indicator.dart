@@ -1,4 +1,3 @@
-import 'package:algorithm_visualizer/core/resources/color_manager.dart';
 import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -31,7 +30,7 @@ class GradientLinearProgressIndicator extends StatelessWidget {
                     end: AlignmentDirectional.centerEnd,
                     colors: [
                       context.getColor(ThemeEnum.accent),
-                      ColorManager.pinkColor,
+                      context.getColor(ThemeEnum.pink),
                     ],
                   ),
                   borderRadius: BorderRadius.circular(12),

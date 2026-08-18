@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+
 import '../models/code_editor_config.dart';
 import '../models/code_editor_theme.dart';
 import '../widgets/line_numbers.dart';
@@ -215,8 +216,8 @@ class _CodeEditorState extends State<CodeEditor> {
     return Container(
       decoration: BoxDecoration(
         border: theme.border,
-        borderRadius: borderRadius,
         color: theme.background,
+        borderRadius: borderRadius ?? BorderRadius.zero,
       ),
       child: Row(
         children: <Widget>[
@@ -241,13 +242,16 @@ class _CodeEditorState extends State<CodeEditor> {
             highlightedLines: widget.controller.highlightedLines,
           ),
           Expanded(
-            child: SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              controller: _horizontalScrollController,
+            child: ClipRRect(
+              borderRadius: borderRadius ?? BorderRadius.zero,
               child: SingleChildScrollView(
-                controller: _scrollController,
-                child: IntrinsicWidth(
-                  child: editableArea,
+                scrollDirection: Axis.horizontal,
+                controller: _horizontalScrollController,
+                child: SingleChildScrollView(
+                  controller: _scrollController,
+                  child: IntrinsicWidth(
+                    child: editableArea,
+                  ),
                 ),
               ),
             ),

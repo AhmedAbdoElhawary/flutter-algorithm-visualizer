@@ -22,8 +22,9 @@ class ProblemStorageDTO with _$ProblemStorageDTO {
 class ProblemSolutionStatusDTO with _$ProblemSolutionStatusDTO {
   const factory ProblemSolutionStatusDTO({
     required String? code,
-    required TestCase? failedTestCase,
+    required List<TestCaseResult>? allTestCaseResults,
     required bool? isCorrect,
+    DateTime? submittedAt,
   }) = _ProblemSolutionStatusDTO;
 
   factory ProblemSolutionStatusDTO.fromJson(Map<String, dynamic> json) =>

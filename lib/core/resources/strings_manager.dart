@@ -78,7 +78,7 @@ class StringsManager {
   static const String size = "Size";
   static const String time = "Time: ";
   static const String space = "Space: ";
-  static const String best = "Best: ";
+  static const String best = "Best:";
   static const String average = "Average: ";
   static const String worst = "Worst: ";
   static const String pseudocode = "pseudocode";
@@ -103,7 +103,7 @@ class StringsManager {
   static const String loading = 'Loading challenges...';
   static const String notAbleToLoadAnyChallenge = 'Not able to load any challenge...';
   static const String tryInDifferentTime = 'Try in different time';
-  static const String practice = 'practice';
+  static const String practice = 'Practice';
   static const String challenges = 'Challenges';
   static const String nan = "NAN";
   static const String solveWithArrow = "Solve →";
@@ -134,5 +134,58 @@ class StringsManager {
   static const String actual = "actual";
   static const String test = "Test";
   static const String caseS = "Case";
+  static const String notSolved = "Not Solved";
 
+  // Profile
+  static const String profile = "Profile";
+  static const String problemsSolved = "Problems Solved";
+  static const String dayStreak = "Day\nStreak";
+  static const String accuracyRate = "Accuracy\nRate";
+  static const String bookmarked = "Bookmarked";
+  static const String difficultyBreakdown = "Difficulty Breakdown";
+  static const String categoryBreakdown = "Category Breakdown";
+  static const String activityHeatmap = "Activity (12 weeks)";
+  static const String recentSubmissions = "Recent Submissions";
+  static const String thisWeek = "This Week";
+  static const String less = "Less";
+  static const String more = "More";
+  static const String bestLabel = "Best";
+  static const String solvedLabel = "solved";
+  static const String total = "Total";
+  static const String viewAll = "View All";
+  static const String days = "days";
+  static const String problems = "problems";
+
+  static const String hints = "Hints";
+  static const String similarQuestions = "Similar Questions";
+  static const String practiceHistory = "Practice History";
+  static const String resetCode = "Reset Code";
+  static const String resetCodeConfirm = "Reset to default code?";
+  static const String resetCodeDesc = "Your current changes will be lost and the default starter code will be restored.";
+  static const String yesReset = "Reset";
+  static const String noCancel = "Cancel";
+
+  static const String solvedTopics = "Solved Topics";
+  static const String topics = "Topics";
+  static const String date = "Date";
+  static const String result = "Result";
+  static const String difficultyProgress = "Difficulty Progress";
+  static const String home = "Home";
+  static const String visual = "Visual";
+  static const String code = "Code";
+  static const String goodMorning = "Good morning";
+  static const String goodAfternoon = "Good afternoon";
+  static const String goodEvening = "Good evening";
+  static const String recentActivity = "Recent Activity";
+  static const String justNow = "Just now";
+  static const String mAgo = "m ago";
+  static const String hAgo = "h ago";
+  static const String dAgo = "d ago";
+  static const String yesterday = "Yesterday";
+
+  static const String streak = "Streak";
+  static const String accuracy = "Accuracy";
+  static const String attempts = "Attempts";
+  static const String continueLabel = "Continue Learning";
+  static const String anonymous = "Anonymous";
 }
