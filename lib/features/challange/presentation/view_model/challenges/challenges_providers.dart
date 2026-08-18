@@ -32,9 +32,7 @@ class FilteredProblemIds {
 }
 
 bool _matchesFilter(CodingProblem problem, ChallengesState state) {
-  if (state.filter != null &&
-      state.filter != ProblemDifficulty.none &&
-      problem.difficulty != state.filter) {
+  if (state.filter != null && state.filter != ProblemDifficulty.none && problem.difficulty != state.filter) {
     return false;
   }
   if (state.search.isNotEmpty && !problem.getName.toLowerCase().contains(state.search.toLowerCase())) {
