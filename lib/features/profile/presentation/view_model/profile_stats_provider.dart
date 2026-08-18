@@ -80,6 +80,16 @@ class ProfileStats {
   final List<RecentSubmission> recentSubmissions;
   final List<PracticeHistoryEntry> practiceHistory;
 
+  static ProfileStats init() => ProfileStats(
+        totalProblems: 0, solvedCount: 0, easySolved: 0, mediumSolved: 0, //
+        hardSolved: 0, easyTotal: 0, mediumTotal: 0, hardTotal: 0, //
+        totalAttempts: 0, correctAttempts: 0, accuracyRate: 0, //
+        bookmarkedCount: 0, currentStreak: 0, bestStreak: 0, //
+        weeklyActivity: [0, 0, 0, 0, 0, 0, 0], //
+        heatmapData: List<int>.filled(84, 0), //
+        categorySolved: {}, recentSubmissions: [], practiceHistory: [], //
+      );
+
   double get easyRatio => easyTotal == 0 ? 0 : easySolved / easyTotal;
   double get mediumRatio => mediumTotal == 0 ? 0 : mediumSolved / mediumTotal;
   double get hardRatio => hardTotal == 0 ? 0 : hardSolved / hardTotal;
@@ -89,24 +99,8 @@ final profileStatsProvider = Provider<ProfileStats>((ref) {
   final asyncProblems = ref.watch(problemsProvider);
   return asyncProblems.when(
     data: _computeStats,
-    loading: () => ProfileStats(
-      totalProblems: 0, solvedCount: 0, easySolved: 0, mediumSolved: 0,
-      hardSolved: 0, easyTotal: 0, mediumTotal: 0, hardTotal: 0,
-      totalAttempts: 0, correctAttempts: 0, accuracyRate: 0,
-      bookmarkedCount: 0, currentStreak: 0, bestStreak: 0,
-      weeklyActivity: [0, 0, 0, 0, 0, 0, 0],
-      heatmapData: List<int>.filled(84, 0),
-      categorySolved: {}, recentSubmissions: [], practiceHistory: [],
-    ),
-    error: (_, __) => ProfileStats(
-      totalProblems: 0, solvedCount: 0, easySolved: 0, mediumSolved: 0,
-      hardSolved: 0, easyTotal: 0, mediumTotal: 0, hardTotal: 0,
-      totalAttempts: 0, correctAttempts: 0, accuracyRate: 0,
-      bookmarkedCount: 0, currentStreak: 0, bestStreak: 0,
-      weeklyActivity: [0, 0, 0, 0, 0, 0, 0],
-      heatmapData: List<int>.filled(84, 0),
-      categorySolved: {}, recentSubmissions: [], practiceHistory: [],
-    ),
+    loading: ProfileStats.init,
+    error: (_, __) => ProfileStats.init(),
   );
 });
 

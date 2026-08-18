@@ -2,7 +2,7 @@ import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
 import 'package:algorithm_visualizer/core/widgets/adaptive/padding/adaptive_padding.dart';
 import 'package:algorithm_visualizer/core/widgets/adaptive/text/adaptive_text.dart';
 import 'package:algorithm_visualizer/features/home/view_model/home_provider.dart';
-import 'package:algorithm_visualizer/features/profile/presentation/view_model/profile_provider.dart';
+import 'package:algorithm_visualizer/features/profile/presentation/view_model/user_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -13,7 +13,7 @@ class HomeHeader extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     // in case i will add others to not rebuild it just to take the name
-    final name = ref.watch(profileNameProvider.select((value) => value));
+    final name = ref.watch(userNameProvider.select((value) => value));
     final greeting = ref.watch(homeDataProvider.select((value) => value.greeting));
 
     return OnlyPadding(

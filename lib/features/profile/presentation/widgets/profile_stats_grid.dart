@@ -1,3 +1,5 @@
+import 'package:algorithm_visualizer/config/routes/route_app.dart';
+import 'package:algorithm_visualizer/core/extensions/navigators.dart';
 import 'package:algorithm_visualizer/core/resources/font_manager.dart';
 import 'package:algorithm_visualizer/core/resources/strings_manager.dart';
 import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
@@ -8,7 +10,6 @@ import 'package:algorithm_visualizer/features/profile/presentation/view_model/pr
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:go_router/go_router.dart';
 
 class ProfileStatsGrid extends ConsumerWidget {
   const ProfileStatsGrid({super.key});
@@ -91,7 +92,7 @@ class ProfileStatsGrid extends ConsumerWidget {
               );
                 if (i == 3) {
                   return GestureDetector(
-                    onTap: () => context.push('/profile/bookmarked'),
+                    onTap: () => context.pushTo(Routes.bookmarkedProblems),
                     child: card,
                   );
                 }
