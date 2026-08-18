@@ -48,6 +48,7 @@ class BookmarkedProblemsPage extends ConsumerWidget {
             itemBuilder: (context, i) {
               final problem = bookmarked[i];
               return ProblemRow(
+                addTopBorder: false,
                 problemName: problem.getName,
                 difficulty: problem.getDifficulty,
                 isCorrect: problem.problemStatus == ProblemStatus.solved,
