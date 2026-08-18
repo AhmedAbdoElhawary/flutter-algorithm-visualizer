@@ -2,7 +2,7 @@ import 'package:algorithm_visualizer/core/resources/strings_manager.dart';
 import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
 import 'package:algorithm_visualizer/core/widgets/adaptive/padding/adaptive_padding.dart';
 import 'package:algorithm_visualizer/core/widgets/adaptive/text/adaptive_text.dart';
-import 'package:algorithm_visualizer/features/profile/presentation/view_model/profile_stats_provider.dart';
+import 'package:algorithm_visualizer/features/profile/presentation/view_model/statistics/profile_statistics_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -12,9 +12,9 @@ class ProfileCategoryChart extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final stats = ref.watch(profileStatsProvider);
+    final categorySolved = ref.watch(profileStatisticsProvider.select((value) => value.categorySolved));
 
-    final entries = stats.categorySolved.entries.where((e) => e.value > 0).toList()
+    final entries = categorySolved.entries.where((e) => e.value > 0).toList()
       ..sort((a, b) => b.value.compareTo(a.value));
 
     if (entries.isEmpty) return const SizedBox.shrink();
@@ -58,7 +58,7 @@ class ProfileCategoryChart extends ConsumerWidget {
                           borderRadius: BorderRadius.circular(6),
                         ),
                         child: MediumText(
-                          '${e.value}',
+                          e.value.toString(),
                           color: ThemeEnum.accent,
                           fontSize: 11,
                         ),
