@@ -2,7 +2,7 @@ import 'package:algorithm_visualizer/core/resources/strings_manager.dart';
 import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
 import 'package:algorithm_visualizer/core/widgets/adaptive/text/adaptive_text.dart';
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/custom_icon.dart';
-import 'package:algorithm_visualizer/features/profile/presentation/view_model/profile_stats_provider.dart';
+import 'package:algorithm_visualizer/features/profile/presentation/view_model/statistics/profile_statistics_provider.dart';
 import 'package:algorithm_visualizer/features/profile/presentation/widgets/profile_practice_history.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -14,8 +14,7 @@ class RecentSubmissionsPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final stats = ref.watch(profileStatsProvider);
-    final all = stats.practiceHistory;
+    final all = ref.watch(profileStatisticsProvider.select((value) => value.practiceHistory));
 
     return Scaffold(
       backgroundColor: context.getColor(ThemeEnum.primary),
@@ -29,8 +28,7 @@ class RecentSubmissionsPage extends ConsumerWidget {
         centerTitle: false,
       ),
       body: all.isEmpty
-          ? Center(
-              child: RegularText(StringsManager.noProblemsFound, color: ThemeEnum.hoverSecond, fontSize: 14))
+          ? Center(child: MediumText(StringsManager.noProblemsFound, color: ThemeEnum.hoverSecond))
           : ListView.separated(
               padding: REdgeInsetsDirectional.only(start: 16, top: 8, bottom: 50),
               itemCount: all.length,
