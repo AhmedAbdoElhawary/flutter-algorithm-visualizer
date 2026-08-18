@@ -1,8 +1,9 @@
 import 'dart:ui';
-import 'package:algorithm_visualizer/features/visualize/helper/o_notation.dart';
+
 import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
 import 'package:algorithm_visualizer/core/widgets/adaptive/text/adaptive_text.dart';
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/custom_icon.dart';
+import 'package:algorithm_visualizer/features/visualize/helper/o_notation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -26,8 +27,8 @@ class AlgorithmGlassCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
-            width: 42.r,
-            height: 42.r,
+            width: 30.r,
+            height: 30.r,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(12),
               color: color.withValues(alpha: .14),
@@ -38,7 +39,7 @@ class AlgorithmGlassCard extends StatelessWidget {
             child: Icon(icon, color: color),
           ),
           const Spacer(flex: 6),
-          SemiBoldText(algoComplexity.name),
+          SemiBoldText(algoComplexity.name,fontSize: 14,color: ThemeEnum.textPrimary),
           const SizedBox(height: 6),
           RSizedBox(
             height: 20,
