@@ -5,7 +5,7 @@ import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
 import 'package:algorithm_visualizer/core/widgets/adaptive/padding/adaptive_padding.dart';
 import 'package:algorithm_visualizer/core/widgets/adaptive/text/adaptive_text.dart';
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/custom_icon.dart';
-import 'package:algorithm_visualizer/features/profile/presentation/view_model/profile_provider.dart';
+import 'package:algorithm_visualizer/features/profile/presentation/view_model/user_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -52,7 +52,7 @@ class ProfileHeader extends StatelessWidget {
               ),
               child: Center(
                 child: Consumer(builder: (context, ref, child) {
-                  final name = ref.watch(profileNameProvider);
+                  final name = ref.watch(userNameProvider);
 
                   return BoldText(
                     name.isNotEmpty ? name[0].toUpperCase() : StringsManager.anonymous,
@@ -86,7 +86,7 @@ class ProfileHeader extends StatelessWidget {
           RSizedBox(width: 14),
           Expanded(
               child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            Consumer(builder: (context, ref, child) => _EditableName(name: ref.watch(profileNameProvider))),
+            Consumer(builder: (context, ref, child) => _EditableName(name: ref.watch(userNameProvider))),
           ])),
         ]),
       ]),
@@ -149,14 +149,14 @@ class _EditableNameState extends ConsumerState<_EditableName> {
         onSubmitted: (value) {
           final trimmed = value.trim();
           if (trimmed.isNotEmpty) {
-            ref.read(profileNameProvider.notifier).updateName(trimmed);
+            ref.read(userNameProvider.notifier).updateName(trimmed);
           }
           setState(() => _editing = false);
         },
         onTapOutside: (event) {
           final trimmed = _controller.text.trim();
           if (trimmed.isNotEmpty) {
-            ref.read(profileNameProvider.notifier).updateName(trimmed);
+            ref.read(userNameProvider.notifier).updateName(trimmed);
           }
           setState(() => _editing = false);
         },
