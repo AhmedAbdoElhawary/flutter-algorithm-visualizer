@@ -1,14 +1,18 @@
 import 'package:algorithm_visualizer/core/storage/profile_storage.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-final userNameProvider = StateNotifierProvider<UserNameNotifier, String>((ref) {
-  return UserNameNotifier(ref.watch(profileStorageProvider));
+final userNameProvider = NotifierProvider<UserNameNotifier, String>(() {
+  return UserNameNotifier();
 });
 
-class UserNameNotifier extends StateNotifier<String> {
-  UserNameNotifier(this._storage) : super(_storage.getProfileName());
+class UserNameNotifier extends Notifier<String> {
+  late final ProfileStorage _storage;
 
-  final ProfileStorage _storage;
+  @override
+  String build() {
+    _storage = ref.watch(profileStorageProvider);
+    return _storage.getProfileName();
+  }
 
   Future<void> updateName(String name) async {
     state = name;
