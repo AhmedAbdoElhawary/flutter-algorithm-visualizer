@@ -6,15 +6,13 @@ part of 'function_signature.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$FunctionSignatureImpl _$$FunctionSignatureImplFromJson(
-        Map<String, dynamic> json) =>
-    _$FunctionSignatureImpl(
+FunctionSignature _$FunctionSignatureFromJson(Map<String, dynamic> json) =>
+    FunctionSignature(
       generic: json['generic'] as String?,
       dart: json['dart'] as String?,
     );
 
-Map<String, dynamic> _$$FunctionSignatureImplToJson(
-        _$FunctionSignatureImpl instance) =>
+Map<String, dynamic> _$FunctionSignatureToJson(FunctionSignature instance) =>
     <String, dynamic>{
       'generic': instance.generic,
       'dart': instance.dart,
