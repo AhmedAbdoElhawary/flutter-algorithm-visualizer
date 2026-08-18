@@ -5,5 +5,4 @@ extension StringX on String {
       (match) => '${match.group(1)}_${match.group(2)}',
     ).toLowerCase();
   }
-
 }

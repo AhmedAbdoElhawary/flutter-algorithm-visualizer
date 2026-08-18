@@ -41,8 +41,7 @@ class TestCaseResult {
   final bool passed;
   final String? errorMessage;
 
-  factory TestCaseResult.fromJson(Map<String, dynamic> json) =>
-      _$TestCaseResultFromJson(json);
+  factory TestCaseResult.fromJson(Map<String, dynamic> json) => _$TestCaseResultFromJson(json);
 
   Map<String, dynamic> toJson() => _$TestCaseResultToJson(this);
 

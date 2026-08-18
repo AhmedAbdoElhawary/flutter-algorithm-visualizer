@@ -47,13 +47,15 @@ class _ChallengesSearchFieldState extends ConsumerState<ChallengesSearchField> {
               child: TextField(
                 controller: _controller,
                 onChanged: (v) => ref.read(challengesProvider.notifier).setSearch(v),
-                style: GetSemiBoldStyle(color: context.getColor(ThemeEnum.textPrimary), fontSize: 14,letterSpacing: 0.2),
-
+                style: GetSemiBoldStyle(
+                    color: context.getColor(ThemeEnum.textPrimary), fontSize: 14, letterSpacing: 0.2),
                 decoration: InputDecoration(
                   isDense: true,
                   hintText: StringsManager.searchProblem,
-                  hintStyle: TextStyle(color: context.getColor(ThemeEnum.textSecond), fontSize: 14.r, fontFamily: FontConstants.fontFamily),
-
+                  hintStyle: TextStyle(
+                      color: context.getColor(ThemeEnum.textSecond),
+                      fontSize: 14.r,
+                      fontFamily: FontConstants.fontFamily),
                   border: InputBorder.none,
                   contentPadding: EdgeInsets.zero,
                 ),

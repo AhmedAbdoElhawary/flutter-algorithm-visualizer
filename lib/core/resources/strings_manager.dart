@@ -161,7 +161,8 @@ class StringsManager {
   static const String practiceHistory = "Practice History";
   static const String resetCode = "Reset Code";
   static const String resetCodeConfirm = "Reset to default code?";
-  static const String resetCodeDesc = "Your current changes will be lost and the default starter code will be restored.";
+  static const String resetCodeDesc =
+      "Your current changes will be lost and the default starter code will be restored.";
   static const String yesReset = "Reset";
   static const String noCancel = "Cancel";
 
