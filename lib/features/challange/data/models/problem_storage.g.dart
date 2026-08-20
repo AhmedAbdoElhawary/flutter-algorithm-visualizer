@@ -6,9 +6,8 @@ part of 'problem_storage.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$ProblemStorageDTOImpl _$$ProblemStorageDTOImplFromJson(
-        Map<String, dynamic> json) =>
-    _$ProblemStorageDTOImpl(
+ProblemStorageDTO _$ProblemStorageDTOFromJson(Map<String, dynamic> json) =>
+    ProblemStorageDTO(
       problemId: (json['problem_id'] as num?)?.toInt(),
       problemStatus:
           $enumDecodeNullable(_$ProblemStatusEnumMap, json['problem_status']),
@@ -19,8 +18,7 @@ _$ProblemStorageDTOImpl _$$ProblemStorageDTOImplFromJson(
           .toList(),
     );
 
-Map<String, dynamic> _$$ProblemStorageDTOImplToJson(
-        _$ProblemStorageDTOImpl instance) =>
+Map<String, dynamic> _$ProblemStorageDTOToJson(ProblemStorageDTO instance) =>
     <String, dynamic>{
       'problem_id': instance.problemId,
       'problem_status': _$ProblemStatusEnumMap[instance.problemStatus],
@@ -35,9 +33,9 @@ const _$ProblemStatusEnumMap = {
   ProblemStatus.none: 'none',
 };
 
-_$ProblemSolutionStatusDTOImpl _$$ProblemSolutionStatusDTOImplFromJson(
+ProblemSolutionStatusDTO _$ProblemSolutionStatusDTOFromJson(
         Map<String, dynamic> json) =>
-    _$ProblemSolutionStatusDTOImpl(
+    ProblemSolutionStatusDTO(
       code: json['code'] as String?,
       allTestCaseResults: (json['all_test_case_results'] as List<dynamic>?)
           ?.map((e) => TestCaseResult.fromJson(e as Map<String, dynamic>))
@@ -48,8 +46,8 @@ _$ProblemSolutionStatusDTOImpl _$$ProblemSolutionStatusDTOImplFromJson(
           : DateTime.parse(json['submitted_at'] as String),
     );
 
-Map<String, dynamic> _$$ProblemSolutionStatusDTOImplToJson(
-        _$ProblemSolutionStatusDTOImpl instance) =>
+Map<String, dynamic> _$ProblemSolutionStatusDTOToJson(
+        ProblemSolutionStatusDTO instance) =>
     <String, dynamic>{
       'code': instance.code,
       'all_test_case_results':

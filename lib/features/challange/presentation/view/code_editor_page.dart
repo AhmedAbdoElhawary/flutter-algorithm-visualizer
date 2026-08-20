@@ -10,6 +10,7 @@ import 'package:algorithm_visualizer/features/challange/presentation/widgets/cod
 import 'package:algorithm_visualizer/features/challange/presentation/widgets/code_editor/code_editor_lang_bar.dart';
 import 'package:algorithm_visualizer/features/challange/presentation/widgets/code_editor/code_grade_result_card.dart';
 import 'package:algorithm_visualizer/features/challange/presentation/widgets/code_editor/code_problem_description_card.dart';
+import 'package:algorithm_visualizer/features/home/view_model/home_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -69,7 +70,11 @@ class _VisualizerScreenState extends ConsumerState<CodeEditorPage> {
 
   @override
   Widget build(BuildContext context) {
-    final provider = codeEditorControllerProvider(widget.problemId);
+    final effectiveProblemId = widget.problemId <= 0
+        ? (ref.watch(homeDataProvider.select((s) => s.continueProblem))?.getProblemId ?? -1)
+        : widget.problemId;
+
+    final provider = codeEditorControllerProvider(effectiveProblemId);
 
     ref.listen(provider.select((s) => (s.isRunning, s.grade)), (prev, next) {
       final wasRunning = prev?.$1 ?? false;
@@ -80,7 +85,7 @@ class _VisualizerScreenState extends ConsumerState<CodeEditorPage> {
       }
     });
 
-    final codingProblem = ref.watch(getProblemProvider(widget.problemId));
+    final codingProblem = ref.watch(getProblemProvider(effectiveProblemId));
 
     return Scaffold(
       body: SafeArea(

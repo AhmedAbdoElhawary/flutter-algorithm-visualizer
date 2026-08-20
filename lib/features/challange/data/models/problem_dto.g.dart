@@ -6,8 +6,7 @@ part of 'problem_dto.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$ProblemDTOImpl _$$ProblemDTOImplFromJson(Map<String, dynamic> json) =>
-    _$ProblemDTOImpl(
+ProblemDTO _$ProblemDTOFromJson(Map<String, dynamic> json) => ProblemDTO(
       problemId: (json['problem_id'] as num?)?.toInt(),
       number: (json['number'] as num?)?.toInt(),
       name: json['name'] as String?,
@@ -71,7 +70,7 @@ _$ProblemDTOImpl _$$ProblemDTOImplFromJson(Map<String, dynamic> json) =>
           .toList(),
     );
 
-Map<String, dynamic> _$$ProblemDTOImplToJson(_$ProblemDTOImpl instance) =>
+Map<String, dynamic> _$ProblemDTOToJson(ProblemDTO instance) =>
     <String, dynamic>{
       'problem_id': instance.problemId,
       'number': instance.number,

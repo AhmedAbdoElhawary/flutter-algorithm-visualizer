@@ -8,7 +8,7 @@ import 'package:go_router/go_router.dart';
 class MainNavigationShell extends StatefulWidget {
   const MainNavigationShell({
     super.key,
-    required this.navigationShell,
+    required this.navigationShell
   });
 
   final StatefulNavigationShell navigationShell;
