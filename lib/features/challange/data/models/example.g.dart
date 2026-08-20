@@ -6,15 +6,13 @@ part of 'example.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$ExampleImpl _$$ExampleImplFromJson(Map<String, dynamic> json) =>
-    _$ExampleImpl(
+Example _$ExampleFromJson(Map<String, dynamic> json) => Example(
       input: json['input'] as String?,
       output: json['output'] as String?,
       explanation: json['explanation'] as String?,
     );
 
-Map<String, dynamic> _$$ExampleImplToJson(_$ExampleImpl instance) =>
-    <String, dynamic>{
+Map<String, dynamic> _$ExampleToJson(Example instance) => <String, dynamic>{
       'input': instance.input,
       'output': instance.output,
       'explanation': instance.explanation,

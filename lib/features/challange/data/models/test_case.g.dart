@@ -6,21 +6,18 @@ part of 'test_case.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$TestCaseImpl _$$TestCaseImplFromJson(Map<String, dynamic> json) =>
-    _$TestCaseImpl(
+TestCase _$TestCaseFromJson(Map<String, dynamic> json) => TestCase(
       input: json['input'] as String?,
       expectedOutput: json['expected_output'] as String?,
     );
 
-Map<String, dynamic> _$$TestCaseImplToJson(_$TestCaseImpl instance) =>
-    <String, dynamic>{
+Map<String, dynamic> _$TestCaseToJson(TestCase instance) => <String, dynamic>{
       'input': instance.input,
       'expected_output': instance.expectedOutput,
     };
 
-_$SingleTestCaseResultImpl _$$SingleTestCaseResultImplFromJson(
-        Map<String, dynamic> json) =>
-    _$SingleTestCaseResultImpl(
+TestCaseResult _$TestCaseResultFromJson(Map<String, dynamic> json) =>
+    TestCaseResult(
       input: json['input'] as String?,
       expectedOutput: json['expected_output'] as String?,
       actualOutput: json['actual_output'] as String,
@@ -28,8 +25,7 @@ _$SingleTestCaseResultImpl _$$SingleTestCaseResultImplFromJson(
       errorMessage: json['error_message'] as String?,
     );
 
-Map<String, dynamic> _$$SingleTestCaseResultImplToJson(
-        _$SingleTestCaseResultImpl instance) =>
+Map<String, dynamic> _$TestCaseResultToJson(TestCaseResult instance) =>
     <String, dynamic>{
       'input': instance.input,
       'expected_output': instance.expectedOutput,

@@ -6,8 +6,7 @@ part of 'dataset.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$DatasetImpl _$$DatasetImplFromJson(Map<String, dynamic> json) =>
-    _$DatasetImpl(
+Dataset _$DatasetFromJson(Map<String, dynamic> json) => Dataset(
       name: json['name'] as String?,
       version: json['version'] as String?,
       totalProblems: (json['total_problems'] as num?)?.toInt(),
@@ -18,8 +17,7 @@ _$DatasetImpl _$$DatasetImplFromJson(Map<String, dynamic> json) =>
           .toList(),
     );
 
-Map<String, dynamic> _$$DatasetImplToJson(_$DatasetImpl instance) =>
-    <String, dynamic>{
+Map<String, dynamic> _$DatasetToJson(Dataset instance) => <String, dynamic>{
       'name': instance.name,
       'version': instance.version,
       'total_problems': instance.totalProblems,

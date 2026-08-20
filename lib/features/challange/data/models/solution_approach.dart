@@ -1,17 +1,36 @@
+import 'package:json_annotation/json_annotation.dart';
 
-import 'package:freezed_annotation/freezed_annotation.dart';
-
-part 'solution_approach.freezed.dart';
 part 'solution_approach.g.dart';
 
-@freezed
-class SolutionApproach with _$SolutionApproach {
-  const factory SolutionApproach({
-    required String? keyObservation,
-    required String? algorithm,
-    required String? whyItWorks,
-    required String? implementationNotes,
-  }) = _SolutionApproach;
+@JsonSerializable()
+class SolutionApproach {
+  const SolutionApproach({
+    required this.keyObservation,
+    required this.algorithm,
+    required this.whyItWorks,
+    required this.implementationNotes,
+  });
 
-  factory SolutionApproach.fromJson(Map<String, dynamic> json) => _$SolutionApproachFromJson(json);
+  final String? keyObservation;
+  final String? algorithm;
+  final String? whyItWorks;
+  final String? implementationNotes;
+
+  factory SolutionApproach.fromJson(Map<String, dynamic> json) =>
+      _$SolutionApproachFromJson(json);
+
+  Map<String, dynamic> toJson() => _$SolutionApproachToJson(this);
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is SolutionApproach &&
+          runtimeType == other.runtimeType &&
+          keyObservation == other.keyObservation &&
+          algorithm == other.algorithm &&
+          whyItWorks == other.whyItWorks &&
+          implementationNotes == other.implementationNotes;
+
+  @override
+  int get hashCode => Object.hash(runtimeType, keyObservation, algorithm, whyItWorks, implementationNotes);
 }
