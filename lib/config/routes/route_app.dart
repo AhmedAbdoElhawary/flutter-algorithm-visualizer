@@ -88,7 +88,7 @@ class AppRoutes {
               GoRoute(
                 path: Routes.home.path,
                 name: Routes.home.name,
-                builder: (context, state) =>  HomePage(),
+                builder: (context, state) => HomePage(),
               ),
             ],
           ),
@@ -119,7 +119,7 @@ class AppRoutes {
                 path: Routes.code.path,
                 name: Routes.code.name,
                 builder: (context, state) {
-                  final id = int.tryParse(state.uri.queryParameters["problem_id"] ?? "")??-1;
+                  final id = int.tryParse(state.uri.queryParameters["problem_id"] ?? "") ?? -1;
 
                   return CodeEditorPage(problemId: id);
                 },
