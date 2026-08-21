@@ -1,17 +1,17 @@
 import 'package:algorithm_visualizer/core/enums/app_settings_enum.dart';
 import 'package:algorithm_visualizer/core/extensions/language.dart';
 import 'package:flutter/material.dart';
-import 'package:riverpod/riverpod.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:riverpod/riverpod.dart';
 
 part 'app_settings_state.dart';
 
-// Define your StateNotifierProvider
 final appSettingsProvider =
-    StateNotifierProvider<AppSettingsNotifier, AppSettingsState>((ref) => AppSettingsNotifier());
+    NotifierProvider<AppSettingsNotifier, AppSettingsState>(() => AppSettingsNotifier());
 
-class AppSettingsNotifier extends StateNotifier<AppSettingsState> {
-  AppSettingsNotifier() : super(AppSettingsState.initial());
+class AppSettingsNotifier extends Notifier<AppSettingsState> {
+  @override
+  AppSettingsState build() => AppSettingsState.initial();
 
   static String getStorageKey = "AppSettings";
   final String _langSveKey = "lang";

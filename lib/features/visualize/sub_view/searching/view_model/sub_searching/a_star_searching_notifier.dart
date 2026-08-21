@@ -2,6 +2,9 @@ part of 'package:algorithm_visualizer/features/visualize/sub_view/searching/view
 
 class AStarSearchingNotifier extends SearchingNotifier {
   @override
+  SearchingState build() => SearchingState.initial();
+
+  @override
   List<PFStep> buildAlgorithm(List<List<bool>> walls) {
     final steps = <PFStep>[];
     final start = pfEncode(kPFStartRow, kPFStartCol);

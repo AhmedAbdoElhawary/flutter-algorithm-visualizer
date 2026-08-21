@@ -1,19 +1,19 @@
-import 'package:algorithm_visualizer/features/visualize/helper/playback_speed.dart';
 import 'package:algorithm_visualizer/core/resources/styles_manager.dart';
 import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
 import 'package:algorithm_visualizer/core/widgets/adaptive/text/adaptive_text.dart';
+import 'package:algorithm_visualizer/core/widgets/custom_widgets/algo_tab.dart';
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/algorithm_control.dart';
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/algorithm_status_text.dart';
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/complexity_details.dart';
 import 'package:algorithm_visualizer/features/base/view_model/base_view_model.dart';
+import 'package:algorithm_visualizer/features/visualize/helper/playback_speed.dart';
 import 'package:algorithm_visualizer/features/visualize/sub_view/sorting/view_model/sorting_notifier.dart';
-import 'package:algorithm_visualizer/core/widgets/custom_widgets/algo_tab.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-part '../widgets/sorting_app_bar.dart';
 part '../widgets/control_buttons.dart';
+part '../widgets/sorting_app_bar.dart';
 
 class SortingView extends ConsumerStatefulWidget {
   const SortingView({this.card = SortingAlgoCards.bubble, required this.onAlgoChanged, super.key});
@@ -24,12 +24,12 @@ class SortingView extends ConsumerStatefulWidget {
 }
 
 class _SortingPageState extends ConsumerState<SortingView> {
-  late StateNotifierProvider<SortingNotifier, SortingNotifierState> instance =
+  late NotifierProvider<SortingNotifier, SortingNotifierState> instance =
       BaseViewModel.sortingCards(widget.card).instance;
 
   late SortingAlgoCards card = widget.card;
 
-  Future<void> deleteInstance(StateNotifierProvider<SortingNotifier, SortingNotifierState> instance) async {
+  Future<void> deleteInstance(NotifierProvider<SortingNotifier, SortingNotifierState> instance) async {
     await ref.read(instance.notifier).cancelSorting();
     ref.invalidate(instance);
   }
@@ -175,7 +175,7 @@ class _SortingSelectionListState extends State<_SortingSelectionList> {
 class _StatusText extends ConsumerWidget {
   const _StatusText(this.instance);
 
-  final StateNotifierProvider<SortingNotifier, SortingNotifierState> instance;
+  final NotifierProvider<SortingNotifier, SortingNotifierState> instance;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -210,7 +210,7 @@ class SortingAppBar extends StatelessWidget {
 
 class ShowUpSortingList extends ConsumerStatefulWidget {
   const ShowUpSortingList(this.instance, {this.selectedAlgorithmLength = 1, super.key});
-  final StateNotifierProvider<SortingNotifier, SortingNotifierState> instance;
+  final NotifierProvider<SortingNotifier, SortingNotifierState> instance;
   final int selectedAlgorithmLength;
 
   @override
@@ -369,7 +369,7 @@ class _BuildItem extends ConsumerWidget {
   final int index;
   final SortableItem item;
   final Duration speedDuration;
-  final StateNotifierProvider<SortingNotifier, SortingNotifierState> instance;
+  final NotifierProvider<SortingNotifier, SortingNotifierState> instance;
   final int selectedAlgorithmLength;
   final bool isLastItem;
   @override

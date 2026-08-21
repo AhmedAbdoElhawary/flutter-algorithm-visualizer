@@ -95,8 +95,8 @@ void main() {
     expect(problems[0].problemStatus, ProblemStatus.solved);
     expect(identical(problems[1], p2), isTrue, reason: 'unrelated instance must be preserved');
 
-    expect(container.read(getProblemProvider(1)).valueOrNull?.problemStatus, ProblemStatus.solved);
-    expect(container.read(getProblemProvider(2)).valueOrNull, same(p2));
+    expect(container.read(getProblemProvider(1)).value?.problemStatus, ProblemStatus.solved);
+    expect(container.read(getProblemProvider(2)).value, same(p2));
   });
 
   test('FilteredProblemIds compares by content, not list identity', () {

@@ -1,5 +1,5 @@
-import 'package:algorithm_visualizer/features/visualize/helper/playback_speed.dart';
 import 'package:algorithm_visualizer/core/resources/strings_manager.dart';
+import 'package:algorithm_visualizer/features/visualize/helper/playback_speed.dart';
 import 'package:algorithm_visualizer/features/visualize/sub_view/sorting/view_model/sorting_notifier.dart';
 import 'package:algorithm_visualizer/features/visualize/sub_view/sorting/view_model/sub_sorting/bubble_sort_notifier.dart';
 import 'package:algorithm_visualizer/features/visualize/sub_view/sorting/view_model/sub_sorting/bucket_sort_notifier.dart';
@@ -14,81 +14,82 @@ import 'package:algorithm_visualizer/features/visualize/sub_view/sorting/view_mo
 import 'package:collection/collection.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 part 'comparison_sort_state.dart';
 
 class SortingAlgorithm {
   final String name;
-  final StateNotifierProvider<SortingNotifier, SortingNotifierState> provider;
+  final NotifierProvider<SortingNotifier, SortingNotifierState> provider;
   SortingAlgorithm({required this.name, required this.provider});
 }
 
-class ComparisonSortNotifier extends StateNotifier<ComparisonSortingNotifierState> {
-  ComparisonSortNotifier()
-      : super(
-          ComparisonSortingNotifierState(
-            selectedAlgorithms: [sortingAlgorithms[StringsManager.bubbleSort]!],
-          ),
-        );
+class ComparisonSortNotifier extends Notifier<ComparisonSortingNotifierState> {
+  @override
+  ComparisonSortingNotifierState build() {
+    return ComparisonSortingNotifierState(
+      selectedAlgorithms: [sortingAlgorithms[StringsManager.bubbleSort]!],
+    );
+  }
 
   static final Map<String, SortingAlgorithm> sortingAlgorithms = {
     StringsManager.bubbleSort: SortingAlgorithm(
       name: StringsManager.bubbleSort,
-      provider: StateNotifierProvider<SortingNotifier, SortingNotifierState>(
-        (ref) => BubbleSortNotifier(),
+      provider: NotifierProvider<SortingNotifier, SortingNotifierState>(
+        () => BubbleSortNotifier(),
       ),
     ),
     StringsManager.insertionSort: SortingAlgorithm(
       name: StringsManager.insertionSort,
-      provider: StateNotifierProvider<SortingNotifier, SortingNotifierState>(
-        (ref) => InsertionSortNotifier(),
+      provider: NotifierProvider<SortingNotifier, SortingNotifierState>(
+        () => InsertionSortNotifier(),
       ),
     ),
     StringsManager.selectionSort: SortingAlgorithm(
       name: StringsManager.selectionSort,
-      provider: StateNotifierProvider<SortingNotifier, SortingNotifierState>(
-        (ref) => SelectionSortNotifier(),
+      provider: NotifierProvider<SortingNotifier, SortingNotifierState>(
+        () => SelectionSortNotifier(),
       ),
     ),
     StringsManager.mergeSort: SortingAlgorithm(
       name: StringsManager.mergeSort,
-      provider: StateNotifierProvider<SortingNotifier, SortingNotifierState>(
-        (ref) => MergeSortNotifier(),
+      provider: NotifierProvider<SortingNotifier, SortingNotifierState>(
+        () => MergeSortNotifier(),
       ),
     ),
     StringsManager.heapSort: SortingAlgorithm(
       name: StringsManager.heapSort,
-      provider: StateNotifierProvider<SortingNotifier, SortingNotifierState>(
-        (ref) => HeapSortNotifier(),
+      provider: NotifierProvider<SortingNotifier, SortingNotifierState>(
+        () => HeapSortNotifier(),
       ),
     ),
     StringsManager.quickSort: SortingAlgorithm(
       name: StringsManager.quickSort,
-      provider: StateNotifierProvider<SortingNotifier, SortingNotifierState>(
-        (ref) => QuickSortNotifier(),
+      provider: NotifierProvider<SortingNotifier, SortingNotifierState>(
+        () => QuickSortNotifier(),
       ),
     ),
     StringsManager.radixSort: SortingAlgorithm(
       name: StringsManager.radixSort,
-      provider: StateNotifierProvider<SortingNotifier, SortingNotifierState>(
-        (ref) => RadixSortNotifier(),
+      provider: NotifierProvider<SortingNotifier, SortingNotifierState>(
+        () => RadixSortNotifier(),
       ),
     ),
     StringsManager.shellSort: SortingAlgorithm(
       name: StringsManager.shellSort,
-      provider: StateNotifierProvider<SortingNotifier, SortingNotifierState>(
-        (ref) => ShellSortNotifier(),
+      provider: NotifierProvider<SortingNotifier, SortingNotifierState>(
+        () => ShellSortNotifier(),
       ),
     ),
     StringsManager.countingSort: SortingAlgorithm(
       name: StringsManager.countingSort,
-      provider: StateNotifierProvider<SortingNotifier, SortingNotifierState>(
-        (ref) => CountingSortNotifier(),
+      provider: NotifierProvider<SortingNotifier, SortingNotifierState>(
+        () => CountingSortNotifier(),
       ),
     ),
     StringsManager.bucketSort: SortingAlgorithm(
       name: StringsManager.bucketSort,
-      provider: StateNotifierProvider<SortingNotifier, SortingNotifierState>(
-        (ref) => BucketSortNotifier(),
+      provider: NotifierProvider<SortingNotifier, SortingNotifierState>(
+        () => BucketSortNotifier(),
       ),
     ),
   };

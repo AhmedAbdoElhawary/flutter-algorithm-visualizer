@@ -1,11 +1,11 @@
 import 'dart:async';
 import 'dart:math' as math;
 
-import 'package:algorithm_visualizer/features/visualize/helper/o_notation.dart';
-import 'package:algorithm_visualizer/features/visualize/helper/playback_speed.dart';
 import 'package:algorithm_visualizer/core/resources/strings_manager.dart';
 import 'package:algorithm_visualizer/features/base/view_model/algorithm_control_interface.dart';
 import 'package:algorithm_visualizer/features/base/view_model/algorithm_description_interface.dart';
+import 'package:algorithm_visualizer/features/visualize/helper/o_notation.dart';
+import 'package:algorithm_visualizer/features/visualize/helper/playback_speed.dart';
 import 'package:algorithm_visualizer/features/visualize/sub_view/searching/helper/pf_constants.dart';
 import 'package:algorithm_visualizer/features/visualize/sub_view/searching/helper/pf_step.dart';
 import 'package:algorithm_visualizer/features/visualize/sub_view/sorting/view_model/sorting_notifier.dart';
@@ -21,17 +21,15 @@ const _kInfinity = 1 << 30;
 const _kOrthogonalDirs = [(-1, 0), (0, 1), (1, 0), (0, -1)];
 const _kReverseOrthogonalDirs = [(0, -1), (1, 0), (0, 1), (-1, 0)];
 
-abstract class SearchingNotifier extends StateNotifier<SearchingState>
+abstract class SearchingNotifier extends Notifier<SearchingState>
     implements AlgorithmDescriptionNotifier, AlgorithmControlInterface {
-  SearchingNotifier() : super(SearchingState.initial());
-
   Timer? _timer;
   bool _erasingGesture = false;
 
   @override
-  void dispose() {
-    _clearTimer();
-    super.dispose();
+  SearchingState build() {
+    ref.onDispose(_clearTimer);
+    return SearchingState.initial();
   }
 
   @override
