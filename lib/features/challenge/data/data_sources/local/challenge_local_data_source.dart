@@ -6,6 +6,7 @@ import 'package:algorithm_visualizer/features/challenge/data/models/problem_stor
 import 'package:flutter/services.dart';
 
 const _problemsAssetsPath = 'assets/problems.json';
+const String _problemsKey = 'problems';
 
 /// [loadProblemsAssets] i saved in local storage only the problems that user make any interaction with (solved it, bookmarked it, etc.)
 
@@ -14,7 +15,6 @@ class ProblemLocalDataSource {
 
   final GetStorageService _storage;
 
-  static const String _problemsKey = 'problems';
 
   Future<Dataset> loadProblemsAssets() async {
     final String jsonString = await rootBundle.loadString(_problemsAssetsPath);
