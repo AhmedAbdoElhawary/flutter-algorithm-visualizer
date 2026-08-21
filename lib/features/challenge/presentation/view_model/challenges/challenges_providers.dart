@@ -58,10 +58,8 @@ final filteredProblemIdsProvider = Provider<AsyncValue<FilteredProblemIds>>((ref
   );
 });
 
-/// The full problem for a single id. `.select` gives per-problem granularity:
-/// when another problem changes, this recomputes to the *same* (freezed-equal)
-/// problem and Riverpod skips the notification, so only the tile watching this
-/// id rebuilds.
+/// [getProblemProvider] it's register for problem id only not all problems
+/// so, will notify only if the problem id changed
 final getProblemProvider = Provider.family<AsyncValue<CodingProblem?>, int>((ref, problemId) {
   if (problemId <= 0) return const AsyncValue.data(null);
   return ref.watch(
@@ -84,7 +82,7 @@ final solvedCountProvider = Provider<AsyncValue<int>>((ref) {
   );
 });
 
-final difficultyCountProvider = Provider.family<AsyncValue<int>, ProblemDifficulty?>(
+final specificDifficultyCountProvider = Provider.family<AsyncValue<int>, ProblemDifficulty?>(
   (ref, filter) {
     return ref.watch(
       problemsProvider.select(
