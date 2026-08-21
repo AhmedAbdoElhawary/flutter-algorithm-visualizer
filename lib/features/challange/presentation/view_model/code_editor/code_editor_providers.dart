@@ -1,4 +1,3 @@
-import 'package:algorithm_visualizer/features/challange/presentation/view_model/challenges/challenges_providers.dart';
 import 'package:algorithm_visualizer/features/challange/presentation/view_model/code_editor/code_editor_controller.dart';
 import 'package:algorithm_visualizer/features/challange/presentation/view_model/code_editor/code_editor_state.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -10,10 +9,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 /// publishes a fresh problem instance doesn't recreate the controller and wipe
 /// the editor session mid-run. The problem snapshot is read once at creation;
 /// it only holds the (immutable) problem definition used for grading.
-final codeEditorControllerProvider = StateNotifierProvider.autoDispose
-    .family<CodeEditorController, CodeEditorState, int>((ref, problemId) {
-  // Only created once the problem is loaded (the editor page builds it inside
-  // the data branch of `getProblemProvider`), so the snapshot is non-null.
-  final problem = ref.read(getProblemProvider(problemId)).valueOrNull;
-  return CodeEditorController(codingProblem: problem!);
+final codeEditorControllerProvider = NotifierProvider.autoDispose
+    .family<CodeEditorController, CodeEditorState, int>((int problemId) {
+  return CodeEditorController(problemId: problemId);
 });

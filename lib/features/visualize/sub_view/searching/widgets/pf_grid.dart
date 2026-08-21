@@ -25,7 +25,7 @@ enum _DragMode { none, start, end, wall }
 
 class PFGrid extends ConsumerStatefulWidget {
   const PFGrid({required this.instance, super.key});
-  final StateNotifierProvider<SearchingNotifier, SearchingState> instance;
+  final NotifierProvider<SearchingNotifier, SearchingState> instance;
 
   @override
   ConsumerState<PFGrid> createState() => _PFGridState();
