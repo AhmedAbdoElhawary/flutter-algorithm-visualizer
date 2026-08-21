@@ -157,6 +157,7 @@ class StringsManager {
   static const String problems = "problems";
 
   static const String hints = "Hints";
+  static const String hint = "Hint";
   static const String similarQuestions = "Similar Questions";
   static const String practiceHistory = "Practice History";
   static const String resetCode = "Reset Code";
