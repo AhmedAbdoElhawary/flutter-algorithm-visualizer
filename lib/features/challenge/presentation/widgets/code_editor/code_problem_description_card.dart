@@ -93,7 +93,7 @@ class _CodeProblemDescriptionCardState extends State<CodeProblemDescriptionCard>
                 ),
               for (var i = 0; i < hints.length; i++)
                 _CollapsibleSection(
-                  title: 'HINT ${i + 1}',
+                  title: '${StringsManager.hint.toUpperCase()} ${i + 1}',
                   expanded: _isExpanded('hint_$i'),
                   onToggle: () => _toggle('hint_$i'),
                   child: _BodyText(hints[i]),
