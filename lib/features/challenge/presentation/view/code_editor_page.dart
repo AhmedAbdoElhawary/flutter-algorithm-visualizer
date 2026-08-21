@@ -17,7 +17,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class CodeEditorPage extends ConsumerStatefulWidget {
   const CodeEditorPage({required this.problemId, super.key});
-
   final int problemId;
 
   @override
@@ -31,9 +30,7 @@ class _VisualizerScreenState extends ConsumerState<CodeEditorPage> {
   @override
   void didUpdateWidget(covariant CodeEditorPage oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (oldWidget.problemId != widget.problemId) {
-      _scrollToTop();
-    }
+    if (oldWidget.problemId != widget.problemId) _scrollToTop();
   }
 
   @override
@@ -62,7 +59,7 @@ class _VisualizerScreenState extends ConsumerState<CodeEditorPage> {
         _scrollController.animateTo(
           0,
           duration: const Duration(milliseconds: 300),
-          curve: Curves.easeOut,
+          curve: Curves.easeInOut,
         );
       }
     });
@@ -76,12 +73,11 @@ class _VisualizerScreenState extends ConsumerState<CodeEditorPage> {
 
     final provider = codeEditorControllerProvider(effectiveProblemId);
 
+    // just to scroll to result when it finished
     ref.listen<bool>(provider.select((s) => s.isRunning), (wasRunning, isRunning) {
       if ((wasRunning ?? false) && !isRunning) {
         final grade = ref.read(provider.select((s) => s.grade));
-        if (grade != null) {
-          _scrollToResult();
-        }
+        if (grade != null) _scrollToResult();
       }
     });
 
