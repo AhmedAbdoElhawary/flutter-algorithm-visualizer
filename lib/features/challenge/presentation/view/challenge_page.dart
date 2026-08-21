@@ -24,31 +24,10 @@ class ChallengePage extends ConsumerWidget {
       body: SafeArea(
         child: CustomScrollView(
           slivers: [
-            SliverAppBar(
-              snap: true,
-              floating: true,
-              stretch: true,
-              centerTitle: false,
-              titleSpacing: 0,
-              leadingWidth: 16.r,
-              leading: SizedBox(),
-              bottom: PreferredSize(
-                preferredSize: Size.fromHeight(138.r),
-                child: SingleChildScrollView(
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      const ChallengesHeader(),
-                      const ChallengesSearchField(),
-                      const ChallengesFilterTabs(),
-                    ],
-                  ),
-                ),
-              ),
-            ),
+            _SliverAppBar(),
             problems.when(
               loading: () => const SliverChallengesLoadingState(),
-              error: (error, stackTrace) => SliverFillRemaining(child: ChallengesErrorState()),
+              error: (_, __) => SliverFillRemaining(child: ChallengesErrorState()),
               data: (data) {
                 if (data.ids.isEmpty) return SliverFillRemaining(child: const ChallengesEmptyState());
                 return SliverPadding(
@@ -69,6 +48,36 @@ class ChallengePage extends ConsumerWidget {
               },
             )
           ],
+        ),
+      ),
+    );
+  }
+}
+
+class _SliverAppBar extends StatelessWidget {
+  const _SliverAppBar();
+
+  @override
+  Widget build(BuildContext context) {
+    return SliverAppBar(
+      snap: true,
+      floating: true,
+      stretch: true,
+      centerTitle: false,
+      titleSpacing: 0,
+      leadingWidth: 16.r,
+      leading: SizedBox(),
+      bottom: PreferredSize(
+        preferredSize: Size.fromHeight(138.r),
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const ChallengesHeader(),
+              const ChallengesSearchField(),
+              const ChallengesFilterTabs(),
+            ],
+          ),
         ),
       ),
     );
