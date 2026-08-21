@@ -21,10 +21,7 @@ class ProblemTile extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // Watch only this problem: when another problem's solution changes the
-    // value recomputes to a freezed-equal instance and Riverpod skips this
-    // tile's rebuild — only the updated problem's tile is notified.
-    final problem = ref.watch(getProblemProvider(problemId).select((async) => async.valueOrNull));
+    final problem = ref.watch(getProblemProvider(problemId).select((async) => async.value));
     if (problem == null) return const SizedBox.shrink();
 
     final expanded = ref.watch(challengesProvider.select((s) => s.expandedId == problemId));

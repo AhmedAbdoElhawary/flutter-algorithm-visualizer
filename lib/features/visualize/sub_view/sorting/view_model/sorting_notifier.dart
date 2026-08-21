@@ -22,10 +22,18 @@ class _SortSnapshot {
   const _SortSnapshot(this.list, this.positions);
 }
 
-abstract class SortingNotifier extends StateNotifier<SortingNotifierState>
+abstract class SortingNotifier extends Notifier<SortingNotifierState>
     implements AlgorithmDescriptionNotifier, AlgorithmControlInterface {
-  SortingNotifier() : super(SortingNotifierState(list: _generateList(_defaultSize))) {
-    _initializePositions();
+  static SortingNotifierState initState() {
+    final list = _generateList(_defaultSize);
+    final positions = _computeInitialPositions(list, _defaultSize);
+    return SortingNotifierState(list: list, positions: positions);
+  }
+
+  @override
+  SortingNotifierState build() {
+    _snapshots = [];
+    return initState();
   }
   static const ThemeEnum swappingColor = ThemeEnum.accentRed;
   static const ThemeEnum comparedColor = ThemeEnum.accentBlue;
@@ -132,6 +140,15 @@ abstract class SortingNotifier extends StateNotifier<SortingNotifierState>
     }
     state = state.copyWith(positions: positions);
     _snapshots = [];
+  }
+
+  static Map<int, Offset> _computeInitialPositions(List<SortableItem> list, int size) {
+    final positions = <int, Offset>{};
+    final itemWidth = calculateItemWidth(size);
+    for (int i = 0; i < list.length; i++) {
+      positions[list[i].id] = Offset(i * (itemWidth + itemsPadding), 0);
+    }
+    return positions;
   }
 
   @override

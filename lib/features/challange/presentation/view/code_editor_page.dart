@@ -76,12 +76,12 @@ class _VisualizerScreenState extends ConsumerState<CodeEditorPage> {
 
     final provider = codeEditorControllerProvider(effectiveProblemId);
 
-    ref.listen(provider.select((s) => (s.isRunning, s.grade)), (prev, next) {
-      final wasRunning = prev?.$1 ?? false;
-      final isRunning = next.$1;
-      final grade = next.$2;
-      if (wasRunning && !isRunning && grade != null) {
-        _scrollToResult();
+    ref.listen<bool>(provider.select((s) => s.isRunning), (wasRunning, isRunning) {
+      if ((wasRunning ?? false) && !isRunning) {
+        final grade = ref.read(provider.select((s) => s.grade));
+        if (grade != null) {
+          _scrollToResult();
+        }
       }
     });
 
