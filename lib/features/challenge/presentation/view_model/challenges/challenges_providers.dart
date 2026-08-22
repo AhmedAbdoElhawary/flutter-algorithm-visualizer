@@ -7,7 +7,7 @@ import 'challenges_notifier.dart';
 import 'challenges_state.dart';
 import 'problems_notifier.dart';
 
-final challengesProvider = NotifierProvider.autoDispose<ChallengesNotifier, ChallengesState>(() {
+final challengesProvider = NotifierProvider<ChallengesNotifier, ChallengesState>(() {
   return ChallengesNotifier();
 });
 
