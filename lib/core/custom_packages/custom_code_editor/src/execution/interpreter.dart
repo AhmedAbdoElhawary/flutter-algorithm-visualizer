@@ -31,6 +31,16 @@ class _ContinueSignal {
   final int line;
 }
 
+/// A callable value stored in an [Environment] by a local function
+/// declaration.  Carries both the function AST and the enclosing scope
+/// so that the function can access variables from its declaration site
+/// (closures).
+class _FunctionValue {
+  _FunctionValue(this.decl, this.capturedEnv);
+  final LocalFunctionStmt decl;
+  final Environment capturedEnv;
+}
+
 /// A lexical scope. Variable lookup/assignment walks up [parent] scopes,
 /// matching Dart's own block-scoping rules closely enough for this
 /// subset (each `{ ... }` body gets its own [Environment]).
@@ -48,6 +58,14 @@ class Environment {
     if (_vars.containsKey(name)) return _vars[name];
     if (parent != null) return parent!.get(name, line);
     throw InterpreterError("Undefined variable '$name'", line);
+  }
+
+  /// Like [get] but returns `null` instead of throwing when [name] is
+  /// not found anywhere in the scope chain.
+  dynamic tryGet(String name) {
+    if (_vars.containsKey(name)) return _vars[name];
+    if (parent != null) return parent!.tryGet(name);
+    return null;
   }
 
   void assign(String name, dynamic value, int line) {
@@ -276,6 +294,11 @@ class Interpreter {
     }
     if (stmt is BreakStmt) throw _BreakSignal(stmt.line);
     if (stmt is ContinueStmt) throw _ContinueSignal(stmt.line);
+
+    if (stmt is LocalFunctionStmt) {
+      env.define(stmt.name, _FunctionValue(stmt, env));
+      return;
+    }
 
     throw InterpreterError('Unsupported statement', stmt.line);
   }
@@ -569,6 +592,15 @@ class Interpreter {
 
     if (expr.callee is PropertyAccess) {
       final PropertyAccess prop = expr.callee as PropertyAccess;
+
+      // Static type methods (e.g. int.parse(...))
+      if (prop.target is Identifier) {
+        final String typeName = (prop.target as Identifier).name;
+        final List<dynamic> args = expr.args.map((Expr a) => _eval(a, env)).toList();
+        final dynamic staticResult = _callStaticMethod(typeName, prop.name, args, expr.line);
+        if (staticResult != _noStaticMethod) return staticResult;
+      }
+
       final dynamic target = _eval(prop.target, env);
       final List<dynamic> args = expr.args.map((Expr a) => _eval(a, env)).toList();
       if (target is ObjectInstanceMethod) {
@@ -584,6 +616,21 @@ class Interpreter {
         final List<dynamic> args = expr.args.map((Expr a) => _eval(a, env)).toList();
         return _construct(cls, args, expr.line);
       }
+
+      // Local function / closure stored in environment.
+      final dynamic localFn = env.tryGet(name);
+      if (localFn is _FunctionValue) {
+        final LocalFunctionStmt fn = localFn.decl;
+        if (expr.args.length != fn.params.length) {
+          throw InterpreterError(
+            "'${fn.name}' expects ${fn.params.length} argument(s) but got ${expr.args.length}",
+            expr.line,
+          );
+        }
+        final List<dynamic> args = expr.args.map((Expr a) => _eval(a, env)).toList();
+        return _callClosure(localFn, args, expr.line);
+      }
+
       final FunctionDecl? fn = _functions[name];
       if (fn == null) {
         throw InterpreterError("Undefined function '$name'", expr.line);
@@ -622,6 +669,85 @@ class Interpreter {
       return r.value;
     }
     return null;
+  }
+
+  /// Calls a local function / closure captured by a local function
+  /// declaration.  The captured enclosing scope is used as the parent
+  /// environment so that the function can access variables from where it
+  /// was declared.
+  dynamic _callClosure(_FunctionValue fv, List<dynamic> args, int line) {
+    final LocalFunctionStmt fn = fv.decl;
+    if (args.length != fn.params.length) {
+      throw InterpreterError(
+        "'${fn.name}' expects ${fn.params.length} argument(s) but got ${args.length}",
+        line,
+      );
+    }
+    final Environment callEnv = Environment(fv.capturedEnv);
+    for (int i = 0; i < fn.params.length; i++) {
+      callEnv.define(fn.params[i].name, i < args.length ? args[i] : null);
+    }
+    try {
+      _execBlock(fn.body, callEnv);
+    } on _ReturnSignal catch (r) {
+      return r.value;
+    }
+    return null;
+  }
+
+  /// Sentinel: returned by [_callStaticMethod] when the type/method
+  /// pair is not a recognised built-in.
+  static const Object _noStaticMethod = Object();
+
+  /// Handles static type methods like `int.parse(...)`, `int.tryParse(...)`.
+  /// Returns `null` on success or throws [InterpreterError]. Returns
+  /// [_noStaticMethod] when [typeName] / [methodName] is not recognised,
+  /// signalling the caller to fall through to normal property resolution.
+  dynamic _callStaticMethod(String typeName, String methodName, List<dynamic> args, int line) {
+    switch (typeName) {
+      case 'int':
+        switch (methodName) {
+          case 'parse':
+            if (args.length != 1) {
+              throw InterpreterError("'int.parse' expects 1 argument, got ${args.length}", line);
+            }
+            if (args[0] is! String) {
+              throw InterpreterError("'int.parse' expects a String, got ${_typeName(args[0])}", line);
+            }
+            return int.parse(args[0] as String);
+          case 'tryParse':
+            if (args.length != 1) {
+              throw InterpreterError("'int.tryParse' expects 1 argument, got ${args.length}", line);
+            }
+            if (args[0] is! String) {
+              throw InterpreterError("'int.tryParse' expects a String, got ${_typeName(args[0])}", line);
+            }
+            return int.tryParse(args[0] as String);
+        }
+        break;
+      case 'double':
+        switch (methodName) {
+          case 'parse':
+            if (args.length != 1) {
+              throw InterpreterError("'double.parse' expects 1 argument, got ${args.length}", line);
+            }
+            if (args[0] is! String) {
+              throw InterpreterError("'double.parse' expects a String, got ${_typeName(args[0])}", line);
+            }
+            return double.parse(args[0] as String);
+        }
+        break;
+      case 'String':
+        switch (methodName) {
+          case 'fromCharCode':
+            if (args.length != 1) {
+              throw InterpreterError("'String.fromCharCode' expects 1 argument, got ${args.length}", line);
+            }
+            return String.fromCharCode(args[0] as int);
+        }
+        break;
+    }
+    return _noStaticMethod;
   }
 
   dynamic _callBuiltinMethod(
