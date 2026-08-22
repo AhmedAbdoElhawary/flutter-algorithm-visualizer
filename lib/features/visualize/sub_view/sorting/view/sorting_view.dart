@@ -8,6 +8,7 @@ import 'package:algorithm_visualizer/core/widgets/custom_widgets/complexity_deta
 import 'package:algorithm_visualizer/features/base/view_model/base_view_model.dart';
 import 'package:algorithm_visualizer/features/visualize/helper/playback_speed.dart';
 import 'package:algorithm_visualizer/features/visualize/sub_view/sorting/view_model/sorting_notifier.dart';
+import 'package:algorithm_visualizer/features/visualize/widgets/grid_squares_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -234,152 +235,49 @@ class _ShowUpSortingListState extends ConsumerState<ShowUpSortingList> {
 
     return Padding(
       padding: REdgeInsets.symmetric(horizontal: 16),
-      child: LayoutBuilder(builder: (context, constraints) {
-        final int squareSize = 15;
-
-        final height = widget.selectedAlgorithmLength == 1 ? maxHeight : constraints.maxHeight;
-
-        final perfectSize = GridSquaresPainter.calculateSizeForPerfectGrid(
-            defaultSize: Size(constraints.maxWidth, height), squareSize: squareSize);
-
-        return SizedBox(
-          height: perfectSize.height,
-          child: CustomPaint(
-            size: perfectSize,
-            painter: GridSquaresPainter(
-              backgroundColor: context.getColor(ThemeEnum.backgroundForSortingColor),
-              borderColor: context.getColor(ThemeEnum.border),
-              squareSize: squareSize,
-              height: perfectSize.height,
-            ),
-            child: Container(
-              padding: REdgeInsets.only(bottom: SortingNotifier.bottomInsidePadding),
-              child: Stack(
-                alignment: AlignmentDirectional.bottomCenter,
-                children: List.generate(
-                  items.length,
-                  (index) {
-                    final item = items[index];
-                    final position = ref.watch(widget.instance.select((state) => state.positions[item.id]));
-                    return AnimatedPositionedDirectional(
-                      key: ValueKey(item.id),
-                      start: position?.dx,
-                      bottom: position?.dy,
-                      width: itemWidth +
-                          SortingNotifier.horizontalInsidePadding -
-                          SortingNotifier.handleCentralBars,
-                      duration: speed.stepSortingDuration,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          _BuildItem(
-                              item: item,
-                              index: index,
-                              size: size,
-                              itemWidth: itemWidth,
-                              instance: widget.instance,
-                              speedDuration: speed.stepSortingDuration * 0.5,
-                              selectedAlgorithmLength: widget.selectedAlgorithmLength,
-                              isLastItem: index == items.length - 1),
-                          RSizedBox(height: 4),
-                          MediumText('$index', fontSize: 10, color: ThemeEnum.columnColor),
-                        ],
-                      ),
-                    );
-                  },
-                ),
-              ),
+      child: GridSquaresView(
+        squareSize: 14,
+        makeThemPerfectGrids: true,
+        estimatedHeight: widget.selectedAlgorithmLength == 1 ? maxHeight : ScreenUtil().screenHeight,
+        child: Container(
+          padding: REdgeInsets.only(bottom: SortingNotifier.bottomInsidePadding),
+          child: Stack(
+            alignment: AlignmentDirectional.bottomCenter,
+            children: List.generate(
+              items.length,
+              (index) {
+                final item = items[index];
+                final position = ref.watch(widget.instance.select((state) => state.positions[item.id]));
+                return AnimatedPositionedDirectional(
+                  key: ValueKey(item.id),
+                  start: position?.dx,
+                  bottom: position?.dy,
+                  width:
+                      itemWidth + SortingNotifier.horizontalInsidePadding - SortingNotifier.handleCentralBars,
+                  duration: speed.stepSortingDuration,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      _BuildItem(
+                          item: item,
+                          index: index,
+                          size: size,
+                          itemWidth: itemWidth,
+                          instance: widget.instance,
+                          speedDuration: speed.stepSortingDuration * 0.5,
+                          selectedAlgorithmLength: widget.selectedAlgorithmLength,
+                          isLastItem: index == items.length - 1),
+                      RSizedBox(height: 4),
+                      MediumText('$index', fontSize: 10, color: ThemeEnum.columnColor),
+                    ],
+                  ),
+                );
+              },
             ),
           ),
-        );
-      }),
+        ),
+      ),
     );
-  }
-}
-
-/// [GridSquaresPainter] if you want to make it perfect grid, use [calculateSizeForPerfectGrid]
-class GridSquaresPainter extends CustomPainter {
-  const GridSquaresPainter({
-    required this.backgroundColor,
-    required this.borderColor,
-    required this.height,
-    this.circularRadius = 20,
-    this.squareSize = 12,
-  });
-
-  final Color backgroundColor;
-  final Color borderColor;
-  final double circularRadius;
-  final int squareSize;
-  final double height;
-
-  static Size calculateSizeForPerfectGrid({required Size defaultSize, required int squareSize}) {
-    final height = defaultSize.height;
-
-    final tempSizeDy = height / squareSize;
-    final tempSizeDx = defaultSize.width / squareSize;
-
-    ///determine based on width always, and height changed to fit the perfect square
-    final finalSquareSize = tempSizeDx;
-
-    final h = height % finalSquareSize;
-
-    /// height increased by square size if it's smaller than width,
-    /// else height decreased by square size if it's larger than width
-    final finalHeight = tempSizeDy < tempSizeDx ? (height + (finalSquareSize - h)) : (height - h);
-
-    return Size(defaultSize.width, finalHeight);
-  }
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    final borderWidth = 1.r;
-    final squareSize = this.squareSize.r;
-
-    final tempSizeDx = size.width / squareSize;
-    final finalSquareSize = tempSizeDx;
-
-    final height = this.height;
-    final width = size.width;
-
-    final mainPaint = Paint()
-      ..color = backgroundColor
-      ..style = PaintingStyle.fill;
-
-    // main background and corner radius
-    final mainRect =
-        RRect.fromRectAndRadius(Rect.fromLTWH(0, 0, width, height), Radius.circular(circularRadius));
-
-    canvas.drawRRect(mainRect, mainPaint);
-
-    //border
-    final borderPaint = Paint()
-      ..color = borderColor.withValues(alpha: 0.015)
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = borderWidth;
-
-    canvas.drawRRect(mainRect, borderPaint);
-    canvas.clipRRect(mainRect);
-
-    // square grid
-    final path = Path();
-
-    for (double dy = 0; dy <= height; dy = dy + finalSquareSize) {
-      for (double dx = 0; dx <= width; dx = dx + finalSquareSize) {
-        final square = Rect.fromLTWH(dx, dy, finalSquareSize, finalSquareSize);
-
-        path.addRect(square);
-      }
-    }
-    canvas.drawPath(path, borderPaint);
-  }
-
-  @override
-  bool shouldRepaint(covariant GridSquaresPainter oldDelegate) {
-    return backgroundColor != oldDelegate.backgroundColor ||
-        borderColor != oldDelegate.borderColor ||
-        squareSize != oldDelegate.squareSize ||
-        circularRadius != oldDelegate.circularRadius;
   }
 }
 
