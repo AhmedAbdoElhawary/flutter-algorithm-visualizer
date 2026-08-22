@@ -105,7 +105,7 @@ class _MovablePinsBackgroundState extends State<MovablePinsBackground>
       if (!_particlesReady && !_size.isEmpty) {
         _createParticles(_size);
         _particlesReady = true;
-        _ticker.start();
+        if (!_ticker.isTicking) _ticker.start();
       }
     }
   }
