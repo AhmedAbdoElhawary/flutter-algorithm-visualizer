@@ -235,18 +235,18 @@ class _ShowUpSortingListState extends ConsumerState<ShowUpSortingList> {
     return Padding(
       padding: REdgeInsets.symmetric(horizontal: 16),
       child: LayoutBuilder(builder: (context, constraints) {
-        final int squareSize = 12;
+        final int squareSize = 15;
 
         final height = widget.selectedAlgorithmLength == 1 ? maxHeight : constraints.maxHeight;
 
-        final perfectSize = _PerfectGridSquarePainter.calculateSizeForPerfectGrid(
+        final perfectSize = GridSquaresPainter.calculateSizeForPerfectGrid(
             defaultSize: Size(constraints.maxWidth, height), squareSize: squareSize);
 
         return SizedBox(
           height: perfectSize.height,
           child: CustomPaint(
             size: perfectSize,
-            painter: _PerfectGridSquarePainter(
+            painter: GridSquaresPainter(
               backgroundColor: context.getColor(ThemeEnum.backgroundForSortingColor),
               borderColor: context.getColor(ThemeEnum.border),
               squareSize: squareSize,
@@ -297,8 +297,9 @@ class _ShowUpSortingListState extends ConsumerState<ShowUpSortingList> {
   }
 }
 
-class _PerfectGridSquarePainter extends CustomPainter {
-  const _PerfectGridSquarePainter({
+/// [GridSquaresPainter] if you want to make it perfect grid, use [calculateSizeForPerfectGrid]
+class GridSquaresPainter extends CustomPainter {
+  const GridSquaresPainter({
     required this.backgroundColor,
     required this.borderColor,
     required this.height,
@@ -363,8 +364,8 @@ class _PerfectGridSquarePainter extends CustomPainter {
     // square grid
     final path = Path();
 
-    for (double dy = 0; dy + finalSquareSize - borderWidth <= height; dy = dy + finalSquareSize) {
-      for (double dx = 0; dx + finalSquareSize - borderWidth <= width; dx = dx + finalSquareSize) {
+    for (double dy = 0; dy <= height; dy = dy + finalSquareSize) {
+      for (double dx = 0; dx <= width; dx = dx + finalSquareSize) {
         final square = Rect.fromLTWH(dx, dy, finalSquareSize, finalSquareSize);
 
         path.addRect(square);
@@ -374,7 +375,7 @@ class _PerfectGridSquarePainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(covariant _PerfectGridSquarePainter oldDelegate) {
+  bool shouldRepaint(covariant GridSquaresPainter oldDelegate) {
     return backgroundColor != oldDelegate.backgroundColor ||
         borderColor != oldDelegate.borderColor ||
         squareSize != oldDelegate.squareSize ||
