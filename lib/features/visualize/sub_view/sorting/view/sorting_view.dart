@@ -234,18 +234,26 @@ class _ShowUpSortingListState extends ConsumerState<ShowUpSortingList> {
 
     return Padding(
       padding: REdgeInsets.symmetric(horizontal: 16),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(20),
-        child: CustomPaint(
-          // size: Size(double.infinity, 200.r),
-          painter: _GridBgPainter(
-            backgroundColor: context.getColor(ThemeEnum.backgroundForSortingColor),
-            borderColor: context.getColor(ThemeEnum.border),
-          ),
-          child: Container(
-            padding: REdgeInsets.only(bottom: SortingNotifier.bottomInsidePadding),
-            child: SizedBox(
-              height: widget.selectedAlgorithmLength == 1 ? maxHeight : null,
+      child: LayoutBuilder(builder: (context, constraints) {
+        final int squareSize = 12;
+
+        final height = widget.selectedAlgorithmLength == 1 ? maxHeight : constraints.maxHeight;
+
+        final perfectSize = _PerfectGridSquarePainter.calculateSizeForPerfectGrid(
+            defaultSize: Size(constraints.maxWidth, height), squareSize: squareSize);
+
+        return SizedBox(
+          height: perfectSize.height,
+          child: CustomPaint(
+            size: perfectSize,
+            painter: _PerfectGridSquarePainter(
+              backgroundColor: context.getColor(ThemeEnum.backgroundForSortingColor),
+              borderColor: context.getColor(ThemeEnum.border),
+              squareSize: squareSize,
+              height: perfectSize.height,
+            ),
+            child: Container(
+              padding: REdgeInsets.only(bottom: SortingNotifier.bottomInsidePadding),
               child: Stack(
                 alignment: AlignmentDirectional.bottomCenter,
                 children: List.generate(
@@ -283,75 +291,94 @@ class _ShowUpSortingListState extends ConsumerState<ShowUpSortingList> {
               ),
             ),
           ),
-        ),
-      ),
+        );
+      }),
     );
   }
 }
 
-class _GridBgPainter extends CustomPainter {
-  const _GridBgPainter({
+class _PerfectGridSquarePainter extends CustomPainter {
+  const _PerfectGridSquarePainter({
     required this.backgroundColor,
     required this.borderColor,
+    required this.height,
+    this.circularRadius = 20,
+    this.squareSize = 12,
   });
 
   final Color backgroundColor;
   final Color borderColor;
+  final double circularRadius;
+  final int squareSize;
+  final double height;
 
-  @override
-  void paint(Canvas canvas, Size size) {
-    const radius = Radius.circular(20);
+  static Size calculateSizeForPerfectGrid({required Size defaultSize, required int squareSize}) {
+    final height = defaultSize.height;
 
-    final rect = Offset.zero & size;
-    final rRect = RRect.fromRectAndRadius(rect, radius);
+    final tempSizeDy = height / squareSize;
+    final tempSizeDx = defaultSize.width / squareSize;
 
-    // Background
-    canvas.drawRRect(
-      rRect,
-      Paint()..color = backgroundColor,
-    );
+    ///determine based on width always, and height changed to fit the perfect square
+    final finalSquareSize = tempSizeDx;
 
-    // Clip so grid doesn't draw outside rounded corners
-    canvas.save();
-    canvas.clipRRect(rRect);
+    final h = height % finalSquareSize;
 
-    final gridPaint = Paint()
-      ..color = borderColor.withValues(alpha: 0.015)
-      ..strokeWidth = 1;
+    /// height increased by square size if it's smaller than width,
+    /// else height decreased by square size if it's larger than width
+    final finalHeight = tempSizeDy < tempSizeDx ? (height + (finalSquareSize - h)) : (height - h);
 
-    const spacing = 24.0;
-
-    for (double x = 0; x <= size.width; x += spacing) {
-      canvas.drawLine(
-        Offset(x, 0),
-        Offset(x, size.height),
-        gridPaint,
-      );
-    }
-
-    for (double y = 0; y <= size.height; y += spacing) {
-      canvas.drawLine(
-        Offset(0, y),
-        Offset(size.width, y),
-        gridPaint,
-      );
-    }
-
-    canvas.restore();
-
-    // Border
-    canvas.drawRRect(
-      rRect,
-      Paint()
-        ..color = borderColor
-        ..style = PaintingStyle.stroke
-        ..strokeWidth = 1,
-    );
+    return Size(defaultSize.width, finalHeight);
   }
 
   @override
-  bool shouldRepaint(covariant _GridBgPainter oldDelegate) {
-    return backgroundColor != oldDelegate.backgroundColor || borderColor != oldDelegate.borderColor;
+  void paint(Canvas canvas, Size size) {
+    final borderWidth = 1.r;
+    final squareSize = this.squareSize.r;
+
+    final tempSizeDx = size.width / squareSize;
+    final finalSquareSize = tempSizeDx;
+
+    final height = this.height;
+    final width = size.width;
+
+    final mainPaint = Paint()
+      ..color = backgroundColor
+      ..style = PaintingStyle.fill;
+
+    // main background and corner radius
+    final mainRect =
+        RRect.fromRectAndRadius(Rect.fromLTWH(0, 0, width, height), Radius.circular(circularRadius));
+
+    canvas.drawRRect(mainRect, mainPaint);
+
+    //border
+    final borderPaint = Paint()
+      ..color = borderColor.withValues(alpha: 0.015)
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = borderWidth;
+
+    canvas.drawRRect(mainRect, borderPaint);
+    canvas.clipRRect(mainRect);
+
+    // square grid
+    final path = Path();
+
+    for (double dy = 0; dy + finalSquareSize - borderWidth <= height; dy = dy + finalSquareSize) {
+      for (double dx = 0; dx + finalSquareSize - borderWidth <= width; dx = dx + finalSquareSize) {
+        final square = Rect.fromLTWH(dx, dy, finalSquareSize, finalSquareSize);
+
+        path.addRect(square);
+      }
+    }
+    canvas.drawPath(path, borderPaint);
+  }
+
+  @override
+  bool shouldRepaint(covariant _PerfectGridSquarePainter oldDelegate) {
+    return backgroundColor != oldDelegate.backgroundColor ||
+        borderColor != oldDelegate.borderColor ||
+        squareSize != oldDelegate.squareSize ||
+        circularRadius != oldDelegate.circularRadius;
   }
 }
 
