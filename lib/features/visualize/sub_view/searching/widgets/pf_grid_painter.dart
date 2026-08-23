@@ -9,19 +9,19 @@ class PFGridPainter extends CustomPainter {
   final PFStep? step;
   final bool isDark;
 
-  final Map<int, double> wallAnims;
-  final Map<int, double> frontierAnims;
-  final Map<int, double> visitedAnims;
-  final Map<int, double> pathAnims;
+  final Map<int, double> wallAnimations;
+  final Map<int, double> frontierAnimations;
+  final Map<int, double> visitedAnimations;
+  final Map<int, double> pathAnimations;
 
   PFGridPainter({
     required this.walls,
     required this.step,
     required this.isDark,
-    required this.wallAnims,
-    required this.frontierAnims,
-    required this.visitedAnims,
-    required this.pathAnims,
+    required this.wallAnimations,
+    required this.frontierAnimations,
+    required this.visitedAnimations,
+    required this.pathAnimations,
     required Listenable repaint,
   }) : super(repaint: repaint);
 
@@ -51,19 +51,19 @@ class PFGridPainter extends CustomPainter {
         canvas.drawRect(rect, gridPaint);
 
         if (isPath) {
-          final startT = pathAnims[encoded];
+          final startT = pathAnimations[encoded];
           final t = startT != null ? ((now - startT) / 500.0) : 1.0;
           _drawElasticCell(canvas, rect, t, kPathGridColor);
         } else if (isVisited) {
-          final startT = visitedAnims[encoded];
+          final startT = visitedAnimations[encoded];
           final t = startT != null ? ((now - startT) / 1500.0) : 1.0;
           _drawSearcherCell(canvas, rect, t, isFinalVisited: true);
         } else if (isFrontier) {
-          final startT = frontierAnims[encoded];
+          final startT = frontierAnimations[encoded];
           final t = startT != null ? ((now - startT) / 1500.0) : 1.0;
           _drawSearcherCell(canvas, rect, t, isFinalVisited: false);
         } else if (isWall) {
-          final startT = wallAnims[encoded];
+          final startT = wallAnimations[encoded];
           final t = startT != null ? ((now - startT) / 500.0) : 1.0;
           _drawElasticCell(canvas, rect, t, kWallGridColor);
         }
