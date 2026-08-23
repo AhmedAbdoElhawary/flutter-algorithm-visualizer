@@ -2,10 +2,10 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
-import 'package:algorithm_visualizer/features/challange/data/mappers/problem_mapper.dart';
-import 'package:algorithm_visualizer/features/challange/data/models/dataset.dart';
-import 'package:algorithm_visualizer/features/challange/domain/entities/coding_problem.dart';
-import 'package:algorithm_visualizer/features/challange/presentation/widgets/code_editor/code_problem_description_card.dart';
+import 'package:algorithm_visualizer/features/challenge/data/mappers/problem_mapper.dart';
+import 'package:algorithm_visualizer/features/challenge/data/models/dataset.dart';
+import 'package:algorithm_visualizer/features/challenge/domain/entities/coding_problem.dart';
+import 'package:algorithm_visualizer/features/challenge/presentation/widgets/code_editor/code_problem_description_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -45,8 +45,7 @@ Future<void> _pumpCard(WidgetTester tester, CodingProblem problem) async {
 void main() {
   final problems = _load();
 
-  testWidgets('renders title, difficulty, description, example, constraints and tags',
-      (tester) async {
+  testWidgets('renders title, difficulty, description, example, constraints and tags', (tester) async {
     final twoSum = _byName(problems, 'Two Sum');
     await _pumpCard(tester, twoSum);
 

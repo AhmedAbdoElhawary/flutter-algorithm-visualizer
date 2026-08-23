@@ -125,6 +125,13 @@ class ContinueStmt extends Stmt {
   ContinueStmt(super.line);
 }
 
+class LocalFunctionStmt extends Stmt {
+  LocalFunctionStmt(this.name, this.params, this.body, int line) : super(line);
+  final String name;
+  final List<Param> params;
+  final Block body;
+}
+
 // ---------------------------------------------------------------------
 // Expressions
 // ---------------------------------------------------------------------

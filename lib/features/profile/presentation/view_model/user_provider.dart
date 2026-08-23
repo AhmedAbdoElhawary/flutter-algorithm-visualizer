@@ -1,4 +1,4 @@
-import 'package:algorithm_visualizer/core/storage/profile_storage.dart';
+import 'package:algorithm_visualizer/features/profile/presentation/view_model/profile_storage.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 final userNameProvider = NotifierProvider<UserNameNotifier, String>(() {

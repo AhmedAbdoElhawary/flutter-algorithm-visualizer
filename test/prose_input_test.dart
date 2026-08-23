@@ -1,10 +1,10 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:algorithm_visualizer/features/challange/data/mappers/problem_mapper.dart';
-import 'package:algorithm_visualizer/features/challange/data/models/dataset.dart';
-import 'package:algorithm_visualizer/features/challange/domain/entities/coding_problem.dart';
-import 'package:algorithm_visualizer/features/challange/domain/usecases/grade_code_usecase.dart';
+import 'package:algorithm_visualizer/features/challenge/data/mappers/problem_mapper.dart';
+import 'package:algorithm_visualizer/features/challenge/data/models/dataset.dart';
+import 'package:algorithm_visualizer/features/challenge/domain/entities/coding_problem.dart';
+import 'package:algorithm_visualizer/features/challenge/domain/usecases/grade_code_usecase.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 List<CodingProblem> _load() {

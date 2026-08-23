@@ -85,7 +85,10 @@ class Parser {
 
   bool _isVarDeclStart() {
     if (_check(TokKind.keyword) &&
-        (_peek.text == 'var' || _peek.text == 'final' || _peek.text == 'const' || _typeKeywords.contains(_peek.text))) {
+        (_peek.text == 'var' ||
+            _peek.text == 'final' ||
+            _peek.text == 'const' ||
+            _typeKeywords.contains(_peek.text))) {
       return true;
     }
     // Custom (identifier) type names: `ListNode head`, `ListNode? next`, etc.
@@ -126,8 +129,10 @@ class Parser {
         // or by `?` then identifier (`ListNode? next`).
         if (next.kind == TokKind.identifier) {
           _advance();
-        } else if (next.kind == TokKind.symbol && next.text == '?' &&
-            pos + 2 < tokens.length && tokens[pos + 2].kind == TokKind.identifier) {
+        } else if (next.kind == TokKind.symbol &&
+            next.text == '?' &&
+            pos + 2 < tokens.length &&
+            tokens[pos + 2].kind == TokKind.identifier) {
           _advance();
         }
       }
@@ -291,7 +296,7 @@ class Parser {
         _skipType();
         final Tok nameTok = _consumeIdentifier('Expected a parameter name');
         params.add(Param(nameTok.text));
-      } while (_matchSymbol(','));
+      } while (_matchSymbol(',') && !_checkSymbol(')'));
     }
     _consumeSymbol(')', "Expected ')'");
     return params;
@@ -333,10 +338,18 @@ class Parser {
     return ExprStmt(expr, line);
   }
 
-  VarDeclStmt _parseLocalVarDecl() {
+  Stmt _parseLocalVarDecl() {
     final int line = _peek.line;
     _skipType();
     final Tok nameTok = _consumeIdentifier('Expected a variable name');
+
+    // Local function declaration: type name(params) { body }
+    if (_checkSymbol('(')) {
+      final List<Param> params = _parseParamList();
+      final Block body = _parseBlock();
+      return LocalFunctionStmt(nameTok.text, params, body, line);
+    }
+
     Expr? init;
     if (_matchSymbol('=')) init = _parseExpr();
     _consumeSymbol(';', "Expected ';' after variable declaration");
@@ -418,7 +431,11 @@ class Parser {
 
   Expr _parseAssignment() {
     final Expr expr = _parseConditional();
-    if (_checkSymbol('=') || _checkSymbol('+=') || _checkSymbol('-=') || _checkSymbol('*=') || _checkSymbol('/=')) {
+    if (_checkSymbol('=') ||
+        _checkSymbol('+=') ||
+        _checkSymbol('-=') ||
+        _checkSymbol('*=') ||
+        _checkSymbol('/=')) {
       final Tok opTok = _advance();
       final Expr value = _parseAssignment();
       if (expr is! Identifier && expr is! IndexExpr && expr is! PropertyAccess) {
@@ -569,7 +586,7 @@ class Parser {
     if (!_checkSymbol(')')) {
       do {
         args.add(_parseAssignment());
-      } while (_matchSymbol(','));
+      } while (_matchSymbol(',') && !_checkSymbol(')'));
     }
     _consumeSymbol(')', "Expected ')'");
     return args;
@@ -640,6 +657,11 @@ class Parser {
       _advance();
       return Identifier(tok.text, tok.line);
     }
+    // Type keywords as identifiers in expression context (e.g. int.parse(...), String.fromCharCode(...))
+    if (_check(TokKind.keyword) && _typeKeywords.contains(_peek.text)) {
+      _advance();
+      return Identifier(tok.text, tok.line);
+    }
     throw ParseError('Unexpected token "${tok.text}"', tok.line);
   }
 
@@ -649,9 +671,8 @@ class Parser {
     final List<Expr> elements = <Expr>[];
     if (!_checkSymbol(']')) {
       do {
-        if (_checkSymbol(']')) break; // trailing comma
         elements.add(_parseAssignment());
-      } while (_matchSymbol(','));
+      } while (_matchSymbol(',') && !_checkSymbol(']'));
     }
     _consumeSymbol(']', "Expected ']'");
     return ListLiteral(elements, line);
@@ -663,9 +684,8 @@ class Parser {
     final List<Expr> elements = <Expr>[];
     if (!_checkSymbol('}')) {
       do {
-        if (_checkSymbol('}')) break; // trailing comma
         elements.add(_parseAssignment());
-      } while (_matchSymbol(','));
+      } while (_matchSymbol(',') && !_checkSymbol('}'));
     }
     _consumeSymbol('}', "Expected '}'");
     return SetLiteral(elements, line);
@@ -677,12 +697,11 @@ class Parser {
     final List<MapLiteralEntry> entries = <MapLiteralEntry>[];
     if (!_checkSymbol('}')) {
       do {
-        if (_checkSymbol('}')) break; // trailing comma
         final Expr key = _parseExpr();
         _consumeSymbol(':', "Expected ':' in map literal");
         final Expr value = _parseAssignment();
         entries.add(MapLiteralEntry(key, value));
-      } while (_matchSymbol(','));
+      } while (_matchSymbol(',') && !_checkSymbol('}'));
     }
     _consumeSymbol('}', "Expected '}'");
     return MapLiteral(entries, line);
