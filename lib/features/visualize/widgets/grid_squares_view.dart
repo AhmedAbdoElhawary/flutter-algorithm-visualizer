@@ -32,6 +32,7 @@ class GridSquaresView extends StatelessWidget {
 
         return SizedBox(
           height: perfectSize.height,
+          width: perfectSize.width,
           child: CustomPaint(
             size: perfectSize,
             painter: GridSquaresPainter(
