@@ -20,7 +20,8 @@ List<int> twoSum(List<int> nums, int target) {
   final sig = parseFunctionSignature(signature);
   debugPrint('NAME=${sig.name} RETURN=${sig.returnType}');
   debugPrint('PARAMS=${sig.params.map((p) => "${p.name}:${p.type}").toList()}');
-  final program = '$userCode\n\nvoid main() {\n  final nums = [2,7,11,15];\n  final target = 9;\n  final result = ${sig.name}(nums, target);\n  print(result);\n}\n';
+  final program =
+      '$userCode\n\nvoid main() {\n  final nums = [2,7,11,15];\n  final target = 9;\n  final result = ${sig.name}(nums, target);\n  print(result);\n}\n';
   debugPrint('--- PROGRAM ---');
   debugPrint(program);
   try {

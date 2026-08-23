@@ -59,47 +59,44 @@ class ProfileStatsGrid extends ConsumerWidget {
       child: Wrap(
         runSpacing: 10.r,
         spacing: 10.r,
-        children: statsList
-            .asMap()
-            .entries
-            .map(
-              (entry) {
-                final i = entry.key;
-                final s = entry.value;
-                final card = Container(
-                padding: REdgeInsets.all(14),
-                width: (ScreenUtil().screenWidth / 2) - 21.r,
-                decoration: BoxDecoration(
-                  color: context.getColor(ThemeEnum.card),
-                  borderRadius: BorderRadius.circular(12),
-                  border: Border.all(color: context.getColor(ThemeEnum.border)),
-                  boxShadow: context.cardShadow,
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(children: [
-                      CustomIcon(s.icon, size: 18, color: s.colorKey),
-                      const Spacer(),
-                      if (s.sub.isNotEmpty) MediumText(s.sub, color: ThemeEnum.hover, fontSize: 10),
-                    ]),
-                    RSizedBox(height: 6),
-                    BoldText(s.value, color: ThemeEnum.textPrimary, fontSize: 20,fontWeight: FontWeightManager.bold900),
-                    RSizedBox(height: 2),
-                    MediumText(s.label, color: ThemeEnum.hover, fontSize: 11),
-                  ],
-                ),
+        children: statsList.asMap().entries.map(
+          (entry) {
+            final i = entry.key;
+            final s = entry.value;
+            final card = Container(
+              padding: REdgeInsets.all(14),
+              width: (ScreenUtil().screenWidth / 2) - 21.r,
+              decoration: BoxDecoration(
+                color: context.getColor(ThemeEnum.card),
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(color: context.getColor(ThemeEnum.border)),
+                boxShadow: context.cardShadow,
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(children: [
+                    CustomIcon(s.icon, size: 18, color: s.colorKey),
+                    const Spacer(),
+                    if (s.sub.isNotEmpty) MediumText(s.sub, color: ThemeEnum.hover, fontSize: 10),
+                  ]),
+                  RSizedBox(height: 6),
+                  BoldText(s.value,
+                      color: ThemeEnum.textPrimary, fontSize: 20, fontWeight: FontWeightManager.bold900),
+                  RSizedBox(height: 2),
+                  MediumText(s.label, color: ThemeEnum.hover, fontSize: 11),
+                ],
+              ),
+            );
+            if (i == 3) {
+              return GestureDetector(
+                onTap: () => context.pushTo(Routes.bookmarkedProblems),
+                child: card,
               );
-                if (i == 3) {
-                  return GestureDetector(
-                    onTap: () => context.pushTo(Routes.bookmarkedProblems),
-                    child: card,
-                  );
-                }
-                return card;
-              },
-            )
-            .toList(),
+            }
+            return card;
+          },
+        ).toList(),
       ),
     );
   }

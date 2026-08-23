@@ -33,7 +33,11 @@ class Token {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      (other is Token && other.type == type && other.text == text && other.start == start && other.end == end);
+      (other is Token &&
+          other.type == type &&
+          other.text == text &&
+          other.start == start &&
+          other.end == end);
 
   @override
   int get hashCode => Object.hash(type, text, start, end);

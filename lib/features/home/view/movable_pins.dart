@@ -70,7 +70,7 @@ class MovablePinsBackground extends StatefulWidget {
 
 class _MovablePinsBackgroundState extends State<MovablePinsBackground>
     with SingleTickerProviderStateMixin, WidgetsBindingObserver {
-  late final Ticker _ticker;
+  late final Ticker _ticker=createTicker(_onTick);
   final _Repainter _repainter = _Repainter();
   final Random _random = Random();
 
@@ -93,7 +93,6 @@ class _MovablePinsBackgroundState extends State<MovablePinsBackground>
     super.initState();
     WidgetsBinding.instance.addObserver(this);
     _frameInterval = Duration(microseconds: (1000000 / widget.targetFps).round());
-    _ticker = createTicker(_onTick);
   }
 
   @override
@@ -105,7 +104,7 @@ class _MovablePinsBackgroundState extends State<MovablePinsBackground>
       if (!_particlesReady && !_size.isEmpty) {
         _createParticles(_size);
         _particlesReady = true;
-        _ticker.start();
+        if (!_ticker.isTicking) _ticker.start();
       }
     }
   }

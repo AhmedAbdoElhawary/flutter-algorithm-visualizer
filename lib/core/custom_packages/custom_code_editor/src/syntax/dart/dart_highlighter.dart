@@ -222,7 +222,10 @@ class DartTokenizer extends Tokenizer {
       if (_digit.hasMatch(ch)) {
         final int start = i;
         while (i < line.length &&
-            (_digit.hasMatch(line[i]) || line[i] == '.' || line[i] == 'x' || RegExp(r'[A-Fa-f]').hasMatch(line[i]))) {
+            (_digit.hasMatch(line[i]) ||
+                line[i] == '.' ||
+                line[i] == 'x' ||
+                RegExp(r'[A-Fa-f]').hasMatch(line[i]))) {
           i++;
         }
         tokens.add(Token(

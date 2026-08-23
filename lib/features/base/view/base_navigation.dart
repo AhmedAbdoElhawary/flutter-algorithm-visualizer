@@ -6,10 +6,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 
 class MainNavigationShell extends StatefulWidget {
-  const MainNavigationShell({
-    super.key,
-    required this.navigationShell
-  });
+  const MainNavigationShell({super.key, required this.navigationShell});
 
   final StatefulNavigationShell navigationShell;
 
@@ -68,7 +65,7 @@ class _MainNavigationShellState extends State<MainNavigationShell> {
                 BottomNavigationBarItem(
                   icon: Icon(Icons.person_outline_rounded),
                   activeIcon: Icon(Icons.person_rounded),
-                  label: StringsManager.profile ,
+                  label: StringsManager.profile,
                 ),
               ],
             ),

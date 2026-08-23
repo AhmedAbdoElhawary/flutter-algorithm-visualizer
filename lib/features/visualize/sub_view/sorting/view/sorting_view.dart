@@ -8,6 +8,7 @@ import 'package:algorithm_visualizer/core/widgets/custom_widgets/complexity_deta
 import 'package:algorithm_visualizer/features/base/view_model/base_view_model.dart';
 import 'package:algorithm_visualizer/features/visualize/helper/playback_speed.dart';
 import 'package:algorithm_visualizer/features/visualize/sub_view/sorting/view_model/sorting_notifier.dart';
+import 'package:algorithm_visualizer/features/visualize/widgets/grid_squares_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -154,8 +155,8 @@ class _SortingSelectionListState extends State<_SortingSelectionList> {
           (index) {
             final cardValue = BaseViewModel.sortingCards(cardValues[index]);
             return Padding(
-              padding:
-                  REdgeInsetsDirectional.only(start: index == 0 ? 16 : 8, end: index < cardValues.length - 1 ? 0 : 16),
+              padding: REdgeInsetsDirectional.only(
+                  start: index == 0 ? 16 : 8, end: index < cardValues.length - 1 ? 0 : 16),
               child: InkWell(
                 onTap: () => widget.onChangedTab(cardValues[index]),
                 child: AlgoTab(
@@ -234,122 +235,49 @@ class _ShowUpSortingListState extends ConsumerState<ShowUpSortingList> {
 
     return Padding(
       padding: REdgeInsets.symmetric(horizontal: 16),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(20),
-        child: CustomPaint(
-          // size: Size(double.infinity, 200.r),
-          painter: _GridBgPainter(
-            backgroundColor: context.getColor(ThemeEnum.backgroundForSortingColor),
-            borderColor: context.getColor(ThemeEnum.border),
-          ),
-          child: Container(
-            padding: REdgeInsets.only(bottom: SortingNotifier.bottomInsidePadding),
-            child: SizedBox(
-              height: widget.selectedAlgorithmLength == 1 ? maxHeight : null,
-              child: Stack(
-                alignment: AlignmentDirectional.bottomCenter,
-                children: List.generate(
-                  items.length,
-                  (index) {
-                    final item = items[index];
-                    final position = ref.watch(widget.instance.select((state) => state.positions[item.id]));
-                    return AnimatedPositionedDirectional(
-                      key: ValueKey(item.id),
-                      start: position?.dx,
-                      bottom: position?.dy,
-                      width: itemWidth + SortingNotifier.horizontalInsidePadding - SortingNotifier.handleCentralBars,
-                      duration: speed.stepSortingDuration,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          _BuildItem(
-                              item: item,
-                              index: index,
-                              size: size,
-                              itemWidth: itemWidth,
-                              instance: widget.instance,
-                              speedDuration: speed.stepSortingDuration * 0.5,
-                              selectedAlgorithmLength: widget.selectedAlgorithmLength,
-                              isLastItem: index == items.length - 1),
-                          RSizedBox(height: 4),
-                          MediumText('$index', fontSize: 10, color: ThemeEnum.columnColor),
-                        ],
-                      ),
-                    );
-                  },
-                ),
-              ),
+      child: GridSquaresView(
+        squareSize: 14,
+        makeThemPerfectGrids: true,
+        estimatedHeight: widget.selectedAlgorithmLength == 1 ? maxHeight : ScreenUtil().screenHeight,
+        child: Container(
+          padding: REdgeInsets.only(bottom: SortingNotifier.bottomInsidePadding),
+          child: Stack(
+            alignment: AlignmentDirectional.bottomCenter,
+            children: List.generate(
+              items.length,
+              (index) {
+                final item = items[index];
+                final position = ref.watch(widget.instance.select((state) => state.positions[item.id]));
+                return AnimatedPositionedDirectional(
+                  key: ValueKey(item.id),
+                  start: position?.dx,
+                  bottom: position?.dy,
+                  width:
+                      itemWidth + SortingNotifier.horizontalInsidePadding - SortingNotifier.handleCentralBars,
+                  duration: speed.stepSortingDuration,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      _BuildItem(
+                          item: item,
+                          index: index,
+                          size: size,
+                          itemWidth: itemWidth,
+                          instance: widget.instance,
+                          speedDuration: speed.stepSortingDuration * 0.5,
+                          selectedAlgorithmLength: widget.selectedAlgorithmLength,
+                          isLastItem: index == items.length - 1),
+                      RSizedBox(height: 4),
+                      MediumText('$index', fontSize: 10, color: ThemeEnum.columnColor),
+                    ],
+                  ),
+                );
+              },
             ),
           ),
         ),
       ),
     );
-  }
-}
-
-class _GridBgPainter extends CustomPainter {
-  const _GridBgPainter({
-    required this.backgroundColor,
-    required this.borderColor,
-  });
-
-  final Color backgroundColor;
-  final Color borderColor;
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    const radius = Radius.circular(20);
-
-    final rect = Offset.zero & size;
-    final rRect = RRect.fromRectAndRadius(rect, radius);
-
-    // Background
-    canvas.drawRRect(
-      rRect,
-      Paint()..color = backgroundColor,
-    );
-
-    // Clip so grid doesn't draw outside rounded corners
-    canvas.save();
-    canvas.clipRRect(rRect);
-
-    final gridPaint = Paint()
-      ..color = borderColor.withValues(alpha: 0.015)
-      ..strokeWidth = 1;
-
-    const spacing = 24.0;
-
-    for (double x = 0; x <= size.width; x += spacing) {
-      canvas.drawLine(
-        Offset(x, 0),
-        Offset(x, size.height),
-        gridPaint,
-      );
-    }
-
-    for (double y = 0; y <= size.height; y += spacing) {
-      canvas.drawLine(
-        Offset(0, y),
-        Offset(size.width, y),
-        gridPaint,
-      );
-    }
-
-    canvas.restore();
-
-    // Border
-    canvas.drawRRect(
-      rRect,
-      Paint()
-        ..color = borderColor
-        ..style = PaintingStyle.stroke
-        ..strokeWidth = 1,
-    );
-  }
-
-  @override
-  bool shouldRepaint(covariant _GridBgPainter oldDelegate) {
-    return backgroundColor != oldDelegate.backgroundColor || borderColor != oldDelegate.borderColor;
   }
 }
 
@@ -374,7 +302,8 @@ class _BuildItem extends ConsumerWidget {
   final bool isLastItem;
   @override
   Widget build(BuildContext context, ref) {
-    final currentItem = ref.watch(instance.select((state) => index < state.list.length ? state.list[index] : null));
+    final currentItem =
+        ref.watch(instance.select((state) => index < state.list.length ? state.list[index] : null));
     final (actualHeight, writtenHeight) =
         SortingNotifier.calculateItemHeight(item.value, size, selectedAlgorithmLength);
     final color = context.getColor(currentItem?.getColor ?? SortingNotifier.itemColor);

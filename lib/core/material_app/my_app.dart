@@ -1,4 +1,5 @@
 import 'package:algorithm_visualizer/config/routes/route_app.dart';
+import 'package:algorithm_visualizer/config/themes/app_theme.dart';
 import 'package:algorithm_visualizer/core/extensions/language.dart';
 import 'package:algorithm_visualizer/core/helpers/storage/app_settings/app_settings_cubit.dart';
 import 'package:algorithm_visualizer/core/helpers/system_overlay_style.dart';
@@ -7,7 +8,6 @@ import 'package:algorithm_visualizer/core/resources/strings_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:algorithm_visualizer/config/themes/app_theme.dart';
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -30,7 +30,8 @@ class MyApp extends StatelessWidget {
 
             return LayoutBuilder(
               builder: (context, constraints) {
-                final padding = constraints.maxWidth < 450 ? 0.0 : ((constraints.maxWidth - defaultSize.width) / 2.3);
+                final padding =
+                    constraints.maxWidth < 450 ? 0.0 : ((constraints.maxWidth - defaultSize.width) / 2.3);
 
                 return SystemOverlay(
                   isBlackTheme: isDarkMode,

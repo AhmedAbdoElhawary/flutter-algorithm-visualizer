@@ -1,4 +1,4 @@
-import 'package:algorithm_visualizer/features/challange/domain/enums/problem.dart';
+import 'package:algorithm_visualizer/features/challenge/domain/enums/problem.dart';
 
 import 'recent_submission.dart';
 

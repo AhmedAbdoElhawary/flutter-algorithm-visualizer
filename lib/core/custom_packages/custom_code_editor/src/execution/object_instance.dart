@@ -16,9 +16,7 @@ class ObjectInstance {
   String toString() => '$type(${_format(fields, 0)})';
 
   static String _format(Map<String, dynamic> fields, int depth) {
-    final parts = fields.entries
-        .map((e) => '${e.key}: ${_fmtValue(e.value, depth)}')
-        .toList(growable: false);
+    final parts = fields.entries.map((e) => '${e.key}: ${_fmtValue(e.value, depth)}').toList(growable: false);
     return parts.join(', ');
   }
 

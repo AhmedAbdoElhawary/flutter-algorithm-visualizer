@@ -1,6 +1,6 @@
-import 'package:algorithm_visualizer/features/challange/domain/entities/coding_problem.dart';
-import 'package:algorithm_visualizer/features/challange/domain/enums/problem.dart';
-import 'package:algorithm_visualizer/features/challange/presentation/view_model/challenges/problems_notifier.dart';
+import 'package:algorithm_visualizer/features/challenge/domain/entities/coding_problem.dart';
+import 'package:algorithm_visualizer/features/challenge/domain/enums/problem.dart';
+import 'package:algorithm_visualizer/features/challenge/presentation/view_model/challenges/problems_notifier.dart';
 import 'package:algorithm_visualizer/features/profile/presentation/entities/profile_statistics.dart';
 import 'package:riverpod/riverpod.dart';
 

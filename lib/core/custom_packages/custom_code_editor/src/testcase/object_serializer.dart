@@ -11,9 +11,7 @@ String canonicalString(dynamic value, {CustomObjectShape? shape}) {
   if (value is ObjectInstance) return _instanceToString(value, shape);
   if (value is List) return '[${value.map((e) => canonicalString(e)).join(',')}]';
   if (value is Map) {
-    final parts = value.entries
-        .map((e) => '${canonicalString(e.key)}:${canonicalString(e.value)}')
-        .join(',');
+    final parts = value.entries.map((e) => '${canonicalString(e.key)}:${canonicalString(e.value)}').join(',');
     return '{$parts}';
   }
   return '$value';
@@ -62,9 +60,7 @@ String _instanceToString(ObjectInstance instance, CustomObjectShape? shape) {
       }
       return '[${values.join(',')}]';
     case CustomObjectShape.plainFields:
-      final fields = instance.fields.entries
-          .map((e) => '${e.key}:${canonicalString(e.value)}')
-          .join(',');
+      final fields = instance.fields.entries.map((e) => '${e.key}:${canonicalString(e.value)}').join(',');
       return '${instance.type}{$fields}';
   }
 }

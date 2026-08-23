@@ -16,10 +16,30 @@ class HomeStatsStrip extends ConsumerWidget {
     final stats = ref.watch(homeDataProvider.select((s) => s.stats));
 
     final items = [
-      (icon: Icons.local_fire_department_rounded, value: '${stats.currentStreak}', label: StringsManager.streak, color: ThemeEnum.accentYellow),
-      (icon: Icons.check_circle_outline_rounded, value: '${stats.solvedCount}', label: StringsManager.solved, color: ThemeEnum.accentGreen),
-      (icon: Icons.gps_fixed_rounded, value: '${(stats.accuracyRate * 100).round()}%', label:StringsManager.accuracy, color: ThemeEnum.accent),
-      (icon: Icons.trending_up_rounded, value: '${stats.totalAttempts}', label: StringsManager.attempts, color: ThemeEnum.accentBlue),
+      (
+        icon: Icons.local_fire_department_rounded,
+        value: '${stats.currentStreak}',
+        label: StringsManager.streak,
+        color: ThemeEnum.accentYellow
+      ),
+      (
+        icon: Icons.check_circle_outline_rounded,
+        value: '${stats.solvedCount}',
+        label: StringsManager.solved,
+        color: ThemeEnum.accentGreen
+      ),
+      (
+        icon: Icons.gps_fixed_rounded,
+        value: '${(stats.accuracyRate * 100).round()}%',
+        label: StringsManager.accuracy,
+        color: ThemeEnum.accent
+      ),
+      (
+        icon: Icons.trending_up_rounded,
+        value: '${stats.totalAttempts}',
+        label: StringsManager.attempts,
+        color: ThemeEnum.accentBlue
+      ),
     ];
 
     return OnlyPadding(

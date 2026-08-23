@@ -151,8 +151,7 @@ class CodeController extends TextEditingController {
   ProblemRunResult? runAllTests() {
     final ProblemData? p = problem;
     if (p == null) return null;
-    final ProblemRunResult result =
-        const ProblemRunner().runAll(problem: p, userCode: text);
+    final ProblemRunResult result = const ProblemRunner().runAll(problem: p, userCode: text);
     errorLine = result.error != null ? 0 : null;
     lastTestRunResult = result;
     notifyListeners();
@@ -209,8 +208,8 @@ class CodeController extends TextEditingController {
       );
     }
     final CodeDocument doc = document;
-    final List<List<Token>> tokens =
-        highlighter?.highlight(doc.lines) ?? List<List<Token>>.generate(doc.lineCount, (_) => const <Token>[]);
+    final List<List<Token>> tokens = highlighter?.highlight(doc.lines) ??
+        List<List<Token>>.generate(doc.lineCount, (_) => const <Token>[]);
     return CodeSpanBuilder.build(
       lines: doc.lines,
       lineTokens: tokens,
