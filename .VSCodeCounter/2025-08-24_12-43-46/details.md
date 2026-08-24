@@ -11,7 +11,7 @@ Total : 133 files,  6259 codes, 411 comments, 1006 blanks, all 7676 lines
 ## Files
 | filename | language | code | comment | blank | total |
 | :--- | :--- | ---: | ---: | ---: | ---: |
-| [.github/workflows/script.yml](/.github/workflows/script.yml) | YAML | 24 | 0 | 7 | 31 |
+| [.github/workflows/script.yml](/.github/workflows/ci.yml) | YAML | 24 | 0 | 7 | 31 |
 | [README.md](/README.md) | Markdown | 53 | 0 | 10 | 63 |
 | [analysis\_options.yaml](/analysis_options.yaml) | YAML | 3 | 22 | 4 | 29 |
 | [android/app/build.gradle](/android/app/build.gradle) | Groovy | 44 | 6 | 9 | 59 |
