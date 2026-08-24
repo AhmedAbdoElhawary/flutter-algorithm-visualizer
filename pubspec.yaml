@@ -45,15 +45,3 @@ flutter:
           weight: 700
   assets:
     - assets/problems.json
-#
-#flutter_native_splash:
-#  android: true
-#  ios: true
-#  web: false
-#
-#  # background_image: "assets/background.png"
-#  image: "assets/splash_5.png"
-#  color: "#ffffff"
-#
-#  android_12:
-#  # branding: "assets/android_branding.png"
