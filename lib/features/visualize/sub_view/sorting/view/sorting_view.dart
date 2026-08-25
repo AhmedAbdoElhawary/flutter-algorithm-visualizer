@@ -14,7 +14,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 part '../widgets/control_buttons.dart';
-part '../widgets/sorting_app_bar.dart';
 
 class SortingView extends ConsumerStatefulWidget {
   const SortingView({this.card = SortingAlgoCards.bubble, required this.onAlgoChanged, super.key});

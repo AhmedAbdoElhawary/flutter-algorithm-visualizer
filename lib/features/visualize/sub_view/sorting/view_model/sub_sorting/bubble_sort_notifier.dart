@@ -5,9 +5,6 @@ import 'package:collection/collection.dart';
 
 class BubbleSortNotifier extends SortingNotifier {
   @override
-  SortingNotifierState build() => SortingNotifier.initState();
-
-  @override
   SortingResult buildSorting(List<int> values) {
     final steps = <SortingStep>[];
     final arr = List<int>.from(values);
@@ -16,10 +13,10 @@ class BubbleSortNotifier extends SortingNotifier {
       bool isSorted = true;
 
       for (int j = 0; j < arr.length - i - 1; j++) {
-        steps.add(SortingStep(index1: j, index2: j + 1, action: SortingStatus.compared)); // external
+        steps.add(SortingStep(index1: j, index2: j + 1, action: SortingStatus.compared));
 
         if (arr[j] > arr[j + 1]) {
-          steps.add(SortingStep(index1: j, index2: j + 1, action: SortingStatus.swapping)); // external
+          steps.add(SortingStep(index1: j, index2: j + 1, action: SortingStatus.swapping));
 
           arr.swap(j, j + 1);
           isSorted = false;
