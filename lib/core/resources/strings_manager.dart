@@ -190,4 +190,7 @@ class StringsManager {
   static const String attempts = "Attempts";
   static const String continueLabel = "Continue Learning";
   static const String anonymous = "Anonymous";
+  static const String minValue = "Min Value";
+  static const String sortedNow = "Sorted now";
+
 }
