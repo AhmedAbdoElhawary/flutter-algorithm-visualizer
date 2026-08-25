@@ -187,7 +187,8 @@ class _StatusText extends ConsumerWidget {
     return AlgorithmStatusText(
       progressLabel: label,
       progressValue: progress,
-      statusText: inst.statusText(currentStep: currentStep, list: list),
+      statusText: inst.statusText(
+          previousStep: ref.read(instance).previousStep, currentStep: currentStep, list: list),
     );
   }
 }
