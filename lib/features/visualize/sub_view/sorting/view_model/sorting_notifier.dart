@@ -39,6 +39,7 @@ abstract class SortingNotifier extends Notifier<SortingNotifierState>
   static const ThemeEnum backgroundForSortingColor = ThemeEnum.backgroundForSortingColor;
   static const ThemeEnum doneSortingColor = ThemeEnum.accentGreen;
 
+  /// todo: add this feature that use dynamic size
   static const int _defaultSize = 7;
   static const int _maxSize = 15;
   static const int _minSize = 5;
@@ -384,9 +385,18 @@ abstract class SortingNotifier extends Notifier<SortingNotifierState>
 
       await Future.delayed(_speedDuration);
       state = state.copyWith(currentStepIndex: i + 1);
+
+      // clear the last color
+      if (i == steps.length - 1) {
+        list[step.index1] = list[step.index1].copyWith(sortedStatus: SortingStatus.none);
+        list[step.index2] = list[step.index2].copyWith(sortedStatus: SortingStatus.none);
+        state = state.copyWith(list: List.of(list), positions: positions, currentStep: step);
+        await Future.delayed(_speedDuration);
+      }
     }
 
     state = state.copyWith(currentStepIndex: steps.length, currentStep: SortingStep.noneStep());
+    await Future.delayed(_speedDuration);
     await _greenSortedItemsAsDone();
     _isPlayingFun = false;
   }
