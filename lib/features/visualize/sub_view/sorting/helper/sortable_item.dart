@@ -27,7 +27,9 @@ class SortableItem {
         return SortingNotifier.swappingColor;
       case SortingStatus.compared:
         return SortingNotifier.comparedColor;
-      default:
+      case SortingStatus.temporary:
+        return SortingNotifier.temporaryColor;
+      case SortingStatus.none:
         return SortingNotifier.itemColor;
     }
   }
@@ -66,11 +68,11 @@ class SortingStep {
   int get hashCode => Object.hash(index1, index2, action);
 
   static SortingStep noneStep() => SortingStep(index1: -1, index2: -2, action: SortingStatus.none);
-  Map<String,String> get toMap => {
-    'index1': index1.toString(),
-    'index2': index2.toString(),
-    'action': action.name,
-  };
+  Map<String, String> get toMap => {
+        'index1': index1.toString(),
+        'index2': index2.toString(),
+        'action': action.name,
+      };
 }
 
 class SortingResult {
