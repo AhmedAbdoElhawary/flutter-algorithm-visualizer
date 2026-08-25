@@ -40,7 +40,7 @@ abstract class SortingNotifier extends Notifier<SortingNotifierState>
   static const ThemeEnum doneSortingColor = ThemeEnum.accentGreen;
 
   /// todo: add this feature that use dynamic size
-  static const int _defaultSize = 7;
+  static const int _defaultSize = 15;
   static const int _maxSize = 15;
   static const int _minSize = 5;
   static double itemsPadding = 8.w;
@@ -104,6 +104,9 @@ abstract class SortingNotifier extends Notifier<SortingNotifierState>
   }
 
   String statusText({required SortingStep? currentStep, required List<SortableItem> list}) {
+    final isAllSorted = list.map((e) => e.sortedStatus != SortingStatus.sorted).isEmpty;
+    if (isAllSorted) return StringsManager.arrayFullySorted;
+
     final initialText = StringsManager.initialArrayReadyToSort;
     if (currentStep == null || currentStep.index1 == -1 || currentStep.index2 == -1) return initialText;
 
@@ -113,13 +116,15 @@ abstract class SortingNotifier extends Notifier<SortingNotifierState>
     final (actualHeight1, writtenHeight1) = calculateItemHeight(value1, _size, selectedAlgorithmLength);
     final (actualHeight2, writtenHeight2) = calculateItemHeight(value2, _size, selectedAlgorithmLength);
 
-    return currentStep.action == SortingStatus.compared
-        ? '${StringsManager.compare} arr[${currentStep.index1}]=$writtenHeight1 ↔ arr[${currentStep.index2}]=$writtenHeight2'
-        : currentStep.action == SortingStatus.swapping
-            ? '$writtenHeight2 > $writtenHeight1: ${StringsManager.swapPositions} ${currentStep.index1} ↔ ${currentStep.index2}'
-            : currentStep.action == SortingStatus.allSorted
-                ? StringsManager.arrayFullySorted
-                : initialText;
+    if (currentStep.action == SortingStatus.compared) {
+      return '${StringsManager.compare} arr[${currentStep.index1}]=$writtenHeight1 ↔ arr[${currentStep.index2}]=$writtenHeight2';
+    }
+
+    if (currentStep.action == SortingStatus.swapping) {
+      return '$writtenHeight2 > $writtenHeight1: ${StringsManager.swapPositions} ${currentStep.index1} ↔ ${currentStep.index2}';
+    }
+
+    return initialText;
   }
 
   Duration get _speedDuration => state.speed.stepSortingDuration;
@@ -309,7 +314,7 @@ abstract class SortingNotifier extends Notifier<SortingNotifierState>
   Future<void> _greenSortedItemsAsDone() async {
     final list = List<SortableItem>.from(state.list);
     for (int i = 0; i < list.length; i++) {
-      list[i] = list[i].copyWith(sortedStatus: SortingStatus.allSorted);
+      list[i] = list[i].copyWith(sortedStatus: SortingStatus.sorted);
       state = state.copyWith(list: List.of(list));
       await Future.delayed(state.speed.stepSortingDuration);
     }
@@ -375,7 +380,15 @@ abstract class SortingNotifier extends Notifier<SortingNotifierState>
 
           break;
 
-        case SortingStatus.allSorted:
+        case SortingStatus.sorted:
+          list[step.index1] = list[step.index1].copyWith(sortedStatus: SortingStatus.sorted);
+          list[step.index2] = list[step.index2].copyWith(sortedStatus: SortingStatus.sorted);
+          state = state.copyWith(list: List.of(list), positions: positions, currentStep: step);
+
+          await Future.delayed(_speedDuration);
+
+          break;
+
         case SortingStatus.none:
           list[step.index1] = list[step.index1].copyWith(sortedStatus: SortingStatus.none);
           list[step.index2] = list[step.index2].copyWith(sortedStatus: SortingStatus.none);
