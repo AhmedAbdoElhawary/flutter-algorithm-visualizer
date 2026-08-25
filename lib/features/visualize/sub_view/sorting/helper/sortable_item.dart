@@ -21,7 +21,7 @@ class SortableItem {
 
   ThemeEnum get getColor {
     switch (sortedStatus) {
-      case SortingStatus.allSorted:
+      case SortingStatus.sorted:
         return SortingNotifier.doneSortingColor;
       case SortingStatus.swapping:
         return SortingNotifier.swappingColor;
