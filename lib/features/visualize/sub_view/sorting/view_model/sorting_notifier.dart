@@ -12,9 +12,6 @@ part '../helper/sortable_item.dart';
 part '../helper/sorting_enums.dart';
 part 'sorting_state.dart';
 
-/// Immutable snapshot of the visual state after N steps have been applied.
-/// Precomputed once per sort so stepForward/stepBackward can jump directly
-/// to any point without incrementally replaying or trying to "undo" steps.
 class _SortSnapshot {
   final List<SortableItem> list;
   final Map<int, Offset> positions;
@@ -24,8 +21,8 @@ class _SortSnapshot {
 
 abstract class SortingNotifier extends Notifier<SortingNotifierState>
     implements AlgorithmDescriptionNotifier, AlgorithmControlInterface {
-  static SortingNotifierState initState() {
-    final list = _generateList(_defaultSize);
+  static SortingNotifierState initState({List<SortableItem>? initialList}) {
+    final list = initialList ?? _generateList(_defaultSize);
     final positions = _computeInitialPositions(list, _defaultSize);
     return SortingNotifierState(list: list, positions: positions);
   }
@@ -50,9 +47,6 @@ abstract class SortingNotifier extends Notifier<SortingNotifierState>
   static const double bottomInsidePadding = 15;
   static double handleCentralBars = horizontalInsidePadding / 4;
 
-  /// snapshots[k] == visual state after k steps have been completed.
-  /// snapshots[0] is always the pristine, pre-sort state.
-  /// Invalidated (cleared) whenever a new list/sort is generated.
   List<_SortSnapshot> _snapshots = [];
 
   bool _isPlayingFun = false;
@@ -189,24 +183,24 @@ abstract class SortingNotifier extends Notifier<SortingNotifierState>
     );
   }
 
-  Future<void> _playSorting(BuildContext context) async {
+  Future<void> _playSorting() async {
     _setOperation = SortingEnum.played;
     await _startSelectedSorting();
   }
 
   @override
-  Future<void> togglePlay(BuildContext context) async {
+  Future<void> togglePlay() async {
     if (state.isAtLastStep) {
       await reset();
 
-      if (context.mounted) _playSorting(context);
+       _playSorting();
 
       return;
     }
 
     final isPlaying = state.isPlaying;
     state = state.copyWith(operationStatus: isPlaying ? SortingEnum.stopped : SortingEnum.played);
-    isPlaying ? _stopSorting() : _playSorting(context);
+    isPlaying ? _stopSorting() : _playSorting();
   }
 
   @override
@@ -223,10 +217,6 @@ abstract class SortingNotifier extends Notifier<SortingNotifierState>
     _initializePositions();
   }
 
-  /// Builds (once) the step list for the current array plus a snapshot of
-  /// the visual state after every step, so manual stepping works correctly
-  /// even if autoplay was never started, and works identically whether it
-  /// runs before or after autoplay has partially run.
   void _ensureStepsGenerated() {
     if (state.sortedSteps.isNotEmpty) return;
 
@@ -294,10 +284,7 @@ abstract class SortingNotifier extends Notifier<SortingNotifierState>
       currentStep: next > 0 ? steps[next - 1] : SortingStep.noneStep(),
     );
 
-    if (next == steps.length) {
-      // Fire-and-forget celebratory highlight, matches autoplay completion.
-      _greenSortedItemsAsDone();
-    }
+    if (next == steps.length) _greenSortedItemsAsDone();
   }
 
   @override
@@ -336,9 +323,6 @@ abstract class SortingNotifier extends Notifier<SortingNotifierState>
     }
   }
 
-  /// Autoplay: runs forward from state.currentStepIndex (== number of
-  /// steps already completed, whether by autoplay or manual stepping)
-  /// through the rest of the step list, one raw step at a time.
   Future<void> _buildSort() async {
     if (_isPlayingFun) return;
     _isPlayingFun = true;
@@ -346,8 +330,8 @@ abstract class SortingNotifier extends Notifier<SortingNotifierState>
     _ensureStepsGenerated();
     final steps = state.sortedSteps;
 
-    var list = List<SortableItem>.from(state.list);
-    var positions = Map<int, Offset>.from(state.positions);
+    final list = List<SortableItem>.from(state.list);
+    Map<int, Offset> positions = Map<int, Offset>.from(state.positions);
 
     for (int i = state.currentStepIndex; i < steps.length; i++) {
       if (_getOperation != SortingEnum.played) {
