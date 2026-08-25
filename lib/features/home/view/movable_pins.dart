@@ -406,3 +406,128 @@ class _ParticlePainter extends CustomPainter {
         oldDelegate.connectionDistance != connectionDistance;
   }
 }
+
+/*
+
+import 'dart:math';
+import 'dart:typed_data';
+import 'dart:ui' as ui;
+
+import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
+import 'package:algorithm_visualizer/core/widgets/custom_widgets/glass_card.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
+
+class MovablePinsBackground extends StatefulWidget {
+  const MovablePinsBackground({
+    this.pinColor = ThemeEnum.whiteD5Color,
+    required this.child,
+    super.key,
+  });
+
+  final ThemeEnum pinColor;
+  final Widget child;
+
+  @override
+  State<MovablePinsBackground> createState() => _MovablePinsBackgroundState();
+}
+
+class _MovablePinsBackgroundState extends State<MovablePinsBackground> {
+  @override
+  Widget build(BuildContext context) {
+    final color = context.getColor(widget.pinColor);
+    return Stack(
+      fit: StackFit.expand,
+      alignment: AlignmentDirectional.center,
+      children: [
+        AnimatedBackground(),
+        RepaintBoundary(child: CustomPaint(size: Size.infinite, painter: _ParticlePainter(pinColor: color))),
+        // widget.child,
+      ],
+    );
+  }
+}
+
+class _ParticlePainter extends CustomPainter {
+  final Color pinColor;
+
+  _ParticlePainter({required this.pinColor});
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final int maxPin = 50;
+
+    final points = List.generate(
+      maxPin,
+          (_) {
+        final randomizedWidth = Random().nextDouble() * size.width;
+        final randomizedHeight = Random().nextDouble() * size.height;
+
+        return Offset(randomizedWidth, randomizedHeight);
+      },
+    );
+
+    final sortedPoints = <Offset>[];
+
+    if (points.isNotEmpty) {
+      final remaining = [...points];
+
+      var current = remaining.removeAt(0);
+      sortedPoints.add(current);
+
+      while (remaining.isNotEmpty) {
+        var nearestIndex = 0;
+        var nearestDistance = double.infinity;
+
+        for (var i = 0; i < remaining.length; i++) {
+          final distance = (remaining[i] - current).distanceSquared;
+
+          if (distance < nearestDistance) {
+            nearestDistance = distance;
+            nearestIndex = i;
+          }
+        }
+
+        current = remaining.removeAt(nearestIndex);
+        sortedPoints.add(current);
+      }
+    }
+
+    for (int i = 0; i < points.length; i++) {
+      final point = points[i];
+      final path = Path();
+      final paint = Paint()
+        ..color = pinColor
+        ..style = PaintingStyle.fill;
+
+      path.addOval(Rect.fromCircle(center: point, radius: 2.5));
+
+      canvas.drawPath(path, paint);
+
+      canvas.save();
+
+      int start = i;
+      while (start<i+3 && start<points.length) {
+        path.moveTo(points[i].dx, points[i].dy);
+
+        path.lineTo(points[start].dx, points[start].dy);
+        final paint = Paint()
+          ..color = pinColor.withValues(alpha: 0.5)
+          ..style = PaintingStyle.stroke;
+        canvas.drawPath(path, paint);
+
+        start++;
+      }
+
+      canvas.restore();
+    }
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) {
+    return false;
+  }
+}
+
+
+* */
