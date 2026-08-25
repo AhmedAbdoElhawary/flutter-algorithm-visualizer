@@ -70,7 +70,7 @@ class MovablePinsBackground extends StatefulWidget {
 
 class _MovablePinsBackgroundState extends State<MovablePinsBackground>
     with SingleTickerProviderStateMixin, WidgetsBindingObserver {
-  late final Ticker _ticker=createTicker(_onTick);
+  late final Ticker _ticker = createTicker(_onTick);
   final _Repainter _repainter = _Repainter();
   final Random _random = Random();
 
