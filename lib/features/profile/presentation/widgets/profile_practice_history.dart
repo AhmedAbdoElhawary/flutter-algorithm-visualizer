@@ -114,6 +114,9 @@ class _PracticeHistoryRowState extends State<PracticeHistoryRow> with SingleTick
   @override
   Widget build(BuildContext context) {
     final entry = widget.entry;
+    final submissionsText = entry.attempts.length > 1
+        ? StringsManager.submissions.toLowerCase()
+        : StringsManager.submission.toLowerCase();
     return ProblemRow(
       addTopBorder: !widget.isFullPage,
       problemName: entry.problemName,
@@ -121,8 +124,7 @@ class _PracticeHistoryRowState extends State<PracticeHistoryRow> with SingleTick
       isCorrect: entry.lastResult,
       onTapCard: _toggle,
       onTapTitle: () => context.pushTo(Routes.code, queryParameters: "${entry.problemId}"),
-      subTitle: MediumText('${entry.attempts.length} ${StringsManager.problems.toLowerCase()}',
-          color: ThemeEnum.hover, fontSize: 11),
+      subTitle: MediumText('${entry.attempts.length} $submissionsText', color: ThemeEnum.hover, fontSize: 11),
       trailing: GestureDetector(
         child: AnimatedRotation(
           turns: _expanded ? 0.5 : 0,
