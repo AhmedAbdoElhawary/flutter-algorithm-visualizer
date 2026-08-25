@@ -6,8 +6,7 @@ enum SortingStatus {
   compared,
   swapping,
   sorted,
-  // temporary,
+  temporary,
 
-  // allSorted,
   none,
 }
