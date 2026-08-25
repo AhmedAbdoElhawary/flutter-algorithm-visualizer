@@ -142,8 +142,7 @@ class ComparisonSortNotifier extends Notifier<ComparisonSortingNotifierState> {
   }
 
   Future<void> togglePlay(BuildContext context, WidgetRef ref) async {
-    final playSorting =
-        state.selectedAlgorithms.map((e) => ref.read(e.provider.notifier).togglePlay());
+    final playSorting = state.selectedAlgorithms.map((e) => ref.read(e.provider.notifier).togglePlay());
 
     await Future.wait(playSorting.toList());
 
