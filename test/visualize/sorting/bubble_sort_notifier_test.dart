@@ -4,7 +4,7 @@ import 'package:algorithm_visualizer/features/visualize/sub_view/sorting/view_mo
 import 'package:algorithm_visualizer/features/visualize/sub_view/sorting/view_model/sub_sorting/bubble_sort_notifier.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import 'custom_expects.dart' show expectSortingSteps;
+import '../custom_expects.dart' show expectSortingSteps;
 
 void main() {
   late BubbleSortNotifier notifier;
