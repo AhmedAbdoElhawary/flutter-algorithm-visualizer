@@ -193,7 +193,7 @@ abstract class SortingNotifier extends Notifier<SortingNotifierState>
     if (state.isAtLastStep) {
       await reset();
 
-       _playSorting();
+      _playSorting();
 
       return;
     }
