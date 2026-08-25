@@ -9,7 +9,6 @@ import 'package:algorithm_visualizer/features/visualize/helper/playback_speed.da
 import 'package:algorithm_visualizer/features/visualize/sub_view/searching/helper/pf_constants.dart';
 import 'package:algorithm_visualizer/features/visualize/sub_view/searching/helper/pf_step.dart';
 import 'package:algorithm_visualizer/features/visualize/sub_view/sorting/view_model/sorting_notifier.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 part 'package:algorithm_visualizer/features/visualize/sub_view/searching/view_model/sub_searching/a_star_searching_notifier.dart';
@@ -142,7 +141,7 @@ abstract class SearchingNotifier extends Notifier<SearchingState>
   }
 
   @override
-  Future<void> togglePlay(BuildContext context) async {
+  Future<void> togglePlay() async {
     if (!state.hasSteps) {
       _runAlgorithm();
       return;
