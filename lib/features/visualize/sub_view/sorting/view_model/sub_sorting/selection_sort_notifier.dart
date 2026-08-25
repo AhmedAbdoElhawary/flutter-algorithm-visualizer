@@ -19,18 +19,19 @@ class SelectionSortNotifier extends SortingNotifier {
         steps.add(SortingStep(index1: minIndex, index2: j, action: SortingStatus.compared));
 
         if (arr[j] < arr[minIndex]) {
-          final previousIndex = minIndex;
-          if (minIndex != i) {
-            steps.add(SortingStep(index1: previousIndex, index2: previousIndex, action: SortingStatus.none));
-          }
+          // final previousIndex = minIndex;
+          // if (minIndex != i) {
+          steps.add(SortingStep(index1: j, index2: j, action: SortingStatus.swapping));
+          // }
           minIndex = j;
         }
 
-        steps.add(SortingStep(index1: minIndex, index2: j, action: SortingStatus.none));
+        steps.add(SortingStep(index1: minIndex, index2: j, action: SortingStatus.compared));
       }
 
       if (minIndex != i) {
         steps.add(SortingStep(index1: i, index2: minIndex, action: SortingStatus.swapping));
+        // steps.add(SortingStep(index1: i, index2: minIndex, action: SortingStatus.swapping));
 
         arr.swap(minIndex, i);
       }
