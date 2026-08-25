@@ -38,9 +38,10 @@ abstract class SortingNotifier extends Notifier<SortingNotifierState>
   static const ThemeEnum itemColor = ThemeEnum.columnColor;
   static const ThemeEnum backgroundForSortingColor = ThemeEnum.backgroundForSortingColor;
   static const ThemeEnum doneSortingColor = ThemeEnum.accentGreen;
+  static const ThemeEnum temporaryColor = ThemeEnum.pink;
 
   /// todo: add this feature that use dynamic size
-  static const int _defaultSize = 15;
+  static const int _defaultSize = 10;
   static const int _maxSize = 15;
   static const int _minSize = 5;
   static double itemsPadding = 8.w;
@@ -103,9 +104,14 @@ abstract class SortingNotifier extends Notifier<SortingNotifierState>
     return (height, '${(height / 2).toInt()}');
   }
 
-  String statusText({required SortingStep? currentStep, required List<SortableItem> list}) {
-    final isAllSorted = list.map((e) => e.sortedStatus != SortingStatus.sorted).isEmpty;
-    if (isAllSorted) return StringsManager.arrayFullySorted;
+  String getWrittenHeight(int value) => calculateItemHeight(value, _size, selectedAlgorithmLength).$2;
+
+  String statusText({
+    required SortingStep? previousStep,
+    required SortingStep? currentStep,
+    required List<SortableItem> list,
+  }) {
+    if (state.isAllSorted) return StringsManager.arrayFullySorted;
 
     final initialText = StringsManager.initialArrayReadyToSort;
     if (currentStep == null || currentStep.index1 == -1 || currentStep.index2 == -1) return initialText;
@@ -113,8 +119,8 @@ abstract class SortingNotifier extends Notifier<SortingNotifierState>
     final value1 = list[currentStep.index1].value;
     final value2 = list[currentStep.index2].value;
 
-    final (actualHeight1, writtenHeight1) = calculateItemHeight(value1, _size, selectedAlgorithmLength);
-    final (actualHeight2, writtenHeight2) = calculateItemHeight(value2, _size, selectedAlgorithmLength);
+    final writtenHeight1 = getWrittenHeight(value1);
+    final writtenHeight2 = getWrittenHeight(value2);
 
     if (currentStep.action == SortingStatus.compared) {
       return '${StringsManager.compare} arr[${currentStep.index1}]=$writtenHeight1 ↔ arr[${currentStep.index2}]=$writtenHeight2';
@@ -139,7 +145,7 @@ abstract class SortingNotifier extends Notifier<SortingNotifierState>
     for (int i = 0; i < state.list.length; i++) {
       positions[state.list[i].id] = Offset(i * (itemWidth + itemsPadding), 0);
     }
-    state = state.copyWith(positions: positions);
+    state = state.copyWith(isAllSorted: false, positions: positions);
     _snapshots = [];
   }
 
@@ -154,13 +160,13 @@ abstract class SortingNotifier extends Notifier<SortingNotifierState>
 
   @override
   void changeSpeed(PlaybackSpeed speed) {
-    state = state.copyWith(speed: speed);
+    state = state.copyWith(isAllSorted: false, speed: speed);
   }
 
   void changeSize(double size) {
     if (_getOperation == SortingEnum.played) return;
     final newSize = _minSize + (_maxSize - _minSize) * size;
-    state = state.copyWith(size: newSize.toInt());
+    state = state.copyWith(isAllSorted: false, size: newSize.toInt());
     reset();
   }
 
@@ -177,6 +183,7 @@ abstract class SortingNotifier extends Notifier<SortingNotifierState>
       totalPlaySteps: 0,
       sortedSteps: [],
       currentStepIndex: 0,
+      isAllSorted: false,
     );
     _snapshots = [];
     _initializePositions();
@@ -184,9 +191,7 @@ abstract class SortingNotifier extends Notifier<SortingNotifierState>
 
   Future<void> _stopSorting() async {
     _resetItemColors();
-    state = state.copyWith(
-      operationStatus: SortingEnum.stopped,
-    );
+    state = state.copyWith(operationStatus: SortingEnum.stopped);
   }
 
   Future<void> _playSorting() async {
@@ -218,6 +223,7 @@ abstract class SortingNotifier extends Notifier<SortingNotifierState>
       totalPlaySteps: 0,
       sortedSteps: [],
       currentStepIndex: 0,
+      isAllSorted: false,
     );
     _snapshots = [];
     _initializePositions();
@@ -231,10 +237,7 @@ abstract class SortingNotifier extends Notifier<SortingNotifierState>
 
     _snapshots = _computeSnapshots(state.list, state.positions, steps);
 
-    state = state.copyWith(
-      sortedSteps: steps,
-      totalPlaySteps: steps.length,
-    );
+    state = state.copyWith(sortedSteps: steps, totalPlaySteps: steps.length);
   }
 
   List<_SortSnapshot> _computeSnapshots(
@@ -308,6 +311,7 @@ abstract class SortingNotifier extends Notifier<SortingNotifierState>
       positions: snapshot.positions,
       currentStepIndex: prev,
       currentStep: prev > 0 ? steps[prev - 1] : SortingStep.noneStep(),
+      isAllSorted: false,
     );
   }
 
@@ -315,7 +319,7 @@ abstract class SortingNotifier extends Notifier<SortingNotifierState>
     final list = List<SortableItem>.from(state.list);
     for (int i = 0; i < list.length; i++) {
       list[i] = list[i].copyWith(sortedStatus: SortingStatus.sorted);
-      state = state.copyWith(list: List.of(list));
+      state = state.copyWith(isAllSorted: true, list: List.of(list));
       await Future.delayed(state.speed.stepSortingDuration);
     }
   }
@@ -389,6 +393,15 @@ abstract class SortingNotifier extends Notifier<SortingNotifierState>
 
           break;
 
+        case SortingStatus.temporary:
+          list[step.index1] = list[step.index1].copyWith(sortedStatus: SortingStatus.temporary);
+          list[step.index2] = list[step.index2].copyWith(sortedStatus: SortingStatus.temporary);
+          state = state.copyWith(list: List.of(list), positions: positions, currentStep: step);
+
+          await Future.delayed(_speedDuration);
+
+          break;
+
         case SortingStatus.none:
           list[step.index1] = list[step.index1].copyWith(sortedStatus: SortingStatus.none);
           list[step.index2] = list[step.index2].copyWith(sortedStatus: SortingStatus.none);
@@ -399,7 +412,7 @@ abstract class SortingNotifier extends Notifier<SortingNotifierState>
       await Future.delayed(_speedDuration);
       state = state.copyWith(currentStepIndex: i + 1);
 
-      // clear the last color
+      // clear the last color, as it became in his color until it's overwrite with green color
       if (i == steps.length - 1) {
         list[step.index1] = list[step.index1].copyWith(sortedStatus: SortingStatus.none);
         list[step.index2] = list[step.index2].copyWith(sortedStatus: SortingStatus.none);
