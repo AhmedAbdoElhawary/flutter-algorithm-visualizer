@@ -39,6 +39,15 @@ void main() {
       });
 
       group("two items for bubble sort", () {
+        test("equal items", () {
+          final result = notifier.buildSorting([3, 3]);
+
+          expect(result.sortedValues, [3, 3]);
+
+          _expectSteps(result.steps, [
+            SortingStep(index1: 0, index2: 1, action: SortingStatus.compared),
+          ]);
+        });
         test("positive items", () {
           final result = notifier.buildSorting([1, 0]);
 
@@ -150,7 +159,7 @@ void main() {
     },
   );
 
-  test('algorithmComplexity reports expected Big-O characteristics', () {
+  test('algorithmComplexity for bubble sort', () {
     final complexity = notifier.algoComplexity;
     expect(complexity.bestTimeComplexity, ONotationComplexity.n);
     expect(complexity.averageTimeComplexity, ONotationComplexity.n2);
