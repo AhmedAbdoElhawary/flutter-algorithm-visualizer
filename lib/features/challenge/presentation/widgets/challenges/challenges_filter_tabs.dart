@@ -23,8 +23,9 @@ class ChallengesFilterTabs extends ConsumerWidget {
           children: ChallengesNotifier.filters.map((f) {
             final active = activeFilter == f;
             final color = f == ProblemDifficulty.none ? ThemeEnum.accent : ProblemStyle.difficultyColor(f);
-            final count =
-                ref.watch(specificDifficultyCountProvider(f)).maybeWhen(data: (data) => "$data", orElse: () => "");
+            final count = ref
+                .watch(specificDifficultyCountProvider(f))
+                .maybeWhen(data: (data) => "$data", orElse: () => "");
 
             return GestureDetector(
               onTap: () => ref.read(challengesProvider.notifier).setFilter(f),
