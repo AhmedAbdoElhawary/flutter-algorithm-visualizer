@@ -61,14 +61,13 @@ class _SortingPageState extends ConsumerState<SortingView> {
       await deleteInstance(prevInstance);
     }
 
-    setState(() {
-      instance = BaseViewModel.sortingCards(card).instance;
-      this.card = card;
-    });
-
-    final description = ref.read(instance.notifier).algorithmDescription;
     final cardValue = BaseViewModel.sortingCards(card);
+    this.card = card;
+    instance = cardValue.instance;
+
+    final description = ref.read(cardValue.instance.notifier).algorithmDescription;
     widget.onAlgoChanged(cardValue.title, description);
+    setState(() {});
   }
 
   @override
