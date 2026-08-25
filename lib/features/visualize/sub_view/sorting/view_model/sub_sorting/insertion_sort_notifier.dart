@@ -3,9 +3,8 @@ import 'package:algorithm_visualizer/features/visualize/helper/o_notation.dart';
 import 'package:algorithm_visualizer/features/visualize/sub_view/sorting/view_model/sorting_notifier.dart';
 import 'package:collection/collection.dart';
 
+
 class InsertionSortNotifier extends SortingNotifier {
-  @override
-  SortingNotifierState build() => SortingNotifier.initState();
 
   @override
   SortingResult buildSorting(List<int> values) {
@@ -13,14 +12,16 @@ class InsertionSortNotifier extends SortingNotifier {
     final arr = List<int>.from(values);
 
     for (int i = 1; i < arr.length; i++) {
-      int j = i;
-
-      while (j > 0 && arr[j] < arr[j - 1]) {
+      for (int j = i; j > 0; j--) {
         steps.add(SortingStep(index1: j, index2: j - 1, action: SortingStatus.compared));
-        steps.add(SortingStep(index1: j, index2: j - 1, action: SortingStatus.swapping));
 
-        arr.swap(j, j - 1);
-        j--;
+        if (arr[j] < arr[j - 1]) {
+          steps.add(SortingStep(index1: j, index2: j - 1, action: SortingStatus.swapping));
+
+          arr.swap(j, j - 1);
+        }else{
+          break;
+        }
       }
     }
 
