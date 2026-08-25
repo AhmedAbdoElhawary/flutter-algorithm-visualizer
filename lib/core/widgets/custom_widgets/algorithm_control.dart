@@ -73,13 +73,13 @@ class AlgorithmControls extends ConsumerWidget {
 
 class _PlayButton extends StatelessWidget {
   final bool playing;
-  final Future<void> Function(BuildContext context) onTap;
+  final Future<void> Function() onTap;
   const _PlayButton({required this.playing, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () async => await onTap(context),
+      onTap: onTap,
       child: Container(
         width: 48.r,
         height: 48.r,
