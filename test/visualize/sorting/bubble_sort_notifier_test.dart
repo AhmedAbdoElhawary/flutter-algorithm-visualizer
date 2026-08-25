@@ -1,3 +1,4 @@
+import 'package:algorithm_visualizer/features/visualize/helper/o_notation.dart';
 import 'package:algorithm_visualizer/features/visualize/sub_view/sorting/view_model/sorting_notifier.dart';
 import 'package:algorithm_visualizer/features/visualize/sub_view/sorting/view_model/sub_sorting/bubble_sort_notifier.dart';
 import 'package:collection/collection.dart';
@@ -11,7 +12,7 @@ void main() {
   });
 
   group(
-    "Test bubble sort",
+    "Test sorting for bubble sort",
     () {
       test("empty items for bubble sort", () {
         final result = notifier.buildSorting([]);
@@ -148,6 +149,17 @@ void main() {
       });
     },
   );
+
+  test('algorithmComplexity reports expected Big-O characteristics', () {
+    final complexity = notifier.algoComplexity;
+    expect(complexity.bestTimeComplexity, ONotationComplexity.n);
+    expect(complexity.averageTimeComplexity, ONotationComplexity.n2);
+    expect(complexity.worstTimeComplexity, ONotationComplexity.n2);
+    expect(complexity.spaceComplexity, ONotationComplexity.constant);
+    expect(complexity.stable, isTrue);
+  });
+
+  /// todo: codeSnippet and codeLineForStep are not implemented yet and not tested too
 }
 
 void _expectSteps(List<SortingStep> steps, List<SortingStep> expectedSteps) {
