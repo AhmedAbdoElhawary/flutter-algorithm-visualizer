@@ -7,8 +7,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class AlgorithmStatusText extends ConsumerWidget {
-  const AlgorithmStatusText(
-      {super.key, required this.statusText, required this.progressLabel, required this.progressValue});
+  const AlgorithmStatusText({
+    super.key,
+    required this.statusText,
+    required this.progressLabel,
+    required this.progressValue,
+  });
   final String statusText;
   final String progressLabel;
   final double progressValue;

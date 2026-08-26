@@ -154,7 +154,8 @@ class StringsManager {
   static const String total = "Total";
   static const String viewAll = "View All";
   static const String days = "days";
-  static const String problems = "problems";
+  static const String problems = "Problems";
+  static const String problem = "Problem";
 
   static const String hints = "Hints";
   static const String hint = "Hint";
@@ -190,4 +191,8 @@ class StringsManager {
   static const String attempts = "Attempts";
   static const String continueLabel = "Continue Learning";
   static const String anonymous = "Anonymous";
+  static const String minValue = "Min Value";
+  static const String sortedNow = "Sorted now";
+  static const String submissions = "Submissions";
+  static const String submission = "Submission";
 }

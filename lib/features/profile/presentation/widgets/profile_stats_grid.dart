@@ -21,13 +21,13 @@ class ProfileStatsGrid extends ConsumerWidget {
     final solvedSub = '${stats.easySolved}E · ${stats.mediumSolved}M · ${stats.hardSolved}H';
     final streakSub = '${StringsManager.best} ${stats.bestStreak} ${StringsManager.days}';
     final accuracySub = '${(stats.accuracyRate * 100).toStringAsFixed(0)}%';
-    final bookmarkSub = '${stats.bookmarkedCount} ${StringsManager.problems}';
+    final bookmarkSub = '${stats.bookmarkedCount} ${stats.bookmarkedCount>1?StringsManager.problems:StringsManager.problem}';
 
     final statsList = [
       (
         icon: Icons.check_circle_outline_rounded,
         value: '${stats.solvedCount}',
-        label: "${StringsManager.problems}\n${StringsManager.solved}",
+        label: "${stats.solvedCount>1?StringsManager.problems:StringsManager.problem}\n${StringsManager.solved}",
         colorKey: ThemeEnum.accentGreen,
         sub: solvedSub
       ),
