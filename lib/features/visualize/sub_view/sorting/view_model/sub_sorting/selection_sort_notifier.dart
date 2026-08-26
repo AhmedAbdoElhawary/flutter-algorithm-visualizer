@@ -5,7 +5,35 @@ import 'package:collection/collection.dart';
 
 class SelectionSortNotifier extends SortingNotifier {
   @override
-  SortingNotifierState build() => SortingNotifier.initState();
+  String statusText({
+    required SortingStep? previousStep,
+    required SortingStep? currentStep,
+    required List<SortableItem> list,
+  }) {
+    final text = super.statusText(previousStep: previousStep, currentStep: currentStep, list: list);
+    if (currentStep == null) return text;
+    final action = currentStep.action;
+
+    if ((action == SortingStatus.swapping || action == SortingStatus.compared)) {
+      final minValue = getWrittenHeight(list[currentStep.index1].value);
+      return "${StringsManager.minValue}: $minValue \n$text";
+    }
+
+    if (action == SortingStatus.temporary) {
+      final minValue = getWrittenHeight(list[currentStep.index1].value);
+
+      final previousText =
+          super.statusText(previousStep: previousStep, currentStep: previousStep, list: list);
+      return "${StringsManager.minValue}: $minValue \n$previousText";
+    }
+
+    if (action == SortingStatus.sorted) {
+      final minValue = getWrittenHeight(list[currentStep.index1].value);
+      return "arr[${currentStep.index1}] = $minValue ${StringsManager.sortedNow}";
+    }
+
+    return text;
+  }
 
   @override
   SortingResult buildSorting(List<int> values) {
@@ -14,19 +42,15 @@ class SelectionSortNotifier extends SortingNotifier {
 
     for (int i = 0; i < arr.length - 1; i++) {
       int minIndex = i;
+      steps.add(SortingStep(index1: minIndex, index2: minIndex, action: SortingStatus.temporary));
 
       for (int j = i + 1; j < arr.length; j++) {
         steps.add(SortingStep(index1: minIndex, index2: j, action: SortingStatus.compared));
 
         if (arr[j] < arr[minIndex]) {
-          final previousIndex = minIndex;
-          if (minIndex != i) {
-            steps.add(SortingStep(index1: previousIndex, index2: previousIndex, action: SortingStatus.none));
-          }
           minIndex = j;
+          steps.add(SortingStep(index1: minIndex, index2: minIndex, action: SortingStatus.temporary));
         }
-
-        steps.add(SortingStep(index1: minIndex, index2: j, action: SortingStatus.none));
       }
 
       if (minIndex != i) {
@@ -34,6 +58,7 @@ class SelectionSortNotifier extends SortingNotifier {
 
         arr.swap(minIndex, i);
       }
+      steps.add(SortingStep(index1: i, index2: i, action: SortingStatus.sorted));
     }
 
     return SortingResult(sortedValues: arr, steps: steps);
