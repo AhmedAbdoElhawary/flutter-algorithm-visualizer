@@ -1,7 +1,6 @@
 import 'package:algorithm_visualizer/core/resources/strings_manager.dart';
 import 'package:algorithm_visualizer/features/visualize/helper/o_notation.dart';
 import 'package:algorithm_visualizer/features/visualize/sub_view/sorting/view_model/sorting_notifier.dart';
-import 'package:collection/collection.dart';
 
 class MergeSortNotifier extends SortingNotifier {
   @override
@@ -12,40 +11,58 @@ class MergeSortNotifier extends SortingNotifier {
     final steps = <SortingStep>[];
     final arr = List<int>.from(values);
 
-    void mergeInPlace(int left, int mid, int right) {
-      int i = left;
-      int j = mid + 1;
+    if (arr.isEmpty) return SortingResult(sortedValues: [], steps: []);
 
-      while (i <= mid && j <= right) {
-        steps.add(SortingStep(index1: i, index2: j, action: SortingStatus.compared));
-        steps.add(SortingStep(index1: i, index2: j, action: SortingStatus.none));
+    if (arr.length == 1) {
+      return SortingResult(
+        steps: [SortingStep(index1: 0, index2: 0, action: SortingStatus.sorted)],
+        sortedValues: [arr[0]],
+      );
+    }
 
-        if (arr[i] <= arr[j]) {
-          i++;
+    List<int> mergeTwoSortedLists(List<int> left, List<int> right) {
+      final  List<int> result = [];
+
+      int leftIndex = 0;
+      int rightIndex = 0;
+
+      while (leftIndex < left.length && rightIndex < right.length) {
+        if (left[leftIndex] < right[rightIndex]) {
+          result.add(left[leftIndex]);
+          leftIndex++;
         } else {
-          int k = j;
-          while (k > i) {
-            steps.add(SortingStep(index1: k, index2: k - 1, action: SortingStatus.swapping));
-            arr.swap(k, k - 1);
-            k--;
-          }
-          i++;
-          mid++;
-          j++;
+          result.add(right[rightIndex]);
+          rightIndex++;
         }
       }
-    }
 
-    void mergeSort(int left, int right) {
-      if (left < right) {
-        final mid = (left + right) >> 1;
-        mergeSort(left, mid);
-        mergeSort(mid + 1, right);
-        mergeInPlace(left, mid, right);
+      while (leftIndex < left.length) {
+        result.add(left[leftIndex]);
+        leftIndex++;
       }
+      while (rightIndex < right.length) {
+        result.add(right[rightIndex]);
+        rightIndex++;
+      }
+
+      return result;
     }
 
-    if (arr.isNotEmpty) mergeSort(0, arr.length - 1);
+    List<int> mergeSort(List<int> arr) {
+      if (arr.length <= 1) return arr;
+      final midIndex = arr.length ~/ 2;
+
+      for(final i in arr.sublist(0,midIndex)){
+        steps.add(SortingStep(index1: arr.indexOf(i), index2: arr.indexOf(i), action: SortingStatus.temporary));
+      }
+
+      final left = mergeSort(arr.sublist(0, midIndex));
+      final right = mergeSort(arr.sublist(midIndex));
+
+      return mergeTwoSortedLists(left, right);
+    }
+
+    mergeSort(arr);
 
     return SortingResult(sortedValues: arr, steps: steps);
   }
