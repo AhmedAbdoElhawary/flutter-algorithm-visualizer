@@ -133,7 +133,8 @@ abstract class SortingNotifier extends Notifier<SortingNotifierState>
     return initialText;
   }
 
-  Duration get _speedDuration => state.speed.stepSortingDuration;
+  @protected
+  Duration get speedDuration => state.speed.stepSortingDuration;
   int get _size => state.size;
 
   SortingEnum get _getOperation => state.operationStatus;
@@ -369,7 +370,7 @@ abstract class SortingNotifier extends Notifier<SortingNotifierState>
           list[step.index1] = list[step.index1].copyWith(sortedStatus: SortingStatus.compared);
           list[step.index2] = list[step.index2].copyWith(sortedStatus: SortingStatus.compared);
           state = state.copyWith(list: List.of(list), positions: positions, currentStep: step);
-          await Future.delayed(_speedDuration);
+          await Future.delayed(speedDuration);
           break;
 
         case SortingStatus.swapping:
@@ -383,7 +384,7 @@ abstract class SortingNotifier extends Notifier<SortingNotifierState>
           positions[id1] = positions[id2]!;
           positions[id2] = tempPosition;
           state = state.copyWith(list: List.of(list), positions: positions, currentStep: step);
-          await Future.delayed(_speedDuration);
+          await Future.delayed(speedDuration);
 
           break;
 
@@ -392,7 +393,7 @@ abstract class SortingNotifier extends Notifier<SortingNotifierState>
           list[step.index2] = list[step.index2].copyWith(sortedStatus: SortingStatus.sorted);
           state = state.copyWith(list: List.of(list), positions: positions, currentStep: step);
 
-          await Future.delayed(_speedDuration);
+          await Future.delayed(speedDuration);
 
           break;
 
@@ -401,7 +402,7 @@ abstract class SortingNotifier extends Notifier<SortingNotifierState>
           list[step.index2] = list[step.index2].copyWith(sortedStatus: SortingStatus.temporary);
           state = state.copyWith(list: List.of(list), positions: positions, currentStep: step);
 
-          await Future.delayed(_speedDuration);
+          await Future.delayed(speedDuration);
 
           break;
 
@@ -412,7 +413,7 @@ abstract class SortingNotifier extends Notifier<SortingNotifierState>
           break;
       }
 
-      await Future.delayed(_speedDuration);
+      await Future.delayed(speedDuration);
       state = state.copyWith(currentStepIndex: i + 1);
 
       // clear the last color, as it became in his color until it's overwrite with green color
@@ -420,12 +421,12 @@ abstract class SortingNotifier extends Notifier<SortingNotifierState>
         list[step.index1] = list[step.index1].copyWith(sortedStatus: SortingStatus.none);
         list[step.index2] = list[step.index2].copyWith(sortedStatus: SortingStatus.none);
         state = state.copyWith(list: List.of(list), positions: positions, currentStep: step);
-        await Future.delayed(_speedDuration);
+        await Future.delayed(speedDuration);
       }
     }
 
     state = state.copyWith(currentStepIndex: steps.length, currentStep: SortingStep.noneStep());
-    await Future.delayed(_speedDuration);
+    await Future.delayed(speedDuration);
     await greenSortedItemsAsDone();
     _isPlayingFun = false;
   }
