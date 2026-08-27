@@ -229,7 +229,8 @@ abstract class SortingNotifier extends Notifier<SortingNotifierState>
     _initializePositions();
   }
 
-  void _ensureStepsGenerated() {
+  @protected
+  void ensureStepsGenerated() {
     if (state.sortedSteps.isNotEmpty) return;
 
     final values = state.list.map((e) => e.value).toList();
@@ -279,7 +280,7 @@ abstract class SortingNotifier extends Notifier<SortingNotifierState>
   void stepForward() {
     if (state.isPlaying) return;
 
-    _ensureStepsGenerated();
+    ensureStepsGenerated();
 
     final steps = state.sortedSteps;
     final next = state.currentStepIndex + 1;
@@ -293,7 +294,7 @@ abstract class SortingNotifier extends Notifier<SortingNotifierState>
       currentStep: next > 0 ? steps[next - 1] : SortingStep.noneStep(),
     );
 
-    if (next == steps.length) _greenSortedItemsAsDone();
+    if (next == steps.length) greenSortedItemsAsDone();
   }
 
   @override
@@ -315,7 +316,8 @@ abstract class SortingNotifier extends Notifier<SortingNotifierState>
     );
   }
 
-  Future<void> _greenSortedItemsAsDone() async {
+  @protected
+  Future<void> greenSortedItemsAsDone() async {
     final list = List<SortableItem>.from(state.list);
     for (int i = 0; i < list.length; i++) {
       list[i] = list[i].copyWith(sortedStatus: SortingStatus.sorted);
@@ -326,18 +328,19 @@ abstract class SortingNotifier extends Notifier<SortingNotifierState>
 
   Future<void> _startSelectedSorting() async {
     try {
-      await _buildSort();
+      await updateVisualizeSorting();
     } catch (e) {
       /// TODO: create cancel variable and cancel it when dispose
       debugPrint("something wrong with sorting: $e");
     }
   }
 
-  Future<void> _buildSort() async {
+  @protected
+  Future<void> updateVisualizeSorting() async {
     if (_isPlayingFun) return;
     _isPlayingFun = true;
 
-    _ensureStepsGenerated();
+    ensureStepsGenerated();
     final steps = state.sortedSteps;
 
     final list = List<SortableItem>.from(state.list);
@@ -423,7 +426,7 @@ abstract class SortingNotifier extends Notifier<SortingNotifierState>
 
     state = state.copyWith(currentStepIndex: steps.length, currentStep: SortingStep.noneStep());
     await Future.delayed(_speedDuration);
-    await _greenSortedItemsAsDone();
+    await greenSortedItemsAsDone();
     _isPlayingFun = false;
   }
 
