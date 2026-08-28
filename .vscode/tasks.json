@@ -1,0 +1,11 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Dart: Apply Fixes",
+      "type": "shell",
+      "command": "dart fix --apply",
+      "problemMatcher": []
+    }
+  ]
+}

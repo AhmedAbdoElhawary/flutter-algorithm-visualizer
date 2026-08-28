@@ -1,0 +1,14 @@
+{
+  "emeraldwalk.runonsave": {
+    "commands": [
+      {
+        "match": "\\.dart$",
+        "cmd": "dart format ${file}"
+      },
+      {
+        "match": "\\.dart$",
+        "cmd": "dart fix --apply ${file}"
+      }
+    ]
+  }
+}

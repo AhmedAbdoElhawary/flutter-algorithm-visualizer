@@ -6,7 +6,7 @@ import 'package:algorithm_visualizer/core/widgets/adaptive/text/adaptive_text.da
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/custom_icon.dart';
 import 'package:algorithm_visualizer/features/challenge/domain/entities/coding_problem.dart';
 import 'package:algorithm_visualizer/features/challenge/domain/enums/problem.dart';
-import 'package:algorithm_visualizer/features/challenge/presentation/view_model/challenges/problems_notifier.dart';
+import 'package:algorithm_visualizer/features/challenge/presentation/view_model/challenges/problems_providers.dart';
 import 'package:algorithm_visualizer/features/challenge/presentation/widgets/challenges/bookmark_button.dart';
 import 'package:algorithm_visualizer/features/challenge/presentation/widgets/challenges/challenge_tags.dart';
 import 'package:algorithm_visualizer/features/profile/presentation/widgets/profile_practice_history.dart';

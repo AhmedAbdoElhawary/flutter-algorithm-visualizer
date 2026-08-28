@@ -39,10 +39,4 @@ class ProblemRepositoryImpl implements ProblemRepository {
   Future<void> deleteProblem(int problemId) async {
     await dataSource.deleteProblem(problemId);
   }
-
-  // @override
-  // Future<CodingProblem?> getProblem(int problemId) async {
-  //   final problem = dataSource.getProblem(problemId);
-  //   return problem != null ? ProblemMapper.toDomain(problem) : null;
-  // }
 }

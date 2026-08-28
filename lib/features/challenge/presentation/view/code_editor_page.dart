@@ -1,7 +1,7 @@
 import 'package:algorithm_visualizer/core/resources/strings_manager.dart';
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/code_editor.dart';
 import 'package:algorithm_visualizer/features/challenge/domain/entities/coding_problem.dart';
-import 'package:algorithm_visualizer/features/challenge/presentation/view_model/challenges/challenges_providers.dart';
+import 'package:algorithm_visualizer/features/challenge/presentation/view_model/challenges/problems_providers.dart';
 import 'package:algorithm_visualizer/features/challenge/presentation/view_model/code_editor/code_editor_providers.dart';
 import 'package:algorithm_visualizer/features/challenge/presentation/widgets/challenges/empty_state.dart';
 import 'package:algorithm_visualizer/features/challenge/presentation/widgets/challenges/error_state.dart';

@@ -1,6 +1,6 @@
 import 'package:algorithm_visualizer/features/challenge/domain/entities/coding_problem.dart';
 import 'package:algorithm_visualizer/features/challenge/domain/enums/problem.dart';
-import 'package:algorithm_visualizer/features/challenge/presentation/view_model/challenges/problems_notifier.dart';
+import 'package:algorithm_visualizer/features/challenge/presentation/view_model/challenges/problems_providers.dart';
 import 'package:algorithm_visualizer/features/profile/presentation/entities/profile_statistics.dart';
 import 'package:riverpod/riverpod.dart';
 
@@ -10,7 +10,7 @@ import '../../entities/recent_submission.dart';
 part 'profile_statistics_calculator.dart';
 
 final profileStatisticsCalculatorProvider =
-    Provider<_ProfileStatisticsCalculator>((ref) => const _ProfileStatisticsCalculator());
+    Provider<ProfileStatisticsCalculator>((ref) => const ProfileStatisticsCalculator());
 
 final profileStatisticsProvider = Provider<ProfileStatistics>((ref) {
   final asyncProblems = ref.watch(problemsProvider);
