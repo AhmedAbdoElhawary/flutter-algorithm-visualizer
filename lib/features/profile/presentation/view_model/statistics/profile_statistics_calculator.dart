@@ -63,9 +63,7 @@ class _ProfileStatisticsCalculator {
       }
     }
 
-    submissions.sort(
-      (a, b) => b.submittedAt.compareTo(a.submittedAt),
-    );
+    submissions.sort((a, b) => b.submittedAt.compareTo(a.submittedAt));
 
     final recent = submissions.take(8).toList();
     final practiceHistory = _computePracticeHistory(submissions);
