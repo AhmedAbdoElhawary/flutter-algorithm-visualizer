@@ -1,7 +1,5 @@
 import 'package:algorithm_visualizer/features/challenge/domain/enums/problem.dart';
-import 'package:flutter/foundation.dart';
 
-@immutable
 class ChallengesState {
   final ProblemDifficulty? filter;
   final String search;
