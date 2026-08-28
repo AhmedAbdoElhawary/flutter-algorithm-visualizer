@@ -5,7 +5,6 @@ import 'package:algorithm_visualizer/core/widgets/custom_widgets/algo_tab.dart';
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/algorithm_control.dart';
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/algorithm_status_text.dart';
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/complexity_details.dart';
-import 'package:algorithm_visualizer/features/base/view_model/algorithm_description_interface.dart';
 import 'package:algorithm_visualizer/features/base/view_model/base_view_model.dart';
 import 'package:algorithm_visualizer/features/visualize/helper/playback_speed.dart';
 import 'package:algorithm_visualizer/features/visualize/sub_view/sorting/view_model/sorting_notifier.dart';
@@ -74,7 +73,6 @@ class _SortingPageState extends ConsumerState<SortingView> {
   @override
   Widget build(BuildContext context) {
     final complexity = ref.read(instance.notifier).algoComplexity;
-    final codeSnippet = ref.read(instance.notifier).code;
 
     return CustomScrollView(
       physics: BouncingScrollPhysics(),

@@ -4,6 +4,8 @@ import 'package:algorithm_visualizer/features/visualize/sub_view/sorting/view_mo
 import 'package:collection/collection.dart';
 
 class SelectionSortNotifier extends SortingNotifier {
+
+
   @override
   String statusText({
     required SortingStep? previousStep,
