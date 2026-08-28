@@ -5,6 +5,7 @@ import 'package:algorithm_visualizer/core/widgets/custom_widgets/algo_tab.dart';
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/algorithm_control.dart';
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/algorithm_status_text.dart';
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/complexity_details.dart';
+import 'package:algorithm_visualizer/features/base/view_model/algorithm_description_interface.dart';
 import 'package:algorithm_visualizer/features/base/view_model/base_view_model.dart';
 import 'package:algorithm_visualizer/features/visualize/helper/playback_speed.dart';
 import 'package:algorithm_visualizer/features/visualize/sub_view/sorting/view_model/sorting_notifier.dart';
@@ -73,12 +74,13 @@ class _SortingPageState extends ConsumerState<SortingView> {
   @override
   Widget build(BuildContext context) {
     final complexity = ref.read(instance.notifier).algoComplexity;
+    final codeSnippet = ref.read(instance.notifier).code;
 
     return CustomScrollView(
-      physics: NeverScrollableScrollPhysics(),
+      physics: BouncingScrollPhysics(),
       slivers: [
         SliverPadding(
-          padding: REdgeInsetsDirectional.only(top: 10, bottom: 10),
+          padding: REdgeInsetsDirectional.only(bottom: 10),
           sliver: SliverToBoxAdapter(
             child: _SortingSelectionList(
                 card: card,
@@ -99,6 +101,15 @@ class _SortingPageState extends ConsumerState<SortingView> {
           sliver: SliverToBoxAdapter(child: _StatusText(instance)),
         ),
         SliverToBoxAdapter(child: _SortingControlButtons(instance)),
+        // SliverToBoxAdapter(child: Consumer(builder: (context, ref, child) {
+        //   final currentStep = ref.watch(instance.select((s) => s.currentStep));
+        //   final currentLine =
+        //       currentStep == null ? -1 : ref.read(instance.notifier).codeLineForStep(currentStep);
+        //   final title = ref.read(instance.notifier).algoComplexity.name.getNameWithLanguageName;
+        //
+        //   return LiveCodeSnippet(code: codeSnippet, currentLine: currentLine, title: title);
+        // })),
+        SliverToBoxAdapter(child: SizedBox(height: 50)),
       ],
     );
   }
