@@ -20,7 +20,7 @@ final homeDataProvider = Provider<HomeData>((ref) {
 
   return asyncProblems.when(
     data: (problems) {
-      final greeting = _computeGreeting();
+      final greeting = computeGreeting();
       final continueProblem = _findContinueProblem(problems);
 
       return HomeData(
@@ -29,17 +29,17 @@ final homeDataProvider = Provider<HomeData>((ref) {
       );
     },
     loading: () => HomeData(
-      greeting: _computeGreeting(),
+      greeting: computeGreeting(),
       continueProblem: null,
     ),
     error: (_, __) => HomeData(
-      greeting: _computeGreeting(),
+      greeting: computeGreeting(),
       continueProblem: null,
     ),
   );
 });
 
-String _computeGreeting() {
+String computeGreeting() {
   final hour = DateTime.now().hour;
   if (hour < 12) return StringsManager.goodMorning;
   if (hour < 17) return StringsManager.goodAfternoon;
