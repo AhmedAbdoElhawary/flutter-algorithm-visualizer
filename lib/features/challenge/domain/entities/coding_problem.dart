@@ -156,7 +156,6 @@ class CodingProblem {
   bool operator ==(Object other) =>
       identical(this, other) ||
       other is CodingProblem &&
-          runtimeType == other.runtimeType &&
           number == other.number &&
           problemId == other.problemId &&
           name == other.name &&
@@ -169,11 +168,11 @@ class CodingProblem {
 
   @override
   int get hashCode => Object.hash(
-        runtimeType,
         number,
         problemId,
         name,
         source,
+        sourceProblemNumber,
         difficulty,
         category,
         problemStatus,
@@ -186,7 +185,7 @@ extension CodingProblemX on CodingProblem {
   int get getProblemId => problemId ?? -1;
   String get getName => name ?? '';
 
-  String get getNameWithLanguageName =>getName.getNameWithLanguageName;
+  String get getNameWithLanguageName => getName.getNameWithLanguageName;
 
   String get getSource => source ?? '';
   int get getSourceProblemNumber => sourceProblemNumber ?? -1;
