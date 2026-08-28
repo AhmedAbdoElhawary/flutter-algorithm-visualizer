@@ -137,13 +137,13 @@ void main() {
 
   group('ProfileStorageNotifier', () {
     test('build() loads the username from storage', () {
-      // Arrange
+      
       storage.saveProfileName("Ahmed");
 
-      // Act
+      
       final state = container.read(profileStorageProvider);
 
-      // Assert
+      
       expect(state.username, 'Ahmed');
     });
 
@@ -153,101 +153,101 @@ void main() {
     });
 
     test('updateName() updates the state username', () async {
-// Arrange
+
       final notifier = container.read(profileStorageProvider.notifier);
 
-// Act
+
       await notifier.updateName('Ahmed');
 
-// Assert
+
       expect(container.read(profileStorageProvider).username, 'Ahmed');
     });
 
     test('updateName() saves the username to storage', () async {
-// Arrange
+
       final notifier = container.read(profileStorageProvider.notifier);
 
-// Act
+
       await notifier.updateName('Ahmed');
 
-// Assert
+
       expect(storage.getProfileName(), 'Ahmed');
     });
 
     test('updateName() updates the state before the save completes', () async {
-// Arrange
+
       final notifier = container.read(profileStorageProvider.notifier);
 
-// Act
+
       final saveFuture = notifier.updateName('Ahmed');
 
-// Assert
+
       expect(container.read(profileStorageProvider).username, 'Ahmed');
 
       await saveFuture;
     });
     test('updateName() allows an empty username', () async {
-// Arrange
+
       final notifier = container.read(profileStorageProvider.notifier);
 
-// Act
+
       await notifier.updateName('Ahmed');
       await notifier.updateName('');
 
-// Assert
+
       expect(container.read(profileStorageProvider).username, 'Ahmed');
       expect(storage.getProfileName(), 'Ahmed');
     });
 
     test('updateName() doesn\'t allows an empty username', () async {
-// Arrange
+
       final notifier = container.read(profileStorageProvider.notifier);
 
-// Act
+
       await notifier.updateName('Ahmed');
       await notifier.updateName('');
 
-// Assert
+
       expect(container.read(profileStorageProvider).username, 'Ahmed');
       expect(storage.getProfileName(), 'Ahmed');
     });
 
     test('updateName() doesn\'t allows a whitespace username', () async {
-// Arrange
+
       final notifier = container.read(profileStorageProvider.notifier);
 
-// Act
+
       await notifier.updateName('Ahmed');
       await notifier.updateName('   ');
-// Assert
+
       expect(container.read(profileStorageProvider).username, 'Ahmed');
       expect(storage.getProfileName(), 'Ahmed');
     });
     test('updateName() remove prefix and suffix whitespaces username', () async {
-// Arrange
+
       final notifier = container.read(profileStorageProvider.notifier);
 
-// Act
+
       await notifier.updateName(' Ahmed ');
-// Assert
+
       expect(container.read(profileStorageProvider).username, 'Ahmed');
       expect(storage.getProfileName(), 'Ahmed');
     });
 
     test('updateName() allows unicode usernames', () async {
-// Arrange
+
       final notifier = container.read(profileStorageProvider.notifier);
 
-// Act
+
       await notifier.updateName('أحمد');
 
-// Assert
+
       expect(container.read(profileStorageProvider).username, 'أحمد');
       expect(storage.getProfileName(), 'أحمد');
     });
 
     test('updateName() replaces the previous username', () async {
-// Arrange
+
       storage.saveProfileName("Ahmed");
 
       final notifier = container.read(profileStorageProvider.notifier);
@@ -255,24 +255,24 @@ void main() {
 // Make sure the provider is built first.
       expect(container.read(profileStorageProvider).username, 'Ahmed');
 
-// Act
+
       await notifier.updateName('Mohamed');
 
-// Assert
+
       expect(container.read(profileStorageProvider).username, 'Mohamed');
       expect(storage.getProfileName(), 'Mohamed');
     });
 
     test('multiple updateName() calls keep the latest username', () async {
-// Arrange
+
       final notifier = container.read(profileStorageProvider.notifier);
 
-// Act
+
       await notifier.updateName('Ahmed');
       await notifier.updateName('Mohamed');
       await notifier.updateName('Ali');
 
-// Assert
+
       expect(container.read(profileStorageProvider).username, 'Ali');
       expect(storage.getProfileName(), 'Ali');
     });
