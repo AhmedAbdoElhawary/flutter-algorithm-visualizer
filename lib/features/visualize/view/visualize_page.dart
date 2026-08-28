@@ -92,7 +92,7 @@ class _VisualizePageState extends State<VisualizePage> {
           ),
           SliverToBoxAdapter(
             child: Padding(
-              padding: REdgeInsets.symmetric(horizontal: 16),
+              padding: REdgeInsets.only(left: 16, right: 16,bottom: 10),
               child: Row(
                 children: [
                   Expanded(
