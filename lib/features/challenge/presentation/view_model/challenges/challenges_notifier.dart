@@ -3,10 +3,10 @@ import 'package:algorithm_visualizer/features/challenge/domain/enums/problem.dar
 import 'package:algorithm_visualizer/features/challenge/domain/repositories/problem_repository.dart';
 import 'package:algorithm_visualizer/features/challenge/domain/usecases/grade_code_usecase.dart';
 import 'package:algorithm_visualizer/features/challenge/domain/usecases/update_problem_solution_usecase.dart';
+import 'package:algorithm_visualizer/features/challenge/presentation/view_model/challenges/problems_providers.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'challenges_state.dart';
-import 'problems_notifier.dart';
 
 class ChallengesNotifier extends Notifier<ChallengesState> {
   static const filters = ProblemDifficulty.values;
