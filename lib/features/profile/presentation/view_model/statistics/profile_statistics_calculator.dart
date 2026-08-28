@@ -1,7 +1,7 @@
 part of 'profile_statistics_provider.dart';
 
-class _ProfileStatisticsCalculator {
-  const _ProfileStatisticsCalculator();
+class ProfileStatisticsCalculator {
+  const ProfileStatisticsCalculator();
 
   ProfileStatistics computeStats(List<CodingProblem> problems) {
     var solvedCount = 0;
@@ -63,9 +63,7 @@ class _ProfileStatisticsCalculator {
       }
     }
 
-    submissions.sort(
-      (a, b) => b.submittedAt.compareTo(a.submittedAt),
-    );
+    submissions.sort((a, b) => b.submittedAt.compareTo(a.submittedAt));
 
     final recent = submissions.take(8).toList();
     final practiceHistory = _computePracticeHistory(submissions);

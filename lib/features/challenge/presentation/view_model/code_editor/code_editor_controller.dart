@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:algorithm_visualizer/core/custom_packages/custom_code_editor/src/editor/code_controller.dart';
 import 'package:algorithm_visualizer/features/challenge/domain/entities/coding_problem.dart';
 import 'package:algorithm_visualizer/features/challenge/domain/usecases/grade_code_usecase.dart';
-import 'package:algorithm_visualizer/features/challenge/presentation/view_model/challenges/challenges_providers.dart';
+import 'package:algorithm_visualizer/features/challenge/presentation/view_model/challenges/problems_providers.dart';
 import 'package:algorithm_visualizer/features/challenge/presentation/view_model/code_editor/code_editor_state.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -57,9 +57,7 @@ class CodeEditorController extends Notifier<CodeEditorState> {
     if (con == null) {
       /// todo: test this
 
-      throw StateError(
-        'CodeControllerRunnerRepository: no CodeController attached yet.',
-      );
+      throw StateError('CodeControllerRunnerRepository: no CodeController attached yet.');
     }
     return con;
   }
