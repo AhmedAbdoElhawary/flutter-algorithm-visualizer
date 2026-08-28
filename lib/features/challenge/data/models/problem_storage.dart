@@ -26,13 +26,12 @@ class ProblemStorageDTO {
   bool operator ==(Object other) =>
       identical(this, other) ||
       other is ProblemStorageDTO &&
-          runtimeType == other.runtimeType &&
           problemId == other.problemId &&
           problemStatus == other.problemStatus &&
           isBookmarked == other.isBookmarked;
 
   @override
-  int get hashCode => Object.hash(runtimeType, problemId, problemStatus, isBookmarked);
+  int get hashCode => Object.hash(problemId, problemStatus, isBookmarked);
 }
 
 @JsonSerializable()
