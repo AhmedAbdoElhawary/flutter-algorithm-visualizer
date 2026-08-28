@@ -27,7 +27,7 @@ class HomePage extends ConsumerWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    HomeHeader(),
+                    const HomeHeader(),
                     const HomeStatsStrip(),
                     const ProfileWeeklyChart(),
                     const HomeDifficultyProgress(),

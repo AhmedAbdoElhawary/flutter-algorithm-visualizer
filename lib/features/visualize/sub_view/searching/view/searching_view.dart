@@ -77,7 +77,7 @@ class _VisualizerScreenState extends ConsumerState<SearchingView> {
       physics: NeverScrollableScrollPhysics(),
       slivers: [
         SliverPadding(
-          padding: REdgeInsets.symmetric(vertical: 10),
+          padding: REdgeInsets.only(bottom: 10),
           sliver: SliverToBoxAdapter(
             child: Row(
               children: List.generate(
@@ -124,6 +124,8 @@ class _VisualizerScreenState extends ConsumerState<SearchingView> {
         //   padding: REdgeInsetsDirectional.only(top: 10, bottom: 10),
         //   sliver: SliverToBoxAdapter(child: _LiveCodeSnippet(instance)),
         // ),
+        SliverToBoxAdapter(child: SizedBox(height: 50)),
+
       ],
     );
   }
