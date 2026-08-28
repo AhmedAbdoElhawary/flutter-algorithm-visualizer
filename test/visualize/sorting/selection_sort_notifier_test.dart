@@ -216,21 +216,35 @@ void main() {
     });
   });
 
-  group('selection sort information', () {
-    test('algorithmComplexity for selection sort', () {
-      final complexity = notifier.algoComplexity;
+  group('algorithmComplexity for selection sort', () {
+    final complexity = notifier.algoComplexity;
 
+    test('name for selection sort', () {
       expect(complexity.name, StringsManager.selectionSort);
-      expect(complexity.bestTimeComplexity, ONotationComplexity.n2);
-      expect(complexity.averageTimeComplexity, ONotationComplexity.n2);
-      expect(complexity.worstTimeComplexity, ONotationComplexity.n2);
-      expect(complexity.spaceComplexity, ONotationComplexity.constant);
-      expect(complexity.stable, isFalse);
     });
 
-    test('algorithmDescription for selection sort', () {
-      final description = notifier.algorithmDescription;
+    test('best time complexity for selection sort', () {
+      expect(complexity.bestTimeComplexity, ONotationComplexity.n2);
+    });
 
+    test('average time complexity for selection sort', () {
+      expect(complexity.averageTimeComplexity, ONotationComplexity.n2);
+    });
+
+    test('worst time complexity for selection sort', () {
+      expect(complexity.worstTimeComplexity, ONotationComplexity.n2);
+    });
+
+    test('space complexity for selection sort', () {
+      expect(complexity.spaceComplexity, ONotationComplexity.constant);
+    });
+
+    test('stability for selection sort', () {
+      expect(complexity.stable, isTrue);
+    });
+
+    test('description for selection sort', () {
+      final description = notifier.algorithmDescription;
       expect(description, StringsManager.selectionSortDescription);
     });
   });
