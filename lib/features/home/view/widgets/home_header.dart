@@ -13,7 +13,7 @@ class HomeHeader extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     // in case i will add others to not rebuild it just to take the name
-    final name = ref.watch(userNameProvider.select((value) => value));
+    final name = ref.watch(profileStorageProvider.select((value) => value.username));
     final greeting = ref.watch(homeDataProvider.select((value) => value.greeting));
 
     return OnlyPadding(

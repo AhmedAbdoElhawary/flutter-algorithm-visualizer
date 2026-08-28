@@ -46,7 +46,7 @@ class _ProblemsNotifier extends Notifier<AsyncValue<List<CodingProblem>>> {
 
   void deleteProblem(int problemId) {
     state = state.whenData(
-      (problems) => problems.where((problem) => problem.problemId != problemId).toList(),
+      (problems) => problems.where((problem) => problem.problemId != problemId).toList()
     );
   }
 }
