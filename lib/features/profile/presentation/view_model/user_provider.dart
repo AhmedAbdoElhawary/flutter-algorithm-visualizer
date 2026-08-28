@@ -19,8 +19,10 @@ class ProfileStorageNotifier extends Notifier<ProfileStorageState> {
   }
 
   Future<void> updateName(String name) async {
-    state = state.copyWith(username: name);
-    await _storage.saveProfileName(name);
+    if (name.trim().isEmpty) return;
+
+    state = state.copyWith(username: name.trim());
+    await _storage.saveProfileName(name.trim());
   }
 }
 
@@ -30,7 +32,7 @@ class ProfileStorageState {
   ProfileStorageState({required this.username});
 
   factory ProfileStorageState.initial() {
-    return ProfileStorageState(username: _defaultName);
+    return ProfileStorageState(username: defaultName);
   }
 
   ProfileStorageState copyWith({String? username}) {
