@@ -29,6 +29,23 @@ class BubbleSortNotifier extends SortingNotifier {
     return SortingResult(sortedValues: arr, steps: steps);
   }
 
+  List<int> bubbleSort(List<int> arr) {
+    for (int i = 0; i < arr.length - 1; i++) {
+      bool isSorted = true;
+
+      for (int j = 0; j < arr.length - i - 1; j++) {
+        if (arr[j] > arr[j + 1]) {
+          arr.swap(j, j + 1);
+          isSorted = false;
+        }
+      }
+
+      if (isSorted) break;
+    }
+
+    return arr;
+  }
+
   static final algorithmComplexity = AlgorithmComplexity(
     name: StringsManager.bubbleSort,
     bestTimeComplexity: ONotationComplexity.n,
@@ -46,22 +63,19 @@ class BubbleSortNotifier extends SortingNotifier {
 
   @override
   List<String> get codeSnippet => const [
-        'void main() {', // 0
-        '  List<int> arr = [64, 34, 25, 12, 22, 11, 90];', // 1
-        '  int n = arr.length;', // 2
-        '  for (int i = 0; i < n - 1; i++) {', // 3
-        '    bool isSorted = true;', // 4
-        '    for (int j = 0; j < n - i - 1; j++) {', // 5
-        '      if (arr[j] > arr[j + 1]) {', // 6
-        '        int temp = arr[j];', // 7
-        '        arr[j] = arr[j + 1];', // 8
-        '        arr[j + 1] = temp;', // 9
-        '        isSorted = false;', // 10
-        '      }', // 11
-        '    }', // 12
-        '    if (isSorted) break;', // 13
-        '  }', // 14
-        '}', // 15
+        "List<int> bubbleSort(List<int> arr) {",
+        "  for (int i = 0; i < arr.length - 1; i++) {",
+        "    bool isSorted = true;",
+        "    for (int j = 0; j < arr.length - i - 1; j++) {",
+        "      if (arr[j] > arr[j + 1]) {",
+        "        arr.swap(j, j + 1);",
+        "        isSorted = false;",
+        "      }",
+        "    }",
+        "    if (isSorted) break;",
+        "  }",
+        "  return arr;",
+        "}",
       ];
 
   @override

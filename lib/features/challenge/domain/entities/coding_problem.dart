@@ -1,5 +1,4 @@
 import 'package:algorithm_visualizer/core/extensions/string.dart';
-import 'package:algorithm_visualizer/core/resources/strings_manager.dart';
 import 'package:algorithm_visualizer/features/challenge/data/models/custom_object.dart';
 import 'package:algorithm_visualizer/features/challenge/data/models/example.dart';
 import 'package:algorithm_visualizer/features/challenge/data/models/function_signature.dart';
@@ -187,14 +186,7 @@ extension CodingProblemX on CodingProblem {
   int get getProblemId => problemId ?? -1;
   String get getName => name ?? '';
 
-  String get getNameWithLanguageName {
-    final snakeCase = getName.toSnakeCase.replaceAll(RegExp(r'\s+'), '_').toLowerCase();
-    final parts = snakeCase.split('_');
-    while (parts.join('_').length >= 20 && parts.length > 1) {
-      parts.removeLast();
-    }
-    return "${parts.join('_')}.${StringsManager.dart.toLowerCase()}";
-  }
+  String get getNameWithLanguageName =>getName.getNameWithLanguageName;
 
   String get getSource => source ?? '';
   int get getSourceProblemNumber => sourceProblemNumber ?? -1;
