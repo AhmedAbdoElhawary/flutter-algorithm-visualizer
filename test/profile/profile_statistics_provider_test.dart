@@ -1,7 +1,7 @@
 import 'package:algorithm_visualizer/features/challenge/data/models/problem_storage.dart';
 import 'package:algorithm_visualizer/features/challenge/domain/entities/coding_problem.dart';
 import 'package:algorithm_visualizer/features/challenge/domain/enums/problem.dart';
-import 'package:algorithm_visualizer/features/challenge/presentation/view_model/challenges/problems_notifier.dart';
+import 'package:algorithm_visualizer/features/challenge/presentation/view_model/challenges/problems_providers.dart';
 import 'package:algorithm_visualizer/features/profile/presentation/entities/profile_statistics.dart';
 import 'package:algorithm_visualizer/features/profile/presentation/view_model/statistics/profile_statistics_provider.dart';
 import 'package:flutter_test/flutter_test.dart';
