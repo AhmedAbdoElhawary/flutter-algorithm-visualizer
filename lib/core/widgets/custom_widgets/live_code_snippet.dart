@@ -4,15 +4,16 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class LiveCodeSnippet extends ConsumerWidget {
-  const LiveCodeSnippet({required this.currentLine, required this.code, super.key});
+  const LiveCodeSnippet({required this.title, required this.currentLine, required this.code, super.key});
 
   final String code;
   final int currentLine;
+  final String title;
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Padding(
       padding: REdgeInsets.symmetric(horizontal: 16),
-      child: CodeEditorBlock(code: code, title: ""),
+      child: CodeEditorBlock(code: code, title: title,highlightLineNumber: currentLine),
     );
   }
 }
