@@ -1,7 +1,7 @@
 part of 'profile_statistics_provider.dart';
 
-class _ProfileStatisticsCalculator {
-  const _ProfileStatisticsCalculator();
+class ProfileStatisticsCalculator {
+  const ProfileStatisticsCalculator();
 
   ProfileStatistics computeStats(List<CodingProblem> problems) {
     var solvedCount = 0;
