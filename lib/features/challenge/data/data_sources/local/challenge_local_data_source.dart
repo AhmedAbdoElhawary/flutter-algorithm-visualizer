@@ -23,6 +23,8 @@ class ProblemLocalDataSource {
   }
 
   Future<void> saveProblem(ProblemStorageDTO problem) async {
+    if (problem.problemId == null) throw StateError('Problem id cannot be nullable');
+
     final problems = getProblems();
 
     final exists = problems.any((item) => item.problemId == problem.problemId);

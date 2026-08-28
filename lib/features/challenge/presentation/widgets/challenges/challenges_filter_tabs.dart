@@ -4,6 +4,7 @@ import 'package:algorithm_visualizer/features/challenge/domain/enums/problem.dar
 import 'package:algorithm_visualizer/features/challenge/presentation/helper/problem_style.dart';
 import 'package:algorithm_visualizer/features/challenge/presentation/view_model/challenges/challenges_notifier.dart';
 import 'package:algorithm_visualizer/features/challenge/presentation/view_model/challenges/challenges_providers.dart';
+import 'package:algorithm_visualizer/features/challenge/presentation/view_model/challenges/problems_providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';

@@ -1,6 +1,6 @@
 import 'package:algorithm_visualizer/core/resources/strings_manager.dart';
 import 'package:algorithm_visualizer/features/challenge/domain/entities/coding_problem.dart';
-import 'package:algorithm_visualizer/features/challenge/presentation/view_model/challenges/problems_notifier.dart';
+import 'package:algorithm_visualizer/features/challenge/presentation/view_model/challenges/problems_providers.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 /// no needed to over engineer and separate theme, just to be different than others view model, but it's clear and not complicated here
@@ -20,7 +20,7 @@ final homeDataProvider = Provider<HomeData>((ref) {
 
   return asyncProblems.when(
     data: (problems) {
-      final greeting = _computeGreeting();
+      final greeting = computeGreeting();
       final continueProblem = _findContinueProblem(problems);
 
       return HomeData(
@@ -29,17 +29,17 @@ final homeDataProvider = Provider<HomeData>((ref) {
       );
     },
     loading: () => HomeData(
-      greeting: _computeGreeting(),
+      greeting: computeGreeting(),
       continueProblem: null,
     ),
     error: (_, __) => HomeData(
-      greeting: _computeGreeting(),
+      greeting: computeGreeting(),
       continueProblem: null,
     ),
   );
 });
 
-String _computeGreeting() {
+String computeGreeting() {
   final hour = DateTime.now().hour;
   if (hour < 12) return StringsManager.goodMorning;
   if (hour < 17) return StringsManager.goodAfternoon;
