@@ -13,6 +13,9 @@ void main() {
     notifier = SelectionSortNotifier();
   });
 
+  // tearDownAll(() {
+  //   notifier.dispose();
+  // },);
   group('Test sorting for selection sort', () {
     test('empty items for selection sort', () {
       final result = notifier.buildSorting([]);
@@ -217,29 +220,39 @@ void main() {
   });
 
   group('algorithmComplexity for selection sort', () {
-    final complexity = notifier.algoComplexity;
-
     test('name for selection sort', () {
+      final complexity = notifier.algoComplexity;
+
       expect(complexity.name, StringsManager.selectionSort);
     });
 
     test('best time complexity for selection sort', () {
+      final complexity = notifier.algoComplexity;
+
       expect(complexity.bestTimeComplexity, ONotationComplexity.n2);
     });
 
     test('average time complexity for selection sort', () {
+      final complexity = notifier.algoComplexity;
+
       expect(complexity.averageTimeComplexity, ONotationComplexity.n2);
     });
 
     test('worst time complexity for selection sort', () {
+      final complexity = notifier.algoComplexity;
+
       expect(complexity.worstTimeComplexity, ONotationComplexity.n2);
     });
 
     test('space complexity for selection sort', () {
+      final complexity = notifier.algoComplexity;
+
       expect(complexity.spaceComplexity, ONotationComplexity.constant);
     });
 
     test('stability for selection sort', () {
+      final complexity = notifier.algoComplexity;
+
       expect(complexity.stable, isTrue);
     });
 
