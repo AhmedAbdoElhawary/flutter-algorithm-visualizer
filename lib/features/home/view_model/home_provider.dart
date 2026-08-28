@@ -1,6 +1,6 @@
 import 'package:algorithm_visualizer/core/resources/strings_manager.dart';
 import 'package:algorithm_visualizer/features/challenge/domain/entities/coding_problem.dart';
-import 'package:algorithm_visualizer/features/challenge/presentation/view_model/challenges/problems_notifier.dart';
+import 'package:algorithm_visualizer/features/challenge/presentation/view_model/challenges/problems_providers.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 /// no needed to over engineer and separate theme, just to be different than others view model, but it's clear and not complicated here
