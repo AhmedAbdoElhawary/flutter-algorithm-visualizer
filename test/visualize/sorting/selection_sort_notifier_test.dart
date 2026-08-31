@@ -13,9 +13,6 @@ void main() {
     notifier = SelectionSortNotifier();
   });
 
-  // tearDownAll(() {
-  //   notifier.dispose();
-  // },);
   group('Test sorting for selection sort', () {
     test('empty items for selection sort', () {
       final result = notifier.buildSorting([]);
