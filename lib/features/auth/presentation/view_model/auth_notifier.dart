@@ -109,17 +109,6 @@ class AuthNotifier extends Notifier<AuthState> {
     state = state.copyWith(isConfirmNewPasswordVisible: !state.isConfirmNewPasswordVisible);
   }
 
-  // Demo auto-fill
-  void fillDemoAccount() {
-    state = state.copyWith(
-      email: 'ahmed@example.com',
-      password: 'password123',
-      clearEmailError: true,
-      clearPasswordError: true,
-      clearErrorMessage: true,
-    );
-  }
-
   // Validations
   bool validateEmail(String email) {
     final emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
