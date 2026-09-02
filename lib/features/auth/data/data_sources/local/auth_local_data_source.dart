@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:algorithm_visualizer/core/storage/storage.dart';
+import 'package:algorithm_visualizer/core/storage/get_storage_service.dart';
 import 'package:algorithm_visualizer/features/auth/data/models/auth_user_dto.dart';
 
 abstract class AuthLocalDataSource {
@@ -11,7 +11,7 @@ abstract class AuthLocalDataSource {
 }
 
 class AuthLocalDataSourceImpl implements AuthLocalDataSource {
-  final LocalStorage storage;
+  final GetStorageService storage;
 
   static const String _userKey = 'auth_current_user';
   static const String _tokenKey = 'auth_access_token';
