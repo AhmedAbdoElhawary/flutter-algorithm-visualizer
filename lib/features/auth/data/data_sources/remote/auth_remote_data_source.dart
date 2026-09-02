@@ -10,10 +10,9 @@ abstract class AuthRemoteDataSource {
 }
 
 class FirebaseAuthRemoteDataSourceImpl implements AuthRemoteDataSource {
-  final FirebaseAuth _firebaseAuth;
+  late final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
 
-  FirebaseAuthRemoteDataSourceImpl({FirebaseAuth? firebaseAuth})
-      : _firebaseAuth = firebaseAuth ?? FirebaseAuth.instance;
+  FirebaseAuthRemoteDataSourceImpl();
 
   @override
   Future<AuthUserDTO> login({required String email, required String password}) async {
