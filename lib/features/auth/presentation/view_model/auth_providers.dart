@@ -1,10 +1,10 @@
+import 'package:algorithm_visualizer/core/resources/strings_manager.dart';
 import 'package:algorithm_visualizer/core/storage/get_storage_service.dart';
 import 'package:algorithm_visualizer/features/auth/data/data_sources/local/auth_local_data_source.dart';
 import 'package:algorithm_visualizer/features/auth/data/data_sources/remote/auth_remote_data_source.dart';
 import 'package:algorithm_visualizer/features/auth/data/repositories/auth_repository_impl.dart';
 import 'package:algorithm_visualizer/features/auth/domain/entities/auth_user.dart';
 import 'package:algorithm_visualizer/features/auth/domain/repositories/auth_repository.dart';
-import 'package:algorithm_visualizer/features/auth/domain/usecases/auth_usecases.dart';
 import 'package:algorithm_visualizer/features/auth/presentation/view_model/auth_notifier.dart';
 import 'package:algorithm_visualizer/features/auth/presentation/view_model/auth_state.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -23,36 +23,16 @@ final authRepositoryProvider = Provider<AuthRepository>((ref) {
   return AuthRepositoryImpl(localDataSource: local, remoteDataSource: remote);
 });
 
-final loginUseCaseProvider = Provider<LoginUseCase>((ref) {
-  return LoginUseCase(ref.watch(authRepositoryProvider));
-});
-
-final registerUseCaseProvider = Provider<RegisterUseCase>((ref) {
-  return RegisterUseCase(ref.watch(authRepositoryProvider));
-});
-
-final forgotPasswordUseCaseProvider = Provider<ForgotPasswordUseCase>((ref) {
-  return ForgotPasswordUseCase(ref.watch(authRepositoryProvider));
-});
-
-final resetPasswordUseCaseProvider = Provider<ResetPasswordUseCase>((ref) {
-  return ResetPasswordUseCase(ref.watch(authRepositoryProvider));
-});
-
-final logoutUseCaseProvider = Provider<LogoutUseCase>((ref) {
-  return LogoutUseCase(ref.watch(authRepositoryProvider));
-});
-
-final getCurrentUserUseCaseProvider = Provider<GetCurrentUserUseCase>((ref) {
-  return GetCurrentUserUseCase(ref.watch(authRepositoryProvider));
-});
-
 final authProvider = NotifierProvider<AuthNotifier, AuthState>(() {
   return AuthNotifier();
 });
 
 final currentUserProvider = Provider<AuthUser?>((ref) {
   return ref.watch(authProvider.select((state) => state.user));
+});
+
+final currentUserNameProvider = Provider<String>((ref) {
+  return ref.watch(authProvider.select((state) => (state.user?.name)?? StringsManager.anonymous));
 });
 
 final isLoggedInProvider = Provider<bool>((ref) {
