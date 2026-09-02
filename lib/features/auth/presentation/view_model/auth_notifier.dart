@@ -1,37 +1,25 @@
 import 'package:algorithm_visualizer/core/resources/strings_manager.dart';
-import 'package:algorithm_visualizer/features/auth/domain/usecases/auth_usecases.dart';
+import 'package:algorithm_visualizer/features/auth/domain/repositories/auth_repository.dart';
 import 'package:algorithm_visualizer/features/auth/presentation/view_model/auth_providers.dart';
 import 'package:algorithm_visualizer/features/auth/presentation/view_model/auth_state.dart';
 import 'package:algorithm_visualizer/features/profile/presentation/view_model/user_provider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class AuthNotifier extends Notifier<AuthState> {
-  late final LoginUseCase _loginUseCase;
-  late final RegisterUseCase _registerUseCase;
-  late final ForgotPasswordUseCase _forgotPasswordUseCase;
-  late final ResetPasswordUseCase _resetPasswordUseCase;
-  late final LogoutUseCase _logoutUseCase;
-  late final GetCurrentUserUseCase _getCurrentUserUseCase;
+  late final AuthRepository _authRepository;
 
   @override
   AuthState build() {
-    _loginUseCase = ref.watch(loginUseCaseProvider);
-    _registerUseCase = ref.watch(registerUseCaseProvider);
-    _forgotPasswordUseCase = ref.watch(forgotPasswordUseCaseProvider);
-    _resetPasswordUseCase = ref.watch(resetPasswordUseCaseProvider);
-    _logoutUseCase = ref.watch(logoutUseCaseProvider);
-    _getCurrentUserUseCase = ref.watch(getCurrentUserUseCaseProvider);
+    _authRepository = ref.watch(authRepositoryProvider);
 
     _loadInitialUser();
     return const AuthState();
   }
 
-  Future<void> _loadInitialUser() async {
+  void _loadInitialUser() {
     try {
-      final user = await _getCurrentUserUseCase.call();
-      if (user != null) {
-        state = state.copyWith(user: user);
-      }
+      final user = _authRepository.getCurrentUser();
+      if (user != null) state = state.copyWith(user: user);
     } catch (_) {}
   }
 
@@ -182,10 +170,7 @@ class AuthNotifier extends Notifier<AuthState> {
       clearConfirmPasswordError: confirmPasswordError == null,
     );
 
-    return nameError == null &&
-        emailError == null &&
-        passwordError == null &&
-        confirmPasswordError == null;
+    return nameError == null && emailError == null && passwordError == null && confirmPasswordError == null;
   }
 
   bool validateForgotPassword() {
@@ -251,7 +236,7 @@ class AuthNotifier extends Notifier<AuthState> {
     );
 
     try {
-      final user = await _loginUseCase.call(
+      final user = await _authRepository.login(
         email: state.email.trim(),
         password: state.password,
       );
@@ -284,7 +269,7 @@ class AuthNotifier extends Notifier<AuthState> {
     );
 
     try {
-      final user = await _registerUseCase.call(
+      final user = await _authRepository.register(
         name: state.name.trim(),
         email: state.email.trim(),
         password: state.password,
@@ -318,7 +303,7 @@ class AuthNotifier extends Notifier<AuthState> {
     );
 
     try {
-      await _forgotPasswordUseCase.call(email: state.email.trim());
+      await _authRepository.forgotPassword(email: state.email.trim());
       state = state.copyWith(
         status: AuthStatus.success,
         successMessage: StringsManager.resetLinkSent,
@@ -343,7 +328,7 @@ class AuthNotifier extends Notifier<AuthState> {
     );
 
     try {
-      await _resetPasswordUseCase.call(
+      await _authRepository.resetPassword(
         code: state.verificationCode.trim(),
         newPassword: state.newPassword,
       );
@@ -362,7 +347,7 @@ class AuthNotifier extends Notifier<AuthState> {
   }
 
   Future<void> logout() async {
-    await _logoutUseCase.call();
+    await _authRepository.logout();
     state = const AuthState();
   }
 
