@@ -14,13 +14,8 @@ final authLocalDataSourceProvider = Provider<AuthLocalDataSource>((ref) {
   return AuthLocalDataSourceImpl(GetStorageService(GetStorage()));
 });
 
-final authRemoteDataSourceProvider = Provider<AuthRemoteDataSource>((ref) {
-  try {
-    return FirebaseAuthRemoteDataSourceImpl();
-  } catch (_) {
-    return AuthRemoteDataSourceImpl();
-  }
-});
+final authRemoteDataSourceProvider =
+    Provider<AuthRemoteDataSource>((ref) => FirebaseAuthRemoteDataSourceImpl());
 
 final authRepositoryProvider = Provider<AuthRepository>((ref) {
   final local = ref.watch(authLocalDataSourceProvider);
@@ -60,6 +55,6 @@ final currentUserProvider = Provider<AuthUser?>((ref) {
   return ref.watch(authProvider.select((state) => state.user));
 });
 
-final isAuthenticatedProvider = Provider<bool>((ref) {
-  return ref.watch(authProvider.select((state) => state.user != null));
+final isLoggedInProvider = Provider<bool>((ref) {
+  return ref.watch(authLocalDataSourceProvider.select((state) => state.isLoggedIn()));
 });
