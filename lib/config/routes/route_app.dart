@@ -1,5 +1,9 @@
 import 'package:algorithm_visualizer/core/resources/strings_manager.dart';
 import 'package:algorithm_visualizer/core/widgets/adaptive/text/adaptive_text.dart';
+import 'package:algorithm_visualizer/features/auth/presentation/view/forgot_password_page.dart';
+import 'package:algorithm_visualizer/features/auth/presentation/view/login_page.dart';
+import 'package:algorithm_visualizer/features/auth/presentation/view/reset_password_page.dart';
+import 'package:algorithm_visualizer/features/auth/presentation/view/sign_up_page.dart';
 import 'package:algorithm_visualizer/features/base/view/base_navigation.dart';
 import 'package:algorithm_visualizer/features/base/view_model/base_view_model.dart';
 import 'package:algorithm_visualizer/features/challenge/presentation/view/challenge_page.dart';
@@ -23,6 +27,23 @@ final _tabDKey = GlobalKey<NavigatorState>();
 final _tabEKey = GlobalKey<NavigatorState>();
 
 class Routes {
+  static const RouteConfig login = RouteConfig(
+    name: 'login',
+    path: '/login',
+  );
+  static const RouteConfig signUp = RouteConfig(
+    name: 'signUp',
+    path: '/signup',
+  );
+  static const RouteConfig forgotPassword = RouteConfig(
+    name: 'forgotPassword',
+    path: '/forgot-password',
+  );
+  static const RouteConfig resetPassword = RouteConfig(
+    name: 'resetPassword',
+    path: '/reset-password',
+  );
+
   static const RouteConfig home = RouteConfig(
     name: 'home',
     path: '/home',
@@ -74,9 +95,29 @@ class AppRoutes {
   static final router = GoRouter(
     debugLogDiagnostics: true,
     navigatorKey: _rootKey,
-    initialLocation: Routes.home.path,
+    initialLocation: Routes.login.path,
     errorBuilder: (context, state) => const _UnknownPage(),
     routes: [
+      GoRoute(
+        path: Routes.login.path,
+        name: Routes.login.name,
+        builder: (context, state) => const LoginPage(),
+      ),
+      GoRoute(
+        path: Routes.signUp.path,
+        name: Routes.signUp.name,
+        builder: (context, state) => const SignUpPage(),
+      ),
+      GoRoute(
+        path: Routes.forgotPassword.path,
+        name: Routes.forgotPassword.name,
+        builder: (context, state) => const ForgotPasswordPage(),
+      ),
+      GoRoute(
+        path: Routes.resetPassword.path,
+        name: Routes.resetPassword.name,
+        builder: (context, state) => const ResetPasswordPage(),
+      ),
       StatefulShellRoute.indexedStack(
         builder: (context, state, navigationShell) {
           return MainNavigationShell(navigationShell: navigationShell);
@@ -163,3 +204,4 @@ class AppRoutes {
     ],
   );
 }
+
