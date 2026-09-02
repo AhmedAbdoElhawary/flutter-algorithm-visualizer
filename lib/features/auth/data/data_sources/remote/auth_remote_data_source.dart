@@ -6,6 +6,7 @@ abstract class AuthRemoteDataSource {
   Future<AuthUserDTO> register({required String name, required String email, required String password});
   Future<void> forgotPassword({required String email});
   Future<void> resetPassword({required String code, required String newPassword});
+  Future<void> signOut();
 }
 
 class FirebaseAuthRemoteDataSourceImpl implements AuthRemoteDataSource {
@@ -23,9 +24,7 @@ class FirebaseAuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       );
 
       final user = credential.user;
-      if (user == null) {
-        throw Exception('User not found after login');
-      }
+      if (user == null) throw Exception('User not found after login');
 
       final token = await user.getIdToken();
 
@@ -105,6 +104,17 @@ class FirebaseAuthRemoteDataSourceImpl implements AuthRemoteDataSource {
     }
   }
 
+  @override
+  Future<void> signOut() async {
+    try {
+      await _firebaseAuth.signOut();
+    } on FirebaseAuthException catch (e) {
+      throw _handleFirebaseAuthException(e);
+    } catch (e) {
+      rethrow;
+    }
+  }
+
   String _formatNameFromEmail(String email) {
     final prefix = email.split('@').first;
     if (prefix.isEmpty) return 'User';
@@ -131,85 +141,6 @@ class FirebaseAuthRemoteDataSourceImpl implements AuthRemoteDataSource {
         return Exception('Too many attempts. Please try again later');
       default:
         return Exception(e.message ?? 'Authentication failed');
-    }
-  }
-}
-
-/// Fallback / Mock Data Source (useful for offline testing or demo accounts)
-class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
-  @override
-  Future<AuthUserDTO> login({required String email, required String password}) async {
-    await Future.delayed(const Duration(milliseconds: 300));
-
-    final normalizedEmail = email.trim().toLowerCase();
-
-    if (normalizedEmail.contains('invalid') || password == 'wrong') {
-      throw Exception('Invalid email or password');
-    }
-
-    if (normalizedEmail == 'ahmed@example.com' || normalizedEmail == 'demo@example.com') {
-      return AuthUserDTO(
-        id: 'user_1',
-        name: 'Ahmed Elhawary',
-        email: email.trim(),
-        token: 'token_mock_${DateTime.now().millisecondsSinceEpoch}',
-        solvedCount: 3,
-      );
-    }
-
-    final nameFromEmail = email.split('@').first;
-    final formattedName = nameFromEmail.isNotEmpty
-        ? nameFromEmail[0].toUpperCase() + nameFromEmail.substring(1)
-        : 'User';
-
-    return AuthUserDTO(
-      id: 'user_${DateTime.now().millisecondsSinceEpoch}',
-      name: formattedName,
-      email: email.trim(),
-      token: 'token_mock_${DateTime.now().millisecondsSinceEpoch}',
-      solvedCount: 0,
-    );
-  }
-
-  @override
-  Future<AuthUserDTO> register({
-    required String name,
-    required String email,
-    required String password,
-  }) async {
-    await Future.delayed(const Duration(milliseconds: 300));
-
-    final normalizedEmail = email.trim().toLowerCase();
-
-    if (normalizedEmail == 'exists@example.com') {
-      throw Exception('An account with this email already exists');
-    }
-
-    return AuthUserDTO(
-      id: 'user_${DateTime.now().millisecondsSinceEpoch}',
-      name: name.trim(),
-      email: email.trim(),
-      token: 'token_mock_${DateTime.now().millisecondsSinceEpoch}',
-      solvedCount: 0,
-    );
-  }
-
-  @override
-  Future<void> forgotPassword({required String email}) async {
-    await Future.delayed(const Duration(milliseconds: 300));
-
-    final normalizedEmail = email.trim().toLowerCase();
-    if (normalizedEmail == 'notfound@example.com') {
-      throw Exception('No account found with this email');
-    }
-  }
-
-  @override
-  Future<void> resetPassword({required String code, required String newPassword}) async {
-    await Future.delayed(const Duration(milliseconds: 300));
-
-    if (code.trim() != '849201' && code.trim().length != 6) {
-      throw Exception('Invalid verification code');
     }
   }
 }
