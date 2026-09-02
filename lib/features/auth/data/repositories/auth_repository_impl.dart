@@ -41,7 +41,7 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   @override
-  Future<AuthUser?> getCurrentUser() async {
+  AuthUser? getCurrentUser()  {
     final dto = localDataSource.getUser();
     return dto?.toDomain();
   }
