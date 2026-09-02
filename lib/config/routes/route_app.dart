@@ -4,6 +4,7 @@ import 'package:algorithm_visualizer/features/auth/presentation/view/forgot_pass
 import 'package:algorithm_visualizer/features/auth/presentation/view/login_page.dart';
 import 'package:algorithm_visualizer/features/auth/presentation/view/reset_password_page.dart';
 import 'package:algorithm_visualizer/features/auth/presentation/view/sign_up_page.dart';
+import 'package:algorithm_visualizer/features/auth/presentation/view_model/auth_providers.dart';
 import 'package:algorithm_visualizer/features/base/view/base_navigation.dart';
 import 'package:algorithm_visualizer/features/base/view_model/base_view_model.dart';
 import 'package:algorithm_visualizer/features/challenge/presentation/view/challenge_page.dart';
@@ -15,6 +16,7 @@ import 'package:algorithm_visualizer/features/profile/presentation/view/sub_view
 import 'package:algorithm_visualizer/features/visualize/view/visualize_page.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 part 'unknown_page.dart';
@@ -92,116 +94,120 @@ class RouteConfig {
 }
 
 class AppRoutes {
-  static final router = GoRouter(
-    debugLogDiagnostics: true,
-    navigatorKey: _rootKey,
-    initialLocation: Routes.login.path,
-    errorBuilder: (context, state) => const _UnknownPage(),
-    routes: [
-      GoRoute(
-        path: Routes.login.path,
-        name: Routes.login.name,
-        builder: (context, state) => const LoginPage(),
-      ),
-      GoRoute(
-        path: Routes.signUp.path,
-        name: Routes.signUp.name,
-        builder: (context, state) => const SignUpPage(),
-      ),
-      GoRoute(
-        path: Routes.forgotPassword.path,
-        name: Routes.forgotPassword.name,
-        builder: (context, state) => const ForgotPasswordPage(),
-      ),
-      GoRoute(
-        path: Routes.resetPassword.path,
-        name: Routes.resetPassword.name,
-        builder: (context, state) => const ResetPasswordPage(),
-      ),
-      StatefulShellRoute.indexedStack(
-        builder: (context, state, navigationShell) {
-          return MainNavigationShell(navigationShell: navigationShell);
-        },
-        branches: [
-          StatefulShellBranch(
-            navigatorKey: _tabAKey,
-            routes: [
-              GoRoute(
-                path: Routes.home.path,
-                name: Routes.home.name,
-                builder: (context, state) => HomePage(),
-              ),
-            ],
-          ),
-          StatefulShellBranch(
-            navigatorKey: _tabBKey,
-            routes: [
-              GoRoute(
-                path: Routes.visualize.path,
-                name: Routes.visualize.name,
-                builder: (context, state) {
-                  final instance = state.uri.queryParameters["instance"];
-                  final sortingAlgo =
-                      SortingAlgoCards.values.firstWhereOrNull((element) => element.name == instance);
-                  final searchingAlgo =
-                      SearchingAlgoCards.values.firstWhereOrNull((element) => element.name == instance);
-                  if (instance != null && (sortingAlgo == null && searchingAlgo == null)) {
-                    return _UnknownPage();
-                  }
-                  return VisualizePage(sortingCard: sortingAlgo, searchingCard: searchingAlgo);
-                },
-              ),
-            ],
-          ),
-          StatefulShellBranch(
-            navigatorKey: _tabCKey,
-            routes: [
-              GoRoute(
-                path: Routes.code.path,
-                name: Routes.code.name,
-                builder: (context, state) {
-                  final id = int.tryParse(state.uri.queryParameters["problem_id"] ?? "") ?? -1;
+  AppRoutes._();
+  static final instance = AppRoutes._();
 
-                  return CodeEditorPage(problemId: id);
-                },
-              ),
-            ],
-          ),
-          StatefulShellBranch(
-            navigatorKey: _tabDKey,
-            routes: [
-              GoRoute(
-                path: Routes.practice.path,
-                name: Routes.practice.name,
-                builder: (context, state) => ChallengePage(),
-              ),
-            ],
-          ),
-          StatefulShellBranch(
-            navigatorKey: _tabEKey,
-            routes: [
-              GoRoute(
-                path: Routes.profile.path,
-                name: Routes.profile.name,
-                builder: (context, state) => ProfileScreen(),
-                routes: [
-                  GoRoute(
-                    path: Routes.recentSubmissions.path,
-                    name: Routes.recentSubmissions.name,
-                    builder: (context, state) => const RecentSubmissionsPage(),
-                  ),
-                  GoRoute(
-                    path: Routes.bookmarkedProblems.path,
-                    name: Routes.bookmarkedProblems.name,
-                    builder: (context, state) => const BookmarkedProblemsPage(),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ],
-      ),
-    ],
-  );
+  final routerProvider = Provider<GoRouter>((ref) {
+    return GoRouter(
+      debugLogDiagnostics: true,
+      navigatorKey: _rootKey,
+      initialLocation: ref.read(isLoggedInProvider) ? Routes.home.path : Routes.login.path,
+      errorBuilder: (context, state) => const _UnknownPage(),
+      routes: [
+        GoRoute(
+          path: Routes.login.path,
+          name: Routes.login.name,
+          builder: (context, state) => const LoginPage(),
+        ),
+        GoRoute(
+          path: Routes.signUp.path,
+          name: Routes.signUp.name,
+          builder: (context, state) => const SignUpPage(),
+        ),
+        GoRoute(
+          path: Routes.forgotPassword.path,
+          name: Routes.forgotPassword.name,
+          builder: (context, state) => const ForgotPasswordPage(),
+        ),
+        GoRoute(
+          path: Routes.resetPassword.path,
+          name: Routes.resetPassword.name,
+          builder: (context, state) => const ResetPasswordPage(),
+        ),
+        StatefulShellRoute.indexedStack(
+          builder: (context, state, navigationShell) {
+            return MainNavigationShell(navigationShell: navigationShell);
+          },
+          branches: [
+            StatefulShellBranch(
+              navigatorKey: _tabAKey,
+              routes: [
+                GoRoute(
+                  path: Routes.home.path,
+                  name: Routes.home.name,
+                  builder: (context, state) => HomePage(),
+                ),
+              ],
+            ),
+            StatefulShellBranch(
+              navigatorKey: _tabBKey,
+              routes: [
+                GoRoute(
+                  path: Routes.visualize.path,
+                  name: Routes.visualize.name,
+                  builder: (context, state) {
+                    final instance = state.uri.queryParameters["instance"];
+                    final sortingAlgo =
+                        SortingAlgoCards.values.firstWhereOrNull((element) => element.name == instance);
+                    final searchingAlgo =
+                        SearchingAlgoCards.values.firstWhereOrNull((element) => element.name == instance);
+                    if (instance != null && (sortingAlgo == null && searchingAlgo == null)) {
+                      return _UnknownPage();
+                    }
+                    return VisualizePage(sortingCard: sortingAlgo, searchingCard: searchingAlgo);
+                  },
+                ),
+              ],
+            ),
+            StatefulShellBranch(
+              navigatorKey: _tabCKey,
+              routes: [
+                GoRoute(
+                  path: Routes.code.path,
+                  name: Routes.code.name,
+                  builder: (context, state) {
+                    final id = int.tryParse(state.uri.queryParameters["problem_id"] ?? "") ?? -1;
+
+                    return CodeEditorPage(problemId: id);
+                  },
+                ),
+              ],
+            ),
+            StatefulShellBranch(
+              navigatorKey: _tabDKey,
+              routes: [
+                GoRoute(
+                  path: Routes.practice.path,
+                  name: Routes.practice.name,
+                  builder: (context, state) => ChallengePage(),
+                ),
+              ],
+            ),
+            StatefulShellBranch(
+              navigatorKey: _tabEKey,
+              routes: [
+                GoRoute(
+                  path: Routes.profile.path,
+                  name: Routes.profile.name,
+                  builder: (context, state) => ProfileScreen(),
+                  routes: [
+                    GoRoute(
+                      path: Routes.recentSubmissions.path,
+                      name: Routes.recentSubmissions.name,
+                      builder: (context, state) => const RecentSubmissionsPage(),
+                    ),
+                    GoRoute(
+                      path: Routes.bookmarkedProblems.path,
+                      name: Routes.bookmarkedProblems.name,
+                      builder: (context, state) => const BookmarkedProblemsPage(),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ],
+        ),
+      ],
+    );
+  });
 }
-
