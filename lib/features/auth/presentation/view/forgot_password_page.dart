@@ -4,6 +4,7 @@ import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
 import 'package:algorithm_visualizer/core/widgets/adaptive/padding/adaptive_padding.dart';
 import 'package:algorithm_visualizer/core/widgets/adaptive/text/adaptive_text.dart';
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/custom_icon.dart';
+import 'package:algorithm_visualizer/core/widgets/custom_widgets/custom_snack_bar.dart';
 import 'package:algorithm_visualizer/features/auth/presentation/view_model/auth_providers.dart';
 import 'package:algorithm_visualizer/features/auth/presentation/widgets/auth_back_button.dart';
 import 'package:algorithm_visualizer/features/auth/presentation/widgets/auth_header_icon.dart';
@@ -42,8 +43,12 @@ class _ForgotPasswordPageState extends ConsumerState<ForgotPasswordPage> {
   Widget build(BuildContext context) {
     final isLoading = ref.watch(authProvider.select((s) => s.isLoading));
     final emailError = ref.watch(authProvider.select((s) => s.emailError));
-    final errorMessage = ref.watch(authProvider.select((s) => s.errorMessage));
-
+    ref.listen(
+      authProvider.select((s) => s.errorMessage),
+          (previous, next) {
+        if (next != null) context.showSnackBar(message: next, type: CustomSnackBarType.error);
+      },
+    );
     return Scaffold(
       backgroundColor: context.getColor(ThemeEnum.primary),
       body: SafeArea(
@@ -78,10 +83,6 @@ class _ForgotPasswordPageState extends ConsumerState<ForgotPasswordPage> {
                     textAlign: TextAlign.center,
                   ),
                   RSizedBox(height: 28),
-                  if (errorMessage != null) ...[
-                    _ForgotPasswordErrorBanner(message: errorMessage),
-                    RSizedBox(height: 16),
-                  ],
                   AuthTextField(
                     label: StringsManager.registeredEmail,
                     hintText: StringsManager.emailHint,
@@ -131,43 +132,6 @@ class _ForgotPasswordAppBar extends StatelessWidget {
         ),
         RSizedBox(width: 40),
       ],
-    );
-  }
-}
-
-class _ForgotPasswordErrorBanner extends StatelessWidget {
-  final String message;
-
-  const _ForgotPasswordErrorBanner({required this.message});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: REdgeInsets.symmetric(horizontal: 14, vertical: 10),
-      decoration: BoxDecoration(
-        color: context.getColor(ThemeEnum.accentRed).withValues(alpha: 0.12),
-        borderRadius: BorderRadius.circular(10.r),
-        border: Border.all(
-          color: context.getColor(ThemeEnum.accentRed).withValues(alpha: 0.3),
-        ),
-      ),
-      child: Row(
-        children: [
-          CustomIcon(
-            Icons.error_outline_rounded,
-            size: 16,
-            color: ThemeEnum.accentRed,
-          ),
-          RSizedBox(width: 8),
-          Expanded(
-            child: RegularText(
-              message,
-              color: ThemeEnum.accentRed,
-              fontSize: 12,
-            ),
-          ),
-        ],
-      ),
     );
   }
 }
