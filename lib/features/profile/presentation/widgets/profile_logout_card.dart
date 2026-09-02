@@ -28,9 +28,7 @@ class ProfileLogoutCard extends ConsumerWidget {
           onConfirm: () async {
             removeOverlay();
             await ref.read(authProvider.notifier).logout();
-            if (context.mounted) {
-              context.go(Routes.login.path);
-            }
+            if (context.mounted) context.go(Routes.login.path);
           },
           onCancel: removeOverlay,
         ),
