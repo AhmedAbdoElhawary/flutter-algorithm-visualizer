@@ -24,6 +24,7 @@ class MyApp extends StatelessWidget {
         return Consumer(
           builder: (context, ref, child) {
             final controller = ref.watch(appSettingsProvider);
+            final router = ref.watch(AppRoutes.instance.routerProvider);
             bool isDarkMode = controller.themeMode != ThemeMode.light;
             final theme = isDarkMode ? AppTheme.dark : AppTheme.light;
             final themeMode = isDarkMode ? ThemeMode.dark : ThemeMode.light;
@@ -47,10 +48,10 @@ class MyApp extends StatelessWidget {
                         darkTheme: AppTheme.dark,
                         themeMode: themeMode,
                         debugShowCheckedModeBanner: false,
-                        routerDelegate: AppRoutes.router.routerDelegate,
-                        backButtonDispatcher: AppRoutes.router.backButtonDispatcher,
-                        routeInformationParser: AppRoutes.router.routeInformationParser,
-                        routeInformationProvider: AppRoutes.router.routeInformationProvider,
+                        routerDelegate: router.routerDelegate,
+                        backButtonDispatcher: router.backButtonDispatcher,
+                        routeInformationParser: router.routeInformationParser,
+                        routeInformationProvider: router.routeInformationProvider,
                       ),
                     ),
                   ),
