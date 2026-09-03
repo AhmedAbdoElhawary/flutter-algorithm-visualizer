@@ -2,7 +2,6 @@ import 'package:algorithm_visualizer/core/resources/strings_manager.dart';
 import 'package:algorithm_visualizer/features/auth/domain/repositories/auth_repository.dart';
 import 'package:algorithm_visualizer/features/auth/presentation/view_model/auth_providers.dart';
 import 'package:algorithm_visualizer/features/auth/presentation/view_model/auth_state.dart';
-import 'package:algorithm_visualizer/features/profile/presentation/view_model/user_provider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class AuthNotifier extends Notifier<AuthState> {
@@ -95,6 +94,62 @@ class AuthNotifier extends Notifier<AuthState> {
 
   void toggleConfirmNewPasswordVisibility() {
     state = state.copyWith(isConfirmNewPasswordVisible: !state.isConfirmNewPasswordVisible);
+  }
+
+  // Profile Update Field updates
+  void setCurrentPassword(String value) {
+    state = state.copyWith(
+      currentPassword: value,
+      clearCurrentPasswordError: true,
+      clearErrorMessage: true,
+    );
+  }
+
+  void setNewDisplayName(String value) {
+    state = state.copyWith(
+      newDisplayName: value,
+      clearNewDisplayNameError: true,
+      clearErrorMessage: true,
+    );
+  }
+
+  void setNewEmail(String value) {
+    state = state.copyWith(
+      newEmail: value,
+      clearNewEmailError: true,
+      clearErrorMessage: true,
+    );
+  }
+
+  void setNewProfilePassword(String value) {
+    state = state.copyWith(
+      newProfilePassword: value,
+      clearNewProfilePasswordError: true,
+      clearErrorMessage: true,
+    );
+  }
+
+  void setConfirmNewProfilePassword(String value) {
+    state = state.copyWith(
+      confirmNewProfilePassword: value,
+      clearConfirmNewProfilePasswordError: true,
+      clearErrorMessage: true,
+    );
+  }
+
+  // Profile Update Visibility toggles
+  void toggleCurrentPasswordVisibility() {
+    state = state.copyWith(isCurrentPasswordVisible: !state.isCurrentPasswordVisible);
+  }
+
+  void toggleNewProfilePasswordVisibility() {
+    state = state.copyWith(isNewProfilePasswordVisible: !state.isNewProfilePasswordVisible);
+  }
+
+  void toggleConfirmNewProfilePasswordVisibility() {
+    state = state.copyWith(
+      isConfirmNewProfilePasswordVisible: !state.isConfirmNewProfilePasswordVisible,
+    );
   }
 
   // Validations
@@ -225,6 +280,85 @@ class AuthNotifier extends Notifier<AuthState> {
     return codeError == null && newPasswordError == null && confirmNewPasswordError == null;
   }
 
+  // Profile Update Validations
+  bool validateUpdateDisplayName({required String name}) {
+    String? newDisplayNameError;
+
+    if (name.trim().isEmpty) {
+      newDisplayNameError = StringsManager.newDisplayNameRequired;
+    } else if (name.trim().length < 2) {
+      newDisplayNameError = StringsManager.nameMinLength;
+    }
+
+
+
+    state = state.copyWith(
+      newDisplayNameError: newDisplayNameError,
+      clearNewDisplayNameError: newDisplayNameError == null,
+    );
+
+    return newDisplayNameError == null;
+  }
+
+  bool validateUpdateEmail() {
+    String? newEmailError;
+    String? currentPasswordError;
+
+    if (state.newEmail.trim().isEmpty) {
+      newEmailError = StringsManager.newEmailRequired;
+    } else if (!validateEmail(state.newEmail)) {
+      newEmailError = StringsManager.invalidEmail;
+    }
+
+    if (state.currentPassword.isEmpty) {
+      currentPasswordError = StringsManager.currentPasswordRequired;
+    }
+
+    state = state.copyWith(
+      newEmailError: newEmailError,
+      currentPasswordError: currentPasswordError,
+      clearNewEmailError: newEmailError == null,
+      clearCurrentPasswordError: currentPasswordError == null,
+    );
+
+    return newEmailError == null && currentPasswordError == null;
+  }
+
+  bool validateUpdatePassword() {
+    String? currentPasswordError;
+    String? newProfilePasswordError;
+    String? confirmNewProfilePasswordError;
+
+    if (state.currentPassword.isEmpty) {
+      currentPasswordError = StringsManager.currentPasswordRequired;
+    }
+
+    if (state.newProfilePassword.isEmpty) {
+      newProfilePasswordError = StringsManager.newPasswordRequired;
+    } else if (state.newProfilePassword.length < 6) {
+      newProfilePasswordError = StringsManager.passwordMinLength;
+    }
+
+    if (state.confirmNewProfilePassword.isEmpty) {
+      confirmNewProfilePasswordError = StringsManager.confirmPasswordRequired;
+    } else if (state.confirmNewProfilePassword != state.newProfilePassword) {
+      confirmNewProfilePasswordError = StringsManager.passwordsDoNotMatch;
+    }
+
+    state = state.copyWith(
+      currentPasswordError: currentPasswordError,
+      newProfilePasswordError: newProfilePasswordError,
+      confirmNewProfilePasswordError: confirmNewProfilePasswordError,
+      clearCurrentPasswordError: currentPasswordError == null,
+      clearNewProfilePasswordError: newProfilePasswordError == null,
+      clearConfirmNewProfilePasswordError: confirmNewProfilePasswordError == null,
+    );
+
+    return currentPasswordError == null &&
+        newProfilePasswordError == null &&
+        confirmNewProfilePasswordError == null;
+  }
+
   // Auth Operations
   Future<bool> login() async {
     if (!validateLogin()) return false;
@@ -241,8 +375,8 @@ class AuthNotifier extends Notifier<AuthState> {
         password: state.password,
       );
 
-      // Also update Profile storage username for consistency
-      ref.read(profileStorageProvider.notifier).updateName(user.name);
+      // // Also update Profile storage username for consistency
+      // ref.read(profileStorageProvider.notifier).updateName(user.name);
 
       state = state.copyWith(
         status: AuthStatus.success,
@@ -275,8 +409,8 @@ class AuthNotifier extends Notifier<AuthState> {
         password: state.password,
       );
 
-      // Update Profile storage username
-      ref.read(profileStorageProvider.notifier).updateName(user.name);
+      // // Update Profile storage username
+      // ref.read(profileStorageProvider.notifier).updateName(user.name);
 
       state = state.copyWith(
         status: AuthStatus.success,
@@ -351,6 +485,131 @@ class AuthNotifier extends Notifier<AuthState> {
     state = const AuthState();
   }
 
+  // Profile Update Operations
+  Future<bool> updateDisplayName({required String name}) async {
+    if (!validateUpdateDisplayName(name: name)) return false;
+
+    state = state.copyWith(
+      status: AuthStatus.loading,
+      clearErrorMessage: true,
+      clearSuccessMessage: true,
+    );
+
+    try {
+      await _authRepository.updateDisplayName(displayName: name.trim());
+
+      // Update AuthUser in state
+      if (state.user != null) state = state.copyWith(user: state.user?.copyWith(name: name.trim()));
+
+      // // Sync profile storage
+      // ref.read(profileStorageProvider.notifier).updateName(name.trim());
+
+      state = state.copyWith(
+        status: AuthStatus.success,
+        successMessage: StringsManager.displayNameUpdated,
+        newDisplayName: name,
+        clearNewDisplayNameError: true,
+      );
+      return true;
+    } catch (e) {
+      state = state.copyWith(
+        status: AuthStatus.error,
+        errorMessage: _mapErrorMessage(e),
+      );
+      return false;
+    }
+  }
+
+  Future<bool> updateEmail() async {
+    if (!validateUpdateEmail()) return false;
+
+    state = state.copyWith(
+      status: AuthStatus.loading,
+      clearErrorMessage: true,
+      clearSuccessMessage: true,
+    );
+
+    try {
+      await _authRepository.updateEmail(
+        newEmail: state.newEmail.trim(),
+        currentPassword: state.currentPassword,
+      );
+
+      // Update AuthUser in state
+      if (state.user != null) {
+        state = state.copyWith(user: state.user!.copyWith(email: state.newEmail.trim()));
+      }
+
+      state = state.copyWith(
+        status: AuthStatus.success,
+        successMessage: StringsManager.emailUpdated,
+        currentPassword: '',
+        newEmail: '',
+        clearCurrentPasswordError: true,
+        clearNewEmailError: true,
+      );
+      return true;
+    } catch (e) {
+      state = state.copyWith(
+        status: AuthStatus.error,
+        errorMessage: _mapErrorMessage(e),
+      );
+      return false;
+    }
+  }
+
+  Future<bool> updatePassword() async {
+    if (!validateUpdatePassword()) return false;
+
+    state = state.copyWith(
+      status: AuthStatus.loading,
+      clearErrorMessage: true,
+      clearSuccessMessage: true,
+    );
+
+    try {
+      await _authRepository.updatePassword(
+        currentPassword: state.currentPassword,
+        newPassword: state.newProfilePassword,
+      );
+
+      state = state.copyWith(
+        status: AuthStatus.success,
+        successMessage: StringsManager.passwordUpdated,
+        currentPassword: '',
+        newProfilePassword: '',
+        confirmNewProfilePassword: '',
+        clearCurrentPasswordError: true,
+        clearNewProfilePasswordError: true,
+        clearConfirmNewProfilePasswordError: true,
+      );
+      return true;
+    } catch (e) {
+      state = state.copyWith(
+        status: AuthStatus.error,
+        errorMessage: _mapErrorMessage(e),
+      );
+      return false;
+    }
+  }
+
+  void resetProfileUpdateForm() {
+    state = state.copyWith(
+      currentPassword: '',
+      newDisplayName: '',
+      newEmail: '',
+      newProfilePassword: '',
+      confirmNewProfilePassword: '',
+      clearCurrentPasswordError: true,
+      clearNewDisplayNameError: true,
+      clearNewEmailError: true,
+      clearNewProfilePasswordError: true,
+      clearConfirmNewProfilePasswordError: true,
+      clearErrorMessage: true,
+      clearSuccessMessage: true,
+    );
+  }
+
   void resetForm() {
     state = state.copyWith(
       status: AuthStatus.initial,
@@ -363,6 +622,11 @@ class AuthNotifier extends Notifier<AuthState> {
       verificationCode: '',
       newPassword: '',
       confirmNewPassword: '',
+      currentPassword: '',
+      newDisplayName: '',
+      newEmail: '',
+      newProfilePassword: '',
+      confirmNewProfilePassword: '',
       clearNameError: true,
       clearEmailError: true,
       clearPasswordError: true,
@@ -370,6 +634,11 @@ class AuthNotifier extends Notifier<AuthState> {
       clearVerificationCodeError: true,
       clearNewPasswordError: true,
       clearConfirmNewPasswordError: true,
+      clearCurrentPasswordError: true,
+      clearNewDisplayNameError: true,
+      clearNewEmailError: true,
+      clearNewProfilePasswordError: true,
+      clearConfirmNewProfilePasswordError: true,
     );
   }
 
@@ -389,6 +658,9 @@ class AuthNotifier extends Notifier<AuthState> {
     }
     if (msg.contains('network') || msg.contains('socket') || msg.contains('timeout')) {
       return StringsManager.networkError;
+    }
+    if (msg.contains('log in again') || msg.contains('requires-recent-login')) {
+      return StringsManager.reauthenticateRequired;
     }
     return StringsManager.sorryForInconvenience;
   }
