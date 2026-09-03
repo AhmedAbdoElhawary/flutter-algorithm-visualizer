@@ -131,6 +131,8 @@ class _EditableNameState extends ConsumerState<_EditableName> {
   Widget build(BuildContext context) {
     if (_editing) {
       return TextField(
+        maxLines: 1,
+        maxLength: 20,
         controller: _controller,
         autofocus: true,
         style: GetBoldStyle(
@@ -168,8 +170,10 @@ class _EditableNameState extends ConsumerState<_EditableName> {
     return GestureDetector(
       onTap: () => setState(() => _editing = true),
       child: Row(children: [
-        BoldText(widget.name,
-            color: ThemeEnum.textPrimary, fontSize: 22, fontWeight: FontWeightManager.bold800),
+        Flexible(
+          child: BoldText(widget.name,
+              maxLines: 1, color: ThemeEnum.textPrimary, fontSize: 22, fontWeight: FontWeightManager.bold800),
+        ),
         RSizedBox(width: 6),
         CustomIcon(Icons.edit_rounded, size: 14, color: ThemeEnum.hoverSecond),
       ]),
