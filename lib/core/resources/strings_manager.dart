@@ -195,4 +195,77 @@ class StringsManager {
   static const String sortedNow = "Sorted now";
   static const String submissions = "Submissions";
   static const String submission = "Submission";
+
+  // Auth Strings
+  static const String welcomeBack = "Welcome back";
+  static const String signInSubtitle = "Sign in to continue solving algorithms & tracking progress";
+  static const String emailAddress = "Email Address";
+  static const String emailHint = "name@example.com";
+  static const String password = "Password";
+  static const String passwordHint = "••••••••";
+  static const String forgotPasswordQuestion = "Forgot Password?";
+  static const String signIn = "Sign In";
+  static const String demoAccount = "Demo Account";
+  static const String demoAccountUser = "Ahmed Elhawary (3 solved)";
+  static const String autoFill = "Auto-fill";
+  static const String dontHaveAccount = "Don't have an account?";
+  static const String signUp = "Sign Up";
+
+  static const String createAccount = "Create Account";
+  static const String signUpSubtitle = "Join algorithmic learners and level up your data structure skills";
+  static const String fullName = "Full Name";
+  static const String fullNameHint = "e.g. Ahmed Elhawary";
+  static const String createStrongPasswordHint = "Create strong password";
+  static const String confirmPassword = "Confirm Password";
+  static const String reEnterPasswordHint = "Re-enter your password";
+  static const String registerAndStartLearning = "Register & Start Learning";
+  static const String alreadyHaveAccount = "Already have an account?";
+  static const String login = "Login";
+
+  static const String accountRecovery = "ACCOUNT RECOVERY";
+  static const String forgotPasswordTitle = "Forgot Password?";
+  static const String forgotPasswordSubtitle = "No worries! Enter your registered email and we'll send you recovery instructions.";
+  static const String registeredEmail = "Registered Email";
+  static const String recoveryEmailNote = "We'll send a 6-digit verification code to this inbox.";
+  static const String sendResetLink = "Send Reset Link";
+  static const String returnToLogin = "Return to Login";
+
+  static const String newPasswordTitle = "NEW PASSWORD";
+  static const String setNewPassword = "Set New Password";
+  static const String setNewPasswordSubtitle = "Enter verification code and choose a secure password";
+  static const String verificationCode = "Verification Code";
+  static const String verificationCodeHint = "6-digit code (e.g. 849201)";
+  static const String newPassword = "New Password";
+  static const String newPasswordHint = "Enter new password";
+  static const String confirmNewPassword = "Confirm New Password";
+  static const String confirmNewPasswordHint = "Re-enter new password";
+  static const String saveNewPassword = "Save New Password";
+
+  // Auth Validation & Status
+  static const String nameRequired = "Please enter your name";
+  static const String nameMinLength = "Name must be at least 2 characters";
+  static const String emailRequired = "Please enter your email";
+  static const String invalidEmail = "Please enter a valid email address";
+  static const String passwordRequired = "Please enter your password";
+  static const String passwordMinLength = "Password must be at least 6 characters";
+  static const String confirmPasswordRequired = "Please confirm your password";
+  static const String passwordsDoNotMatch = "Passwords do not match";
+  static const String codeRequired = "Please enter the verification code";
+  static const String invalidCode = "Verification code must be 6 digits";
+  static const String loginSuccess = "Welcome back!";
+  static const String registrationSuccess = "Account created successfully!";
+  static const String resetLinkSent = "Verification code sent to your email";
+  static const String passwordResetSuccess = "Password updated successfully!";
+  static const String invalidCredentials = "Invalid email or password";
+  static const String userAlreadyExists = "An account with this email already exists";
+  static const String userNotFound = "No account found with this email";
+  static const String networkError = "Network error. Please try again";
+
+  // Logout
+  static const String logout = "Log Out";
+  static const String logoutConfirmTitle = "Log out of your account?";
+  static const String logoutConfirmDesc = "You can sign back in anytime to continue your algorithmic journey.";
+  static const String yesLogout = "Log Out";
 }
+
+
