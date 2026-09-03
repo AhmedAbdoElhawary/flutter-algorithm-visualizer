@@ -261,6 +261,16 @@ class StringsManager {
   static const String userNotFound = "No account found with this email";
   static const String networkError = "Network error. Please try again";
 
+  // Profile Update
+  static const String displayNameUpdated = "Display name updated successfully";
+  static const String emailUpdated = "Email updated successfully. Please verify your new email.";
+  static const String passwordUpdated = "Password updated successfully";
+  static const String reauthenticateRequired = "Please log in again before making this change";
+  static const String currentPasswordRequired = "Please enter your current password";
+  static const String newDisplayNameRequired = "Please enter a display name";
+  static const String newEmailRequired = "Please enter a new email";
+  static const String newPasswordRequired = "Please enter a new password";
+
   // Logout
   static const String logout = "Log Out";
   static const String logoutConfirmTitle = "Log out of your account?";
