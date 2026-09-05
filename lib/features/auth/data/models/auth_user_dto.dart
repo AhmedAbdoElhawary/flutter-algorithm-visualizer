@@ -5,14 +5,12 @@ class AuthUserDTO {
   final String name;
   final String email;
   final String? token;
-  final int solvedCount;
 
   const AuthUserDTO({
     required this.id,
     required this.name,
     required this.email,
     this.token,
-    this.solvedCount = 0,
   });
 
   factory AuthUserDTO.fromJson(Map<String, dynamic> json) {
@@ -21,7 +19,6 @@ class AuthUserDTO {
       name: json['name'] as String? ?? '',
       email: json['email'] as String? ?? '',
       token: json['token'] as String?,
-      solvedCount: json['solvedCount'] as int? ?? 0,
     );
   }
 
@@ -31,7 +28,6 @@ class AuthUserDTO {
       'name': name,
       'email': email,
       if (token != null) 'token': token,
-      'solvedCount': solvedCount,
     };
   }
 
@@ -41,7 +37,6 @@ class AuthUserDTO {
       name: name,
       email: email,
       token: token,
-      solvedCount: solvedCount,
     );
   }
 
@@ -51,7 +46,20 @@ class AuthUserDTO {
       name: entity.name,
       email: entity.email,
       token: entity.token,
-      solvedCount: entity.solvedCount,
+    );
+  }
+
+  AuthUserDTO copyWith({
+    String? id,
+    String? name,
+    String? email,
+    String? token,
+  }) {
+    return AuthUserDTO(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      email: email ?? this.email,
+      token: token ?? this.token,
     );
   }
 }
