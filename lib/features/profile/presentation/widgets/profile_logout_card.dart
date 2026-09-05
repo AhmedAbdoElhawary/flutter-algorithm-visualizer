@@ -9,28 +9,29 @@ import 'package:algorithm_visualizer/core/widgets/custom_widgets/custom_icon.dar
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/custom_rounded_elevated_button.dart';
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/rounded_outlined_button.dart';
 import 'package:algorithm_visualizer/features/auth/presentation/view_model/auth_providers.dart';
+import 'package:algorithm_visualizer/features/profile/presentation/view_model/user_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 
-class ProfileLogoutCard extends ConsumerWidget {
+class ProfileLogoutCard extends StatelessWidget {
   const ProfileLogoutCard({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final user = ref.watch(currentUserProvider);
-
+  Widget build(BuildContext context) {
     return HorizontalPadding(
       padding: 16,
       child: AnimatedPopup(
-        builder: (removeOverlay) => _LogoutConfirmationDialog(
-          onConfirm: () async {
-            removeOverlay();
-            await ref.read(authProvider.notifier).logout();
-            if (context.mounted) context.go(Routes.login.path);
-          },
-          onCancel: removeOverlay,
+        builder: (removeOverlay) => Consumer(
+          builder: (context, ref, child) => _LogoutConfirmationDialog(
+            onConfirm: () async {
+              removeOverlay();
+              await ref.read(authProvider.notifier).logout();
+              if (context.mounted) context.go(Routes.login.path);
+            },
+            onCancel: removeOverlay,
+          ),
         ),
         child: Container(
           padding: REdgeInsets.symmetric(horizontal: 14, vertical: 12),
@@ -64,24 +65,30 @@ class ProfileLogoutCard extends ConsumerWidget {
               ),
               RSizedBox(width: 12),
               Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    BoldText(
-                      StringsManager.logout,
-                      color: ThemeEnum.accentRed,
-                      fontSize: 13,
-                      fontWeight: FontWeightManager.bold800,
-                    ),
-                    if (user?.email != null && user!.email.isNotEmpty) ...[
-                      RSizedBox(height: 2),
-                      RegularText(
-                        user.email,
-                        color: ThemeEnum.textSecond,
-                        fontSize: 11,
-                      ),
-                    ],
-                  ],
+                child: Consumer(
+                  builder: (context, ref, child) {
+                    final user = ref.watch(currentUserProvider);
+
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        BoldText(
+                          StringsManager.logout,
+                          color: ThemeEnum.accentRed,
+                          fontSize: 13,
+                          fontWeight: FontWeightManager.bold800,
+                        ),
+                        if (user?.email != null && user!.email.isNotEmpty) ...[
+                          RSizedBox(height: 2),
+                          RegularText(
+                            user.email,
+                            color: ThemeEnum.textSecond,
+                            fontSize: 11,
+                          ),
+                        ],
+                      ],
+                    );
+                  },
                 ),
               ),
               CustomIcon(
