@@ -67,7 +67,11 @@ class ProfileLogoutCard extends StatelessWidget {
               Expanded(
                 child: Consumer(
                   builder: (context, ref, child) {
-                    final user = ref.watch(currentUserProvider);
+                    final email = ref.watch(
+                      currentUserProvider.select(
+                        (value) => value.maybeWhen(data: (data) => data?.email ?? "", orElse: () => ""),
+                      ),
+                    );
 
                     return Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -78,10 +82,10 @@ class ProfileLogoutCard extends StatelessWidget {
                           fontSize: 13,
                           fontWeight: FontWeightManager.bold800,
                         ),
-                        if (user?.email != null && user!.email.isNotEmpty) ...[
+                        if (email.isNotEmpty) ...[
                           RSizedBox(height: 2),
                           RegularText(
-                            user.email,
+                            email,
                             color: ThemeEnum.textSecond,
                             fontSize: 11,
                           ),
