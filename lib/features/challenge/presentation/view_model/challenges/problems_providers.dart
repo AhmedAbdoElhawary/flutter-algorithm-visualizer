@@ -1,4 +1,4 @@
-import 'package:algorithm_visualizer/core/storage/get_storage_service.dart';
+import 'package:algorithm_visualizer/core/storage/storage_providers.dart';
 import 'package:algorithm_visualizer/features/challenge/data/data_sources/local/challenge_local_data_source.dart';
 import 'package:algorithm_visualizer/features/challenge/data/data_sources/remote/challenge_remote_data_source.dart';
 import 'package:algorithm_visualizer/features/challenge/data/repositories/problem_repository_impl.dart';
@@ -8,12 +8,18 @@ import 'package:algorithm_visualizer/features/challenge/domain/repositories/prob
 import 'package:algorithm_visualizer/features/challenge/presentation/view_model/challenges/problems_notifier.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:get_storage/get_storage.dart';
+
+final problemLocalDataSourceProvider = Provider<ProblemLocalDataSource>((ref) {
+  return ProblemLocalDataSource(ref.watch(localStorageProvider));
+});
+
+final problemRemoteDataSourceProvider =
+    Provider<ProblemRemoteDataSource>((ref) => ProblemRemoteDataSourceImpl());
 
 final problemRepositoryProvider = Provider<ProblemRepository>((ref) {
   return ProblemRepositoryImpl(
-    ProblemLocalDataSource(GetStorageService(GetStorage())),
-    ProblemRemoteDataSource(),
+    ref.watch(problemLocalDataSourceProvider),
+    ref.watch(problemRemoteDataSourceProvider),
   );
 });
 
