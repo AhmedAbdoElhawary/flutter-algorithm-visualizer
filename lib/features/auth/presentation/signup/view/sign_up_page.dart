@@ -4,6 +4,7 @@ import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
 import 'package:algorithm_visualizer/core/widgets/adaptive/padding/adaptive_padding.dart';
 import 'package:algorithm_visualizer/core/widgets/adaptive/text/adaptive_text.dart';
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/custom_snack_bar.dart';
+import 'package:algorithm_visualizer/features/auth/presentation/common/view_model/auth_providers.dart';
 import 'package:algorithm_visualizer/features/auth/presentation/common/widget/auth_header_icon.dart';
 import 'package:algorithm_visualizer/features/auth/presentation/common/widget/auth_primary_button.dart';
 import 'package:algorithm_visualizer/features/auth/presentation/common/widget/auth_text_field.dart';
@@ -26,6 +27,33 @@ class _SignUpPageState extends ConsumerState<SignUpPage> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+
+    /// Carry over the name the user already picked while browsing as a guest,
+    /// so they are not asked for it twice. The signup state outlives this page,
+    /// so a name typed on an earlier visit wins over the guest one.
+    final typedName = ref.read(authSignupProvider).name;
+    if (typedName.trim().isNotEmpty) {
+      _nameController.text = typedName;
+      return;
+    }
+
+    final guestName = ref.read(guestDataServiceProvider).guestName;
+    if (guestName == null) return;
+
+    _nameController.text = guestName;
+
+    /// Push the seeded name into signup state after this build pass: go_router
+    /// builds the page inside a layout callback, and mutating a provider there
+    /// is disallowed by Riverpod.
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      ref.read(authSignupProvider.notifier).setName(guestName);
+    });
+  }
 
   @override
   void dispose() {
