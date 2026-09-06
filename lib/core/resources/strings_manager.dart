@@ -276,6 +276,8 @@ class StringsManager {
   static const String logoutConfirmTitle = "Log out of your account?";
   static const String logoutConfirmDesc = "You can sign back in anytime to continue your algorithmic journey.";
   static const String yesLogout = "Log Out";
+  static const String notValidName = "Please enter a valid name";
+
 }
 
 
