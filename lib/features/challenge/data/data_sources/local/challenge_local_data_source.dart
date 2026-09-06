@@ -8,8 +8,8 @@ import 'package:flutter/services.dart';
 const _problemsAssetsPath = 'assets/problems.json';
 const String _problemsKey = 'problems';
 
-/// [loadProblemsAssets] i saved in local storage only the problems that user make any interaction with (solved it, bookmarked it, etc.)
-
+/// i saved in local storage only the problems that user make any interaction with (solved it, bookmarked it, etc.)
+/// Except [loadProblemsAssets] it has all problems
 class ProblemLocalDataSource {
   ProblemLocalDataSource(this._storage);
 
@@ -29,7 +29,7 @@ class ProblemLocalDataSource {
 
     final exists = problems.any((item) => item.problemId == problem.problemId);
 
-    if (exists) throw StateError('Problem with id ${problem.problemId} already exists.');
+    if (exists) return await updateProblem(problem);
 
     problems.add(problem);
 
@@ -74,9 +74,16 @@ class ProblemLocalDataSource {
     return null;
   }
 
-  Future<void> _saveProblems(List<ProblemStorageDTO> problems) async {
-    final json = problems.map((problem) => problem.toJson()).toList();
+  Future<void> overwriteProblems(List<ProblemStorageDTO> problems) => _saveProblems(problems);
 
+  Future<void> _saveProblems(List<ProblemStorageDTO> problems) async {
+    final List<Map<String, dynamic>> json = [];
+
+    for (final problem in problems) {
+      if (problem.problemId == null) continue;
+
+      json.add(problem.toJson());
+    }
     await _storage.write(_problemsKey, json);
   }
 }

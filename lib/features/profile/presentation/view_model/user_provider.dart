@@ -1,5 +1,5 @@
 import 'package:algorithm_visualizer/features/auth/domain/entities/auth_user.dart';
-import 'package:algorithm_visualizer/features/auth/presentation/view_model/auth_providers.dart';
+import 'package:algorithm_visualizer/features/auth/presentation/common/view_model/auth_providers.dart';
 import 'package:algorithm_visualizer/features/profile/data/data_sources/remote/profile_remote_data_source.dart';
 import 'package:algorithm_visualizer/features/profile/data/repositories/profile_repository_impl.dart';
 import 'package:algorithm_visualizer/features/profile/domain/repositories/profile_repository.dart';

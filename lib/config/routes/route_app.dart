@@ -1,10 +1,10 @@
 import 'package:algorithm_visualizer/core/resources/strings_manager.dart';
 import 'package:algorithm_visualizer/core/widgets/adaptive/text/adaptive_text.dart';
-import 'package:algorithm_visualizer/features/auth/presentation/view/forgot_password_page.dart';
-import 'package:algorithm_visualizer/features/auth/presentation/view/login_page.dart';
-import 'package:algorithm_visualizer/features/auth/presentation/view/reset_password_page.dart';
-import 'package:algorithm_visualizer/features/auth/presentation/view/sign_up_page.dart';
-import 'package:algorithm_visualizer/features/auth/presentation/view_model/auth_providers.dart';
+import 'package:algorithm_visualizer/features/auth/presentation/forgot_password/view/forgot_password_page.dart';
+import 'package:algorithm_visualizer/features/auth/presentation/login/view/login_page.dart';
+import 'package:algorithm_visualizer/features/auth/presentation/login/view_model/login_auth_provider.dart';
+import 'package:algorithm_visualizer/features/auth/presentation/reset_password/view/reset_password_page.dart';
+import 'package:algorithm_visualizer/features/auth/presentation/signup/view/sign_up_page.dart';
 import 'package:algorithm_visualizer/features/base/view/base_navigation.dart';
 import 'package:algorithm_visualizer/features/base/view_model/base_view_model.dart';
 import 'package:algorithm_visualizer/features/challenge/presentation/view/challenge_page.dart';
