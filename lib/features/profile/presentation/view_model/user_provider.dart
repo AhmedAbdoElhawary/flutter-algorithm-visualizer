@@ -1,16 +1,20 @@
+import 'package:algorithm_visualizer/core/logging/firebase_log_config.dart';
 import 'package:algorithm_visualizer/core/resources/strings_manager.dart';
 import 'package:algorithm_visualizer/core/storage/storage_providers.dart';
 import 'package:algorithm_visualizer/features/auth/domain/entities/auth_user.dart';
 import 'package:algorithm_visualizer/features/auth/presentation/common/view_model/auth_providers.dart';
 import 'package:algorithm_visualizer/features/profile/data/data_sources/local/profile_local_data_source.dart';
+import 'package:algorithm_visualizer/features/profile/data/data_sources/remote/logging_profile_remote_data_source.dart';
 import 'package:algorithm_visualizer/features/profile/data/data_sources/remote/profile_remote_data_source.dart';
 import 'package:algorithm_visualizer/features/profile/data/repositories/profile_repository_impl.dart';
 import 'package:algorithm_visualizer/features/profile/domain/repositories/profile_repository.dart';
 import 'package:algorithm_visualizer/features/profile/presentation/view_model/profile_notifier.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-final profileRemoteDataSourceProvider =
-    Provider<ProfileRemoteDataSource>((ref) => ProfileRemoteDataSourceImpl());
+final profileRemoteDataSourceProvider = Provider<ProfileRemoteDataSource>((ref) {
+  final source = ProfileRemoteDataSourceImpl();
+  return FirebaseLogConfig.enabled ? LoggingProfileRemoteDataSource(source) : source;
+});
 
 final profileLocalDataSourceProvider = Provider<ProfileLocalDataSource>((ref) {
   return ProfileLocalDataSourceImpl(ref.watch(localStorageProvider));
