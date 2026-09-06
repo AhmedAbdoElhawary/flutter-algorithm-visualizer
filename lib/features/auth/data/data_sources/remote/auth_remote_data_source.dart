@@ -8,9 +8,6 @@ abstract class AuthRemoteDataSource {
   Future<void> forgotPassword({required String email});
   Future<void> resetPassword({required String code, required String newPassword});
   Future<void> signOut();
-  Future<void> updateDisplayName({required String displayName});
-  Future<void> updateEmail({required String newEmail, required String currentPassword});
-  Future<void> updatePassword({required String currentPassword, required String newPassword});
 }
 
 class FirebaseAuthRemoteDataSourceImpl implements AuthRemoteDataSource {
@@ -109,57 +106,6 @@ class FirebaseAuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   Future<void> signOut() async {
     try {
       await _firebaseAuth.signOut();
-    } on FirebaseAuthException catch (e) {
-      throw FirebaseExceptions.handleFirebaseAuthException(e);
-    } catch (e) {
-      rethrow;
-    }
-  }
-
-  @override
-  Future<void> updateDisplayName({required String displayName}) async {
-    try {
-      final user = _firebaseAuth.currentUser;
-      if (user == null) throw Exception('No authenticated user');
-
-      await user.updateDisplayName(displayName.trim());
-      await user.reload();
-    } on FirebaseAuthException catch (e) {
-      throw FirebaseExceptions.handleFirebaseAuthException(e);
-    } catch (e) {
-      rethrow;
-    }
-  }
-
-  @override
-  Future<void> updateEmail({required String newEmail, required String currentPassword}) async {
-    try {
-      final user = _firebaseAuth.currentUser;
-      if (user == null || user.email == null) throw Exception('No authenticated user');
-
-      final credential = EmailAuthProvider.credential(email: user.email!, password: currentPassword);
-      await user.reauthenticateWithCredential(credential);
-
-      await user.verifyBeforeUpdateEmail(newEmail.trim());
-      await user.reload();
-    } on FirebaseAuthException catch (e) {
-      throw FirebaseExceptions.handleFirebaseAuthException(e);
-    } catch (e) {
-      rethrow;
-    }
-  }
-
-  @override
-  Future<void> updatePassword({required String currentPassword, required String newPassword}) async {
-    try {
-      final user = _firebaseAuth.currentUser;
-      if (user == null || user.email == null) throw Exception('No authenticated user');
-
-      final credential = EmailAuthProvider.credential(email: user.email!, password: currentPassword);
-      await user.reauthenticateWithCredential(credential);
-
-      await user.updatePassword(newPassword);
-      await user.reload();
     } on FirebaseAuthException catch (e) {
       throw FirebaseExceptions.handleFirebaseAuthException(e);
     } catch (e) {
