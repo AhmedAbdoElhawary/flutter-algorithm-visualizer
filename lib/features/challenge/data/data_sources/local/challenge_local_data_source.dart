@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:algorithm_visualizer/core/storage/get_storage_service.dart';
+import 'package:algorithm_visualizer/core/storage/storage.dart';
 import 'package:algorithm_visualizer/features/challenge/data/models/dataset.dart';
 import 'package:algorithm_visualizer/features/challenge/data/models/problem_storage.dart';
 import 'package:flutter/services.dart';
@@ -13,7 +13,7 @@ const String _problemsKey = 'problems';
 class ProblemLocalDataSource {
   ProblemLocalDataSource(this._storage);
 
-  final GetStorageService _storage;
+  final LocalStorage _storage;
 
   Future<Dataset> loadProblemsAssets() async {
     final String jsonString = await rootBundle.loadString(_problemsAssetsPath);
