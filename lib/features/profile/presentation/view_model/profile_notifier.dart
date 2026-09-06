@@ -37,17 +37,14 @@ class ProfileNotifier extends Notifier<AsyncValue<AuthUser?>> {
       return false;
     }
 
-    // final preDisplayName = state.newDisplayName;
-    // final preUser = state.user;
-
     try {
       await _profileRepository.updateDisplayName(displayName: name.trim());
 
-      // state = state.copyWith(
-      //   status: NotifierStatus.success,
-      //   successMessage: StringsManager.displayNameUpdated,
-      //   clearNewDisplayNameError: true,
-      // );
+      /// Reflect the new name straight away: a guest has no Firebase profile to
+      /// re-read, and `currentUserNameProvider` reads it off this state.
+      state = state.whenData(
+        (user) => (user ?? const AuthUser.guest()).copyWith(name: name.trim()),
+      );
       return true;
     } catch (e) {
       // state = state.copyWith(
