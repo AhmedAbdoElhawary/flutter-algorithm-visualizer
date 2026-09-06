@@ -7,6 +7,7 @@ import 'package:algorithm_visualizer/features/challenge/domain/repositories/prob
 import 'package:collection/collection.dart';
 import 'package:flutter/cupertino.dart';
 
+/// [localDataSource] i became relying on remote data source as local caching
 class ProblemRepositoryImpl implements ProblemRepository {
   ProblemRepositoryImpl(this.localDataSource, this.remoteDataSource);
 
@@ -31,7 +32,7 @@ class ProblemRepositoryImpl implements ProblemRepository {
     final dto = ProblemStorageDTO.fromJson(problem.toJson());
 
     await Future.wait([
-      localDataSource.saveProblem(dto),
+      // localDataSource.saveProblem(dto),
       _tryRemote(() => remoteDataSource.saveProblem(dto)),
     ]);
   }
@@ -41,7 +42,7 @@ class ProblemRepositoryImpl implements ProblemRepository {
     final dto = ProblemStorageDTO.fromJson(problem.toJson());
 
     await Future.wait([
-      localDataSource.updateProblem(dto),
+      // localDataSource.updateProblem(dto),
       _tryRemote(() => remoteDataSource.updateProblem(dto)),
     ]);
   }
@@ -49,25 +50,25 @@ class ProblemRepositoryImpl implements ProblemRepository {
   @override
   Future<void> deleteProblem(int problemId) async {
     await Future.wait([
-      localDataSource.deleteProblem(problemId),
+      // localDataSource.deleteProblem(problemId),
       _tryRemote(() => remoteDataSource.deleteProblem(problemId)),
     ]);
   }
 
   Future<List<ProblemStorageDTO>> _loadStorageProblems() async {
-    if (!remoteDataSource.isSignedIn) return localDataSource.getProblems();
+    // if (!remoteDataSource.isSignedIn) return localDataSource.getProblems();
 
-    try {
-      final remoteProblems = await remoteDataSource.getProblems();
-      await localDataSource.overwriteProblems(remoteProblems);
-      return remoteProblems;
-    } catch (_) {
-      return localDataSource.getProblems();
-    }
+    // try {
+    final remoteProblems = await remoteDataSource.getProblems();
+    // await localDataSource.overwriteProblems(remoteProblems);
+    return remoteProblems;
+    // } catch (_) {
+    //   return localDataSource.getProblems();
+    // }
   }
 
   Future<void> _tryRemote(Future<void> Function() action) async {
-    if (!remoteDataSource.isSignedIn) return;
+    // if (!remoteDataSource.isSignedIn) return;
     try {
       await action();
     } catch (e) {
