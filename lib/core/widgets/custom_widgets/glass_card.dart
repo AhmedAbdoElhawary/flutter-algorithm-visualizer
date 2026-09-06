@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
 import 'package:algorithm_visualizer/core/widgets/adaptive/text/adaptive_text.dart';
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/custom_icon.dart';
@@ -106,27 +104,30 @@ class GlassContainer extends StatelessWidget {
   Widget build(BuildContext context) {
     final borderColor = context.getColor(highlightCard ? ThemeEnum.borderPurpleColor : ThemeEnum.border);
 
+    // NOTE: this used to wrap the card in a `BackdropFilter`
+    // (`ImageFilter.blur(sigmaX: 2, sigmaY: 2)`). With an animated background
+    // behind it, every glass card forced a per-frame saveLayer + blur that
+    // could never be cached, which made scrolling screens full of these cards
+    // (e.g. the home grid) stutter. The sigma-2 blur was visually negligible,
+    // so it's dropped in favour of the plain translucent fill below.
     return ClipRRect(
       borderRadius: BorderRadius.circular(borderRadius),
-      child: BackdropFilter(
-        filter: ImageFilter.blur(sigmaX: 2, sigmaY: 2),
-        child: Container(
-          padding: padding,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(borderRadius),
-            color: context.getColor(highlightCard ? ThemeEnum.lightPurpleColor : color),
-            border: Border(
-              top: BorderSide(
-                  color: borderColor,
-                  width: withAboveShadow ? 1.5 : borderWidth,
-                  strokeAlign: withAboveShadow ? -2 : -1),
-              right: BorderSide(color: borderColor, width: borderWidth),
-              left: BorderSide(color: borderColor, width: borderWidth),
-              bottom: BorderSide(color: borderColor, width: borderWidth),
-            ),
+      child: Container(
+        padding: padding,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(borderRadius),
+          color: context.getColor(highlightCard ? ThemeEnum.lightPurpleColor : color),
+          border: Border(
+            top: BorderSide(
+                color: borderColor,
+                width: withAboveShadow ? 1.5 : borderWidth,
+                strokeAlign: withAboveShadow ? -2 : -1),
+            right: BorderSide(color: borderColor, width: borderWidth),
+            left: BorderSide(color: borderColor, width: borderWidth),
+            bottom: BorderSide(color: borderColor, width: borderWidth),
           ),
-          child: child,
         ),
+        child: child,
       ),
     );
   }
