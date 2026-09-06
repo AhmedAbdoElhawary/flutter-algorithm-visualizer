@@ -9,9 +9,16 @@ class ProfileRepositoryImpl implements ProfileRepository {
 
   ProfileRepositoryImpl({required this.localDataSource, required this.remoteDataSource});
   @override
-  AuthUser? getCurrentUser() {
-    final dto = localDataSource.getUser();
-    return dto?.toDomain();
+  Future<AuthUser?> getCurrentUser() async {
+    final user = remoteDataSource.getCurrentUser();
+    if (user == null) return null;
+
+    return AuthUser(
+      id: user.uid,
+      name: user.displayName,
+      email: user.email,
+      token: await (user.getIdToken()),
+    );
   }
 
   @override
