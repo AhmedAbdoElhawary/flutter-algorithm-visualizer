@@ -278,6 +278,13 @@ class StringsManager {
   static const String yesLogout = "Log Out";
   static const String notValidName = "Please enter a valid name";
 
+  // Guest session
+  static const String guestProgressWarningTitle = "Replace your local progress?";
+  static const String guestProgressWarningDesc =
+      "Your local interactions will be removed when you log in to this account.";
+  static const String continueToLogin = "Log In Anyway";
+  static const String guestAccountTitle = "Log In or Sign Up";
+  static const String guestAccountDesc = "Save your progress and sync it across your devices.";
 }
 
 
