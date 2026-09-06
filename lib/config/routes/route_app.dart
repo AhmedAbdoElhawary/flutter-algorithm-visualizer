@@ -2,7 +2,6 @@ import 'package:algorithm_visualizer/core/resources/strings_manager.dart';
 import 'package:algorithm_visualizer/core/widgets/adaptive/text/adaptive_text.dart';
 import 'package:algorithm_visualizer/features/auth/presentation/forgot_password/view/forgot_password_page.dart';
 import 'package:algorithm_visualizer/features/auth/presentation/login/view/login_page.dart';
-import 'package:algorithm_visualizer/features/auth/presentation/login/view_model/login_auth_provider.dart';
 import 'package:algorithm_visualizer/features/auth/presentation/reset_password/view/reset_password_page.dart';
 import 'package:algorithm_visualizer/features/auth/presentation/signup/view/sign_up_page.dart';
 import 'package:algorithm_visualizer/features/base/view/base_navigation.dart';
@@ -101,7 +100,7 @@ class AppRoutes {
     return GoRouter(
       debugLogDiagnostics: true,
       navigatorKey: _rootKey,
-      initialLocation: ref.read(isLoggedInProvider) ? Routes.home.path : Routes.login.path,
+      initialLocation: Routes.home.path,
       errorBuilder: (context, state) => const _UnknownPage(),
       routes: [
         GoRoute(
