@@ -5,6 +5,8 @@ import 'package:algorithm_visualizer/features/auth/domain/repositories/auth_repo
 import 'package:algorithm_visualizer/features/auth/presentation/common/extensions/auth_extensions.dart';
 import 'package:algorithm_visualizer/features/auth/presentation/common/view_model/auth_providers.dart';
 import 'package:algorithm_visualizer/features/auth/presentation/signup/view_model/signup_auth_state.dart';
+import 'package:algorithm_visualizer/features/challenge/presentation/view_model/challenges/problems_providers.dart';
+import 'package:algorithm_visualizer/features/profile/presentation/view_model/user_provider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class AuthSignUpNotifier extends Notifier<AuthSignUpState> {
@@ -108,6 +110,14 @@ class AuthSignUpNotifier extends Notifier<AuthSignUpState> {
         email: state.email.trim(),
         password: state.password,
       );
+
+      /// Carry the guest's work into the account that now owns it. A failure
+      /// here is not a sign up failure: the account exists and the user is
+      /// signed in, the local copy is kept and retried on the next launch.
+      await ref.read(guestDataServiceProvider).migrateToAccount();
+
+      ref.invalidate(problemsProvider);
+      ref.invalidate(profileProvider);
 
       state = state.copyWith(
         status: NotifierStatus.success,

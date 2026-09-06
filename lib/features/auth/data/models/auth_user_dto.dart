@@ -40,15 +40,6 @@ class AuthUserDTO {
     );
   }
 
-  factory AuthUserDTO.fromDomain(AuthUser entity) {
-    return AuthUserDTO(
-      id: entity.id,
-      name: entity.name,
-      email: entity.email,
-      token: entity.token,
-    );
-  }
-
   AuthUserDTO copyWith({
     String? id,
     String? name,

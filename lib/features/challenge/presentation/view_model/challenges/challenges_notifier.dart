@@ -32,7 +32,7 @@ class ChallengesNotifier extends Notifier<ChallengesState> {
     }
   }
 
-  Future<void> updateProblem(CodingProblem problem, CodeGradeResult result) async {
+  Future<void> updateProblemSubmission(CodingProblem problem, CodeGradeResult result) async {
     final updatedProblem = await _updateProblemSolutionUseCase.call(problem, result);
     ref.read(problemsProvider.notifier).updateProblem(updatedProblem);
   }
@@ -40,6 +40,7 @@ class ChallengesNotifier extends Notifier<ChallengesState> {
   Future<void> toggleBookmark(CodingProblem problem) async {
     final updated = problem.copyWith(isBookmarked: !problem.getIsBookmarked);
     await _problemRepository.updateProblem(updated);
+
     ref.read(problemsProvider.notifier).updateProblem(updated);
   }
 

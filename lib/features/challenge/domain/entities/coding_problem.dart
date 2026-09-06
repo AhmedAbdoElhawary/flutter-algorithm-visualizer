@@ -163,8 +163,9 @@ class CodingProblem {
           sourceProblemNumber == other.sourceProblemNumber &&
           difficulty == other.difficulty &&
           category == other.category &&
-          problemStatus == other.problemStatus &&
-          isBookmarked == other.isBookmarked;
+          problemStatus?.name == other.problemStatus?.name &&
+          isBookmarked == other.isBookmarked &&
+          solutionsStatus == other.solutionsStatus;
 
   @override
   int get hashCode => Object.hash(
@@ -175,8 +176,9 @@ class CodingProblem {
         sourceProblemNumber,
         difficulty,
         category,
-        problemStatus,
+        problemStatus?.name,
         isBookmarked,
+        solutionsStatus.hashCode,
       );
 }
 

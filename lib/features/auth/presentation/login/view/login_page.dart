@@ -3,7 +3,10 @@ import 'package:algorithm_visualizer/core/resources/strings_manager.dart';
 import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
 import 'package:algorithm_visualizer/core/widgets/adaptive/padding/adaptive_padding.dart';
 import 'package:algorithm_visualizer/core/widgets/adaptive/text/adaptive_text.dart';
+import 'package:algorithm_visualizer/core/widgets/custom_widgets/animated_popup.dart';
+import 'package:algorithm_visualizer/core/widgets/custom_widgets/confirmation_dialog_card.dart';
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/custom_snack_bar.dart';
+import 'package:algorithm_visualizer/features/auth/presentation/common/view_model/auth_providers.dart';
 import 'package:algorithm_visualizer/features/auth/presentation/common/widget/auth_header_icon.dart';
 import 'package:algorithm_visualizer/features/auth/presentation/common/widget/auth_primary_button.dart';
 import 'package:algorithm_visualizer/features/auth/presentation/common/widget/auth_text_field.dart';
@@ -105,6 +108,11 @@ class _LoginFooter extends StatelessWidget {
 class _AuthButton extends ConsumerWidget {
   const _AuthButton();
 
+  Future<void> _login(BuildContext context, WidgetRef ref) async {
+    final success = await ref.read(authLoginProvider.notifier).login();
+    if (success && context.mounted) context.go(Routes.home.path);
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final isLoading = ref.watch(authLoginProvider.select((s) => s.isLoading));
@@ -114,8 +122,29 @@ class _AuthButton extends ConsumerWidget {
       icon: Icons.arrow_forward_rounded,
       isLoading: isLoading,
       onPressed: () async {
-        final success = await ref.read(authLoginProvider.notifier).login();
-        if (success && context.mounted) context.go(Routes.home.path);
+        /// Signing in adopts the account's own progress and drops whatever was
+        /// solved as a guest, so warn first, but only when there is something
+        /// to lose and the form is worth submitting.
+        final hasGuestData = ref.read(guestDataServiceProvider).hasGuestData;
+
+        if (!hasGuestData || !ref.read(authLoginProvider.notifier).validateLogin()) {
+          return await _login(context, ref);
+        }
+
+        AnimatedPopup.show(
+          context,
+          builder: (removeOverlay) => ConfirmationDialogCard(
+            icon: Icons.sync_problem_rounded,
+            title: StringsManager.guestProgressWarningTitle,
+            description: StringsManager.guestProgressWarningDesc,
+            confirmLabel: StringsManager.continueToLogin,
+            onCancel: removeOverlay,
+            onConfirm: () {
+              removeOverlay();
+              _login(context, ref);
+            },
+          ),
+        );
       },
     );
   }
