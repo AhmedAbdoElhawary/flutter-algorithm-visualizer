@@ -10,8 +10,17 @@ abstract class ProfileRemoteDataSource {
 
 class ProfileRemoteDataSourceImpl implements ProfileRemoteDataSource {
   late final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
+
   @override
-  User? getCurrentUser() => _firebaseAuth.currentUser;
+  User? getCurrentUser() {
+    try {
+      return _firebaseAuth.currentUser;
+    } catch (_) {
+      /// Firebase never came up, `main` swallows that failure. Reporting nobody
+      /// signed in keeps the app on its local guest session.
+      return null;
+    }
+  }
 
   @override
   Future<void> updateDisplayName({required String displayName}) async {
