@@ -54,9 +54,7 @@ class FirebaseAuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       );
 
       final user = credential.user;
-      if (user == null) {
-        throw Exception('User creation failed');
-      }
+      if (user == null) throw Exception('User creation failed');
 
       // Update user display name in Firebase Auth
       await user.updateDisplayName(name.trim());
