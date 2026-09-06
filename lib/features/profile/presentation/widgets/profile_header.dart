@@ -52,7 +52,7 @@ class ProfileHeader extends StatelessWidget {
               ),
               child: Center(
                 child: Consumer(builder: (context, ref, child) {
-                  final name = ref.watch(profileStorageProvider.select((value) => value.username));
+                  final name = ref.watch(currentUserNameProvider.select((value) => value));
 
                   return BoldText(
                     name.isNotEmpty ? name[0].toUpperCase() : StringsManager.anonymous,
@@ -88,7 +88,7 @@ class ProfileHeader extends StatelessWidget {
               child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
             Consumer(
                 builder: (context, ref, child) =>
-                    _EditableName(name: ref.watch(profileStorageProvider.select((value) => value.username)))),
+                    _EditableName(name: ref.watch(currentUserNameProvider.select((value) => value)))),
           ])),
         ]),
       ]),
@@ -152,16 +152,14 @@ class _EditableNameState extends ConsumerState<_EditableName> {
         ),
         onSubmitted: (value) {
           final text = value.trim();
-          if (text.isNotEmpty) {
-            ref.read(profileStorageProvider.notifier).updateName(text);
-          }
+          if (text.isNotEmpty) ref.read(profileProvider.notifier).updateDisplayName(name: text);
+
           setState(() => _editing = false);
         },
         onTapOutside: (event) {
           final text = _controller.text.trim();
-          if (text.isNotEmpty) {
-            ref.read(profileStorageProvider.notifier).updateName(text);
-          }
+          if (text.isNotEmpty) ref.read(profileProvider.notifier).updateDisplayName(name: text);
+
           setState(() => _editing = false);
         },
       );

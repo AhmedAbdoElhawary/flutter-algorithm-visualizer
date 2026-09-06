@@ -1,4 +1,3 @@
-import 'package:algorithm_visualizer/core/resources/strings_manager.dart';
 import 'package:algorithm_visualizer/core/storage/get_storage_service.dart';
 import 'package:algorithm_visualizer/features/auth/data/data_sources/local/auth_local_data_source.dart';
 import 'package:algorithm_visualizer/features/auth/data/data_sources/remote/auth_remote_data_source.dart';
@@ -32,7 +31,7 @@ final currentUserProvider = Provider<AuthUser?>((ref) {
 });
 
 final currentUserNameProvider = Provider<String>((ref) {
-  return ref.watch(authProvider.select((state) => (state.user?.name)?? StringsManager.anonymous));
+  return ref.watch(authProvider.select((state) => (state.newDisplayName)));
 });
 
 final isLoggedInProvider = Provider<bool>((ref) {

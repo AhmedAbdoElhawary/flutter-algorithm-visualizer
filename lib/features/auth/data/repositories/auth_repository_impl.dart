@@ -51,4 +51,31 @@ class AuthRepositoryImpl implements AuthRepository {
     await localDataSource.clearUser();
     await remoteDataSource.signOut();
   }
+
+  @override
+  Future<void> updateDisplayName({required String displayName}) async {
+    await remoteDataSource.updateDisplayName(displayName: displayName);
+
+    final currentDto = localDataSource.getUser();
+    if (currentDto != null) {
+      final updatedDto = currentDto.copyWith(name: displayName.trim());
+      await localDataSource.saveUser(updatedDto);
+    }
+  }
+
+  @override
+  Future<void> updateEmail({required String newEmail, required String currentPassword}) async {
+    await remoteDataSource.updateEmail(newEmail: newEmail, currentPassword: currentPassword);
+
+    final currentDto = localDataSource.getUser();
+    if (currentDto != null) {
+      final updatedDto = currentDto.copyWith(email: newEmail.trim());
+      await localDataSource.saveUser(updatedDto);
+    }
+  }
+
+  @override
+  Future<void> updatePassword({required String currentPassword, required String newPassword}) async {
+    await remoteDataSource.updatePassword(currentPassword: currentPassword, newPassword: newPassword);
+  }
 }

@@ -1,41 +1,29 @@
-import 'package:algorithm_visualizer/core/resources/strings_manager.dart';
-import 'package:algorithm_visualizer/core/storage/get_storage_service.dart';
+import 'package:algorithm_visualizer/features/auth/domain/entities/auth_user.dart';
+import 'package:algorithm_visualizer/features/auth/presentation/view_model/auth_providers.dart';
+import 'package:algorithm_visualizer/features/profile/data/data_sources/remote/profile_remote_data_source.dart';
+import 'package:algorithm_visualizer/features/profile/data/repositories/profile_repository_impl.dart';
+import 'package:algorithm_visualizer/features/profile/domain/repositories/profile_repository.dart';
+import 'package:algorithm_visualizer/features/profile/presentation/view_model/profile_notifier.dart';
+import 'package:algorithm_visualizer/features/profile/presentation/view_model/profile_state.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:get_storage/get_storage.dart';
 
-part 'profile_storage.dart';
+final profileRemoteDataSourceProvider =
+    Provider<ProfileRemoteDataSource>((ref) => ProfileRemoteDataSourceImpl());
 
-final profileStorageProvider = NotifierProvider<ProfileStorageNotifier, ProfileStorageState>(() {
-  return ProfileStorageNotifier();
+final profileRepositoryProvider = Provider<ProfileRepository>((ref) {
+  final local = ref.watch(authLocalDataSourceProvider);
+  final remote = ref.watch(profileRemoteDataSourceProvider);
+  return ProfileRepositoryImpl(localDataSource: local, remoteDataSource: remote);
 });
 
-class ProfileStorageNotifier extends Notifier<ProfileStorageState> {
-  late final ProfileStorage _storage;
+final profileProvider = NotifierProvider.autoDispose<ProfileNotifier, ProfileState>(() {
+  return ProfileNotifier();
+});
 
-  @override
-  ProfileStorageState build() {
-    _storage = ref.watch(profileStorageInstanceProvider);
-    return ProfileStorageState(username: _storage.getProfileName());
-  }
+final currentUserProvider = Provider<AuthUser?>((ref) {
+  return ref.watch(profileProvider.select((state) => state.user));
+});
 
-  Future<void> updateName(String name) async {
-    if (name.trim().isEmpty) return;
-
-    state = state.copyWith(username: name.trim());
-    await _storage.saveProfileName(name.trim());
-  }
-}
-
-class ProfileStorageState {
-  final String username;
-
-  ProfileStorageState({required this.username});
-
-  factory ProfileStorageState.initial() {
-    return ProfileStorageState(username: defaultName);
-  }
-
-  ProfileStorageState copyWith({String? username}) {
-    return ProfileStorageState(username: username ?? this.username);
-  }
-}
+final currentUserNameProvider = Provider<String>((ref) {
+  return ref.watch(profileProvider.select((state) => (state.user?.name ?? state.newDisplayName)));
+});
