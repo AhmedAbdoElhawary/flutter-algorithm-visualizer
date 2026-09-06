@@ -337,7 +337,6 @@ ProblemSolutionStatusDTO _createSolution({
 }) {
   return ProblemSolutionStatusDTO(
     code: 'test code',
-    allTestCaseResults: const [],
     isCorrect: isCorrect,
     submittedAt: submittedAt,
   );
