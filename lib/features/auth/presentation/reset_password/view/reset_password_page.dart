@@ -5,11 +5,11 @@ import 'package:algorithm_visualizer/core/widgets/adaptive/padding/adaptive_padd
 import 'package:algorithm_visualizer/core/widgets/adaptive/text/adaptive_text.dart';
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/custom_icon.dart';
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/custom_snack_bar.dart';
-import 'package:algorithm_visualizer/features/auth/presentation/view_model/auth_providers.dart';
-import 'package:algorithm_visualizer/features/auth/presentation/widgets/auth_back_button.dart';
-import 'package:algorithm_visualizer/features/auth/presentation/widgets/auth_header_icon.dart';
-import 'package:algorithm_visualizer/features/auth/presentation/widgets/auth_primary_button.dart';
-import 'package:algorithm_visualizer/features/auth/presentation/widgets/auth_text_field.dart';
+import 'package:algorithm_visualizer/features/auth/presentation/common/widget/auth_back_button.dart';
+import 'package:algorithm_visualizer/features/auth/presentation/common/widget/auth_header_icon.dart';
+import 'package:algorithm_visualizer/features/auth/presentation/common/widget/auth_primary_button.dart';
+import 'package:algorithm_visualizer/features/auth/presentation/common/widget/auth_text_field.dart';
+import 'package:algorithm_visualizer/features/auth/presentation/reset_password/view_model/reset_password_auth_provider.dart';
 import 'package:algorithm_visualizer/features/home/view/movable_pins.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -37,7 +37,7 @@ class _ResetPasswordPageState extends ConsumerState<ResetPasswordPage> {
   }
 
   void _onSaveNewPassword() async {
-    final success = await ref.read(authProvider.notifier).resetPassword();
+    final success = await ref.read(authResetPasswordProvider.notifier).resetPassword();
     if (success && mounted) {
       context.go(Routes.login.path);
     }
@@ -45,18 +45,12 @@ class _ResetPasswordPageState extends ConsumerState<ResetPasswordPage> {
 
   @override
   Widget build(BuildContext context) {
-    final isNewPasswordVisible =
-        ref.watch(authProvider.select((s) => s.isNewPasswordVisible));
-    final isConfirmNewPasswordVisible =
-        ref.watch(authProvider.select((s) => s.isConfirmNewPasswordVisible));
-    final isLoading = ref.watch(authProvider.select((s) => s.isLoading));
-    final codeError = ref.watch(authProvider.select((s) => s.verificationCodeError));
-    final newPasswordError = ref.watch(authProvider.select((s) => s.newPasswordError));
-    final confirmNewPasswordError =
-        ref.watch(authProvider.select((s) => s.confirmNewPasswordError));
+    final isLoading = ref.watch(authResetPasswordProvider.select((s) => s.isLoading));
+    final codeError = ref.watch(authResetPasswordProvider.select((s) => s.verificationCodeError));
+
     ref.listen(
-      authProvider.select((s) => s.errorMessage),
-          (previous, next) {
+      authResetPasswordProvider.select((s) => s.errorMessage),
+      (previous, next) {
         if (next != null) context.showSnackBar(message: next, type: CustomSnackBarType.error);
       },
     );
@@ -103,38 +97,13 @@ class _ResetPasswordPageState extends ConsumerState<ResetPasswordPage> {
                     textInputAction: TextInputAction.next,
                     errorText: codeError,
                     onChanged: (v) =>
-                        ref.read(authProvider.notifier).setVerificationCode(v),
+                        ref.read(authResetPasswordProvider.notifier).setVerificationCode(v),
                   ),
                   RSizedBox(height: 16),
-                  AuthTextField(
-                    label: StringsManager.newPassword,
-                    hintText: StringsManager.newPasswordHint,
-                    prefixIcon: Icons.lock_outline_rounded,
-                    controller: _newPasswordController,
-                    isPassword: true,
-                    isPasswordVisible: isNewPasswordVisible,
-                    textInputAction: TextInputAction.next,
-                    errorText: newPasswordError,
-                    onTogglePasswordVisibility: () =>
-                        ref.read(authProvider.notifier).toggleNewPasswordVisibility(),
-                    onChanged: (v) =>
-                        ref.read(authProvider.notifier).setNewPassword(v),
-                  ),
+                  _NewPasswordField(controller: _newPasswordController),
                   RSizedBox(height: 16),
-                  AuthTextField(
-                    label: StringsManager.confirmNewPassword,
-                    hintText: StringsManager.confirmNewPasswordHint,
-                    prefixIcon: Icons.lock_outline_rounded,
+                  _ConfirmNewPasswordField(
                     controller: _confirmNewPasswordController,
-                    isPassword: true,
-                    isPasswordVisible: isConfirmNewPasswordVisible,
-                    textInputAction: TextInputAction.done,
-                    errorText: confirmNewPasswordError,
-                    onTogglePasswordVisibility: () => ref
-                        .read(authProvider.notifier)
-                        .toggleConfirmNewPasswordVisibility(),
-                    onChanged: (v) =>
-                        ref.read(authProvider.notifier).setConfirmNewPassword(v),
                     onSubmitted: (_) => _onSaveNewPassword(),
                   ),
                   RSizedBox(height: 24),
@@ -153,6 +122,79 @@ class _ResetPasswordPageState extends ConsumerState<ResetPasswordPage> {
           ),
         ),
       ),
+    );
+  }
+}
+
+class _NewPasswordField extends ConsumerStatefulWidget {
+  const _NewPasswordField({required this.controller});
+
+  final TextEditingController controller;
+
+  @override
+  ConsumerState<_NewPasswordField> createState() => _NewPasswordFieldState();
+}
+
+class _NewPasswordFieldState extends ConsumerState<_NewPasswordField> {
+  bool isPasswordVisible = false;
+
+  @override
+  Widget build(BuildContext context) {
+    final newPasswordError = ref.watch(authResetPasswordProvider.select((s) => s.newPasswordError));
+
+    return AuthTextField(
+      label: StringsManager.newPassword,
+      hintText: StringsManager.newPasswordHint,
+      prefixIcon: Icons.lock_outline_rounded,
+      controller: widget.controller,
+      isPassword: true,
+      isPasswordVisible: isPasswordVisible,
+      textInputAction: TextInputAction.next,
+      errorText: newPasswordError,
+      onTogglePasswordVisibility: () {
+        setState(() {
+          isPasswordVisible = !isPasswordVisible;
+        });
+      },
+      onChanged: (v) => ref.read(authResetPasswordProvider.notifier).setNewPassword(v),
+    );
+  }
+}
+
+class _ConfirmNewPasswordField extends ConsumerStatefulWidget {
+  const _ConfirmNewPasswordField({required this.controller, this.onSubmitted});
+
+  final TextEditingController controller;
+  final ValueChanged<String>? onSubmitted;
+
+  @override
+  ConsumerState<_ConfirmNewPasswordField> createState() => _ConfirmNewPasswordFieldState();
+}
+
+class _ConfirmNewPasswordFieldState extends ConsumerState<_ConfirmNewPasswordField> {
+  bool isPasswordVisible = false;
+
+  @override
+  Widget build(BuildContext context) {
+    final confirmNewPasswordError =
+        ref.watch(authResetPasswordProvider.select((s) => s.confirmNewPasswordError));
+
+    return AuthTextField(
+      label: StringsManager.confirmNewPassword,
+      hintText: StringsManager.confirmNewPasswordHint,
+      prefixIcon: Icons.lock_outline_rounded,
+      controller: widget.controller,
+      isPassword: true,
+      isPasswordVisible: isPasswordVisible,
+      textInputAction: TextInputAction.done,
+      errorText: confirmNewPasswordError,
+      onTogglePasswordVisibility: () {
+        setState(() {
+          isPasswordVisible = !isPasswordVisible;
+        });
+      },
+      onChanged: (v) => ref.read(authResetPasswordProvider.notifier).setConfirmNewPassword(v),
+      onSubmitted: widget.onSubmitted,
     );
   }
 }
