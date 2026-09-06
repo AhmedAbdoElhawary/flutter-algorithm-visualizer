@@ -1,4 +1,3 @@
-import 'package:algorithm_visualizer/features/challenge/data/models/test_case.dart';
 import 'package:algorithm_visualizer/features/challenge/domain/enums/problem.dart';
 import 'package:json_annotation/json_annotation.dart';
 
@@ -40,13 +39,11 @@ class ProblemStorageDTO {
 class ProblemSolutionStatusDTO {
   const ProblemSolutionStatusDTO({
     required this.code,
-    required this.allTestCaseResults,
     required this.isCorrect,
     this.submittedAt,
   });
 
   final String? code;
-  final List<TestCaseResult>? allTestCaseResults;
   final bool? isCorrect;
   final DateTime? submittedAt;
 

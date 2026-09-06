@@ -5,6 +5,8 @@ import 'package:algorithm_visualizer/features/auth/domain/repositories/auth_repo
 import 'package:algorithm_visualizer/features/auth/presentation/common/extensions/auth_extensions.dart';
 import 'package:algorithm_visualizer/features/auth/presentation/common/view_model/auth_providers.dart';
 import 'package:algorithm_visualizer/features/auth/presentation/login/view_model/login_auth_state.dart';
+import 'package:algorithm_visualizer/features/challenge/presentation/view_model/challenges/problems_providers.dart';
+import 'package:algorithm_visualizer/features/profile/presentation/view_model/user_provider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class AuthLoginNotifier extends Notifier<AuthLoginState> {
@@ -72,6 +74,11 @@ class AuthLoginNotifier extends Notifier<AuthLoginState> {
     try {
       await _authRepository.login(email: state.email.trim(), password: state.password);
 
+      /// The account's own data replaces the guest session entirely, the user
+      /// has already confirmed losing it on the login page.
+      await ref.read(guestDataServiceProvider).clearGuestData();
+      _reloadUserScopedData();
+
       state = state.copyWith(
         status: NotifierStatus.success,
         successMessage: StringsManager.loginSuccess,
@@ -89,6 +96,17 @@ class AuthLoginNotifier extends Notifier<AuthLoginState> {
 
   Future<void> logout() async {
     await _authRepository.logout();
-    state = const AuthLoginState();
+
+    /// Start the next session as a clean guest rather than leaving anything of
+    /// the signed out account behind.
+    await ref.read(guestDataServiceProvider).clearGuestData();
+    _reloadUserScopedData();
+  }
+
+  /// Drops everything keyed to "who is signed in" so it is read again from
+  /// whichever store now owns it.
+  void _reloadUserScopedData() {
+    ref.invalidate(problemsProvider);
+    ref.invalidate(profileProvider);
   }
 }

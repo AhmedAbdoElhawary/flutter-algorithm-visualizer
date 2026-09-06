@@ -1039,7 +1039,6 @@ CodingProblem _problem({
 ProblemSolutionStatusDTO _solution({bool? isCorrect = false, DateTime? submittedAt}) {
   return ProblemSolutionStatusDTO(
     code: 'test code',
-    allTestCaseResults: const [],
     isCorrect: isCorrect,
     submittedAt: submittedAt,
   );

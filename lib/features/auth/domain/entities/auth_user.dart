@@ -1,7 +1,7 @@
 class AuthUser {
   final String id;
-  final String name;
-  final String email;
+  final String? name;
+  final String? email;
   final String? token;
 
   const AuthUser({
@@ -10,6 +10,16 @@ class AuthUser {
     required this.email,
     this.token,
   });
+
+  /// A guest is a user who interacts with the app before owning an account.
+  /// Firebase never issues an empty uid, so an empty [id] marks the local-only
+  /// session whose progress still lives in `GetStorage`.
+  const AuthUser.guest({this.name})
+      : id = '',
+        email = null,
+        token = null;
+
+  bool get isGuest => id.isEmpty;
 
   AuthUser copyWith({
     String? id,
