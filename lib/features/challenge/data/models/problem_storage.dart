@@ -31,7 +31,9 @@ class ProblemStorageDTO {
           isBookmarked == other.isBookmarked;
 
   @override
-  int get hashCode => Object.hash(problemId, problemStatus, isBookmarked);
+  int get hashCode {
+    return Object.hash(problemId, problemStatus?.name, isBookmarked,solutionsStatus);
+  }
 }
 
 @JsonSerializable()
