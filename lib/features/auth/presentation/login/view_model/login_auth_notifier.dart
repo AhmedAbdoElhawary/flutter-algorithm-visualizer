@@ -89,6 +89,5 @@ class AuthLoginNotifier extends Notifier<AuthLoginState> {
 
   Future<void> logout() async {
     await _authRepository.logout();
-    state = const AuthLoginState();
   }
 }
