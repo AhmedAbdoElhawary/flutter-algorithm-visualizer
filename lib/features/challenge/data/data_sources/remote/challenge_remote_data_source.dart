@@ -33,7 +33,9 @@ class ProblemRemoteDataSource {
     final ref = _problemsRef();
     if (ref == null || problem.problemId == null) return;
 
-    await ref.doc(problem.problemId.toString()).set(problem.toJson());
+    /// todo: look to this again:
+    /// it's freezed while the device offline when write await
+    ref.doc(problem.problemId.toString()).set(problem.toJson());
   }
 
   Future<void> updateProblem(ProblemStorageDTO problem) => saveProblem(problem);
@@ -42,6 +44,6 @@ class ProblemRemoteDataSource {
     final ref = _problemsRef();
     if (ref == null) return;
 
-    await ref.doc(problemId.toString()).delete();
+    return await ref.doc(problemId.toString()).delete();
   }
 }
