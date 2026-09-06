@@ -8,7 +8,7 @@ import 'package:algorithm_visualizer/core/widgets/custom_widgets/animated_popup.
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/custom_icon.dart';
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/custom_rounded_elevated_button.dart';
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/rounded_outlined_button.dart';
-import 'package:algorithm_visualizer/features/auth/presentation/view_model/auth_providers.dart';
+import 'package:algorithm_visualizer/features/auth/presentation/login/view_model/login_auth_provider.dart';
 import 'package:algorithm_visualizer/features/profile/presentation/view_model/user_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -27,7 +27,7 @@ class ProfileLogoutCard extends StatelessWidget {
           builder: (context, ref, child) => _LogoutConfirmationDialog(
             onConfirm: () async {
               removeOverlay();
-              await ref.read(authProvider.notifier).logout();
+              await ref.read(authLoginProvider.notifier).logout();
               if (context.mounted) context.go(Routes.login.path);
             },
             onCancel: removeOverlay,
