@@ -14,7 +14,6 @@ class UpdateProblemSolutionUseCase {
 
     final status = ProblemSolutionStatusDTO(
       code: result.code,
-      allTestCaseResults: result.allTestCaseResults,
       isCorrect: result.allPassed,
       submittedAt: DateTime.now(),
     );

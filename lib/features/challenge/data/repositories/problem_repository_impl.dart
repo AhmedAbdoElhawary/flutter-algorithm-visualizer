@@ -7,6 +7,13 @@ import 'package:algorithm_visualizer/features/challenge/domain/repositories/prob
 import 'package:collection/collection.dart';
 import 'package:flutter/cupertino.dart';
 
+/// Routes the progress of a problem to whichever store owns it right now.
+///
+/// Signed out, everything lives in [localDataSource]: a guest is free to solve
+/// and bookmark, and the local `problems` key is the only copy of that work.
+/// Signed in, everything lives in [remoteDataSource] and Firestore's own cache
+/// covers being offline, so the local key is deliberately left untouched: a
+/// non-empty one always means "a guest session that has not been migrated yet".
 class ProblemRepositoryImpl implements ProblemRepository {
   ProblemRepositoryImpl(this.localDataSource, this.remoteDataSource);
 
@@ -30,44 +37,34 @@ class ProblemRepositoryImpl implements ProblemRepository {
   Future<void> saveProblem(CodingProblem problem) async {
     final dto = ProblemStorageDTO.fromJson(problem.toJson());
 
-    await Future.wait([
-      localDataSource.saveProblem(dto),
-      _tryRemote(() => remoteDataSource.saveProblem(dto)),
-    ]);
+    if (!remoteDataSource.isSignedIn) return await localDataSource.saveProblem(dto);
+
+    await _tryRemote(() => remoteDataSource.saveProblem(dto));
   }
 
   @override
   Future<void> updateProblem(CodingProblem problem) async {
     final dto = ProblemStorageDTO.fromJson(problem.toJson());
 
-    await Future.wait([
-      localDataSource.updateProblem(dto),
-      _tryRemote(() => remoteDataSource.updateProblem(dto)),
-    ]);
+    if (!remoteDataSource.isSignedIn) return await localDataSource.updateProblem(dto);
+
+    await _tryRemote(() => remoteDataSource.updateProblem(dto));
   }
 
   @override
   Future<void> deleteProblem(int problemId) async {
-    await Future.wait([
-      localDataSource.deleteProblem(problemId),
-      _tryRemote(() => remoteDataSource.deleteProblem(problemId)),
-    ]);
+    if (!remoteDataSource.isSignedIn) return await localDataSource.deleteProblem(problemId);
+
+    await _tryRemote(() => remoteDataSource.deleteProblem(problemId));
   }
 
   Future<List<ProblemStorageDTO>> _loadStorageProblems() async {
     if (!remoteDataSource.isSignedIn) return localDataSource.getProblems();
 
-    try {
-      final remoteProblems = await remoteDataSource.getProblems();
-      await localDataSource.overwriteProblems(remoteProblems);
-      return remoteProblems;
-    } catch (_) {
-      return localDataSource.getProblems();
-    }
+    return await remoteDataSource.getProblems();
   }
 
   Future<void> _tryRemote(Future<void> Function() action) async {
-    if (!remoteDataSource.isSignedIn) return;
     try {
       await action();
     } catch (e) {

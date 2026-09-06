@@ -108,7 +108,7 @@ class CodeEditorLangBar extends ConsumerWidget {
                             (result) async {
                               if (result == null) return;
                               if (!(!result.allPassed && problem.isThereAnyCorrectCodeSaved)) {
-                                await ref.read(challengesProvider.notifier).updateProblem(problem, result);
+                                await ref.read(challengesProvider.notifier).updateProblemSubmission(problem, result);
                               }
                             },
                           );

@@ -5,17 +5,27 @@ abstract class ProfileRemoteDataSource {
   Future<void> updateDisplayName({required String displayName});
   Future<void> updateEmail({required String newEmail, required String currentPassword});
   Future<void> updatePassword({required String currentPassword, required String newPassword});
+  User? getCurrentUser();
 }
 
 class ProfileRemoteDataSourceImpl implements ProfileRemoteDataSource {
   late final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
 
-  ProfileRemoteDataSourceImpl();
+  @override
+  User? getCurrentUser() {
+    try {
+      return _firebaseAuth.currentUser;
+    } catch (_) {
+      /// Firebase never came up, `main` swallows that failure. Reporting nobody
+      /// signed in keeps the app on its local guest session.
+      return null;
+    }
+  }
 
   @override
   Future<void> updateDisplayName({required String displayName}) async {
     try {
-      final user = _firebaseAuth.currentUser;
+      final user = getCurrentUser();
       if (user == null) throw Exception('No authenticated user');
 
       await user.updateDisplayName(displayName.trim());
@@ -30,7 +40,7 @@ class ProfileRemoteDataSourceImpl implements ProfileRemoteDataSource {
   @override
   Future<void> updateEmail({required String newEmail, required String currentPassword}) async {
     try {
-      final user = _firebaseAuth.currentUser;
+      final user = getCurrentUser();
       if (user == null || user.email == null) throw Exception('No authenticated user');
 
       final credential = EmailAuthProvider.credential(email: user.email!, password: currentPassword);
@@ -48,7 +58,7 @@ class ProfileRemoteDataSourceImpl implements ProfileRemoteDataSource {
   @override
   Future<void> updatePassword({required String currentPassword, required String newPassword}) async {
     try {
-      final user = _firebaseAuth.currentUser;
+      final user = getCurrentUser();
       if (user == null || user.email == null) throw Exception('No authenticated user');
 
       final credential = EmailAuthProvider.credential(email: user.email!, password: currentPassword);
