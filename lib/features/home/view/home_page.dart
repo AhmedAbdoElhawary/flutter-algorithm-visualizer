@@ -20,24 +20,28 @@ class HomePage extends ConsumerWidget {
       body: SafeArea(
         child: MovablePinsBackground(
           pinColor: ThemeEnum.whiteD4Color,
-          child: CustomScrollView(
-            physics: const BouncingScrollPhysics(),
-            slivers: [
-              SliverToBoxAdapter(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const HomeHeader(),
-                    const HomeStatsStrip(),
-                    const ProfileWeeklyChart(),
-                    const HomeDifficultyProgress(),
-                    const HomeContinueCard(),
-                    const HomeCategoryGrid(),
-                    const HomeRecentActivity(),
+          // Isolate the scrolling content into its own compositor layer so a
+          // scroll doesn't re-rasterize the static orb background behind it.
+          child: RepaintBoundary(
+            child: CustomScrollView(
+              physics: const BouncingScrollPhysics(),
+              slivers: [
+                // SliverList.list wraps each section in its own RepaintBoundary
+                // and only builds sections near the viewport, so painting one
+                // section can't invalidate the others.
+                SliverList.list(
+                  children: const [
+                    HomeHeader(),
+                    HomeStatsStrip(),
+                    ProfileWeeklyChart(),
+                    HomeDifficultyProgress(),
+                    HomeContinueCard(),
+                    HomeCategoryGrid(),
+                    HomeRecentActivity(),
                   ],
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
