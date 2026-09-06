@@ -4,10 +4,10 @@ import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
 import 'package:algorithm_visualizer/core/widgets/adaptive/padding/adaptive_padding.dart';
 import 'package:algorithm_visualizer/core/widgets/adaptive/text/adaptive_text.dart';
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/custom_snack_bar.dart';
-import 'package:algorithm_visualizer/features/auth/presentation/view_model/auth_providers.dart';
-import 'package:algorithm_visualizer/features/auth/presentation/widgets/auth_header_icon.dart';
-import 'package:algorithm_visualizer/features/auth/presentation/widgets/auth_primary_button.dart';
-import 'package:algorithm_visualizer/features/auth/presentation/widgets/auth_text_field.dart';
+import 'package:algorithm_visualizer/features/auth/presentation/common/widget/auth_header_icon.dart';
+import 'package:algorithm_visualizer/features/auth/presentation/common/widget/auth_primary_button.dart';
+import 'package:algorithm_visualizer/features/auth/presentation/common/widget/auth_text_field.dart';
+import 'package:algorithm_visualizer/features/auth/presentation/signup/view_model/signup_auth_providers.dart';
 import 'package:algorithm_visualizer/features/home/view/movable_pins.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -37,7 +37,7 @@ class _SignUpPageState extends ConsumerState<SignUpPage> {
   }
 
   void _onRegister() async {
-    final success = await ref.read(authProvider.notifier).register();
+    final success = await ref.read(authSignupProvider.notifier).register();
     if (success && mounted) {
       context.go(Routes.home.path);
     }
@@ -45,17 +45,13 @@ class _SignUpPageState extends ConsumerState<SignUpPage> {
 
   @override
   Widget build(BuildContext context) {
-    final isPasswordVisible = ref.watch(authProvider.select((s) => s.isPasswordVisible));
-    final isConfirmPasswordVisible =
-        ref.watch(authProvider.select((s) => s.isConfirmPasswordVisible));
-    final isLoading = ref.watch(authProvider.select((s) => s.isLoading));
-    final nameError = ref.watch(authProvider.select((s) => s.nameError));
-    final emailError = ref.watch(authProvider.select((s) => s.emailError));
-    final passwordError = ref.watch(authProvider.select((s) => s.passwordError));
-    final confirmPasswordError = ref.watch(authProvider.select((s) => s.confirmPasswordError));
+    final isLoading = ref.watch(authSignupProvider.select((s) => s.isLoading));
+    final nameError = ref.watch(authSignupProvider.select((s) => s.nameError));
+    final emailError = ref.watch(authSignupProvider.select((s) => s.emailError));
+
     ref.listen(
-      authProvider.select((s) => s.errorMessage),
-          (previous, next) {
+      authSignupProvider.select((s) => s.errorMessage),
+      (previous, next) {
         if (next != null) context.showSnackBar(message: next, type: CustomSnackBarType.error);
       },
     );
@@ -99,7 +95,7 @@ class _SignUpPageState extends ConsumerState<SignUpPage> {
                     keyboardType: TextInputType.name,
                     textInputAction: TextInputAction.next,
                     errorText: nameError,
-                    onChanged: (v) => ref.read(authProvider.notifier).setName(v),
+                    onChanged: (v) => ref.read(authSignupProvider.notifier).setName(v),
                   ),
                   RSizedBox(height: 16),
                   AuthTextField(
@@ -110,37 +106,12 @@ class _SignUpPageState extends ConsumerState<SignUpPage> {
                     keyboardType: TextInputType.emailAddress,
                     textInputAction: TextInputAction.next,
                     errorText: emailError,
-                    onChanged: (v) => ref.read(authProvider.notifier).setEmail(v),
+                    onChanged: (v) => ref.read(authSignupProvider.notifier).setEmail(v),
                   ),
                   RSizedBox(height: 16),
-                  AuthTextField(
-                    label: StringsManager.password,
-                    hintText: StringsManager.createStrongPasswordHint,
-                    prefixIcon: Icons.lock_outline_rounded,
-                    controller: _passwordController,
-                    isPassword: true,
-                    isPasswordVisible: isPasswordVisible,
-                    textInputAction: TextInputAction.next,
-                    errorText: passwordError,
-                    onTogglePasswordVisibility: () =>
-                        ref.read(authProvider.notifier).togglePasswordVisibility(),
-                    onChanged: (v) => ref.read(authProvider.notifier).setPassword(v),
-                  ),
+                  _AuthPasswordTextField(),
                   RSizedBox(height: 16),
-                  AuthTextField(
-                    label: StringsManager.confirmPassword,
-                    hintText: StringsManager.reEnterPasswordHint,
-                    prefixIcon: Icons.lock_outline_rounded,
-                    controller: _confirmPasswordController,
-                    isPassword: true,
-                    isPasswordVisible: isConfirmPasswordVisible,
-                    textInputAction: TextInputAction.done,
-                    errorText: confirmPasswordError,
-                    onTogglePasswordVisibility: () =>
-                        ref.read(authProvider.notifier).toggleConfirmPasswordVisibility(),
-                    onChanged: (v) => ref.read(authProvider.notifier).setConfirmPassword(v),
-                    onSubmitted: (_) => _onRegister(),
-                  ),
+                  _AuthConfirmedPasswordTextField(),
                   RSizedBox(height: 24),
                   AuthPrimaryButton(
                     title: StringsManager.registerAndStartLearning,
@@ -190,6 +161,68 @@ class _SignUpFooter extends StatelessWidget {
           ),
         ),
       ],
+    );
+  }
+}
+
+class _AuthPasswordTextField extends ConsumerStatefulWidget {
+  const _AuthPasswordTextField();
+
+  @override
+  ConsumerState<_AuthPasswordTextField> createState() => _AuthPasswordTextFieldState();
+}
+
+class _AuthPasswordTextFieldState extends ConsumerState<_AuthPasswordTextField> {
+  bool isPasswordVisible = false;
+  @override
+  Widget build(BuildContext context) {
+    final passwordError = ref.watch(authSignupProvider.select((s) => s.passwordError));
+
+    return AuthTextField(
+      label: StringsManager.password,
+      hintText: StringsManager.createStrongPasswordHint,
+      prefixIcon: Icons.lock_outline_rounded,
+      isPassword: true,
+      isPasswordVisible: isPasswordVisible,
+      textInputAction: TextInputAction.next,
+      errorText: passwordError,
+      onTogglePasswordVisibility: () {
+        setState(() {
+          isPasswordVisible = !isPasswordVisible;
+        });
+      },
+      onChanged: (v) => ref.read(authSignupProvider.notifier).setPassword(v),
+    );
+  }
+}
+
+class _AuthConfirmedPasswordTextField extends ConsumerStatefulWidget {
+  const _AuthConfirmedPasswordTextField();
+
+  @override
+  ConsumerState<_AuthConfirmedPasswordTextField> createState() => _AuthConfirmedPasswordTextFieldState();
+}
+
+class _AuthConfirmedPasswordTextFieldState extends ConsumerState<_AuthConfirmedPasswordTextField> {
+  bool isPasswordVisible = false;
+  @override
+  Widget build(BuildContext context) {
+    final confirmPasswordError = ref.watch(authSignupProvider.select((s) => s.confirmPasswordError));
+
+    return AuthTextField(
+      label: StringsManager.confirmPassword,
+      hintText: StringsManager.reEnterPasswordHint,
+      prefixIcon: Icons.lock_outline_rounded,
+      isPassword: true,
+      isPasswordVisible: isPasswordVisible,
+      textInputAction: TextInputAction.done,
+      errorText: confirmPasswordError,
+      onTogglePasswordVisibility: () {
+        setState(() {
+          isPasswordVisible = !isPasswordVisible;
+        });
+      },
+      onChanged: (v) => ref.read(authSignupProvider.notifier).setConfirmPassword(v),
     );
   }
 }
