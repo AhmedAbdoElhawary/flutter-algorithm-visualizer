@@ -95,12 +95,21 @@ class AuthLoginNotifier extends Notifier<AuthLoginState> {
   }
 
   Future<void> logout() async {
-    await _authRepository.logout();
+    /// Signing out tears down the profile screen that keeps this auto-dispose
+    /// notifier alive, so pin it until the cleanup below finishes; otherwise
+    /// `ref` is disposed mid-flight and every use after the first await throws.
+    final keepAlive = ref.keepAlive();
 
-    /// Start the next session as a clean guest rather than leaving anything of
-    /// the signed out account behind.
-    await ref.read(guestDataServiceProvider).clearGuestData();
-    _reloadUserScopedData();
+    try {
+      await _authRepository.logout();
+
+      /// Start the next session as a clean guest rather than leaving anything of
+      /// the signed out account behind.
+      await ref.read(guestDataServiceProvider).clearGuestData();
+      _reloadUserScopedData();
+    } finally {
+      keepAlive.close();
+    }
   }
 
   /// Drops everything keyed to "who is signed in" so it is read again from
