@@ -1,0 +1,13 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Per-account progress: `users/{uid}/problems/{problemId}` (see
+    // lib/features/challenge/data/data_sources/remote/challenge_remote_data_source.dart).
+    // Only the owning account may read or write its own subtree, including the
+    // signup batch migration in lib/features/auth/domain/services/guest_data_service.dart.
+    match /users/{uid}/{document=**} {
+      allow read, write: if request.auth != null && request.auth.uid == uid;
+    }
+  }
+}
