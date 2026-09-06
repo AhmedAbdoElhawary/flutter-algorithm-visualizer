@@ -5,11 +5,11 @@ import 'package:algorithm_visualizer/core/widgets/adaptive/padding/adaptive_padd
 import 'package:algorithm_visualizer/core/widgets/adaptive/text/adaptive_text.dart';
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/custom_icon.dart';
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/custom_snack_bar.dart';
-import 'package:algorithm_visualizer/features/auth/presentation/view_model/auth_providers.dart';
-import 'package:algorithm_visualizer/features/auth/presentation/widgets/auth_back_button.dart';
-import 'package:algorithm_visualizer/features/auth/presentation/widgets/auth_header_icon.dart';
-import 'package:algorithm_visualizer/features/auth/presentation/widgets/auth_primary_button.dart';
-import 'package:algorithm_visualizer/features/auth/presentation/widgets/auth_text_field.dart';
+import 'package:algorithm_visualizer/features/auth/presentation/common/widget/auth_back_button.dart';
+import 'package:algorithm_visualizer/features/auth/presentation/common/widget/auth_header_icon.dart';
+import 'package:algorithm_visualizer/features/auth/presentation/common/widget/auth_primary_button.dart';
+import 'package:algorithm_visualizer/features/auth/presentation/common/widget/auth_text_field.dart';
+import 'package:algorithm_visualizer/features/auth/presentation/forgot_password/view_model/forgot_password_auth_provider.dart';
 import 'package:algorithm_visualizer/features/home/view/movable_pins.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -33,7 +33,7 @@ class _ForgotPasswordPageState extends ConsumerState<ForgotPasswordPage> {
   }
 
   void _onSendResetLink() async {
-    final success = await ref.read(authProvider.notifier).forgotPassword();
+    final success = await ref.read(authForgotPasswordProvider.notifier).forgotPassword();
     if (success && mounted) {
       context.push(Routes.resetPassword.path);
     }
@@ -41,11 +41,12 @@ class _ForgotPasswordPageState extends ConsumerState<ForgotPasswordPage> {
 
   @override
   Widget build(BuildContext context) {
-    final isLoading = ref.watch(authProvider.select((s) => s.isLoading));
-    final emailError = ref.watch(authProvider.select((s) => s.emailError));
+    final isLoading = ref.watch(authForgotPasswordProvider.select((s) => s.isLoading));
+    final emailError = ref.watch(authForgotPasswordProvider.select((s) => s.emailError));
+
     ref.listen(
-      authProvider.select((s) => s.errorMessage),
-          (previous, next) {
+      authForgotPasswordProvider.select((s) => s.errorMessage),
+      (previous, next) {
         if (next != null) context.showSnackBar(message: next, type: CustomSnackBarType.error);
       },
     );
@@ -92,7 +93,7 @@ class _ForgotPasswordPageState extends ConsumerState<ForgotPasswordPage> {
                     textInputAction: TextInputAction.done,
                     helperText: StringsManager.recoveryEmailNote,
                     errorText: emailError,
-                    onChanged: (v) => ref.read(authProvider.notifier).setEmail(v),
+                    onChanged: (v) => ref.read(authForgotPasswordProvider.notifier).setEmail(v),
                     onSubmitted: (_) => _onSendResetLink(),
                   ),
                   RSizedBox(height: 28),
