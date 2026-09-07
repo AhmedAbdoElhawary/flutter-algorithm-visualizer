@@ -210,14 +210,14 @@ void main() {
         );
       });
 
-      test('throws StateError when saving a duplicate problem ID', () async {
+      test('update problem when saving a duplicate problem ID', () async {
         final problem = _createProblem(problemId: 1);
 
         await dataSource.saveProblem(problem);
-
+await dataSource.saveProblem(problem);
         await expectLater(
-          dataSource.saveProblem(problem),
-          throwsA(isA<StateError>()),
+          dataSource.getProblems(),
+          [problem],
         );
       });
 
