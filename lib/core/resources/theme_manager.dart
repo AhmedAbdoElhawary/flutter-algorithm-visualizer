@@ -26,6 +26,68 @@ enum ThemeEnum {
   hoverSecond,
   border,
 
+  /// ---- CoreDive semantic tokens ----
+  /// Surfaces
+  bgRaised,
+  surfaceAlt,
+
+  /// Brass-tinted card — streak / XP surfaces only
+  surfaceWarm,
+  borderSubtle,
+  borderStrong,
+
+  /// Text
+  textBody,
+  textDisabled,
+  textBright,
+
+  /// Auth background wash (one of the two sanctioned gradients)
+  authWash,
+
+  /// Interactive (brass — the only interactive colour)
+  primaryHover,
+  primaryPress,
+  primaryTint,
+  primaryRing,
+  onPrimary,
+
+  /// Feedback
+  onError,
+  errorRing,
+
+  /// Progress (brass — only ever streak / XP / level)
+  accentXp,
+  accentXpText,
+  onAccentXp,
+
+  /// Difficulty (three fixed hues — only ever difficulty)
+  difficultyEasy,
+  difficultyMedium,
+  difficultyHard,
+
+  /// Visualizer bar states
+  barIdle,
+  barCompare,
+  barSwap,
+  barDone,
+
+  /// Code syntax
+  codeBg,
+  codeGutter,
+  codeLine,
+  codeKeyword,
+  codeType,
+  codePlain,
+  codePunct,
+  codeNumber,
+  codeComment,
+
+  /// Activity heat ramp (low → high)
+  heat0,
+  heat1,
+  heat2,
+  heat3,
+
   /// static colors
   solidWhite,
   purple,
@@ -51,6 +113,8 @@ enum ThemeEnum {
 extension ThemeExtension on BuildContext {
   bool get isThemeDark => Theme.of(this).brightness == Brightness.dark;
 
+  T _pick<T>(T dark, T light) => isThemeDark ? dark : light;
+
   List<BoxShadow> get cardShadow => isThemeDark
       ? []
       : [
@@ -63,36 +127,90 @@ extension ThemeExtension on BuildContext {
       ThemeEnum.primary: Theme.of(this).primaryColor,
       ThemeEnum.focus: Theme.of(this).focusColor,
       ThemeEnum.card: Theme.of(this).hintColor,
-      ThemeEnum.mainCard: ColorManager.mainCardDk,
-      ThemeEnum.outputHeader: isThemeDark ? ColorManager.outputHeaderDk : ColorManager.outputHeaderLt,
-      ThemeEnum.accent: isThemeDark ? ColorManager.accentDk : ColorManager.accentLt,
-      ThemeEnum.borderAccent: isThemeDark
-          ? ColorManager.accentDk.withValues(alpha: 0.22)
-          : ColorManager.accentLt.withValues(alpha: 0.25),
-      ThemeEnum.accentBg: isThemeDark
-          ? ColorManager.accentDk.withValues(alpha: 0.12)
-          : ColorManager.accentLt.withValues(alpha: 0.08),
+      ThemeEnum.mainCard: _pick(ColorManager.cdSurfaceDk, ColorManager.cdSurfaceLt),
+      ThemeEnum.outputHeader: _pick(ColorManager.outputHeaderDk, ColorManager.outputHeaderLt),
+      ThemeEnum.accent: _pick(ColorManager.accentDk, ColorManager.accentLt),
+      ThemeEnum.borderAccent: _pick(
+        ColorManager.accentDk.withValues(alpha: 0.22),
+        ColorManager.accentLt.withValues(alpha: 0.25),
+      ),
+      ThemeEnum.accentBg: _pick(
+        ColorManager.accentDk.withValues(alpha: 0.12),
+        ColorManager.accentLt.withValues(alpha: 0.08),
+      ),
       ThemeEnum.accentGreenRc: ColorManager.accentGreenBgDk,
-      ThemeEnum.accentGreen: isThemeDark ? ColorManager.accentGreenDk : ColorManager.accentGreenLt,
-      ThemeEnum.accentGreenBg: isThemeDark
-          ? ColorManager.accentGreenDk.withValues(alpha: 0.12)
-          : ColorManager.accentGreenLt.withValues(alpha: 0.08),
-      ThemeEnum.accentYellow: isThemeDark ? ColorManager.accentYellowDk : ColorManager.accentYellowLt,
-      ThemeEnum.accentYellowRc: ColorManager.accentYellowBgDk,
-      ThemeEnum.accentRed: isThemeDark ? ColorManager.accentRedDk : ColorManager.accentRedLt,
+      ThemeEnum.accentGreen: _pick(ColorManager.accentGreenDk, ColorManager.accentGreenLt),
+      ThemeEnum.accentGreenBg: _pick(
+        ColorManager.accentGreenDk.withValues(alpha: 0.12),
+        ColorManager.accentGreenLt.withValues(alpha: 0.08),
+      ),
+      ThemeEnum.accentYellow: _pick(ColorManager.accentYellowDk, ColorManager.accentYellowLt),
+      ThemeEnum.accentYellowRc: _pick(ColorManager.accentYellowDk, ColorManager.accentYellowLt),
+      ThemeEnum.accentRed: _pick(ColorManager.accentRedDk, ColorManager.accentRedLt),
       ThemeEnum.accentRedRc: ColorManager.accentRedBgDk,
-      ThemeEnum.accentBlueBg: isThemeDark
-          ? ColorManager.accentBlueDk.withValues(alpha: 0.1)
-          : ColorManager.accentBlueLt.withValues(alpha: 0.1),
-      ThemeEnum.borderAccentBlue: isThemeDark
-          ? ColorManager.accentBlueDk.withValues(alpha: 0.3)
-          : ColorManager.accentBlueLt.withValues(alpha: 0.3),
-      ThemeEnum.accentBlue: isThemeDark ? ColorManager.accentBlueDk : ColorManager.accentBlueLt,
-      ThemeEnum.textSecond: isThemeDark ? ColorManager.textSecondDk : ColorManager.textSecondLt,
-      ThemeEnum.textPrimary: isThemeDark ? ColorManager.textPrimaryDk : ColorManager.textPrimaryLt,
-      ThemeEnum.hover: isThemeDark ? ColorManager.hoverDk : ColorManager.hoverLt,
-      ThemeEnum.hoverSecond: isThemeDark ? ColorManager.hoverSecondDk : ColorManager.hoverSecondLt,
-      ThemeEnum.border: isThemeDark ? ColorManager.borderDk : ColorManager.borderLt,
+      ThemeEnum.accentBlueBg: _pick(
+        ColorManager.accentBlueDk.withValues(alpha: 0.1),
+        ColorManager.accentBlueLt.withValues(alpha: 0.1),
+      ),
+      ThemeEnum.borderAccentBlue: _pick(
+        ColorManager.accentBlueDk.withValues(alpha: 0.3),
+        ColorManager.accentBlueLt.withValues(alpha: 0.3),
+      ),
+      ThemeEnum.accentBlue: _pick(ColorManager.accentBlueDk, ColorManager.accentBlueLt),
+      ThemeEnum.textSecond: _pick(ColorManager.textSecondDk, ColorManager.textSecondLt),
+      ThemeEnum.textPrimary: _pick(ColorManager.textPrimaryDk, ColorManager.textPrimaryLt),
+      ThemeEnum.hover: _pick(ColorManager.hoverDk, ColorManager.hoverLt),
+      ThemeEnum.hoverSecond: _pick(ColorManager.hoverSecondDk, ColorManager.hoverSecondLt),
+      ThemeEnum.border: _pick(ColorManager.borderDk, ColorManager.borderLt),
+
+      /// ---- CoreDive semantic tokens ---->
+      ThemeEnum.bgRaised: _pick(ColorManager.cdBgRaisedDk, ColorManager.cdBgRaisedLt),
+      ThemeEnum.surfaceAlt: _pick(ColorManager.cdSurfaceAltDk, ColorManager.cdSurfaceAltLt),
+      ThemeEnum.surfaceWarm: _pick(ColorManager.cdSurfaceWarmDk, ColorManager.cdSurfaceWarmLt),
+      ThemeEnum.borderSubtle: _pick(ColorManager.cdBorderSubtleDk, ColorManager.cdBorderSubtleLt),
+      ThemeEnum.borderStrong: _pick(ColorManager.cdBorderStrongDk, ColorManager.cdBorderStrongLt),
+
+      ThemeEnum.textBody: _pick(ColorManager.cdTextBodyDk, ColorManager.cdTextBodyLt),
+      ThemeEnum.textDisabled: _pick(ColorManager.cdTextDisabledDk, ColorManager.cdTextDisabledLt),
+      ThemeEnum.textBright: _pick(ColorManager.cdTextBrightDk, ColorManager.cdTextBrightLt),
+      ThemeEnum.authWash: _pick(ColorManager.cdAuthWashDk, ColorManager.cdAuthWashLt),
+
+      ThemeEnum.primaryHover: _pick(ColorManager.cdPrimaryHoverDk, ColorManager.cdPrimaryHoverLt),
+      ThemeEnum.primaryPress: _pick(ColorManager.cdPrimaryPressDk, ColorManager.cdPrimaryPressLt),
+      ThemeEnum.primaryTint: _pick(ColorManager.cdPrimaryTintDk, ColorManager.cdPrimaryTintLt),
+      ThemeEnum.primaryRing: _pick(ColorManager.cdPrimaryRingDk, ColorManager.cdPrimaryRingLt),
+      ThemeEnum.onPrimary: _pick(ColorManager.cdOnPrimaryDk, ColorManager.cdOnPrimaryLt),
+
+      ThemeEnum.onError: _pick(ColorManager.cdOnErrorDk, ColorManager.cdOnErrorLt),
+      ThemeEnum.errorRing: _pick(ColorManager.cdErrorRingDk, ColorManager.cdErrorRingLt),
+
+      ThemeEnum.accentXp: _pick(ColorManager.cdAccentXpDk, ColorManager.cdAccentXpLt),
+      ThemeEnum.accentXpText: _pick(ColorManager.cdAccentXpTextDk, ColorManager.cdAccentXpTextLt),
+      ThemeEnum.onAccentXp: _pick(ColorManager.cdOnAccentXpDk, ColorManager.cdOnAccentXpLt),
+
+      ThemeEnum.difficultyEasy: _pick(ColorManager.cdSuccessDk, ColorManager.cdSuccessLt),
+      ThemeEnum.difficultyMedium: _pick(ColorManager.cdWarningDk, ColorManager.cdWarningLt),
+      ThemeEnum.difficultyHard: _pick(ColorManager.cdErrorDk, ColorManager.cdErrorLt),
+
+      ThemeEnum.barIdle: _pick(ColorManager.cdBarIdleDk, ColorManager.cdBarIdleLt),
+      ThemeEnum.barCompare: _pick(ColorManager.cdBarCompareDk, ColorManager.cdBarCompareLt),
+      ThemeEnum.barSwap: _pick(ColorManager.cdBarSwapDk, ColorManager.cdBarSwapLt),
+      ThemeEnum.barDone: _pick(ColorManager.cdBarDoneDk, ColorManager.cdBarDoneLt),
+
+      ThemeEnum.codeBg: _pick(ColorManager.cdBgRaisedDk, ColorManager.cdBgRaisedLt),
+      ThemeEnum.codeGutter: _pick(ColorManager.cdCodeGutterDk, ColorManager.cdCodeGutterLt),
+      ThemeEnum.codeLine: _pick(ColorManager.cdCodeLineDk, ColorManager.cdCodeLineLt),
+      ThemeEnum.codeKeyword: _pick(ColorManager.cdCodeKeywordDk, ColorManager.cdCodeKeywordLt),
+      ThemeEnum.codeType: _pick(ColorManager.cdCodeTypeDk, ColorManager.cdCodeTypeLt),
+      ThemeEnum.codePlain: _pick(ColorManager.cdTextBodyDk, ColorManager.cdTextBodyLt),
+      ThemeEnum.codePunct: _pick(ColorManager.cdCodePunctDk, ColorManager.cdCodePunctLt),
+      ThemeEnum.codeNumber: _pick(ColorManager.cdCodeNumberDk, ColorManager.cdCodeNumberLt),
+      ThemeEnum.codeComment: _pick(ColorManager.cdTextDisabledDk, ColorManager.cdTextDisabledLt),
+
+      ThemeEnum.heat0: _pick(ColorManager.cdHeatDk[0], ColorManager.cdHeatLt[0]),
+      ThemeEnum.heat1: _pick(ColorManager.cdHeatDk[1], ColorManager.cdHeatLt[1]),
+      ThemeEnum.heat2: _pick(ColorManager.cdHeatDk[2], ColorManager.cdHeatLt[2]),
+      ThemeEnum.heat3: _pick(ColorManager.cdHeatDk[3], ColorManager.cdHeatLt[3]),
 
       ///-------------------->
       ThemeEnum.solidWhite: ColorManager.white,
@@ -101,8 +219,9 @@ extension ThemeExtension on BuildContext {
       ThemeEnum.lightPink: ColorManager.lightPinkColor,
       ThemeEnum.howItWorksColor: ColorManager.howItWorksColor,
       ThemeEnum.white2DarkColor: ColorManager.white2DarkColor,
-      ThemeEnum.columnColor: ColorManager.columnSortColor,
-      ThemeEnum.backgroundForSortingColor: ColorManager.backgroundForSortingColor,
+      // Visualizer canvas + idle bar rail — CoreDive screen 02.
+      ThemeEnum.columnColor: _pick(ColorManager.cdBarIdleDk, ColorManager.cdBarIdleLt),
+      ThemeEnum.backgroundForSortingColor: _pick(ColorManager.cdBgRaisedDk, ColorManager.cdBgRaisedLt),
       ThemeEnum.textDarkColor: ColorManager.textDarkColor,
       ThemeEnum.text2DarkColor: ColorManager.text2DarkColor,
       ThemeEnum.lightPurpleColor: ColorManager.lightPurpleColor,
