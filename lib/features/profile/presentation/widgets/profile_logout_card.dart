@@ -14,8 +14,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 
-/// Offers to sign out of an account, or to claim one when the session is still
-/// a local guest.
 class ProfileLogoutCard extends ConsumerWidget {
   const ProfileLogoutCard({super.key});
 
@@ -76,8 +74,6 @@ class _GuestSignInCard extends StatelessWidget {
   }
 }
 
-/// The row shared by both states: a tinted icon, a title, an optional caption
-/// and a chevron.
 class _AccountCardBody extends StatelessWidget {
   final IconData icon;
   final String title;
@@ -155,8 +151,6 @@ class _AccountCardLabels extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    /// A signed-in account is identified by its e-mail; a guest has none, so it
-    /// falls back to the caption passed in.
     final email = ref.watch(
       currentUserProvider.select(
         (value) => value.maybeWhen(data: (data) => data?.email ?? "", orElse: () => ""),

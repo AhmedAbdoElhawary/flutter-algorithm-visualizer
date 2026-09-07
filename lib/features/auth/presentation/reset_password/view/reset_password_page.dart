@@ -1,21 +1,21 @@
 import 'package:algorithm_visualizer/config/routes/route_app.dart';
+import 'package:algorithm_visualizer/core/resources/dimensions_manager.dart';
 import 'package:algorithm_visualizer/core/resources/strings_manager.dart';
-import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
-import 'package:algorithm_visualizer/core/widgets/adaptive/padding/adaptive_padding.dart';
-import 'package:algorithm_visualizer/core/widgets/adaptive/text/adaptive_text.dart';
-import 'package:algorithm_visualizer/core/widgets/custom_widgets/custom_icon.dart';
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/custom_snack_bar.dart';
-import 'package:algorithm_visualizer/features/auth/presentation/common/widget/auth_back_button.dart';
-import 'package:algorithm_visualizer/features/auth/presentation/common/widget/auth_header_icon.dart';
+import 'package:algorithm_visualizer/features/auth/presentation/common/widget/auth_common_bits.dart';
+import 'package:algorithm_visualizer/features/auth/presentation/common/widget/auth_logo_tile.dart';
 import 'package:algorithm_visualizer/features/auth/presentation/common/widget/auth_primary_button.dart';
+import 'package:algorithm_visualizer/features/auth/presentation/common/widget/auth_scaffold.dart';
 import 'package:algorithm_visualizer/features/auth/presentation/common/widget/auth_text_field.dart';
+import 'package:algorithm_visualizer/features/auth/presentation/common/widget/password_strength_meter.dart';
 import 'package:algorithm_visualizer/features/auth/presentation/reset_password/view_model/reset_password_auth_provider.dart';
-import 'package:algorithm_visualizer/features/home/view/movable_pins.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 
+/// Not depicted in the CoreDive handoff (screen 12 stops at "Send code"). Built
+/// on the same auth components for continuity.
 class ResetPasswordPage extends ConsumerStatefulWidget {
   const ResetPasswordPage({super.key});
 
@@ -38,9 +38,7 @@ class _ResetPasswordPageState extends ConsumerState<ResetPasswordPage> {
 
   void _onSaveNewPassword() async {
     final success = await ref.read(authResetPasswordProvider.notifier).resetPassword();
-    if (success && mounted) {
-      context.go(Routes.login.path);
-    }
+    if (success && mounted) context.go(Routes.login.path);
   }
 
   @override
@@ -54,74 +52,50 @@ class _ResetPasswordPageState extends ConsumerState<ResetPasswordPage> {
         if (next != null) context.showSnackBar(message: next, type: CustomSnackBarType.error);
       },
     );
-    return Scaffold(
-      backgroundColor: context.getColor(ThemeEnum.primary),
-      body: SafeArea(
-        child: MovablePinsBackground(
-          pinColor: ThemeEnum.whiteD4Color,
-          child: SingleChildScrollView(
-            physics: const BouncingScrollPhysics(),
-            child: HorizontalPadding(
-              padding: 24,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  RSizedBox(height: 16),
-                  const _ResetPasswordAppBar(),
-                  RSizedBox(height: 32),
-                  const AuthHeaderIcon(
-                    type: AuthHeaderIconType.key,
-                    showBadge: false,
-                  ),
-                  RSizedBox(height: 20),
-                  BoldText(
-                    StringsManager.setNewPassword,
-                    color: ThemeEnum.textPrimary,
-                    fontSize: 24,
-                    textAlign: TextAlign.center,
-                  ),
-                  RSizedBox(height: 8),
-                  RegularText(
-                    StringsManager.setNewPasswordSubtitle,
-                    color: ThemeEnum.textSecond,
-                    fontSize: 13,
-                    textAlign: TextAlign.center,
-                  ),
-                  RSizedBox(height: 24),
-                  AuthTextField(
-                    label: StringsManager.verificationCode,
-                    hintText: StringsManager.verificationCodeHint,
-                    prefixIcon: Icons.pin_outlined,
-                    controller: _codeController,
-                    keyboardType: TextInputType.number,
-                    textInputAction: TextInputAction.next,
-                    errorText: codeError,
-                    onChanged: (v) =>
-                        ref.read(authResetPasswordProvider.notifier).setVerificationCode(v),
-                  ),
-                  RSizedBox(height: 16),
-                  _NewPasswordField(controller: _newPasswordController),
-                  RSizedBox(height: 16),
-                  _ConfirmNewPasswordField(
-                    controller: _confirmNewPasswordController,
-                    onSubmitted: (_) => _onSaveNewPassword(),
-                  ),
-                  RSizedBox(height: 24),
-                  AuthPrimaryButton(
-                    title: StringsManager.saveNewPassword,
-                    icon: Icons.verified_user_outlined,
-                    isLoading: isLoading,
-                    onPressed: _onSaveNewPassword,
-                  ),
-                  RSizedBox(height: 28),
-                  const _ResetPasswordReturnToLoginLink(),
-                  RSizedBox(height: 24),
-                ],
-              ),
-            ),
-          ),
+
+    return AuthScaffold(
+      topInset: CdSpace.x2,
+      children: [
+        AuthEyebrowRow(
+          StringsManager.newPasswordTitle,
+          onBack: () => context.canPop() ? context.pop() : context.go(Routes.login.path),
         ),
-      ),
+        SizedBox(height: CdSpace.x8.h),
+        const Align(
+          alignment: AlignmentDirectional.centerStart,
+          child: AuthRecoveryTile(),
+        ),
+        SizedBox(height: CdSpace.x6.h),
+        const AuthTitle(StringsManager.setNewPassword),
+        SizedBox(height: CdSpace.x2.h),
+        const AuthSubtitle(StringsManager.setNewPasswordSubtitle),
+        SizedBox(height: CdSpace.x8.h),
+        AuthTextField(
+          label: StringsManager.verificationCode,
+          hintText: StringsManager.verificationCodeHint,
+          prefixIcon: Icons.pin_outlined,
+          controller: _codeController,
+          keyboardType: TextInputType.number,
+          textInputAction: TextInputAction.next,
+          errorText: codeError,
+          onChanged: (v) => ref.read(authResetPasswordProvider.notifier).setVerificationCode(v),
+        ),
+        SizedBox(height: CdSpace.gapCard.h),
+        _NewPasswordField(controller: _newPasswordController),
+        SizedBox(height: CdSpace.gapCard.h),
+        _ConfirmNewPasswordField(
+          controller: _confirmNewPasswordController,
+          onSubmitted: (_) => _onSaveNewPassword(),
+        ),
+        SizedBox(height: CdSpace.x6.h),
+        AuthPrimaryButton(
+          title: StringsManager.saveNewPassword,
+          isLoading: isLoading,
+          onPressed: _onSaveNewPassword,
+        ),
+        SizedBox(height: CdSpace.x6.h),
+        const AuthReturnLink(StringsManager.returnToSignIn),
+      ],
     );
   }
 }
@@ -136,27 +110,31 @@ class _NewPasswordField extends ConsumerStatefulWidget {
 }
 
 class _NewPasswordFieldState extends ConsumerState<_NewPasswordField> {
-  bool isPasswordVisible = false;
+  bool _visible = false;
 
   @override
   Widget build(BuildContext context) {
     final newPasswordError = ref.watch(authResetPasswordProvider.select((s) => s.newPasswordError));
+    final password = ref.watch(authResetPasswordProvider.select((s) => s.newPassword));
 
-    return AuthTextField(
-      label: StringsManager.newPassword,
-      hintText: StringsManager.newPasswordHint,
-      prefixIcon: Icons.lock_outline_rounded,
-      controller: widget.controller,
-      isPassword: true,
-      isPasswordVisible: isPasswordVisible,
-      textInputAction: TextInputAction.next,
-      errorText: newPasswordError,
-      onTogglePasswordVisibility: () {
-        setState(() {
-          isPasswordVisible = !isPasswordVisible;
-        });
-      },
-      onChanged: (v) => ref.read(authResetPasswordProvider.notifier).setNewPassword(v),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        AuthTextField(
+          label: StringsManager.newPassword,
+          hintText: StringsManager.newPasswordHint,
+          prefixIcon: Icons.lock_outline_rounded,
+          controller: widget.controller,
+          isPassword: true,
+          isPasswordVisible: _visible,
+          textInputAction: TextInputAction.next,
+          errorText: newPasswordError,
+          onTogglePasswordVisibility: () => setState(() => _visible = !_visible),
+          onChanged: (v) => ref.read(authResetPasswordProvider.notifier).setNewPassword(v),
+        ),
+        if (newPasswordError == null || newPasswordError.isEmpty)
+          PasswordStrengthMeter(password: password),
+      ],
     );
   }
 }
@@ -172,7 +150,7 @@ class _ConfirmNewPasswordField extends ConsumerStatefulWidget {
 }
 
 class _ConfirmNewPasswordFieldState extends ConsumerState<_ConfirmNewPasswordField> {
-  bool isPasswordVisible = false;
+  bool _visible = false;
 
   @override
   Widget build(BuildContext context) {
@@ -185,64 +163,12 @@ class _ConfirmNewPasswordFieldState extends ConsumerState<_ConfirmNewPasswordFie
       prefixIcon: Icons.lock_outline_rounded,
       controller: widget.controller,
       isPassword: true,
-      isPasswordVisible: isPasswordVisible,
+      isPasswordVisible: _visible,
       textInputAction: TextInputAction.done,
       errorText: confirmNewPasswordError,
-      onTogglePasswordVisibility: () {
-        setState(() {
-          isPasswordVisible = !isPasswordVisible;
-        });
-      },
+      onTogglePasswordVisibility: () => setState(() => _visible = !_visible),
       onChanged: (v) => ref.read(authResetPasswordProvider.notifier).setConfirmNewPassword(v),
       onSubmitted: widget.onSubmitted,
-    );
-  }
-}
-
-class _ResetPasswordAppBar extends StatelessWidget {
-  const _ResetPasswordAppBar();
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        const AuthBackButton(),
-        MediumText(
-          StringsManager.newPasswordTitle,
-          color: ThemeEnum.textSecond,
-          fontSize: 12,
-          letterSpacing: 1.0,
-        ),
-        RSizedBox(width: 40),
-      ],
-    );
-  }
-}
-
-class _ResetPasswordReturnToLoginLink extends StatelessWidget {
-  const _ResetPasswordReturnToLoginLink();
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () => context.go(Routes.login.path),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          CustomIcon(
-            Icons.arrow_back_rounded,
-            size: 14,
-            color: ThemeEnum.textSecond,
-          ),
-          RSizedBox(width: 6),
-          RegularText(
-            StringsManager.returnToLogin,
-            color: ThemeEnum.textSecond,
-            fontSize: 13,
-          ),
-        ],
-      ),
     );
   }
 }

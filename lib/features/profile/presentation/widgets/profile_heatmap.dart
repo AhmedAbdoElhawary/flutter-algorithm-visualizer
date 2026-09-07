@@ -1,4 +1,3 @@
-import 'package:algorithm_visualizer/core/resources/color_manager.dart';
 import 'package:algorithm_visualizer/core/resources/strings_manager.dart';
 import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
 import 'package:algorithm_visualizer/core/widgets/adaptive/padding/adaptive_padding.dart';
@@ -15,19 +14,12 @@ class ProfileHeatmap extends StatelessWidget {
   Widget build(BuildContext context) {
     final isDark = context.isThemeDark;
 
-    final heatColors = isDark
-        ? [
-            ColorManager.outputHeaderDk.withValues(alpha: 0.5),
-            const Color.fromRGBO(26, 58, 42, 1),
-            const Color.fromRGBO(30, 92, 58, 1),
-            const Color.fromRGBO(52, 211, 153, 1)
-          ]
-        : [
-            const Color.fromRGBO(238, 242, 255, 1),
-            const Color.fromRGBO(187, 247, 208, 1),
-            const Color.fromRGBO(134, 239, 172, 1),
-            const Color.fromRGBO(34, 197, 94, 1)
-          ];
+    final heatColors = [
+      context.getColor(ThemeEnum.heat0),
+      context.getColor(ThemeEnum.heat1),
+      context.getColor(ThemeEnum.heat2),
+      context.getColor(ThemeEnum.heat3),
+    ];
 
     return HorizontalPadding(
       padding: 16,
@@ -81,7 +73,7 @@ class ProfileHeatmap extends StatelessWidget {
                           boxShadow: level == 3 && isDark
                               ? [
                                   BoxShadow(
-                                      color: const Color.fromRGBO(52, 211, 153, 1).withValues(alpha: 0.3),
+                                      color: context.getColor(ThemeEnum.heat3).withValues(alpha: 0.3),
                                       blurRadius: 4)
                                 ]
                               : null,

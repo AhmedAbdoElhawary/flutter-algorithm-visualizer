@@ -1,13 +1,18 @@
+import 'package:algorithm_visualizer/core/resources/dimensions_manager.dart';
 import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
 import 'package:algorithm_visualizer/core/widgets/adaptive/text/adaptive_text.dart';
-import 'package:algorithm_visualizer/core/widgets/custom_widgets/custom_icon.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-class AuthPrimaryButton extends StatelessWidget {
+/// CoreDive primary action. Solid teal, full-opacity ink label (never white at
+/// alpha), glow. Press = [ThemeEnum.primaryPress] + 0.98 scale over 90ms.
+/// Disabled = [ThemeEnum.surfaceAlt] / [ThemeEnum.textDisabled], no shadow.
+class AuthPrimaryButton extends StatefulWidget {
   final String title;
   final VoidCallback? onPressed;
   final bool isLoading;
+
+  /// Kept for source compatibility; CoreDive buttons carry no trailing icon.
   final IconData? icon;
 
   const AuthPrimaryButton({
@@ -19,72 +24,51 @@ class AuthPrimaryButton extends StatelessWidget {
   });
 
   @override
+  State<AuthPrimaryButton> createState() => _AuthPrimaryButtonState();
+}
+
+class _AuthPrimaryButtonState extends State<AuthPrimaryButton> {
+  bool _pressed = false;
+
+  @override
   Widget build(BuildContext context) {
-    final isDisabled = onPressed == null || isLoading;
+    final disabled = widget.onPressed == null || widget.isLoading;
+
+    final bg = disabled
+        ? ThemeEnum.surfaceAlt
+        : _pressed
+            ? ThemeEnum.primaryPress
+            : ThemeEnum.accent;
+    final fg = disabled ? ThemeEnum.textDisabled : ThemeEnum.onPrimary;
 
     return GestureDetector(
-      onTap: isDisabled ? null : onPressed,
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 200),
-        height: 48.r,
-        width: double.infinity,
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: AlignmentDirectional.centerStart,
-            end: AlignmentDirectional.centerEnd,
-            colors: isDisabled
-                ? [
-                    context.getColor(ThemeEnum.accent).withValues(alpha: 0.5),
-                    context.getColor(ThemeEnum.pink).withValues(alpha: 0.5),
-                  ]
-                : [
-                    context.getColor(ThemeEnum.accent),
-                    context.getColor(ThemeEnum.pink).withValues(alpha: 0.9),
-                  ],
+      onTap: disabled ? null : widget.onPressed,
+      onTapDown: disabled ? null : (_) => setState(() => _pressed = true),
+      onTapUp: disabled ? null : (_) => setState(() => _pressed = false),
+      onTapCancel: disabled ? null : () => setState(() => _pressed = false),
+      child: AnimatedScale(
+        scale: _pressed ? CdMotion.pressScale : 1,
+        duration: CdMotion.press,
+        child: AnimatedContainer(
+          duration: CdMotion.press,
+          padding: REdgeInsets.symmetric(vertical: 15),
+          decoration: BoxDecoration(
+            color: context.getColor(bg),
+            borderRadius: BorderRadius.circular(CdRadius.md.r),
+            boxShadow: disabled ? null : context.cdGlow,
           ),
-          borderRadius: BorderRadius.circular(14.r),
-          boxShadow: isDisabled
-              ? []
-              : [
-                  BoxShadow(
-                    color: context.getColor(ThemeEnum.accent).withValues(alpha: 0.35),
-                    blurRadius: 16,
-                    spreadRadius: 1,
-                    offset: const Offset(0, 4),
-                  ),
-                ],
-        ),
-        child: Center(
-          child: isLoading
-              ? SizedBox(
-                  width: 20.r,
-                  height: 20.r,
-                  child: CircularProgressIndicator(
-                    strokeWidth: 2.2.r,
-                    valueColor: AlwaysStoppedAnimation<Color>(
-                      context.getColor(ThemeEnum.solidWhite),
+          child: Center(
+            child: widget.isLoading
+                ? SizedBox(
+                    width: 18.r,
+                    height: 18.r,
+                    child: CircularProgressIndicator(
+                      strokeWidth: 2.2.r,
+                      valueColor: AlwaysStoppedAnimation<Color>(context.getColor(ThemeEnum.onPrimary)),
                     ),
-                  ),
-                )
-              : Row(
-                  mainAxisSize: MainAxisSize.min,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    SemiBoldText(
-                      title,
-                      color: ThemeEnum.solidWhite,
-                      fontSize: 15,
-                    ),
-                    if (icon != null) ...[
-                      RSizedBox(width: 8),
-                      CustomIcon(
-                        icon!,
-                        size: 16,
-                        color: ThemeEnum.solidWhite,
-                      ),
-                    ],
-                  ],
-                ),
+                  )
+                : SemiBoldText(widget.title, color: fg, fontSize: 14, maxLines: 1),
+          ),
         ),
       ),
     );
