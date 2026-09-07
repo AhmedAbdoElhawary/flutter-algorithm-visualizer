@@ -1,6 +1,8 @@
+import 'package:algorithm_visualizer/core/logging/firebase_log_config.dart';
 import 'package:algorithm_visualizer/core/storage/storage_providers.dart';
 import 'package:algorithm_visualizer/features/challenge/data/data_sources/local/challenge_local_data_source.dart';
 import 'package:algorithm_visualizer/features/challenge/data/data_sources/remote/challenge_remote_data_source.dart';
+import 'package:algorithm_visualizer/features/challenge/data/data_sources/remote/logging_challenge_remote_data_source.dart';
 import 'package:algorithm_visualizer/features/challenge/data/repositories/problem_repository_impl.dart';
 import 'package:algorithm_visualizer/features/challenge/domain/entities/coding_problem.dart';
 import 'package:algorithm_visualizer/features/challenge/domain/enums/problem.dart';
@@ -13,8 +15,10 @@ final problemLocalDataSourceProvider = Provider<ProblemLocalDataSource>((ref) {
   return ProblemLocalDataSource(ref.watch(localStorageProvider));
 });
 
-final problemRemoteDataSourceProvider =
-    Provider<ProblemRemoteDataSource>((ref) => ProblemRemoteDataSourceImpl());
+final problemRemoteDataSourceProvider = Provider<ProblemRemoteDataSource>((ref) {
+  final source = ProblemRemoteDataSourceImpl();
+  return FirebaseLogConfig.enabled ? LoggingProblemRemoteDataSource(source) : source;
+});
 
 final problemRepositoryProvider = Provider<ProblemRepository>((ref) {
   return ProblemRepositoryImpl(
