@@ -1,16 +1,13 @@
 import 'package:algorithm_visualizer/config/routes/route_app.dart';
+import 'package:algorithm_visualizer/core/resources/dimensions_manager.dart';
 import 'package:algorithm_visualizer/core/resources/strings_manager.dart';
-import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
-import 'package:algorithm_visualizer/core/widgets/adaptive/padding/adaptive_padding.dart';
-import 'package:algorithm_visualizer/core/widgets/adaptive/text/adaptive_text.dart';
-import 'package:algorithm_visualizer/core/widgets/custom_widgets/custom_icon.dart';
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/custom_snack_bar.dart';
-import 'package:algorithm_visualizer/features/auth/presentation/common/widget/auth_back_button.dart';
-import 'package:algorithm_visualizer/features/auth/presentation/common/widget/auth_header_icon.dart';
+import 'package:algorithm_visualizer/features/auth/presentation/common/widget/auth_common_bits.dart';
+import 'package:algorithm_visualizer/features/auth/presentation/common/widget/auth_logo_tile.dart';
 import 'package:algorithm_visualizer/features/auth/presentation/common/widget/auth_primary_button.dart';
+import 'package:algorithm_visualizer/features/auth/presentation/common/widget/auth_scaffold.dart';
 import 'package:algorithm_visualizer/features/auth/presentation/common/widget/auth_text_field.dart';
 import 'package:algorithm_visualizer/features/auth/presentation/forgot_password/view_model/forgot_password_auth_provider.dart';
-import 'package:algorithm_visualizer/features/home/view/movable_pins.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -32,11 +29,9 @@ class _ForgotPasswordPageState extends ConsumerState<ForgotPasswordPage> {
     super.dispose();
   }
 
-  void _onSendResetLink() async {
+  void _onSendCode() async {
     final success = await ref.read(authForgotPasswordProvider.notifier).forgotPassword();
-    if (success && mounted) {
-      context.push(Routes.resetPassword.path);
-    }
+    if (success && mounted) context.push(Routes.resetPassword.path);
   }
 
   @override
@@ -50,122 +45,45 @@ class _ForgotPasswordPageState extends ConsumerState<ForgotPasswordPage> {
         if (next != null) context.showSnackBar(message: next, type: CustomSnackBarType.error);
       },
     );
-    return Scaffold(
-      backgroundColor: context.getColor(ThemeEnum.primary),
-      body: SafeArea(
-        child: MovablePinsBackground(
-          pinColor: ThemeEnum.whiteD4Color,
-          child: SingleChildScrollView(
-            physics: const BouncingScrollPhysics(),
-            child: HorizontalPadding(
-              padding: 24,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  RSizedBox(height: 16),
-                  const _ForgotPasswordAppBar(),
-                  RSizedBox(height: 32),
-                  const AuthHeaderIcon(
-                    type: AuthHeaderIconType.key,
-                    showBadge: false,
-                  ),
-                  RSizedBox(height: 20),
-                  BoldText(
-                    StringsManager.forgotPasswordTitle,
-                    color: ThemeEnum.textPrimary,
-                    fontSize: 24,
-                    textAlign: TextAlign.center,
-                  ),
-                  RSizedBox(height: 8),
-                  RegularText(
-                    StringsManager.forgotPasswordSubtitle,
-                    color: ThemeEnum.textSecond,
-                    fontSize: 13,
-                    textAlign: TextAlign.center,
-                  ),
-                  RSizedBox(height: 28),
-                  AuthTextField(
-                    label: StringsManager.registeredEmail,
-                    hintText: StringsManager.emailHint,
-                    prefixIcon: Icons.mail_outline_rounded,
-                    controller: _emailController,
-                    keyboardType: TextInputType.emailAddress,
-                    textInputAction: TextInputAction.done,
-                    helperText: StringsManager.recoveryEmailNote,
-                    errorText: emailError,
-                    onChanged: (v) => ref.read(authForgotPasswordProvider.notifier).setEmail(v),
-                    onSubmitted: (_) => _onSendResetLink(),
-                  ),
-                  RSizedBox(height: 28),
-                  AuthPrimaryButton(
-                    title: StringsManager.sendResetLink,
-                    icon: Icons.send_rounded,
-                    isLoading: isLoading,
-                    onPressed: _onSendResetLink,
-                  ),
-                  RSizedBox(height: 36),
-                  const _ReturnToLoginLink(),
-                  RSizedBox(height: 24),
-                ],
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}
 
-class _ForgotPasswordAppBar extends StatelessWidget {
-  const _ForgotPasswordAppBar();
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    return AuthScaffold(
+      topInset: CdSpace.x2,
       children: [
-        const AuthBackButton(),
-        MediumText(
+        AuthEyebrowRow(
           StringsManager.accountRecovery,
-          color: ThemeEnum.textSecond,
-          fontSize: 12,
-          letterSpacing: 1.0,
+          onBack: () => context.canPop() ? context.pop() : context.go(Routes.login.path),
         ),
-        RSizedBox(width: 40),
+        SizedBox(height: CdSpace.x8.h),
+        const Align(
+          alignment: AlignmentDirectional.centerStart,
+          child: AuthRecoveryTile(),
+        ),
+        SizedBox(height: CdSpace.x6.h),
+        const AuthTitle(StringsManager.forgotPasswordTitle),
+        SizedBox(height: CdSpace.x2.h),
+        const AuthSubtitle(StringsManager.forgotPasswordSubtitle),
+        SizedBox(height: CdSpace.x8.h),
+        AuthTextField(
+          label: StringsManager.registeredEmail,
+          hintText: StringsManager.emailHint,
+          prefixIcon: Icons.mail_outline_rounded,
+          controller: _emailController,
+          keyboardType: TextInputType.emailAddress,
+          textInputAction: TextInputAction.done,
+          helperText: StringsManager.codeExpiryNote,
+          errorText: emailError,
+          onChanged: (v) => ref.read(authForgotPasswordProvider.notifier).setEmail(v),
+          onSubmitted: (_) => _onSendCode(),
+        ),
+        SizedBox(height: CdSpace.x6.h),
+        AuthPrimaryButton(
+          title: StringsManager.sendCode,
+          isLoading: isLoading,
+          onPressed: _onSendCode,
+        ),
+        SizedBox(height: CdSpace.x6.h),
+        const AuthReturnLink(StringsManager.returnToSignIn),
       ],
-    );
-  }
-}
-
-class _ReturnToLoginLink extends StatelessWidget {
-  const _ReturnToLoginLink();
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        if (context.canPop()) {
-          context.pop();
-        } else {
-          context.go(Routes.login.path);
-        }
-      },
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          CustomIcon(
-            Icons.arrow_back_rounded,
-            size: 14,
-            color: ThemeEnum.textSecond,
-          ),
-          RSizedBox(width: 6),
-          RegularText(
-            StringsManager.returnToLogin,
-            color: ThemeEnum.textSecond,
-            fontSize: 13,
-          ),
-        ],
-      ),
     );
   }
 }
