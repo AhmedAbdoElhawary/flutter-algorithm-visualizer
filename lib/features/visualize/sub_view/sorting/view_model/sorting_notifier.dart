@@ -33,12 +33,13 @@ abstract class SortingNotifier extends Notifier<SortingNotifierState>
     return initState();
   }
 
-  static const ThemeEnum swappingColor = ThemeEnum.accentRed;
-  static const ThemeEnum comparedColor = ThemeEnum.accentBlue;
-  static const ThemeEnum itemColor = ThemeEnum.columnColor;
+  /// CoreDive screen 02 bar states: idle / comparing / swapping / sorted-pivot.
+  static const ThemeEnum swappingColor = ThemeEnum.barSwap;
+  static const ThemeEnum comparedColor = ThemeEnum.barCompare;
+  static const ThemeEnum itemColor = ThemeEnum.barIdle;
   static const ThemeEnum backgroundForSortingColor = ThemeEnum.backgroundForSortingColor;
-  static const ThemeEnum doneSortingColor = ThemeEnum.accentGreen;
-  static const ThemeEnum temporaryColor = ThemeEnum.pink;
+  static const ThemeEnum doneSortingColor = ThemeEnum.barDone;
+  static const ThemeEnum temporaryColor = ThemeEnum.primaryHover;
 
   /// todo: add this feature that use dynamic size
   static const int _defaultSize = 10;
