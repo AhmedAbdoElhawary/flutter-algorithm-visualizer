@@ -20,7 +20,7 @@ class HomeStatsStrip extends ConsumerWidget {
         icon: Icons.local_fire_department_rounded,
         value: '${stats.currentStreak}',
         label: StringsManager.streak,
-        color: ThemeEnum.accentYellow
+        color: ThemeEnum.accentXpText
       ),
       (
         icon: Icons.check_circle_outline_rounded,

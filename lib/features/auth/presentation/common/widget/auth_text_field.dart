@@ -1,4 +1,4 @@
-import 'package:algorithm_visualizer/core/resources/font_manager.dart';
+import 'package:algorithm_visualizer/core/resources/dimensions_manager.dart';
 import 'package:algorithm_visualizer/core/resources/styles_manager.dart';
 import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
 import 'package:algorithm_visualizer/core/widgets/adaptive/padding/adaptive_padding.dart';
@@ -7,7 +7,13 @@ import 'package:algorithm_visualizer/core/widgets/custom_widgets/custom_icon.dar
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-class AuthTextField extends StatelessWidget {
+/// CoreDive auth field (screens 11 / 12 / 13).
+///
+/// Label (500 11) 7px above; box bg [ThemeEnum.card], 1px [ThemeEnum.border],
+/// radius md, 13/14 padding, 15px leading icon. Focus → teal border + 3px ring,
+/// icon turns [ThemeEnum.primaryHover]. Error → clay border + 3px ring, message
+/// below. Obscured passwords render in mono with wide tracking.
+class AuthTextField extends StatefulWidget {
   final String label;
   final String hintText;
   final IconData? prefixIcon;
@@ -44,8 +50,53 @@ class AuthTextField extends StatelessWidget {
   });
 
   @override
+  State<AuthTextField> createState() => _AuthTextFieldState();
+}
+
+class _AuthTextFieldState extends State<AuthTextField> {
+  FocusNode? _ownNode;
+  FocusNode get _node => widget.focusNode ?? (_ownNode ??= FocusNode());
+  bool _focused = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _node.addListener(_onFocusChange);
+  }
+
+  @override
+  void dispose() {
+    _node.removeListener(_onFocusChange);
+    _ownNode?.dispose();
+    super.dispose();
+  }
+
+  void _onFocusChange() {
+    if (_focused != _node.hasFocus) setState(() => _focused = _node.hasFocus);
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final hasError = errorText != null && errorText!.isNotEmpty;
+    final hasError = widget.errorText != null && widget.errorText!.isNotEmpty;
+    final obscured = widget.isPassword && !widget.isPasswordVisible;
+
+    final borderColor = hasError
+        ? ThemeEnum.difficultyHard
+        : _focused
+            ? ThemeEnum.accent
+            : ThemeEnum.border;
+
+    final iconColor = hasError
+        ? ThemeEnum.difficultyHard
+        : _focused
+            ? ThemeEnum.primaryHover
+            : ThemeEnum.textDisabled;
+
+    final ringColor = hasError
+        ? context.getColor(ThemeEnum.errorRing)
+        : _focused
+            ? context.getColor(ThemeEnum.primaryRing)
+            : null;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -53,100 +104,78 @@ class AuthTextField extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            MediumText(
-              label,
-              color: ThemeEnum.textPrimary,
-              fontSize: 13,
-            ),
-            if (trailingLabelWidget != null) trailingLabelWidget!,
+            MediumText(widget.label, color: ThemeEnum.text2DarkColor, fontSize: 11, maxLines: 1),
+            if (widget.trailingLabelWidget != null) widget.trailingLabelWidget!,
           ],
         ),
-        RSizedBox(height: 8),
-        Container(
-          height: 48.r,
-          padding: REdgeInsets.symmetric(horizontal: 14),
+        SizedBox(height: 7.h),
+        DecoratedBox(
           decoration: BoxDecoration(
             color: context.getColor(ThemeEnum.card),
-            borderRadius: BorderRadius.circular(12.r),
-            border: Border.all(
-              color: hasError
-                  ? context.getColor(ThemeEnum.accentRed)
-                  : context.getColor(ThemeEnum.border),
-              width: hasError ? 1.2.r : 1.r,
-            ),
-            boxShadow: context.cardShadow,
+            borderRadius: BorderRadius.circular(CdRadius.md.r),
+            border: Border.all(color: context.getColor(borderColor)),
+            boxShadow: ringColor == null
+                ? null
+                : [BoxShadow(color: ringColor, spreadRadius: 3.r, blurRadius: 0)],
           ),
-          child: Row(
-            children: [
-              if (prefixIcon != null) ...[
-                CustomIcon(
-                  prefixIcon!,
-                  size: 18,
-                  color: hasError ? ThemeEnum.accentRed : ThemeEnum.hover,
-                ),
-                RSizedBox(width: 12),
-              ],
-              Expanded(
-                child: TextField(
-                  controller: controller,
-                  focusNode: focusNode,
-                  keyboardType: keyboardType,
-                  textInputAction: textInputAction,
-                  obscureText: isPassword && !isPasswordVisible,
-                  onChanged: onChanged,
-                  onSubmitted: onSubmitted,
-                  style: GetMediumStyle(
-                    color: context.getColor(ThemeEnum.textPrimary),
-                    fontSize: 14,
-                    letterSpacing: (isPassword && !isPasswordVisible) ? 1.5 : 0.2,
-                  ),
-                  decoration: InputDecoration(
-                    isDense: true,
-                    hintText: hintText,
-                    hintStyle: TextStyle(
-                      color: context.getColor(ThemeEnum.textSecond),
-                      fontSize: 14.r,
-                      fontFamily: FontConstants.fontFamily,
-                      letterSpacing: 0.2,
+          child: SymmetricPadding(
+            horizontal: 14,
+            vertical: 13,
+            child: Row(
+              children: [
+                if (widget.prefixIcon != null) ...[
+                  CustomIcon(widget.prefixIcon!, size: 15, color: iconColor),
+                  SizedBox(width: 10.w),
+                ],
+                Expanded(
+                  child: TextField(
+                    controller: widget.controller,
+                    focusNode: _node,
+                    keyboardType: widget.keyboardType,
+                    textInputAction: widget.textInputAction,
+                    obscureText: obscured,
+                    onChanged: widget.onChanged,
+                    onSubmitted: widget.onSubmitted,
+                    cursorColor: context.getColor(ThemeEnum.accent),
+                    style: GetMediumStyle().copyWith(
+                      color: context.getColor(ThemeEnum.textBright),
+                      fontSize: (obscured ? 13 : 12.5).sp,
+                      letterSpacing: obscured ? 1.8.sp : 0.2,
                     ),
-                    border: InputBorder.none,
-                    contentPadding: EdgeInsets.zero,
+                    decoration: InputDecoration(
+                      isDense: true,
+                      hintText: widget.hintText,
+                      hintStyle: GetMediumStyle().copyWith(
+                        color: context.getColor(ThemeEnum.textDisabled),
+                        fontSize: 12.5.sp,
+                      ),
+                      border: InputBorder.none,
+                      contentPadding: EdgeInsets.zero,
+                    ),
                   ),
                 ),
-              ),
-              if (isPassword)
-                GestureDetector(
-                  onTap: onTogglePasswordVisibility,
-                  child: CustomIcon(
-                    isPasswordVisible
-                        ? Icons.visibility_off_outlined
-                        : Icons.visibility_outlined,
-                    size: 18,
-                    color: ThemeEnum.hover,
+                if (widget.isPassword)
+                  GestureDetector(
+                    onTap: widget.onTogglePasswordVisibility,
+                    child: CustomIcon(
+                      widget.isPasswordVisible ? Icons.visibility_off_outlined : Icons.visibility_outlined,
+                      size: 15,
+                      color: ThemeEnum.textDisabled,
+                    ),
                   ),
-                ),
-            ],
+              ],
+            ),
           ),
         ),
         if (hasError)
-          OnlyPadding(
-            topPadding: 6,
-            startPadding: 4,
-            child: RegularText(
-              errorText!,
-              color: ThemeEnum.accentRed,
-              fontSize: 12,
-            ),
+          TopPadding(
+            padding: 6,
+            child: RegularText(widget.errorText!, color: ThemeEnum.difficultyHard, fontSize: 10.5),
           )
-        else if (helperText != null && helperText!.isNotEmpty)
-          OnlyPadding(
-            topPadding: 6,
-            startPadding: 4,
-            child: RegularText(
-              helperText!,
-              color: ThemeEnum.textSecond,
-              fontSize: 12,
-            ),
+        else if (widget.helperText != null && widget.helperText!.isNotEmpty)
+          TopPadding(
+            padding: 8,
+            child: RegularText(widget.helperText!, color: ThemeEnum.textDisabled, fontSize: 10.5),
           ),
       ],
     );

@@ -6,6 +6,7 @@ import 'package:algorithm_visualizer/core/helpers/system_overlay_style.dart';
 import 'package:algorithm_visualizer/core/resources/color_manager.dart';
 import 'package:algorithm_visualizer/core/resources/strings_manager.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -43,6 +44,12 @@ class MyApp extends StatelessWidget {
                       child: MaterialApp.router(
                         title: StringsManager.appName,
                         locale: Locale(controller.language.shortKey),
+                        supportedLocales: const [Locale('en'), Locale('ar')],
+                        localizationsDelegates: const [
+                          GlobalMaterialLocalizations.delegate,
+                          GlobalWidgetsLocalizations.delegate,
+                          GlobalCupertinoLocalizations.delegate,
+                        ],
                         localeResolutionCallback: dynamicTranslate,
                         theme: theme,
                         darkTheme: AppTheme.dark,

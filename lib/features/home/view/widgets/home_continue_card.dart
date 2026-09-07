@@ -33,9 +33,16 @@ class HomeContinueCard extends ConsumerWidget {
         child: Container(
           padding: REdgeInsets.all(16),
           decoration: BoxDecoration(
-            color: context.getColor(ThemeEnum.accentBg),
-            borderRadius: BorderRadius.circular(16.r),
-            border: Border.all(color: context.getColor(ThemeEnum.borderAccent)),
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [
+                context.getColor(ThemeEnum.accent).withValues(alpha: 0.16),
+                context.getColor(ThemeEnum.accent).withValues(alpha: 0.04),
+              ],
+            ),
+            borderRadius: BorderRadius.circular(20.r),
+            border: Border.all(color: context.getColor(ThemeEnum.accent).withValues(alpha: 0.28)),
             boxShadow: context.cardShadow,
           ),
           child: Row(
@@ -44,18 +51,17 @@ class HomeContinueCard extends ConsumerWidget {
                 width: 48.w,
                 height: 48.w,
                 decoration: BoxDecoration(
-                  color: context.getColor(ThemeEnum.accent).withValues(alpha: 0.15),
+                  color: context.getColor(ThemeEnum.accent),
                   borderRadius: BorderRadius.circular(14.r),
-                  border: Border.all(color: context.getColor(ThemeEnum.borderAccent)),
                 ),
-                child: Icon(Icons.play_arrow_rounded, color: context.getColor(ThemeEnum.accent), size: 24.r),
+                child: Icon(Icons.play_arrow_rounded, color: context.getColor(ThemeEnum.onPrimary), size: 24.r),
               ),
               SizedBox(width: 14.w),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    RegularText(StringsManager.continueLabel, fontSize: 11, color: ThemeEnum.textSecond),
+                    RegularText(StringsManager.continueLabel, fontSize: 11,maxLines: 1, color: ThemeEnum.textSecond),
                     SizedBox(height: 2.h),
                     BoldText(
                       problem.getName,
@@ -64,18 +70,20 @@ class HomeContinueCard extends ConsumerWidget {
                       maxLines: 1,
                     ),
                     SizedBox(height: 4.h),
-                    if (diffLabel.isNotEmpty)
-                      Container(
-                        padding: REdgeInsets.symmetric(horizontal: 8, vertical: 2),
-                        decoration: BoxDecoration(
-                          color: context.getColor(diffColor).withValues(alpha: 0.12),
-                          borderRadius: BorderRadius.circular(6.r),
-                        ),
-                        child: RegularText(diffLabel, fontSize: 10, color: diffColor),
-                      ),
+
+
                   ],
                 ),
               ),
+              if (diffLabel.isNotEmpty)
+                Container(
+                  padding: REdgeInsets.symmetric(horizontal: 9, vertical: 4),
+                  decoration: BoxDecoration(
+                    color: context.getColor(diffColor).withValues(alpha: 0.14),
+                    borderRadius: BorderRadius.circular(999),
+                  ),
+                  child: RegularText(diffLabel, fontSize: 10, color: diffColor),
+                ),
               Icon(Icons.chevron_right_rounded, color: context.getColor(ThemeEnum.textSecond), size: 20.r),
             ],
           ),

@@ -196,39 +196,59 @@ class StringsManager {
   static const String submissions = "Submissions";
   static const String submission = "Submission";
 
-  // Auth Strings
+  // Auth Strings — CoreDive screens 11 / 12 / 13
   static const String welcomeBack = "Welcome back";
-  static const String signInSubtitle = "Sign in to continue solving algorithms & tracking progress";
-  static const String emailAddress = "Email Address";
+  static const String signInSubtitle = "Sign in to keep your streak and pick up where you stopped.";
+  static const String emailAddress = "Email";
   static const String emailHint = "name@example.com";
   static const String password = "Password";
   static const String passwordHint = "••••••••";
   static const String forgotPasswordQuestion = "Forgot Password?";
-  static const String signIn = "Sign In";
+  static const String forgotShort = "Forgot?";
+  static const String signIn = "Sign in";
   static const String demoAccount = "Demo Account";
   static const String demoAccountUser = "Ahmed Elhawary (3 solved)";
   static const String autoFill = "Auto-fill";
   static const String dontHaveAccount = "Don't have an account?";
-  static const String signUp = "Sign Up";
+  static const String noAccountYet = "No account yet?";
+  static const String signUp = "Sign up";
+  static const String orDivider = "or";
+  static const String continueWithGoogle = "Continue with Google";
+  static const String socialAuthUnavailable = "Google sign-in isn't available yet";
 
-  static const String createAccount = "Create Account";
-  static const String signUpSubtitle = "Join algorithmic learners and level up your data structure skills";
-  static const String fullName = "Full Name";
-  static const String fullNameHint = "e.g. Ahmed Elhawary";
-  static const String createStrongPasswordHint = "Create strong password";
-  static const String confirmPassword = "Confirm Password";
-  static const String reEnterPasswordHint = "Re-enter your password";
+  static const String createAccount = "Create account";
+  static const String signUpSubtitle = "Track every problem you solve and build a streak worth keeping.";
+  static const String fullName = "Full name";
+  static const String fullNameHint = "Ahmed Elhawary";
+  static const String createStrongPasswordHint = "••••••";
+  static const String confirmPassword = "Confirm password";
+  static const String reEnterPasswordHint = "Re-enter password";
   static const String registerAndStartLearning = "Register & Start Learning";
   static const String alreadyHaveAccount = "Already have an account?";
   static const String login = "Login";
 
+  // Password strength meter (CoreDive screen 13)
+  static const String pwStrengthWeak = "Weak";
+  static const String pwStrengthFair = "Fair";
+  static const String pwStrengthGood = "Good";
+  static const String pwStrengthStrong = "Strong";
+  static const String pwHintAddLength = "add a few more characters";
+  static const String pwHintAddNumber = "add a number to strengthen it";
+  static const String pwHintAddCase = "mix upper and lower case";
+  static const String pwHintAddSymbol = "add a symbol to strengthen it";
+  static const String pwHintStrongEnough = "strong enough to keep";
+  static const String pwStrengthEmpty = "Use at least 8 characters.";
+
   static const String accountRecovery = "ACCOUNT RECOVERY";
-  static const String forgotPasswordTitle = "Forgot Password?";
-  static const String forgotPasswordSubtitle = "No worries! Enter your registered email and we'll send you recovery instructions.";
-  static const String registeredEmail = "Registered Email";
+  static const String forgotPasswordTitle = "Reset your password";
+  static const String forgotPasswordSubtitle = "Enter the email on your account and we will send a six-digit code.";
+  static const String registeredEmail = "Registered email";
   static const String recoveryEmailNote = "We'll send a 6-digit verification code to this inbox.";
+  static const String codeExpiryNote = "The code expires after 10 minutes.";
   static const String sendResetLink = "Send Reset Link";
+  static const String sendCode = "Send code";
   static const String returnToLogin = "Return to Login";
+  static const String returnToSignIn = "Return to sign in";
 
   static const String newPasswordTitle = "NEW PASSWORD";
   static const String setNewPassword = "Set New Password";
@@ -277,6 +297,20 @@ class StringsManager {
   static const String logoutConfirmDesc = "You can sign back in anytime to continue your algorithmic journey.";
   static const String yesLogout = "Log Out";
   static const String notValidName = "Please enter a valid name";
+
+  // CoreDive token gallery (dev only)
+  static const String cdGalleryTitle = "CoreDive tokens";
+  static const String cdGallerySurfaces = "Surfaces";
+  static const String cdGalleryInteractive = "Interactive (teal)";
+  static const String cdGalleryProgress = "Progress (brass)";
+  static const String cdGalleryDifficulty = "Difficulty";
+  static const String cdGalleryBars = "Visualizer bars";
+  static const String cdGalleryHeat = "Activity heat";
+  static const String cdGalleryTypeScale = "Type scale";
+  static const String cdGalleryProgressRow = "Progress fill (start-edge anchored)";
+  static const String cdGalleryThemeToggle = "Toggle theme";
+  static const String cdGalleryDirToggle = "Toggle direction";
+  static const String cdGallerySample = "The quick brown fox — الخوارزمية";
 
   // Guest session
   static const String guestProgressWarningTitle = "Replace your local progress?";
