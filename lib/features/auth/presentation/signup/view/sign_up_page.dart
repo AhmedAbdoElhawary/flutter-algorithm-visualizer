@@ -1,15 +1,14 @@
 import 'package:algorithm_visualizer/config/routes/route_app.dart';
+import 'package:algorithm_visualizer/core/resources/dimensions_manager.dart';
 import 'package:algorithm_visualizer/core/resources/strings_manager.dart';
-import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
-import 'package:algorithm_visualizer/core/widgets/adaptive/padding/adaptive_padding.dart';
-import 'package:algorithm_visualizer/core/widgets/adaptive/text/adaptive_text.dart';
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/custom_snack_bar.dart';
 import 'package:algorithm_visualizer/features/auth/presentation/common/view_model/auth_providers.dart';
-import 'package:algorithm_visualizer/features/auth/presentation/common/widget/auth_header_icon.dart';
+import 'package:algorithm_visualizer/features/auth/presentation/common/widget/auth_common_bits.dart';
 import 'package:algorithm_visualizer/features/auth/presentation/common/widget/auth_primary_button.dart';
+import 'package:algorithm_visualizer/features/auth/presentation/common/widget/auth_scaffold.dart';
 import 'package:algorithm_visualizer/features/auth/presentation/common/widget/auth_text_field.dart';
+import 'package:algorithm_visualizer/features/auth/presentation/common/widget/password_strength_meter.dart';
 import 'package:algorithm_visualizer/features/auth/presentation/signup/view_model/signup_auth_providers.dart';
-import 'package:algorithm_visualizer/features/home/view/movable_pins.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -66,9 +65,7 @@ class _SignUpPageState extends ConsumerState<SignUpPage> {
 
   void _onRegister() async {
     final success = await ref.read(authSignupProvider.notifier).register();
-    if (success && mounted) {
-      context.go(Routes.home.path);
-    }
+    if (success && mounted) context.go(Routes.home.path);
   }
 
   @override
@@ -83,156 +80,106 @@ class _SignUpPageState extends ConsumerState<SignUpPage> {
         if (next != null) context.showSnackBar(message: next, type: CustomSnackBarType.error);
       },
     );
-    return Scaffold(
-      backgroundColor: context.getColor(ThemeEnum.primary),
-      body: SafeArea(
-        child: MovablePinsBackground(
-          pinColor: ThemeEnum.whiteD4Color,
-          child: SingleChildScrollView(
-            physics: const BouncingScrollPhysics(),
-            child: HorizontalPadding(
-              padding: 24,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  RSizedBox(height: 32),
-                  const AuthHeaderIcon(
-                    type: AuthHeaderIconType.shield,
-                    showBadge: false,
-                  ),
-                  RSizedBox(height: 20),
-                  BoldText(
-                    StringsManager.createAccount,
-                    color: ThemeEnum.textPrimary,
-                    fontSize: 24,
-                    textAlign: TextAlign.center,
-                  ),
-                  RSizedBox(height: 8),
-                  RegularText(
-                    StringsManager.signUpSubtitle,
-                    color: ThemeEnum.textSecond,
-                    fontSize: 13,
-                    textAlign: TextAlign.center,
-                  ),
-                  RSizedBox(height: 24),
-                  AuthTextField(
-                    label: StringsManager.fullName,
-                    hintText: StringsManager.fullNameHint,
-                    prefixIcon: Icons.person_outline_rounded,
-                    controller: _nameController,
-                    keyboardType: TextInputType.name,
-                    textInputAction: TextInputAction.next,
-                    errorText: nameError,
-                    onChanged: (v) => ref.read(authSignupProvider.notifier).setName(v),
-                  ),
-                  RSizedBox(height: 16),
-                  AuthTextField(
-                    label: StringsManager.emailAddress,
-                    hintText: StringsManager.emailHint,
-                    prefixIcon: Icons.mail_outline_rounded,
-                    controller: _emailController,
-                    keyboardType: TextInputType.emailAddress,
-                    textInputAction: TextInputAction.next,
-                    errorText: emailError,
-                    onChanged: (v) => ref.read(authSignupProvider.notifier).setEmail(v),
-                  ),
-                  RSizedBox(height: 16),
-                  _AuthPasswordTextField(),
-                  RSizedBox(height: 16),
-                  _AuthConfirmedPasswordTextField(),
-                  RSizedBox(height: 24),
-                  AuthPrimaryButton(
-                    title: StringsManager.registerAndStartLearning,
-                    icon: Icons.arrow_forward_rounded,
-                    isLoading: isLoading,
-                    onPressed: _onRegister,
-                  ),
-                  RSizedBox(height: 28),
-                  const _SignUpFooter(),
-                  RSizedBox(height: 24),
-                ],
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}
 
-class _SignUpFooter extends StatelessWidget {
-  const _SignUpFooter();
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
+    return AuthScaffold(
+      topInset: CdSpace.x6,
       children: [
-        RegularText(
-          StringsManager.alreadyHaveAccount,
-          color: ThemeEnum.textSecond,
-          fontSize: 13,
+        const AuthTitle(StringsManager.createAccount),
+        SizedBox(height: CdSpace.x2.h),
+        const AuthSubtitle(StringsManager.signUpSubtitle),
+        SizedBox(height: CdSpace.x6.h),
+        AuthTextField(
+          label: StringsManager.fullName,
+          hintText: StringsManager.fullNameHint,
+          prefixIcon: Icons.person_outline_rounded,
+          controller: _nameController,
+          keyboardType: TextInputType.name,
+          textInputAction: TextInputAction.next,
+          errorText: nameError,
+          onChanged: (v) => ref.read(authSignupProvider.notifier).setName(v),
         ),
-        RSizedBox(width: 4),
-        GestureDetector(
-          onTap: () {
-            if (context.canPop()) {
-              context.pop();
-            } else {
-              context.go(Routes.login.path);
-            }
-          },
-          child: SemiBoldText(
-            StringsManager.login,
-            color: ThemeEnum.accent,
-            fontSize: 13,
-          ),
+        SizedBox(height: CdSpace.gapCard.h),
+        AuthTextField(
+          label: StringsManager.emailAddress,
+          hintText: StringsManager.emailHint,
+          prefixIcon: Icons.mail_outline_rounded,
+          controller: _emailController,
+          keyboardType: TextInputType.emailAddress,
+          textInputAction: TextInputAction.next,
+          errorText: emailError,
+          onChanged: (v) => ref.read(authSignupProvider.notifier).setEmail(v),
+        ),
+        SizedBox(height: CdSpace.gapCard.h),
+        _PasswordField(controller: _passwordController),
+        SizedBox(height: CdSpace.gapCard.h),
+        _ConfirmPasswordField(controller: _confirmPasswordController),
+        SizedBox(height: CdSpace.x6.h),
+        AuthPrimaryButton(
+          title: StringsManager.createAccount,
+          isLoading: isLoading,
+          onPressed: _onRegister,
+        ),
+        SizedBox(height: CdSpace.x4.h),
+        AuthFooterPrompt(
+          prompt: StringsManager.alreadyHaveAccount,
+          action: StringsManager.signIn,
+          onTap: () => context.canPop() ? context.pop() : context.go(Routes.login.path),
         ),
       ],
     );
   }
 }
 
-class _AuthPasswordTextField extends ConsumerStatefulWidget {
-  const _AuthPasswordTextField();
+class _PasswordField extends ConsumerStatefulWidget {
+  const _PasswordField({required this.controller});
+
+  final TextEditingController controller;
 
   @override
-  ConsumerState<_AuthPasswordTextField> createState() => _AuthPasswordTextFieldState();
+  ConsumerState<_PasswordField> createState() => _PasswordFieldState();
 }
 
-class _AuthPasswordTextFieldState extends ConsumerState<_AuthPasswordTextField> {
-  bool isPasswordVisible = false;
+class _PasswordFieldState extends ConsumerState<_PasswordField> {
+  bool _visible = false;
+
   @override
   Widget build(BuildContext context) {
     final passwordError = ref.watch(authSignupProvider.select((s) => s.passwordError));
+    final password = ref.watch(authSignupProvider.select((s) => s.password));
 
-    return AuthTextField(
-      label: StringsManager.password,
-      hintText: StringsManager.createStrongPasswordHint,
-      prefixIcon: Icons.lock_outline_rounded,
-      isPassword: true,
-      isPasswordVisible: isPasswordVisible,
-      textInputAction: TextInputAction.next,
-      errorText: passwordError,
-      onTogglePasswordVisibility: () {
-        setState(() {
-          isPasswordVisible = !isPasswordVisible;
-        });
-      },
-      onChanged: (v) => ref.read(authSignupProvider.notifier).setPassword(v),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        AuthTextField(
+          label: StringsManager.password,
+          hintText: StringsManager.createStrongPasswordHint,
+          prefixIcon: Icons.lock_outline_rounded,
+          controller: widget.controller,
+          isPassword: true,
+          isPasswordVisible: _visible,
+          textInputAction: TextInputAction.next,
+          errorText: passwordError,
+          onTogglePasswordVisibility: () => setState(() => _visible = !_visible),
+          onChanged: (v) => ref.read(authSignupProvider.notifier).setPassword(v),
+        ),
+        if (passwordError == null || passwordError.isEmpty) PasswordStrengthMeter(password: password),
+      ],
     );
   }
 }
 
-class _AuthConfirmedPasswordTextField extends ConsumerStatefulWidget {
-  const _AuthConfirmedPasswordTextField();
+class _ConfirmPasswordField extends ConsumerStatefulWidget {
+  const _ConfirmPasswordField({required this.controller});
+
+  final TextEditingController controller;
 
   @override
-  ConsumerState<_AuthConfirmedPasswordTextField> createState() => _AuthConfirmedPasswordTextFieldState();
+  ConsumerState<_ConfirmPasswordField> createState() => _ConfirmPasswordFieldState();
 }
 
-class _AuthConfirmedPasswordTextFieldState extends ConsumerState<_AuthConfirmedPasswordTextField> {
-  bool isPasswordVisible = false;
+class _ConfirmPasswordFieldState extends ConsumerState<_ConfirmPasswordField> {
+  bool _visible = false;
+
   @override
   Widget build(BuildContext context) {
     final confirmPasswordError = ref.watch(authSignupProvider.select((s) => s.confirmPasswordError));
@@ -241,15 +188,12 @@ class _AuthConfirmedPasswordTextFieldState extends ConsumerState<_AuthConfirmedP
       label: StringsManager.confirmPassword,
       hintText: StringsManager.reEnterPasswordHint,
       prefixIcon: Icons.lock_outline_rounded,
+      controller: widget.controller,
       isPassword: true,
-      isPasswordVisible: isPasswordVisible,
+      isPasswordVisible: _visible,
       textInputAction: TextInputAction.done,
       errorText: confirmPasswordError,
-      onTogglePasswordVisibility: () {
-        setState(() {
-          isPasswordVisible = !isPasswordVisible;
-        });
-      },
+      onTogglePasswordVisibility: () => setState(() => _visible = !_visible),
       onChanged: (v) => ref.read(authSignupProvider.notifier).setConfirmPassword(v),
     );
   }
