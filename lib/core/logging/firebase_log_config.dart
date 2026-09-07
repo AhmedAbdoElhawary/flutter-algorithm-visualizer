@@ -19,19 +19,19 @@ abstract final class FirebaseLogConfig {
   ///
   /// The output comes from the native SDK, not from Dart, so it shows up in
   /// `flutter run` / logcat on Android and in the Xcode console on iOS.
-  static bool specificLogs = false;
+  static bool specificLogs = true;
 
   /// Prints full document payloads and argument values instead of the redacted
   /// summaries. Secrets (passwords, reset codes, tokens) stay redacted anyway.
-  static bool payloads = false;
+  static bool payloads = true;
 
   /// Applies the configuration. Call it once after `Firebase.initializeApp`.
   ///
   /// Release builds get nothing, whatever the caller asks for.
   static Future<void> apply({
     bool enabled = kDebugMode,
-    bool specificLogs = false,
-    bool payloads = false,
+    bool specificLogs = true,
+    bool payloads = true,
   }) async {
     FirebaseLogConfig.enabled = enabled && kDebugMode;
     FirebaseLogConfig.specificLogs = specificLogs && kDebugMode;
