@@ -11,6 +11,8 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  flutter_localizations:
+    sdk: flutter
   go_router: ^17.5.0
   get_it: ^9.2.1
   flutter_screenutil: ^5.9.3
@@ -41,10 +43,14 @@ dev_dependencies:
 flutter:
   uses-material-design: true
   fonts:
+    # Legacy bundled mono, kept for pre-CoreDive screens that reference
+    # FontConstants.fontJetBrainsMono directly. The CoreDive `mono` scale
+    # (CdText.mono) resolves JetBrains Mono 400/500/700 through google_fonts
+    # instead — see lib/core/resources/typography_manager.dart.
     - family: JetBrainsMono
       fonts:
-        - asset: assets/fonts/JetBrainsMono-Italic.ttf
         - asset: assets/fonts/JetBrainsMono.ttf
-          weight: 700
+        - asset: assets/fonts/JetBrainsMono-Italic.ttf
+          style: italic
   assets:
     - assets/problems.json
