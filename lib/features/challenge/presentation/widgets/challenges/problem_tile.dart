@@ -94,12 +94,14 @@ class _MainRow extends StatelessWidget {
         child: Row(
           children: [
             CustomIcon(statusIcon, size: 16, color: statusColor),
-            const RSizedBox(width: 8),
+            const RSizedBox(width: 6),
             BoldText('${problem.number}.', color: ThemeEnum.hover, fontSize: 11),
             const RSizedBox(width: 6),
             Expanded(child: BoldText(problem.getName, color: ThemeEnum.textSecond, fontSize: 13)),
+            const RSizedBox(width: 4),
+
             BoldText(problem.getDifficulty.difficultyString, color: diffColor, fontSize: 11),
-            const RSizedBox(width: 6),
+            const RSizedBox(width: 4),
             AnimatedRotation(
               turns: expanded ? 0.25 : 0,
               duration: const Duration(milliseconds: 200),
