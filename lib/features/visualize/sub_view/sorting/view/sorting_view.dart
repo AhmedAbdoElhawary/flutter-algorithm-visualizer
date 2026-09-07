@@ -276,7 +276,7 @@ class _ShowUpSortingListState extends ConsumerState<ShowUpSortingList> {
                           selectedAlgorithmLength: widget.selectedAlgorithmLength,
                           isLastItem: index == items.length - 1),
                       RSizedBox(height: 4),
-                      MediumText('$index', fontSize: 10, color: ThemeEnum.columnColor),
+                      MediumText('$index', fontSize: 10, color: ThemeEnum.textDisabled),
                     ],
                   ),
                 );
