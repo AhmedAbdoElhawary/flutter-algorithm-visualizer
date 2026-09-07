@@ -51,6 +51,14 @@ class AuthSignUpNotifier extends Notifier<AuthSignUpState> {
     );
   }
 
+  /// Reject the guest placeholder names ("Anonymous", "Anonymous ff 12", …) that
+  /// otherwise reach the Home headline as a real display name.
+  bool _looksLikePlaceholderName(String name) {
+    final n = name.trim().toLowerCase();
+    if (n.startsWith('anonymous') || n.startsWith('anon ') || n == 'anon') return true;
+    return RegExp(r'^(guest|user|player)[\s_-]*\d*$').hasMatch(n);
+  }
+
   bool validateSignUp() {
     String? nameError;
     String? emailError;
@@ -61,6 +69,8 @@ class AuthSignUpNotifier extends Notifier<AuthSignUpState> {
       nameError = StringsManager.nameRequired;
     } else if (state.name.trim().length < 2) {
       nameError = StringsManager.nameMinLength;
+    } else if (_looksLikePlaceholderName(state.name)) {
+      nameError = StringsManager.notValidName;
     }
 
     if (state.email.trim().isEmpty) {
