@@ -1,5 +1,4 @@
 import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
-import 'package:algorithm_visualizer/features/home/view/movable_pins.dart';
 import 'package:algorithm_visualizer/features/home/view/widgets/home_category_grid.dart';
 import 'package:algorithm_visualizer/features/home/view/widgets/home_continue_card.dart';
 import 'package:algorithm_visualizer/features/home/view/widgets/home_difficulty_progress.dart';
