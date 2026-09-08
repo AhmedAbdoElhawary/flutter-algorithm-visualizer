@@ -49,7 +49,7 @@ app.*.map.json
 /lib/firebase_options.dart
 /.VSCodeCounter/
 /firebase.json
-/.claude/
+/.claude
 /android/app/google-services.json
 /AGENTS.md
 /ios/Runner/GoogleService-Info.plist
@@ -69,6 +69,9 @@ app.*.map.json
 /android/key.properties
 *.jks
 *.keystore
+# Generated CI keystores + their plaintext secret values (paste into GitHub, then
+# move the .jks + passwords to a vault). Never commit this folder.
+/ci-keystores/
 # App Store / Fastlane
 /ios/fastlane/report.xml
 /ios/fastlane/Preview.html
