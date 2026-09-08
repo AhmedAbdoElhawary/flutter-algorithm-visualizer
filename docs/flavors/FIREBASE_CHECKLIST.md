@@ -8,9 +8,9 @@ build wiring already exist.
 
 | Flavor | Suggested project id | Android app package name | iOS app bundle id |
 | --- | --- | --- | --- |
-| dev | `algodive-dev` | `com.elhawary.algodive.dev` | `com.elhawary.algodive.dev` |
-| staging | `algodive-staging` | `com.elhawary.algodive.staging` | `com.elhawary.algodive.staging` |
-| production | `algodive` (existing) | `com.elhawary.algodive` | `com.elhawary.algodive` |
+| dev | `algo-dive-dev` | `com.elhawary.algodive.dev` | `com.elhawary.algodive.dev` |
+| staging | `algo-dive-staging` | `com.elhawary.algodive.staging` | `com.elhawary.algodive.staging` |
+| production | `algo-dive-prod` (existing) | `com.elhawary.algodive` | `com.elhawary.algodive` |
 
 For each project: **Add app → Android**, use the package name above → download
 `google-services.json`. **Add app → iOS**, use the bundle id above → download
