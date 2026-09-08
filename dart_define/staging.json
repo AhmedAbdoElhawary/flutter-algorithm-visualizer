@@ -1,0 +1,5 @@
+{
+  "FLAVOR": "staging",
+  "APP_NAME": "AlgoDive Stag",
+  "API_BASE_URL": "https://staging.api.algodive.app"
+}
