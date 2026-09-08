@@ -82,34 +82,54 @@ jobs:
         run: flutter test --dart-define-from-file=dart_define/dev.json
 
   build:
-    name: Build ${{ matrix.platform }}
+    name: Build ${{ matrix.platform }} (${{ matrix.flavor }})
     needs: quality
 
     strategy:
       fail-fast: false
       matrix:
         include:
+          # One Android smoke build per flavor that PRs into develop can ship.
+          # Each flavor's Gradle applicationId differs (.dev / .staging), so each
+          # needs a google-services.json whose package matches — pulled from that
+          # flavor's GitHub Environment secret and written to src/<flavor>/ below.
+          # production is intentionally NOT built here: its Environment is
+          # review-gated (Required reviewers), which would freeze the PR check.
+          # deploy.yml builds the production flavor on every release tag.
           - platform: Android
             os: ubuntu-latest
-            # Android flavors work through Gradle productFlavors out of the box.
+            flavor: dev
+            github_environment: development
             command: >-
               flutter build apk --debug
               --flavor dev -t lib/main_dev.dart
               --dart-define-from-file=dart_define/dev.json
 
+          - platform: Android
+            os: ubuntu-latest
+            flavor: staging
+            github_environment: staging
+            command: >-
+              flutter build apk --debug
+              --flavor staging -t lib/main_staging.dart
+              --dart-define-from-file=dart_define/staging.json
+
+          # Schemeless iOS smoke build. Per-flavor iOS builds need the Xcode
+          # schemes + per-config baseConfigurationReference wiring done properly
+          # in Xcode — a later phase (see docs/flavors/CICD.md). Until then a
+          # plain production-entry build is the reliable PR check. No
+          # github_environment: it reads the repo-level iOS plist secret.
           - platform: iOS
             os: macos-latest
-            # Schemeless smoke build. The per-flavor Xcode configs/schemes exist
-            # but their baseConfigurationReference isn't wired to the flavor
-            # .xcconfig files yet, so a plain build stays the reliable PR check.
-            # iOS App Distribution (signed, per flavor) is a later phase — see
-            # docs/flavors/CICD.md.
+            flavor: production
             command: >-
               flutter build ios --debug --no-codesign
               -t lib/main_prod.dart
               --dart-define-from-file=dart_define/prod.json
 
     runs-on: ${{ matrix.os }}
+    # Empty for the iOS row -> that job runs without an environment.
+    environment: ${{ matrix.github_environment }}
 
     steps:
       - name: Checkout
@@ -125,12 +145,23 @@ jobs:
       - name: Get dependencies
         run: flutter pub get
 
-      - name: Create Firebase configuration
+      - name: Create Firebase configuration (Android)
+        if: matrix.platform == 'Android'
         env:
-          GOOGLE_SERVICES_JSON: ${{ secrets.GOOGLE_SERVICES_JSON }}
+          # Resolved from the matrix row's GitHub Environment (development /
+          # staging), each holding its own value under this same name.
+          ANDROID_GOOGLE_SERVICES_JSON: ${{ secrets.ANDROID_GOOGLE_SERVICES_JSON }}
+        run: |
+          # Flavor-scoped location: the Google Services Gradle plugin reads
+          # src/<flavor>/google-services.json before the app-level fallback.
+          mkdir -p "android/app/src/${{ matrix.flavor }}"
+          printf '%s' "$ANDROID_GOOGLE_SERVICES_JSON" > "android/app/src/${{ matrix.flavor }}/google-services.json"
+
+      - name: Create Firebase configuration (iOS)
+        if: matrix.platform == 'iOS'
+        env:
           GOOGLE_SERVICE_INFO_PLIST: ${{ secrets.GOOGLE_SERVICE_INFO_PLIST }}
         run: |
-          printf '%s' "$GOOGLE_SERVICES_JSON" > android/app/google-services.json
           printf '%s' "$GOOGLE_SERVICE_INFO_PLIST" > ios/Runner/GoogleService-Info.plist
           # iOS build phase copies the flavor plist; provide a default so a plain
           # (schemeless) build still finds one.
