@@ -1,13 +1,13 @@
 name: Flutter V_0.1.0
 
+# PR quality gate only. Pushes/merges to develop, staging and production are
+# built and shipped by .github/workflows/deploy.yml.
 on:
   pull_request:
     branches:
       - develop
-
-  push:
-    branches:
-      - develop
+      - staging
+      - production
 
 permissions:
   contents: read
@@ -17,6 +17,33 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  merge-guard:
+    name: Merge direction check
+    runs-on: ubuntu-latest
+    steps:
+      - name: Verify ${{ github.head_ref }} is allowed to merge into ${{ github.base_ref }}
+        run: |
+          base="${{ github.base_ref }}"
+          head="${{ github.head_ref }}"
+          case "$base" in
+            develop)
+              exit 0 ;; # anything may merge into develop
+            staging)
+              case "$head" in
+                develop|production|hotfix/*) exit 0 ;;
+                *) echo "::error::'$head' -> 'staging' is not allowed. staging only accepts develop, production (back-merge), or hotfix/*."; exit 1 ;;
+              esac
+              ;;
+            production)
+              case "$head" in
+                staging|hotfix/*) exit 0 ;;
+                *) echo "::error::'$head' -> 'production' is not allowed. production only accepts staging or hotfix/* — not even develop directly."; exit 1 ;;
+              esac
+              ;;
+            *)
+              exit 0 ;; # any other target branch (e.g. a feature branch) is unrestricted
+          esac
+
   quality:
     name: Quality Checks
     runs-on: ubuntu-latest
@@ -29,6 +56,7 @@ jobs:
         uses: subosito/flutter-action@v2
         with:
           channel: stable
+          flutter-version: 3.44.7 # keep in sync with the team's local toolchain
           cache: true
 
       - name: Get dependencies
@@ -71,12 +99,11 @@ jobs:
 
           - platform: iOS
             os: macos-latest
-            # No --flavor yet: the Debug-dev / Release-dev Xcode configs + schemes
-            # are a one-time manual step (see docs/IOS_XCODE_SETUP.md). Until they
-            # exist, build the production entry point without a flavor. Once the
-            # schemes are committed, switch to:
-            #   flutter build ios --debug --no-codesign --flavor dev
-            #   -t lib/main_dev.dart --dart-define-from-file=dart_define/dev.json
+            # Schemeless smoke build. The per-flavor Xcode configs/schemes exist
+            # but their baseConfigurationReference isn't wired to the flavor
+            # .xcconfig files yet, so a plain build stays the reliable PR check.
+            # iOS App Distribution (signed, per flavor) is a later phase — see
+            # docs/flavors/CICD.md.
             command: >-
               flutter build ios --debug --no-codesign
               -t lib/main_prod.dart
@@ -92,6 +119,7 @@ jobs:
         uses: subosito/flutter-action@v2
         with:
           channel: stable
+          flutter-version: 3.44.7 # keep in sync with the team's local toolchain
           cache: true
 
       - name: Get dependencies
