@@ -4,6 +4,12 @@ Concrete commands and file paths for things you'll actually do. Assumes the
 one-time setup ([README](README.md), [IOS_XCODE_SETUP](IOS_XCODE_SETUP.md),
 [FIREBASE_CHECKLIST](FIREBASE_CHECKLIST.md)) is done.
 
+Shipping a build (branch → flavor → Firebase App Distribution) is its own
+guide: **[CICD.md](CICD.md)**. Short version: merge to `develop` / `staging` /
+`production` and the matching flavor is built and distributed automatically
+(production waits for your approval). Write the tester-facing notes in
+`CHANGELOG.md` — the top block is what ships.
+
 Shorthand used below:
 
 ```
@@ -136,14 +142,21 @@ hotfix branch — the store rejects a re-used build number.
 
 1. Open the failed run: **Actions** tab → the run → the red job.
 2. Common causes & fixes:
-   - **`No matching client found for package name …`** — the CI Firebase secret
-     doesn't contain that flavor's package. Update `GOOGLE_SERVICES_JSON`
-     (or the per-flavor secret) with an entry for `com.elhawary.algodive[.suffix]`.
+   - **`No matching client found for package name …`** — that environment's
+     `ANDROID_GOOGLE_SERVICES_JSON` secret is from the wrong Firebase project.
+     Replace it with the `google-services.json` whose package matches
+     `com.elhawary.algodive[.suffix]`.
+   - **`… is empty for environment '…'`** — the secret is set repo-wide but not
+     on that GitHub Environment. Add it under Settings → Environments.
+   - **`APK is debug-signed`** — that environment's `ANDROID_KEYSTORE_*` secrets
+     are missing/wrong, so Gradle fell back to the debug key. Re-add (see §9).
    - **`flutter analyze` errors** — reproduce locally: `flutter analyze lib test`.
-   - **Signing / keystore** on a release job — the `key.properties` / keystore
-     secret is missing or malformed; re-add it (see §9).
-   - **iOS `scheme not found`** — the flavored iOS build was enabled in CI
-     before the schemes were committed (IOS_XCODE_SETUP step 7).
+   - **Firebase upload `401` / `403` / `not found`** — `FIREBASE_TOKEN` is
+     stale (regenerate with `firebase login:ci`), or its account can't reach
+     that project, or `FIREBASE_ANDROID_APP_ID` is from the wrong project.
+     See [CICD.md](CICD.md#troubleshooting).
+   - **Production deploy stuck** on *"Waiting for review"* — expected; approve it
+     under the run's **Review deployments** prompt.
 3. Fix on a branch, PR it, re-merge. To just re-run after a flaky failure:
    **Actions → run → "Re-run failed jobs"**.
 4. `git revert -m 1 <merge-commit>` if you need the branch green *now* and the
