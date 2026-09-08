@@ -1,0 +1,17 @@
+# Regenerates the clean production launcher icon (NO ribbon) for every density.
+#   dart run tool/flavor_icons/generate_ribbon_icons.dart
+#   dart run flutter_launcher_icons -f flutter_launcher_icons-production.yaml
+#
+# Writes Android output to android/app/src/production/res/** and the default
+# `AppIcon` set in the iOS asset catalog. Run this whenever the base artwork in
+# tool/flavor_icons/base/app_icon.png changes.
+flutter_launcher_icons:
+  image_path: "tool/flavor_icons/generated/production.png"
+
+  android: true
+  min_sdk_android: 21
+  adaptive_icon_background: "#5A5A5A"
+  adaptive_icon_foreground: "tool/flavor_icons/generated/production.png"
+
+  ios: true
+  remove_alpha_ios: true
