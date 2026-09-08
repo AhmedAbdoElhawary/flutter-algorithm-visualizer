@@ -1,0 +1,248 @@
+name: Deploy
+
+# A pushed TAG -> build that flavor's release APK -> upload to that flavor's
+# own Firebase project via App Distribution. A plain merge/push ships nothing.
+#
+# Tag shapes (one version line, stage as a suffix):
+#   v1.3.0-dev.2   -> environment "development" -> flavor dev        -> algo-dive-dev
+#   v1.3.0-stag.1  -> environment "staging"     -> flavor staging    -> algo-dive-staging
+#   v1.3.0         -> environment "production"  -> flavor production -> algo-dive-prod
+#
+# Each GitHub Environment holds its own secrets (same names, different values):
+#   ANDROID_GOOGLE_SERVICES_JSON   that project's google-services.json (raw text)
+#   ANDROID_KEYSTORE_BASE64        `base64 -w0 release.jks`
+#   ANDROID_KEYSTORE_PASSWORD
+#   ANDROID_KEY_ALIAS
+#   ANDROID_KEY_PASSWORD
+#   FIREBASE_TOKEN                 `firebase login:ci` token (one token covers all
+#                                 three projects; store it in each environment)
+#   FIREBASE_ANDROID_APP_ID        the 1:...:android:... id from that project
+# Optional repo/environment variable:
+#   FIREBASE_TESTER_GROUPS         comma list of tester groups (default: "testers")
+#
+# The "production" environment has "Required reviewers" enabled, so a v1.2.3
+# tag pauses here until someone approves it under the run's
+# "Review deployments" prompt. Nothing reaches testers before that.
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write # the production job creates a GitHub Release
+
+concurrency:
+  group: deploy-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  resolve:
+    name: Resolve target
+    runs-on: ubuntu-latest
+    outputs:
+      environment: ${{ steps.map.outputs.environment }}
+      flavor: ${{ steps.map.outputs.flavor }}
+      target: ${{ steps.map.outputs.target }}
+      dart_define: ${{ steps.map.outputs.dart_define }}
+      branch: ${{ steps.map.outputs.branch }}
+      version: ${{ steps.map.outputs.version }}
+      is_production: ${{ steps.map.outputs.is_production }}
+    steps:
+      - id: map
+        run: |
+          tag="${{ github.ref_name }}"
+          case "$tag" in
+            v*-dev.*)
+              env=development; flavor=dev;        target=lib/main_dev.dart;     define=dart_define/dev.json;     branch=develop;    prod=false ;;
+            v*-stag.*)
+              env=staging;     flavor=staging;    target=lib/main_staging.dart; define=dart_define/staging.json; branch=staging;    prod=false ;;
+            v[0-9]*)
+              env=production;  flavor=production; target=lib/main_prod.dart;    define=dart_define/prod.json;    branch=production; prod=true ;;
+            *)
+              echo "::error::deploy.yml does not recognize tag '$tag' — expected v<x.y.z>-dev.<n>, v<x.y.z>-stag.<n>, or v<x.y.z>"; exit 1 ;;
+          esac
+          # Strip the leading 'v' and any -dev.N / -stag.N suffix to get the base
+          # version, e.g. v1.3.0-dev.2 -> 1.3.0. Used as --build-name.
+          version="${tag#v}"
+          version="${version%%-*}"
+          {
+            echo "environment=$env"
+            echo "flavor=$flavor"
+            echo "target=$target"
+            echo "dart_define=$define"
+            echo "branch=$branch"
+            echo "version=$version"
+            echo "is_production=$prod"
+          } >> "$GITHUB_OUTPUT"
+
+  guard:
+    name: Verify tag is on its branch
+    needs: resolve
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Confirm the tagged commit is reachable from ${{ needs.resolve.outputs.branch }}
+        run: |
+          branch="${{ needs.resolve.outputs.branch }}"
+          tag="${{ github.ref_name }}"
+          if ! git merge-base --is-ancestor "$tag" "origin/$branch"; then
+            echo "::error::tag '$tag' is not on branch '$branch' — refusing to ship a mismatched tag/branch pair"
+            exit 1
+          fi
+
+  verify:
+    name: Analyze & test
+    needs: [resolve, guard]
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          flutter-version: 3.44.7 # keep in sync with the team's local toolchain
+          cache: true
+
+      - run: flutter pub get
+      - run: flutter analyze
+      - run: flutter test --dart-define-from-file=${{ needs.resolve.outputs.dart_define }}
+
+  android:
+    name: Build & distribute (Android)
+    needs: [resolve, guard, verify]
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    # Selecting the environment is what injects that environment's secrets AND
+    # enforces the production approval gate before this job starts.
+    environment: ${{ needs.resolve.outputs.environment }}
+    outputs:
+      release_notes_file: release-notes.txt
+    env:
+      FLAVOR: ${{ needs.resolve.outputs.flavor }}
+      TARGET: ${{ needs.resolve.outputs.target }}
+      DART_DEFINE: ${{ needs.resolve.outputs.dart_define }}
+      VERSION: ${{ needs.resolve.outputs.version }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # need full tag history for the auto commit-list notes
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          flutter-version: 3.44.7 # keep in sync with the team's local toolchain
+          cache: true
+
+      - run: flutter pub get
+
+      - name: Restore this flavor's google-services.json
+        env:
+          GOOGLE_SERVICES_JSON: ${{ secrets.ANDROID_GOOGLE_SERVICES_JSON }}
+        run: |
+          test -n "$GOOGLE_SERVICES_JSON" || { echo "::error::ANDROID_GOOGLE_SERVICES_JSON is empty for environment '${{ needs.resolve.outputs.environment }}'"; exit 1; }
+          mkdir -p "android/app/src/${FLAVOR}"
+          printf '%s' "$GOOGLE_SERVICES_JSON" > "android/app/src/${FLAVOR}/google-services.json"
+
+      - name: Restore release keystore
+        env:
+          KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+          KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+          KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+        run: |
+          test -n "$KEYSTORE_BASE64" || { echo "::error::ANDROID_KEYSTORE_BASE64 is empty for environment '${{ needs.resolve.outputs.environment }}'"; exit 1; }
+          echo "$KEYSTORE_BASE64" | base64 --decode > "${GITHUB_WORKSPACE}/android/app/release.jks"
+          # printf per line so a password containing $, backticks, etc. is written literally.
+          {
+            printf 'storeFile=%s\n' "${GITHUB_WORKSPACE}/android/app/release.jks"
+            printf 'storePassword=%s\n' "$KEYSTORE_PASSWORD"
+            printf 'keyAlias=%s\n' "$KEY_ALIAS"
+            printf 'keyPassword=%s\n' "$KEY_PASSWORD"
+          } > "${GITHUB_WORKSPACE}/android/key.properties"
+
+      - name: Build release notes
+        run: |
+          if [ "${{ needs.resolve.outputs.is_production }}" = "true" ]; then
+            # Production: the hand-written CHANGELOG.md entry, approved by the
+            # user in the /promote flow before this tag was ever pushed.
+            python3 tool/changelog_release_notes.py > release-notes.txt
+          else
+            # Dev/staging: auto-generated list of commits since the previous
+            # tag in this same stage (same -dev./-stag. suffix family).
+            python3 tool/changelog_release_notes.py --auto-since-previous-tag "${{ github.ref_name }}" > release-notes.txt
+          fi
+          echo "----- release notes -----"; cat release-notes.txt
+
+      - name: Build release APK
+        run: |
+          flutter build apk --release \
+            --flavor "$FLAVOR" \
+            -t "$TARGET" \
+            --dart-define-from-file="$DART_DEFINE" \
+            --build-name "$VERSION" \
+            --build-number "${{ github.run_number }}"
+
+      - name: Verify the APK is signed with the release key (not debug)
+        run: |
+          apk="build/app/outputs/flutter-apk/app-${FLAVOR}-release.apk"
+          test -f "$apk" || { echo "::error::expected APK not found at $apk"; exit 1; }
+          # Flutter/AGP signs v2/v3 only (no JAR signature), so use apksigner.
+          apksigner="$(ls "${ANDROID_HOME:-$ANDROID_SDK_ROOT}"/build-tools/*/apksigner 2>/dev/null | sort -V | tail -1)"
+          if [ -z "$apksigner" ]; then echo "::warning::apksigner not found — skipping signature check"; exit 0; fi
+          certs="$("$apksigner" verify --print-certs "$apk")"
+          echo "$certs"
+          if echo "$certs" | grep -q "CN=Android Debug"; then
+            echo "::error::APK is debug-signed — check the ANDROID_KEYSTORE_* secrets for environment '${{ needs.resolve.outputs.environment }}'"; exit 1
+          fi
+
+      - name: Upload to Firebase App Distribution
+        uses: wzieba/Firebase-Distribution-Github-Action@v1
+        with:
+          appId: ${{ secrets.FIREBASE_ANDROID_APP_ID }}
+          token: ${{ secrets.FIREBASE_TOKEN }}
+          groups: ${{ vars.FIREBASE_TESTER_GROUPS || 'testers' }}
+          file: build/app/outputs/flutter-apk/app-${{ needs.resolve.outputs.flavor }}-release.apk
+          releaseNotesFile: release-notes.txt
+
+      - name: Upload release notes + APK for the release job
+        if: needs.resolve.outputs.is_production == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-assets
+          path: |
+            release-notes.txt
+            build/app/outputs/flutter-apk/app-${{ needs.resolve.outputs.flavor }}-release.apk
+          retention-days: 1
+
+      - name: Scrub secrets from the runner
+        if: always()
+        run: rm -f "${GITHUB_WORKSPACE}/android/app/release.jks" "${GITHUB_WORKSPACE}/android/key.properties"
+
+  release:
+    name: Create GitHub Release
+    if: needs.resolve.outputs.is_production == 'true'
+    needs: [resolve, android]
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: release-assets
+
+      - name: Create the release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ github.ref_name }}
+          name: ${{ github.ref_name }}
+          body_path: release-notes.txt
+          files: "*-release.apk"
