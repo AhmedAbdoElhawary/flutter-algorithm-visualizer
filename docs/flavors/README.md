@@ -154,18 +154,24 @@ The exact 6 files to create → **[FIREBASE_CHECKLIST.md](FIREBASE_CHECKLIST.md)
 
 `android/app/build.gradle.kts`:
 
-- `dev` and `staging` flavors set `signingConfig = signingConfigs.getByName("debug")`
-  — the auto-generated debug key. No secrets needed to build or distribute them.
-- `production` uses the `release` signing config, which loads
-  `android/key.properties` → `upload-keystore.jks`. If `key.properties` is
-  absent (fresh clone, PR CI) the release build falls back to the debug key so
-  it still compiles.
-- `android/key.properties`, `*.jks`, `*.keystore` are git-ignored. For release
-  CI, write `key.properties` + the keystore from GitHub Actions secrets in a
-  step before `flutter build`.
+- No flavor pins a `signingConfig`. Every flavor inherits the build type's
+  config: a `--release` build is signed with `release` when
+  `android/key.properties` exists, and falls back to `debug` when it doesn't
+  (fresh clone, PR CI) so it still compiles.
+- `flutter run --flavor <x>` uses the **debug** build type → the debug key,
+  always. Signing only matters for `--release`.
+- In CI (`deploy.yml`) each environment injects **its own** keystore: the job
+  decodes `ANDROID_KEYSTORE_BASE64` to `android/app/release.jks` and writes
+  `android/key.properties` from the keystore secrets, before `flutter build`,
+  then deletes both afterwards. So dev/staging/production release APKs are each
+  signed with a different, per-environment key.
+- `android/key.properties`, `*.jks`, `*.keystore` are git-ignored. Locally you
+  only need them to make a `--release` build; a debug run never does.
 
-iOS signing is per build configuration in Xcode / `ExportOptions.plist` — not
-covered here (CI/CD deferred).
+Android CI delivery is live — see **[CICD.md](CICD.md)** for the technical
+reference, or **[RELEASES.md](RELEASES.md)** for the short day-to-day version.
+iOS signing (per build configuration in Xcode / `ExportOptions.plist`) and iOS
+distribution are still a later phase.
 
 ---
 
@@ -185,16 +191,19 @@ file works; `FlavorConfig` also has a safe fallback if none is passed).
 
 ## Branch → environment map
 
-CI/CD implementation is deferred, but the intended mapping is:
+Implemented in `.github/workflows/deploy.yml`. Full guide: **[CICD.md](CICD.md)**.
 
-| Branch       | Flavor       | Deploy target |
-| ------------ | ------------ | ------------- |
-| `develop`    | `dev`        | Firebase App Distribution — internal testers |
-| `staging`    | `staging`    | Firebase App Distribution — QA / stakeholders |
-| `production` | `production` | Play Store (internal/closed) + TestFlight, behind manual approval |
+| Branch       | GitHub Environment | Flavor       | Firebase project    | Deploy target |
+| ------------ | ------------------ | ------------ | ------------------- | ------------- |
+| `develop`    | `development`       | `dev`        | `algo-dive-dev`     | Firebase App Distribution — automatic |
+| `staging`    | `staging`          | `staging`    | `algo-dive-staging` | Firebase App Distribution — automatic |
+| `production` | `production`       | `production` | `algo-dive-prod`    | Firebase App Distribution — after a required-reviewer approval |
 
-The current `.github/workflows/ci.yml` only runs quality + a dev build on
-`develop`.
+- **Push/merge** to one of these branches → `deploy.yml` builds that flavor's
+  release APK and uploads it to that flavor's Firebase project.
+- **Pull requests** into these branches → `.github/workflows/ci.yml` runs
+  analyze + test + a smoke build (no secrets).
+- iOS distribution and the app stores are a later phase — see CICD.md.
 
 ---
 
@@ -208,8 +217,8 @@ Say `qa`, app name "AlgoDive QA", suffix `.qa`. Touch these, in order:
 3. **`lib/main_qa.dart`** — copy `lib/main_dev.dart`.
 4. **`android/app/build.gradle.kts`** — add a `create("qa") { … }` block in
    `productFlavors` (dimension, `applicationIdSuffix = ".qa"`,
-   `versionNameSuffix`, `resValue("string", "app_name", "AlgoDive QA")`,
-   `signingConfig = signingConfigs.getByName("debug")`).
+   `versionNameSuffix`, `resValue("string", "app_name", "AlgoDive QA")`). No
+   `signingConfig` line — flavors inherit the build type's.
 5. **`android/app/src/qa/`** — create the folder; drop `google-services.json`
    for the qa Firebase Android app (`com.elhawary.algodive.qa`).
 6. **iOS `.xcconfig`** — add `ios/Flutter/{Debug,Release,Profile}-qa.xcconfig`
