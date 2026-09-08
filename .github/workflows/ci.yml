@@ -81,55 +81,71 @@ jobs:
       - name: Run tests
         run: flutter test --dart-define-from-file=dart_define/dev.json
 
-  build:
-    name: Build ${{ matrix.platform }} (${{ matrix.flavor }})
+  # One Android build per PR, for the flavor that the PR's target branch ships:
+  #   PR -> develop     builds flavor dev
+  #   PR -> staging     builds flavor staging
+  #   PR -> production  builds flavor production (its Environment is review-gated,
+  #                     so this job pauses for a manual approval — rare, as only
+  #                     staging / hotfix PRs may target production).
+  build-android:
+    name: Build Android (${{ github.base_ref }})
     needs: quality
+    runs-on: ubuntu-latest
+    # develop -> the "development" box; staging / production -> the same-named box.
+    environment: ${{ github.base_ref == 'develop' && 'development' || github.base_ref }}
 
-    strategy:
-      fail-fast: false
-      matrix:
-        include:
-          # One Android smoke build per flavor that PRs into develop can ship.
-          # Each flavor's Gradle applicationId differs (.dev / .staging), so each
-          # needs a google-services.json whose package matches — pulled from that
-          # flavor's GitHub Environment secret and written to src/<flavor>/ below.
-          # production is intentionally NOT built here: its Environment is
-          # review-gated (Required reviewers), which would freeze the PR check.
-          # deploy.yml builds the production flavor on every release tag.
-          - platform: Android
-            os: ubuntu-latest
-            flavor: dev
-            github_environment: development
-            command: >-
-              flutter build apk --debug
-              --flavor dev -t lib/main_dev.dart
-              --dart-define-from-file=dart_define/dev.json
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
 
-          - platform: Android
-            os: ubuntu-latest
-            flavor: staging
-            github_environment: staging
-            command: >-
-              flutter build apk --debug
-              --flavor staging -t lib/main_staging.dart
-              --dart-define-from-file=dart_define/staging.json
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          flutter-version: 3.44.7 # keep in sync with the team's local toolchain
+          cache: true
 
-          # Schemeless iOS smoke build. Per-flavor iOS builds need the Xcode
-          # schemes + per-config baseConfigurationReference wiring done properly
-          # in Xcode — a later phase (see docs/flavors/CICD.md). Until then a
-          # plain production-entry build is the reliable PR check. No
-          # github_environment: it reads the repo-level iOS plist secret.
-          - platform: iOS
-            os: macos-latest
-            flavor: production
-            command: >-
-              flutter build ios --debug --no-codesign
-              -t lib/main_prod.dart
-              --dart-define-from-file=dart_define/prod.json
+      - name: Resolve flavor from target branch
+        id: map
+        run: |
+          case "${{ github.base_ref }}" in
+            develop)    f=dev;        t=lib/main_dev.dart;     d=dart_define/dev.json ;;
+            staging)    f=staging;    t=lib/main_staging.dart; d=dart_define/staging.json ;;
+            production) f=production; t=lib/main_prod.dart;    d=dart_define/prod.json ;;
+            *) echo "::error::unsupported base branch '${{ github.base_ref }}'"; exit 1 ;;
+          esac
+          { echo "flavor=$f"; echo "target=$t"; echo "dart_define=$d"; } >> "$GITHUB_OUTPUT"
 
-    runs-on: ${{ matrix.os }}
-    # Empty for the iOS row -> that job runs without an environment.
-    environment: ${{ matrix.github_environment }}
+      - name: Get dependencies
+        run: flutter pub get
+
+      - name: Create Firebase configuration
+        env:
+          # Resolved from this job's GitHub Environment (development / staging /
+          # production), each holding its own value under this same name.
+          ANDROID_GOOGLE_SERVICES_JSON: ${{ secrets.ANDROID_GOOGLE_SERVICES_JSON }}
+        run: |
+          # Flavor-scoped location: the Google Services Gradle plugin reads
+          # src/<flavor>/google-services.json before the app-level fallback.
+          mkdir -p "android/app/src/${{ steps.map.outputs.flavor }}"
+          printf '%s' "$ANDROID_GOOGLE_SERVICES_JSON" > "android/app/src/${{ steps.map.outputs.flavor }}/google-services.json"
+
+      - name: Build
+        run: >-
+          flutter build apk --debug
+          --flavor ${{ steps.map.outputs.flavor }}
+          -t ${{ steps.map.outputs.target }}
+          --dart-define-from-file=${{ steps.map.outputs.dart_define }}
+
+  # Schemeless iOS smoke build — same for every target branch. Per-flavor iOS
+  # builds need the Xcode schemes + per-config baseConfigurationReference wiring
+  # done properly in Xcode (a later phase, see docs/flavors/CICD.md). Until then
+  # a plain production-entry build is the reliable check. No environment: it
+  # reads the repo-level iOS plist secret.
+  build-ios:
+    name: Build iOS (schemeless)
+    needs: quality
+    runs-on: macos-latest
 
     steps:
       - name: Checkout
@@ -145,20 +161,7 @@ jobs:
       - name: Get dependencies
         run: flutter pub get
 
-      - name: Create Firebase configuration (Android)
-        if: matrix.platform == 'Android'
-        env:
-          # Resolved from the matrix row's GitHub Environment (development /
-          # staging), each holding its own value under this same name.
-          ANDROID_GOOGLE_SERVICES_JSON: ${{ secrets.ANDROID_GOOGLE_SERVICES_JSON }}
-        run: |
-          # Flavor-scoped location: the Google Services Gradle plugin reads
-          # src/<flavor>/google-services.json before the app-level fallback.
-          mkdir -p "android/app/src/${{ matrix.flavor }}"
-          printf '%s' "$ANDROID_GOOGLE_SERVICES_JSON" > "android/app/src/${{ matrix.flavor }}/google-services.json"
-
-      - name: Create Firebase configuration (iOS)
-        if: matrix.platform == 'iOS'
+      - name: Create Firebase configuration
         env:
           GOOGLE_SERVICE_INFO_PLIST: ${{ secrets.GOOGLE_SERVICE_INFO_PLIST }}
         run: |
@@ -169,4 +172,7 @@ jobs:
           printf '%s' "$GOOGLE_SERVICE_INFO_PLIST" > ios/Runner/Firebase/production/GoogleService-Info.plist
 
       - name: Build
-        run: ${{ matrix.command }}
+        run: >-
+          flutter build ios --debug --no-codesign
+          -t lib/main_prod.dart
+          --dart-define-from-file=dart_define/prod.json
