@@ -1,0 +1,5 @@
+{
+  "FLAVOR": "dev",
+  "APP_NAME": "AlgoDive Dev",
+  "API_BASE_URL": "https://dev.api.algodive.app"
+}
