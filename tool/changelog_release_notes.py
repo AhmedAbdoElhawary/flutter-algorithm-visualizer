@@ -19,7 +19,7 @@ The changelog format is one section per release, newest first:
 Anything between the first `## [x.y.z]` heading and the next `## ` heading is the
 body. The version is the `x.y.z` inside the brackets.
 """
-
+# nothing
 from __future__ import annotations
 
 import argparse
