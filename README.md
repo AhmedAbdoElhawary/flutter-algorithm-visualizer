@@ -86,3 +86,46 @@ Whether you are preparing for coding interviews, studying computer science funda
 
 - We will also write an explanation code for every algorithm in several languages.
 - Compare different algorithms with the interaction way
+
+---
+
+## Flavors (dev / staging / production)
+
+The app ships in three flavors, each with its own name, application id, launcher
+icon and Firebase project.
+
+| Flavor       | Entry point            | App name        | Android applicationId          | iOS bundle id                  | Icon           |
+| ------------ | ---------------------- | --------------- | ------------------------------ | ------------------------------ | -------------- |
+| `dev`        | `lib/main_dev.dart`     | AlgoDive Dev    | `com.elhawary.algodive.dev`     | `com.elhawary.algodive.dev`     | red **DEV** ribbon |
+| `staging`    | `lib/main_staging.dart` | AlgoDive Stag   | `com.elhawary.algodive.staging` | `com.elhawary.algodive.staging` | red **STAGING** ribbon |
+| `production` | `lib/main_prod.dart`    | AlgoDive        | `com.elhawary.algodive`         | `com.elhawary.algodive`         | clean          |
+
+`lib/main.dart` is **not** launchable — it throws. Always launch a flavored
+entry point.
+
+### Run
+
+```bash
+# dev
+flutter run --flavor dev        -t lib/main_dev.dart     --dart-define-from-file=dart_define/dev.json
+# staging
+flutter run --flavor staging    -t lib/main_staging.dart --dart-define-from-file=dart_define/staging.json
+# production
+flutter run --flavor production  -t lib/main_prod.dart    --dart-define-from-file=dart_define/prod.json
+```
+
+Release/appbundle builds use the same three flags, e.g.
+`flutter build appbundle --release --flavor production -t lib/main_prod.dart --dart-define-from-file=dart_define/prod.json`.
+
+VS Code: pick **dev / staging / production** in the Run and Debug panel.
+Android Studio / IntelliJ: pick the **dev / staging / production** run configuration.
+
+### Docs
+
+| Doc | What it covers |
+| --- | --- |
+| [docs/flavors/README.md](docs/flavors/README.md) | Full reference: folder layout, env config, how to add a 4th flavor, branch → environment map |
+| [docs/flavors/FIREBASE_CHECKLIST.md](docs/flavors/FIREBASE_CHECKLIST.md) | The exact 6 Firebase files to download and where each one goes |
+| [docs/flavors/IOS_XCODE_SETUP.md](docs/flavors/IOS_XCODE_SETUP.md) | One-time Xcode step: create the per-flavor build configs, schemes and the Firebase Run Script phase |
+| [docs/flavors/PLAYBOOK.md](docs/flavors/PLAYBOOK.md) | Day-to-day situations: new dependency, new Firebase service, hotfix, key rotation, onboarding, troubleshooting |
+
