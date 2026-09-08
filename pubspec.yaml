@@ -39,6 +39,12 @@ dev_dependencies:
   flutter_lints: ^6.0.0
   build_runner: ^2.4.0
   json_serializable: ^6.7.0
+  # Flavor tooling (build-time only, never shipped):
+  # - flutter_launcher_icons: regenerates mipmap-*/AppIcon.appiconset per flavor
+  # - image: used by tool/flavor_icons/generate_ribbon_icons.dart to overlay the
+  #   DEV/STAGING ribbon on the base icon before flutter_launcher_icons runs
+  flutter_launcher_icons: ^0.14.4
+  image: ^4.5.4
 
 flutter:
   uses-material-design: true
