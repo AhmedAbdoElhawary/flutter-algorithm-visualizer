@@ -1,0 +1,16 @@
+# Regenerates the staging launcher icon (red STAGING ribbon) for every density.
+#   dart run tool/flavor_icons/generate_ribbon_icons.dart
+#   dart run flutter_launcher_icons -f flutter_launcher_icons-staging.yaml
+#
+# Writes Android output to android/app/src/staging/res/** and an `AppIcon-staging`
+# set into the iOS asset catalog.
+flutter_launcher_icons:
+  image_path: "tool/flavor_icons/generated/staging.png"
+
+  android: true
+  min_sdk_android: 21
+  adaptive_icon_background: "#5A5A5A"
+  adaptive_icon_foreground: "tool/flavor_icons/generated/staging.png"
+
+  ios: true
+  remove_alpha_ios: true
