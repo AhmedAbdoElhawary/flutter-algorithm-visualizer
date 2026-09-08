@@ -16,7 +16,9 @@ migrate_working_dir/
 *.iml
 *.ipr
 *.iws
-.idea/
+.idea/*
+# ...but keep shared per-flavor run configurations
+!.idea/runConfigurations/
 
 # The .vscode folder contains launch configuration and tasks you configure in
 # VS Code which you may wish to be included in version control, so this line
@@ -51,3 +53,34 @@ app.*.map.json
 /android/app/google-services.json
 /AGENTS.md
 /ios/Runner/GoogleService-Info.plist
+
+# --- Flavors: per-flavor Firebase config (provide locally / inject in CI) ---
+# Android google-services plugin reads android/app/src/<flavor>/google-services.json
+/android/app/src/dev/google-services.json
+/android/app/src/staging/google-services.json
+/android/app/src/production/google-services.json
+# iOS source plists; ios/scripts/firebase_config.sh copies the right one into
+# ios/Runner/GoogleService-Info.plist at build time (that dest is ignored above)
+/ios/Runner/Firebase/dev/GoogleService-Info.plist
+/ios/Runner/Firebase/staging/GoogleService-Info.plist
+/ios/Runner/Firebase/production/GoogleService-Info.plist
+
+# --- Signing (never commit) ---
+/android/key.properties
+*.jks
+*.keystore
+# App Store / Fastlane
+/ios/fastlane/report.xml
+/ios/fastlane/Preview.html
+/ios/fastlane/*.mobileprovision
+/ios/**/*.p12
+
+# --- Flavor icon intermediates (regenerated from base/app_icon.png) ---
+# Final icons in android/app/src/*/res and AppIcon-*.appiconset ARE committed.
+/tool/flavor_icons/generated/
+
+# --- dart-define ---
+# dart_define/*.json here hold only non-secret selectors (flavor, app name,
+# public base URL) and ARE committed. If you add a real secret, move it to a
+# *.secret.json and ignore that instead:
+/dart_define/*.secret.json
