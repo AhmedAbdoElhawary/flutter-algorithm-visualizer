@@ -1,0 +1,16 @@
+# Regenerates the dev launcher icon (red DEV ribbon) for every density.
+#   dart run tool/flavor_icons/generate_ribbon_icons.dart   # refresh the source PNG first
+#   dart run flutter_launcher_icons -f flutter_launcher_icons-dev.yaml
+#
+# The `-dev` filename suffix makes flutter_launcher_icons write Android output to
+# android/app/src/dev/res/** and an `AppIcon-dev` set into the iOS asset catalog.
+flutter_launcher_icons:
+  image_path: "tool/flavor_icons/generated/dev.png"
+
+  android: true
+  min_sdk_android: 21
+  adaptive_icon_background: "#5A5A5A"
+  adaptive_icon_foreground: "tool/flavor_icons/generated/dev.png"
+
+  ios: true
+  remove_alpha_ios: true

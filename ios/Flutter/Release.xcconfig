@@ -1,1 +1,4 @@
 #include "Generated.xcconfig"
+
+// Default (non-flavored) display name. Per-flavor *.xcconfig files override this.
+APP_DISPLAY_NAME=AlgoDive

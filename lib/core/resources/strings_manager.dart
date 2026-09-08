@@ -19,6 +19,10 @@ class StringsManager {
 
   static const String appName = "Algorithm Visualizer";
   static const String welcomeToApp = "Welcome to $appName";
+
+  /// Non-production build markers (icon ribbon + in-app corner ribbon).
+  static const String flavorDev = "DEV";
+  static const String flavorStaging = "STAGING";
   static const String sorryForInconvenience = "Sorry for inconvenience";
   static const String cancel = "Cancel";
   static const String unknownPage = "Unknown page";
