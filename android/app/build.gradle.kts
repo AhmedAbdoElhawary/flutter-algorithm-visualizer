@@ -16,6 +16,7 @@ val keystorePropertiesFile = rootProject.file("key.properties")
 if (keystorePropertiesFile.exists()) {
     keystoreProperties.load(FileInputStream(keystorePropertiesFile))
 }
+val hasReleaseKeystore = keystorePropertiesFile.exists()
 
 android {
     namespace = "com.elhawary.algodive"
@@ -23,11 +24,15 @@ android {
     ndkVersion = flutter.ndkVersion
 
     signingConfigs {
-        create("release") {
-            keyAlias = keystoreProperties["keyAlias"] as String?
-            keyPassword = keystoreProperties["keyPassword"] as String?
-            storeFile = keystoreProperties["storeFile"]?.let { file(it) }
-            storePassword = keystoreProperties["storePassword"] as String?
+        // Real upload/release key. Only present when key.properties exists
+        // (locally, or injected by CI). dev/staging never use this.
+        if (hasReleaseKeystore) {
+            create("release") {
+                keyAlias = keystoreProperties["keyAlias"] as String?
+                keyPassword = keystoreProperties["keyPassword"] as String?
+                storeFile = keystoreProperties["storeFile"]?.let { file(it) }
+                storePassword = keystoreProperties["storePassword"] as String?
+            }
         }
     }
 
@@ -43,21 +48,55 @@ android {
     }
 
     defaultConfig {
-        // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
         applicationId = "com.elhawary.algodive"
-        // You can update the following values to match your application needs.
-        // For more information, see: https://flutter.dev/to/review-gradle-config.
         minSdk = flutter.minSdkVersion
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
         versionName = flutter.versionName
     }
 
+    buildFeatures {
+        // AGP 9 disables resValue by default; the per-flavor app_name needs it.
+        resValues = true
+    }
+
+    // One dimension is enough: each flavor is a full environment.
+    flavorDimensions += "environment"
+
+    productFlavors {
+        create("dev") {
+            dimension = "environment"
+            applicationIdSuffix = ".dev"
+            versionNameSuffix = "-dev"
+            // Consumed by android:label="@string/app_name" in AndroidManifest.xml.
+            resValue("string", "app_name", "AlgoDive Dev")
+            // dev is signed with the auto-generated debug key, not the upload key.
+            signingConfig = signingConfigs.getByName("debug")
+        }
+        create("staging") {
+            dimension = "environment"
+            applicationIdSuffix = ".staging"
+            versionNameSuffix = "-staging"
+            resValue("string", "app_name", "AlgoDive Stag")
+            signingConfig = signingConfigs.getByName("debug")
+        }
+        create("production") {
+            dimension = "environment"
+            // No suffix: the real applicationId and version.
+            resValue("string", "app_name", "AlgoDive")
+        }
+    }
+
     buildTypes {
         release {
-            // TODO: Add your own signing config for the release build.
-            // Signing with the debug keys for now, so `flutter run --release` works.
-            signingConfig = signingConfigs.getByName("release")
+            // production release builds use the upload key when it is available,
+            // otherwise fall back to debug so `flutter build apk` still works in
+            // environments without key.properties (e.g. a fresh clone / PR CI).
+            signingConfig = if (hasReleaseKeystore) {
+                signingConfigs.getByName("release")
+            } else {
+                signingConfigs.getByName("debug")
+            }
         }
     }
 }
