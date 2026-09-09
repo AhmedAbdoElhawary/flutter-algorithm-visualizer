@@ -5,13 +5,14 @@ set -e
 # built, based on the active Xcode build configuration ($CONFIGURATION), e.g.
 # "Debug-dev", "Release-staging", "Release-production".
 #
-# Wire this up as a Run Script build phase on the Runner target, placed BEFORE
-# the "[CP] Copy Pods Resources" / "Thin Binary" phases and after
-# "[CP] Embed Pods Frameworks":
+# Wired up as the "Firebase config (per flavor)" Run Script build phase on
+# the Runner target (see project.pbxproj), placed right before "Thin Binary".
+# This project has no CocoaPods build phases (removed in an earlier commit;
+# plugins link via FlutterGeneratedPluginSwiftPackage instead), so there's no
+# "[CP] Embed Pods Frameworks" to anchor on — just before the final packaging
+# step is the equivalent spot.
 #
-#   "${SRCROOT}/scripts/firebase_config.sh"
-#
-# Source files (you drop these in — see the PLACE_* files there):
+# Source files:
 #   ios/Runner/Firebase/dev/GoogleService-Info.plist
 #   ios/Runner/Firebase/staging/GoogleService-Info.plist
 #   ios/Runner/Firebase/production/GoogleService-Info.plist
