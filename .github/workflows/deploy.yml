@@ -4,9 +4,9 @@ name: Deploy
 # own Firebase project via App Distribution. A plain merge/push ships nothing.
 #
 # Tag shapes (one version line, stage as a suffix):
-#   v1.3.0-dev.2   -> environment "development" -> flavor dev        -> algo-dive-dev
-#   v1.3.0-stag.1  -> environment "staging"     -> flavor staging    -> algo-dive-staging
-#   v1.3.0         -> environment "production"  -> flavor production -> algo-dive-prod
+#   v1.3.0-dev.2   -> environment "development" -> flavor dev        -> algodive-dev
+#   v1.3.0-stag.1  -> environment "staging"     -> flavor staging    -> algodive-staging
+#   v1.3.0         -> environment "production"  -> flavor production -> algodive-prod
 #
 # Each GitHub Environment holds its own secrets (same names, different values):
 #   ANDROID_GOOGLE_SERVICES_JSON   that project's google-services.json (raw text)
@@ -14,8 +14,10 @@ name: Deploy
 #   ANDROID_KEYSTORE_PASSWORD
 #   ANDROID_KEY_ALIAS
 #   ANDROID_KEY_PASSWORD
-#   FIREBASE_TOKEN                 `firebase login:ci` token (one token covers all
-#                                 three projects; store it in each environment)
+#   FIREBASE_TOKEN                 `firebase login:ci` token. dev + staging share
+#                                 one token (same Google account); production
+#                                 needs its OWN token (separate account) — do not
+#                                 reuse the dev/staging token there.
 #   FIREBASE_ANDROID_APP_ID        the 1:...:android:... id from that project
 # Optional repo/environment variable:
 #   FIREBASE_TESTER_GROUPS         comma list of tester groups (default: "testers")
@@ -23,6 +25,15 @@ name: Deploy
 # The "production" environment has "Required reviewers" enabled, so a v1.2.3
 # tag pauses here until someone approves it under the run's
 # "Review deployments" prompt. Nothing reaches testers before that.
+#
+# production-environment secret: SHOREBIRD_TOKEN — a Shorebird console API
+# key (Account -> API Keys; `shorebird login:ci` is removed). Used by the
+# production build only: production is built
+# through `shorebird release android` so it can be hotfixed later via
+# patch.yml, while dev and staging use plain `flutter build apk` (they ship
+# often enough that a new tag is the simpler fix). A plain `flutter build`
+# artifact can never receive a Shorebird patch, so the production path must
+# always stay on Shorebird — see docs/flavors/RELEASES.md.
 
 on:
   push:
@@ -127,6 +138,7 @@ jobs:
       TARGET: ${{ needs.resolve.outputs.target }}
       DART_DEFINE: ${{ needs.resolve.outputs.dart_define }}
       VERSION: ${{ needs.resolve.outputs.version }}
+      SHOREBIRD_TOKEN: ${{ secrets.SHOREBIRD_TOKEN }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -143,6 +155,15 @@ jobs:
           flutter-version: 3.44.7 # keep in sync with the team's local toolchain
           cache: true
 
+      # Shorebird is production-only: dev and staging ship often enough that a
+      # new tag is the simpler fix, and keeping code push to one flavor keeps
+      # the free patch-install allowance for the builds that actually need it.
+      - name: Setup Shorebird
+        if: needs.resolve.outputs.is_production == 'true'
+        uses: shorebirdtech/setup-shorebird@v1
+        with:
+          cache: true
+
       - run: flutter pub get
 
       - name: Restore this flavor's google-services.json
@@ -152,6 +173,22 @@ jobs:
           test -n "$GOOGLE_SERVICES_JSON" || { echo "::error::ANDROID_GOOGLE_SERVICES_JSON is empty for environment '${{ needs.resolve.outputs.environment }}'"; exit 1; }
           mkdir -p "android/app/src/${FLAVOR}"
           printf '%s' "$GOOGLE_SERVICES_JSON" > "android/app/src/${FLAVOR}/google-services.json"
+
+      # THIS REPO IS PUBLIC, so the Sentry DSN is not committed. It is written
+      # here into the git-ignored *.secret.json that the build reads alongside
+      # the committed dart_define file, then scrubbed with the keystore below.
+      # A DSN is only a client key, but keeping it out of a public repo stops
+      # a stranger flooding the project and burning the free event quota.
+      - name: Write Sentry DSN for this flavor
+        env:
+          SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
+        run: |
+          if [ -z "$SENTRY_DSN" ]; then
+            echo "::warning::SENTRY_DSN is not set for environment '${{ needs.resolve.outputs.environment }}' — this build will ship with crash reporting disabled"
+            printf '{}\n' > "dart_define/${FLAVOR}.secret.json"
+          else
+            python3 -c 'import json,os,sys; json.dump({"SENTRY_DSN": os.environ["SENTRY_DSN"]}, open(sys.argv[1],"w"))' "dart_define/${FLAVOR}.secret.json"
+          fi
 
       - name: Restore release keystore
         env:
@@ -183,12 +220,35 @@ jobs:
           fi
           echo "----- release notes -----"; cat release-notes.txt
 
-      - name: Build release APK
+      # Production goes through `shorebird release`, which produces the same
+      # signed APK as `flutter build` but also registers the build with
+      # Shorebird so patch.yml can hotfix it later. A build made with plain
+      # `flutter build` can NEVER receive a patch, so production must always
+      # take the Shorebird path — including the first Play Store upload.
+      # Dev and staging use plain `flutter build`: they are not patchable, and
+      # do not need to be, because a new -dev.N / -stag.N tag ships in minutes.
+      - name: Build release APK (Shorebird — production)
+        if: needs.resolve.outputs.is_production == 'true'
+        run: |
+          shorebird release android \
+            --artifact apk \
+            --flavor "$FLAVOR" \
+            -t "$TARGET" \
+            --build-name "$VERSION" \
+            --build-number "${{ github.run_number }}" \
+            --no-confirm \
+            -- \
+            --dart-define-from-file="$DART_DEFINE" \
+            --dart-define-from-file="dart_define/${FLAVOR}.secret.json"
+
+      - name: Build release APK (dev / staging)
+        if: needs.resolve.outputs.is_production != 'true'
         run: |
           flutter build apk --release \
             --flavor "$FLAVOR" \
             -t "$TARGET" \
             --dart-define-from-file="$DART_DEFINE" \
+            --dart-define-from-file="dart_define/${FLAVOR}.secret.json" \
             --build-name "$VERSION" \
             --build-number "${{ github.run_number }}"
 
@@ -226,7 +286,10 @@ jobs:
 
       - name: Scrub secrets from the runner
         if: always()
-        run: rm -f "${GITHUB_WORKSPACE}/android/app/release.jks" "${GITHUB_WORKSPACE}/android/key.properties"
+        run: |
+          rm -f "${GITHUB_WORKSPACE}/android/app/release.jks" \
+                "${GITHUB_WORKSPACE}/android/key.properties" \
+                "${GITHUB_WORKSPACE}"/dart_define/*.secret.json
 
   release:
     name: Create GitHub Release

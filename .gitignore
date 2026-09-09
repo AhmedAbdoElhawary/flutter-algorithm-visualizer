@@ -83,7 +83,16 @@ app.*.map.json
 /tool/flavor_icons/generated/
 
 # --- dart-define ---
-# dart_define/*.json here hold only non-secret selectors (flavor, app name,
-# public base URL) and ARE committed. If you add a real secret, move it to a
-# *.secret.json and ignore that instead:
+# THIS REPO IS PUBLIC. dart_define/*.json hold only non-secret selectors
+# (flavor, app name, public base URL) and ARE committed. Anything that must
+# not be world-readable goes in a *.secret.json, which is never committed —
+# in CI it is written from a GitHub Environment secret and deleted after the
+# build. See dart_define/README.md.
 /dart_define/*.secret.json
+
+# flutter_dotenv-style env files. Not used here on purpose: .env ships as a
+# Flutter asset, so `unzip app.apk` prints it in plaintext. Ignored anyway so
+# one can never be committed by accident.
+*.env
+.env.*
+!.env.example

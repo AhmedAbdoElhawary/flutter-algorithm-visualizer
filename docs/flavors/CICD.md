@@ -27,11 +27,11 @@ tag is pushed.
 
 | Branch | Tag shape | GitHub Environment | Flavor | Firebase project | Package name | Who approves |
 | --- | --- | --- | --- | --- | --- | --- |
-| `develop` | `v<x.y.z>-dev.<n>` | `development` | dev | `algo-dive-dev` | `com.elhawary.algodive.dev` | nobody — automatic |
-| `staging` | `v<x.y.z>-stag.<n>` | `staging` | staging | `algo-dive-staging` | `com.elhawary.algodive.staging` | nobody — automatic |
-| `production` | `v<x.y.z>` | `production` | production | `algo-dive-prod` | `com.elhawary.algodive` | **you** (required reviewer) |
+| `develop` | `v<x.y.z>-dev.<n>` | `development` | dev | `algodive-dev` | `com.elhawary.algodive.dev` | nobody — automatic |
+| `staging` | `v<x.y.z>-stag.<n>` | `staging` | staging | `algodive-staging` | `com.elhawary.algodive.staging` | nobody — automatic |
+| `production` | `v<x.y.z>` | `production` | production | `algodive-prod` | `com.elhawary.algodive` | **you** (required reviewer) |
 
-Two GitHub Actions workflows:
+Three GitHub Actions workflows:
 
 - **`.github/workflows/ci.yml`** — runs on **pull requests** into `develop` /
   `staging` / `production`. Analyze, test, a debug build, and a
@@ -41,7 +41,17 @@ Two GitHub Actions workflows:
   Analyze + test again, then build the release APK for the flavor that tag
   belongs to and upload it to that flavor's Firebase project. This is the
   thing that ships. It always builds the exact commit the tag points at —
-  never "whatever is newest on the branch."
+  never "whatever is newest on the branch." **Production** builds via
+  `shorebird release android` (that is what makes them patchable); dev and
+  staging use plain `flutter build apk`.
+- **`.github/workflows/patch.yml`** — manual (`workflow_dispatch`) only,
+  never triggered by a tag, **production only**. Ships a Dart-only fix to the
+  live production build via `shorebird patch android`, in minutes, with no
+  reinstall — behind the same Required reviewers gate as a release. Dev and
+  staging are not patchable by design: a new `-dev.N` / `-stag.N` tag already
+  ships in minutes with no approval. See
+  [RELEASES.md#emergency--hotfix](RELEASES.md#emergency--hotfix) and the
+  `/hotfix` skill.
 
 The isolation is real: a `deploy.yml` run for a `-dev.` tag only ever sees the
 `development` environment's secrets. It cannot read the staging or production
@@ -80,7 +90,7 @@ these tags for you — see [RELEASES.md](RELEASES.md).
 4. When you want testers to see it, run `/atomic-commits` (or ask to tag a dev
    build) on `develop`. It pushes the next `v<x.y.z>-dev.<n>` tag, which
    triggers `deploy.yml` to build the **dev** flavor and push it to
-   `algo-dive-dev` → App Distribution automatically.
+   `algodive-dev` → App Distribution automatically.
 
 ---
 
@@ -91,7 +101,7 @@ Use the `/promote` skill (`.claude/skills/promote`). Full walkthrough in
 
 1. **`develop` → `staging`.** Computes the next `-stag.N` tag, asks *tag and
    promote, or cancel* — merges, tags, pushes. `deploy.yml` builds **staging**
-   and ships to `algo-dive-staging` automatically.
+   and ships to `algodive-staging` automatically.
 2. **`staging` → `production`.** Asks MAJOR/MINOR/PATCH, drafts a
    `CHANGELOG.md` entry from the commits since the last release, **shows it
    to you and waits for approval** (edit or cancel are both fine), then on
@@ -99,7 +109,7 @@ Use the `/promote` skill (`.claude/skills/promote`). Full walkthrough in
    `deploy.yml` starts, but the **Build & distribute (Android)** job stops on
    *"Waiting for review"*. Open the run in the **Actions** tab, click
    **Review deployments**, tick `production`, **Approve and deploy**. The job
-   then builds, uploads to `algo-dive-prod`, and creates a GitHub Release with
+   then builds, uploads to `algodive-prod`, and creates a GitHub Release with
    the changelog text and the APK attached. Reject it and nothing ships.
 
 ---
@@ -237,13 +247,67 @@ pull request, and under **required status checks** add `merge-guard` (from
 merge, but the merge button stays clickable — the required check is what
 actually blocks it.
 
-### 6. First run
+### 6. Shorebird (code push — production only)
+
+Stored under the **production** GitHub Environment, not repo-level — both
+`deploy.yml`'s android job and `patch.yml`'s job run with `environment:
+production`, so an environment-scoped secret reaches them. Only the
+production build is released and patched through Shorebird; dev and staging
+use plain `flutter build`:
+
+Install the CLI from [docs.shorebird.dev](https://docs.shorebird.dev), then
+`shorebird login` once locally. `shorebird login:ci` is **removed** — CI
+tokens are now created in the console: **console.shorebird.dev → Account →
+API Keys → Create API Key**. Copy it immediately (shown once).
+
+Add it as **Settings → Environments → production → Add secret** →
+`SHOREBIRD_TOKEN`. The env var name is unchanged, so no workflow file needs
+editing.
+
+Then run `shorebird init` once locally — it detects the Gradle flavors and
+writes `shorebird.yaml`. **Commit `shorebird.yaml`.** It will list all three
+flavors; that is harmless, only production is ever released or patched
+through Shorebird.
+
+### 7. Sentry (crash reports, performance)
+
+Create three Sentry projects (platform: Flutter), one per flavor —
+`algodive-dev`, `algodive-staging`, and `algodive` for production (no suffix,
+matching the app's own naming). Copy each project's DSN
+into the matching `dart_define/<flavor>.json`'s `SENTRY_DSN` value. A DSN is
+a public client key, safe to commit — same trust level as `API_BASE_URL` in
+those files.
+
+In each project's Sentry settings, turn on **Spike Protection** — it drops
+events during an abnormal spike for free, which is what keeps a crash loop
+from burning the free plan's monthly event quota.
+
+Every Sentry option lives in one place: `lib/core/monitoring/monitoring.dart`.
+
+### 8. Firebase Analytics
+
+Nothing to add here beyond what's already true: each Firebase project needs
+Google Analytics enabled (check **Project settings → Integrations**) — some
+projects are created without it. `firebase_analytics` reads whichever
+project's `google-services.json` is bundled for that flavor, same as every
+other Firebase package already in the app.
+
+### Both are release-only
+
+Sentry and Analytics are gated on `kReleaseMode` (see `Monitoring.isEnabled`),
+so debug and profile builds report nothing — a local `flutter run` cannot
+spend quota or pollute a flavor's usage numbers. A release build of **any**
+flavor, including dev, reports normally, which is what makes a tester's
+crash visible.
+
+### 9. First run
 
 Push a trivial commit to `develop`, then push a `v0.0.1-dev.1` tag on it
 (`git tag v0.0.1-dev.1 && git push origin v0.0.1-dev.1`). Watch
 **Actions → Deploy**. It should build `com.elhawary.algodive.dev` and the
-build should appear in `algo-dive-dev` → App Distribution for the `testers`
-group.
+build should appear in `algodive-dev` → App Distribution for the `testers`
+group. Trigger a test crash from that build and confirm it lands in the
+`algodive-dev` Sentry project within about 30 seconds.
 
 ---
 
@@ -306,6 +370,21 @@ under every `subosito/flutter-action` step. Bump that string (in `ci.yml` and
   certificate, one provisioning profile per bundle id, and registered tester
   device UDIDs — that's the phase where a small `ios/fastlane/` setup with
   `match` earns its place.
-- **Play Store / TestFlight / App Store** submission.
-- **Crashlytics** symbol upload (dSYMs, R8 mapping) — no `firebase_crashlytics`
+- **Play Store / TestFlight / App Store** submission. The `android` job in
+  `deploy.yml` produces an APK for Firebase App Distribution only; a Play
+  Console account and the first manual upload are still ahead. Once that
+  upload happens it **must** come from `shorebird release android` (already
+  wired in, see below) — never a plain `flutter build`, or that store build
+  can never receive a Shorebird patch.
+- **iOS Sentry dSYM upload / Shorebird iOS releases.** Sentry, Analytics and
+  Shorebird are Android-only for now — no Apple Developer account yet. The
+  Dart-side setup (`bootstrap.dart`, the two navigator observers) is
+  platform-agnostic and needs no change when iOS is added; only a dSYM
+  upload step and `shorebird release ios` are missing.
+- ~~Crashlytics symbol upload~~ — not applicable: this project uses **Sentry**
+  for crash/error/performance reporting instead of Crashlytics (see
+  [RELEASES.md#monitoring--where-to-look-when-something-breaks](RELEASES.md#monitoring--where-to-look-when-something-breaks)).
+  Sentry needs no symbol upload here because Dart obfuscation
+  (`--obfuscate`/`--split-debug-info`) is deliberately off — stack traces
+  arrive readable already.
   dependency yet.
