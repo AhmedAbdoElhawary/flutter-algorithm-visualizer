@@ -1,4 +1,4 @@
-#include "Profile.xcconfig"
+#include "Release.xcconfig"
 
 FLUTTER_TARGET=lib/main_prod.dart
 PRODUCT_BUNDLE_IDENTIFIER=com.elhawary.algodive
