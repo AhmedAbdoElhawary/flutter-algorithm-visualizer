@@ -8,15 +8,22 @@ build wiring already exist.
 
 | Flavor | Suggested project id | Android app package name | iOS app bundle id |
 | --- | --- | --- | --- |
-| dev | `algo-dive-dev` | `com.elhawary.algodive.dev` | `com.elhawary.algodive.dev` |
-| staging | `algo-dive-staging` | `com.elhawary.algodive.staging` | `com.elhawary.algodive.staging` |
-| production | `algo-dive-prod` (existing) | `com.elhawary.algodive` | `com.elhawary.algodive` |
+| dev | `algodive-dev` | `com.elhawary.algodive.dev` | `com.elhawary.algodive.dev` |
+| staging | `algodive-staging` | `com.elhawary.algodive.staging` | `com.elhawary.algodive.staging` |
+| production | `algodive-prod` | `com.elhawary.algodive` | `com.elhawary.algodive` |
+
+`dev` and `staging` live in one Google account; `production` lives in a
+**separate** Google account. Switch accounts with `firebase logout` +
+`firebase login` (or `firebase login:add` to hold both) before touching the
+other project — see [CICD.md](CICD.md) for the CI-side implication
+(`FIREBASE_TOKEN` needs two values, not one).
 
 For each project: **Add app → Android**, use the package name above → download
 `google-services.json`. **Add app → iOS**, use the bundle id above → download
-`GoogleService-Info.plist`. Enable Crashlytics / Analytics / Remote Config on
-each project as needed (no code change per flavor — data is isolated by
-project).
+`GoogleService-Info.plist`. Enable Analytics / Remote Config on each project
+as needed (no code change per flavor — data is isolated by project).
+Crashlytics is not used — this app reports crashes through Sentry
+(`lib/core/monitoring/sentry_crash_reporter.dart`).
 
 ## Where each file goes
 
@@ -29,8 +36,7 @@ project).
 | 5 | `GoogleService-Info.plist` (staging) | `ios/Runner/Firebase/staging/GoogleService-Info.plist` |
 | 6 | `GoogleService-Info.plist` (production) | `ios/Runner/Firebase/production/GoogleService-Info.plist` |
 
-Each target folder has a `PLACE_..._HERE.md` reminder. All 6 files are
-git-ignored.
+All 6 files are git-ignored.
 
 ## After dropping the files in
 
@@ -44,31 +50,32 @@ flutter build apk --debug --flavor production -t lib/main_prod.dart    --dart-de
 A wrong/missing file fails with
 `No matching client found for package name 'com.elhawary.algodive.<suffix>'`.
 
-- You can now delete the legacy `android/app/google-services.json` once all
-  three `src/<flavor>/` files exist (keep it if CI still relies on it as a
-  fallback — see `.github/workflows/ci.yml`).
+- You can delete the legacy `android/app/google-services.json` once all three
+  `src/<flavor>/` files exist — CI no longer falls back to it (see below).
 - `lib/firebase_options.dart` is no longer used at runtime and can be deleted
   (it is git-ignored anyway).
 
 ## iOS
 
-The plists only take effect once the Xcode build configurations, schemes and
-the "Firebase config (per flavor)" Run Script phase exist —
-see **[IOS_XCODE_SETUP.md](IOS_XCODE_SETUP.md)**. After that:
+Xcode is wired for flavors — see
+**[IOS_XCODE_SETUP.md](IOS_XCODE_SETUP.md)** for exactly what exists. A
+Run Script build phase (`ios/scripts/firebase_config.sh`) copies the right
+`ios/Runner/Firebase/<flavor>/GoogleService-Info.plist` into place
+automatically on every build, keyed off which scheme/configuration you're
+building — you never hand-edit the top-level plist yourself:
 
 ```bash
-flutter build ios --debug --no-codesign --flavor dev -t lib/main_dev.dart --dart-define-from-file=dart_define/dev.json
-# build log prints: "Firebase: using dev GoogleService-Info.plist (CONFIGURATION=Debug-dev)"
+flutter run --flavor dev -t lib/main_dev.dart --dart-define-from-file=dart_define/dev.json
 ```
 
 ## CI
 
 CI injects config from GitHub Actions secrets instead of the checked-out files:
 
-| Secret | Written to | Used by |
-| --- | --- | --- |
-| `GOOGLE_SERVICES_JSON` | `android/app/google-services.json` | fallback for every Android flavor build |
-| `GOOGLE_SERVICE_INFO_PLIST` | `ios/Runner/GoogleService-Info.plist` + `ios/Runner/Firebase/production/GoogleService-Info.plist` | iOS build |
+| Secret | Scope | Written to | Used by |
+| --- | --- | --- | --- |
+| `ANDROID_GOOGLE_SERVICES_JSON` | per-environment (dev/staging/production hold different values) | `android/app/src/<flavor>/google-services.json` | `build-android` — a real, flavor-correct APK build |
+| `GOOGLE_SERVICE_INFO_PLIST` | repo-level (one value, currently the production plist) | `ios/Runner/GoogleService-Info.plist` + `ios/Runner/Firebase/production/GoogleService-Info.plist` | `build-ios` — still a schemeless, production-only smoke build in CI even though Xcode itself now supports flavors (see [IOS_XCODE_SETUP.md](IOS_XCODE_SETUP.md)); switching `ci.yml` to a flavored build is a follow-up, not done yet |
 
-For per-flavor isolation in CI, add `GOOGLE_SERVICES_JSON_DEV` etc. and write
-them to `android/app/src/dev/google-services.json` in the workflow.
+The `quality` job (analyze + test) needs neither — it's pure Dart, no native
+build.

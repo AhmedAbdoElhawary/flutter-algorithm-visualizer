@@ -195,9 +195,9 @@ Implemented in `.github/workflows/deploy.yml`. Full guide: **[CICD.md](CICD.md)*
 
 | Branch       | GitHub Environment | Flavor       | Firebase project    | Deploy target |
 | ------------ | ------------------ | ------------ | ------------------- | ------------- |
-| `develop`    | `development`       | `dev`        | `algo-dive-dev`     | Firebase App Distribution — automatic |
-| `staging`    | `staging`          | `staging`    | `algo-dive-staging` | Firebase App Distribution — automatic |
-| `production` | `production`       | `production` | `algo-dive-prod`    | Firebase App Distribution — after a required-reviewer approval |
+| `develop`    | `development`       | `dev`        | `algodive-dev`     | Firebase App Distribution — automatic |
+| `staging`    | `staging`          | `staging`    | `algodive-staging` | Firebase App Distribution — automatic |
+| `production` | `production`       | `production` | `algodive-prod`    | Firebase App Distribution — after a required-reviewer approval |
 
 - **Push/merge** to one of these branches → `deploy.yml` builds that flavor's
   release APK and uploads it to that flavor's Firebase project.
