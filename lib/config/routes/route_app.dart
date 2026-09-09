@@ -1,3 +1,4 @@
+import 'package:algorithm_visualizer/core/monitoring/monitoring.dart';
 import 'package:algorithm_visualizer/core/resources/strings_manager.dart';
 import 'package:algorithm_visualizer/core/widgets/adaptive/text/adaptive_text.dart';
 import 'package:algorithm_visualizer/features/auth/presentation/forgot_password/view/forgot_password_page.dart';
@@ -102,6 +103,12 @@ class AppRoutes {
       navigatorKey: _rootKey,
       initialLocation: Routes.home.path,
       errorBuilder: (context, state) => const _UnknownPage(),
+      // Screen tracking with no per-page code: Firebase logs each route
+      // change as a `screen_view`, Sentry times how long the screen took to
+      // render. Monitoring owns the list — it is empty in debug/profile
+      // builds and whenever an SDK did not start, so the router never holds
+      // an observer backed by an uninitialized SDK.
+      observers: Monitoring.navigatorObservers,
       routes: [
         GoRoute(
           path: Routes.login.path,
