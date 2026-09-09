@@ -16,6 +16,7 @@ class FlavorConfig {
     required this.flavor,
     required this.appName,
     required this.apiBaseUrl,
+    required this.sentryDsn,
   });
 
   final Flavor flavor;
@@ -25,6 +26,13 @@ class FlavorConfig {
 
   /// Base URL every network call is built on top of.
   final String apiBaseUrl;
+
+  /// This flavor's Sentry project DSN. A DSN is a public client key (not a
+  /// secret), same as [apiBaseUrl] — safe to commit in `dart_define/<flavor>.json`.
+  /// Empty until the three Sentry projects exist; [bootstrap] skips
+  /// `SentryFlutter.init` when this is empty so a bare `flutter test` (which
+  /// has no defines at all) never tries to reach the network.
+  final String sentryDsn;
 
   /// Show the flavor ribbon / debug label in-app. Off for production.
   bool get showFlavorBanner => !flavor.isProduction;
@@ -67,6 +75,7 @@ class FlavorConfig {
         defaultValue: 'AlgoDive',
       ),
       apiBaseUrl: const String.fromEnvironment('API_BASE_URL'),
+      sentryDsn: const String.fromEnvironment('SENTRY_DSN'),
     );
   }
 
