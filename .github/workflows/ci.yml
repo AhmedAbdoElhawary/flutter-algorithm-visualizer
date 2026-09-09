@@ -62,17 +62,13 @@ jobs:
       - name: Get dependencies
         run: flutter pub get
 
-      # google-services.json written to android/app/ acts as the fallback for
-      # every Android flavor when a per-flavor src/<flavor>/google-services.json
-      # is absent (as in CI). The iOS plist is copied into place by
-      # ios/scripts/firebase_config.sh during an Xcode build; analyze/test do not
-      # need it.
+      # analyze/test are pure Dart — no Gradle, no Xcode — so this job never
+      # needs an Android google-services.json. Only the iOS plist is written
+      # here (kept for parity with build-ios's own copy of this step).
       - name: Create Firebase configuration
         env:
-          GOOGLE_SERVICES_JSON: ${{ secrets.GOOGLE_SERVICES_JSON }}
           GOOGLE_SERVICE_INFO_PLIST: ${{ secrets.GOOGLE_SERVICE_INFO_PLIST }}
         run: |
-          printf '%s' "$GOOGLE_SERVICES_JSON" > android/app/google-services.json
           printf '%s' "$GOOGLE_SERVICE_INFO_PLIST" > ios/Runner/GoogleService-Info.plist
 
       - name: Analyze
