@@ -115,15 +115,29 @@ Confirmed matching per flavor: `com.elhawary.algodive.dev` / `algodive-dev`,
 8.14.2's Swift code called a `sentry-cocoa` API that was renamed at cocoa
 version 8.56.0 (`image(byAddress:)` → `imageByAddress(_:)`, when that class
 was rewritten from Objective-C to pure Swift). Since `sentry_flutter`
-declares an unbounded `from: "8.46.0"` dependency, Swift Package Manager
+declared an unbounded `from: "8.46.0"` dependency, Swift Package Manager
 kept resolving the newest 8.x and broke **every** iOS build regardless of
-flavor — this predates the flavor work entirely. Fixed by pinning
-`sentry-cocoa` to `8.55.1` in `ios/Runner.xcworkspace/xcshareddata/swiftpm/Package.resolved`
-— that's the lock file Flutter actually builds against (there's a second,
-unused one inside `Runner.xcodeproj`'s own implicit workspace; kept in sync
-so nothing on disk contradicts). After a version pin like this, run
+flavor — this predated the flavor work entirely, and it turned out to have
+an Android twin (see below). First worked around by pinning `sentry-cocoa`
+to `8.55.1`; superseded by the real fix — upgrading `sentry_flutter` itself
+(see the Android section). After any Package.resolved change, run
 `flutter clean` once — a stale precompiled module cache will otherwise
 reject the changed framework with a "modified since... was built" error.
+
+**A fourth bug, this time on Android**: `sentry_flutter` 8.14.2's own
+`android/build.gradle` hardcoded `kotlinOptions { languageVersion = "1.6" }`
+— rejected outright by this project's Kotlin (2.3.20), which requires 2.0+.
+No 8.x patch exists (8.14.2 is the newest). Fixed by upgrading
+`sentry_flutter` to `^9.29.0`, whose `android/build.gradle` drops the
+`languageVersion` override entirely. That release also pins `sentry-cocoa`
+to an **exact** `8.58.4` (its Swift code matches that cocoa version's new
+API), so `Package.resolved`'s `8.55.1` workaround was reverted back to
+`8.58.4` in both files — a version bump replaces the pin, it doesn't stack
+with it. Also bumped `pubspec.yaml`'s `environment.sdk` floor to `3.5.0`
+(9.x's own minimum). Checked `lib/core/monitoring/` against 9.x's breaking
+changes first — none of the removed/renamed APIs are used there, and
+`flutter analyze` came back clean. Verified with a real build on both
+platforms after the upgrade.
 
 ## Commit
 
