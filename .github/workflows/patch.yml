@@ -1,0 +1,106 @@
+name: Patch (hotfix)
+
+# Ships a Dart-only fix to the PRODUCTION build in minutes, with no rebuild
+# and no reinstall for users.
+#
+# Production only, on purpose. Dev and staging are built with plain
+# `flutter build` (see deploy.yml) and are therefore not patchable — they do
+# not need to be, because pushing a new -dev.N / -stag.N tag already ships in
+# minutes with no approval. Production is the only place where waiting for a
+# full release actually hurts.
+#
+# This is NOT a substitute for deploy.yml — it can only patch a build that
+# deploy.yml already shipped through `shorebird release`. It cannot change
+# native/Kotlin code, add a plugin with native code, or upgrade the Flutter
+# version; Shorebird refuses those. See docs/flavors/RELEASES.md for the full
+# decision rule, or run the /hotfix skill.
+#
+# Manual dispatch on purpose: a patch skips the whole review-and-tag ladder,
+# so shipping one must always be a deliberate human action. Selecting the
+# `production` environment below also enforces its Required reviewers gate,
+# exactly like a production release.
+#
+# Secret used (production-environment, same one deploy.yml uses): SHOREBIRD_TOKEN
+
+on:
+  workflow_dispatch:
+
+jobs:
+  patch:
+    name: Patch & publish (Android, production)
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    # Same gate as a production release: this pauses for manual approval.
+    environment: production
+    env:
+      FLAVOR: production
+      TARGET: lib/main_prod.dart
+      DART_DEFINE: dart_define/prod.json
+      SHOREBIRD_TOKEN: ${{ secrets.SHOREBIRD_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Refuse to patch anything but production
+        # The patch must be built from the code that is actually live.
+        run: |
+          branch="$(git rev-parse --abbrev-ref HEAD)"
+          if [ "$branch" != "production" ]; then
+            echo "::error::patch.yml must be run on the 'production' branch (got '$branch'). Run it from Actions -> Patch (hotfix) -> Use workflow from: production."
+            exit 1
+          fi
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          flutter-version: 3.44.7 # keep in sync with the team's local toolchain
+          cache: true
+
+      - name: Setup Shorebird
+        uses: shorebirdtech/setup-shorebird@v1
+        with:
+          cache: true
+
+      - run: flutter pub get
+
+      - name: Restore production google-services.json
+        env:
+          GOOGLE_SERVICES_JSON: ${{ secrets.ANDROID_GOOGLE_SERVICES_JSON }}
+        run: |
+          test -n "$GOOGLE_SERVICES_JSON" || { echo "::error::ANDROID_GOOGLE_SERVICES_JSON is empty for the production environment"; exit 1; }
+          mkdir -p "android/app/src/${FLAVOR}"
+          printf '%s' "$GOOGLE_SERVICES_JSON" > "android/app/src/${FLAVOR}/google-services.json"
+
+      # Same public-repo rule as deploy.yml: the DSN is never committed, it is
+      # written here from the environment secret and scrubbed below. A patch
+      # rebuilds the Dart code, so it must be built with the same defines as
+      # the release it patches — otherwise the patch would silently turn
+      # crash reporting off.
+      - name: Write Sentry DSN
+        env:
+          SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
+        run: |
+          if [ -z "$SENTRY_DSN" ]; then
+            echo "::warning::SENTRY_DSN is not set for the production environment — this patch would disable crash reporting"
+            printf '{}\n' > "dart_define/${FLAVOR}.secret.json"
+          else
+            python3 -c 'import json,os,sys; json.dump({"SENTRY_DSN": os.environ["SENTRY_DSN"]}, open(sys.argv[1],"w"))' "dart_define/${FLAVOR}.secret.json"
+          fi
+
+      - name: Patch the most recent production release
+        run: |
+          shorebird patch android \
+            --flavor "$FLAVOR" \
+            -t "$TARGET" \
+            --no-confirm \
+            -- \
+            --dart-define-from-file="$DART_DEFINE" \
+            --dart-define-from-file="dart_define/${FLAVOR}.secret.json"
+
+      - name: Scrub secrets from the runner
+        if: always()
+        run: rm -f "${GITHUB_WORKSPACE}"/dart_define/*.secret.json
