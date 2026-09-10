@@ -29,7 +29,7 @@ class ProfileWeeklyChart extends ConsumerWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-              BoldText(StringsManager.thisWeek, color: ThemeEnum.textSecond, fontSize: 14),
+              const BoldText(StringsManager.thisWeek, color: ThemeEnum.textSecond, fontSize: 14),
               SemiBoldText(
                 '$total ${StringsManager.solvedLabel}',
                 color: ThemeEnum.accent,
@@ -58,7 +58,7 @@ class ProfileWeeklyChart extends ConsumerWidget {
                               fontSize: 9,
                               color: ThemeEnum.textSecond,
                             ),
-                          RSizedBox(height: 4),
+                          const RSizedBox(height: 4),
                           Container(
                             height: (50.h * fraction).clamp(4.0, 50.0),
                             decoration: BoxDecoration(
@@ -68,7 +68,7 @@ class ProfileWeeklyChart extends ConsumerWidget {
                               borderRadius: BorderRadius.circular(4.r),
                             ),
                           ),
-                          RSizedBox(height: 6),
+                          const RSizedBox(height: 6),
                           RegularText(
                             _dayLabels[i],
                             fontSize: 10,
