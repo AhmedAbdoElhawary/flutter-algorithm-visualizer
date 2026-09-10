@@ -61,7 +61,7 @@ class _Header extends StatelessWidget {
       color: context.getColor(ThemeEnum.outputHeader),
       child: Row(children: [
         CustomIcon(Icons.terminal_rounded, size: 14, color: color),
-        RSizedBox(width: 6),
+        const RSizedBox(width: 6),
         BoldText(StringsManager.output, color: color, fontSize: 12),
         const Spacer(),
         Container(
@@ -136,7 +136,7 @@ class _TestCaseRow extends StatelessWidget {
               color: color,
             ),
           ),
-          RSizedBox(width: 10),
+          const RSizedBox(width: 10),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -146,7 +146,7 @@ class _TestCaseRow extends StatelessWidget {
                   color: ThemeEnum.textSecond,
                   fontSize: 12,
                 ),
-                RSizedBox(height: 2),
+                const RSizedBox(height: 2),
                 RegularText(
                   result.input ?? "",
                   maxLines: 2,
