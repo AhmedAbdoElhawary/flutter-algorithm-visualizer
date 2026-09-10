@@ -52,16 +52,16 @@ class _MainRowShimmer extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: REdgeInsets.symmetric(horizontal: 14, vertical: 15),
-      child: Row(
+      child: const Row(
         children: [
           _ShimmerBox(width: 16, height: 16),
-          const RSizedBox(width: 8),
+          RSizedBox(width: 8),
           _ShimmerBox(width: 20, height: 13),
-          const RSizedBox(width: 6),
+          RSizedBox(width: 6),
           Expanded(child: _ShimmerBox(height: 15)),
-          const RSizedBox(width: 6),
+          RSizedBox(width: 6),
           _ShimmerBox(width: 40, height: 13),
-          const RSizedBox(width: 6),
+          RSizedBox(width: 6),
           _ShimmerBox(width: 16, height: 16),
         ],
       ),
