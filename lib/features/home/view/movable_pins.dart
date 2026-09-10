@@ -241,7 +241,7 @@ class _MovablePinsBackgroundState extends State<MovablePinsBackground>
         fit: StackFit.expand,
         alignment: AlignmentDirectional.center,
         children: [
-          AnimatedBackground(),
+          const AnimatedBackground(),
           RepaintBoundary(
             child: CustomPaint(
               painter: _ParticlePainter(
