@@ -77,7 +77,7 @@ class _CodeProblemDescriptionCardState extends State<CodeProblemDescriptionCard>
                         Padding(
                           padding: REdgeInsets.only(bottom: 4),
                           child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                            _BodyText('•  '),
+                            const _BodyText('•  '),
                             Expanded(child: _BodyText(constraint)),
                           ]),
                         ),
@@ -110,8 +110,8 @@ class _CodeProblemDescriptionCardState extends State<CodeProblemDescriptionCard>
                         Padding(
                           padding: REdgeInsets.only(bottom: 4),
                           child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                            CustomIcon(Icons.arrow_outward_rounded, size: 14, color: ThemeEnum.hover),
-                            RSizedBox(width: 6),
+                            const CustomIcon(Icons.arrow_outward_rounded, size: 14, color: ThemeEnum.hover),
+                            const RSizedBox(width: 6),
                             Expanded(child: _BodyText(sq.name ?? '')),
                             if ((sq.reason ?? '').isNotEmpty)
                               Expanded(flex: 2, child: _BodyText(' — ${sq.reason}')),
@@ -159,7 +159,7 @@ class _CollapsibleSection extends StatelessWidget {
             AnimatedRotation(
               turns: expanded ? 0.5 : 0,
               duration: const Duration(milliseconds: 200),
-              child: CustomIcon(Icons.expand_more_rounded, size: 16, color: ThemeEnum.hoverSecond),
+              child: const CustomIcon(Icons.expand_more_rounded, size: 16, color: ThemeEnum.hoverSecond),
             ),
           ]),
           AnimatedSize(
@@ -189,7 +189,7 @@ class _Header extends StatelessWidget {
       color: context.getColor(ThemeEnum.outputHeader),
       child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
         Expanded(child: SemiBoldText(title, fontSize: 15, color: ThemeEnum.textPrimary, maxLines: 3)),
-        RSizedBox(width: 8),
+        const RSizedBox(width: 8),
         Container(
           padding: REdgeInsets.symmetric(horizontal: 10, vertical: 3),
           decoration: BoxDecoration(
@@ -219,7 +219,7 @@ class _Section extends StatelessWidget {
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         SemiBoldText(title.toUpperCase(),
             fontSize: 11, color: ThemeEnum.hover, maxLines: 2, letterSpacing: 0.5),
-        RSizedBox(height: 6),
+        const RSizedBox(height: 6),
         child,
       ]),
     );
@@ -254,11 +254,11 @@ class _ExampleSection extends StatelessWidget {
             if (example.output != null && example.output!.trim().isNotEmpty)
               _ExampleRow(label: StringsManager.output, value: example.output!.trim()),
             if (explanation != null && explanation.isNotEmpty) ...[
-              RSizedBox(height: 6),
+              const RSizedBox(height: 6),
               Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  SemiBoldText(StringsManager.explanation,
+                  const SemiBoldText(StringsManager.explanation,
                       fontSize: 11, color: ThemeEnum.textSecond, maxLines: 5),
                   Expanded(
                     child: RegularText(
@@ -292,7 +292,7 @@ class _ExampleRow extends StatelessWidget {
       padding: REdgeInsets.only(bottom: 6),
       child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
         SemiBoldText(label, fontSize: 11, color: ThemeEnum.textSecond, maxLines: 4),
-        SemiBoldText(": ", fontSize: 11, color: ThemeEnum.textSecond, maxLines: 1),
+        const SemiBoldText(": ", fontSize: 11, color: ThemeEnum.textSecond, maxLines: 1),
         Expanded(
           child: RegularText(
             value,
