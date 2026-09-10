@@ -8,8 +8,8 @@ class CodeEditorHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SliverPadding(
-      padding: const EdgeInsets.fromLTRB(16, 16, 16, 10),
+    return const SliverPadding(
+      padding: EdgeInsets.fromLTRB(16, 16, 16, 10),
       sliver: SliverToBoxAdapter(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
