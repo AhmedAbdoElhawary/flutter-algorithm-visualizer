@@ -50,7 +50,7 @@ class ProfileDifficultyProgress extends ConsumerWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             BoldText(StringsManager.difficultyProgress, color: titleColor, fontSize: 14),
-            RSizedBox(height: 12),
+            const RSizedBox(height: 12),
             ...bars.map((b) => _DifficultyRow(b)),
           ],
         ),
@@ -86,7 +86,7 @@ class _DifficultyRow extends StatelessWidget {
               ),
             ],
           ),
-          RSizedBox(height: 4),
+          const RSizedBox(height: 4),
           ClipRRect(
             borderRadius: BorderRadius.circular(3),
             child: TweenAnimationBuilder<double>(
