@@ -137,7 +137,7 @@ class _AuthTextFieldState extends State<AuthTextField> {
                     onChanged: widget.onChanged,
                     onSubmitted: widget.onSubmitted,
                     cursorColor: context.getColor(ThemeEnum.accent),
-                    style: GetMediumStyle().copyWith(
+                    style: const GetMediumStyle().copyWith(
                       color: context.getColor(ThemeEnum.textBright),
                       fontSize: (obscured ? 13 : 12.5).sp,
                       letterSpacing: obscured ? 1.8.sp : 0.2,
@@ -145,7 +145,7 @@ class _AuthTextFieldState extends State<AuthTextField> {
                     decoration: InputDecoration(
                       isDense: true,
                       hintText: widget.hintText,
-                      hintStyle: GetMediumStyle().copyWith(
+                      hintStyle: const GetMediumStyle().copyWith(
                         color: context.getColor(ThemeEnum.textDisabled),
                         fontSize: 12.5.sp,
                       ),
