@@ -45,7 +45,7 @@ class AuthRecoveryTile extends StatelessWidget {
         borderRadius: BorderRadius.circular(CdRadius.lg.r),
         border: Border.all(color: context.getColor(ThemeEnum.borderAccent)),
       ),
-      child: CustomIcon(
+      child: const CustomIcon(
         Icons.key_rounded,
         size: 26,
         color: ThemeEnum.primaryHover,
