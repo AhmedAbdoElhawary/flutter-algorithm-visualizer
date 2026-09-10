@@ -56,7 +56,7 @@ class PasswordStrength {
 
   static PasswordStrength evaluate(String password) {
     if (password.isEmpty) {
-      return PasswordStrength._(0, StringsManager.pwStrengthEmpty);
+      return const PasswordStrength._(0, StringsManager.pwStrengthEmpty);
     }
 
     final hasDigit = password.contains(RegExp(r'\d'));
