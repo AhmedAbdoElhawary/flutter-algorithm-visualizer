@@ -28,7 +28,7 @@ class AuthBackButton extends StatelessWidget {
         ),
         child: Transform.flip(
           flipX: isRtl,
-          child: CustomIcon(Icons.chevron_left_rounded, size: 15, color: ThemeEnum.text2DarkColor),
+          child: const CustomIcon(Icons.chevron_left_rounded, size: 15, color: ThemeEnum.text2DarkColor),
         ),
       ),
     );
