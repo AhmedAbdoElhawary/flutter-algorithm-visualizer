@@ -39,7 +39,7 @@ class AlgoTab extends ConsumerWidget {
           children: [
             if (icon != null) ...[
               CustomIcon(icon!, color: isSelected ? ThemeEnum.accent : ThemeEnum.hover, size: 20),
-              RSizedBox(width: 5)
+              const RSizedBox(width: 5)
             ],
             BoldText(
               label,
