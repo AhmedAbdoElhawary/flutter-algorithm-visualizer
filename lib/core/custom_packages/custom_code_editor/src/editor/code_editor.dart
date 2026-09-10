@@ -203,7 +203,7 @@ class _CodeEditorState extends State<CodeEditor> {
               enableSuggestions: false,
               cursorWidth: theme.caretWidth,
               cursorHeight: theme.caretHeight,
-              cursorOffset: Offset(0, 2),
+              cursorOffset: const Offset(0, 2),
               cursorRadius: const Radius.circular(1),
             ),
           ),
