@@ -76,25 +76,25 @@ class CodeEditorTheme {
   /// A dark theme reminiscent of common editor "dark" presets.
   factory CodeEditorTheme.dark() {
     const Color fg = Color(0xFFD4D4D4);
-    return CodeEditorTheme(
-      background: const Color(0xFF1E1E1E),
-      caretColor: const Color(0xFFAEAFAD),
-      selectionColor: const Color(0x554B6EAF),
-      textStyle: const TextStyle(
+    return const CodeEditorTheme(
+      background: Color(0xFF1E1E1E),
+      caretColor: Color(0xFFAEAFAD),
+      selectionColor: Color(0x554B6EAF),
+      textStyle: TextStyle(
         color: fg,
         fontFamily: 'monospace',
         fontSize: 14,
         height: 1.5,
       ),
-      lineNumberStyle: const TextStyle(
+      lineNumberStyle: TextStyle(
         color: Color(0xFF6E7681),
         fontFamily: 'monospace',
         fontSize: 14,
         height: 1.5,
       ),
-      lineNumberBackground: const Color(0xFF1E1E1E),
-      activeLineBackground: const Color(0x14FFFFFF),
-      tokenColors: const <TokenType, Color>{
+      lineNumberBackground: Color(0xFF1E1E1E),
+      activeLineBackground: Color(0x14FFFFFF),
+      tokenColors: <TokenType, Color>{
         TokenType.keyword: Color(0xFF569CD6),
         TokenType.string: Color(0xFFCE9178),
         TokenType.number: Color(0xFFB5CEA8),
@@ -111,25 +111,25 @@ class CodeEditorTheme {
   /// A light theme reminiscent of common editor "light" presets.
   factory CodeEditorTheme.light() {
     const Color fg = Color(0xFF1F1F1F);
-    return CodeEditorTheme(
-      background: const Color(0xFFFFFFFF),
-      caretColor: const Color(0xFF000000),
-      selectionColor: const Color(0x33ADD6FF),
-      textStyle: const TextStyle(
+    return const CodeEditorTheme(
+      background: Color(0xFFFFFFFF),
+      caretColor: Color(0xFF000000),
+      selectionColor: Color(0x33ADD6FF),
+      textStyle: TextStyle(
         color: fg,
         fontFamily: 'monospace',
         fontSize: 14,
         height: 1.5,
       ),
-      lineNumberStyle: const TextStyle(
+      lineNumberStyle: TextStyle(
         color: Color(0xFF999999),
         fontFamily: 'monospace',
         fontSize: 14,
         height: 1.5,
       ),
-      lineNumberBackground: const Color(0xFFFFFFFF),
-      activeLineBackground: const Color(0x11000000),
-      tokenColors: const <TokenType, Color>{
+      lineNumberBackground: Color(0xFFFFFFFF),
+      activeLineBackground: Color(0x11000000),
+      tokenColors: <TokenType, Color>{
         TokenType.keyword: Color(0xFF0000FF),
         TokenType.string: Color(0xFFA31515),
         TokenType.number: Color(0xFF098658),
