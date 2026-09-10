@@ -74,7 +74,7 @@ class _AuthErrorBanner extends StatelessWidget {
         child: Row(
           children: [
             CustomIcon(getIcon, size: 16, color: getColor),
-            RSizedBox(width: 8),
+            const RSizedBox(width: 8),
             Expanded(child: RegularText(message, color: getColor, fontSize: 12)),
             CustomIcon(Icons.close_rounded, size: 16, color: getColor),
           ],
