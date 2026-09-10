@@ -23,7 +23,7 @@ class ChallengesEmptyState extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             if (showIcon) ...[
-              RegularText('🔍', fontSize: 40),
+              const RegularText('🔍', fontSize: 40),
               const RSizedBox(height: 12),
             ],
             SemiBoldText(title, color: ThemeEnum.textSecond, fontSize: 15),
