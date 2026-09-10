@@ -9,14 +9,14 @@ class ChallengesErrorState extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
+    return const Center(
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
           RegularText('ⓘ', fontSize: 40, color: ThemeEnum.accentRedRc),
-          const RSizedBox(height: 12),
+          RSizedBox(height: 12),
           SemiBoldText(StringsManager.notAbleToLoadAnyChallenge, color: ThemeEnum.textSecond, fontSize: 15),
-          const RSizedBox(height: 4),
+          RSizedBox(height: 4),
           RegularText(StringsManager.tryInDifferentTime, color: ThemeEnum.hover, fontSize: 13),
         ],
       ),
