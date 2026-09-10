@@ -51,8 +51,8 @@ class AlgorithmGlassCard extends StatelessWidget {
                 SliverToBoxAdapter(
                   child: Row(
                     children: [
-                      CustomIcon(Icons.access_time_rounded, size: 11, color: ThemeEnum.text2DarkColor),
-                      RSizedBox(width: 2),
+                      const CustomIcon(Icons.access_time_rounded, size: 11, color: ThemeEnum.text2DarkColor),
+                      const RSizedBox(width: 2),
                       RegularText(algoComplexity.worstTimeComplexity.getText,
                           color: ThemeEnum.textDarkColor, fontSize: 10),
                     ],
@@ -63,8 +63,8 @@ class AlgorithmGlassCard extends StatelessWidget {
                   sliver: SliverToBoxAdapter(
                     child: Row(
                       children: [
-                        CustomIcon(Icons.storage_rounded, size: 11, color: ThemeEnum.text2DarkColor),
-                        RSizedBox(width: 2),
+                        const CustomIcon(Icons.storage_rounded, size: 11, color: ThemeEnum.text2DarkColor),
+                        const RSizedBox(width: 2),
                         RegularText(algoComplexity.spaceComplexity.getText,
                             color: ThemeEnum.textDarkColor, fontSize: 10),
                       ],
@@ -165,13 +165,13 @@ class AnimatedBackground extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
+    return const Stack(
       children: [
         PositionedDirectional(
           top: -25,
           start: -80,
           child: _ORB(
-            color: const Color(0xFF5B9CF6),
+            color: Color(0xFF5B9CF6),
             size: 260,
           ),
         ),
@@ -179,7 +179,7 @@ class AnimatedBackground extends StatelessWidget {
           top: 220,
           end: -100,
           child: _ORB(
-            color: const Color(0xFFA78BFA),
+            color: Color(0xFFA78BFA),
             size: 280,
           ),
         ),
@@ -187,7 +187,7 @@ class AnimatedBackground extends StatelessWidget {
           bottom: -25,
           start: -60,
           child: _ORB(
-            color: const Color(0xFF38BDF8),
+            color: Color(0xFF38BDF8),
             size: 240,
           ),
         ),
