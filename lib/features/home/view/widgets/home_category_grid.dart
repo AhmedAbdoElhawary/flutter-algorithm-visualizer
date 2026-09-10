@@ -14,8 +14,8 @@ class HomeCategoryGrid extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final sortingCardValues = SortingAlgoCards.values;
-    final searchingCardValues = SearchingAlgoCards.values;
+    const sortingCardValues = SortingAlgoCards.values;
+    const searchingCardValues = SearchingAlgoCards.values;
 
     return OnlyPadding(
       startPadding: 16,
@@ -24,7 +24,7 @@ class HomeCategoryGrid extends ConsumerWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          BoldText(StringsManager.topics, fontSize: 15, color: ThemeEnum.textPrimary),
+          const BoldText(StringsManager.topics, fontSize: 15, color: ThemeEnum.textPrimary),
           SizedBox(height: 12.h),
           GridView.builder(
             itemCount: 6,
