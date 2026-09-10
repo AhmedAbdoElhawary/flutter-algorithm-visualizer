@@ -24,15 +24,15 @@ class ProfileScreen extends ConsumerWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             spacing: 14.r,
-            children: [
+            children: const [
               ProfileHeader(),
-              const ProfileStatsGrid(),
-              const ProfileDifficultyProgress(),
-              const ProfileWeeklyChart(),
-              const ProfileHeatmap(),
-              const ProfileCategoryChart(),
-              const ProfilePracticeHistory(),
-              const ProfileLogoutCard(),
+              ProfileStatsGrid(),
+              ProfileDifficultyProgress(),
+              ProfileWeeklyChart(),
+              ProfileHeatmap(),
+              ProfileCategoryChart(),
+              ProfilePracticeHistory(),
+              ProfileLogoutCard(),
             ],
           ),
         ),
