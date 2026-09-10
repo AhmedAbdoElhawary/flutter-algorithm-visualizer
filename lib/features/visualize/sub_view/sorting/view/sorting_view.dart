@@ -75,7 +75,7 @@ class _SortingPageState extends ConsumerState<SortingView> {
     final complexity = ref.read(instance.notifier).algoComplexity;
 
     return CustomScrollView(
-      physics: BouncingScrollPhysics(),
+      physics: const BouncingScrollPhysics(),
       slivers: [
         SliverPadding(
           padding: REdgeInsetsDirectional.only(bottom: 10),
@@ -107,7 +107,7 @@ class _SortingPageState extends ConsumerState<SortingView> {
         //
         //   return LiveCodeSnippet(code: codeSnippet, currentLine: currentLine, title: title);
         // })),
-        SliverToBoxAdapter(child: SizedBox(height: 50)),
+        const SliverToBoxAdapter(child: SizedBox(height: 50)),
       ],
     );
   }
@@ -275,7 +275,7 @@ class _ShowUpSortingListState extends ConsumerState<ShowUpSortingList> {
                           speedDuration: speed.stepSortingDuration * 0.5,
                           selectedAlgorithmLength: widget.selectedAlgorithmLength,
                           isLastItem: index == items.length - 1),
-                      RSizedBox(height: 4),
+                      const RSizedBox(height: 4),
                       MediumText('$index', fontSize: 10, color: ThemeEnum.textDisabled),
                     ],
                   ),
@@ -324,7 +324,7 @@ class _BuildItem extends ConsumerWidget {
           style: GetMediumStyle(fontSize: 10, color: color),
           child: Text(writtenHeight),
         ),
-        RSizedBox(height: 4),
+        const RSizedBox(height: 4),
         AnimatedContainer(
           duration: speedDuration,
           width: itemWidth,
