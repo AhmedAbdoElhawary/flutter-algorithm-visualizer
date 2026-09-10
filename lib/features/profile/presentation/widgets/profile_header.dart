@@ -35,7 +35,7 @@ class ProfileHeader extends StatelessWidget {
               ],
             ),
           ),
-          RSizedBox(height: 10),
+          const RSizedBox(height: 10),
           Row(
             children: [
               Stack(clipBehavior: Clip.none, children: [
@@ -87,11 +87,11 @@ class ProfileHeader extends StatelessWidget {
                       borderRadius: BorderRadius.circular(7.r),
                       border: Border.all(color: context.getColor(ThemeEnum.primary), width: 2.r),
                     ),
-                    child: CustomIcon(Icons.bolt_rounded, size: 14, color: ThemeEnum.solidWhite),
+                    child: const CustomIcon(Icons.bolt_rounded, size: 14, color: ThemeEnum.solidWhite),
                   ),
                 ),
               ]),
-              RSizedBox(width: 14),
+              const RSizedBox(width: 14),
               Expanded(
                 child: Consumer(
                   builder: (context, ref, child) => _EditableName(
@@ -188,8 +188,8 @@ class _EditableNameState extends ConsumerState<_EditableName> {
           child: BoldText(widget.name,
               maxLines: 1, color: ThemeEnum.textPrimary, fontSize: 22, fontWeight: FontWeightManager.bold800),
         ),
-        RSizedBox(width: 6),
-        CustomIcon(Icons.edit_rounded, size: 14, color: ThemeEnum.hoverSecond),
+        const RSizedBox(width: 6),
+        const CustomIcon(Icons.edit_rounded, size: 14, color: ThemeEnum.hoverSecond),
       ]),
     );
   }
