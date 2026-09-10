@@ -21,14 +21,14 @@ class RecentSubmissionsPage extends ConsumerWidget {
       appBar: AppBar(
         backgroundColor: context.getColor(ThemeEnum.primary),
         leading: IconButton(
-          icon: CustomIcon(Icons.arrow_back_ios_rounded, size: 20, color: ThemeEnum.textSecond),
+          icon: const CustomIcon(Icons.arrow_back_ios_rounded, size: 20, color: ThemeEnum.textSecond),
           onPressed: () => context.pop(),
         ),
-        title: BoldText(StringsManager.practiceHistory, color: ThemeEnum.textSecond, fontSize: 16),
+        title: const BoldText(StringsManager.practiceHistory, color: ThemeEnum.textSecond, fontSize: 16),
         centerTitle: false,
       ),
       body: all.isEmpty
-          ? Center(child: MediumText(StringsManager.noProblemsFound, color: ThemeEnum.hoverSecond))
+          ? const Center(child: MediumText(StringsManager.noProblemsFound, color: ThemeEnum.hoverSecond))
           : ListView.separated(
               padding: REdgeInsetsDirectional.only(start: 16, top: 8, bottom: 50),
               itemCount: all.length,
