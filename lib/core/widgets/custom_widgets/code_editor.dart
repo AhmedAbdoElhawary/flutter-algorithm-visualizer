@@ -52,9 +52,9 @@ class _CodeEditorBlockState extends State<CodeEditorBlock> with SingleTickerProv
           height: 1.5,
           fontFamily: FontConstants.fontJetBrainsMono,
         ),
-        selectionColor: Color.fromRGBO(54, 83, 116, 1),
+        selectionColor: const Color.fromRGBO(54, 83, 116, 1),
         textStyle: TextStyle(
-          color: Color(0xFFD4D4D4),
+          color: const Color(0xFFD4D4D4),
           fontFamily: FontConstants.fontJetBrainsMono,
           fontSize: 14.sp,
           height: 1.5,
@@ -112,7 +112,7 @@ class _CodeEditorBlockState extends State<CodeEditorBlock> with SingleTickerProv
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: BoxDecoration(
+      decoration: const BoxDecoration(
         borderRadius: BorderRadius.only(bottomLeft: Radius.circular(10), bottomRight: Radius.circular(10)),
       ),
       child: Column(
@@ -121,8 +121,8 @@ class _CodeEditorBlockState extends State<CodeEditorBlock> with SingleTickerProv
           Container(
             padding: REdgeInsetsDirectional.only(start: 12, end: 12),
             decoration: BoxDecoration(
-              color: Color.fromRGBO(22, 27, 34, 1),
-              borderRadius: BorderRadius.vertical(top: Radius.circular(15)),
+              color: const Color.fromRGBO(22, 27, 34, 1),
+              borderRadius: const BorderRadius.vertical(top: Radius.circular(15)),
               border: Border(top: border.top, left: border.left, right: border.right),
             ),
             child: Row(
@@ -130,13 +130,13 @@ class _CodeEditorBlockState extends State<CodeEditorBlock> with SingleTickerProv
               children: [
                 Padding(
                   padding: REdgeInsetsDirectional.only(top: 12, bottom: 12),
-                  child: CircleAvatar(radius: 5.r, backgroundColor: Color.fromRGBO(181, 88, 89, 1)),
+                  child: CircleAvatar(radius: 5.r, backgroundColor: const Color.fromRGBO(181, 88, 89, 1)),
                 ),
-                RSizedBox(width: 5),
-                CircleAvatar(radius: 5.r, backgroundColor: Color.fromRGBO(182, 142, 43, 1)),
-                RSizedBox(width: 5),
-                CircleAvatar(radius: 5.r, backgroundColor: Color.fromRGBO(46, 156, 117, 1)),
-                Spacer(flex: 1),
+                const RSizedBox(width: 5),
+                CircleAvatar(radius: 5.r, backgroundColor: const Color.fromRGBO(182, 142, 43, 1)),
+                const RSizedBox(width: 5),
+                CircleAvatar(radius: 5.r, backgroundColor: const Color.fromRGBO(46, 156, 117, 1)),
+                const Spacer(flex: 1),
                 if (widget.title.isNotEmpty) ...[
                   if (widget.executing) ...[
                     SizedBox(
@@ -163,14 +163,14 @@ class _CodeEditorBlockState extends State<CodeEditorBlock> with SingleTickerProv
                   ]
                 ],
                 if (widget.executing) ...[
-                  Spacer(flex: 1),
+                  const Spacer(flex: 1),
                   Padding(
                     padding: REdgeInsets.only(top: 2.5),
                     child:
                         CircleAvatar(radius: 3.r, backgroundColor: context.getColor(ThemeEnum.accentGreen)),
                   ),
-                  RSizedBox(width: 5),
-                  MediumText(StringsManager.executing, color: ThemeEnum.accentGreen, fontSize: 10),
+                  const RSizedBox(width: 5),
+                  const MediumText(StringsManager.executing, color: ThemeEnum.accentGreen, fontSize: 10),
                 ]
               ],
             ),
