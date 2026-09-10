@@ -98,7 +98,7 @@ class _VisualizerScreenState extends ConsumerState<CodeEditorPage> {
             return CustomScrollView(
               controller: _scrollController,
               slivers: [
-                CodeEditorHeader(),
+                const CodeEditorHeader(),
                 CodeProblemDescriptionCard(problem: problem),
                 CodeEditorLangBar(problem: problem),
                 Consumer(
@@ -134,15 +134,15 @@ class _VisualizerScreenState extends ConsumerState<CodeEditorPage> {
                       );
                     }
 
-                    return SliverToBoxAdapter(child: SizedBox.shrink());
+                    return const SliverToBoxAdapter(child: SizedBox.shrink());
                   },
                 ),
-                SliverToBoxAdapter(child: RSizedBox(height: 20)),
+                const SliverToBoxAdapter(child: RSizedBox(height: 20)),
               ],
             );
           },
-          error: (error, stackTrace) => ChallengesErrorState(),
-          loading: () => ChallengesLoadingState(),
+          error: (error, stackTrace) => const ChallengesErrorState(),
+          loading: () => const ChallengesLoadingState(),
         ),
       ),
     );
