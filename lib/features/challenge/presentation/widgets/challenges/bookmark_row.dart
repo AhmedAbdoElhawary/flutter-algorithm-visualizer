@@ -1,8 +1,9 @@
 import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
 import 'package:algorithm_visualizer/core/widgets/adaptive/text/adaptive_text.dart';
-import 'package:algorithm_visualizer/core/widgets/custom_widgets/aurora_chips.dart';
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/custom_icon.dart';
-import 'package:algorithm_visualizer/core/widgets/custom_widgets/glass_card.dart';
+import 'package:algorithm_visualizer/core/widgets/custom_widgets/difficulty_chip.dart';
+import 'package:algorithm_visualizer/core/widgets/custom_widgets/surface_card.dart';
+import 'package:algorithm_visualizer/core/widgets/custom_widgets/tag_chip.dart';
 import 'package:algorithm_visualizer/features/challenge/domain/entities/coding_problem.dart';
 import 'package:algorithm_visualizer/features/challenge/domain/enums/problem.dart';
 import 'package:algorithm_visualizer/features/challenge/presentation/helper/problem_style.dart';
@@ -27,16 +28,14 @@ class BookmarkRow extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final difficulty = problem.getDifficulty;
-    final chipDifficulty = ProblemStyle.chipDifficulty(difficulty);
+    final chipDifficulty = ProblemStyle.quietChipDifficulty(difficulty);
     final tags = problem.getTags.take(2).toList();
 
     return Dismissible(
       key: ValueKey(problem.getProblemId),
       direction: DismissDirection.endToStart,
       onDismissed: (_) => _unbookmark(ref),
-      child: GlassContainer(
-        depth: GlassDepth.card,
-        borderRadius: 14,
+      child: SurfaceCard(
         padding: REdgeInsets.symmetric(horizontal: 14, vertical: 13),
         onTap: onTap,
         child: Column(

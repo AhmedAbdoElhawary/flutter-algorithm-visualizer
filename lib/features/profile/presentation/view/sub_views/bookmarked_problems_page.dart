@@ -3,8 +3,7 @@ import 'package:algorithm_visualizer/core/extensions/navigators.dart';
 import 'package:algorithm_visualizer/core/resources/strings_manager.dart';
 import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
 import 'package:algorithm_visualizer/core/widgets/adaptive/text/adaptive_text.dart';
-import 'package:algorithm_visualizer/core/widgets/custom_widgets/aurora_buttons.dart';
-import 'package:algorithm_visualizer/core/widgets/custom_widgets/glass_card.dart';
+import 'package:algorithm_visualizer/core/widgets/custom_widgets/icon_button_quiet.dart';
 import 'package:algorithm_visualizer/features/challenge/domain/entities/coding_problem.dart';
 import 'package:algorithm_visualizer/features/challenge/presentation/view_model/challenges/problems_providers.dart';
 import 'package:algorithm_visualizer/features/challenge/presentation/widgets/challenges/bookmark_row.dart';
@@ -21,8 +20,7 @@ class BookmarkedProblemsPage extends ConsumerWidget {
 
     return Scaffold(
       backgroundColor: context.getColor(ThemeEnum.primary),
-      body: AuroraGround(
-        child: SafeArea(
+      body: SafeArea(
           child: problems.when(
             data: (all) {
               final bookmarked = all.where((p) => p.getIsBookmarked).toList();
@@ -75,7 +73,6 @@ class BookmarkedProblemsPage extends ConsumerWidget {
             ),
           ),
         ),
-      ),
     );
   }
 }
@@ -92,7 +89,7 @@ class _Header extends StatelessWidget {
       padding: REdgeInsets.fromLTRB(16, 4, 16, 14),
       child: Row(
         children: [
-        const CustomBackButton(),
+        IconButtonQuiet(icon: Icons.arrow_back_ios_new_rounded, size: 30, iconSize: 14, onTap: context.back),
           const RSizedBox(width: 12),
           BoldText(StringsManager.bookmarked.trim(),
               color: ThemeEnum.textPrimary, fontSize: 17),
