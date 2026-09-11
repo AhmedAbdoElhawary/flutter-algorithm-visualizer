@@ -16,26 +16,21 @@ class ProfileScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return Material(
-      child: SafeArea(
-        child: SingleChildScrollView(
-          padding: REdgeInsets.only(bottom: 24),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            spacing: 14.r,
-            children: const [
-              ProfileHeader(),
-              ProfileStatsGrid(),
-              ProfileDifficultyProgress(),
-              ProfileWeeklyChart(),
-              ProfileHeatmap(),
-              ProfileCategoryChart(),
-              ProfilePracticeHistory(),
-              ProfileLogoutCard(),
-              RSizedBox(height: kBottomPageSpacing)
-            ],
-          ),
-        ),
+    return SingleChildScrollView(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        spacing: 14.r,
+        children: const [
+          ProfileHeader(),
+          ProfileStatsGrid(),
+          ProfileDifficultyProgress(),
+          ProfileWeeklyChart(),
+          ProfileHeatmap(),
+          ProfileCategoryChart(),
+          ProfilePracticeHistory(),
+          ProfileLogoutCard(),
+          RSizedBox(height: kBottomPageSpacing)
+        ],
       ),
     );
   }

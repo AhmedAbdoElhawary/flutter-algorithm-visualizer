@@ -75,7 +75,34 @@ jobs:
         run: flutter analyze
 
       - name: Run tests
-        run: flutter test --dart-define-from-file=dart_define/dev.json
+        run: flutter test -x golden --dart-define-from-file=dart_define/dev.json
+
+  # Golden (pixel-identity) tests run on macOS because the reference PNGs were
+  # recorded on macOS — font rasterisation differs by host OS, so running them
+  # on ubuntu-latest would fail every PR regardless of an actual regression.
+  golden:
+    name: Golden Tests (macOS)
+    runs-on: macos-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          flutter-version: 3.44.7 # keep in sync with the team's local toolchain
+          cache: true
+
+      - name: Get dependencies
+        run: flutter pub get
+
+      # Path-based, not tag-based: a golden file that forgets @Tags(['golden'])
+      # would otherwise silently skip this job and only run (and fail) on the
+      # Linux job in the "quality" job above.
+      - name: Run golden tests
+        run: flutter test test/golden --dart-define-from-file=dart_define/dev.json
 
   # One Android build per PR, for the flavor that the PR's target branch ships:
   #   PR -> develop     builds flavor dev

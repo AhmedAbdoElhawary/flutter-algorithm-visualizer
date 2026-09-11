@@ -20,34 +20,32 @@ class ChallengePage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final problems = ref.watch(filteredProblemIdsProvider);
 
-    return Material(
-      child: CustomScrollView(
-        slivers: [
-          const _SliverAppBar(),
-          problems.when(
-            loading: () => const SliverChallengesLoadingState(),
-            error: (_, __) => const SliverFillRemaining(child: ChallengesErrorState()),
-            data: (data) {
-              if (data.ids.isEmpty) return const SliverFillRemaining(child: ChallengesEmptyState());
-              return SliverPadding(
-                padding: REdgeInsets.fromLTRB(16, 0, 16, 60),
-                sliver: SliverList.builder(
-                  itemCount: data.ids.length,
-                  itemBuilder: (ctx, i) {
-                    final problemId = data.ids[i];
-                    return ProblemTile(
-                      problemId: problemId,
-                      onSolveTap: () {
-                        context.pushTo(Routes.problem, queryParameters: "$problemId");
-                      },
-                    );
-                  },
-                ),
-              );
-            },
-          )
-        ],
-      ),
+    return CustomScrollView(
+      slivers: [
+        const _SliverAppBar(),
+        problems.when(
+          loading: () => const SliverChallengesLoadingState(),
+          error: (_, __) => const SliverFillRemaining(child: ChallengesErrorState()),
+          data: (data) {
+            if (data.ids.isEmpty) return const SliverFillRemaining(child: ChallengesEmptyState());
+            return SliverPadding(
+              padding: REdgeInsets.fromLTRB(16, 0, 16, 60),
+              sliver: SliverList.builder(
+                itemCount: data.ids.length,
+                itemBuilder: (ctx, i) {
+                  final problemId = data.ids[i];
+                  return ProblemTile(
+                    problemId: problemId,
+                    onSolveTap: () {
+                      context.pushTo(Routes.problem, queryParameters: "$problemId");
+                    },
+                  );
+                },
+              ),
+            );
+          },
+        )
+      ],
     );
   }
 }

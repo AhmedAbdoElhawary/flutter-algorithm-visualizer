@@ -37,11 +37,17 @@ class MovablePinsBackground extends StatefulWidget {
     this.connectionDistance = 130,
     this.enableConnections = true,
     this.targetFps = 30,
+    this.random,
     super.key,
   });
 
   final ThemeEnum pinColor;
   final Widget child;
+
+  /// Source of randomness for initial particle placement and drift.
+  /// Defaults to an unseeded [Random]. Tests inject a seeded instance so
+  /// particle positions are deterministic across pumps (golden captures).
+  final Random? random;
 
   /// Hard cap on particle count, regardless of screen size.
   final int maxPins;
@@ -72,7 +78,7 @@ class _MovablePinsBackgroundState extends State<MovablePinsBackground>
     with SingleTickerProviderStateMixin, WidgetsBindingObserver {
   late final Ticker _ticker = createTicker(_onTick);
   final _Repainter _repainter = _Repainter();
-  final Random _random = Random();
+  late final Random _random = widget.random ?? Random();
 
   Float32List _posX = Float32List(0);
   Float32List _posY = Float32List(0);
