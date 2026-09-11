@@ -18,9 +18,9 @@ class ProfileHeatmap extends StatelessWidget {
       child: SurfaceCard(
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           const SectionHeader(title: StringsManager.activityHeatmap),
-          RSizedBox(height: 8),
+          const RSizedBox(height: 8),
           const HeatGridLegend(),
-          RSizedBox(height: 10),
+          const RSizedBox(height: 10),
           Consumer(
             builder: (context, ref, child) {
               final heatmapData =

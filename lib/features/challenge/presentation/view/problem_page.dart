@@ -200,7 +200,7 @@ class _TabBar extends StatelessWidget {
             // _tab(context, StringsManager.similarQuestions, _ProblemTab.similar),
           ],
         ),
-        RSizedBox(height: 9),
+        const RSizedBox(height: 9),
         Container(height: 1, color: context.getColor(ThemeEnum.borderSubtle)),
       ],
     );
@@ -218,7 +218,7 @@ class _TabBar extends StatelessWidget {
           selected
               ? SemiBoldText(label, color: ThemeEnum.textPrimary, fontSize: 12, maxLines: 1)
               : MediumText(label, color: ThemeEnum.textSecond, fontSize: 12, maxLines: 1),
-          RSizedBox(height: 7),
+          const RSizedBox(height: 7),
           Container(height: 2, color: selected ? context.getColor(ThemeEnum.solidWhite) : Colors.transparent),
         ],
       ),

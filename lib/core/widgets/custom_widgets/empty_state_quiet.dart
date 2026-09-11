@@ -24,7 +24,7 @@ class EmptyStateQuiet extends StatelessWidget {
           children: [
             SemiBoldText(title, fontSize: 12.5, color: ThemeEnum.textBody, textAlign: TextAlign.center),
             if (caption != null) ...[
-              RSizedBox(height: 6),
+              const RSizedBox(height: 6),
               RegularText(
                 caption!,
                 fontSize: 11,
