@@ -14,6 +14,9 @@ class SurfaceCard extends StatelessWidget {
   /// plot/grid panels, which sit directly on `background base`.
   final bool filled;
 
+  /// Corner radius — 14 for every card except the 18px dialog radius.
+  final double radius;
+
   const SurfaceCard({
     super.key,
     required this.child,
@@ -21,11 +24,12 @@ class SurfaceCard extends StatelessWidget {
     this.onTap,
     this.clip = false,
     this.filled = true,
+    this.radius = 14,
   });
 
   @override
   Widget build(BuildContext context) {
-    final radius = BorderRadius.circular(14.r);
+    final radius = BorderRadius.circular(this.radius.r);
     final decorated = Container(
       decoration: BoxDecoration(
         color: filled ? context.getColor(ThemeEnum.mainCard) : null,
