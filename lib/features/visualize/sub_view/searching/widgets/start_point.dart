@@ -1,9 +1,9 @@
-import 'package:algorithm_visualizer/features/visualize/sub_view/searching/widgets/pf_grid.dart';
 import 'package:flutter/material.dart';
 
 class PFStartPointWidget extends StatelessWidget {
-  const PFStartPointWidget({required this.size, super.key});
+  const PFStartPointWidget({required this.size, required this.color, super.key});
   final double size;
+  final Color color;
 
   @override
   Widget build(BuildContext context) {
@@ -15,7 +15,7 @@ class PFStartPointWidget extends StatelessWidget {
           fontSize: size * 1,
           fontFamily: Icons.arrow_forward_ios_rounded.fontFamily,
           package: Icons.arrow_forward_ios_rounded.fontPackage,
-          color: kStartPointIconColor,
+          color: color,
         ),
       ),
     );

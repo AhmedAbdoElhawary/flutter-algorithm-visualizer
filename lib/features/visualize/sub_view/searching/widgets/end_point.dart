@@ -1,18 +1,26 @@
-import 'package:algorithm_visualizer/features/visualize/sub_view/searching/widgets/pf_grid.dart';
 import 'package:flutter/material.dart';
 
 class PFEndPointWidget extends StatelessWidget {
-  const PFEndPointWidget({required this.size, super.key});
+  const PFEndPointWidget({
+    required this.size,
+    required this.outerColor,
+    required this.midColor,
+    required this.innerColor,
+    super.key,
+  });
   final double size;
+  final Color outerColor;
+  final Color midColor;
+  final Color innerColor;
 
   @override
   Widget build(BuildContext context) {
     return CustomPaint(
       size: Size(size, size),
       painter: _TargetPainter(
-        outerColor: kTargetOuterColor,
-        midColor: kTargetMidColor,
-        innerColor: kTargetInnerColor,
+        outerColor: outerColor,
+        midColor: midColor,
+        innerColor: innerColor,
       ),
     );
   }
