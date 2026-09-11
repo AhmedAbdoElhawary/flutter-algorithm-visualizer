@@ -39,7 +39,10 @@ abstract class SortingNotifier extends Notifier<SortingNotifierState>
   static const ThemeEnum itemColor = ThemeEnum.barIdle;
   static const ThemeEnum backgroundForSortingColor = ThemeEnum.backgroundForSortingColor;
   static const ThemeEnum doneSortingColor = ThemeEnum.barDone;
-  static const ThemeEnum temporaryColor = ThemeEnum.primaryHover;
+
+  /// The single element the algorithm is *holding* (pivot / insertion key /
+  /// selection minimum) — white, per the Aurora chart state model.
+  static const ThemeEnum temporaryColor = ThemeEnum.primary;
 
   /// todo: add this feature that use dynamic size
   static const int _defaultSize = 10;
@@ -86,12 +89,17 @@ abstract class SortingNotifier extends Notifier<SortingNotifierState>
     return screenHeight > 0 ? screenHeight : 1.0;
   }
 
+  /// Returns the bar's pixel [actualHeight] and the label to print above it.
+  ///
+  /// The label is the array [value] itself — it must never be derived from the
+  /// rendered pixel height, or it drifts as bars shrink to fit a side-by-side
+  /// comparison. Height is pixels; the label is data.
   static (double actualHeight, String writtenHeight) calculateItemHeight(
-    int itemIndex,
+    int value,
     int size,
     int selectedAlgorithmsLength,
   ) {
-    final value = (calculateMaxListItemHeight / size) * (itemIndex + 1);
+    final scaledHeight = (calculateMaxListItemHeight / size) * (value + 1);
     final per = selectedAlgorithmsLength == 1
         ? 0.8
         : selectedAlgorithmsLength <= 2
@@ -101,8 +109,8 @@ abstract class SortingNotifier extends Notifier<SortingNotifierState>
                 : selectedAlgorithmsLength <= 6
                     ? 0.7
                     : 0.6;
-    final height = value.h / selectedAlgorithmsLength * (per - 0.15);
-    return (height, '${(height / 2).toInt()}');
+    final height = scaledHeight.h / selectedAlgorithmsLength * (per - 0.15);
+    return (height, '$value');
   }
 
   String getWrittenHeight(int value) => calculateItemHeight(value, _size, selectedAlgorithmLength).$2;
