@@ -34,50 +34,52 @@ abstract final class ColorManager {
   /// ======================================================================
   /// Aurora primitives — DARK (primary theme)
   /// ======================================================================
-  static const cdBgBaseDk = Color(0xFF04050A);
-  static const cdBgRaisedDk = Color(0xFF080A12);
-  static const cdSurfaceDk = Color(0xFF0B0E17);
+  static const cdBgBaseDk = Color(0xFF0B0B0D);
+  static const cdBgRaisedDk = Color(0xFF181A1F);
+  static const cdSurfaceDk = Color(0xFF121317);
   static const cdSurfaceAltDk = Color(0xFF0E1119);
 
-  /// Borders are white alphas now — that is what lets the glass read.
-  static const cdBorderSubtleDk = Color(0x1FFFFFFF); // white 12%
-  static const cdBorderDk = Color(0x21FFFFFF); // white 13%
-  static const cdBorderStrongDk = Color(0x33FFFFFF); // white 20%
+  /// Quiet: hairlines are solid greys now, never white alpha.
+  static const cdBorderSubtleDk = Color(0xFF1C1D22);
+  static const cdBorderDk = Color(0xFF24262C);
+  static const cdBorderStrongDk = Color(0xFF3A3D46);
 
   /// White carries every primary action. No hue ramp — hover/press are cooler
   /// whites.
   static const cdPrimaryDk = Color(0xFFFFFFFF);
   static const cdPrimaryHoverDk = Color(0xFFF1F3FB);
   static const cdPrimaryPressDk = Color(0xFFE4E7F2);
-  static const cdOnPrimaryDk = Color(0xFF06070C);
-  static const cdPrimaryTintDk = Color(0x1AFFFFFF); // white 10% — pressed/selected wash
-  static const cdPrimaryRingDk = Color(0x668B7CF6); // violet @ 40% — focus ring
+  static const cdOnPrimaryDk = Color(0xFF0B0B0D);
+  static const cdPrimaryTintDk = Color(0xFF24262C); // Quiet: solid selected/pressed wash
+  static const cdPrimaryRingDk = Color(0x8CFFFFFF); // white @ 55% — focus ring only, not a fill
 
   /// XP / streak / level progress is white now, like every other primary action.
   static const cdAccentXpDk = cdPrimaryDk;
   static const cdAccentXpTextDk = cdTextPrimaryDk;
   static const cdOnAccentXpDk = cdOnPrimaryDk;
 
-  static const cdTextPrimaryDk = Color(0xFFF4F6FF);
-  static const cdTextBodyDk = Color(0xFFAFB6CC);
+  static const cdTextPrimaryDk = Color(0xFFF2F3F5);
+  static const cdTextBodyDk = Color(0xFF9A9FAB);
   static const cdTextSecondaryDk = Color(0xFF7C87A3); // contrast floor for real content ≈4.6:1
-  static const cdTextDisabledDk = Color(0xFF5F6A85);
+  static const cdTextDisabledDk = Color(0xFF4A4E5A);
 
-  static const cdSuccessDk = Color(0xFF4FE0A8);
-  static const cdWarningDk = Color(0xFFF3B25A);
-  static const cdErrorDk = Color(0xFFFF6B7E);
+  static const cdSuccessDk = Color(0xFF79C9A4);
+  static const cdWarningDk = Color(0xFFD9AE72);
+  static const cdErrorDk = Color(0xFFDE8189);
   static const cdOnErrorDk = Color(0xFF3A0A12);
 
-  /// "currently comparing" — was brass, now cyan; it belongs to the palette.
-  static const cdComparingDk = Color(0xFF46D8E6);
+  /// Quiet: "currently comparing" is white now — the retired cyan is gone.
+  static const cdComparingDk = Color(0xFFFFFFFF);
 
-  static const cdBarIdleDk = Color(0x8038415C);
-  static const cdBarExcludedDk = Color(0xFF171C2A);
+  static const cdBarIdleDk = Color(0xFF2A2D35);
+  static const cdBarExcludedDk = Color(0xFF181A1F);
   static const cdBarCompareDk = cdComparingDk;
   static const cdBarSwapDk = cdErrorDk;
   static const cdBarDoneDk = cdSuccessDk;
 
-  static const cdTextBrightDk = Color(0xFFE8EAF4); // code punctuation / row title ink
+  /// Quiet's "primary" ink/action role (see research.md R3) — repoints this
+  /// existing member instead of adding a new one.
+  static const cdTextBrightDk = Color(0xFFFFFFFF);
   static const cdErrorRingDk = Color(0x1FFF6B7E);
 
   /// The aurora glow — only indigo and a trace of cyan reach the ground, in one
@@ -114,56 +116,68 @@ abstract final class ColorManager {
   static const cdCodePunctDk = cdTextBrightDk;
   static const cdCodeNumberDk = cdSuccessDk;
 
-  /// Activity heat — five steps: white 7% empty, then success @ 20 / 40 / 66 / 100%.
+  /// Activity heat — five solid steps, low → high.
   static const cdHeatDk = <Color>[
-    Color(0x12FFFFFF),
-    Color(0x334FE0A8),
-    Color(0x664FE0A8),
-    Color(0xA84FE0A8),
-    Color(0xFF4FE0A8),
+    Color(0xFF181A1F),
+    Color(0xFF21312B),
+    Color(0xFF375749),
+    Color(0xFF548871),
+    Color(0xFF79C9A4),
   ];
+
+  /// Quiet: generic 3px progress-bar track, distinct from the sorting bar rail.
+  static const cdTrackDk = Color(0xFF2A2D35);
+
+  /// Quiet: solid chip fills — never alpha over a surface.
+  static const cdChipEasyFillDk = Color(0xFF17241F);
+  static const cdChipMediumFillDk = Color(0xFF25200F);
+  static const cdChipHardFillDk = Color(0xFF291619);
+  static const cdChipNeutralFillDk = Color(0xFF1C1D22);
 
   /// ======================================================================
   /// Aurora primitives — LIGHT (cool off-white, cool greys)
   /// ======================================================================
-  static const cdBgBaseLt = Color(0xFFF6F7FC);
-  static const cdBgRaisedLt = Color(0xFFFFFFFF);
+  static const cdBgBaseLt = Color(0xFFFBFBFC);
+  static const cdBgRaisedLt = Color(0xFFF4F5F7);
   static const cdSurfaceLt = Color(0xFFFFFFFF);
   static const cdSurfaceAltLt = Color(0xFFEEF0F6);
-  static const cdBorderSubtleLt = Color(0x14000000); // black 8%
-  static const cdBorderLt = Color(0x1F000000); // black 12%
-  static const cdBorderStrongLt = Color(0x2E000000); // black 18%
+  static const cdBorderSubtleLt = Color(0xFFE8E9ED);
+  static const cdBorderLt = Color(0xFFDCDEE3);
+  static const cdBorderStrongLt = Color(0xFFB9BCC4);
 
   static const cdPrimaryLt = Color(0xFF12141C);
   static const cdPrimaryHoverLt = Color(0xFF2A2D38);
   static const cdPrimaryPressLt = Color(0xFF0B0D14);
   static const cdOnPrimaryLt = Color(0xFFFFFFFF);
-  static const cdPrimaryTintLt = Color(0x14000000); // black 8%
-  static const cdPrimaryRingLt = Color(0x665C6CF2); // indigo @ 40%
+  static const cdPrimaryTintLt = Color(0xFFECEDF0);
+  static const cdPrimaryRingLt = Color(0x73101114); // #101114 @ 45% — focus ring only, not a fill
 
   static const cdAccentXpLt = cdPrimaryLt;
   static const cdAccentXpTextLt = cdPrimaryLt;
   static const cdOnAccentXpLt = Color(0xFFFFFFFF);
 
-  static const cdTextPrimaryLt = Color(0xFF12141C);
-  static const cdTextBodyLt = Color(0xFF454C60);
+  static const cdTextPrimaryLt = Color(0xFF101114);
+  static const cdTextBodyLt = Color(0xFF4A4F5A);
   static const cdTextSecondaryLt = Color(0xFF6A7387);
-  static const cdTextDisabledLt = Color(0xFF9AA1B3);
+  static const cdTextDisabledLt = Color(0xFFA0A5AE);
 
-  static const cdSuccessLt = Color(0xFF128A5E);
-  static const cdWarningLt = Color(0xFFA9670F);
-  static const cdErrorLt = Color(0xFFC1414D);
+  static const cdSuccessLt = Color(0xFF11704E);
+  static const cdWarningLt = Color(0xFF8A5D12);
+  static const cdErrorLt = Color(0xFFA83F49);
   static const cdOnErrorLt = Color(0xFFFFFFFF);
 
-  static const cdComparingLt = Color(0xFF147C90);
+  /// Quiet: "currently comparing" is ink-black now, matching the dark theme's white.
+  static const cdComparingLt = Color(0xFF101114);
 
-  static const cdBarIdleLt = Color(0x80C3CBD8);
-  static const cdBarExcludedLt = Color(0xFFEAEDF3);
+  static const cdBarIdleLt = Color(0xFFDCDEE3);
+  static const cdBarExcludedLt = Color(0xFFEDEEF1);
   static const cdBarCompareLt = cdComparingLt;
   static const cdBarSwapLt = cdErrorLt;
   static const cdBarDoneLt = cdSuccessLt;
 
-  static const cdTextBrightLt = cdTextPrimaryLt;
+  /// Quiet's "primary" ink/action role (see research.md R3) — repoints this
+  /// existing member instead of adding a new one.
+  static const cdTextBrightLt = Color(0xFF101114);
   static const cdErrorRingLt = Color(0x1FC1414D);
 
   static const cdGlowIndigoLt = Color(0x294A5BD8); // ~16%
@@ -196,12 +210,19 @@ abstract final class ColorManager {
   static const cdCodeNumberLt = cdSuccessLt;
 
   static const cdHeatLt = <Color>[
-    Color(0xFFEAEDF3),
-    Color(0x33128A5E),
-    Color(0x66128A5E),
-    Color(0xA8128A5E),
-    Color(0xFF128A5E),
+    Color(0xFFEDEEF1),
+    Color(0xFFDBEBE2),
+    Color(0xFFB5D8C6),
+    Color(0xFF7FBBA0),
+    Color(0xFF11704E),
   ];
+
+  static const cdTrackLt = Color(0xFFE2E4E9);
+
+  static const cdChipEasyFillLt = Color(0xFFE7F3EC);
+  static const cdChipMediumFillLt = Color(0xFFF6EFE2);
+  static const cdChipHardFillLt = Color(0xFFF9EAEB);
+  static const cdChipNeutralFillLt = Color(0xFFF0F1F4);
 
   /// ======================================================================
   /// Legacy theme names, repointed to Aurora primitives
