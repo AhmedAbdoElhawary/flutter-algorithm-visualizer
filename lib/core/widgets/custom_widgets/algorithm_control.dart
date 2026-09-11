@@ -123,20 +123,26 @@ class CtrlButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SimpleGlassButton(
+    return SimpleControllerGlassButton(
+      depth: GlassDepth.recessed,
       onTap: onTap,
       messageTip: messageTip,
       child: Icon(icon,
           size: size.r,
-          color:
-              _disabled ? context.getColor(ThemeEnum.hoverSecond) : context.getColor(ThemeEnum.textSecond)),
+          color: _disabled
+              ? context.getColor(ThemeEnum.textBody).withValues(alpha: .1)
+              : context.getColor(ThemeEnum.textBody)),
     );
   }
 }
 
 class SpeedSelector extends ConsumerWidget {
-  const SpeedSelector(
-      {required this.interface, required this.expandSpeedEscalator, required this.getSpeed, super.key});
+  const SpeedSelector({
+    required this.interface,
+    required this.expandSpeedEscalator,
+    required this.getSpeed,
+    super.key,
+  });
   final AlgorithmControlInterface interface;
   final PlaybackSpeed getSpeed;
   final bool expandSpeedEscalator;
@@ -149,19 +155,17 @@ class SpeedSelector extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return SimpleGlassButton(
-      padding: 7,
+    return SimpleControllerGlassButton(
+      padding: REdgeInsets.symmetric(vertical: 5, horizontal: 5),
       child: expandSpeedEscalator
           ? Row(
+              spacing: 5,
               children: getPlaybackSpeedsForSorting()
-                  .map((e) => Padding(
-                        padding: REdgeInsetsDirectional.only(end: 5),
-                        child: _BuildChildForSpeedSelector(
-                            interface: interface,
-                            selectedSpeed: getSpeed,
-                            speed: e,
-                            onTap: () => interface.changeSpeed(e)),
-                      ))
+                  .map((e) => _BuildChildForSpeedSelector(
+                      interface: interface,
+                      selectedSpeed: getSpeed,
+                      speed: e,
+                      onTap: () => interface.changeSpeed(e)))
                   .toList(),
             )
           : _BuildChildForSpeedSelector(
@@ -196,13 +200,13 @@ class _BuildChildForSpeedSelector extends StatelessWidget {
             ? null
             : BoxDecoration(
                 color: context.getColor(ThemeEnum.accentBg),
-                borderRadius: BorderRadius.circular(5),
+                borderRadius: BorderRadius.circular(6),
               ),
         child: Center(
           child: MediumText(
             '${speed.level}×',
             color: speed != selectedSpeed ? ThemeEnum.textDarkColor : ThemeEnum.accent,
-            fontSize: 10,
+            fontSize: 11,
           ),
         ),
       ),
