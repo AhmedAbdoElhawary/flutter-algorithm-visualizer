@@ -47,8 +47,9 @@ abstract class SortingNotifier extends Notifier<SortingNotifierState>
   static const ThemeEnum doneSortingColor = ThemeEnum.barDone;
 
   /// The single element the algorithm is *holding* (pivot / insertion key /
-  /// selection minimum) — white, per the Aurora chart state model.
-  static const ThemeEnum temporaryColor = ThemeEnum.focus;
+  /// selection minimum) — shares the `comparing` white role (Contract 4):
+  /// key and comparing are told apart by the step caption, not colour.
+  static const ThemeEnum temporaryColor = ThemeEnum.comparing;
 
   /// todo: add this feature that use dynamic size
   static const int _defaultSize = 10;
