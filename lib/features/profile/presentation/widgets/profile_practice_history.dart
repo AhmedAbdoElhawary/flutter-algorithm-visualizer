@@ -123,7 +123,7 @@ class _PracticeHistoryRowState extends State<PracticeHistoryRow> with SingleTick
       difficulty: entry.difficulty,
       isCorrect: entry.lastResult,
       onTapCard: _toggle,
-      onTapTitle: () => context.pushTo(Routes.code, queryParameters: "${entry.problemId}"),
+      onTapTitle: () => context.pushTo(Routes.problem, queryParameters: "${entry.problemId}"),
       subTitle: MediumText('${entry.attempts.length} $submissionsText', color: ThemeEnum.hover, fontSize: 11),
       trailing: GestureDetector(
         child: AnimatedRotation(
@@ -132,7 +132,7 @@ class _PracticeHistoryRowState extends State<PracticeHistoryRow> with SingleTick
           child: const CustomIcon(
             Icons.keyboard_arrow_down_rounded,
             size: 18,
-            color: ThemeEnum.hoverSecond,
+            color: ThemeEnum.white2DarkColor,
           ),
         ),
       ),
