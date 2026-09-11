@@ -12,6 +12,7 @@ class StatTile extends StatelessWidget {
   final String value;
   final bool emphasized;
   final IconData? icon;
+  final String? sub;
 
   const StatTile({
     super.key,
@@ -19,10 +20,12 @@ class StatTile extends StatelessWidget {
     required this.value,
     this.emphasized = false,
     this.icon,
+    this.sub,
   });
 
   @override
   Widget build(BuildContext context) {
+    final hasHeaderRow = icon != null || (sub != null && sub!.isNotEmpty);
     return Container(
       padding: REdgeInsets.symmetric(horizontal: 12, vertical: 12),
       decoration: BoxDecoration(
@@ -32,16 +35,23 @@ class StatTile extends StatelessWidget {
         ),
       ),
       child: Column(
-        crossAxisAlignment: icon == null ? CrossAxisAlignment.start : CrossAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: [
-          if (icon != null) ...[
-            Icon(icon, size: 18.r, color: context.getColor(ThemeEnum.textBody)),
-            RSizedBox(height: 4),
+          if (hasHeaderRow) ...[
+            Row(
+              children: [
+                if (icon != null) Icon(icon, size: 18.r, color: context.getColor(ThemeEnum.textBody)),
+                const Spacer(),
+                if (sub != null && sub!.isNotEmpty)
+                  RegularText(sub!, fontSize: 10, color: ThemeEnum.textSecond),
+              ],
+            ),
+            RSizedBox(height: 6),
           ],
           SemiBoldText(value, fontSize: 19, color: emphasized ? ThemeEnum.textBright : ThemeEnum.textPrimary),
           RSizedBox(height: 4),
-          RegularText(label, fontSize: 10, color: ThemeEnum.textSecond, textAlign: TextAlign.center),
+          RegularText(label, fontSize: 10, color: ThemeEnum.textSecond),
         ],
       ),
     );
