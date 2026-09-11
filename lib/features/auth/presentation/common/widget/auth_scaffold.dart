@@ -1,7 +1,6 @@
 import 'package:algorithm_visualizer/core/resources/dimensions_manager.dart';
 import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
 import 'package:algorithm_visualizer/core/widgets/adaptive/padding/adaptive_padding.dart';
-import 'package:algorithm_visualizer/core/widgets/custom_widgets/glass_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -27,8 +26,7 @@ class AuthScaffold extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: context.getColor(ThemeEnum.primary),
-      body: AuroraGround(
-        child: SafeArea(
+      body: SafeArea(
           child: SingleChildScrollView(
             physics: const BouncingScrollPhysics(),
             child: HorizontalPadding(
@@ -43,7 +41,6 @@ class AuthScaffold extends StatelessWidget {
               ),
             ),
           ),
-        ),
       ),
     );
   }

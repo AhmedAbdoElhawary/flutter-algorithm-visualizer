@@ -187,21 +187,22 @@ class _TabBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        border: Border(bottom: BorderSide(color: context.getColor(ThemeEnum.borderSubtle))),
-      ),
-      padding: REdgeInsets.only(bottom: 9),
-      child: Row(
-        children: [
-          _tab(context, StringsManager.problemTab, _ProblemTab.problem),
-          const RSizedBox(width: 16),
-          _tab(context, StringsManager.hints, _ProblemTab.hints),
-          /// TODO: add this with push to different problem
-          // const RSizedBox(width: 16),
-          // _tab(context, StringsManager.similarQuestions, _ProblemTab.similar),
-        ],
-      ),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            _tab(context, StringsManager.problemTab, _ProblemTab.problem),
+            const RSizedBox(width: 16),
+            _tab(context, StringsManager.hints, _ProblemTab.hints),
+            /// TODO: add this with push to different problem
+            // const RSizedBox(width: 16),
+            // _tab(context, StringsManager.similarQuestions, _ProblemTab.similar),
+          ],
+        ),
+        RSizedBox(height: 9),
+        Container(height: 1, color: context.getColor(ThemeEnum.borderSubtle)),
+      ],
     );
   }
 
@@ -210,18 +211,16 @@ class _TabBar extends StatelessWidget {
     return GestureDetector(
       onTap: () => onChanged(value),
       behavior: HitTestBehavior.opaque,
-      child: Container(
-        decoration: selected
-            ? BoxDecoration(
-                border: Border(
-                  bottom: BorderSide(color: context.getColor(ThemeEnum.solidWhite), width: 2),
-                ),
-              )
-            : null,
-        padding: REdgeInsets.only(bottom: 9),
-        child: selected
-            ? SemiBoldText(label, color: ThemeEnum.textPrimary, fontSize: 12, maxLines: 1)
-            : MediumText(label, color: ThemeEnum.textSecond, fontSize: 12, maxLines: 1),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          selected
+              ? SemiBoldText(label, color: ThemeEnum.textPrimary, fontSize: 12, maxLines: 1)
+              : MediumText(label, color: ThemeEnum.textSecond, fontSize: 12, maxLines: 1),
+          RSizedBox(height: 7),
+          Container(height: 2, color: selected ? context.getColor(ThemeEnum.solidWhite) : Colors.transparent),
+        ],
       ),
     );
   }
@@ -309,12 +308,9 @@ class _ExampleBlock extends StatelessWidget {
               ],
               if (explanation != null && explanation.isNotEmpty) ...[
                 const RSizedBox(height: 7),
-                Container(
-                  width: double.infinity,
+                Container(height: 1, color: context.getColor(ThemeEnum.borderSubtle)),
+                Padding(
                   padding: REdgeInsets.only(top: 7),
-                  decoration: BoxDecoration(
-                    border: Border(top: BorderSide(color: context.getColor(ThemeEnum.borderSubtle))),
-                  ),
                   child: RegularText(
                     explanation,
                     color: ThemeEnum.textSecond,

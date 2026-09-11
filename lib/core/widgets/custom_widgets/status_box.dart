@@ -13,14 +13,14 @@ class StatusBox extends StatelessWidget {
       width: 28.r,
       height: 28.r,
       decoration: BoxDecoration(
-        color: context.getColor(ThemeEnum.accentBg),
-        borderRadius: BorderRadius.circular(8),
+        color: context.getColor(isCorrect ? ThemeEnum.chipEasyFill : ThemeEnum.chipHardFill),
+        borderRadius: BorderRadius.circular(8.r),
       ),
       child: Center(
           child: Icon(
         isCorrect ? Icons.check_rounded : Icons.close_rounded,
         size: 14.r,
-        color: context.getColor(isCorrect ? ThemeEnum.accentGreen : ThemeEnum.accentRed),
+        color: context.getColor(isCorrect ? ThemeEnum.difficultyEasy : ThemeEnum.difficultyHard),
       )),
     );
   }
