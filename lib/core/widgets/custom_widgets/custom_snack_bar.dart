@@ -36,13 +36,26 @@ class _AuthErrorBanner extends StatelessWidget {
   ThemeEnum get getColor {
     switch (type) {
       case CustomSnackBarType.error:
-        return ThemeEnum.accentRed;
+        return ThemeEnum.difficultyHard;
       case CustomSnackBarType.success:
-        return ThemeEnum.accentGreen;
+        return ThemeEnum.difficultyEasy;
       case CustomSnackBarType.warning:
-        return ThemeEnum.accentYellow;
+        return ThemeEnum.difficultyMedium;
       case CustomSnackBarType.info:
-        return ThemeEnum.accentBlue;
+        return ThemeEnum.textBody;
+    }
+  }
+
+  ThemeEnum get _fill {
+    switch (type) {
+      case CustomSnackBarType.error:
+        return ThemeEnum.chipHardFill;
+      case CustomSnackBarType.success:
+        return ThemeEnum.chipEasyFill;
+      case CustomSnackBarType.warning:
+        return ThemeEnum.chipMediumFill;
+      case CustomSnackBarType.info:
+        return ThemeEnum.chipNeutralFill;
     }
   }
 
@@ -67,9 +80,9 @@ class _AuthErrorBanner extends StatelessWidget {
       child: Container(
         padding: REdgeInsets.symmetric(horizontal: 14, vertical: 12),
         decoration: BoxDecoration(
-          color: context.getColor(getColor).withValues(alpha: 0.15),
+          color: context.getColor(_fill),
           borderRadius: BorderRadius.circular(10.r),
-          border: Border.all(color: context.getColor(getColor).withValues(alpha: 0.35)),
+          border: Border.all(color: context.getColor(getColor)),
         ),
         child: Row(
           children: [
