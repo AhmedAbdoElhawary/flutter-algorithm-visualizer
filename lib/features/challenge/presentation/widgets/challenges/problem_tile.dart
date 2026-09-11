@@ -33,7 +33,7 @@ class ProblemTile extends ConsumerWidget {
     return Padding(
       padding: REdgeInsets.only(bottom: 6),
       child: GlassContainer(
-        fillCardTheme: ThemeEnum.glassCardFill2,
+        // fillCardTheme: ThemeEnum.glassCardFill2,
         depth: GlassDepth.card,
         durationForAnimation: const Duration(milliseconds: 200),
         borderRadius: 12,
@@ -84,7 +84,7 @@ class _MainRow extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: onTap,
-      behavior: HitTestBehavior.opaque,
+      // behavior: HitTestBehavior.opaque,
       child: Padding(
         padding: REdgeInsets.symmetric(horizontal: 14, vertical: 11),
         child: Row(

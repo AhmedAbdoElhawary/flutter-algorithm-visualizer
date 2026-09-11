@@ -1,5 +1,3 @@
-import 'dart:ui' show ImageFilter;
-
 import 'package:algorithm_visualizer/core/resources/dimensions_manager.dart';
 import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
 import 'package:algorithm_visualizer/core/widgets/adaptive/text/adaptive_text.dart';
@@ -86,26 +84,17 @@ class GlassContainer extends StatelessWidget {
             width: !allowCardTopShadow && depth != GlassDepth.recessed ? 2 : 1),
       ),
     );
-    final surface = ClipRRect(
-      borderRadius: radius,
-      child: BackdropFilter(
-        filter: ImageFilter.compose(
-          outer: ColorFilter.matrix(_saturationMatrix(_saturation)),
-          inner: ImageFilter.blur(sigmaX: _blur, sigmaY: _blur),
-        ),
-        child: durationForAnimation != null
-            ? AnimatedContainer(
-                duration: durationForAnimation!,
-                decoration: box,
-                child: child,
-              )
-            : Container(
-                padding: padding,
-                decoration: box,
-                child: child,
-              ),
-      ),
-    );
+    final surface = durationForAnimation != null
+        ? AnimatedContainer(
+            duration: durationForAnimation!,
+            decoration: box,
+            child: child,
+          )
+        : Container(
+            padding: padding,
+            decoration: box,
+            child: child,
+          );
 
     // Shadow sits outside the clip.
     final result = DecoratedBox(
@@ -159,21 +148,22 @@ class AuroraGround extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
     return Stack(
       fit: StackFit.expand,
       children: [
-        Positioned.fill(
-          child: CustomPaint(
-            size: Size.infinite,
-            painter: _AuroraPainter(
-              base: context.getColor(ThemeEnum.primary),
-              indigo: context.getColor(ThemeEnum.glowIndigo),
-              cyan: context.getColor(ThemeEnum.glowCyan),
-              dot: context.getColor(ThemeEnum.dotGrid),
-              dotSpacing: 13.r,
-            ),
-          ),
-        ),
+        // Positioned.fill(
+        //   child: CustomPaint(
+        //     size: Size.infinite,
+        //     painter: _AuroraPainter(
+        //       base: context.getColor(ThemeEnum.primary),
+        //       indigo: context.getColor(ThemeEnum.glowIndigo),
+        //       cyan: context.getColor(ThemeEnum.glowCyan),
+        //       dot: context.getColor(ThemeEnum.dotGrid),
+        //       dotSpacing: 13.r,
+        //     ),
+        //   ),
+        // ),
         if (child != null) child!,
       ],
     );
@@ -205,12 +195,12 @@ class _AuroraPainter extends CustomPainter {
     _band(canvas, full, cyan,
         center: Offset(size.width * 0.82, size.height * 1.06), radius: size.width * 0.42);
 
-    final dotPaint = Paint()..color = dot;
-    for (double y = 0; y <= size.height; y += dotSpacing) {
-      for (double x = 0; x <= size.width; x += dotSpacing) {
-        canvas.drawCircle(Offset(x, y), 0.9, dotPaint);
-      }
-    }
+    // final dotPaint = Paint()..color = dot;
+    // for (double y = 0; y <= size.height; y += dotSpacing) {
+    //   for (double x = 0; x <= size.width; x += dotSpacing) {
+    //     canvas.drawCircle(Offset(x, y), 0.9, dotPaint);
+    //   }
+    // }
   }
 
   void _band(Canvas canvas, Rect area, Color color, {required Offset center, required double radius}) {
@@ -230,20 +220,6 @@ class _AuroraPainter extends CustomPainter {
       old.cyan != cyan ||
       old.dot != dot ||
       old.dotSpacing != dotSpacing;
-}
-
-/// Colour-saturation matrix for [ColorFilter.matrix] — `1.0` is unchanged.
-List<double> _saturationMatrix(double s) {
-  const lumR = 0.213, lumG = 0.715, lumB = 0.072;
-  final sr = (1 - s) * lumR;
-  final sg = (1 - s) * lumG;
-  final sb = (1 - s) * lumB;
-  return [
-    sr + s, sg, sb, 0, 0, //
-    sr, sg + s, sb, 0, 0, //
-    sr, sg, sb + s, 0, 0, //
-    0, 0, 0, 1, 0, //
-  ];
 }
 
 class AlgorithmGlassCard extends StatelessWidget {

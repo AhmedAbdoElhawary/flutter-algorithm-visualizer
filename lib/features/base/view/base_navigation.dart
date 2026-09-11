@@ -1,3 +1,4 @@
+import 'package:algorithm_visualizer/core/helpers/constants.dart';
 import 'package:algorithm_visualizer/core/resources/dimensions_manager.dart';
 import 'package:algorithm_visualizer/core/resources/strings_manager.dart';
 import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
@@ -18,19 +19,17 @@ class MainNavigationShell extends StatelessWidget {
     // The nav is a real child in the layout flow — not a stack overlay, not a
     // transparent-body bottom bar. Content lives in the flexible slot, clipped
     // so an overflowing child clips instead of painting over the nav.
-    return Scaffold(
-      backgroundColor: context.getColor(ThemeEnum.primary),
+    return Material(
       // The shell owns the ground for the tabbed screens so the nav floats over
       // the aurora. It stays static — only Home drifts, from its own ground.
-      body: Stack(
+      child: Stack(
         alignment: AlignmentDirectional.bottomCenter,
         children: [
-          SafeArea(
-            child: Padding(
-              padding: REdgeInsets.only(bottom: 10),
-              child: navigationShell,
-            ),
-          ),
+          AuroraGround(
+              child: Padding(
+            padding: REdgeInsets.only(bottom: kBottomPageSpacing),
+            child: SafeArea(bottom: false,child: navigationShell),
+          )),
           _AuroraNavBar(navigationShell: navigationShell),
         ],
       ),

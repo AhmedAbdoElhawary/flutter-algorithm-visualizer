@@ -47,6 +47,8 @@ dev_dependencies:
   #   DEV/STAGING ribbon on the base icon before flutter_launcher_icons runs
   flutter_launcher_icons: ^0.14.4
   image: ^4.5.4
+  integration_test:
+    sdk: flutter
 
 flutter:
   uses-material-design: true
