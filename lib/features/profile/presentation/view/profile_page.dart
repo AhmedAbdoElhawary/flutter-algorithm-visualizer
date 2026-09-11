@@ -1,4 +1,4 @@
-import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
+import 'package:algorithm_visualizer/core/helpers/constants.dart';
 import 'package:algorithm_visualizer/features/profile/presentation/widgets/profile_category_chart.dart';
 import 'package:algorithm_visualizer/features/profile/presentation/widgets/profile_difficulty_progress.dart';
 import 'package:algorithm_visualizer/features/profile/presentation/widgets/profile_header.dart';
@@ -16,9 +16,8 @@ class ProfileScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return Scaffold(
-      backgroundColor: context.getColor(ThemeEnum.primary),
-      body: SafeArea(
+    return Material(
+      child: SafeArea(
         child: SingleChildScrollView(
           padding: REdgeInsets.only(bottom: 24),
           child: Column(
@@ -33,6 +32,7 @@ class ProfileScreen extends ConsumerWidget {
               ProfileCategoryChart(),
               ProfilePracticeHistory(),
               ProfileLogoutCard(),
+              RSizedBox(height: kBottomPageSpacing)
             ],
           ),
         ),
