@@ -1,11 +1,23 @@
 import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
+import 'package:algorithm_visualizer/core/widgets/custom_widgets/aurora_chips.dart';
 import 'package:algorithm_visualizer/features/challenge/domain/enums/problem.dart';
 import 'package:flutter/material.dart';
 
 class ProblemStyle {
   const ProblemStyle._();
 
-  static ThemeEnum difficultyCodeDescriptionColor(ProblemDifficulty difficulty) {
+  /// Maps the domain difficulty onto the chip's semantic level ([ChipDifficulty]
+  /// has no `none` — callers treat null as the neutral / "All" case).
+  static ChipDifficulty? chipDifficulty(ProblemDifficulty difficulty) =>
+      switch (difficulty) {
+        ProblemDifficulty.easy => ChipDifficulty.easy,
+        ProblemDifficulty.medium => ChipDifficulty.medium,
+        ProblemDifficulty.hard => ChipDifficulty.hard,
+        ProblemDifficulty.none => null,
+      };
+
+  static ThemeEnum difficultyCodeDescriptionColor(
+      ProblemDifficulty difficulty) {
     switch (difficulty) {
       case ProblemDifficulty.easy:
         return ThemeEnum.accentGreen;
@@ -38,7 +50,7 @@ class ProblemStyle {
       case ProblemStatus.attempted:
         return (ThemeEnum.accentYellowRc, Icons.error_outline_rounded);
       default:
-        return (ThemeEnum.hoverSecond, Icons.radio_button_unchecked_rounded);
+        return (ThemeEnum.white2DarkColor, Icons.radio_button_unchecked_rounded);
     }
   }
 }
