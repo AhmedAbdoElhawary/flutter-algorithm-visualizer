@@ -45,6 +45,13 @@ enum ThemeEnum {
   primaryRing,
   onPrimary,
 
+  /// Quiet: generic progress-bar track + solid chip fills
+  track,
+  chipEasyFill,
+  chipMediumFill,
+  chipHardFill,
+  chipNeutralFill,
+
   /// Feedback
   onError,
   errorRing,
@@ -200,6 +207,12 @@ extension ThemeExtension on BuildContext {
       ThemeEnum.primaryTint: _pick(ColorManager.cdPrimaryTintDk, ColorManager.cdPrimaryTintLt),
       ThemeEnum.primaryRing: _pick(ColorManager.cdPrimaryRingDk, ColorManager.cdPrimaryRingLt),
       ThemeEnum.onPrimary: _pick(ColorManager.cdOnPrimaryDk, ColorManager.cdOnPrimaryLt),
+
+      ThemeEnum.track: _pick(ColorManager.cdTrackDk, ColorManager.cdTrackLt),
+      ThemeEnum.chipEasyFill: _pick(ColorManager.cdChipEasyFillDk, ColorManager.cdChipEasyFillLt),
+      ThemeEnum.chipMediumFill: _pick(ColorManager.cdChipMediumFillDk, ColorManager.cdChipMediumFillLt),
+      ThemeEnum.chipHardFill: _pick(ColorManager.cdChipHardFillDk, ColorManager.cdChipHardFillLt),
+      ThemeEnum.chipNeutralFill: _pick(ColorManager.cdChipNeutralFillDk, ColorManager.cdChipNeutralFillLt),
 
       ThemeEnum.onError: _pick(ColorManager.cdOnErrorDk, ColorManager.cdOnErrorLt),
       ThemeEnum.errorRing: _pick(ColorManager.cdErrorRingDk, ColorManager.cdErrorRingLt),
