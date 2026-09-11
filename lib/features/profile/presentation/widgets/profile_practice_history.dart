@@ -1,11 +1,12 @@
 import 'package:algorithm_visualizer/config/routes/route_app.dart';
 import 'package:algorithm_visualizer/core/extensions/navigators.dart';
-import 'package:algorithm_visualizer/core/resources/font_manager.dart';
 import 'package:algorithm_visualizer/core/resources/strings_manager.dart';
 import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
 import 'package:algorithm_visualizer/core/widgets/adaptive/padding/adaptive_padding.dart';
 import 'package:algorithm_visualizer/core/widgets/adaptive/text/adaptive_text.dart';
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/custom_icon.dart';
+import 'package:algorithm_visualizer/core/widgets/custom_widgets/section_header.dart';
+import 'package:algorithm_visualizer/core/widgets/custom_widgets/surface_card.dart';
 import 'package:algorithm_visualizer/features/challenge/domain/enums/problem.dart';
 import 'package:algorithm_visualizer/features/profile/presentation/entities/practice_history_entry.dart';
 import 'package:algorithm_visualizer/features/profile/presentation/view_model/statistics/profile_statistics_provider.dart';
@@ -29,13 +30,9 @@ class ProfilePracticeHistory extends ConsumerWidget {
 
     return HorizontalPadding(
       padding: 16,
-      child: Container(
-        decoration: BoxDecoration(
-          color: context.getColor(ThemeEnum.card),
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: context.getColor(ThemeEnum.border)),
-        ),
-        clipBehavior: Clip.hardEdge,
+      child: SurfaceCard(
+        padding: EdgeInsets.zero,
+        clip: true,
         child: Column(children: [
           const _HeaderOfCard(),
           ...preview.map((entry) => PracticeHistoryRow(entry: entry)),
@@ -53,9 +50,7 @@ class _HeaderOfCard extends StatelessWidget {
     return Padding(
       padding: REdgeInsets.fromLTRB(14, 14, 14, 10),
       child: Row(children: [
-        const BoldText(StringsManager.practiceHistory,
-            color: ThemeEnum.textSecond, fontSize: 13, fontWeight: FontWeightManager.bold800),
-        const Spacer(),
+        const Expanded(child: SectionHeader(title: StringsManager.practiceHistory)),
         GestureDetector(
           onTap: () => context.pushTo(Routes.recentSubmissions),
           child: const Row(children: [
@@ -116,7 +111,7 @@ class _PracticeHistoryRowState extends State<PracticeHistoryRow> with SingleTick
     final submissionsText = entry.attempts.length > 1
         ? StringsManager.submissions.toLowerCase()
         : StringsManager.submission.toLowerCase();
-    return ProblemRow(
+    return PracticeHistoryProblemRow(
       addTopBorder: !widget.isFullPage,
       problemName: entry.problemName,
       difficulty: entry.difficulty,
@@ -147,12 +142,8 @@ class _PracticeHistoryRowState extends State<PracticeHistoryRow> with SingleTick
                     width: double.infinity,
                     margin: REdgeInsetsDirectional.only(
                         bottom: 10, start: widget.isFullPage ? 37 : 50, end: widget.isFullPage ? 5 : 20),
+                    child: SurfaceCard(
                     padding: REdgeInsets.symmetric(vertical: 10, horizontal: 10),
-                    decoration: BoxDecoration(
-                      color: context.getColor(ThemeEnum.mainCard),
-                      borderRadius: BorderRadius.circular(10),
-                      border: Border.all(color: context.getColor(ThemeEnum.border)),
-                    ),
                     child: Column(
                       children: [
                         const Row(
@@ -193,7 +184,8 @@ class _PracticeHistoryRowState extends State<PracticeHistoryRow> with SingleTick
                     ),
                   ),
                 ),
-              )
+              ),
+            )
             : const SizedBox.shrink(),
       ),
     );
@@ -205,8 +197,8 @@ class _PracticeHistoryRowState extends State<PracticeHistoryRow> with SingleTick
   }
 }
 
-class ProblemRow extends StatefulWidget {
-  const ProblemRow({
+class PracticeHistoryProblemRow extends StatefulWidget {
+  const PracticeHistoryProblemRow({
     super.key,
     this.addTopBorder = false,
     required this.onTapTitle,
@@ -229,10 +221,10 @@ class ProblemRow extends StatefulWidget {
   final ProblemDifficulty difficulty;
   final bool isCorrect;
   @override
-  State<ProblemRow> createState() => _ProblemRowState();
+  State<PracticeHistoryProblemRow> createState() => _ProblemRowState();
 }
 
-class _ProblemRowState extends State<ProblemRow> with SingleTickerProviderStateMixin {
+class _ProblemRowState extends State<PracticeHistoryProblemRow> with SingleTickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     return InkWell(

@@ -2,7 +2,9 @@ import 'package:algorithm_visualizer/core/resources/strings_manager.dart';
 import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
 import 'package:algorithm_visualizer/core/widgets/adaptive/padding/adaptive_padding.dart';
 import 'package:algorithm_visualizer/core/widgets/adaptive/text/adaptive_text.dart';
-import 'package:algorithm_visualizer/core/widgets/custom_widgets/glass_card.dart';
+import 'package:algorithm_visualizer/core/widgets/custom_widgets/bar_chart_quiet.dart';
+import 'package:algorithm_visualizer/core/widgets/custom_widgets/section_header.dart';
+import 'package:algorithm_visualizer/core/widgets/custom_widgets/surface_card.dart';
 import 'package:algorithm_visualizer/features/profile/presentation/view_model/statistics/profile_statistics_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -23,20 +25,11 @@ class ProfileWeeklyChart extends ConsumerWidget {
       startPadding: 16,
       endPadding: 16,
       bottomPadding: 14,
-      child: GlassContainer(
-        depth: GlassDepth.card,
-        borderRadius: 20,
+      child: SurfaceCard(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-              const BoldText(StringsManager.thisWeek, color: ThemeEnum.textSecond, fontSize: 14),
-              SemiBoldText(
-                '$total ${StringsManager.solvedLabel}',
-                color: ThemeEnum.accent,
-                fontSize: 12,
-              ),
-            ]),
+            SectionHeader(title: StringsManager.thisWeek, trailing: '$total ${StringsManager.solvedLabel}'),
             const RSizedBox(height: 12),
             RSizedBox(
               height: 90,
@@ -60,12 +53,10 @@ class ProfileWeeklyChart extends ConsumerWidget {
                               color: ThemeEnum.textSecond,
                             ),
                           const RSizedBox(height: 4),
-                          Container(
+                          QuietBar(
+                            width: double.infinity,
                             height: (50.r * fraction).clamp(4.0, 50.0),
-                            decoration: BoxDecoration(
-                              color: context.getColor(isToday ? ThemeEnum.accentGreen : ThemeEnum.barIdle),
-                              borderRadius: BorderRadius.circular(4.r),
-                            ),
+                            fill: isToday ? ThemeEnum.difficultyEasy : ThemeEnum.barIdle,
                           ),
                           const RSizedBox(height: 6),
                           RegularText(
