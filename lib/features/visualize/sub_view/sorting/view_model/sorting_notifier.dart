@@ -21,8 +21,14 @@ class _SortSnapshot {
 
 abstract class SortingNotifier extends Notifier<SortingNotifierState>
     implements AlgorithmDescriptionNotifier, AlgorithmControlInterface {
+  /// Test-only: when set, [build] uses this fixed list instead of a random
+  /// shuffle, so widget/golden tests get a deterministic initial bar order.
+  /// Always null in production — nothing outside tests ever sets it.
+  @visibleForTesting
+  static List<SortableItem>? debugInitialListOverride;
+
   static SortingNotifierState initState({List<SortableItem>? initialList}) {
-    final list = initialList ?? _generateList(_defaultSize);
+    final list = initialList ?? debugInitialListOverride ?? _generateList(_defaultSize);
     final positions = _computeInitialPositions(list, _defaultSize);
     return SortingNotifierState(list: list, positions: positions);
   }
@@ -42,7 +48,7 @@ abstract class SortingNotifier extends Notifier<SortingNotifierState>
 
   /// The single element the algorithm is *holding* (pivot / insertion key /
   /// selection minimum) — white, per the Aurora chart state model.
-  static const ThemeEnum temporaryColor = ThemeEnum.primary;
+  static const ThemeEnum temporaryColor = ThemeEnum.focus;
 
   /// todo: add this feature that use dynamic size
   static const int _defaultSize = 10;

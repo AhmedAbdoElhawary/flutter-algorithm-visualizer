@@ -43,34 +43,31 @@ class _ProblemPageState extends ConsumerState<ProblemPage> {
 
     final problem = ref.watch(getProblemProvider(problemId).select((a) => a.value));
 
-    return Material(
-      child: problem == null
-          ? const Center(child: MediumText(StringsManager.noChallengeSelected, color: ThemeEnum.textSecond))
-          : Stack(
-              children: [
-                ListView(
-                  padding: REdgeInsets.fromLTRB(16, 4, 16, 120),
-                  children: [
-                    _Header(problem: problem),
-                    const RSizedBox(height: 13),
-                    _TabBar(active: _tab, onChanged: (t) => setState(() => _tab = t)),
-                    const RSizedBox(height: 13),
-                    ..._tabContent(problem),
-                    const RSizedBox(height: kBottomPageSpacing),
-                  ],
-                ),
-                _PinnedCta(
-                  onSolve: () {
-                    /// TODO: move to new editor page
-                    // context.pushTo(
-                    // Routes.code,
-                    // queryParameters: "${problem.getProblemId}",
-                    // );
-                  },
-                ),
-              ],
-            ),
-    );
+    return problem == null
+        ? const Center(child: MediumText(StringsManager.noChallengeSelected, color: ThemeEnum.textSecond))
+        : Stack(
+            children: [
+              ListView(
+                padding: REdgeInsets.fromLTRB(16, 4, 16, 120),
+                children: [
+                  _Header(problem: problem),
+                  const RSizedBox(height: 13),
+                  _TabBar(active: _tab, onChanged: (t) => setState(() => _tab = t)),
+                  const RSizedBox(height: 13),
+                  ..._tabContent(problem),
+                ],
+              ),
+              _PinnedCta(
+                onSolve: () {
+                  /// TODO: move to new editor page
+                  // context.pushTo(
+                  // Routes.code,
+                  // queryParameters: "${problem.getProblemId}",
+                  // );
+                },
+              ),
+            ],
+          );
   }
 
   List<Widget> _tabContent(CodingProblem problem) {

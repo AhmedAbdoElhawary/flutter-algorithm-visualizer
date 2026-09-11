@@ -96,9 +96,9 @@ abstract final class ColorManager {
   /// The glass material — one recipe, three depths. Fill + blur carry the depth.
   static const glassRecessedFill100DK = Color.fromRGBO(9, 10, 15, 1); // white 4%
   static const cdGlassRecessedFillDk = Color(0x06ffffff); // white 4%
-  static const cdGlassCardFillDk = Color(0x0EFFFFFF); // white 5.5%
+  static const cdGlassCardFillDk = Color.fromRGBO(18, 19, 25, 1); // white 5.5%
   static const cdGlassCardFill2Dk = Color.fromRGBO(22, 24, 32, 0.803921568627451); // white 5.5%
-  static const cdGlassFloatingFillDk = Color(0x1AFFFFFF); // white 10%
+  static const cdGlassFloatingFillDk =  Color.fromRGBO(18, 19, 25, 1); // white 10%
   static const cdGlassSheenRecessedDk = Color(0x1AFFFFFF); // white 10%
   static const cdGlassSheenCardDk = Color(0x29FFFFFF); // white 16%
   static const cdGlassSheenFloatingDk = Color(0x3DFFFFFF); // white 24%

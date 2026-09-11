@@ -71,95 +71,93 @@ class _VisualizePageState extends State<VisualizePage> {
   Widget build(BuildContext context) {
     final (sortingCard, searchingCard) = getCards();
 
-    return Material(
-      child: CustomScrollView(
-        // physics: const NeverScrollableScrollPhysics(),
-        slivers: [
-          SliverAppBar(
-            centerTitle: false,
-            forceMaterialTransparency: true,
-            titleSpacing: 0,
-            leadingWidth: 16.r,
-            leading: const SizedBox(),
-            title: ValueListenableBuilder(
-              valueListenable: title,
-              builder: (context, titleValue, child) => ValueListenableBuilder(
-                valueListenable: description,
-                builder: (context, descriptionValue, child) =>
-                    AlgorithmTitle(title: titleValue, description: descriptionValue),
-              ),
+    return CustomScrollView(
+      // physics: const NeverScrollableScrollPhysics(),
+      slivers: [
+        SliverAppBar(
+          centerTitle: false,
+          forceMaterialTransparency: true,
+          titleSpacing: 0,
+          leadingWidth: 16.r,
+          leading: const SizedBox(),
+          title: ValueListenableBuilder(
+            valueListenable: title,
+            builder: (context, titleValue, child) => ValueListenableBuilder(
+              valueListenable: description,
+              builder: (context, descriptionValue, child) =>
+                  AlgorithmTitle(title: titleValue, description: descriptionValue),
             ),
           ),
-          SliverToBoxAdapter(
-            child: Padding(
-              padding: REdgeInsets.only(left: 16, right: 16,bottom: 10),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: InkWell(
-                      onTap: () {
-                        setState(() {
-                          tabView = 0;
-                          this.sortingCard = SortingAlgoCards.bubble;
-                          this.searchingCard = null;
-                        });
-                      },
-                      child: AlgoTab(
-                        isSelected: tabView == 0,
-                        addEndPadding: false,
-                        label: StringsManager.sorting,
-                        verticalPadding: 3,
-                        icon: Icons.filter_list_rounded,
-                      ),
+        ),
+        SliverToBoxAdapter(
+          child: Padding(
+            padding: REdgeInsets.only(left: 16, right: 16,bottom: 10),
+            child: Row(
+              children: [
+                Expanded(
+                  child: InkWell(
+                    onTap: () {
+                      setState(() {
+                        tabView = 0;
+                        this.sortingCard = SortingAlgoCards.bubble;
+                        this.searchingCard = null;
+                      });
+                    },
+                    child: AlgoTab(
+                      isSelected: tabView == 0,
+                      addEndPadding: false,
+                      label: StringsManager.sorting,
+                      verticalPadding: 3,
+                      icon: Icons.filter_list_rounded,
                     ),
                   ),
-                  const RSizedBox(width: 10),
-                  Expanded(
-                    child: InkWell(
-                      onTap: () {
-                        setState(() {
-                          tabView = 1;
-                          this.sortingCard = null;
-                          this.searchingCard = SearchingAlgoCards.bfs;
-                        });
-                      },
-                      child: AlgoTab(
-                        isSelected: tabView == 1,
-                        addEndPadding: false,
-                        label: StringsManager.searching,
-                        verticalPadding: 3,
-                        icon: Icons.map_rounded,
-                      ),
+                ),
+                const RSizedBox(width: 10),
+                Expanded(
+                  child: InkWell(
+                    onTap: () {
+                      setState(() {
+                        tabView = 1;
+                        this.sortingCard = null;
+                        this.searchingCard = SearchingAlgoCards.bfs;
+                      });
+                    },
+                    child: AlgoTab(
+                      isSelected: tabView == 1,
+                      addEndPadding: false,
+                      label: StringsManager.searching,
+                      verticalPadding: 3,
+                      icon: Icons.map_rounded,
                     ),
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
-          SliverFillRemaining(
-              child: tabView == 0 && sortingCard != null
-                  ? SortingView(
-                      card: sortingCard,
-                      onAlgoChanged: (title, description) {
-                        WidgetsBinding.instance.addPostFrameCallback((_) {
-                          this.title.value = title;
-                          this.description.value = description;
-                        });
-                      },
-                    )
-                  : searchingCard != null
-                      ? SearchingView(
-                          card: searchingCard,
-                          onAlgoChanged: (title, description) {
-                            WidgetsBinding.instance.addPostFrameCallback((_) {
-                              this.title.value = title;
-                              this.description.value = description;
-                            });
-                          },
-                        )
-                      : const UnknownView()),
-        ],
-      ),
+        ),
+        SliverFillRemaining(
+            child: tabView == 0 && sortingCard != null
+                ? SortingView(
+              card: sortingCard,
+              onAlgoChanged: (title, description) {
+                WidgetsBinding.instance.addPostFrameCallback((_) {
+                  this.title.value = title;
+                  this.description.value = description;
+                });
+              },
+            )
+                : searchingCard != null
+                ? SearchingView(
+              card: searchingCard,
+              onAlgoChanged: (title, description) {
+                WidgetsBinding.instance.addPostFrameCallback((_) {
+                  this.title.value = title;
+                  this.description.value = description;
+                });
+              },
+            )
+                : const UnknownView()),
+      ],
     );
   }
 }
