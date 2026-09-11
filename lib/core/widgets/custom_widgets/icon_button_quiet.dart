@@ -14,6 +14,10 @@ class IconButtonQuiet extends StatelessWidget {
   final double iconSize;
   final bool filled;
 
+  /// Semantic override for the icon's own ink role (e.g. the destructive
+  /// "log out" row) — a [ThemeEnum] role, never a raw `Color`.
+  final ThemeEnum? iconColor;
+
   const IconButtonQuiet({
     super.key,
     required this.icon,
@@ -21,6 +25,7 @@ class IconButtonQuiet extends StatelessWidget {
     this.size = 32,
     this.iconSize = 16,
     this.filled = false,
+    this.iconColor,
   });
 
   @override
@@ -42,9 +47,8 @@ class IconButtonQuiet extends StatelessWidget {
           size: iconSize,
           color: filled
               ? ThemeEnum.onPrimary
-              : disabled
-                  ? ThemeEnum.textDisabled
-                  : ThemeEnum.textBody,
+              : iconColor ??
+                  (disabled ? ThemeEnum.textDisabled : ThemeEnum.textBody),
         ),
       ),
     );
