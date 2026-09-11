@@ -71,13 +71,13 @@ class _VisualizePageState extends State<VisualizePage> {
   Widget build(BuildContext context) {
     final (sortingCard, searchingCard) = getCards();
 
-    return Scaffold(
-      body: CustomScrollView(
-        physics: const NeverScrollableScrollPhysics(),
+    return Material(
+      child: CustomScrollView(
+        // physics: const NeverScrollableScrollPhysics(),
         slivers: [
           SliverAppBar(
-            pinned: true,
             centerTitle: false,
+            forceMaterialTransparency: true,
             titleSpacing: 0,
             leadingWidth: 16.r,
             leading: const SizedBox(),
