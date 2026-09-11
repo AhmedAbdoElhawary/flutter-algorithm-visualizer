@@ -38,18 +38,6 @@ class GlassContainer extends StatelessWidget {
     this.onTap,
   });
 
-  double get _blur => switch (depth) {
-        GlassDepth.recessed => CdBlur.recessed,
-        GlassDepth.card => CdBlur.card,
-        GlassDepth.floating => CdBlur.floating,
-      };
-
-  double get _saturation => switch (depth) {
-        GlassDepth.recessed => 1.3,
-        GlassDepth.card => 1.4,
-        GlassDepth.floating => 1.5,
-      };
-
   ThemeEnum get _fill => switch (depth) {
         GlassDepth.recessed => ThemeEnum.glassRecessedFill,
         GlassDepth.card => fillCardTheme,
@@ -60,12 +48,6 @@ class GlassContainer extends StatelessWidget {
         GlassDepth.recessed => ThemeEnum.glassHairlineRecessed,
         GlassDepth.card => ThemeEnum.border,
         GlassDepth.floating => ThemeEnum.borderStrong,
-      };
-
-  List<BoxShadow> _shadow(BuildContext context) => switch (depth) {
-        GlassDepth.recessed => const [],
-        GlassDepth.card => context.isThemeDark ? CdElevation.e2 : context.cardShadow,
-        GlassDepth.floating => context.isThemeDark ? CdElevation.e3 : context.cardShadow,
       };
 
   @override
@@ -96,22 +78,15 @@ class GlassContainer extends StatelessWidget {
             child: child,
           );
 
-    // Shadow sits outside the clip.
-    final result = DecoratedBox(
-      decoration: BoxDecoration(borderRadius: radius, boxShadow: _shadow(context)),
-      child: surface,
-    );
-
-    if (onTap == null) return result;
-    return GestureDetector(onTap: onTap, child: result);
+    if (onTap == null) return surface;
+    return GestureDetector(onTap: onTap, child: surface);
   }
 }
 
 /// The recessed-track variant — progress-bar fills, segmented-control and
 /// chip-row backgrounds. The reference draws these rails at white 10–13%
-/// ([ThemeEnum.primaryTint]), not the 4% recessed-glass fill, and a blurred
-/// sub-surface inside a glass card is a needless [BackdropFilter] nest, so this
-/// is a plain clipped fill with no blur, sheen, or shadow.
+/// ([ThemeEnum.primaryTint]), not the 4% recessed-glass fill: a plain clipped
+/// fill with no blur, sheen, or shadow.
 class GlassTrack extends StatelessWidget {
   final Widget child;
   final double? height;
@@ -152,74 +127,10 @@ class AuroraGround extends StatelessWidget {
     return Stack(
       fit: StackFit.expand,
       children: [
-        // Positioned.fill(
-        //   child: CustomPaint(
-        //     size: Size.infinite,
-        //     painter: _AuroraPainter(
-        //       base: context.getColor(ThemeEnum.primary),
-        //       indigo: context.getColor(ThemeEnum.glowIndigo),
-        //       cyan: context.getColor(ThemeEnum.glowCyan),
-        //       dot: context.getColor(ThemeEnum.dotGrid),
-        //       dotSpacing: 13.r,
-        //     ),
-        //   ),
-        // ),
         if (child != null) child!,
       ],
     );
   }
-}
-
-class _AuroraPainter extends CustomPainter {
-  final Color base;
-  final Color indigo;
-  final Color cyan;
-  final Color dot;
-  final double dotSpacing;
-
-  const _AuroraPainter({
-    required this.base,
-    required this.indigo,
-    required this.cyan,
-    required this.dot,
-    required this.dotSpacing,
-  });
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    final full = Offset.zero & size;
-    canvas.drawRect(full, Paint()..color = base);
-
-    _band(canvas, full, indigo,
-        center: Offset(size.width * 0.5, size.height * 1.12), radius: size.width * 0.66);
-    _band(canvas, full, cyan,
-        center: Offset(size.width * 0.82, size.height * 1.06), radius: size.width * 0.42);
-
-    // final dotPaint = Paint()..color = dot;
-    // for (double y = 0; y <= size.height; y += dotSpacing) {
-    //   for (double x = 0; x <= size.width; x += dotSpacing) {
-    //     canvas.drawCircle(Offset(x, y), 0.9, dotPaint);
-    //   }
-    // }
-  }
-
-  void _band(Canvas canvas, Rect area, Color color, {required Offset center, required double radius}) {
-    final rect = Rect.fromCircle(center: center, radius: radius);
-    canvas.drawRect(
-      area,
-      Paint()
-        ..shader = RadialGradient(colors: [color, color.withValues(alpha: 0)]).createShader(rect)
-        ..maskFilter = const MaskFilter.blur(BlurStyle.normal, CdBlur.groundMask),
-    );
-  }
-
-  @override
-  bool shouldRepaint(_AuroraPainter old) =>
-      old.base != base ||
-      old.indigo != indigo ||
-      old.cyan != cyan ||
-      old.dot != dot ||
-      old.dotSpacing != dotSpacing;
 }
 
 class AlgorithmGlassCard extends StatelessWidget {

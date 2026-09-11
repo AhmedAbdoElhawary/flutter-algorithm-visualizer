@@ -92,12 +92,6 @@ class _AuthTextFieldState extends State<AuthTextField> {
             ? ThemeEnum.primaryHover
             : ThemeEnum.textDisabled;
 
-    final ringColor = hasError
-        ? context.getColor(ThemeEnum.errorRing)
-        : _focused
-            ? context.getColor(ThemeEnum.primaryRing)
-            : null;
-
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -114,9 +108,6 @@ class _AuthTextFieldState extends State<AuthTextField> {
             color: context.getColor(ThemeEnum.card),
             borderRadius: BorderRadius.circular(CdRadius.md.r),
             border: Border.all(color: context.getColor(borderColor)),
-            boxShadow: ringColor == null
-                ? null
-                : [BoxShadow(color: ringColor, spreadRadius: 3.r, blurRadius: 0)],
           ),
           child: SymmetricPadding(
             horizontal: 14,

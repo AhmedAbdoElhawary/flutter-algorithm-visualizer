@@ -56,7 +56,6 @@ class _AuroraPrimaryButtonState extends State<AuroraPrimaryButton> {
           decoration: BoxDecoration(
             color: context.getColor(bg),
             borderRadius: BorderRadius.circular(CdRadius.md.r),
-            boxShadow: disabled ? null : context.cdGlow,
           ),
           child: Center(
             child: widget.isLoading
@@ -138,14 +137,7 @@ class BottomCtaBar extends StatelessWidget {
     final base = context.getColor(ThemeEnum.primary);
     return Container(
       padding: REdgeInsets.fromLTRB(16, 24, 16, 12),
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-          colors: [base.withValues(alpha: 0), base.withValues(alpha: 0.96)],
-          stops: const [0, 0.4],
-        ),
-      ),
+      decoration: BoxDecoration(color: base),
       child: child,
     );
   }

@@ -42,7 +42,6 @@ class ChallengesFilterTabs extends ConsumerWidget {
                       color: active
                           ? context.getColor(color).withValues(alpha: 0.35)
                           : context.getColor(ThemeEnum.border)),
-                  boxShadow: context.cardShadow,
                 ),
                 child: Row(
                   mainAxisSize: MainAxisSize.min,

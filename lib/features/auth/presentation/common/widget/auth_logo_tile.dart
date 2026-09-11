@@ -19,7 +19,6 @@ class AuthLogoTile extends StatelessWidget {
       decoration: BoxDecoration(
         color: context.getColor(ThemeEnum.accent),
         borderRadius: BorderRadius.circular(CdRadius.lg.r),
-        boxShadow: context.cdGlow,
       ),
       child: CustomPaint(
         size: Size(32.r, 32.r),
