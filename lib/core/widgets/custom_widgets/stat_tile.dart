@@ -1,3 +1,4 @@
+import 'package:algorithm_visualizer/core/resources/dimensions_manager.dart';
 import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
 import 'package:algorithm_visualizer/core/widgets/adaptive/text/adaptive_text.dart';
 import 'package:flutter/material.dart';
@@ -29,7 +30,7 @@ class StatTile extends StatelessWidget {
     return Container(
       padding: REdgeInsets.symmetric(horizontal: 12, vertical: 12),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(14.r),
+        borderRadius: BorderRadius.circular(CdRadius.md.r),
         border: Border.all(
           color: context.getColor(emphasized ? ThemeEnum.borderStrong : ThemeEnum.borderSubtle),
         ),

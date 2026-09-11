@@ -105,7 +105,7 @@ class AlgorithmGlassCard extends StatelessWidget {
             width: 30.r,
             height: 30.r,
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(10.r),
+              borderRadius: BorderRadius.circular(CdRadius.smAlt.r),
               color: context.getColor(ThemeEnum.chipNeutralFill),
               border: Border.all(color: context.getColor(ThemeEnum.borderSubtle)),
             ),

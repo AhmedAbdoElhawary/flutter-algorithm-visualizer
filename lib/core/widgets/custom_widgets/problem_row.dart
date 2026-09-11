@@ -1,3 +1,4 @@
+import 'package:algorithm_visualizer/core/resources/dimensions_manager.dart';
 import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -27,7 +28,7 @@ class ProblemRow extends StatelessWidget {
       padding: padding,
       decoration: BoxDecoration(
         color: context.getColor(ThemeEnum.mainCard),
-        borderRadius: BorderRadius.circular(14.r),
+        borderRadius: BorderRadius.circular(CdRadius.md.r),
         border: Border.all(
           color: context.getColor(selected ? ThemeEnum.borderStrong : ThemeEnum.borderSubtle),
         ),
