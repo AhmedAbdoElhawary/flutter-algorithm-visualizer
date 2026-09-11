@@ -85,13 +85,11 @@ class GlassContainer extends StatelessWidget {
 
 class AlgorithmGlassCard extends StatelessWidget {
   final AlgorithmComplexity algoComplexity;
-  final Color color;
   final IconData icon;
 
   const AlgorithmGlassCard({
     super.key,
     required this.algoComplexity,
-    required this.color,
     required this.icon,
   });
 
@@ -107,15 +105,13 @@ class AlgorithmGlassCard extends StatelessWidget {
             width: 30.r,
             height: 30.r,
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(10),
-              color: color.withValues(alpha: .14),
-              border: Border.all(
-                color: color.withValues(alpha: .24),
-              ),
+              borderRadius: BorderRadius.circular(10.r),
+              color: context.getColor(ThemeEnum.chipNeutralFill),
+              border: Border.all(color: context.getColor(ThemeEnum.borderSubtle)),
             ),
-            child: Icon(
+            child: CustomIcon(
               icon,
-              color: color,
+              color: ThemeEnum.textBody,
               size: 20,
             ),
           ),
