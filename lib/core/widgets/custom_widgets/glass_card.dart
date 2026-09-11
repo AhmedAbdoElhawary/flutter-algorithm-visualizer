@@ -83,56 +83,6 @@ class GlassContainer extends StatelessWidget {
   }
 }
 
-/// The recessed-track variant — progress-bar fills, segmented-control and
-/// chip-row backgrounds. The reference draws these rails at white 10–13%
-/// ([ThemeEnum.primaryTint]), not the 4% recessed-glass fill: a plain clipped
-/// fill with no blur, sheen, or shadow.
-class GlassTrack extends StatelessWidget {
-  final Widget child;
-  final double? height;
-  final double borderRadius;
-
-  const GlassTrack({
-    super.key,
-    required this.child,
-    this.height,
-    this.borderRadius = CdRadius.pill,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(borderRadius.r),
-      child: Container(
-        height: height?.r,
-        color: context.getColor(ThemeEnum.primaryTint),
-        child: child,
-      ),
-    );
-  }
-}
-
-/// The ground. Paints, bottom to top: the base colour, a radial indigo band
-/// rising from the bottom edge, a smaller cyan band, then a dot grid, then the
-/// child. Static by default — pass [animate] only on Home, and it still yields
-/// to the OS "reduce motion" setting.
-class AuroraGround extends StatelessWidget {
-  final Widget? child;
-
-  const AuroraGround({super.key, this.child});
-
-  @override
-  Widget build(BuildContext context) {
-
-    return Stack(
-      fit: StackFit.expand,
-      children: [
-        if (child != null) child!,
-      ],
-    );
-  }
-}
-
 class AlgorithmGlassCard extends StatelessWidget {
   final AlgorithmComplexity algoComplexity;
   final Color color;
@@ -210,41 +160,3 @@ class AlgorithmGlassCard extends StatelessWidget {
   }
 }
 
-class SimpleControllerGlassButton extends StatelessWidget {
-  final VoidCallback? onTap;
-  final String? messageTip;
-  final Widget child;
-  final GlassDepth depth;
-  final EdgeInsetsGeometry padding;
-  const SimpleControllerGlassButton({
-    super.key,
-    required this.child,
-    this.depth = GlassDepth.card,
-    this.padding = const EdgeInsets.all(10),
-    this.onTap,
-    this.messageTip,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final button = GestureDetector(
-      onTap: onTap,
-      child: GlassContainer(
-        depth: depth,
-        borderRadius: 12,
-        padding: padding,
-        child: child,
-      ),
-    );
-    return messageTip != null ? Tooltip(message: messageTip!, child: button) : button;
-  }
-}
-
-/// Deprecated alias — the old three-orb backdrop is gone. Kept so its remaining
-/// call sites keep compiling until they move to [AuroraGround] directly.
-class AnimatedBackground extends StatelessWidget {
-  const AnimatedBackground({super.key});
-
-  @override
-  Widget build(BuildContext context) => const AuroraGround();
-}

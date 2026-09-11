@@ -122,7 +122,7 @@ changed).
 - [X] T039 [US2] Refactor `lib/features/auth/presentation/forgot_password/view/forgot_password_page.dart` to call `PrimaryButtonQuiet` (T022). Same acceptance criterion as above.
 - [X] T040 [US2] Refactor `lib/features/auth/presentation/reset_password/view/reset_password_page.dart` to call `PrimaryButtonQuiet` (T022). Same acceptance criterion as above.
 - [X] T041 [US2] Refactor the logout confirmation dialog (`lib/core/widgets/custom_widgets/confirmation_dialog_card.dart`, triggered from `lib/features/profile/presentation/widgets/profile_logout_card.dart`) to call `SurfaceCard` (T011)/`PrimaryButtonQuiet`/`SecondaryButtonQuiet` (T022/T023) at dialog radius 18. Same acceptance criterion as above.
-- [ ] T042 [US1] Refactor `lib/features/challenge/presentation/view/celebration_page.dart` to call `StatTile` (T014), `SurfaceCard` (T011), `QuietProgressBar` (T015), `PrimaryButtonQuiet`/`SecondaryButtonQuiet` (T022/T023), `BottomCtaBar` (T024) — keep its entrance-sequence and ring/pop animations, wired to reduce-motion per FR-019. Same acceptance criterion as above.
+- [X] T042 [US1] Refactor `lib/features/challenge/presentation/view/celebration_page.dart` to call `StatTile` (T014), `SurfaceCard` (T011), `QuietProgressBar` (T015), `PrimaryButtonQuiet`/`SecondaryButtonQuiet` (T022/T023), `BottomCtaBar` (T024) — keep its entrance-sequence and ring/pop animations, wired to reduce-motion per FR-019. Same acceptance criterion as above.
 
 **Checkpoint**: every screen file's diff against `develop` is a decoration-for-shared-widget swap only.
 
