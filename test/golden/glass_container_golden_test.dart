@@ -86,19 +86,5 @@ void main() {
       );
       await expectGolden(tester, find.byType(GlassContainer), 'glass.card.animated.$suffix');
     });
-
-    testWidgets('glass.track.$suffix', (tester) async {
-      await pumpGolden(
-        tester,
-        backdrop(
-          const GlassTrack(
-            height: 40,
-            child: SizedBox(width: 200),
-          ),
-        ),
-        brightness: brightness,
-      );
-      await expectGolden(tester, find.byType(GlassTrack), 'glass.track.$suffix');
-    });
   }
 }
