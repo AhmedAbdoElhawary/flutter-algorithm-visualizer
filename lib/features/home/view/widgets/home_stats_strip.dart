@@ -1,12 +1,9 @@
 import 'package:algorithm_visualizer/core/resources/strings_manager.dart';
-import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
 import 'package:algorithm_visualizer/core/widgets/adaptive/padding/adaptive_padding.dart';
-import 'package:algorithm_visualizer/core/widgets/adaptive/text/adaptive_text.dart';
-import 'package:algorithm_visualizer/core/widgets/custom_widgets/glass_card.dart';
+import 'package:algorithm_visualizer/core/widgets/custom_widgets/stat_tile.dart';
 import 'package:algorithm_visualizer/features/profile/presentation/view_model/statistics/profile_statistics_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class HomeStatsStrip extends ConsumerWidget {
   const HomeStatsStrip({super.key});
@@ -20,25 +17,21 @@ class HomeStatsStrip extends ConsumerWidget {
         icon: Icons.local_fire_department_rounded,
         value: '${stats.currentStreak}',
         label: StringsManager.streak,
-        background: ThemeEnum.accentXpText
       ),
       (
         icon: Icons.check_circle_outline_rounded,
         value: '${stats.solvedCount}',
         label: StringsManager.solved,
-        background: ThemeEnum.accentGreen
       ),
       (
         icon: Icons.gps_fixed_rounded,
         value: '${(stats.accuracyRate * 100).round()}%',
         label: StringsManager.accuracy,
-        background: ThemeEnum.accent
       ),
       (
         icon: Icons.trending_up_rounded,
         value: '${stats.totalAttempts}',
         label: StringsManager.attempts,
-        background: ThemeEnum.accentBlue
       ),
     ];
 
@@ -50,30 +43,7 @@ class HomeStatsStrip extends ConsumerWidget {
         spacing: 10,
         children: items.map((s) {
           return Expanded(
-            child: GlassContainer(
-              depth: GlassDepth.card,
-              borderRadius: 20,
-              padding: REdgeInsets.symmetric(vertical: 12, horizontal: 8),
-              child: Column(
-                children: [
-                  Icon(s.icon, size: 18.r, color: context.getColor(s.background)),
-                  SizedBox(height: 4.h),
-                  BoldText(
-                    s.value,
-                    fontSize: 17,
-                    color: ThemeEnum.textPrimary,
-                    letterSpacing: -0.5,
-                  ),
-                  SizedBox(height: 2.h),
-                  MediumText(
-                    s.label,
-                    fontSize: 10,
-                    color: ThemeEnum.textSecond,
-                    textAlign: TextAlign.center,
-                  ),
-                ],
-              ),
-            ),
+            child: StatTile(icon: s.icon, value: s.value, label: s.label),
           );
         }).toList(),
       ),

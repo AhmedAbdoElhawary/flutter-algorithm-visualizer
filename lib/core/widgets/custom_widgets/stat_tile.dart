@@ -11,8 +11,15 @@ class StatTile extends StatelessWidget {
   final String label;
   final String value;
   final bool emphasized;
+  final IconData? icon;
 
-  const StatTile({super.key, required this.label, required this.value, this.emphasized = false});
+  const StatTile({
+    super.key,
+    required this.label,
+    required this.value,
+    this.emphasized = false,
+    this.icon,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -25,12 +32,16 @@ class StatTile extends StatelessWidget {
         ),
       ),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: icon == null ? CrossAxisAlignment.start : CrossAxisAlignment.center,
         mainAxisSize: MainAxisSize.min,
         children: [
+          if (icon != null) ...[
+            Icon(icon, size: 18.r, color: context.getColor(ThemeEnum.textBody)),
+            RSizedBox(height: 4),
+          ],
           SemiBoldText(value, fontSize: 19, color: emphasized ? ThemeEnum.textBright : ThemeEnum.textPrimary),
           RSizedBox(height: 4),
-          RegularText(label, fontSize: 10, color: ThemeEnum.textSecond),
+          RegularText(label, fontSize: 10, color: ThemeEnum.textSecond, textAlign: TextAlign.center),
         ],
       ),
     );
