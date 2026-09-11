@@ -52,11 +52,11 @@ class _ActivityTile extends StatelessWidget {
     final timeAgo = _formatTimeAgo(item.submittedAt);
 
     return GestureDetector(
-      onTap: () => context.pushTo(Routes.code, queryParameters: '${item.problemId}'),
-      child: Container(
-        margin: REdgeInsets.only(bottom: 8),
+      onTap: () => context.pushTo(Routes.problem, queryParameters: '${item.problemId}'),
+      child: GlassContainer(
+        depth: GlassDepth.card,
+        borderRadius: 20,
         padding: REdgeInsets.symmetric(horizontal: 14, vertical: 10),
-        decoration: SimpleGlassButton.cardDecoration(context),
         child: Row(
           children: [
             Container(
