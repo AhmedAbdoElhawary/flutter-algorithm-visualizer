@@ -149,7 +149,7 @@ abstract final class ColorManager {
 
   static const cdTextPrimaryLt = Color(0xFF101114);
   static const cdTextBodyLt = Color(0xFF4A4F5A);
-  static const cdTextSecondaryLt = Color(0xFF6A7387);
+  static const cdTextSecondaryLt = Color(0xFF667080); // T054: darkened from 6A7387 — 4.5:1 vs bgRaisedLt
   static const cdTextDisabledLt = Color(0xFFA0A5AE);
 
   static const cdSuccessLt = Color(0xFF11704E);
