@@ -106,16 +106,19 @@ class _ShimmerBoxState extends State<_ShimmerBox> with SingleTickerProviderState
 
   @override
   Widget build(BuildContext context) {
-    return FadeTransition(
-      opacity: _animation,
-      child: Container(
-        width: widget.width?.r,
-        height: widget.height?.r,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(CdRadius.tiny.r),
-          color: context.getColor(ThemeEnum.primaryTint),
-        ),
+    final box = Container(
+      width: widget.width?.r,
+      height: widget.height?.r,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(CdRadius.tiny.r),
+        color: context.getColor(ThemeEnum.primaryTint),
       ),
     );
+
+    if (MediaQuery.disableAnimationsOf(context)) {
+      return Opacity(opacity: 0.65, child: box);
+    }
+
+    return FadeTransition(opacity: _animation, child: box);
   }
 }
