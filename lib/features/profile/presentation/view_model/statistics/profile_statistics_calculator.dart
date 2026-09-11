@@ -234,8 +234,10 @@ class ProfileStatisticsCalculator {
         data[i] = 1;
       } else if (count <= 5) {
         data[i] = 2;
-      } else {
+      } else if (count <= 9) {
         data[i] = 3;
+      } else {
+        data[i] = 4;
       }
     }
 
