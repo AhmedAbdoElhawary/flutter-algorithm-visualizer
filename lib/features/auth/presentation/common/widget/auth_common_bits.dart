@@ -1,7 +1,7 @@
 import 'package:algorithm_visualizer/config/routes/route_app.dart';
 import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
 import 'package:algorithm_visualizer/core/widgets/adaptive/text/adaptive_text.dart';
-import 'package:algorithm_visualizer/features/auth/presentation/common/widget/auth_back_button.dart';
+import 'package:algorithm_visualizer/core/widgets/custom_widgets/aurora_buttons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
@@ -48,9 +48,9 @@ class AuthEyebrowRow extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        AuthBackButton(onPressed: onBack),
+        CustomBackButton(onTap: onBack),
         SizedBox(width: 12.w),
-        SemiBoldText(label, color: ThemeEnum.textSecond, fontSize: 11, letterSpacing: 1.2, maxLines: 1),
+        SemiBoldText(label, color: ThemeEnum.textSecond, fontSize: 12, letterSpacing: 1.2, maxLines: 1),
       ],
     );
   }
