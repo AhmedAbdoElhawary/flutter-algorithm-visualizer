@@ -4,6 +4,7 @@ import 'package:algorithm_visualizer/core/resources/strings_manager.dart';
 import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
 import 'package:algorithm_visualizer/core/widgets/adaptive/padding/adaptive_padding.dart';
 import 'package:algorithm_visualizer/core/widgets/adaptive/text/adaptive_text.dart';
+import 'package:algorithm_visualizer/core/widgets/custom_widgets/glass_card.dart';
 import 'package:algorithm_visualizer/features/challenge/domain/entities/coding_problem.dart';
 import 'package:algorithm_visualizer/features/challenge/domain/enums/problem.dart';
 import 'package:algorithm_visualizer/features/challenge/presentation/helper/problem_style.dart';
@@ -28,30 +29,18 @@ class HomeContinueCard extends ConsumerWidget {
       startPadding: 16,
       endPadding: 16,
       bottomPadding: 14,
-      child: GestureDetector(
-        onTap: () => context.pushTo(Routes.code, queryParameters: '${problem.getProblemId}'),
-        child: Container(
-          padding: REdgeInsets.all(16),
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: [
-                context.getColor(ThemeEnum.accent).withValues(alpha: 0.16),
-                context.getColor(ThemeEnum.accent).withValues(alpha: 0.04),
-              ],
-            ),
-            borderRadius: BorderRadius.circular(20.r),
-            border: Border.all(color: context.getColor(ThemeEnum.accent).withValues(alpha: 0.28)),
-            boxShadow: context.cardShadow,
-          ),
-          child: Row(
+      child: GlassContainer(
+        depth: GlassDepth.card,
+        borderRadius: 20,
+        padding: REdgeInsets.all(16),
+        onTap: () => context.pushTo(Routes.problem, queryParameters: '${problem.getProblemId}'),
+        child: Row(
             children: [
               Container(
                 width: 48.w,
                 height: 48.w,
                 decoration: BoxDecoration(
-                  color: context.getColor(ThemeEnum.accent),
+                  color: context.getColor(ThemeEnum.accentXp),
                   borderRadius: BorderRadius.circular(14.r),
                 ),
                 child: Icon(Icons.play_arrow_rounded, color: context.getColor(ThemeEnum.onPrimary), size: 24.r),
@@ -87,7 +76,6 @@ class HomeContinueCard extends ConsumerWidget {
               Icon(Icons.chevron_right_rounded, color: context.getColor(ThemeEnum.textSecond), size: 20.r),
             ],
           ),
-        ),
       ),
     );
   }
