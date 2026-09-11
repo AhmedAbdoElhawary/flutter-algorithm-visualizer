@@ -4,8 +4,9 @@ import 'package:algorithm_visualizer/core/resources/dimensions_manager.dart';
 import 'package:algorithm_visualizer/core/resources/strings_manager.dart';
 import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
 import 'package:algorithm_visualizer/core/widgets/adaptive/text/adaptive_text.dart';
+import 'package:algorithm_visualizer/core/widgets/custom_widgets/bar_chart_quiet.dart';
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/custom_icon.dart';
-import 'package:algorithm_visualizer/core/widgets/custom_widgets/glass_card.dart';
+import 'package:algorithm_visualizer/core/widgets/custom_widgets/problem_row.dart';
 import 'package:algorithm_visualizer/features/challenge/domain/enums/problem.dart';
 import 'package:algorithm_visualizer/features/profile/presentation/entities/practice_history_entry.dart';
 import 'package:flutter/material.dart';
@@ -34,6 +35,13 @@ class _HistoryRowState extends State<HistoryRow> {
         ProblemDifficulty.none => ThemeEnum.textSecond,
       };
 
+  ThemeEnum get _badgeFill => switch (widget.entry.difficulty) {
+        ProblemDifficulty.easy => ThemeEnum.chipEasyFill,
+        ProblemDifficulty.medium => ThemeEnum.chipMediumFill,
+        ProblemDifficulty.hard => ThemeEnum.chipHardFill,
+        ProblemDifficulty.none => ThemeEnum.chipNeutralFill,
+      };
+
   String get _initial => switch (widget.entry.difficulty) {
         ProblemDifficulty.easy => 'E',
         ProblemDifficulty.medium => 'M',
@@ -44,14 +52,11 @@ class _HistoryRowState extends State<HistoryRow> {
   @override
   Widget build(BuildContext context) {
     final entry = widget.entry;
-    final hue = context.getColor(_difficultyRole);
     final count = entry.attempts.length;
     final unit =
         count == 1 ? StringsManager.submission : StringsManager.submissions;
 
-    return GlassContainer(
-      depth: GlassDepth.card,
-      borderRadius: CdRadius.lg,
+    return ProblemRow(
       padding: REdgeInsets.symmetric(horizontal: 15, vertical: 14),
       onTap: () => setState(() => _expanded = !_expanded),
       child: Column(
@@ -65,7 +70,7 @@ class _HistoryRowState extends State<HistoryRow> {
                 height: 28.r,
                 alignment: Alignment.center,
                 decoration: BoxDecoration(
-                  color: hue.withValues(alpha: 0.13),
+                  color: context.getColor(_badgeFill),
                   borderRadius: BorderRadius.circular(CdRadius.sm.r),
                 ),
                 child:
@@ -111,7 +116,7 @@ class _HistoryRowState extends State<HistoryRow> {
           const RSizedBox(height: 12),
           Padding(
             padding: REdgeInsetsDirectional.only(start: 39),
-            child: _AttemptStrip(count: count, color: hue),
+            child: _AttemptStrip(count: count, fill: _difficultyRole),
           ),
           AnimatedSize(
             duration: CdMotion.expand,
@@ -136,23 +141,19 @@ class _HistoryRowState extends State<HistoryRow> {
 }
 
 class _AttemptStrip extends StatelessWidget {
-  const _AttemptStrip({required this.count, required this.color});
+  const _AttemptStrip({required this.count, required this.fill});
 
   final int count;
-  final Color color;
+  final ThemeEnum fill;
 
   @override
   Widget build(BuildContext context) {
     return Row(
       children: List.generate(count, (i) {
         return Expanded(
-          child: Container(
-            height: 4.r,
-            margin: REdgeInsetsDirectional.only(end: i == count - 1 ? 0 : 4),
-            decoration: BoxDecoration(
-              color: color.withValues(alpha: 0.5),
-              borderRadius: BorderRadius.circular(CdRadius.pill.r),
-            ),
+          child: Padding(
+            padding: EdgeInsetsDirectional.only(end: i == count - 1 ? 0 : 4.w),
+            child: QuietBar(width: double.infinity, height: 4.r, fill: fill),
           ),
         );
       }),
