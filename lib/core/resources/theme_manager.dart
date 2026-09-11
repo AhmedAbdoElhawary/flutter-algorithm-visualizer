@@ -30,9 +30,6 @@ enum ThemeEnum {
   /// Surfaces
   bgRaised,
   surfaceAlt,
-
-  /// Brass-tinted card — streak / XP surfaces only
-  surfaceWarm,
   borderSubtle,
   borderStrong,
 
@@ -40,9 +37,6 @@ enum ThemeEnum {
   textBody,
   textDisabled,
   textBright,
-
-  /// Auth background wash (one of the two sanctioned gradients)
-  authWash,
 
   /// Interactive (brass — the only interactive colour)
   primaryHover,
@@ -67,9 +61,13 @@ enum ThemeEnum {
 
   /// Visualizer bar states
   barIdle,
+  barExcluded,
   barCompare,
   barSwap,
   barDone,
+
+  /// "currently comparing" — cyan, the same mark everywhere (bars, live dot)
+  comparing,
 
   /// Code syntax
   codeBg,
@@ -82,11 +80,35 @@ enum ThemeEnum {
   codeNumber,
   codeComment,
 
-  /// Activity heat ramp (low → high)
+  /// Activity heat ramp (low → high) — five steps
   heat0,
   heat1,
   heat2,
   heat3,
+  heat4,
+
+  /// The aurora — dim indigo/cyan bands + dot grid on the ground
+  glowIndigo,
+  glowCyan,
+  dotGrid,
+
+  /// Accent marks only (focus, key-bar label, small azure marks)
+  accentViolet,
+  accentAzure,
+
+  /// Bottom-nav inactive item
+  navInactive,
+
+  /// The glass material — fill / sheen per depth; recessed hairline
+  glassRecessedFill,
+  glassRecessedFill100,
+  glassCardFill,
+  glassCardFill2,
+  glassFloatingFill,
+  glassSheenRecessed,
+  glassSheenCard,
+  glassSheenFloating,
+  glassHairlineRecessed,
 
   /// static colors
   solidWhite,
@@ -166,14 +188,12 @@ extension ThemeExtension on BuildContext {
       /// ---- CoreDive semantic tokens ---->
       ThemeEnum.bgRaised: _pick(ColorManager.cdBgRaisedDk, ColorManager.cdBgRaisedLt),
       ThemeEnum.surfaceAlt: _pick(ColorManager.cdSurfaceAltDk, ColorManager.cdSurfaceAltLt),
-      ThemeEnum.surfaceWarm: _pick(ColorManager.cdSurfaceWarmDk, ColorManager.cdSurfaceWarmLt),
       ThemeEnum.borderSubtle: _pick(ColorManager.cdBorderSubtleDk, ColorManager.cdBorderSubtleLt),
       ThemeEnum.borderStrong: _pick(ColorManager.cdBorderStrongDk, ColorManager.cdBorderStrongLt),
 
       ThemeEnum.textBody: _pick(ColorManager.cdTextBodyDk, ColorManager.cdTextBodyLt),
       ThemeEnum.textDisabled: _pick(ColorManager.cdTextDisabledDk, ColorManager.cdTextDisabledLt),
       ThemeEnum.textBright: _pick(ColorManager.cdTextBrightDk, ColorManager.cdTextBrightLt),
-      ThemeEnum.authWash: _pick(ColorManager.cdAuthWashDk, ColorManager.cdAuthWashLt),
 
       ThemeEnum.primaryHover: _pick(ColorManager.cdPrimaryHoverDk, ColorManager.cdPrimaryHoverLt),
       ThemeEnum.primaryPress: _pick(ColorManager.cdPrimaryPressDk, ColorManager.cdPrimaryPressLt),
@@ -193,9 +213,11 @@ extension ThemeExtension on BuildContext {
       ThemeEnum.difficultyHard: _pick(ColorManager.cdErrorDk, ColorManager.cdErrorLt),
 
       ThemeEnum.barIdle: _pick(ColorManager.cdBarIdleDk, ColorManager.cdBarIdleLt),
+      ThemeEnum.barExcluded: _pick(ColorManager.cdBarExcludedDk, ColorManager.cdBarExcludedLt),
       ThemeEnum.barCompare: _pick(ColorManager.cdBarCompareDk, ColorManager.cdBarCompareLt),
       ThemeEnum.barSwap: _pick(ColorManager.cdBarSwapDk, ColorManager.cdBarSwapLt),
       ThemeEnum.barDone: _pick(ColorManager.cdBarDoneDk, ColorManager.cdBarDoneLt),
+      ThemeEnum.comparing: _pick(ColorManager.cdComparingDk, ColorManager.cdComparingLt),
 
       ThemeEnum.codeBg: _pick(ColorManager.cdBgRaisedDk, ColorManager.cdBgRaisedLt),
       ThemeEnum.codeGutter: _pick(ColorManager.cdCodeGutterDk, ColorManager.cdCodeGutterLt),
@@ -211,6 +233,26 @@ extension ThemeExtension on BuildContext {
       ThemeEnum.heat1: _pick(ColorManager.cdHeatDk[1], ColorManager.cdHeatLt[1]),
       ThemeEnum.heat2: _pick(ColorManager.cdHeatDk[2], ColorManager.cdHeatLt[2]),
       ThemeEnum.heat3: _pick(ColorManager.cdHeatDk[3], ColorManager.cdHeatLt[3]),
+      ThemeEnum.heat4: _pick(ColorManager.cdHeatDk[4], ColorManager.cdHeatLt[4]),
+
+      ThemeEnum.glowIndigo: _pick(ColorManager.cdGlowIndigoDk, ColorManager.cdGlowIndigoLt),
+      ThemeEnum.glowCyan: _pick(ColorManager.cdGlowCyanDk, ColorManager.cdGlowCyanLt),
+      ThemeEnum.dotGrid: _pick(ColorManager.cdDotGridDk, ColorManager.cdDotGridLt),
+
+      ThemeEnum.accentViolet: _pick(ColorManager.cdAccentVioletDk, ColorManager.cdAccentVioletLt),
+      ThemeEnum.accentAzure: _pick(ColorManager.cdAccentAzureDk, ColorManager.cdAccentAzureLt),
+
+      ThemeEnum.navInactive: _pick(ColorManager.cdNavInactiveDk, ColorManager.cdNavInactiveLt),
+
+      ThemeEnum.glassRecessedFill: _pick(ColorManager.cdGlassRecessedFillDk, ColorManager.cdGlassRecessedFillLt),
+      ThemeEnum.glassRecessedFill100: _pick(ColorManager.glassRecessedFill100DK, ColorManager.cdGlassRecessedFillLt),
+      ThemeEnum.glassCardFill: _pick(ColorManager.cdGlassCardFillDk, ColorManager.cdGlassCardFillLt),
+      ThemeEnum.glassCardFill2: _pick(ColorManager.cdGlassCardFill2Dk, ColorManager.cdGlassCardFill2Lt),
+      ThemeEnum.glassFloatingFill: _pick(ColorManager.cdGlassFloatingFillDk, ColorManager.cdGlassFloatingFillLt),
+      ThemeEnum.glassSheenRecessed: _pick(ColorManager.cdGlassSheenRecessedDk, ColorManager.cdGlassSheenRecessedLt),
+      ThemeEnum.glassSheenCard: _pick(ColorManager.cdGlassSheenCardDk, ColorManager.cdGlassSheenCardLt),
+      ThemeEnum.glassSheenFloating: _pick(ColorManager.cdGlassSheenFloatingDk, ColorManager.cdGlassSheenFloatingLt),
+      ThemeEnum.glassHairlineRecessed: _pick(ColorManager.cdGlassHairlineRecessedDk, ColorManager.cdGlassHairlineRecessedLt),
 
       ///-------------------->
       ThemeEnum.solidWhite: ColorManager.white,
