@@ -53,7 +53,6 @@ class BaseViewModel {
           ),
           card: AlgorithmGlassCard(
             algoComplexity: BubbleSortNotifier.algorithmComplexity,
-            color: const Color(0xFF5B9CF6),
             icon: Icons.auto_graph,
           ),
         );
@@ -66,7 +65,6 @@ class BaseViewModel {
           ),
           card: AlgorithmGlassCard(
             algoComplexity: SelectionSortNotifier.algorithmComplexity,
-            color: const Color(0xFF26A69A),
             icon: Icons.select_all,
           ),
         );
@@ -79,7 +77,6 @@ class BaseViewModel {
           ),
           card: AlgorithmGlassCard(
             algoComplexity: InsertionSortNotifier.algorithmComplexity,
-            color: const Color(0xFF5C6BC0),
             icon: Icons.insert_drive_file,
           ),
         );
@@ -92,7 +89,6 @@ class BaseViewModel {
           ),
           card: AlgorithmGlassCard(
             algoComplexity: MergeSortNotifier.algorithmComplexity,
-            color: const Color(0xFF9CCC65),
             icon: Icons.merge_type,
           ),
         );
@@ -105,7 +101,6 @@ class BaseViewModel {
           ),
           card: AlgorithmGlassCard(
             algoComplexity: QuickSortNotifier.algorithmComplexity,
-            color: const Color(0xFFF7C246),
             icon: Icons.waves,
           ),
         );
@@ -118,7 +113,6 @@ class BaseViewModel {
           ),
           card: AlgorithmGlassCard(
             algoComplexity: HeapSortNotifier.algorithmComplexity,
-            color: const Color(0xFFE67E22),
             icon: Icons.wifi_tethering,
           ),
         );
@@ -131,7 +125,6 @@ class BaseViewModel {
           ),
           card: AlgorithmGlassCard(
             algoComplexity: ShellSortNotifier.algorithmComplexity,
-            color: const Color(0xFF26A69A),
             icon: Icons.blur_linear,
           ),
         );
@@ -144,7 +137,6 @@ class BaseViewModel {
           ),
           card: AlgorithmGlassCard(
             algoComplexity: RadixSortNotifier.algorithmComplexity,
-            color: const Color(0xFF5C6BC0),
             icon: Icons.pin,
           ),
         );
@@ -157,7 +149,6 @@ class BaseViewModel {
           ),
           card: AlgorithmGlassCard(
             algoComplexity: CountingSortNotifier.algorithmComplexity,
-            color: const Color(0xFF26C6DA),
             icon: Icons.format_list_numbered,
           ),
         );
@@ -170,7 +161,6 @@ class BaseViewModel {
           ),
           card: AlgorithmGlassCard(
             algoComplexity: BucketSortNotifier.algorithmComplexity,
-            color: const Color(0xFFFF7043),
             icon: Icons.inventory_2,
           ),
         );
@@ -185,7 +175,6 @@ class BaseViewModel {
           title: StringsManager.bFS,
           card: AlgorithmGlassCard(
             algoComplexity: BFSSearchingNotifier.algorithmComplexity,
-            color: const Color(0xFF5B9CF6),
             icon: Icons.location_searching_rounded,
           ),
         ),
@@ -195,7 +184,6 @@ class BaseViewModel {
           title: StringsManager.dFS,
           card: AlgorithmGlassCard(
             algoComplexity: DFSSearchingNotifier.algorithmComplexity,
-            color: const Color(0xFFFFA726),
             icon: Icons.search_off_rounded,
           ),
         ),
@@ -205,7 +193,6 @@ class BaseViewModel {
           instance: NotifierProvider<SearchingNotifier, SearchingState>(() => AStarSearchingNotifier()),
           card: AlgorithmGlassCard(
             algoComplexity: AStarSearchingNotifier.algorithmComplexity,
-            color: const Color(0xFF66BB6A),
             icon: Icons.find_replace_rounded,
           ),
         )
