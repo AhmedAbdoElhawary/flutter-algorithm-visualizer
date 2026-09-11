@@ -3,6 +3,7 @@ import 'package:algorithm_visualizer/core/resources/styles_manager.dart';
 import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
 import 'package:algorithm_visualizer/core/widgets/adaptive/padding/adaptive_padding.dart';
 import 'package:algorithm_visualizer/core/widgets/adaptive/text/adaptive_text.dart';
+import 'package:algorithm_visualizer/core/widgets/custom_widgets/glass_card.dart';
 import 'package:algorithm_visualizer/features/profile/presentation/view_model/statistics/profile_statistics_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -20,32 +21,26 @@ class ProfileDifficultyProgress extends ConsumerWidget {
         label: StringsManager.easy,
         solved: stats.easySolved,
         total: stats.easyTotal,
-        color: ThemeEnum.accentGreen
+      color: ThemeEnum.accentGreen
       ),
       (
         label: StringsManager.medium,
         solved: stats.mediumSolved,
         total: stats.mediumTotal,
-        color: ThemeEnum.accentYellow
+      color: ThemeEnum.accentYellow
       ),
       (
         label: StringsManager.hard,
         solved: stats.hardSolved,
         total: stats.hardTotal,
-        color: ThemeEnum.accentRed
+      color: ThemeEnum.accentRed
       ),
     ];
-
     return HorizontalPadding(
       padding: 16,
-      child: Container(
-        padding: REdgeInsets.all(14),
-        decoration: BoxDecoration(
-          color: context.getColor(ThemeEnum.card),
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: context.getColor(ThemeEnum.border)),
-          boxShadow: context.cardShadow,
-        ),
+      child: GlassContainer(
+        depth: GlassDepth.card,
+        borderRadius: 20,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
