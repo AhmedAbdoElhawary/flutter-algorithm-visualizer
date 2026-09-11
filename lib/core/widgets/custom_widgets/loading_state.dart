@@ -1,3 +1,4 @@
+import 'package:algorithm_visualizer/core/resources/dimensions_manager.dart';
 import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -36,7 +37,7 @@ class ProblemTileShimmer extends StatelessWidget {
       child: Container(
         decoration: BoxDecoration(
           color: context.getColor(ThemeEnum.card),
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(CdRadius.medium.r),
           border: Border.all(color: context.getColor(ThemeEnum.border)),
         ),
         clipBehavior: Clip.hardEdge,
@@ -111,7 +112,7 @@ class _ShimmerBoxState extends State<_ShimmerBox> with SingleTickerProviderState
         width: widget.width?.r,
         height: widget.height?.r,
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(3.r),
+          borderRadius: BorderRadius.circular(CdRadius.tiny.r),
           color: context.getColor(ThemeEnum.primaryTint),
         ),
       ),

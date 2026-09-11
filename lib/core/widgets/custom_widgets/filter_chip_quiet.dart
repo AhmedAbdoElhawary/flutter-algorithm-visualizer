@@ -1,3 +1,4 @@
+import 'package:algorithm_visualizer/core/resources/dimensions_manager.dart';
 import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
 import 'package:algorithm_visualizer/core/widgets/adaptive/text/adaptive_text.dart';
 import 'package:flutter/material.dart';
@@ -29,7 +30,7 @@ class FilterChipQuiet extends StatelessWidget {
         padding: REdgeInsets.symmetric(horizontal: 10, vertical: 7),
         decoration: BoxDecoration(
           color: selected ? context.getColor(ThemeEnum.primaryTint) : null,
-          borderRadius: BorderRadius.circular(999.r),
+          borderRadius: BorderRadius.circular(CdRadius.pill.r),
           border: selected ? null : Border.all(color: context.getColor(ThemeEnum.borderSubtle)),
         ),
         child: Row(

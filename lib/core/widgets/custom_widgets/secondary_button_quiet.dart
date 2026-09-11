@@ -1,3 +1,4 @@
+import 'package:algorithm_visualizer/core/resources/dimensions_manager.dart';
 import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
 import 'package:algorithm_visualizer/core/widgets/adaptive/text/adaptive_text.dart';
 import 'package:flutter/material.dart';
@@ -26,7 +27,7 @@ class SecondaryButtonQuiet extends StatelessWidget {
         padding: REdgeInsets.symmetric(vertical: 14),
         alignment: Alignment.center,
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(14.r),
+          borderRadius: BorderRadius.circular(CdRadius.md.r),
           border: Border.all(color: context.getColor(ThemeEnum.borderStrong)),
         ),
         child: SemiBoldText(label, color: ThemeEnum.textPrimary, fontSize: 13.5),

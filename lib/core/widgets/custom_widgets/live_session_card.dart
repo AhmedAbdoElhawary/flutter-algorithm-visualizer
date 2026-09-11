@@ -1,3 +1,4 @@
+import 'package:algorithm_visualizer/core/resources/dimensions_manager.dart';
 import 'package:algorithm_visualizer/core/resources/font_manager.dart';
 import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
 import 'package:algorithm_visualizer/core/widgets/adaptive/text/adaptive_text.dart';
@@ -172,7 +173,7 @@ class _PauseSquare extends StatelessWidget {
       alignment: Alignment.center,
       decoration: BoxDecoration(
         color: context.getColor(ThemeEnum.textBright),
-        borderRadius: BorderRadius.circular(8.r),
+        borderRadius: BorderRadius.circular(CdRadius.xs.r),
       ),
       child: Icon(
         playing ? Icons.pause_rounded : Icons.play_arrow_rounded,

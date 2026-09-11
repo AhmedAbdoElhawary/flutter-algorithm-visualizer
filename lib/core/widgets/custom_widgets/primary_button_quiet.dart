@@ -1,3 +1,4 @@
+import 'package:algorithm_visualizer/core/resources/dimensions_manager.dart';
 import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
 import 'package:algorithm_visualizer/core/widgets/adaptive/text/adaptive_text.dart';
 import 'package:flutter/material.dart';
@@ -30,7 +31,7 @@ class PrimaryButtonQuiet extends StatelessWidget {
         alignment: Alignment.center,
         decoration: BoxDecoration(
           color: context.getColor(ThemeEnum.textBright),
-          borderRadius: BorderRadius.circular(14.r),
+          borderRadius: BorderRadius.circular(CdRadius.md.r),
         ),
         child: loading
             ? SizedBox(
