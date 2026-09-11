@@ -1,3 +1,4 @@
+import 'package:algorithm_visualizer/core/resources/dimensions_manager.dart';
 import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
 import 'package:algorithm_visualizer/core/widgets/adaptive/text/adaptive_text.dart';
 import 'package:flutter/material.dart';
@@ -23,7 +24,7 @@ class SegmentedControlQuiet extends StatelessWidget {
       padding: REdgeInsets.all(3),
       decoration: BoxDecoration(
         border: Border.all(color: context.getColor(ThemeEnum.border)),
-        borderRadius: BorderRadius.circular(10.r),
+        borderRadius: BorderRadius.circular(CdRadius.smAlt.r),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
@@ -35,7 +36,7 @@ class SegmentedControlQuiet extends StatelessWidget {
               padding: REdgeInsets.symmetric(horizontal: 12, vertical: 6),
               decoration: BoxDecoration(
                 color: selected ? context.getColor(ThemeEnum.textBright) : null,
-                borderRadius: BorderRadius.circular(7.r),
+                borderRadius: BorderRadius.circular(CdRadius.segment.r),
               ),
               child: MediumText(
                 labels[i],

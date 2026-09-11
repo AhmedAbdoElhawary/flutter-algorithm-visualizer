@@ -1,3 +1,4 @@
+import 'package:algorithm_visualizer/core/resources/dimensions_manager.dart';
 import 'package:algorithm_visualizer/core/resources/strings_manager.dart';
 import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
 import 'package:algorithm_visualizer/core/widgets/adaptive/text/adaptive_text.dart';
@@ -68,7 +69,7 @@ class _HeatCell extends StatelessWidget {
       height: 11.r,
       decoration: BoxDecoration(
         color: context.getColor(level),
-        borderRadius: BorderRadius.circular(3.r),
+        borderRadius: BorderRadius.circular(CdRadius.tiny.r),
         border: level == HeatGrid.heatLevels.first
             ? Border.all(color: context.getColor(ThemeEnum.border))
             : null,

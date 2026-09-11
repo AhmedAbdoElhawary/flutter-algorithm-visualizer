@@ -1,3 +1,4 @@
+import 'package:algorithm_visualizer/core/resources/dimensions_manager.dart';
 import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
 import 'package:algorithm_visualizer/core/widgets/adaptive/text/adaptive_text.dart';
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/custom_icon.dart';
@@ -76,12 +77,12 @@ class _AuthErrorBanner extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () => context..hideCurrentSnackBar(),
-      borderRadius: BorderRadius.circular(10.r),
+      borderRadius: BorderRadius.circular(CdRadius.smAlt.r),
       child: Container(
         padding: REdgeInsets.symmetric(horizontal: 14, vertical: 12),
         decoration: BoxDecoration(
           color: context.getColor(_fill),
-          borderRadius: BorderRadius.circular(10.r),
+          borderRadius: BorderRadius.circular(CdRadius.smAlt.r),
           border: Border.all(color: context.getColor(getColor)),
         ),
         child: Row(

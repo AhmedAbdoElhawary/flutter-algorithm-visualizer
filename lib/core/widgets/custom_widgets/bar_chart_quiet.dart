@@ -87,7 +87,7 @@ class QuietBar extends StatelessWidget {
       height: height,
       decoration: BoxDecoration(
         color: context.getColor(fill),
-        borderRadius: BorderRadius.circular(3.r),
+        borderRadius: BorderRadius.circular(CdRadius.tiny.r),
       ),
     );
   }
@@ -130,7 +130,7 @@ class _Bar extends StatelessWidget {
               height: trackHeight * fraction,
               decoration: BoxDecoration(
                 color: context.getColor(barStateRole(bar.state)),
-                borderRadius: BorderRadius.circular(3.r),
+                borderRadius: BorderRadius.circular(CdRadius.tiny.r),
               ),
             ),
           ),
