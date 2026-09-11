@@ -5,6 +5,7 @@ import 'package:algorithm_visualizer/core/widgets/adaptive/text/adaptive_text.da
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/algo_tab.dart';
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/algorithm_control.dart';
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/algorithm_status_text.dart';
+import 'package:algorithm_visualizer/core/widgets/custom_widgets/bar_chart_quiet.dart';
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/complexity_details.dart';
 import 'package:algorithm_visualizer/features/base/view_model/base_view_model.dart';
 import 'package:algorithm_visualizer/features/visualize/helper/playback_speed.dart';
@@ -324,7 +325,7 @@ class _BuildItem extends ConsumerWidget {
         ref.watch(instance.select((state) => index < state.list.length ? state.list[index] : null));
     final (actualHeight, writtenHeight) =
         SortingNotifier.calculateItemHeight(item.value, size, selectedAlgorithmLength);
-    final color = context.getColor(currentItem?.getColor ?? SortingNotifier.itemColor);
+    final fill = currentItem?.getColor ?? SortingNotifier.itemColor;
 
     // The value label reads its own state, not the bar's colour: primary for
     // compare/swap, success when locked, violet for the white "held" bar so it
@@ -349,15 +350,7 @@ class _BuildItem extends ConsumerWidget {
         const RSizedBox(height: 4),
         // Colour and height carry all meaning — no shadow, glow, gradient, or
         // opacity on the bar.
-        AnimatedContainer(
-          duration: CdMotion.barHeight,
-          width: itemWidth,
-          height: actualHeight,
-          decoration: BoxDecoration(
-            color: color,
-            borderRadius: BorderRadius.vertical(top: Radius.circular(3.r), bottom: Radius.circular(3.r)),
-          ),
-        ),
+        QuietBar(width: itemWidth, height: actualHeight, fill: fill),
       ],
     );
   }

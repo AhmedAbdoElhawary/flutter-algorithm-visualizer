@@ -65,6 +65,34 @@ class BarChartQuiet extends StatelessWidget {
   }
 }
 
+/// A single Quiet bar rectangle — the colour/radius primitive [BarChartQuiet]
+/// composes internally, exposed separately for call sites (the sorting
+/// visualizer) that drive their own per-item layout/position animation and
+/// only need the bar's fill. [fill] is the resolved [ThemeEnum] role, not a
+/// raw `Color` — the same semantic-token pattern the domain layer's own
+/// `SortableItem.getColor` already produces.
+class QuietBar extends StatelessWidget {
+  final double width;
+  final double height;
+  final ThemeEnum fill;
+
+  const QuietBar({super.key, required this.width, required this.height, required this.fill});
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedContainer(
+      duration: CdMotion.barHeight,
+      curve: CdMotion.easeOut,
+      width: width,
+      height: height,
+      decoration: BoxDecoration(
+        color: context.getColor(fill),
+        borderRadius: BorderRadius.circular(3.r),
+      ),
+    );
+  }
+}
+
 class _Bar extends StatelessWidget {
   final BarChartBar bar;
   final double trackHeight;
