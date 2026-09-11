@@ -60,13 +60,10 @@ class _ActivityTile extends StatelessWidget {
         padding: REdgeInsets.symmetric(horizontal: 14, vertical: 10),
         child: Row(
           children: [
-            Container(
-              width: 8.r,
-              height: 8.r,
-              decoration: BoxDecoration(
-                color: context.getColor(item.isCorrect ? ThemeEnum.difficultyEasy : ThemeEnum.difficultyMedium),
-                shape: BoxShape.circle,
-              ),
+            Icon(
+              Icons.circle,
+              size: 8.r,
+              color: context.getColor(item.isCorrect ? ThemeEnum.difficultyEasy : ThemeEnum.difficultyMedium),
             ),
             SizedBox(width: 10.w),
             Expanded(

@@ -118,15 +118,17 @@ class _DetailsPanel extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final isBookmarked = problem.getIsBookmarked;
 
-    return Container(
-      width: double.infinity,
-      decoration: BoxDecoration(border: Border(top: BorderSide(color: context.getColor(ThemeEnum.border)))),
-      padding: REdgeInsets.fromLTRB(14, 10, 14, 12),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          ChallengeTags(tags: problem.getTags),
-          const RSizedBox(height: 10),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Container(height: 1, color: context.getColor(ThemeEnum.border)),
+        Padding(
+          padding: REdgeInsets.fromLTRB(14, 10, 14, 12),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              ChallengeTags(tags: problem.getTags),
+              const RSizedBox(height: 10),
           Row(
             children: [
               _StatColumn(
@@ -150,8 +152,10 @@ class _DetailsPanel extends ConsumerWidget {
               SecondaryButtonQuiet(label: StringsManager.solveWithArrow, onPressed: onSolve, expand: false),
             ],
           ),
-        ],
-      ),
+            ],
+          ),
+        ),
+      ],
     );
   }
 }

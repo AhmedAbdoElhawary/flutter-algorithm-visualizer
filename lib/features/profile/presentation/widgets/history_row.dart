@@ -6,6 +6,7 @@ import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
 import 'package:algorithm_visualizer/core/widgets/adaptive/text/adaptive_text.dart';
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/bar_chart_quiet.dart';
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/custom_icon.dart';
+import 'package:algorithm_visualizer/core/widgets/custom_widgets/difficulty_chip.dart';
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/problem_row.dart';
 import 'package:algorithm_visualizer/features/challenge/domain/enums/problem.dart';
 import 'package:algorithm_visualizer/features/profile/presentation/entities/practice_history_entry.dart';
@@ -35,11 +36,11 @@ class _HistoryRowState extends State<HistoryRow> {
         ProblemDifficulty.none => ThemeEnum.textSecond,
       };
 
-  ThemeEnum get _badgeFill => switch (widget.entry.difficulty) {
-        ProblemDifficulty.easy => ThemeEnum.chipEasyFill,
-        ProblemDifficulty.medium => ThemeEnum.chipMediumFill,
-        ProblemDifficulty.hard => ThemeEnum.chipHardFill,
-        ProblemDifficulty.none => ThemeEnum.chipNeutralFill,
+  Difficulty? get _quietDifficulty => switch (widget.entry.difficulty) {
+        ProblemDifficulty.easy => Difficulty.easy,
+        ProblemDifficulty.medium => Difficulty.medium,
+        ProblemDifficulty.hard => Difficulty.hard,
+        ProblemDifficulty.none => null,
       };
 
   String get _initial => switch (widget.entry.difficulty) {
@@ -65,17 +66,7 @@ class _HistoryRowState extends State<HistoryRow> {
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Container(
-                width: 28.r,
-                height: 28.r,
-                alignment: Alignment.center,
-                decoration: BoxDecoration(
-                  color: context.getColor(_badgeFill),
-                  borderRadius: BorderRadius.circular(CdRadius.sm.r),
-                ),
-                child:
-                    BoldText(_initial, color: _difficultyRole, fontSize: 10.5),
-              ),
+              DifficultySquareBadge(difficulty: _quietDifficulty, label: _initial),
               const RSizedBox(width: 11),
               Expanded(
                 child: Column(

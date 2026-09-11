@@ -4,6 +4,7 @@ import 'package:algorithm_visualizer/core/resources/styles_manager.dart';
 import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
 import 'package:algorithm_visualizer/core/widgets/adaptive/text/adaptive_text.dart';
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/custom_icon.dart';
+import 'package:algorithm_visualizer/core/widgets/custom_widgets/surface_card.dart';
 import 'package:algorithm_visualizer/features/challenge/presentation/view_model/challenges/challenges_providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -31,13 +32,8 @@ class _ChallengesSearchFieldState extends ConsumerState<ChallengesSearchField> {
 
     return Padding(
       padding: REdgeInsets.fromLTRB(16, 0, 16, 12),
-      child: Container(
+      child: SurfaceCard(
         padding: REdgeInsets.symmetric(horizontal: 14, vertical: 10),
-        decoration: BoxDecoration(
-          color: context.getColor(ThemeEnum.card),
-          borderRadius: BorderRadius.circular(10),
-          border: Border.all(color: context.getColor(ThemeEnum.border)),
-        ),
         child: Row(
           children: [
             const CustomIcon(Icons.search_rounded, size: 16, color: ThemeEnum.hover),

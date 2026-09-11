@@ -39,11 +39,7 @@ class PFLegend extends StatelessWidget {
                   innerColor: context.getColor(ThemeEnum.difficultyEasy),
                 )
               else
-                Container(
-                  width: 10.r,
-                  height: 10.r,
-                  decoration: BoxDecoration(color: context.getColor(role), shape: BoxShape.circle),
-                ),
+                Icon(Icons.circle, size: 10.r, color: context.getColor(role)),
               const RSizedBox(width: 4),
               RegularText(label, color: ThemeEnum.textSecond, fontSize: 10),
             ]);
