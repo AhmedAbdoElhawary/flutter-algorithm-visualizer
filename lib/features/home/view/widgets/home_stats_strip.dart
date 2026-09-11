@@ -20,25 +20,25 @@ class HomeStatsStrip extends ConsumerWidget {
         icon: Icons.local_fire_department_rounded,
         value: '${stats.currentStreak}',
         label: StringsManager.streak,
-        color: ThemeEnum.accentXpText
+        background: ThemeEnum.accentXpText
       ),
       (
         icon: Icons.check_circle_outline_rounded,
         value: '${stats.solvedCount}',
         label: StringsManager.solved,
-        color: ThemeEnum.accentGreen
+        background: ThemeEnum.accentGreen
       ),
       (
         icon: Icons.gps_fixed_rounded,
         value: '${(stats.accuracyRate * 100).round()}%',
         label: StringsManager.accuracy,
-        color: ThemeEnum.accent
+        background: ThemeEnum.accent
       ),
       (
         icon: Icons.trending_up_rounded,
         value: '${stats.totalAttempts}',
         label: StringsManager.attempts,
-        color: ThemeEnum.accentBlue
+        background: ThemeEnum.accentBlue
       ),
     ];
 
@@ -47,16 +47,16 @@ class HomeStatsStrip extends ConsumerWidget {
       endPadding: 16,
       bottomPadding: 14,
       child: Row(
+        spacing: 10,
         children: items.map((s) {
-          final isLast = s == items.last;
           return Expanded(
-            child: Container(
-              margin: EdgeInsets.only(right: isLast ? 0 : 8.w),
+            child: GlassContainer(
+              depth: GlassDepth.card,
+              borderRadius: 20,
               padding: REdgeInsets.symmetric(vertical: 12, horizontal: 8),
-              decoration: SimpleGlassButton.cardDecoration(context),
               child: Column(
                 children: [
-                  Icon(s.icon, size: 18.r, color: context.getColor(s.color)),
+                  Icon(s.icon, size: 18.r, color: context.getColor(s.background)),
                   SizedBox(height: 4.h),
                   BoldText(
                     s.value,
