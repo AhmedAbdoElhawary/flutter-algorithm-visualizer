@@ -3,7 +3,8 @@ import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
 import 'package:algorithm_visualizer/core/widgets/adaptive/padding/adaptive_padding.dart';
 import 'package:algorithm_visualizer/core/widgets/adaptive/text/adaptive_text.dart';
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/custom_icon.dart';
-import 'package:algorithm_visualizer/core/widgets/custom_widgets/glass_card.dart';
+import 'package:algorithm_visualizer/core/widgets/custom_widgets/problem_row.dart';
+import 'package:algorithm_visualizer/core/widgets/custom_widgets/secondary_button_quiet.dart';
 import 'package:algorithm_visualizer/features/challenge/domain/entities/coding_problem.dart';
 import 'package:algorithm_visualizer/features/challenge/domain/enums/problem.dart';
 import 'package:algorithm_visualizer/features/challenge/presentation/helper/problem_style.dart';
@@ -32,12 +33,8 @@ class ProblemTile extends ConsumerWidget {
 
     return Padding(
       padding: REdgeInsets.only(bottom: 6),
-      child: GlassContainer(
-        // fillCardTheme: ThemeEnum.glassCardFill2,
-        depth: GlassDepth.card,
-        durationForAnimation: const Duration(milliseconds: 200),
-        borderRadius: 12,
-        allowCardTopShadow: !expanded,
+      child: ProblemRow(
+        selected: expanded,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -150,18 +147,7 @@ class _DetailsPanel extends ConsumerWidget {
                 ],
               ),
               const Spacer(),
-              GestureDetector(
-                onTap: onSolve,
-                child: Container(
-                  padding: REdgeInsets.symmetric(horizontal: 14, vertical: 7),
-                  decoration: BoxDecoration(
-                    color: context.getColor(ThemeEnum.accentBg),
-                    borderRadius: BorderRadius.circular(9),
-                    border: Border.all(color: context.getColor(ThemeEnum.borderAccent)),
-                  ),
-                  child: const BoldText(StringsManager.solveWithArrow, color: ThemeEnum.accent, fontSize: 12),
-                ),
-              ),
+              SecondaryButtonQuiet(label: StringsManager.solveWithArrow, onPressed: onSolve, expand: false),
             ],
           ),
         ],
