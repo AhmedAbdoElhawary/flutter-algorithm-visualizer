@@ -1,12 +1,15 @@
+import 'package:algorithm_visualizer/core/extensions/navigators.dart';
 import 'package:algorithm_visualizer/core/resources/dimensions_manager.dart';
 import 'package:algorithm_visualizer/core/resources/font_manager.dart';
 import 'package:algorithm_visualizer/core/resources/strings_manager.dart';
 import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
 import 'package:algorithm_visualizer/core/widgets/adaptive/text/adaptive_text.dart';
-import 'package:algorithm_visualizer/core/widgets/custom_widgets/aurora_buttons.dart';
-import 'package:algorithm_visualizer/core/widgets/custom_widgets/aurora_chips.dart';
+import 'package:algorithm_visualizer/core/widgets/custom_widgets/bottom_cta_bar.dart';
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/custom_icon.dart';
-import 'package:algorithm_visualizer/core/widgets/custom_widgets/glass_card.dart';
+import 'package:algorithm_visualizer/core/widgets/custom_widgets/difficulty_chip.dart';
+import 'package:algorithm_visualizer/core/widgets/custom_widgets/icon_button_quiet.dart';
+import 'package:algorithm_visualizer/core/widgets/custom_widgets/primary_button_quiet.dart';
+import 'package:algorithm_visualizer/core/widgets/custom_widgets/surface_card.dart';
 import 'package:algorithm_visualizer/features/challenge/data/models/example.dart';
 import 'package:algorithm_visualizer/features/challenge/domain/entities/coding_problem.dart';
 import 'package:algorithm_visualizer/features/challenge/domain/enums/problem.dart';
@@ -103,9 +106,7 @@ class _ProblemPageState extends ConsumerState<ProblemPage> {
           for (var i = 0; i < hints.length; i++)
             Padding(
               padding: REdgeInsets.only(bottom: 10),
-              child: GlassContainer(
-                depth: GlassDepth.card,
-                borderRadius: CdRadius.md,
+              child: SurfaceCard(
                 child: RegularText('${i + 1}.  ${hints[i]}',
                     color: ThemeEnum.textBody, fontSize: 12, height: 1.6, maxLines: 20),
               ),
@@ -120,12 +121,10 @@ class _ProblemPageState extends ConsumerState<ProblemPage> {
           for (final sq in similar)
             Padding(
               padding: REdgeInsets.only(bottom: 10),
-              child: GlassContainer(
+              child: SurfaceCard(
                 // onTap: () {
                 //   context.pushTo(Routes.subProblem, queryParameters: sq.problemId?.toString() ?? "");
                 // },
-                depth: GlassDepth.card,
-                borderRadius: CdRadius.md,
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -151,12 +150,12 @@ class _Header extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final chipDifficulty = ProblemStyle.chipDifficulty(problem.getDifficulty);
+    final chipDifficulty = ProblemStyle.quietChipDifficulty(problem.getDifficulty);
     final tags = problem.getTags;
     return Row(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        const CustomBackButton(),
+        IconButtonQuiet(icon: Icons.arrow_back_ios_new_rounded, size: 30, iconSize: 14, onTap: context.back),
         const RSizedBox(width: 10),
         Expanded(
           child: Column(
@@ -237,9 +236,7 @@ class _ConstraintsCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GlassContainer(
-      depth: GlassDepth.card,
-      borderRadius: CdRadius.md,
+    return SurfaceCard(
       padding: REdgeInsets.symmetric(horizontal: 15, vertical: 13),
       onTap: onToggle,
       child: Column(
@@ -299,9 +296,7 @@ class _ExampleBlock extends StatelessWidget {
           letterSpacing: 1,
         ),
         const RSizedBox(height: 9),
-        GlassContainer(
-          depth: GlassDepth.recessed,
-          borderRadius: CdRadius.md,
+        SurfaceCard(
           padding: REdgeInsets.symmetric(horizontal: 13, vertical: 12),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -381,9 +376,8 @@ class _PinnedCta extends StatelessWidget {
       left: 0,
       right: 0,
       bottom: 0,
-      child: Padding(
-        padding: REdgeInsets.symmetric(horizontal: 32, vertical: 15),
-        child: AuroraPrimaryButton(label: StringsManager.solveInEditor, onPressed: onSolve),
+      child: BottomCtaBar(
+        child: PrimaryButtonQuiet(label: StringsManager.solveInEditor, onPressed: onSolve),
       ),
     );
   }
