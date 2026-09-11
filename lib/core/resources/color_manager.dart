@@ -2,13 +2,16 @@ import 'package:flutter/material.dart';
 
 /// Raw hex primitives. Nothing outside this file may hold a literal colour.
 ///
-/// The `*Dk` / `*Lt` values below now carry the **CoreDive** palette (brass
-/// interactive colour on near-black, brass progress, three fixed difficulty
-/// hues clear of the brand colour). The legacy constant *names* are kept so
-/// pre-CoreDive screens keep compiling; each screen swaps to the CoreDive-native
-/// [ThemeEnum] entries during its migration phase.
+/// The `*Dk` / `*Lt` values below now carry the **Aurora glass** palette: white
+/// carries every primary action, the ground is blue-black, surfaces are glass
+/// over a dim indigo/cyan aurora, and the three difficulty hues plus the
+/// comparing cyan are retuned to the cold ground. The legacy constant *names*
+/// are kept so pre-Aurora screens keep compiling; each screen swaps to the
+/// Aurora-native [ThemeEnum] entries during its migration phase.
 ///
-/// Source of truth: design_handoff_coredive/tokens/coredive_tokens.dart
+/// Dark is the source of truth (see design_handoff_coredive/AURORA_REFERENCE.html
+/// §3a). Light values that the reference does not draw are placeholders derived
+/// from the stated rules and are polished in a later pass.
 abstract final class ColorManager {
   /// -------- shared / static (not theme-resolved) ------------>
 
@@ -20,139 +23,193 @@ abstract final class ColorManager {
   static const Color columnSortColor = Color.fromRGBO(26, 47, 80, 0.7);
   static const Color backgroundForSortingColor = Color.fromRGBO(14, 23, 41, 0.3);
   static const Color white2DarkColor = Color(0xFF9BAAA6);
-  static const Color textDarkColor = Color(0xFF5C6360);
-  static const Color text2DarkColor = Color(0xFF9BAAA6);
-  static const Color howItWorksColor = Color(0xFF0C0E0D);
-  static const Color lightPurpleColor = Color(0xFF1A1F1D);
-  static const Color borderPurpleColor = Color(0xFF31372F);
-  static const Color codeEditorBackground = Color(0xFF0A0C0B);
-  static const Color codeEditorNumberColor = Color(0xFF4A4F49);
+  static const Color textDarkColor = Color(0xFF7C87A3);
+  static const Color text2DarkColor = Color(0xFF7C87A3);
+  static const Color howItWorksColor = Color(0xFF0B0E17);
+  static const Color lightPurpleColor = Color(0xFF11141D);
+  static const Color borderPurpleColor = Color(0xFF2A3350);
+  static const Color codeEditorBackground = Color(0xFF080A12);
+  static const Color codeEditorNumberColor = Color(0xFF7C87A3);
 
   /// ======================================================================
-  /// CoreDive primitives — DARK (primary theme)
+  /// Aurora primitives — DARK (primary theme)
   /// ======================================================================
-  static const cdBgBaseDk = Color(0xFF050605);
-  static const cdBgRaisedDk = Color(0xFF0A0C0B);
-  static const cdSurfaceDk = Color(0xFF0C0E0D);
-  static const cdSurfaceAltDk = Color(0xFF1A1F1D);
+  static const cdBgBaseDk = Color(0xFF04050A);
+  static const cdBgRaisedDk = Color(0xFF080A12);
+  static const cdSurfaceDk = Color(0xFF0B0E17);
+  static const cdSurfaceAltDk = Color(0xFF0E1119);
 
-  /// Brass-tinted card. Streak and XP surfaces only.
-  static const cdSurfaceWarmDk = Color(0xFF15100A);
-  static const cdBorderSubtleDk = Color(0xFF1C201E);
-  static const cdBorderDk = Color(0xFF222725);
-  static const cdBorderStrongDk = Color(0xFF31372F);
+  /// Borders are white alphas now — that is what lets the glass read.
+  static const cdBorderSubtleDk = Color(0x1FFFFFFF); // white 12%
+  static const cdBorderDk = Color(0x21FFFFFF); // white 13%
+  static const cdBorderStrongDk = Color(0x33FFFFFF); // white 20%
 
-  static const cdPrimaryDk = Color(0xFFE0A33E);
-  static const cdPrimaryHoverDk = Color(0xFFF0BC63);
-  static const cdPrimaryPressDk = Color(0xFFC9922E);
-  static const cdOnPrimaryDk = Color(0xFF1A1206);
-  static const cdPrimaryTintDk = Color(0x24E0A33E);
-  static const cdPrimaryRingDk = Color(0x29E0A33E);
+  /// White carries every primary action. No hue ramp — hover/press are cooler
+  /// whites.
+  static const cdPrimaryDk = Color(0xFFFFFFFF);
+  static const cdPrimaryHoverDk = Color(0xFFF1F3FB);
+  static const cdPrimaryPressDk = Color(0xFFE4E7F2);
+  static const cdOnPrimaryDk = Color(0xFF06070C);
+  static const cdPrimaryTintDk = Color(0x1AFFFFFF); // white 10% — pressed/selected wash
+  static const cdPrimaryRingDk = Color(0x668B7CF6); // violet @ 40% — focus ring
 
-  /// XP IS the brand colour — identity and progress are deliberately the same brass.
-  static const cdAccentXpDk = cdPrimaryPressDk;
-  static const cdAccentXpTextDk = cdPrimaryDk;
+  /// XP / streak / level progress is white now, like every other primary action.
+  static const cdAccentXpDk = cdPrimaryDk;
+  static const cdAccentXpTextDk = cdTextPrimaryDk;
   static const cdOnAccentXpDk = cdOnPrimaryDk;
 
-  static const cdTextPrimaryDk = Color(0xFFF5F7F6);
-  static const cdTextBodyDk = Color(0xFFB9BEBB);
-  static const cdTextSecondaryDk = Color(0xFF7E8582);
-  static const cdTextDisabledDk = Color(0xFF5C6360);
+  static const cdTextPrimaryDk = Color(0xFFF4F6FF);
+  static const cdTextBodyDk = Color(0xFFAFB6CC);
+  static const cdTextSecondaryDk = Color(0xFF7C87A3); // contrast floor for real content ≈4.6:1
+  static const cdTextDisabledDk = Color(0xFF5F6A85);
 
-  static const cdSuccessDk = Color(0xFF4FC38C);
+  static const cdSuccessDk = Color(0xFF4FE0A8);
+  static const cdWarningDk = Color(0xFFF3B25A);
+  static const cdErrorDk = Color(0xFFFF6B7E);
+  static const cdOnErrorDk = Color(0xFF3A0A12);
 
-  /// Burnt orange, NOT amber — amber is the brand colour.
-  static const cdWarningDk = Color(0xFFD97742);
-  static const cdErrorDk = Color(0xFFDF5B67);
-  static const cdOnErrorDk = Color(0xFF2A0709);
+  /// "currently comparing" — was brass, now cyan; it belongs to the palette.
+  static const cdComparingDk = Color(0xFF46D8E6);
 
-  static const cdBarIdleDk = Color(0xFF3A3226);
-  static const cdBarCompareDk = cdWarningDk;
-  static const cdBarSwapDk = Color(0xFFB85F2E);
-  static const cdBarDoneDk = Color(0xFFF2F4F3);
+  static const cdBarIdleDk = Color(0x8038415C);
+  static const cdBarExcludedDk = Color(0xFF171C2A);
+  static const cdBarCompareDk = cdComparingDk;
+  static const cdBarSwapDk = cdErrorDk;
+  static const cdBarDoneDk = cdSuccessDk;
 
-  static const cdTextBrightDk = Color(0xFFE8EAE9);
-  static const cdAuthWashDk = Color(0xFF15100A);
-  static const cdErrorRingDk = Color(0x1FDF5B67);
+  static const cdTextBrightDk = Color(0xFFE8EAF4); // code punctuation / row title ink
+  static const cdErrorRingDk = Color(0x1FFF6B7E);
 
-  static const cdCodeGutterDk = Color(0xFF4A4F49);
-  static const cdCodeLineDk = Color(0x12E0A33E);
-  static const cdCodeKeywordDk = Color(0xFFD97742);
-  static const cdCodeTypeDk = Color(0xFFF0BC63);
-  static const cdCodePunctDk = Color(0xFFE8EAE9);
-  static const cdCodeNumberDk = Color(0xFF4FC38C);
+  /// The aurora glow — only indigo and a trace of cyan reach the ground, in one
+  /// broad soft band rising from the bottom edge.
+  static const cdGlowIndigoDk = Color(0x664A5BD8); // #4A5BD8 @ 40%
+  static const cdGlowCyanDk = Color(0x4D2FA3B8); // #2FA3B8 @ 30%
+  static const cdDotGridDk = Color(0x0EFFFFFF); // white 5.5%
 
+  /// Accent marks only — never on the ground, never on a data mark.
+  static const cdAccentVioletDk = Color(0xFF8B7CF6); // focus, key-bar label
+  static const cdAccentAzureDk = Color(0xFF3FA9F5);
+
+  /// Inactive bottom-nav item (design is explicit — distinct from text secondary).
+  static const cdNavInactiveDk = Color(0xFF8892AC);
+
+  /// The glass material — one recipe, three depths. Fill + blur carry the depth.
+  static const glassRecessedFill100DK = Color.fromRGBO(9, 10, 15, 1); // white 4%
+  static const cdGlassRecessedFillDk = Color(0x06ffffff); // white 4%
+  static const cdGlassCardFillDk = Color(0x0EFFFFFF); // white 5.5%
+  static const cdGlassCardFill2Dk = Color.fromRGBO(22, 24, 32, 0.803921568627451); // white 5.5%
+  static const cdGlassFloatingFillDk = Color(0x1AFFFFFF); // white 10%
+  static const cdGlassSheenRecessedDk = Color(0x1AFFFFFF); // white 10%
+  static const cdGlassSheenCardDk = Color(0x29FFFFFF); // white 16%
+  static const cdGlassSheenFloatingDk = Color(0x3DFFFFFF); // white 24%
+
+  /// Card / floating hairlines reuse [cdBorderDk] / [cdBorderStrongDk]; only the
+  /// recessed hairline (9%) has no border-role equivalent.
+  static const cdGlassHairlineRecessedDk = Color(0x17FFFFFF); // white 9%
+
+  static const cdCodeGutterDk = cdTextSecondaryDk;
+  static const cdCodeLineDk = Color(0x12FFFFFF); // current line — white 7%
+  static const cdCodeKeywordDk = cdWarningDk;
+  static const cdCodeTypeDk = cdTextPrimaryDk;
+  static const cdCodePunctDk = cdTextBrightDk;
+  static const cdCodeNumberDk = cdSuccessDk;
+
+  /// Activity heat — five steps: white 7% empty, then success @ 20 / 40 / 66 / 100%.
   static const cdHeatDk = <Color>[
-    Color(0xFF1A1F1D),
-    Color(0xFF5C3F12),
-    Color(0xFFC9922E),
-    Color(0xFFF0BC63),
+    Color(0x12FFFFFF),
+    Color(0x334FE0A8),
+    Color(0x664FE0A8),
+    Color(0xA84FE0A8),
+    Color(0xFF4FE0A8),
   ];
 
   /// ======================================================================
-  /// CoreDive primitives — LIGHT (warm off-white paper, warm greys)
+  /// Aurora primitives — LIGHT (cool off-white, cool greys)
   /// ======================================================================
-  static const cdBgBaseLt = Color(0xFFFAF8F4);
+  static const cdBgBaseLt = Color(0xFFF6F7FC);
   static const cdBgRaisedLt = Color(0xFFFFFFFF);
   static const cdSurfaceLt = Color(0xFFFFFFFF);
-  static const cdSurfaceAltLt = Color(0xFFF2EEE6);
-  static const cdSurfaceWarmLt = Color(0xFFFBF3E3);
-  static const cdBorderSubtleLt = Color(0xFFEFEBE2);
-  static const cdBorderLt = Color(0xFFE5E0D6);
-  static const cdBorderStrongLt = Color(0xFFCBC4B5);
+  static const cdSurfaceAltLt = Color(0xFFEEF0F6);
+  static const cdBorderSubtleLt = Color(0x14000000); // black 8%
+  static const cdBorderLt = Color(0x1F000000); // black 12%
+  static const cdBorderStrongLt = Color(0x2E000000); // black 18%
 
-  static const cdPrimaryLt = Color(0xFF8F6216);
-  static const cdPrimaryHoverLt = Color(0xFFA9761D);
-  static const cdPrimaryPressLt = Color(0xFF734E0F);
+  static const cdPrimaryLt = Color(0xFF12141C);
+  static const cdPrimaryHoverLt = Color(0xFF2A2D38);
+  static const cdPrimaryPressLt = Color(0xFF0B0D14);
   static const cdOnPrimaryLt = Color(0xFFFFFFFF);
-  static const cdPrimaryTintLt = Color(0x1A8F6216);
-  static const cdPrimaryRingLt = Color(0x298F6216);
+  static const cdPrimaryTintLt = Color(0x14000000); // black 8%
+  static const cdPrimaryRingLt = Color(0x665C6CF2); // indigo @ 40%
 
   static const cdAccentXpLt = cdPrimaryLt;
-  static const cdAccentXpTextLt = cdPrimaryPressLt;
+  static const cdAccentXpTextLt = cdPrimaryLt;
   static const cdOnAccentXpLt = Color(0xFFFFFFFF);
 
-  static const cdTextPrimaryLt = Color(0xFF12100C);
-  static const cdTextBodyLt = Color(0xFF2E2A22);
-  static const cdTextSecondaryLt = Color(0xFF6B665C);
-  static const cdTextDisabledLt = Color(0xFFA09A8D);
+  static const cdTextPrimaryLt = Color(0xFF12141C);
+  static const cdTextBodyLt = Color(0xFF454C60);
+  static const cdTextSecondaryLt = Color(0xFF6A7387);
+  static const cdTextDisabledLt = Color(0xFF9AA1B3);
 
-  static const cdSuccessLt = Color(0xFF1B7F5A);
-  static const cdWarningLt = Color(0xFFA85426);
+  static const cdSuccessLt = Color(0xFF128A5E);
+  static const cdWarningLt = Color(0xFFA9670F);
   static const cdErrorLt = Color(0xFFC1414D);
   static const cdOnErrorLt = Color(0xFFFFFFFF);
 
-  static const cdBarIdleLt = Color(0xFFDCD6C9);
-  static const cdBarCompareLt = cdWarningLt;
-  static const cdBarSwapLt = Color(0xFF8A4520);
-  static const cdBarDoneLt = cdTextPrimaryLt;
+  static const cdComparingLt = Color(0xFF147C90);
+
+  static const cdBarIdleLt = Color(0x80C3CBD8);
+  static const cdBarExcludedLt = Color(0xFFEAEDF3);
+  static const cdBarCompareLt = cdComparingLt;
+  static const cdBarSwapLt = cdErrorLt;
+  static const cdBarDoneLt = cdSuccessLt;
 
   static const cdTextBrightLt = cdTextPrimaryLt;
-  static const cdAuthWashLt = cdSurfaceWarmLt;
   static const cdErrorRingLt = Color(0x1FC1414D);
 
-  static const cdCodeGutterLt = Color(0xFFA6A093);
-  static const cdCodeLineLt = Color(0x148F6216);
-  static const cdCodeKeywordLt = Color(0xFFA85426);
-  static const cdCodeTypeLt = cdPrimaryLt;
+  static const cdGlowIndigoLt = Color(0x294A5BD8); // ~16%
+  static const cdGlowCyanLt = Color(0x292FA3B8); // ~16%
+  static const cdDotGridLt = Color(0x0D000000); // black ~5%
+
+  static const cdAccentVioletLt = Color(0xFF5C6CF2);
+  static const cdAccentAzureLt = Color(0xFF3FA9F5);
+
+  static const cdNavInactiveLt = Color(0xFF6A7387);
+
+  /// Placeholder light glass — black-alpha fills, white sheens. Polished later.
+  static const cdGlassRecessedFillLt = Color(0x0A000000);
+  /// TODO: edit it based on black, i get the dark theme from the other filter color
+  static const cdGlassRecessedFill100Lt = Color(0x0A000000);
+
+  static const cdGlassCardFillLt = Color(0x0E000000);
+  static const cdGlassCardFill2Lt = Color(0x0E000000);
+  static const cdGlassFloatingFillLt = Color(0x14000000);
+  static const cdGlassSheenRecessedLt = Color(0x80FFFFFF);
+  static const cdGlassSheenCardLt = Color(0x99FFFFFF);
+  static const cdGlassSheenFloatingLt = Color(0xB3FFFFFF);
+  static const cdGlassHairlineRecessedLt = Color(0x12000000);
+
+  static const cdCodeGutterLt = cdTextSecondaryLt;
+  static const cdCodeLineLt = Color(0x0A000000);
+  static const cdCodeKeywordLt = cdWarningLt;
+  static const cdCodeTypeLt = cdTextPrimaryLt;
   static const cdCodePunctLt = cdTextPrimaryLt;
   static const cdCodeNumberLt = cdSuccessLt;
 
   static const cdHeatLt = <Color>[
-    Color(0xFFEFEBE2),
-    Color(0xFFE8CE96),
-    Color(0xFFC9922E),
-    Color(0xFF8F6216),
+    Color(0xFFEAEDF3),
+    Color(0x33128A5E),
+    Color(0x66128A5E),
+    Color(0xA8128A5E),
+    Color(0xFF128A5E),
   ];
 
   /// ======================================================================
-  /// Legacy theme names, repointed to CoreDive primitives
+  /// Legacy theme names, repointed to Aurora primitives
   /// ======================================================================
 
   /// -------- dark ------------>
   static const primaryDk = cdBgBaseDk;
-  static const mainCardDk = cdSurfaceDk;
-  static const cardDk = mainCardDk;
+  static const cardDk = Color.fromRGBO(21, 22, 27, 1.0);
   static const outputHeaderDk = cdBgRaisedDk;
   static const accentDk = cdPrimaryDk;
   static const accentGreenDk = cdSuccessDk;
