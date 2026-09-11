@@ -31,7 +31,10 @@ class _ForgotPasswordPageState extends ConsumerState<ForgotPasswordPage> {
 
   void _onSendCode() async {
     final success = await ref.read(authForgotPasswordProvider.notifier).forgotPassword();
-    if (success && mounted) context.push(Routes.resetPassword.path);
+    if (success && mounted) {
+      /// TODO: create info page
+      // context.push(Routes.resetPassword.path);
+    }
   }
 
   @override
