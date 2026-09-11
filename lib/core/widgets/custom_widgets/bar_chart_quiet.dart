@@ -117,7 +117,7 @@ class _Bar extends StatelessWidget {
               ),
             ),
           ),
-          RSizedBox(height: 4),
+          const RSizedBox(height: 4),
         ],
         SizedBox(
           height: trackHeight,

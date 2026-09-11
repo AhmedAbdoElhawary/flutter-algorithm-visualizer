@@ -106,7 +106,7 @@ class _NavItem extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           CustomIcon(icon, size: 20, color: color),
-          RSizedBox(height: 5),
+          const RSizedBox(height: 5),
           active
               ? MediumText(label, fontSize: 9.5, color: color, maxLines: 1)
               : RegularText(label, fontSize: 9.5, color: color, maxLines: 1),
