@@ -59,13 +59,13 @@ class _HomeLiveSessionCard extends StatelessWidget {
           Row(
             children: [
               _PulsingDot(),
-              RSizedBox(width: 6),
-              MediumText(
+              const RSizedBox(width: 6),
+              const MediumText(
                 'LIVE',
                 fontSize: 9.5,
                 color: ThemeEnum.textBody,
               ),
-              RSizedBox(width: 8),
+              const RSizedBox(width: 8),
               Expanded(
                 child: SemiBoldText(data.algorithmName, fontSize: 12, color: ThemeEnum.textPrimary, maxLines: 1),
               ),
@@ -77,7 +77,7 @@ class _HomeLiveSessionCard extends StatelessWidget {
               ),
             ],
           ),
-          RSizedBox(height: 10),
+          const RSizedBox(height: 10),
           SizedBox(
             height: 30.h,
             child: BarChartQuiet(
@@ -97,18 +97,18 @@ class _HomeLiveSessionCard extends StatelessWidget {
                   .toList(),
             ),
           ),
-          RSizedBox(height: 10),
+          const RSizedBox(height: 10),
           Row(
             children: [
               Expanded(child: QuietProgressBar(value: data.progress)),
-              RSizedBox(width: 10),
+              const RSizedBox(width: 10),
               RegularText(
                 '${data.currentStep} / ${data.totalSteps}',
                 fontSize: 11,
                 color: ThemeEnum.textSecond,
                 fontFamily: FontConstants.fontJetBrainsMono,
               ),
-              RSizedBox(width: 10),
+              const RSizedBox(width: 10),
               _PauseSquare(playing: data.isPlaying),
             ],
           ),

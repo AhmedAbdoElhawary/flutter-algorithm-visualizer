@@ -43,14 +43,14 @@ class HeatGridLegend extends StatelessWidget {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        RegularText(StringsManager.less, color: ThemeEnum.textSecond, fontSize: 11),
-        RSizedBox(width: 4),
+        const RegularText(StringsManager.less, color: ThemeEnum.textSecond, fontSize: 11),
+        const RSizedBox(width: 4),
         Wrap(
           spacing: 3.5.w,
           children: HeatGrid.heatLevels.map((level) => _HeatCell(level: level)).toList(),
         ),
-        RSizedBox(width: 4),
-        RegularText(StringsManager.more, color: ThemeEnum.textSecond, fontSize: 11),
+        const RSizedBox(width: 4),
+        const RegularText(StringsManager.more, color: ThemeEnum.textSecond, fontSize: 11),
       ],
     );
   }

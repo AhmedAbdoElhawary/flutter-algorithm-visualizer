@@ -19,7 +19,7 @@ class TitledCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           SectionHeader(title: title, trailing: trailing),
-          RSizedBox(height: 10),
+          const RSizedBox(height: 10),
           body,
         ],
       ),
