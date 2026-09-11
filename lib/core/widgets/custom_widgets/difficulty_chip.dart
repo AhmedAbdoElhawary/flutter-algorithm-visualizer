@@ -41,3 +41,40 @@ class DifficultyChip extends StatelessWidget {
     );
   }
 }
+
+/// A fixed-size square variant — History's difficulty-initial badge ("E" /
+/// "M" / "H"). [difficulty] is nullable to cover the domain's `none` case
+/// (neutral fill), which [Difficulty] itself has no member for.
+class DifficultySquareBadge extends StatelessWidget {
+  final Difficulty? difficulty;
+  final String label;
+  final double size;
+  final double radius;
+  final double fontSize;
+
+  const DifficultySquareBadge({
+    super.key,
+    required this.difficulty,
+    required this.label,
+    this.size = 28,
+    this.radius = 9,
+    this.fontSize = 10.5,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final d = difficulty;
+    final (fill, labelRole) =
+        d == null ? (ThemeEnum.chipNeutralFill, ThemeEnum.textSecond) : _difficultyRoles(d);
+    return Container(
+      width: size.r,
+      height: size.r,
+      alignment: Alignment.center,
+      decoration: BoxDecoration(
+        color: context.getColor(fill),
+        borderRadius: BorderRadius.circular(radius.r),
+      ),
+      child: BoldText(label, color: labelRole, fontSize: fontSize),
+    );
+  }
+}

@@ -3,11 +3,11 @@ import 'package:algorithm_visualizer/core/resources/dimensions_manager.dart';
 import 'package:algorithm_visualizer/core/resources/strings_manager.dart';
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/custom_snack_bar.dart';
 import 'package:algorithm_visualizer/features/auth/presentation/common/view_model/auth_providers.dart';
+import 'package:algorithm_visualizer/core/widgets/custom_widgets/primary_button_quiet.dart';
 import 'package:algorithm_visualizer/features/auth/presentation/common/widget/auth_common_bits.dart';
-import 'package:algorithm_visualizer/features/auth/presentation/common/widget/auth_primary_button.dart';
 import 'package:algorithm_visualizer/features/auth/presentation/common/widget/auth_scaffold.dart';
-import 'package:algorithm_visualizer/features/auth/presentation/common/widget/auth_text_field.dart';
-import 'package:algorithm_visualizer/features/auth/presentation/common/widget/password_strength_meter.dart';
+import 'package:algorithm_visualizer/core/widgets/custom_widgets/auth_text_field.dart';
+import 'package:algorithm_visualizer/core/widgets/custom_widgets/password_strength_meter.dart';
 import 'package:algorithm_visualizer/features/auth/presentation/signup/view_model/signup_auth_providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -114,9 +114,9 @@ class _SignUpPageState extends ConsumerState<SignUpPage> {
         SizedBox(height: CdSpace.gapCard.h),
         _ConfirmPasswordField(controller: _confirmPasswordController),
         SizedBox(height: CdSpace.x6.h),
-        AuthPrimaryButton(
-          title: StringsManager.createAccount,
-          isLoading: isLoading,
+        PrimaryButtonQuiet(
+          label: StringsManager.createAccount,
+          loading: isLoading,
           onPressed: _onRegister,
         ),
         SizedBox(height: CdSpace.x4.h),

@@ -7,11 +7,11 @@ import 'package:algorithm_visualizer/core/widgets/custom_widgets/animated_popup.
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/confirmation_dialog_card.dart';
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/custom_snack_bar.dart';
 import 'package:algorithm_visualizer/features/auth/presentation/common/view_model/auth_providers.dart';
+import 'package:algorithm_visualizer/core/widgets/custom_widgets/primary_button_quiet.dart';
 import 'package:algorithm_visualizer/features/auth/presentation/common/widget/auth_common_bits.dart';
-import 'package:algorithm_visualizer/features/auth/presentation/common/widget/auth_logo_tile.dart';
-import 'package:algorithm_visualizer/features/auth/presentation/common/widget/auth_primary_button.dart';
+import 'package:algorithm_visualizer/core/widgets/custom_widgets/auth_logo_tile.dart';
 import 'package:algorithm_visualizer/features/auth/presentation/common/widget/auth_scaffold.dart';
-import 'package:algorithm_visualizer/features/auth/presentation/common/widget/auth_text_field.dart';
+import 'package:algorithm_visualizer/core/widgets/custom_widgets/auth_text_field.dart';
 import 'package:algorithm_visualizer/features/auth/presentation/login/view_model/login_auth_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -80,9 +80,9 @@ class _SignInButton extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final isLoading = ref.watch(authLoginProvider.select((s) => s.isLoading));
 
-    return AuthPrimaryButton(
-      title: StringsManager.signIn,
-      isLoading: isLoading,
+    return PrimaryButtonQuiet(
+      label: StringsManager.signIn,
+      loading: isLoading,
       onPressed: () {
         /// Signing in adopts the account's own progress and drops whatever was
         /// solved as a guest, so warn first, but only when there is something

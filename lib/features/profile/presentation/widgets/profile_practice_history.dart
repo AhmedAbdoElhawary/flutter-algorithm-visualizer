@@ -10,7 +10,7 @@ import 'package:algorithm_visualizer/core/widgets/custom_widgets/surface_card.da
 import 'package:algorithm_visualizer/features/challenge/domain/enums/problem.dart';
 import 'package:algorithm_visualizer/features/profile/presentation/entities/practice_history_entry.dart';
 import 'package:algorithm_visualizer/features/profile/presentation/view_model/statistics/profile_statistics_provider.dart';
-import 'package:algorithm_visualizer/features/profile/presentation/widgets/status_box.dart';
+import 'package:algorithm_visualizer/core/widgets/custom_widgets/status_box.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -229,15 +229,10 @@ class _ProblemRowState extends State<PracticeHistoryProblemRow> with SingleTicke
   Widget build(BuildContext context) {
     return InkWell(
       onTap: widget.onTapCard,
-      child: Container(
-        decoration: widget.addTopBorder
-            ? BoxDecoration(
-                border: Border(top: BorderSide(color: context.getColor(ThemeEnum.border))),
-              )
-            : null,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          if (widget.addTopBorder) Container(height: 1, color: context.getColor(ThemeEnum.border)),
             Padding(
               padding: REdgeInsets.symmetric(horizontal: widget.addTopBorder ? 14 : 0, vertical: 10),
               child: Row(
@@ -275,7 +270,6 @@ class _ProblemRowState extends State<PracticeHistoryProblemRow> with SingleTicke
             widget.subUnderWidget,
           ],
         ),
-      ),
     );
   }
 
