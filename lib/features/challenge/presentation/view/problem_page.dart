@@ -1,4 +1,3 @@
-import 'package:algorithm_visualizer/core/helpers/constants.dart';
 import 'package:algorithm_visualizer/core/resources/dimensions_manager.dart';
 import 'package:algorithm_visualizer/core/resources/font_manager.dart';
 import 'package:algorithm_visualizer/core/resources/strings_manager.dart';
@@ -381,7 +380,7 @@ class _PinnedCta extends StatelessWidget {
     return Positioned(
       left: 0,
       right: 0,
-      bottom: kBottomPageSpacing,
+      bottom: 0,
       child: Padding(
         padding: REdgeInsets.symmetric(horizontal: 32, vertical: 15),
         child: AuroraPrimaryButton(label: StringsManager.solveInEditor, onPressed: onSolve),

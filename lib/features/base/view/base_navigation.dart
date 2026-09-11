@@ -1,10 +1,7 @@
-import 'package:algorithm_visualizer/core/helpers/constants.dart';
-import 'package:algorithm_visualizer/core/resources/dimensions_manager.dart';
 import 'package:algorithm_visualizer/core/resources/strings_manager.dart';
 import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
 import 'package:algorithm_visualizer/core/widgets/adaptive/text/adaptive_text.dart';
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/custom_icon.dart';
-import 'package:algorithm_visualizer/core/widgets/custom_widgets/glass_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
@@ -16,29 +13,22 @@ class MainNavigationShell extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // The nav is a real child in the layout flow — not a stack overlay, not a
-    // transparent-body bottom bar. Content lives in the flexible slot, clipped
-    // so an overflowing child clips instead of painting over the nav.
+    // The nav is a real, non-flexible child in a Column — content and nav are
+    // siblings, never a Stack overlay.
     return Material(
-      // The shell owns the ground for the tabbed screens so the nav floats over
-      // the aurora. It stays static — only Home drifts, from its own ground.
-      child: Stack(
-        alignment: AlignmentDirectional.bottomCenter,
+      color: context.getColor(ThemeEnum.primary),
+      child: Column(
         children: [
-          AuroraGround(
-              child: Padding(
-            padding: REdgeInsets.only(bottom: kBottomPageSpacing),
-            child: SafeArea(bottom: false,child: navigationShell),
-          )),
-          _AuroraNavBar(navigationShell: navigationShell),
+          Expanded(child: ClipRect(child: navigationShell)),
+          _BottomNavBar(navigationShell: navigationShell),
         ],
       ),
     );
   }
 }
 
-class _AuroraNavBar extends StatelessWidget {
-  const _AuroraNavBar({required this.navigationShell});
+class _BottomNavBar extends StatelessWidget {
+  const _BottomNavBar({required this.navigationShell});
 
   final StatefulNavigationShell navigationShell;
 
@@ -57,27 +47,29 @@ class _AuroraNavBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final current = navigationShell.currentIndex;
-    return Padding(
-      padding: REdgeInsets.fromLTRB(16, 10, 16, 20),
-      child: RSizedBox(
-        height: 62,
-        child: GlassContainer(
-          depth: GlassDepth.floating,
-          borderRadius: CdRadius.pill,
-          padding: REdgeInsets.all(5),
-          child: Row(
-            children: List.generate(_destinations.length, (i) {
-              final d = _destinations[i];
-              return Expanded(
-                child: _NavItem(
-                  icon: i == current ? d.activeIcon : d.icon,
-                  label: d.label,
-                  active: i == current,
-                  onTap: () => _go(i),
-                ),
-              );
-            }),
-          ),
+    return SafeArea(
+      top: false,
+      child: Container(
+        height: 64.h,
+        width: double.infinity,
+        padding: REdgeInsetsDirectional.fromSTEB(0, 6, 0, 6),
+        decoration: BoxDecoration(
+          color: context.getColor(ThemeEnum.primary),
+          border: Border(top: BorderSide(color: context.getColor(ThemeEnum.borderSubtle))),
+        ),
+        child: Row(
+          children: List.generate(_destinations.length, (i) {
+            final d = _destinations[i];
+            final active = i == current;
+            return Expanded(
+              child: _NavItem(
+                icon: active ? d.activeIcon : d.icon,
+                label: d.label,
+                active: active,
+                onTap: () => _go(i),
+              ),
+            );
+          }),
         ),
       ),
     );
@@ -99,31 +91,19 @@ class _NavItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final color = active ? ThemeEnum.textPrimary : ThemeEnum.navInactive;
+    final color = active ? ThemeEnum.textBright : ThemeEnum.textSecond;
     return GestureDetector(
       onTap: onTap,
       behavior: HitTestBehavior.opaque,
-      child: Container(
-        height: 50.r,
-        decoration: active
-            ? BoxDecoration(
-                color: context.getColor(ThemeEnum.primaryTint),
-                borderRadius: BorderRadius.circular(CdRadius.pill.r),
-                border: Border(
-                  top: BorderSide(color: context.getColor(ThemeEnum.glassSheenCard)),
-                ),
-              )
-            : null,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            CustomIcon(icon, size: 21, color: color),
-            const RSizedBox(height: 4),
-            active
-                ? SemiBoldText(label, fontSize: 10, color: color)
-                : MediumText(label, fontSize: 10, color: color),
-          ],
-        ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          CustomIcon(icon, size: 20, color: color),
+          RSizedBox(height: 5),
+          active
+              ? MediumText(label, fontSize: 9.5, color: color, maxLines: 1)
+              : RegularText(label, fontSize: 9.5, color: color, maxLines: 1),
+        ],
       ),
     );
   }
