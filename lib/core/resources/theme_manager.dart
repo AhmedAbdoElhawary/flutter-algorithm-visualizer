@@ -11,15 +11,12 @@ enum ThemeEnum {
   borderAccent,
   accentBg,
   accentGreen,
-  accentGreenBg,
   accentGreenRc,
   accentYellow,
   accentYellowRc,
   accentRed,
   accentRedRc,
   accentBlue,
-  accentBlueBg,
-  borderAccentBlue,
   textSecond,
   textPrimary,
   hover,
@@ -40,7 +37,6 @@ enum ThemeEnum {
 
   /// Interactive (brass — the only interactive colour)
   primaryHover,
-  primaryPress,
   primaryTint,
   primaryRing,
   onPrimary,
@@ -94,21 +90,13 @@ enum ThemeEnum {
   heat3,
   heat4,
 
-  /// Accent marks only (focus, key-bar label)
-  accentViolet,
-
   /// Bottom-nav inactive item
   navInactive,
 
   /// The glass material — fill / sheen per depth; recessed hairline
   glassRecessedFill,
-  glassRecessedFill100,
   glassCardFill,
-  glassCardFill2,
   glassFloatingFill,
-  glassSheenRecessed,
-  glassSheenCard,
-  glassSheenFloating,
   glassHairlineRecessed,
 
   /// static colors
@@ -156,22 +144,10 @@ extension ThemeExtension on BuildContext {
       ),
       ThemeEnum.accentGreenRc: ColorManager.accentGreenBgDk,
       ThemeEnum.accentGreen: _pick(ColorManager.accentGreenDk, ColorManager.accentGreenLt),
-      ThemeEnum.accentGreenBg: _pick(
-        ColorManager.accentGreenDk.withValues(alpha: 0.12),
-        ColorManager.accentGreenLt.withValues(alpha: 0.08),
-      ),
       ThemeEnum.accentYellow: _pick(ColorManager.accentYellowDk, ColorManager.accentYellowLt),
       ThemeEnum.accentYellowRc: _pick(ColorManager.accentYellowDk, ColorManager.accentYellowLt),
       ThemeEnum.accentRed: _pick(ColorManager.accentRedDk, ColorManager.accentRedLt),
       ThemeEnum.accentRedRc: ColorManager.accentRedBgDk,
-      ThemeEnum.accentBlueBg: _pick(
-        ColorManager.accentBlueDk.withValues(alpha: 0.1),
-        ColorManager.accentBlueLt.withValues(alpha: 0.1),
-      ),
-      ThemeEnum.borderAccentBlue: _pick(
-        ColorManager.accentBlueDk.withValues(alpha: 0.3),
-        ColorManager.accentBlueLt.withValues(alpha: 0.3),
-      ),
       ThemeEnum.accentBlue: _pick(ColorManager.accentBlueDk, ColorManager.accentBlueLt),
       ThemeEnum.textSecond: _pick(ColorManager.textSecondDk, ColorManager.textSecondLt),
       ThemeEnum.textPrimary: _pick(ColorManager.textPrimaryDk, ColorManager.textPrimaryLt),
@@ -190,7 +166,6 @@ extension ThemeExtension on BuildContext {
       ThemeEnum.textBright: _pick(ColorManager.cdTextBrightDk, ColorManager.cdTextBrightLt),
 
       ThemeEnum.primaryHover: _pick(ColorManager.cdPrimaryHoverDk, ColorManager.cdPrimaryHoverLt),
-      ThemeEnum.primaryPress: _pick(ColorManager.cdPrimaryPressDk, ColorManager.cdPrimaryPressLt),
       ThemeEnum.primaryTint: _pick(ColorManager.cdPrimaryTintDk, ColorManager.cdPrimaryTintLt),
       ThemeEnum.primaryRing: _pick(ColorManager.cdPrimaryRingDk, ColorManager.cdPrimaryRingLt),
       ThemeEnum.onPrimary: _pick(ColorManager.cdOnPrimaryDk, ColorManager.cdOnPrimaryLt),
@@ -235,18 +210,11 @@ extension ThemeExtension on BuildContext {
       ThemeEnum.heat3: _pick(ColorManager.cdHeatDk[3], ColorManager.cdHeatLt[3]),
       ThemeEnum.heat4: _pick(ColorManager.cdHeatDk[4], ColorManager.cdHeatLt[4]),
 
-      ThemeEnum.accentViolet: _pick(ColorManager.cdAccentVioletDk, ColorManager.cdAccentVioletLt),
-
       ThemeEnum.navInactive: _pick(ColorManager.cdNavInactiveDk, ColorManager.cdNavInactiveLt),
 
       ThemeEnum.glassRecessedFill: _pick(ColorManager.cdGlassRecessedFillDk, ColorManager.cdGlassRecessedFillLt),
-      ThemeEnum.glassRecessedFill100: _pick(ColorManager.glassRecessedFill100DK, ColorManager.cdGlassRecessedFillLt),
       ThemeEnum.glassCardFill: _pick(ColorManager.cdGlassCardFillDk, ColorManager.cdGlassCardFillLt),
-      ThemeEnum.glassCardFill2: _pick(ColorManager.cdGlassCardFill2Dk, ColorManager.cdGlassCardFill2Lt),
       ThemeEnum.glassFloatingFill: _pick(ColorManager.cdGlassFloatingFillDk, ColorManager.cdGlassFloatingFillLt),
-      ThemeEnum.glassSheenRecessed: _pick(ColorManager.cdGlassSheenRecessedDk, ColorManager.cdGlassSheenRecessedLt),
-      ThemeEnum.glassSheenCard: _pick(ColorManager.cdGlassSheenCardDk, ColorManager.cdGlassSheenCardLt),
-      ThemeEnum.glassSheenFloating: _pick(ColorManager.cdGlassSheenFloatingDk, ColorManager.cdGlassSheenFloatingLt),
       ThemeEnum.glassHairlineRecessed: _pick(ColorManager.cdGlassHairlineRecessedDk, ColorManager.cdGlassHairlineRecessedLt),
 
       ///-------------------->
