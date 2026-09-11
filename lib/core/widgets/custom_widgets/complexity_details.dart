@@ -14,19 +14,17 @@ class ComplexityDetails extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          const RSizedBox(width: 16),
-          TimeComplexityData(complexity: complexity),
-          const RSizedBox(width: 10),
-          SpaceComplexityData(complexity: complexity),
-          const RSizedBox(width: 10),
-          StabilityData(complexity: complexity),
-          const RSizedBox(width: 16),
-        ],
+    return Center(
+      child: SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        child: Row(
+          spacing: 10,
+          children: [
+            TimeComplexityData(complexity: complexity),
+            SpaceComplexityData(complexity: complexity),
+            StabilityData(complexity: complexity),
+          ],
+        ),
       ),
     );
   }
@@ -40,17 +38,20 @@ class TimeComplexityData extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GlassContainer(
-      withAboveShadow: false,
+      depth: GlassDepth.recessed,
       borderRadius: 8,
       padding: REdgeInsets.all(6),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          const CustomIcon(Icons.access_time_rounded, size: 14, color: ThemeEnum.hover),
+          const CustomIcon(Icons.access_time_rounded,
+              size: 14, color: ThemeEnum.hover),
           const RSizedBox(width: 4),
-          const RegularText(StringsManager.time, color: ThemeEnum.hover, fontSize: 14),
+          const RegularText(StringsManager.time,
+              color: ThemeEnum.hover, fontSize: 14),
           const RSizedBox(width: 2),
-          SemiBoldText(complexity.worstTimeComplexity.getText, color: ThemeEnum.accent, fontSize: 14),
+          SemiBoldText(complexity.worstTimeComplexity.getText,
+              color: ThemeEnum.accent, fontSize: 14),
         ],
       ),
     );
@@ -65,17 +66,20 @@ class SpaceComplexityData extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GlassContainer(
-      withAboveShadow: false,
+      depth: GlassDepth.recessed,
       borderRadius: 8,
       padding: REdgeInsets.all(6),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          const CustomIcon(Icons.storage_rounded, size: 14, color: ThemeEnum.hover),
+          const CustomIcon(Icons.storage_rounded,
+              size: 14, color: ThemeEnum.hover),
           const RSizedBox(width: 4),
-          const RegularText(StringsManager.space, color: ThemeEnum.hover, fontSize: 14),
+          const RegularText(StringsManager.space,
+              color: ThemeEnum.hover, fontSize: 14),
           const RSizedBox(width: 2),
-          SemiBoldText(complexity.spaceComplexity.getText, color: ThemeEnum.accent, fontSize: 14),
+          SemiBoldText(complexity.spaceComplexity.getText,
+              color: ThemeEnum.accent, fontSize: 14),
         ],
       ),
     );
@@ -90,17 +94,20 @@ class StabilityData extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GlassContainer(
-      withAboveShadow: false,
+      depth: GlassDepth.recessed,
       borderRadius: 8,
       padding: REdgeInsets.all(6),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          const CustomIcon(Icons.balance_rounded, size: 14, color: ThemeEnum.hover),
+          const CustomIcon(Icons.balance_rounded,
+              size: 14, color: ThemeEnum.hover),
           const RSizedBox(width: 4),
-          const RegularText(StringsManager.stable, color: ThemeEnum.hover, fontSize: 14),
+          const RegularText(StringsManager.stable,
+              color: ThemeEnum.hover, fontSize: 14),
           const RSizedBox(width: 2),
-          SemiBoldText(complexity.getStabilityText, color: ThemeEnum.accentGreen, fontSize: 14),
+          SemiBoldText(complexity.getStabilityText,
+              color: ThemeEnum.accentGreen, fontSize: 14),
         ],
       ),
     );
