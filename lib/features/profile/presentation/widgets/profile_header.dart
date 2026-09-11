@@ -20,77 +20,33 @@ class ProfileHeader extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Padding(
-            padding: REdgeInsets.fromLTRB(0, 16, 0, 0),
-            child: Row(
-              children: [
-                MediumText(
-                  StringsManager.profile.toUpperCase(),
-                  color: ThemeEnum.hover,
-                  letterSpacing: 0.5,
-                  fontSize: 12,
-                ),
-                // const Spacer(),
-                // CustomIcon(Icons.settings_rounded, size: 18, color: ThemeEnum.hoverSecond),
-              ],
-            ),
-          ),
-          const RSizedBox(height: 10),
           Row(
             children: [
-              Stack(clipBehavior: Clip.none, children: [
-                Container(
-                  width: 64.r,
-                  height: 64.r,
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      begin: AlignmentDirectional.centerStart,
-                      end: AlignmentDirectional.centerEnd,
-                      colors: [
-                        context.getColor(ThemeEnum.accent),
-                        context.getColor(ThemeEnum.pink),
-                      ],
-                    ),
-                    borderRadius: BorderRadius.circular(20.r),
-                  ),
-                  child: Center(
-                    child: Consumer(builder: (context, ref, child) {
-                      final name = ref.watch(
-                        currentUserNameProvider.select(
-                          (value) =>
-                              value.maybeWhen(data: (data) => data, orElse: () => StringsManager.anonymous),
-                        ),
-                      );
-
-                      return BoldText(
-                        name.isNotEmpty ? name[0].toUpperCase() : StringsManager.anonymous,
-                        color: ThemeEnum.solidWhite,
-                        fontSize: 26,
-                      );
-                    }),
-                  ),
+              Container(
+                width: 64.r,
+                height: 64.r,
+                decoration: BoxDecoration(
+                  color: context.getColor(ThemeEnum.primaryTint),
+                  borderRadius: BorderRadius.circular(20.r),
+                  border: Border.all(color: context.getColor(ThemeEnum.border)),
                 ),
-                Positioned(
-                  bottom: -6.r,
-                  right: -6.r,
-                  child: Container(
-                    padding: REdgeInsets.all(1),
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        begin: AlignmentDirectional.centerStart,
-                        end: AlignmentDirectional.centerEnd,
-                        colors: [
-                          context.getColor(ThemeEnum.accent),
-                          context.getColor(ThemeEnum.pink),
-                        ],
+                child: Center(
+                  child: Consumer(builder: (context, ref, child) {
+                    final name = ref.watch(
+                      currentUserNameProvider.select(
+                        (value) =>
+                            value.maybeWhen(data: (data) => data, orElse: () => StringsManager.anonymous),
                       ),
-                      borderRadius: BorderRadius.circular(7.r),
-                      border: Border.all(color: context.getColor(ThemeEnum.primary), width: 2.r),
-                    ),
-                    child: const CustomIcon(Icons.bolt_rounded, size: 14, color: ThemeEnum.solidWhite),
-                  ),
+                    );
+
+                    return BoldText(
+                      name.isNotEmpty ? name[0].toUpperCase() : StringsManager.anonymous,
+                      color: ThemeEnum.solidWhite,
+                      fontSize: 26,
+                    );
+                  }),
                 ),
-              ]),
+              ),
               const RSizedBox(width: 14),
               Expanded(
                 child: Consumer(
