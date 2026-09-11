@@ -46,7 +46,6 @@ abstract final class ColorManager {
   /// whites.
   static const cdPrimaryDk = Color(0xFFFFFFFF);
   static const cdPrimaryHoverDk = Color(0xFFF1F3FB);
-  static const cdPrimaryPressDk = Color(0xFFE4E7F2);
   static const cdOnPrimaryDk = Color(0xFF0B0B0D);
   static const cdPrimaryTintDk = Color(0xFF24262C); // Quiet: solid selected/pressed wash
   static const cdPrimaryRingDk = Color(0x8CFFFFFF); // white @ 55% — focus ring only, not a fill
@@ -80,21 +79,13 @@ abstract final class ColorManager {
   static const cdTextBrightDk = Color(0xFFFFFFFF);
   static const cdErrorRingDk = Color(0x1FFF6B7E);
 
-  /// Accent marks only — never on the ground, never on a data mark.
-  static const cdAccentVioletDk = Color(0xFF8B7CF6); // focus, key-bar label
-
   /// Inactive bottom-nav item (design is explicit — distinct from text secondary).
   static const cdNavInactiveDk = Color(0xFF8892AC);
 
   /// The glass material — one recipe, three depths. Fill + blur carry the depth.
-  static const glassRecessedFill100DK = Color.fromRGBO(9, 10, 15, 1); // white 4%
   static const cdGlassRecessedFillDk = Color(0x06ffffff); // white 4%
   static const cdGlassCardFillDk = Color.fromRGBO(18, 19, 25, 1); // white 5.5%
-  static const cdGlassCardFill2Dk = Color.fromRGBO(22, 24, 32, 0.803921568627451); // white 5.5%
   static const cdGlassFloatingFillDk =  Color.fromRGBO(18, 19, 25, 1); // white 10%
-  static const cdGlassSheenRecessedDk = Color(0x1AFFFFFF); // white 10%
-  static const cdGlassSheenCardDk = Color(0x29FFFFFF); // white 16%
-  static const cdGlassSheenFloatingDk = Color(0x3DFFFFFF); // white 24%
 
   /// Card / floating hairlines reuse [cdBorderDk] / [cdBorderStrongDk]; only the
   /// recessed hairline (9%) has no border-role equivalent.
@@ -138,7 +129,6 @@ abstract final class ColorManager {
 
   static const cdPrimaryLt = Color(0xFF12141C);
   static const cdPrimaryHoverLt = Color(0xFF2A2D38);
-  static const cdPrimaryPressLt = Color(0xFF0B0D14);
   static const cdOnPrimaryLt = Color(0xFFFFFFFF);
   static const cdPrimaryTintLt = Color(0xFFECEDF0);
   static const cdPrimaryRingLt = Color(0x73101114); // #101114 @ 45% — focus ring only, not a fill
@@ -171,21 +161,13 @@ abstract final class ColorManager {
   static const cdTextBrightLt = Color(0xFF101114);
   static const cdErrorRingLt = Color(0x1FC1414D);
 
-  static const cdAccentVioletLt = Color(0xFF5C6CF2);
-
   static const cdNavInactiveLt = Color(0xFF6A7387);
 
   /// Placeholder light glass — black-alpha fills, white sheens. Polished later.
   static const cdGlassRecessedFillLt = Color(0x0A000000);
-  /// TODO: edit it based on black, i get the dark theme from the other filter color
-  static const cdGlassRecessedFill100Lt = Color(0x0A000000);
 
   static const cdGlassCardFillLt = Color(0x0E000000);
-  static const cdGlassCardFill2Lt = Color(0x0E000000);
   static const cdGlassFloatingFillLt = Color(0x14000000);
-  static const cdGlassSheenRecessedLt = Color(0x80FFFFFF);
-  static const cdGlassSheenCardLt = Color(0x99FFFFFF);
-  static const cdGlassSheenFloatingLt = Color(0xB3FFFFFF);
   static const cdGlassHairlineRecessedLt = Color(0x12000000);
 
   static const cdCodeGutterLt = cdTextSecondaryLt;
