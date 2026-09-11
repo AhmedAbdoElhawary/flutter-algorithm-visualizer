@@ -36,7 +36,7 @@ class GridSquaresView extends StatelessWidget {
           child: CustomPaint(
             size: perfectSize,
             painter: GridSquaresPainter(
-              backgroundColor: context.getColor(ThemeEnum.backgroundForSortingColor),
+              backgroundColor: context.getColor(ThemeEnum.glassRecessedFill100).withValues(alpha: 0.8),
               borderColor: context.getColor(ThemeEnum.border),
               squareSize: squareSize,
               height: perfectSize.height,
