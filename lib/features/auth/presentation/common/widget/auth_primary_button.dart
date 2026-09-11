@@ -55,7 +55,6 @@ class _AuthPrimaryButtonState extends State<AuthPrimaryButton> {
           decoration: BoxDecoration(
             color: context.getColor(bg),
             borderRadius: BorderRadius.circular(CdRadius.md.r),
-            boxShadow: disabled ? null : context.cdGlow,
           ),
           child: Center(
             child: widget.isLoading

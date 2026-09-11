@@ -39,7 +39,6 @@ class ConfirmationDialogCard extends StatelessWidget {
         color: context.getColor(ThemeEnum.card),
         borderRadius: BorderRadius.circular(16.r),
         border: Border.all(color: context.getColor(ThemeEnum.border)),
-        boxShadow: context.cardShadow,
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,

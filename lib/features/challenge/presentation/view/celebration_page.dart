@@ -257,7 +257,6 @@ class _CheckmarkState extends State<_Checkmark>
         decoration: BoxDecoration(
           color: context.getColor(ThemeEnum.solidWhite),
           borderRadius: BorderRadius.circular(28.r),
-          boxShadow: CdElevation.glow,
         ),
         child: Icon(
           Icons.check_rounded,

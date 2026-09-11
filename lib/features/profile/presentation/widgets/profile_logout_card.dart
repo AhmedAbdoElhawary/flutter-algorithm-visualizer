@@ -97,7 +97,6 @@ class _AccountCardBody extends StatelessWidget {
         border: Border.all(
           color: context.getColor(accentColor).withValues(alpha: 0.25),
         ),
-        boxShadow: context.cardShadow,
       ),
       child: Row(
         children: [

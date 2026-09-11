@@ -1,4 +1,3 @@
-import 'package:algorithm_visualizer/core/resources/color_manager.dart';
 import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
 import 'package:algorithm_visualizer/core/widgets/adaptive/text/adaptive_text.dart';
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/glass_card.dart';
@@ -84,23 +83,8 @@ class _PlayButton extends StatelessWidget {
         width: 48.r,
         height: 48.r,
         decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: AlignmentDirectional.topStart,
-            end: AlignmentDirectional.bottomEnd,
-            colors: [
-              context.getColor(ThemeEnum.accent),
-              ColorManager.pinkColor,
-            ],
-          ),
+          color: context.getColor(ThemeEnum.accent),
           borderRadius: BorderRadius.circular(14),
-          boxShadow: [
-            BoxShadow(
-              color: context.getColor(ThemeEnum.accent).withValues(alpha: 0.25),
-              blurRadius: 1,
-              spreadRadius: 0.4,
-              offset: const Offset(0, 0),
-            ),
-          ],
         ),
         child: Icon(
           playing ? Icons.pause_rounded : Icons.play_arrow_rounded,

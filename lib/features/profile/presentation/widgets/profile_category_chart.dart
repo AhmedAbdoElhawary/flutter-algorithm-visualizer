@@ -28,7 +28,6 @@ class ProfileCategoryChart extends ConsumerWidget {
           color: context.getColor(ThemeEnum.card),
           borderRadius: BorderRadius.circular(12),
           border: Border.all(color: context.getColor(ThemeEnum.border)),
-          boxShadow: context.cardShadow,
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
