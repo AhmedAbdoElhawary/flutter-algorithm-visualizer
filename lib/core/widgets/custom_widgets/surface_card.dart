@@ -10,12 +10,17 @@ class SurfaceCard extends StatelessWidget {
   final VoidCallback? onTap;
   final bool clip;
 
+  /// False for an outline-only panel (no `surface` fill) — the Visualizer's
+  /// plot/grid panels, which sit directly on `background base`.
+  final bool filled;
+
   const SurfaceCard({
     super.key,
     required this.child,
     this.padding = const EdgeInsets.all(14),
     this.onTap,
     this.clip = false,
+    this.filled = true,
   });
 
   @override
@@ -23,7 +28,7 @@ class SurfaceCard extends StatelessWidget {
     final radius = BorderRadius.circular(14.r);
     final decorated = Container(
       decoration: BoxDecoration(
-        color: context.getColor(ThemeEnum.mainCard),
+        color: filled ? context.getColor(ThemeEnum.mainCard) : null,
         borderRadius: radius,
         border: Border.all(color: context.getColor(ThemeEnum.borderSubtle)),
       ),

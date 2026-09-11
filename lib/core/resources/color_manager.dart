@@ -16,11 +16,9 @@ abstract final class ColorManager {
   /// -------- shared / static (not theme-resolved) ------------>
 
   static const Color targetSearchingPoint = Color.fromRGBO(66, 8, 99, 1.0);
-  static const Color wallBlack = Color.fromRGBO(22, 68, 101, 1.0);
 
   static const Color pinkColor = Color.fromRGBO(192, 132, 252, 1);
   static const Color lightPinkColor = Color.fromRGBO(192, 132, 252, 0.1);
-  static const Color columnSortColor = Color.fromRGBO(26, 47, 80, 0.7);
   static const Color backgroundForSortingColor = Color.fromRGBO(14, 23, 41, 0.3);
   static const Color white2DarkColor = Color(0xFF9BAAA6);
   static const Color textDarkColor = Color(0xFF7C87A3);
