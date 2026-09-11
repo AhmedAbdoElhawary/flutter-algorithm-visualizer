@@ -1,3 +1,4 @@
+import 'package:algorithm_visualizer/core/resources/dimensions_manager.dart';
 import 'package:algorithm_visualizer/core/resources/styles_manager.dart';
 import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
 import 'package:algorithm_visualizer/core/widgets/adaptive/text/adaptive_text.dart';
@@ -272,11 +273,22 @@ class _ShowUpSortingListState extends ConsumerState<ShowUpSortingList> {
                           size: size,
                           itemWidth: itemWidth,
                           instance: widget.instance,
-                          speedDuration: speed.stepSortingDuration * 0.5,
                           selectedAlgorithmLength: widget.selectedAlgorithmLength,
                           isLastItem: index == items.length - 1),
                       const RSizedBox(height: 4),
-                      MediumText('$index', fontSize: 10, color: ThemeEnum.textDisabled),
+                      Consumer(
+                        builder: (context, ref, _) {
+                          final status = ref.watch(widget.instance.select((s) =>
+                              index < s.list.length ? s.list[index].sortedStatus : SortingStatus.none));
+                          return MediumText(
+                            '$index',
+                            fontSize: 10,
+                            color: status == SortingStatus.compared
+                                ? ThemeEnum.comparing
+                                : ThemeEnum.textDisabled,
+                          );
+                        },
+                      ),
                     ],
                   ),
                 );
@@ -293,7 +305,6 @@ class _BuildItem extends ConsumerWidget {
   const _BuildItem({
     required this.item,
     required this.index,
-    required this.speedDuration,
     required this.instance,
     required this.selectedAlgorithmLength,
     required this.isLastItem,
@@ -304,7 +315,6 @@ class _BuildItem extends ConsumerWidget {
   final int size;
   final int index;
   final SortableItem item;
-  final Duration speedDuration;
   final NotifierProvider<SortingNotifier, SortingNotifierState> instance;
   final int selectedAlgorithmLength;
   final bool isLastItem;
@@ -316,24 +326,35 @@ class _BuildItem extends ConsumerWidget {
         SortingNotifier.calculateItemHeight(item.value, size, selectedAlgorithmLength);
     final color = context.getColor(currentItem?.getColor ?? SortingNotifier.itemColor);
 
+    // The value label reads its own state, not the bar's colour: primary for
+    // compare/swap, success when locked, violet for the white "held" bar so it
+    // does not vanish into it, secondary otherwise.
+    final labelColor = context.getColor(switch (currentItem?.sortedStatus ?? SortingStatus.none) {
+      SortingStatus.compared || SortingStatus.swapping => ThemeEnum.textPrimary,
+      SortingStatus.sorted => ThemeEnum.difficultyEasy,
+      SortingStatus.temporary => ThemeEnum.accentViolet,
+      SortingStatus.none => ThemeEnum.textSecond,
+    });
+
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
         AnimatedDefaultTextStyle(
-          duration: speedDuration,
-          style: GetMediumStyle(fontSize: 10, color: color),
+          // Label + colour react fast (180ms); the bar's geometry eases at
+          // 240ms — the split keeps the number legible while the bar resizes.
+          duration: CdMotion.barColour,
+          style: GetMediumStyle(fontSize: 10, color: labelColor),
           child: Text(writtenHeight),
         ),
         const RSizedBox(height: 4),
+        // Colour and height carry all meaning — no shadow, glow, gradient, or
+        // opacity on the bar.
         AnimatedContainer(
-          duration: speedDuration,
+          duration: CdMotion.barHeight,
           width: itemWidth,
           height: actualHeight,
           decoration: BoxDecoration(
             color: color,
-            boxShadow: currentItem == null || currentItem.getColor == SortingNotifier.itemColor
-                ? null
-                : [BoxShadow(color: color.withValues(alpha: 0.35), blurRadius: 10)],
             borderRadius: BorderRadius.vertical(top: Radius.circular(3.r), bottom: Radius.circular(3.r)),
           ),
         ),
