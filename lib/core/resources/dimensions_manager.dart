@@ -35,6 +35,20 @@ abstract final class CdRadius {
   static const double lg = 16;
   static const double xl = 19;
   static const double pill = 999;
+
+  /// Quiet theme geometry (PROMPT_QUIET.md Step 1): small badges/icon buttons
+  /// at 8-10, medium 12, large 14 (== [md], every Quiet card), dialog 18,
+  /// tiny 3 (bar/heat-cell corners), the progress bar's half-height cap.
+  static const double xs = 8;
+  static const double smAlt = 10;
+  static const double medium = 12;
+  static const double dialog = 18;
+  static const double tiny = 3;
+  static const double hairlinePill = 1.5;
+
+  /// The segmented control's selected-segment radius (7), one step tighter
+  /// than the group's own outline radius (10 -> [smAlt]).
+  static const double segment = 7;
 }
 
 abstract final class CdMotion {
