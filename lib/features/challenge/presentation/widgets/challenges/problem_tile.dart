@@ -3,6 +3,7 @@ import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
 import 'package:algorithm_visualizer/core/widgets/adaptive/padding/adaptive_padding.dart';
 import 'package:algorithm_visualizer/core/widgets/adaptive/text/adaptive_text.dart';
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/custom_icon.dart';
+import 'package:algorithm_visualizer/core/widgets/custom_widgets/glass_card.dart';
 import 'package:algorithm_visualizer/features/challenge/domain/entities/coding_problem.dart';
 import 'package:algorithm_visualizer/features/challenge/domain/enums/problem.dart';
 import 'package:algorithm_visualizer/features/challenge/presentation/helper/problem_style.dart';
@@ -31,17 +32,12 @@ class ProblemTile extends ConsumerWidget {
 
     return Padding(
       padding: REdgeInsets.only(bottom: 6),
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 200),
-        decoration: BoxDecoration(
-          color: context.getColor(ThemeEnum.card),
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(
-              color:
-                  expanded ? context.getColor(ThemeEnum.borderAccent) : context.getColor(ThemeEnum.border)),
-          boxShadow: context.cardShadow,
-        ),
-        clipBehavior: Clip.hardEdge,
+      child: GlassContainer(
+        fillCardTheme: ThemeEnum.glassCardFill2,
+        depth: GlassDepth.card,
+        durationForAnimation: const Duration(milliseconds: 200),
+        borderRadius: 12,
+        allowCardTopShadow: !expanded,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -97,7 +93,7 @@ class _MainRow extends StatelessWidget {
             const RSizedBox(width: 6),
             BoldText('${problem.number}.', color: ThemeEnum.hover, fontSize: 11),
             const RSizedBox(width: 6),
-            Expanded(child: BoldText(problem.getName, color: ThemeEnum.textSecond, fontSize: 13)),
+            Expanded(child: BoldText(problem.getName, color: ThemeEnum.white2DarkColor, fontSize: 13)),
             const RSizedBox(width: 4),
 
             BoldText(problem.getDifficulty.difficultyString, color: diffColor, fontSize: 11),
@@ -105,7 +101,7 @@ class _MainRow extends StatelessWidget {
             AnimatedRotation(
               turns: expanded ? 0.25 : 0,
               duration: const Duration(milliseconds: 200),
-              child: const CustomIcon(Icons.chevron_right_rounded, size: 16, color: ThemeEnum.hoverSecond),
+              child: const CustomIcon(Icons.chevron_right_rounded, size: 16, color: ThemeEnum.white2DarkColor),
             ),
           ],
         ),
