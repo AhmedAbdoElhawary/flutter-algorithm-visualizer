@@ -88,11 +88,13 @@ class _ShimmerBoxState extends State<_ShimmerBox> with SingleTickerProviderState
     super.initState();
     _controller = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 1500),
-    )..repeat();
+      duration: const Duration(milliseconds: 1100),
+    )..repeat(reverse: true);
 
-    _animation = Tween<double>(begin: -1, end: 1).animate(
-      CurvedAnimation(parent: _controller, curve: Curves.easeInOutSine),
+    // No gradient sweep — a flat glass fill that breathes in opacity. Aurora
+    // rule: skeletons carry meaning through fill and opacity only.
+    _animation = Tween<double>(begin: 0.35, end: 1).animate(
+      CurvedAnimation(parent: _controller, curve: Curves.easeInOut),
     );
   }
 
@@ -104,31 +106,16 @@ class _ShimmerBoxState extends State<_ShimmerBox> with SingleTickerProviderState
 
   @override
   Widget build(BuildContext context) {
-    return AnimatedBuilder(
-      animation: _animation,
-      builder: (context, child) {
-        return Container(
-          width: widget.width?.r,
-          height: widget.height?.r,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(3),
-            gradient: LinearGradient(
-              begin: Alignment.centerLeft,
-              end: Alignment.centerRight,
-              colors: [
-                context.getColor(ThemeEnum.hover).withValues(alpha: 0.05),
-                context.getColor(ThemeEnum.hover).withValues(alpha: 0.1),
-                context.getColor(ThemeEnum.hover).withValues(alpha: 0.05),
-              ],
-              stops: [
-                _animation.value - 1,
-                _animation.value,
-                _animation.value + 1,
-              ],
-            ),
-          ),
-        );
-      },
+    return FadeTransition(
+      opacity: _animation,
+      child: Container(
+        width: widget.width?.r,
+        height: widget.height?.r,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(3.r),
+          color: context.getColor(ThemeEnum.primaryTint),
+        ),
+      ),
     );
   }
 }
