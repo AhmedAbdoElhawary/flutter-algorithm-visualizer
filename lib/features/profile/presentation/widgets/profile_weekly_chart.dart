@@ -23,8 +23,9 @@ class ProfileWeeklyChart extends ConsumerWidget {
       startPadding: 16,
       endPadding: 16,
       bottomPadding: 14,
-      child: SimpleGlassButton(
-        padding: 14,
+      child: GlassContainer(
+        depth: GlassDepth.card,
+        borderRadius: 20,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -36,7 +37,7 @@ class ProfileWeeklyChart extends ConsumerWidget {
                 fontSize: 12,
               ),
             ]),
-            SizedBox(height: 12.h),
+            const RSizedBox(height: 12),
             RSizedBox(
               height: 90,
               child: Row(
@@ -60,11 +61,9 @@ class ProfileWeeklyChart extends ConsumerWidget {
                             ),
                           const RSizedBox(height: 4),
                           Container(
-                            height: (50.h * fraction).clamp(4.0, 50.0),
+                            height: (50.r * fraction).clamp(4.0, 50.0),
                             decoration: BoxDecoration(
-                              color: isToday
-                                  ? context.getColor(ThemeEnum.accent)
-                                  : context.getColor(ThemeEnum.accent).withValues(alpha: 0.3),
+                              color: context.getColor(isToday ? ThemeEnum.accentGreen : ThemeEnum.barIdle),
                               borderRadius: BorderRadius.circular(4.r),
                             ),
                           ),
@@ -72,7 +71,7 @@ class ProfileWeeklyChart extends ConsumerWidget {
                           RegularText(
                             _dayLabels[i],
                             fontSize: 10,
-                            color: isToday ? ThemeEnum.accent : ThemeEnum.textSecond,
+                            color: isToday ? ThemeEnum.textPrimary : ThemeEnum.textSecond,
                           ),
                         ],
                       ),
