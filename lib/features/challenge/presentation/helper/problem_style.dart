@@ -1,5 +1,6 @@
 import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
-import 'package:algorithm_visualizer/core/widgets/custom_widgets/aurora_chips.dart';
+import 'package:algorithm_visualizer/core/widgets/custom_widgets/aurora_chips.dart' hide DifficultyChip;
+import 'package:algorithm_visualizer/core/widgets/custom_widgets/difficulty_chip.dart';
 import 'package:algorithm_visualizer/features/challenge/domain/enums/problem.dart';
 import 'package:flutter/material.dart';
 
@@ -13,6 +14,15 @@ class ProblemStyle {
         ProblemDifficulty.easy => ChipDifficulty.easy,
         ProblemDifficulty.medium => ChipDifficulty.medium,
         ProblemDifficulty.hard => ChipDifficulty.hard,
+        ProblemDifficulty.none => null,
+      };
+
+  /// Same mapping onto the Quiet [DifficultyChip]'s [Difficulty] level.
+  static Difficulty? quietChipDifficulty(ProblemDifficulty difficulty) =>
+      switch (difficulty) {
+        ProblemDifficulty.easy => Difficulty.easy,
+        ProblemDifficulty.medium => Difficulty.medium,
+        ProblemDifficulty.hard => Difficulty.hard,
         ProblemDifficulty.none => null,
       };
 

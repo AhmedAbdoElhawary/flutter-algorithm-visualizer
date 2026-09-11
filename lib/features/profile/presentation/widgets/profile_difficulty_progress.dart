@@ -3,7 +3,8 @@ import 'package:algorithm_visualizer/core/resources/styles_manager.dart';
 import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
 import 'package:algorithm_visualizer/core/widgets/adaptive/padding/adaptive_padding.dart';
 import 'package:algorithm_visualizer/core/widgets/adaptive/text/adaptive_text.dart';
-import 'package:algorithm_visualizer/core/widgets/custom_widgets/glass_card.dart';
+import 'package:algorithm_visualizer/core/widgets/custom_widgets/quiet_progress_bar.dart';
+import 'package:algorithm_visualizer/core/widgets/custom_widgets/surface_card.dart';
 import 'package:algorithm_visualizer/features/profile/presentation/view_model/statistics/profile_statistics_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -38,9 +39,7 @@ class ProfileDifficultyProgress extends ConsumerWidget {
     ];
     return HorizontalPadding(
       padding: 16,
-      child: GlassContainer(
-        depth: GlassDepth.card,
-        borderRadius: 20,
+      child: SurfaceCard(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -82,19 +81,11 @@ class _DifficultyRow extends StatelessWidget {
             ],
           ),
           const RSizedBox(height: 4),
-          ClipRRect(
-            borderRadius: BorderRadius.circular(3),
-            child: TweenAnimationBuilder<double>(
-              tween: Tween(begin: 0, end: b.total == 0 ? 0 : b.solved / b.total),
-              duration: const Duration(milliseconds: 900),
-              curve: Curves.easeOut,
-              builder: (_, v, __) => LinearProgressIndicator(
-                value: v,
-                minHeight: 6.h,
-                backgroundColor: context.getColor(ThemeEnum.border),
-                valueColor: AlwaysStoppedAnimation(context.getColor(b.color).withValues(alpha: 0.85)),
-              ),
-            ),
+          TweenAnimationBuilder<double>(
+            tween: Tween(begin: 0, end: b.total == 0 ? 0 : b.solved / b.total),
+            duration: const Duration(milliseconds: 900),
+            curve: Curves.easeOut,
+            builder: (_, v, __) => QuietProgressBar(value: v, fill: b.color),
           ),
         ],
       ),

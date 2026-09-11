@@ -4,11 +4,15 @@ import 'package:algorithm_visualizer/core/resources/strings_manager.dart';
 import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
 import 'package:algorithm_visualizer/core/widgets/adaptive/padding/adaptive_padding.dart';
 import 'package:algorithm_visualizer/core/widgets/adaptive/text/adaptive_text.dart';
-import 'package:algorithm_visualizer/core/widgets/custom_widgets/glass_card.dart';
+import 'package:algorithm_visualizer/core/widgets/custom_widgets/difficulty_chip.dart';
+import 'package:algorithm_visualizer/core/widgets/custom_widgets/icon_button_quiet.dart';
+import 'package:algorithm_visualizer/core/widgets/custom_widgets/live_session_card.dart';
+import 'package:algorithm_visualizer/core/widgets/custom_widgets/surface_card.dart';
 import 'package:algorithm_visualizer/features/challenge/domain/entities/coding_problem.dart';
 import 'package:algorithm_visualizer/features/challenge/domain/enums/problem.dart';
 import 'package:algorithm_visualizer/features/challenge/presentation/helper/problem_style.dart';
 import 'package:algorithm_visualizer/features/home/view_model/home_provider.dart';
+import 'package:algorithm_visualizer/features/visualize/view_model/live_session_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -18,33 +22,33 @@ class HomeContinueCard extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final isLive = ref.watch(liveSessionProvider.select((s) => s != null));
+    if (isLive) {
+      return const OnlyPadding(
+        startPadding: 16,
+        endPadding: 16,
+        bottomPadding: 14,
+        child: LiveSessionCard(),
+      );
+    }
+
     final problem = ref.watch(homeDataProvider.select((s) => s.continueProblem));
 
     if (problem == null) return const SizedBox.shrink();
 
-    final diffColor = ProblemStyle.difficultyColor(problem.getDifficulty);
+    final quietDifficulty = ProblemStyle.quietChipDifficulty(problem.getDifficulty);
     final diffLabel = problem.getDifficulty.difficultyString;
 
     return OnlyPadding(
       startPadding: 16,
       endPadding: 16,
       bottomPadding: 14,
-      child: GlassContainer(
-        depth: GlassDepth.card,
-        borderRadius: 20,
+      child: SurfaceCard(
         padding: REdgeInsets.all(16),
         onTap: () => context.pushTo(Routes.problem, queryParameters: '${problem.getProblemId}'),
         child: Row(
             children: [
-              Container(
-                width: 48.w,
-                height: 48.w,
-                decoration: BoxDecoration(
-                  color: context.getColor(ThemeEnum.accentXp),
-                  borderRadius: BorderRadius.circular(14.r),
-                ),
-                child: Icon(Icons.play_arrow_rounded, color: context.getColor(ThemeEnum.onPrimary), size: 24.r),
-              ),
+              const IconButtonQuiet(icon: Icons.play_arrow_rounded, size: 48, iconSize: 24, filled: true),
               SizedBox(width: 14.w),
               Expanded(
                 child: Column(
@@ -64,15 +68,7 @@ class HomeContinueCard extends ConsumerWidget {
                   ],
                 ),
               ),
-              if (diffLabel.isNotEmpty)
-                Container(
-                  padding: REdgeInsets.symmetric(horizontal: 9, vertical: 4),
-                  decoration: BoxDecoration(
-                    color: context.getColor(diffColor).withValues(alpha: 0.14),
-                    borderRadius: BorderRadius.circular(999),
-                  ),
-                  child: RegularText(diffLabel, fontSize: 10, color: diffColor),
-                ),
+              if (quietDifficulty != null) DifficultyChip(difficulty: quietDifficulty, label: diffLabel),
               Icon(Icons.chevron_right_rounded, color: context.getColor(ThemeEnum.textSecond), size: 20.r),
             ],
           ),
