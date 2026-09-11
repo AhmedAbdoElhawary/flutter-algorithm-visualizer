@@ -45,7 +45,9 @@ class StatTile extends StatelessWidget {
                 if (icon != null) Icon(icon, size: 18.r, color: context.getColor(ThemeEnum.textBody)),
                 const Spacer(),
                 if (sub != null && sub!.isNotEmpty)
-                  RegularText(sub!, fontSize: 10, color: ThemeEnum.textSecond),
+                  Flexible(
+                    child: RegularText(sub!, fontSize: 10, color: ThemeEnum.textSecond, maxLines: 1),
+                  ),
               ],
             ),
             const RSizedBox(height: 6),
