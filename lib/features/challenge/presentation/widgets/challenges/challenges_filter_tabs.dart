@@ -49,7 +49,7 @@ class ChallengesFilterTabs extends ConsumerWidget {
                   children: [
                     BoldText(f.difficultyString, color: active ? color : ThemeEnum.hover, fontSize: 13),
                     const SizedBox(width: 5),
-                    SemiBoldText(count, color: active ? color : ThemeEnum.hoverSecond, fontSize: 11),
+                    SemiBoldText(count, color: active ? color : ThemeEnum.hover, fontSize: 11),
                   ],
                 ),
               ),
