@@ -50,26 +50,33 @@ class _BottomNavBar extends StatelessWidget {
     return SafeArea(
       top: false,
       child: Container(
-        height: 64.h,
         width: double.infinity,
-        padding: REdgeInsetsDirectional.fromSTEB(0, 6, 0, 6),
-        decoration: BoxDecoration(
-          color: context.getColor(ThemeEnum.primary),
-          border: Border(top: BorderSide(color: context.getColor(ThemeEnum.borderSubtle))),
-        ),
-        child: Row(
-          children: List.generate(_destinations.length, (i) {
-            final d = _destinations[i];
-            final active = i == current;
-            return Expanded(
-              child: _NavItem(
-                icon: active ? d.activeIcon : d.icon,
-                label: d.label,
-                active: active,
-                onTap: () => _go(i),
+        color: context.getColor(ThemeEnum.primary),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(height: 1, color: context.getColor(ThemeEnum.borderSubtle)),
+            SizedBox(
+              height: 63.h,
+              child: Padding(
+                padding: REdgeInsetsDirectional.fromSTEB(0, 6, 0, 6),
+                child: Row(
+                  children: List.generate(_destinations.length, (i) {
+                    final d = _destinations[i];
+                    final active = i == current;
+                    return Expanded(
+                      child: _NavItem(
+                        icon: active ? d.activeIcon : d.icon,
+                        label: d.label,
+                        active: active,
+                        onTap: () => _go(i),
+                      ),
+                    );
+                  }),
+                ),
               ),
-            );
-          }),
+            ),
+          ],
         ),
       ),
     );

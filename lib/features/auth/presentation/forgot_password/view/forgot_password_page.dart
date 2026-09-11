@@ -2,11 +2,11 @@ import 'package:algorithm_visualizer/config/routes/route_app.dart';
 import 'package:algorithm_visualizer/core/resources/dimensions_manager.dart';
 import 'package:algorithm_visualizer/core/resources/strings_manager.dart';
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/custom_snack_bar.dart';
+import 'package:algorithm_visualizer/core/widgets/custom_widgets/primary_button_quiet.dart';
 import 'package:algorithm_visualizer/features/auth/presentation/common/widget/auth_common_bits.dart';
-import 'package:algorithm_visualizer/features/auth/presentation/common/widget/auth_logo_tile.dart';
-import 'package:algorithm_visualizer/features/auth/presentation/common/widget/auth_primary_button.dart';
+import 'package:algorithm_visualizer/core/widgets/custom_widgets/auth_logo_tile.dart';
 import 'package:algorithm_visualizer/features/auth/presentation/common/widget/auth_scaffold.dart';
-import 'package:algorithm_visualizer/features/auth/presentation/common/widget/auth_text_field.dart';
+import 'package:algorithm_visualizer/core/widgets/custom_widgets/auth_text_field.dart';
 import 'package:algorithm_visualizer/features/auth/presentation/forgot_password/view_model/forgot_password_auth_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -79,9 +79,9 @@ class _ForgotPasswordPageState extends ConsumerState<ForgotPasswordPage> {
           onSubmitted: (_) => _onSendCode(),
         ),
         SizedBox(height: CdSpace.x6.h),
-        AuthPrimaryButton(
-          title: StringsManager.sendCode,
-          isLoading: isLoading,
+        PrimaryButtonQuiet(
+          label: StringsManager.sendCode,
+          loading: isLoading,
           onPressed: _onSendCode,
         ),
         SizedBox(height: CdSpace.x6.h),

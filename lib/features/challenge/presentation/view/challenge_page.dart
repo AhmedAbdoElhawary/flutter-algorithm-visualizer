@@ -1,7 +1,7 @@
 import 'package:algorithm_visualizer/config/routes/route_app.dart';
 import 'package:algorithm_visualizer/core/extensions/navigators.dart';
 import 'package:algorithm_visualizer/features/challenge/presentation/widgets/challenges/error_state.dart';
-import 'package:algorithm_visualizer/features/challenge/presentation/widgets/challenges/loading_state.dart';
+import 'package:algorithm_visualizer/core/widgets/custom_widgets/loading_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
