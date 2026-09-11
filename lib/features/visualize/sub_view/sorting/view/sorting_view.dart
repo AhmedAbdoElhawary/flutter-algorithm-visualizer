@@ -327,25 +327,32 @@ class _BuildItem extends ConsumerWidget {
         SortingNotifier.calculateItemHeight(item.value, size, selectedAlgorithmLength);
     final fill = currentItem?.getColor ?? SortingNotifier.itemColor;
 
-    // The value label reads its own state, not the bar's colour: primary for
-    // compare/swap, success when locked, violet for the white "held" bar so it
-    // does not vanish into it, secondary otherwise.
+    // Value labels: text primary above a white bar (compared/held), success
+    // when locked in, text secondary otherwise (per PROMPT_QUIET.md Step 6).
     final labelColor = context.getColor(switch (currentItem?.sortedStatus ?? SortingStatus.none) {
-      SortingStatus.compared || SortingStatus.swapping => ThemeEnum.textPrimary,
+      SortingStatus.compared || SortingStatus.temporary => ThemeEnum.textPrimary,
       SortingStatus.sorted => ThemeEnum.difficultyEasy,
-      SortingStatus.temporary => ThemeEnum.accentViolet,
-      SortingStatus.none => ThemeEnum.textSecond,
+      SortingStatus.swapping || SortingStatus.none => ThemeEnum.textSecond,
     });
 
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        AnimatedDefaultTextStyle(
-          // Label + colour react fast (180ms); the bar's geometry eases at
-          // 240ms — the split keeps the number legible while the bar resizes.
-          duration: CdMotion.barColour,
-          style: GetMediumStyle(fontSize: 10, color: labelColor),
-          child: Text(writtenHeight),
+        // Fixed-height label row: the value/max fraction below always
+        // resolves against the bar's own track height alone, never against
+        // label + gap + bar (FR-015) — a column can't overflow the label
+        // into the bar's allotted box.
+        SizedBox(
+          height: 14.h,
+          child: Center(
+            child: AnimatedDefaultTextStyle(
+              // Label + colour react fast (180ms); the bar's geometry eases at
+              // 240ms — the split keeps the number legible while the bar resizes.
+              duration: CdMotion.barColour,
+              style: GetMediumStyle(fontSize: 10, color: labelColor),
+              child: Text(writtenHeight),
+            ),
+          ),
         ),
         const RSizedBox(height: 4),
         // Colour and height carry all meaning — no shadow, glow, gradient, or
