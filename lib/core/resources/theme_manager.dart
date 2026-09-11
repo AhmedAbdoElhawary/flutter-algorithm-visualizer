@@ -94,14 +94,8 @@ enum ThemeEnum {
   heat3,
   heat4,
 
-  /// The aurora — dim indigo/cyan bands + dot grid on the ground
-  glowIndigo,
-  glowCyan,
-  dotGrid,
-
-  /// Accent marks only (focus, key-bar label, small azure marks)
+  /// Accent marks only (focus, key-bar label)
   accentViolet,
-  accentAzure,
 
   /// Bottom-nav inactive item
   navInactive,
@@ -143,13 +137,6 @@ extension ThemeExtension on BuildContext {
   bool get isThemeDark => Theme.of(this).brightness == Brightness.dark;
 
   T _pick<T>(T dark, T light) => isThemeDark ? dark : light;
-
-  List<BoxShadow> get cardShadow => isThemeDark
-      ? []
-      : [
-          BoxShadow(color: Colors.black.withValues(alpha: 0.05), blurRadius: 12, offset: const Offset(0, 2)),
-          BoxShadow(color: Colors.black.withValues(alpha: 0.04), spreadRadius: 1),
-        ];
 
   Map<ThemeEnum, Color> get _colors {
     return {
@@ -248,12 +235,7 @@ extension ThemeExtension on BuildContext {
       ThemeEnum.heat3: _pick(ColorManager.cdHeatDk[3], ColorManager.cdHeatLt[3]),
       ThemeEnum.heat4: _pick(ColorManager.cdHeatDk[4], ColorManager.cdHeatLt[4]),
 
-      ThemeEnum.glowIndigo: _pick(ColorManager.cdGlowIndigoDk, ColorManager.cdGlowIndigoLt),
-      ThemeEnum.glowCyan: _pick(ColorManager.cdGlowCyanDk, ColorManager.cdGlowCyanLt),
-      ThemeEnum.dotGrid: _pick(ColorManager.cdDotGridDk, ColorManager.cdDotGridLt),
-
       ThemeEnum.accentViolet: _pick(ColorManager.cdAccentVioletDk, ColorManager.cdAccentVioletLt),
-      ThemeEnum.accentAzure: _pick(ColorManager.cdAccentAzureDk, ColorManager.cdAccentAzureLt),
 
       ThemeEnum.navInactive: _pick(ColorManager.cdNavInactiveDk, ColorManager.cdNavInactiveLt),
 
