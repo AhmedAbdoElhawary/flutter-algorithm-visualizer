@@ -1,5 +1,4 @@
 import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
-import 'package:algorithm_visualizer/core/widgets/custom_widgets/aurora_chips.dart' hide DifficultyChip;
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/difficulty_chip.dart';
 import 'package:algorithm_visualizer/features/challenge/domain/enums/problem.dart';
 import 'package:flutter/material.dart';
@@ -7,17 +6,8 @@ import 'package:flutter/material.dart';
 class ProblemStyle {
   const ProblemStyle._();
 
-  /// Maps the domain difficulty onto the chip's semantic level ([ChipDifficulty]
-  /// has no `none` — callers treat null as the neutral / "All" case).
-  static ChipDifficulty? chipDifficulty(ProblemDifficulty difficulty) =>
-      switch (difficulty) {
-        ProblemDifficulty.easy => ChipDifficulty.easy,
-        ProblemDifficulty.medium => ChipDifficulty.medium,
-        ProblemDifficulty.hard => ChipDifficulty.hard,
-        ProblemDifficulty.none => null,
-      };
-
-  /// Same mapping onto the Quiet [DifficultyChip]'s [Difficulty] level.
+  /// Maps the domain difficulty onto the Quiet [DifficultyChip]'s [Difficulty]
+  /// level (has no `none` — callers treat null as the neutral / "All" case).
   static Difficulty? quietChipDifficulty(ProblemDifficulty difficulty) =>
       switch (difficulty) {
         ProblemDifficulty.easy => Difficulty.easy,

@@ -3,8 +3,8 @@ import 'package:algorithm_visualizer/core/resources/dimensions_manager.dart';
 import 'package:algorithm_visualizer/core/resources/strings_manager.dart';
 import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
 import 'package:algorithm_visualizer/core/widgets/adaptive/text/adaptive_text.dart';
-import 'package:algorithm_visualizer/core/widgets/custom_widgets/aurora_buttons.dart';
-import 'package:algorithm_visualizer/core/widgets/custom_widgets/glass_card.dart';
+import 'package:algorithm_visualizer/core/widgets/custom_widgets/primary_button_quiet.dart';
+import 'package:algorithm_visualizer/core/widgets/custom_widgets/secondary_button_quiet.dart';
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/stat_tile.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -70,8 +70,7 @@ class _CelebrationPageState extends State<CelebrationPage>
 
     return Scaffold(
       backgroundColor: context.getColor(ThemeEnum.primary),
-      body: AuroraGround(
-        child: SafeArea(
+      body: SafeArea(
           child: Stack(
             children: [
               SingleChildScrollView(
@@ -139,12 +138,12 @@ class _CelebrationPageState extends State<CelebrationPage>
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      AuroraPrimaryButton(
+                      PrimaryButtonQuiet(
                         label: StringsManager.nextProblem,
                         onPressed: () => context.go(Routes.practice.path),
                       ),
                       const RSizedBox(height: 10),
-                      AuroraSecondaryButton(
+                      SecondaryButtonQuiet(
                         label: StringsManager.seeTheVisualTrace,
                         onPressed: () => context.pop(),
                       ),
@@ -155,7 +154,6 @@ class _CelebrationPageState extends State<CelebrationPage>
             ],
           ),
         ),
-      ),
     );
   }
 }
@@ -186,6 +184,24 @@ class _Stage extends StatelessWidget {
   }
 }
 
+class _RingPainter extends CustomPainter {
+  const _RingPainter({required this.color});
+
+  final Color color;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final paint = Paint()
+      ..color = color
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 2;
+    canvas.drawCircle(size.center(Offset.zero), size.shortestSide / 2, paint);
+  }
+
+  @override
+  bool shouldRepaint(_RingPainter oldDelegate) => oldDelegate.color != color;
+}
+
 class _Ring extends StatelessWidget {
   const _Ring(
       {required this.controller, required this.color, required this.phase});
@@ -204,17 +220,33 @@ class _Ring extends StatelessWidget {
           opacity: (1 - t).clamp(0.0, 1.0),
           child: Transform.scale(
             scale: 0.5 + t,
-            child: Container(
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                border: Border.all(color: color, width: 2),
-              ),
+            child: SizedBox(
+              width: 104.r,
+              height: 104.r,
+              child: CustomPaint(painter: _RingPainter(color: color)),
             ),
           ),
         );
       },
     );
   }
+}
+
+class _RoundedSquarePainter extends CustomPainter {
+  const _RoundedSquarePainter({required this.color, required this.radius});
+
+  final Color color;
+  final double radius;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final rrect = RRect.fromRectAndRadius(Offset.zero & size, Radius.circular(radius));
+    canvas.drawRRect(rrect, Paint()..color = color);
+  }
+
+  @override
+  bool shouldRepaint(_RoundedSquarePainter oldDelegate) =>
+      oldDelegate.color != color || oldDelegate.radius != radius;
 }
 
 class _Checkmark extends StatefulWidget {
@@ -250,18 +282,25 @@ class _CheckmarkState extends State<_Checkmark>
   Widget build(BuildContext context) {
     return ScaleTransition(
       scale: CurvedAnimation(parent: _pop, curve: CdMotion.easePop),
-      child: Container(
+      child: SizedBox(
         width: 82.r,
         height: 82.r,
-        alignment: Alignment.center,
-        decoration: BoxDecoration(
-          color: context.getColor(ThemeEnum.solidWhite),
-          borderRadius: BorderRadius.circular(28.r),
-        ),
-        child: Icon(
-          Icons.check_rounded,
-          size: 40.r,
-          color: context.getColor(ThemeEnum.onPrimary),
+        child: Stack(
+          alignment: Alignment.center,
+          children: [
+            CustomPaint(
+              size: Size(82.r, 82.r),
+              painter: _RoundedSquarePainter(
+                color: context.getColor(ThemeEnum.solidWhite),
+                radius: 28.r,
+              ),
+            ),
+            Icon(
+              Icons.check_rounded,
+              size: 40.r,
+              color: context.getColor(ThemeEnum.onPrimary),
+            ),
+          ],
         ),
       ),
     );
