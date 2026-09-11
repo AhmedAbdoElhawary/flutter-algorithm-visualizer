@@ -1,76 +1,38 @@
-import 'package:algorithm_visualizer/core/resources/dimensions_manager.dart';
-import 'package:algorithm_visualizer/core/resources/font_manager.dart';
 import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
 import 'package:algorithm_visualizer/core/widgets/adaptive/text/adaptive_text.dart';
-import 'package:algorithm_visualizer/core/widgets/custom_widgets/glass_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-/// Solved / Accuracy / Attempts, Profile stats, celebration stats. A glass card
-/// with a big value over a small label. [emphasis] renders the value in white on
-/// a stronger hairline (the celebration "+40 XP" tile); [mono] sets the value in
-/// the mono face (times / complexity).
+/// Solved / Accuracy / Attempts, Profile stats, celebration stats — an
+/// outlined tile with a label under a value. [emphasized] swaps the hairline
+/// for `border strong` and the value ink for `textBright` — the one
+/// highlighted tile in a row (e.g. celebration's `+40 XP`).
 class StatTile extends StatelessWidget {
-  final String value;
   final String label;
-  final String? sub;
-  final bool emphasis;
-  final bool mono;
+  final String value;
+  final bool emphasized;
 
-  const StatTile({
-    super.key,
-    required this.value,
-    required this.label,
-    this.sub,
-    this.emphasis = false,
-    this.mono = false,
-  });
+  const StatTile({super.key, required this.label, required this.value, this.emphasized = false});
 
   @override
   Widget build(BuildContext context) {
-    return GlassContainer(
-      depth: GlassDepth.card,
-      borderRadius: CdRadius.lg,
-      padding: REdgeInsets.symmetric(horizontal: 14, vertical: 8),
+    return Container(
+      padding: REdgeInsets.symmetric(horizontal: 12, vertical: 12),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(14.r),
+        border: Border.all(
+          color: context.getColor(emphasized ? ThemeEnum.borderStrong : ThemeEnum.borderSubtle),
+        ),
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: [
-          BoldText(
-            value,
-            color: emphasis ? ThemeEnum.solidWhite : ThemeEnum.textPrimary,
-            fontSize: 19,
-            fontFamily: mono ? FontConstants.fontJetBrainsMono : null,
-          ),
-          const RSizedBox(height: 3),
-          RegularText(label, color: ThemeEnum.textSecond, fontSize: 10),
-          if (sub != null) ...[
-            const RSizedBox(height: 2),
-            RegularText(sub!, color: ThemeEnum.textDisabled, fontSize: 10),
-          ],
+          SemiBoldText(value, fontSize: 19, color: emphasized ? ThemeEnum.textBright : ThemeEnum.textPrimary),
+          RSizedBox(height: 4),
+          RegularText(label, fontSize: 10, color: ThemeEnum.textSecond),
         ],
       ),
-    );
-  }
-}
-
-/// "Activity", "Topics", "This week" — a title row with optional trailing meta.
-class SectionHeader extends StatelessWidget {
-  final String title;
-  final Widget? trailing;
-
-  const SectionHeader({super.key, required this.title, this.trailing});
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.baseline,
-      textBaseline: TextBaseline.alphabetic,
-      children: [
-        SemiBoldText(title, color: ThemeEnum.textPrimary, fontSize: 13),
-        const Spacer(),
-        if (trailing != null) trailing!,
-      ],
     );
   }
 }
