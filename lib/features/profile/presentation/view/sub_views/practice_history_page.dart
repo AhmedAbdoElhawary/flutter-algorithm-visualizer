@@ -1,9 +1,9 @@
-import 'package:algorithm_visualizer/core/resources/dimensions_manager.dart';
+import 'package:algorithm_visualizer/core/extensions/navigators.dart';
 import 'package:algorithm_visualizer/core/resources/strings_manager.dart';
 import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
 import 'package:algorithm_visualizer/core/widgets/adaptive/text/adaptive_text.dart';
-import 'package:algorithm_visualizer/core/widgets/custom_widgets/aurora_buttons.dart';
-import 'package:algorithm_visualizer/core/widgets/custom_widgets/glass_card.dart';
+import 'package:algorithm_visualizer/core/widgets/custom_widgets/empty_state_quiet.dart';
+import 'package:algorithm_visualizer/core/widgets/custom_widgets/icon_button_quiet.dart';
 import 'package:algorithm_visualizer/features/profile/presentation/view_model/statistics/profile_statistics_provider.dart';
 import 'package:algorithm_visualizer/features/profile/presentation/widgets/history_row.dart';
 import 'package:flutter/material.dart';
@@ -20,8 +20,7 @@ class RecentSubmissionsPage extends ConsumerWidget {
 
     return Scaffold(
       backgroundColor: context.getColor(ThemeEnum.primary),
-      body: AuroraGround(
-        child: SafeArea(
+      body: SafeArea(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -29,7 +28,8 @@ class RecentSubmissionsPage extends ConsumerWidget {
                 padding: REdgeInsets.fromLTRB(16, 4, 16, 16),
                 child: Row(
                   children: [
-                   CustomBackButton(),
+                    IconButtonQuiet(
+                        icon: Icons.arrow_back_ios_new_rounded, size: 30, iconSize: 14, onTap: context.back),
                     const RSizedBox(width: 12),
                     const BoldText(StringsManager.practiceHistory,
                         color: ThemeEnum.textPrimary, fontSize: 17),
@@ -55,7 +55,6 @@ class RecentSubmissionsPage extends ConsumerWidget {
               ),
             ],
           ),
-        ),
       ),
     );
   }
@@ -67,65 +66,12 @@ class _DashedEndState extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: REdgeInsets.only(top: 6),
-      child: CustomPaint(
-        painter: _DashedRRectPainter(
-          color: context.getColor(ThemeEnum.border),
-          radius: CdRadius.lg.r,
-        ),
-        child: Padding(
-          padding: REdgeInsets.symmetric(horizontal: 18, vertical: 22),
-          child: const Column(
-            children: [
-              SemiBoldText(StringsManager.historyEndTitle,
-                  color: ThemeEnum.textBody,
-                  fontSize: 12.5,
-                  textAlign: TextAlign.center),
-              RSizedBox(height: 5),
-              RegularText(StringsManager.historyEndSubtitle,
-                  color: ThemeEnum.textSecond,
-                  fontSize: 11,
-                  textAlign: TextAlign.center,
-                  maxLines: 3),
-            ],
-          ),
-        ),
+    return const Padding(
+      padding: EdgeInsets.only(top: 6),
+      child: EmptyStateQuiet(
+        title: StringsManager.historyEndTitle,
+        caption: StringsManager.historyEndSubtitle,
       ),
     );
   }
-}
-
-class _DashedRRectPainter extends CustomPainter {
-  const _DashedRRectPainter({required this.color, required this.radius});
-
-  final Color color;
-  final double radius;
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    final rrect = RRect.fromRectAndRadius(
-      Offset.zero & size,
-      Radius.circular(radius),
-    );
-    final path = Path()..addRRect(rrect);
-    final paint = Paint()
-      ..color = color
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 1;
-
-    const dash = 5.0;
-    const gap = 4.0;
-    for (final metric in path.computeMetrics()) {
-      double distance = 0;
-      while (distance < metric.length) {
-        canvas.drawPath(metric.extractPath(distance, distance + dash), paint);
-        distance += dash + gap;
-      }
-    }
-  }
-
-  @override
-  bool shouldRepaint(_DashedRRectPainter old) =>
-      old.color != color || old.radius != radius;
 }
