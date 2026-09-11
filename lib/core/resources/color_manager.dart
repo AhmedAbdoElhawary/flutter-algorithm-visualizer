@@ -82,15 +82,8 @@ abstract final class ColorManager {
   static const cdTextBrightDk = Color(0xFFFFFFFF);
   static const cdErrorRingDk = Color(0x1FFF6B7E);
 
-  /// The aurora glow — only indigo and a trace of cyan reach the ground, in one
-  /// broad soft band rising from the bottom edge.
-  static const cdGlowIndigoDk = Color(0x664A5BD8); // #4A5BD8 @ 40%
-  static const cdGlowCyanDk = Color(0x4D2FA3B8); // #2FA3B8 @ 30%
-  static const cdDotGridDk = Color(0x0EFFFFFF); // white 5.5%
-
   /// Accent marks only — never on the ground, never on a data mark.
   static const cdAccentVioletDk = Color(0xFF8B7CF6); // focus, key-bar label
-  static const cdAccentAzureDk = Color(0xFF3FA9F5);
 
   /// Inactive bottom-nav item (design is explicit — distinct from text secondary).
   static const cdNavInactiveDk = Color(0xFF8892AC);
@@ -180,12 +173,7 @@ abstract final class ColorManager {
   static const cdTextBrightLt = Color(0xFF101114);
   static const cdErrorRingLt = Color(0x1FC1414D);
 
-  static const cdGlowIndigoLt = Color(0x294A5BD8); // ~16%
-  static const cdGlowCyanLt = Color(0x292FA3B8); // ~16%
-  static const cdDotGridLt = Color(0x0D000000); // black ~5%
-
   static const cdAccentVioletLt = Color(0xFF5C6CF2);
-  static const cdAccentAzureLt = Color(0xFF3FA9F5);
 
   static const cdNavInactiveLt = Color(0xFF6A7387);
 

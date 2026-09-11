@@ -38,7 +38,6 @@ class ProblemTileShimmer extends StatelessWidget {
           color: context.getColor(ThemeEnum.card),
           borderRadius: BorderRadius.circular(12),
           border: Border.all(color: context.getColor(ThemeEnum.border)),
-          boxShadow: context.cardShadow,
         ),
         clipBehavior: Clip.hardEdge,
         child: _MainRowShimmer(),

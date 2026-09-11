@@ -37,45 +37,6 @@ abstract final class CdRadius {
   static const double pill = 999;
 }
 
-/// Backdrop-blur sigmas for the glass material and the ground.
-///
-/// [recessed] / [card] / [floating] are the three glass depths; [groundMask] is
-/// the blur-mask sigma for the aurora bands (not a BackdropFilter).
-abstract final class CdBlur {
-  static const double recessed = 14;
-  static const double card = 22;
-  static const double floating = 30;
-  static const double groundMask = 34;
-}
-
-/// The named elevation levels. No ad-hoc shadows anywhere else.
-///
-/// [e2] is the default card shadow, [e3] the floating shadow, [nav] the tab
-/// bar's, and [glow] the one sanctioned CTA glow (white, on the primary button).
-abstract final class CdElevation {
-  static const List<BoxShadow> e1 = [
-    BoxShadow(color: Color(0x66000000), blurRadius: 2, offset: Offset(0, 1)),
-  ];
-  static const List<BoxShadow> e2 = [
-    BoxShadow(color: Color(0x80000000), blurRadius: 44, offset: Offset(0, 18)),
-  ];
-  static const List<BoxShadow> e3 = [
-    BoxShadow(color: Color(0x99000000), blurRadius: 60, offset: Offset(0, 26)),
-  ];
-  static const List<BoxShadow> nav = [
-    BoxShadow(color: Color(0x8C000000), blurRadius: 46, offset: Offset(0, 20)),
-  ];
-  static const List<BoxShadow> glow = [
-    BoxShadow(color: Color(0x4DFFFFFF), blurRadius: 24, offset: Offset(0, 8)),
-  ];
-}
-
-extension CdElevationX on BuildContext {
-  /// The white CTA glow — the one place a glow is allowed, because it is a
-  /// primary action and not a data mark. Theme-independent.
-  List<BoxShadow> get cdGlow => CdElevation.glow;
-}
-
 abstract final class CdMotion {
   static const Duration press = Duration(milliseconds: 90);
   static const Duration fade = Duration(milliseconds: 120);
