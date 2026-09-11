@@ -1,4 +1,3 @@
-import 'package:algorithm_visualizer/core/helpers/constants.dart';
 import 'package:algorithm_visualizer/features/home/view/widgets/home_category_grid.dart';
 import 'package:algorithm_visualizer/features/home/view/widgets/home_continue_card.dart';
 import 'package:algorithm_visualizer/features/home/view/widgets/home_difficulty_progress.dart';
@@ -8,7 +7,6 @@ import 'package:algorithm_visualizer/features/home/view/widgets/home_stats_strip
 import 'package:algorithm_visualizer/features/profile/presentation/widgets/profile_weekly_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class HomePage extends ConsumerWidget {
   const HomePage({super.key});
@@ -27,7 +25,6 @@ class HomePage extends ConsumerWidget {
             HomeContinueCard(),
             HomeCategoryGrid(),
             HomeRecentActivity(),
-            RSizedBox(height: kBottomPageSpacing)
           ],
         ),
       ],
