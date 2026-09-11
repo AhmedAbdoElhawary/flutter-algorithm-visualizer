@@ -1,9 +1,250 @@
+import 'dart:ui' show ImageFilter;
+
+import 'package:algorithm_visualizer/core/resources/dimensions_manager.dart';
 import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
 import 'package:algorithm_visualizer/core/widgets/adaptive/text/adaptive_text.dart';
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/custom_icon.dart';
 import 'package:algorithm_visualizer/features/visualize/helper/o_notation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+
+/// The three glass depths. Depth comes from fill + blur only — no coloured
+/// glows, no gradient borders. A card never sits on another card; if two glass
+/// layers must overlap, the upper one steps up a depth.
+enum GlassDepth { recessed, card, floating }
+
+/// The only place in the app that composes a blur, fill, hairline, and sheen.
+///
+/// Takes a [depth], a [borderRadius], [padding], a [child], and an optional
+/// [onTap] — never a colour argument. The drop shadow sits *outside* the clip so
+/// it is not clipped away; the sheen is a 1px gradient line at the top inside
+/// edge, not a second border.
+class GlassContainer extends StatelessWidget {
+  final Widget child;
+  final GlassDepth depth;
+  final double borderRadius;
+  final EdgeInsetsGeometry padding;
+  final VoidCallback? onTap;
+  final Duration? durationForAnimation;
+  final bool allowCardTopShadow;
+  final ThemeEnum fillCardTheme;
+  const GlassContainer({
+    super.key,
+    required this.child,
+    this.durationForAnimation,
+    this.fillCardTheme = ThemeEnum.glassCardFill,
+    this.allowCardTopShadow = true,
+    this.depth = GlassDepth.card,
+    this.borderRadius = CdRadius.lg,
+    this.padding = const EdgeInsets.all(CdSpace.gapCard),
+    this.onTap,
+  });
+
+  double get _blur => switch (depth) {
+        GlassDepth.recessed => CdBlur.recessed,
+        GlassDepth.card => CdBlur.card,
+        GlassDepth.floating => CdBlur.floating,
+      };
+
+  double get _saturation => switch (depth) {
+        GlassDepth.recessed => 1.3,
+        GlassDepth.card => 1.4,
+        GlassDepth.floating => 1.5,
+      };
+
+  ThemeEnum get _fill => switch (depth) {
+        GlassDepth.recessed => ThemeEnum.glassRecessedFill,
+        GlassDepth.card => fillCardTheme,
+        GlassDepth.floating => ThemeEnum.glassFloatingFill,
+      };
+
+  ThemeEnum get _hairline => switch (depth) {
+        GlassDepth.recessed => ThemeEnum.glassHairlineRecessed,
+        GlassDepth.card => ThemeEnum.border,
+        GlassDepth.floating => ThemeEnum.borderStrong,
+      };
+
+  List<BoxShadow> _shadow(BuildContext context) => switch (depth) {
+        GlassDepth.recessed => const [],
+        GlassDepth.card => context.isThemeDark ? CdElevation.e2 : context.cardShadow,
+        GlassDepth.floating => context.isThemeDark ? CdElevation.e3 : context.cardShadow,
+      };
+
+  @override
+  Widget build(BuildContext context) {
+    final radius = BorderRadius.circular(borderRadius.r);
+    final borderSide = BorderSide(color: context.getColor(_hairline));
+    final box = BoxDecoration(
+      color: context.getColor(_fill),
+      borderRadius: radius,
+      border: Border(
+        bottom: borderSide,
+        left: borderSide,
+        right: borderSide,
+        top: BorderSide(
+            color: context.getColor(_hairline),
+            width: !allowCardTopShadow && depth != GlassDepth.recessed ? 2 : 1),
+      ),
+    );
+    final surface = ClipRRect(
+      borderRadius: radius,
+      child: BackdropFilter(
+        filter: ImageFilter.compose(
+          outer: ColorFilter.matrix(_saturationMatrix(_saturation)),
+          inner: ImageFilter.blur(sigmaX: _blur, sigmaY: _blur),
+        ),
+        child: durationForAnimation != null
+            ? AnimatedContainer(
+                duration: durationForAnimation!,
+                decoration: box,
+                child: child,
+              )
+            : Container(
+                padding: padding,
+                decoration: box,
+                child: child,
+              ),
+      ),
+    );
+
+    // Shadow sits outside the clip.
+    final result = DecoratedBox(
+      decoration: BoxDecoration(borderRadius: radius, boxShadow: _shadow(context)),
+      child: surface,
+    );
+
+    if (onTap == null) return result;
+    return GestureDetector(onTap: onTap, child: result);
+  }
+}
+
+/// The recessed-track variant — progress-bar fills, segmented-control and
+/// chip-row backgrounds. The reference draws these rails at white 10–13%
+/// ([ThemeEnum.primaryTint]), not the 4% recessed-glass fill, and a blurred
+/// sub-surface inside a glass card is a needless [BackdropFilter] nest, so this
+/// is a plain clipped fill with no blur, sheen, or shadow.
+class GlassTrack extends StatelessWidget {
+  final Widget child;
+  final double? height;
+  final double borderRadius;
+
+  const GlassTrack({
+    super.key,
+    required this.child,
+    this.height,
+    this.borderRadius = CdRadius.pill,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(borderRadius.r),
+      child: Container(
+        height: height?.r,
+        color: context.getColor(ThemeEnum.primaryTint),
+        child: child,
+      ),
+    );
+  }
+}
+
+/// The ground. Paints, bottom to top: the base colour, a radial indigo band
+/// rising from the bottom edge, a smaller cyan band, then a dot grid, then the
+/// child. Static by default — pass [animate] only on Home, and it still yields
+/// to the OS "reduce motion" setting.
+class AuroraGround extends StatelessWidget {
+  final Widget? child;
+
+  const AuroraGround({super.key, this.child});
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      fit: StackFit.expand,
+      children: [
+        Positioned.fill(
+          child: CustomPaint(
+            size: Size.infinite,
+            painter: _AuroraPainter(
+              base: context.getColor(ThemeEnum.primary),
+              indigo: context.getColor(ThemeEnum.glowIndigo),
+              cyan: context.getColor(ThemeEnum.glowCyan),
+              dot: context.getColor(ThemeEnum.dotGrid),
+              dotSpacing: 13.r,
+            ),
+          ),
+        ),
+        if (child != null) child!,
+      ],
+    );
+  }
+}
+
+class _AuroraPainter extends CustomPainter {
+  final Color base;
+  final Color indigo;
+  final Color cyan;
+  final Color dot;
+  final double dotSpacing;
+
+  const _AuroraPainter({
+    required this.base,
+    required this.indigo,
+    required this.cyan,
+    required this.dot,
+    required this.dotSpacing,
+  });
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final full = Offset.zero & size;
+    canvas.drawRect(full, Paint()..color = base);
+
+    _band(canvas, full, indigo,
+        center: Offset(size.width * 0.5, size.height * 1.12), radius: size.width * 0.66);
+    _band(canvas, full, cyan,
+        center: Offset(size.width * 0.82, size.height * 1.06), radius: size.width * 0.42);
+
+    final dotPaint = Paint()..color = dot;
+    for (double y = 0; y <= size.height; y += dotSpacing) {
+      for (double x = 0; x <= size.width; x += dotSpacing) {
+        canvas.drawCircle(Offset(x, y), 0.9, dotPaint);
+      }
+    }
+  }
+
+  void _band(Canvas canvas, Rect area, Color color, {required Offset center, required double radius}) {
+    final rect = Rect.fromCircle(center: center, radius: radius);
+    canvas.drawRect(
+      area,
+      Paint()
+        ..shader = RadialGradient(colors: [color, color.withValues(alpha: 0)]).createShader(rect)
+        ..maskFilter = const MaskFilter.blur(BlurStyle.normal, CdBlur.groundMask),
+    );
+  }
+
+  @override
+  bool shouldRepaint(_AuroraPainter old) =>
+      old.base != base ||
+      old.indigo != indigo ||
+      old.cyan != cyan ||
+      old.dot != dot ||
+      old.dotSpacing != dotSpacing;
+}
+
+/// Colour-saturation matrix for [ColorFilter.matrix] — `1.0` is unchanged.
+List<double> _saturationMatrix(double s) {
+  const lumR = 0.213, lumG = 0.715, lumB = 0.072;
+  final sr = (1 - s) * lumR;
+  final sg = (1 - s) * lumG;
+  final sb = (1 - s) * lumB;
+  return [
+    sr + s, sg, sb, 0, 0, //
+    sr, sg + s, sb, 0, 0, //
+    sr, sg, sb + s, 0, 0, //
+    0, 0, 0, 1, 0, //
+  ];
+}
 
 class AlgorithmGlassCard extends StatelessWidget {
   final AlgorithmComplexity algoComplexity;
@@ -20,7 +261,8 @@ class AlgorithmGlassCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GlassContainer(
-      color: ThemeEnum.mainCard,
+      borderRadius: CdRadius.xl,
+      padding: REdgeInsets.all(15),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -81,78 +323,29 @@ class AlgorithmGlassCard extends StatelessWidget {
   }
 }
 
-class GlassContainer extends StatelessWidget {
+class SimpleControllerGlassButton extends StatelessWidget {
+  final VoidCallback? onTap;
+  final String? messageTip;
   final Widget child;
-  final double borderRadius;
-  final double borderWidth;
+  final GlassDepth depth;
   final EdgeInsetsGeometry padding;
-  final bool withAboveShadow;
-  final bool highlightCard;
-  final ThemeEnum color;
-  const GlassContainer({
+  const SimpleControllerGlassButton({
     super.key,
     required this.child,
-    this.color = ThemeEnum.card,
-    this.borderRadius = 20,
-    this.borderWidth = 0.5,
-    this.withAboveShadow = true,
-    this.highlightCard = false,
-    this.padding = const EdgeInsets.all(15),
+    this.depth = GlassDepth.card,
+    this.padding = const EdgeInsets.all(10),
+    this.onTap,
+    this.messageTip,
   });
 
   @override
   Widget build(BuildContext context) {
-    final borderColor = context.getColor(highlightCard ? ThemeEnum.borderPurpleColor : ThemeEnum.border);
-
-    // NOTE: this used to wrap the card in a `BackdropFilter`
-    // (`ImageFilter.blur(sigmaX: 2, sigmaY: 2)`). With an animated background
-    // behind it, every glass card forced a per-frame saveLayer + blur that
-    // could never be cached, which made scrolling screens full of these cards
-    // (e.g. the home grid) stutter. The sigma-2 blur was visually negligible,
-    // so it's dropped in favour of the plain translucent fill below.
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(borderRadius),
-      child: Container(
-        padding: padding,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(borderRadius),
-          color: context.getColor(highlightCard ? ThemeEnum.lightPurpleColor : color),
-          border: Border(
-            top: BorderSide(
-                color: borderColor,
-                width: withAboveShadow ? 1.5 : borderWidth,
-                strokeAlign: withAboveShadow ? -2 : -1),
-            right: BorderSide(color: borderColor, width: borderWidth),
-            left: BorderSide(color: borderColor, width: borderWidth),
-            bottom: BorderSide(color: borderColor, width: borderWidth),
-          ),
-        ),
-        child: child,
-      ),
-    );
-  }
-}
-
-class SimpleGlassButton extends StatelessWidget {
-  final VoidCallback? onTap;
-  final String? messageTip;
-  final Widget child;
-  final double padding;
-  const SimpleGlassButton({super.key, required this.child, this.padding = 10, this.onTap, this.messageTip});
-
-  static BoxDecoration cardDecoration(BuildContext context) => BoxDecoration(
-        color: context.getColor(ThemeEnum.mainCard),
-        borderRadius: BorderRadius.circular(14.r),
-        border: Border.all(color: context.getColor(ThemeEnum.border)),
-        boxShadow: context.cardShadow,
-      );
-  @override
-  Widget build(BuildContext context) {
     final button = GestureDetector(
       onTap: onTap,
-      child: Container(
-        padding: REdgeInsets.all(padding),
-        decoration: cardDecoration(context),
+      child: GlassContainer(
+        depth: depth,
+        borderRadius: 12,
+        padding: padding,
         child: child,
       ),
     );
@@ -160,60 +353,11 @@ class SimpleGlassButton extends StatelessWidget {
   }
 }
 
+/// Deprecated alias — the old three-orb backdrop is gone. Kept so its remaining
+/// call sites keep compiling until they move to [AuroraGround] directly.
 class AnimatedBackground extends StatelessWidget {
   const AnimatedBackground({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return const Stack(
-      children: [
-        PositionedDirectional(
-          top: -25,
-          start: -80,
-          child: _ORB(
-            color: Color(0xFF5B9CF6),
-            size: 260,
-          ),
-        ),
-        PositionedDirectional(
-          top: 220,
-          end: -100,
-          child: _ORB(
-            color: Color(0xFFA78BFA),
-            size: 280,
-          ),
-        ),
-        PositionedDirectional(
-          bottom: -25,
-          start: -60,
-          child: _ORB(
-            color: Color(0xFF38BDF8),
-            size: 240,
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-class _ORB extends StatelessWidget {
-  const _ORB({required this.size, required this.color});
-  final double size;
-  final Color color;
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: size.r,
-      height: size.r,
-      decoration: BoxDecoration(
-        shape: BoxShape.circle,
-        gradient: RadialGradient(
-          colors: [
-            color.withValues(alpha: 0.13),
-            Colors.transparent,
-          ],
-        ),
-      ),
-    );
-  }
+  Widget build(BuildContext context) => const AuroraGround();
 }
