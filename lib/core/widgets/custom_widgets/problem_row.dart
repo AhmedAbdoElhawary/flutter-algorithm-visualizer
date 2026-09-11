@@ -10,14 +10,21 @@ class ProblemRow extends StatelessWidget {
   final Widget child;
   final bool selected;
   final VoidCallback? onTap;
+  final EdgeInsetsGeometry padding;
 
-  const ProblemRow({super.key, required this.child, this.selected = false, this.onTap});
+  const ProblemRow({
+    super.key,
+    required this.child,
+    this.selected = false,
+    this.onTap,
+    this.padding = const EdgeInsets.symmetric(horizontal: 14, vertical: 13),
+  });
 
   @override
   Widget build(BuildContext context) {
     final row = Container(
       width: double.infinity,
-      padding: REdgeInsets.symmetric(horizontal: 14, vertical: 13),
+      padding: padding,
       decoration: BoxDecoration(
         color: context.getColor(ThemeEnum.mainCard),
         borderRadius: BorderRadius.circular(14.r),
