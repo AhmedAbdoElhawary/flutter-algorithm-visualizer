@@ -1,21 +1,19 @@
 import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
 import 'package:algorithm_visualizer/core/widgets/adaptive/text/adaptive_text.dart';
+import 'package:algorithm_visualizer/features/challenge/domain/enums/problem.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-/// The three levels a difficulty chip can carry. Callers map their own domain
-/// enum onto this — the chip never takes a colour.
-enum Difficulty { easy, medium, hard }
-
-(ThemeEnum fill, ThemeEnum label) _difficultyRoles(Difficulty d) => switch (d) {
-      Difficulty.easy => (ThemeEnum.chipEasyFill, ThemeEnum.difficultyEasy),
-      Difficulty.medium => (ThemeEnum.chipMediumFill, ThemeEnum.difficultyMedium),
-      Difficulty.hard => (ThemeEnum.chipHardFill, ThemeEnum.difficultyHard),
+(ThemeEnum fill, ThemeEnum label) _difficultyRoles(ProblemDifficulty d) => switch (d) {
+      ProblemDifficulty.easy => (ThemeEnum.chipEasyFill, ThemeEnum.difficultyEasy),
+      ProblemDifficulty.medium => (ThemeEnum.chipMediumFill, ThemeEnum.difficultyMedium),
+      ProblemDifficulty.hard => (ThemeEnum.chipHardFill, ThemeEnum.difficultyHard),
+      ProblemDifficulty.none => (ThemeEnum.primary, ThemeEnum.primary),
     };
 
 /// Easy / Medium / Hard pill — solid tinted fill, never an alpha wash.
 class DifficultyChip extends StatelessWidget {
-  final Difficulty difficulty;
+  final ProblemDifficulty difficulty;
   final String label;
   final double fontSize;
   final double radius;
@@ -46,7 +44,7 @@ class DifficultyChip extends StatelessWidget {
 /// "M" / "H"). [difficulty] is nullable to cover the domain's `none` case
 /// (neutral fill), which [Difficulty] itself has no member for.
 class DifficultySquareBadge extends StatelessWidget {
-  final Difficulty? difficulty;
+  final ProblemDifficulty? difficulty;
   final String label;
   final double size;
   final double radius;
