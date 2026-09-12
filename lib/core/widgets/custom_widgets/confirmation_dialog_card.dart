@@ -2,10 +2,11 @@ import 'package:algorithm_visualizer/core/resources/font_manager.dart';
 import 'package:algorithm_visualizer/core/resources/strings_manager.dart';
 import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
 import 'package:algorithm_visualizer/core/widgets/adaptive/text/adaptive_text.dart';
+import 'package:algorithm_visualizer/core/resources/dimensions_manager.dart';
+import 'package:algorithm_visualizer/core/widgets/custom_widgets/card_container.dart';
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/custom_icon.dart';
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/primary_button_quiet.dart';
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/secondary_button_quiet.dart';
-import 'package:algorithm_visualizer/core/widgets/custom_widgets/surface_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -33,8 +34,8 @@ class ConfirmationDialogCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SurfaceCard(
-      radius: 18,
+    return CardContainer(
+      radius: CdRadius.dialog,
       padding: REdgeInsets.all(20),
       child: SizedBox(
         width: 320.w,
