@@ -26,7 +26,9 @@ enum ThemeEnum {
   /// ---- CoreDive semantic tokens ----
   /// Surfaces
   bgRaised,
+  bgBase,
   surfaceAlt,
+  surfaceRaised,
   borderSubtle,
   borderStrong,
 
@@ -93,12 +95,6 @@ enum ThemeEnum {
   /// Bottom-nav inactive item
   navInactive,
 
-  /// The glass material — fill / sheen per depth; recessed hairline
-  glassRecessedFill,
-  glassCardFill,
-  glassFloatingFill,
-  glassHairlineRecessed,
-
   /// static colors
   solidWhite,
   purple,
@@ -157,7 +153,9 @@ extension ThemeExtension on BuildContext {
 
       /// ---- CoreDive semantic tokens ---->
       ThemeEnum.bgRaised: _pick(ColorManager.cdBgRaisedDk, ColorManager.cdBgRaisedLt),
+      ThemeEnum.bgBase: _pick(ColorManager.cdBgBaseDk, ColorManager.cdBgBaseLt),
       ThemeEnum.surfaceAlt: _pick(ColorManager.cdSurfaceAltDk, ColorManager.cdSurfaceAltLt),
+      ThemeEnum.surfaceRaised: _pick(ColorManager.cdSurfaceRaisedDk, ColorManager.cdBgRaisedLt),
       ThemeEnum.borderSubtle: _pick(ColorManager.cdBorderSubtleDk, ColorManager.cdBorderSubtleLt),
       ThemeEnum.borderStrong: _pick(ColorManager.cdBorderStrongDk, ColorManager.cdBorderStrongLt),
 
@@ -211,11 +209,6 @@ extension ThemeExtension on BuildContext {
       ThemeEnum.heat4: _pick(ColorManager.cdHeatDk[4], ColorManager.cdHeatLt[4]),
 
       ThemeEnum.navInactive: _pick(ColorManager.cdNavInactiveDk, ColorManager.cdNavInactiveLt),
-
-      ThemeEnum.glassRecessedFill: _pick(ColorManager.cdGlassRecessedFillDk, ColorManager.cdGlassRecessedFillLt),
-      ThemeEnum.glassCardFill: _pick(ColorManager.cdGlassCardFillDk, ColorManager.cdGlassCardFillLt),
-      ThemeEnum.glassFloatingFill: _pick(ColorManager.cdGlassFloatingFillDk, ColorManager.cdGlassFloatingFillLt),
-      ThemeEnum.glassHairlineRecessed: _pick(ColorManager.cdGlassHairlineRecessedDk, ColorManager.cdGlassHairlineRecessedLt),
 
       ///-------------------->
       ThemeEnum.solidWhite: ColorManager.white,
