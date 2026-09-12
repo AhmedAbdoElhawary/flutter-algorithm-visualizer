@@ -33,8 +33,9 @@ abstract final class ColorManager {
   /// Aurora primitives — DARK (primary theme)
   /// ======================================================================
   static const cdBgBaseDk = Color(0xFF0B0B0D);
-  static const cdBgRaisedDk = Color(0xFF181A1F);
+  static const cdBgRaisedDk = Color(0xFF101112);
   static const cdSurfaceDk = Color(0xFF121317);
+  static const cdSurfaceRaisedDk = Color(0xFF181A1F);
   static const cdSurfaceAltDk = Color(0xFF0E1119);
 
   /// Quiet: hairlines are solid greys now, never white alpha.
@@ -81,15 +82,6 @@ abstract final class ColorManager {
 
   /// Inactive bottom-nav item (design is explicit — distinct from text secondary).
   static const cdNavInactiveDk = Color(0xFF8892AC);
-
-  /// The glass material — one recipe, three depths. Fill + blur carry the depth.
-  static const cdGlassRecessedFillDk = Color(0x06ffffff); // white 4%
-  static const cdGlassCardFillDk = Color.fromRGBO(18, 19, 25, 1); // white 5.5%
-  static const cdGlassFloatingFillDk =  Color.fromRGBO(18, 19, 25, 1); // white 10%
-
-  /// Card / floating hairlines reuse [cdBorderDk] / [cdBorderStrongDk]; only the
-  /// recessed hairline (9%) has no border-role equivalent.
-  static const cdGlassHairlineRecessedDk = Color(0x17FFFFFF); // white 9%
 
   static const cdCodeGutterDk = cdTextSecondaryDk;
   static const cdCodeLineDk = Color(0x12FFFFFF); // current line — white 7%
@@ -162,13 +154,6 @@ abstract final class ColorManager {
   static const cdErrorRingLt = Color(0x1FC1414D);
 
   static const cdNavInactiveLt = Color(0xFF6A7387);
-
-  /// Placeholder light glass — black-alpha fills, white sheens. Polished later.
-  static const cdGlassRecessedFillLt = Color(0x0A000000);
-
-  static const cdGlassCardFillLt = Color(0x0E000000);
-  static const cdGlassFloatingFillLt = Color(0x14000000);
-  static const cdGlassHairlineRecessedLt = Color(0x12000000);
 
   static const cdCodeGutterLt = cdTextSecondaryLt;
   static const cdCodeLineLt = Color(0x0A000000);
