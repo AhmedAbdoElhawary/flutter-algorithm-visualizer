@@ -1,28 +1,31 @@
 import 'package:algorithm_visualizer/core/resources/dimensions_manager.dart';
 import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
+import 'package:algorithm_visualizer/core/widgets/custom_widgets/card_container.dart';
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/custom_icon.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-/// 60px teal logo tile — CoreDive screen 11. Solid teal, glow, the three-strata
-/// mark in ink. The mark is a symbol: it never mirrors in RTL.
+/// 60px logo tile — CoreDive screen 11, the three-strata mark in ink on the
+/// shared [CdSurface.main] card. The mark is a symbol: it never mirrors in RTL.
 class AuthLogoTile extends StatelessWidget {
   const AuthLogoTile({super.key});
 
   @override
   Widget build(BuildContext context) {
     final side = 60.r;
-    return Container(
-      width: side,
-      height: side,
-      alignment: Alignment.center,
-      decoration: BoxDecoration(
-        color: context.getColor(ThemeEnum.accent),
-        borderRadius: BorderRadius.circular(CdRadius.lg.r),
-      ),
-      child: CustomPaint(
-        size: Size(32.r, 32.r),
-        painter: _CoreDiveLogoMark(color: context.getColor(ThemeEnum.onPrimary)),
+    return CardContainer(
+      surface: CdSurface.main,
+      radius: CdRadius.lg,
+      padding: EdgeInsets.zero,
+      child: SizedBox(
+        width: side,
+        height: side,
+        child: Center(
+          child: CustomPaint(
+            size: Size(32.r, 32.r),
+            painter: _CoreDiveLogoMark(color: context.getColor(ThemeEnum.textPrimary)),
+          ),
+        ),
       ),
     );
   }
