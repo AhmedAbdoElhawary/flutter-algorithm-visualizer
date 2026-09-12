@@ -13,13 +13,11 @@ class MainNavigationShell extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // The nav is a real, non-flexible child in a Column — content and nav are
-    // siblings, never a Stack overlay.
     return Material(
       color: context.getColor(ThemeEnum.primary),
       child: Column(
         children: [
-          Expanded(child: ClipRect(child: navigationShell)),
+          Expanded(child: SafeArea(bottom: false, child: navigationShell)),
           _BottomNavBar(navigationShell: navigationShell),
         ],
       ),
