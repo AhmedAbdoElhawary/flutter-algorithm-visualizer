@@ -1,20 +1,9 @@
 import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
-import 'package:algorithm_visualizer/core/widgets/custom_widgets/difficulty_chip.dart';
 import 'package:algorithm_visualizer/features/challenge/domain/enums/problem.dart';
 import 'package:flutter/material.dart';
 
 class ProblemStyle {
   const ProblemStyle._();
-
-  /// Maps the domain difficulty onto the Quiet [DifficultyChip]'s [Difficulty]
-  /// level (has no `none` — callers treat null as the neutral / "All" case).
-  static Difficulty? quietChipDifficulty(ProblemDifficulty difficulty) =>
-      switch (difficulty) {
-        ProblemDifficulty.easy => Difficulty.easy,
-        ProblemDifficulty.medium => Difficulty.medium,
-        ProblemDifficulty.hard => Difficulty.hard,
-        ProblemDifficulty.none => null,
-      };
 
   static ThemeEnum difficultyCodeDescriptionColor(
       ProblemDifficulty difficulty) {
@@ -50,7 +39,7 @@ class ProblemStyle {
       case ProblemStatus.attempted:
         return (ThemeEnum.accentYellowRc, Icons.error_outline_rounded);
       default:
-        return (ThemeEnum.white2DarkColor, Icons.radio_button_unchecked_rounded);
+        return (ThemeEnum.accentBg, Icons.radio_button_unchecked_rounded);
     }
   }
 }
