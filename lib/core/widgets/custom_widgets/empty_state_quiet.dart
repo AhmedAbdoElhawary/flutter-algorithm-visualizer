@@ -3,8 +3,7 @@ import 'package:algorithm_visualizer/core/widgets/adaptive/text/adaptive_text.da
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-/// The one dashed-border block in the app — 1px dashed `border`, radius 14,
-/// padding `22 x 18`, centred title over a secondary caption.
+
 class EmptyStateQuiet extends StatelessWidget {
   final String title;
   final String? caption;
@@ -13,27 +12,30 @@ class EmptyStateQuiet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return CustomPaint(
-      painter: _DashedBorderPainter(color: context.getColor(ThemeEnum.border), radius: 14.r),
-      child: Container(
-        width: double.infinity,
-        padding: REdgeInsets.symmetric(horizontal: 22, vertical: 18),
-        alignment: Alignment.center,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            SemiBoldText(title, fontSize: 12.5, color: ThemeEnum.textBody, textAlign: TextAlign.center),
-            if (caption != null) ...[
-              const RSizedBox(height: 6),
-              RegularText(
-                caption!,
-                fontSize: 11,
-                color: ThemeEnum.textSecond,
-                textAlign: TextAlign.center,
-                maxLines: 3,
-              ),
+    return Padding(
+      padding: REdgeInsets.only(top: 6),
+      child: CustomPaint(
+        painter: _DashedBorderPainter(color: context.getColor(ThemeEnum.border), radius: 14.r),
+        child: Container(
+          width: double.infinity,
+          padding: REdgeInsets.symmetric(horizontal: 22, vertical: 18),
+          alignment: Alignment.center,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              SemiBoldText(title, fontSize: 12.5, color: ThemeEnum.textBody, textAlign: TextAlign.center),
+              if (caption != null) ...[
+                const RSizedBox(height: 6),
+                RegularText(
+                  caption!,
+                  fontSize: 11,
+                  color: ThemeEnum.textSecond,
+                  textAlign: TextAlign.center,
+                  maxLines: 3,
+                ),
+              ],
             ],
-          ],
+          ),
         ),
       ),
     );
