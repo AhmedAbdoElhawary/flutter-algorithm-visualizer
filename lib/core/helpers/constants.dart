@@ -1,1 +1,1 @@
-const double kBottomPageSpacing=50;
+const double kBottomPageSpacing=20;
