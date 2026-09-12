@@ -1,6 +1,5 @@
 import 'package:algorithm_visualizer/config/routes/route_app.dart';
 import 'package:algorithm_visualizer/core/extensions/navigators.dart';
-import 'package:algorithm_visualizer/core/helpers/constants.dart';
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/loading_state.dart';
 import 'package:algorithm_visualizer/features/challenge/presentation/widgets/challenges/error_state.dart';
 import 'package:flutter/material.dart';
@@ -23,35 +22,34 @@ class ChallengePage extends ConsumerWidget {
 
     // Scaffold/Metrial written in base_navigation, why?
     // to control all main pages with the structure of them
-    return CustomScrollView(
-      physics: const BouncingScrollPhysics(),
-      slivers: [
+    return NestedScrollView(
+      headerSliverBuilder: (context, innerBoxIsScrolled) => [
         const _SliverAppBar(),
-        problems.when(
-          loading: () => const SliverChallengesLoadingState(),
-          error: (_, __) => const SliverFillRemaining(child: ChallengesErrorState()),
-          data: (data) {
-            if (data.ids.isEmpty) return const SliverFillRemaining(child: ChallengesEmptyState());
-            return SliverPadding(
-              padding: REdgeInsets.fromLTRB(16, 0, 16, kBottomPageSpacing),
-              sliver: SliverList.builder(
-                itemCount: data.ids.length,
-                itemBuilder: (ctx, i) {
-                  final problemId = data.ids[i];
-                  return ProblemTile(
-                    problemId: problemId,
-                    expanded: ref.watch(challengesProvider.select((s) => s.expandedId == problemId)),
-                    onToggle: () => ref.read(challengesProvider.notifier).toggleExpanded(problemId),
-                    onSolveTap: () {
-                      context.pushTo(Routes.problem, queryParameters: "$problemId");
-                    },
-                  );
-                },
-              ),
-            );
-          },
-        )
       ],
+      body: problems.when(
+        loading: () => const ChallengesLoadingState(),
+        error: (_, __) => const ChallengesErrorState(),
+        data: (data) {
+          if (data.ids.isEmpty) return const ChallengesEmptyState();
+          return Padding(
+            padding: REdgeInsets.fromLTRB(16, 0, 16, 0),
+            child: ListView.builder(
+              itemCount: data.ids.length,
+              itemBuilder: (ctx, i) {
+                final problemId = data.ids[i];
+                return ProblemTile(
+                  problemId: problemId,
+                  expanded: ref.watch(challengesProvider.select((s) => s.expandedId == problemId)),
+                  onToggle: () => ref.read(challengesProvider.notifier).toggleExpanded(problemId),
+                  onSolveTap: () {
+                    context.pushTo(Routes.problem, queryParameters: "$problemId");
+                  },
+                );
+              },
+            ),
+          );
+        },
+      ),
     );
   }
 }
@@ -70,7 +68,7 @@ class _SliverAppBar extends StatelessWidget {
       leadingWidth: 16.r,
       leading: const SizedBox(),
       bottom: PreferredSize(
-        preferredSize: Size.fromHeight(110.r),
+        preferredSize: Size.fromHeight(115.r),
         child: const SingleChildScrollView(
           child: Column(
             mainAxisSize: MainAxisSize.min,
