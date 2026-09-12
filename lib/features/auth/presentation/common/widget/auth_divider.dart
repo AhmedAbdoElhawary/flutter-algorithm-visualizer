@@ -13,9 +13,9 @@ class AuthDivider extends StatelessWidget {
     return Row(
       children: [
         Expanded(child: _Rule()),
-        HorizontalGap(),
-        RegularText(StringsManager.orDivider, color: ThemeEnum.textDisabled, fontSize: 10.5, maxLines: 1),
-        HorizontalGap(),
+        const HorizontalGap(),
+        const RegularText(StringsManager.orDivider, color: ThemeEnum.textDisabled, fontSize: 10.5, maxLines: 1),
+        const HorizontalGap(),
         Expanded(child: _Rule()),
       ],
     );

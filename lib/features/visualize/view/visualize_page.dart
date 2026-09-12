@@ -73,14 +73,14 @@ class _VisualizePageState extends State<VisualizePage> {
 
     return Scaffold(
       body: CustomScrollView(
-        physics: NeverScrollableScrollPhysics(),
+        physics: const NeverScrollableScrollPhysics(),
         slivers: [
           SliverAppBar(
             pinned: true,
             centerTitle: false,
             titleSpacing: 0,
             leadingWidth: 16.r,
-            leading: SizedBox(),
+            leading: const SizedBox(),
             title: ValueListenableBuilder(
               valueListenable: title,
               builder: (context, titleValue, child) => ValueListenableBuilder(
@@ -113,7 +113,7 @@ class _VisualizePageState extends State<VisualizePage> {
                       ),
                     ),
                   ),
-                  RSizedBox(width: 10),
+                  const RSizedBox(width: 10),
                   Expanded(
                     child: InkWell(
                       onTap: () {
@@ -157,7 +157,7 @@ class _VisualizePageState extends State<VisualizePage> {
                             });
                           },
                         )
-                      : UnknownView()),
+                      : const UnknownView()),
         ],
       ),
     );

@@ -33,10 +33,10 @@ class ProfileHeatmap extends StatelessWidget {
         ),
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-            BoldText(StringsManager.activityHeatmap, color: ThemeEnum.textSecond, fontSize: 13),
+            const BoldText(StringsManager.activityHeatmap, color: ThemeEnum.textSecond, fontSize: 13),
             Row(children: [
-              RegularText(StringsManager.less, color: ThemeEnum.hoverSecond, fontSize: 11),
-              RSizedBox(width: 4),
+              const RegularText(StringsManager.less, color: ThemeEnum.hoverSecond, fontSize: 11),
+              const RSizedBox(width: 4),
               ...heatColors.asMap().entries.map((e) => Container(
                     width: 10.r,
                     height: 10.r,
@@ -47,11 +47,11 @@ class ProfileHeatmap extends StatelessWidget {
                       border: e.key == 0 ? Border.all(color: context.getColor(ThemeEnum.border)) : null,
                     ),
                   )),
-              RSizedBox(width: 4),
-              RegularText(StringsManager.more, color: ThemeEnum.hoverSecond, fontSize: 11),
+              const RSizedBox(width: 4),
+              const RegularText(StringsManager.more, color: ThemeEnum.hoverSecond, fontSize: 11),
             ]),
           ]),
-          RSizedBox(height: 10),
+          const RSizedBox(height: 10),
           Consumer(
             builder: (context, ref, child) {
               final heatmapData = ref.watch(profileStatisticsProvider.select((value) => value.heatmapData));

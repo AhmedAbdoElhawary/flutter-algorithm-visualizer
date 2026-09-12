@@ -114,7 +114,7 @@ abstract class SortingNotifier extends Notifier<SortingNotifierState>
   }) {
     if (state.isAllSorted) return StringsManager.arrayFullySorted;
 
-    final initialText = StringsManager.initialArrayReadyToSort;
+    const initialText = StringsManager.initialArrayReadyToSort;
     if (currentStep == null || currentStep.index1 == -1 || currentStep.index2 == -1) return initialText;
 
     final value1 = list[currentStep.index1].value;
