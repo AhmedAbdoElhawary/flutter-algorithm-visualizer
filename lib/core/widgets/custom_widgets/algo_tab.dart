@@ -1,8 +1,9 @@
+import 'package:algorithm_visualizer/core/resources/dimensions_manager.dart';
 import 'package:algorithm_visualizer/core/resources/font_manager.dart';
 import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
 import 'package:algorithm_visualizer/core/widgets/adaptive/text/adaptive_text.dart';
+import 'package:algorithm_visualizer/core/widgets/custom_widgets/card_container.dart';
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/custom_icon.dart';
-import 'package:algorithm_visualizer/core/widgets/custom_widgets/glass_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -23,10 +24,10 @@ class AlgoTab extends ConsumerWidget {
   final double verticalPadding;
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return GlassContainer(
+    return CardContainer(
       padding: REdgeInsets.symmetric(vertical: 8),
-      borderRadius: 12,
-      depth: isSelected ? GlassDepth.floating : GlassDepth.recessed,
+      radius: CdRadius.medium,
+      surface: isSelected ? CdSurface.secondary : CdSurface.recessed,
       child: Padding(
         padding: REdgeInsets.symmetric(horizontal: 10, vertical: verticalPadding),
         child: Row(
