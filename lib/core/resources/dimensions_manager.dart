@@ -1,4 +1,3 @@
-import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
 import 'package:flutter/material.dart';
 
 /// CoreDive spacing / radius / elevation / motion scales.
@@ -32,41 +31,24 @@ abstract final class CdSpace {
 
 abstract final class CdRadius {
   static const double sm = 9;
-  static const double md = 13;
-  static const double lg = 19;
-  static const double xl = 24;
+  static const double md = 14;
+  static const double lg = 16;
+  static const double xl = 19;
   static const double pill = 999;
-}
 
-/// The four named elevation levels. No ad-hoc shadows anywhere else.
-///
-/// [glow] is brass-tinted; prefer [CdElevationX.cdGlow] so it follows the active
-/// theme's primary. The alpha values below are the design constants.
-abstract final class CdElevation {
-  static const List<BoxShadow> e1 = [
-    BoxShadow(color: Color(0x66000000), blurRadius: 2, offset: Offset(0, 1)),
-  ];
-  static const List<BoxShadow> e2 = [
-    BoxShadow(color: Color(0x73000000), blurRadius: 18, offset: Offset(0, 6)),
-  ];
-  static const List<BoxShadow> e3 = [
-    BoxShadow(color: Color(0xB3000000), blurRadius: 60, offset: Offset(0, 24)),
-  ];
-  static const List<BoxShadow> glow = [
-    BoxShadow(color: Color(0x42E0A33E), blurRadius: 24, offset: Offset(0, 8)),
-  ];
-}
+  /// Quiet theme geometry (PROMPT_QUIET.md Step 1): small badges/icon buttons
+  /// at 8-10, medium 12, large 14 (== [md], every Quiet card), dialog 18,
+  /// tiny 3 (bar/heat-cell corners), the progress bar's half-height cap.
+  static const double xs = 8;
+  static const double smAlt = 10;
+  static const double medium = 12;
+  static const double dialog = 18;
+  static const double tiny = 3;
+  static const double hairlinePill = 1.5;
 
-extension CdElevationX on BuildContext {
-  /// Brass glow that tracks the active theme's primary colour. Brass is brighter
-  /// than teal, so the alpha sits lower than the old teal glow (.26 dark / .20 light).
-  List<BoxShadow> get cdGlow => [
-        BoxShadow(
-          color: getColor(ThemeEnum.primary).withValues(alpha: isThemeDark ? 0.26 : 0.20),
-          blurRadius: 24,
-          offset: const Offset(0, 8),
-        ),
-      ];
+  /// The segmented control's selected-segment radius (7), one step tighter
+  /// than the group's own outline radius (10 -> [smAlt]).
+  static const double segment = 7;
 }
 
 abstract final class CdMotion {
@@ -76,6 +58,14 @@ abstract final class CdMotion {
   static const Duration dialog = Duration(milliseconds: 200);
   static const Duration expand = Duration(milliseconds: 240);
   static const Duration ring = Duration(milliseconds: 2400);
+
+  /// Colour vs height on a chart bar — resolve independently.
+  static const Duration barColour = Duration(milliseconds: 180);
+  static const Duration barHeight = Duration(milliseconds: 240);
+
+  /// The pulsing live dot (Step 8) and Home's ground drift (Step 2).
+  static const Duration live = Duration(milliseconds: 1600);
+  static const Duration ground = Duration(seconds: 28);
 
   static const Curve easeOut = Cubic(.2, .8, .4, 1);
   static const Curve easePop = Cubic(.2, 1.3, .4, 1);

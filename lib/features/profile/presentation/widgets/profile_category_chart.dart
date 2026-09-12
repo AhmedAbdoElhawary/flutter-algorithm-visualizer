@@ -1,7 +1,8 @@
 import 'package:algorithm_visualizer/core/resources/strings_manager.dart';
-import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
 import 'package:algorithm_visualizer/core/widgets/adaptive/padding/adaptive_padding.dart';
-import 'package:algorithm_visualizer/core/widgets/adaptive/text/adaptive_text.dart';
+import 'package:algorithm_visualizer/core/widgets/custom_widgets/card_container.dart';
+import 'package:algorithm_visualizer/core/widgets/custom_widgets/section_header.dart';
+import 'package:algorithm_visualizer/core/widgets/custom_widgets/tag_chip.dart';
 import 'package:algorithm_visualizer/features/profile/presentation/view_model/statistics/profile_statistics_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -21,52 +22,17 @@ class ProfileCategoryChart extends ConsumerWidget {
 
     return HorizontalPadding(
       padding: 16,
-      child: Container(
-        padding: REdgeInsets.all(14),
-        width: double.infinity,
-        decoration: BoxDecoration(
-          color: context.getColor(ThemeEnum.card),
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: context.getColor(ThemeEnum.border)),
-          boxShadow: context.cardShadow,
-        ),
+      child: CardContainer(
+        surface: CdSurface.main,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const BoldText(StringsManager.solvedTopics, color: ThemeEnum.textSecond, fontSize: 13),
+            const SectionHeader(title: StringsManager.solvedTopics),
             const RSizedBox(height: 10),
             Wrap(
               spacing: 6,
               runSpacing: 6,
-              children: entries.map((e) {
-                return Container(
-                  padding: REdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                  decoration: BoxDecoration(
-                    color: context.getColor(ThemeEnum.accentBg),
-                    borderRadius: BorderRadius.circular(8),
-                    border: Border.all(color: context.getColor(ThemeEnum.borderAccent)),
-                  ),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      SemiBoldText(e.key, color: ThemeEnum.accent, fontSize: 12),
-                      const RSizedBox(width: 6),
-                      Container(
-                        padding: REdgeInsets.symmetric(horizontal: 6, vertical: 1),
-                        decoration: BoxDecoration(
-                          color: context.getColor(ThemeEnum.accent).withValues(alpha: 0.15),
-                          borderRadius: BorderRadius.circular(6),
-                        ),
-                        child: MediumText(
-                          e.value.toString(),
-                          color: ThemeEnum.accent,
-                          fontSize: 11,
-                        ),
-                      ),
-                    ],
-                  ),
-                );
-              }).toList(),
+              children: entries.map((e) => TagChip(label: '${e.key}  ${e.value}')).toList(),
             ),
           ],
         ),

@@ -1,4 +1,3 @@
-import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
 import 'package:algorithm_visualizer/features/home/view/widgets/home_category_grid.dart';
 import 'package:algorithm_visualizer/features/home/view/widgets/home_continue_card.dart';
 import 'package:algorithm_visualizer/features/home/view/widgets/home_difficulty_progress.dart';
@@ -14,31 +13,23 @@ class HomePage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return Scaffold(
-      backgroundColor: context.getColor(ThemeEnum.primary),
-      body: SafeArea(
-        child: RepaintBoundary(
-          child: CustomScrollView(
-            physics: const BouncingScrollPhysics(),
-            slivers: [
-              // SliverList.list wraps each section in its own RepaintBoundary
-              // and only builds sections near the viewport, so painting one
-              // section can't invalidate the others.
-              SliverList.list(
-                children: const [
-                  HomeHeader(),
-                  HomeStatsStrip(),
-                  ProfileWeeklyChart(),
-                  HomeDifficultyProgress(),
-                  HomeContinueCard(),
-                  HomeCategoryGrid(),
-                  HomeRecentActivity(),
-                ],
-              ),
-            ],
-          ),
+    // Scaffold/Metrial written in base_navigation, why?
+    // to control all main pages with the structure of them
+    return CustomScrollView(
+      physics: const BouncingScrollPhysics(),
+      slivers: [
+        SliverList.list(
+          children: const [
+            HomeHeader(),
+            HomeStatsStrip(),
+            ProfileWeeklyChart(),
+            HomeDifficultyProgress(),
+            HomeContinueCard(),
+            HomeCategoryGrid(),
+            HomeRecentActivity(),
+          ],
         ),
-      ),
+      ],
     );
   }
 }

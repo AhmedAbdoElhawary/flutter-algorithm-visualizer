@@ -6,9 +6,9 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 /// Shared shell for the three auth screens (CoreDive 11 / 12 / 13).
 ///
-/// Radial background wash (one of the two gradients the system allows), 24px
-/// screen inset, scrollable column. The old particle-constellation background is
-/// gone — it fought the form.
+/// The Aurora ground (static — auth is not Home), a 24px screen inset, and a
+/// scrollable column. The old radial wash and the particle-constellation
+/// background are both gone — they fought the form.
 class AuthScaffold extends StatelessWidget {
   const AuthScaffold({
     super.key,
@@ -26,19 +26,7 @@ class AuthScaffold extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: context.getColor(ThemeEnum.primary),
-      body: DecoratedBox(
-        decoration: BoxDecoration(
-          gradient: RadialGradient(
-            center: const Alignment(0, -1),
-            radius: 1.2,
-            stops: const [0, 0.62],
-            colors: [
-              context.getColor(ThemeEnum.authWash),
-              context.getColor(ThemeEnum.primary),
-            ],
-          ),
-        ),
-        child: SafeArea(
+      body: SafeArea(
           child: SingleChildScrollView(
             physics: const BouncingScrollPhysics(),
             child: HorizontalPadding(
@@ -53,7 +41,6 @@ class AuthScaffold extends StatelessWidget {
               ),
             ),
           ),
-        ),
       ),
     );
   }

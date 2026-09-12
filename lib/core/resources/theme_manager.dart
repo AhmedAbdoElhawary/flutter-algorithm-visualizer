@@ -11,15 +11,12 @@ enum ThemeEnum {
   borderAccent,
   accentBg,
   accentGreen,
-  accentGreenBg,
   accentGreenRc,
   accentYellow,
   accentYellowRc,
   accentRed,
   accentRedRc,
   accentBlue,
-  accentBlueBg,
-  borderAccentBlue,
   textSecond,
   textPrimary,
   hover,
@@ -29,10 +26,9 @@ enum ThemeEnum {
   /// ---- CoreDive semantic tokens ----
   /// Surfaces
   bgRaised,
+  bgBase,
   surfaceAlt,
-
-  /// Brass-tinted card — streak / XP surfaces only
-  surfaceWarm,
+  surfaceRaised,
   borderSubtle,
   borderStrong,
 
@@ -41,15 +37,18 @@ enum ThemeEnum {
   textDisabled,
   textBright,
 
-  /// Auth background wash (one of the two sanctioned gradients)
-  authWash,
-
   /// Interactive (brass — the only interactive colour)
   primaryHover,
-  primaryPress,
   primaryTint,
   primaryRing,
   onPrimary,
+
+  /// Quiet: generic progress-bar track + solid chip fills
+  track,
+  chipEasyFill,
+  chipMediumFill,
+  chipHardFill,
+  chipNeutralFill,
 
   /// Feedback
   onError,
@@ -67,9 +66,13 @@ enum ThemeEnum {
 
   /// Visualizer bar states
   barIdle,
+  barExcluded,
   barCompare,
   barSwap,
   barDone,
+
+  /// "currently comparing" — cyan, the same mark everywhere (bars, live dot)
+  comparing,
 
   /// Code syntax
   codeBg,
@@ -82,11 +85,15 @@ enum ThemeEnum {
   codeNumber,
   codeComment,
 
-  /// Activity heat ramp (low → high)
+  /// Activity heat ramp (low → high) — five steps
   heat0,
   heat1,
   heat2,
   heat3,
+  heat4,
+
+  /// Bottom-nav inactive item
+  navInactive,
 
   /// static colors
   solidWhite,
@@ -115,13 +122,6 @@ extension ThemeExtension on BuildContext {
 
   T _pick<T>(T dark, T light) => isThemeDark ? dark : light;
 
-  List<BoxShadow> get cardShadow => isThemeDark
-      ? []
-      : [
-          BoxShadow(color: Colors.black.withValues(alpha: 0.05), blurRadius: 12, offset: const Offset(0, 2)),
-          BoxShadow(color: Colors.black.withValues(alpha: 0.04), spreadRadius: 1),
-        ];
-
   Map<ThemeEnum, Color> get _colors {
     return {
       ThemeEnum.primary: Theme.of(this).primaryColor,
@@ -140,22 +140,10 @@ extension ThemeExtension on BuildContext {
       ),
       ThemeEnum.accentGreenRc: ColorManager.accentGreenBgDk,
       ThemeEnum.accentGreen: _pick(ColorManager.accentGreenDk, ColorManager.accentGreenLt),
-      ThemeEnum.accentGreenBg: _pick(
-        ColorManager.accentGreenDk.withValues(alpha: 0.12),
-        ColorManager.accentGreenLt.withValues(alpha: 0.08),
-      ),
       ThemeEnum.accentYellow: _pick(ColorManager.accentYellowDk, ColorManager.accentYellowLt),
       ThemeEnum.accentYellowRc: _pick(ColorManager.accentYellowDk, ColorManager.accentYellowLt),
       ThemeEnum.accentRed: _pick(ColorManager.accentRedDk, ColorManager.accentRedLt),
       ThemeEnum.accentRedRc: ColorManager.accentRedBgDk,
-      ThemeEnum.accentBlueBg: _pick(
-        ColorManager.accentBlueDk.withValues(alpha: 0.1),
-        ColorManager.accentBlueLt.withValues(alpha: 0.1),
-      ),
-      ThemeEnum.borderAccentBlue: _pick(
-        ColorManager.accentBlueDk.withValues(alpha: 0.3),
-        ColorManager.accentBlueLt.withValues(alpha: 0.3),
-      ),
       ThemeEnum.accentBlue: _pick(ColorManager.accentBlueDk, ColorManager.accentBlueLt),
       ThemeEnum.textSecond: _pick(ColorManager.textSecondDk, ColorManager.textSecondLt),
       ThemeEnum.textPrimary: _pick(ColorManager.textPrimaryDk, ColorManager.textPrimaryLt),
@@ -165,21 +153,26 @@ extension ThemeExtension on BuildContext {
 
       /// ---- CoreDive semantic tokens ---->
       ThemeEnum.bgRaised: _pick(ColorManager.cdBgRaisedDk, ColorManager.cdBgRaisedLt),
+      ThemeEnum.bgBase: _pick(ColorManager.cdBgBaseDk, ColorManager.cdBgBaseLt),
       ThemeEnum.surfaceAlt: _pick(ColorManager.cdSurfaceAltDk, ColorManager.cdSurfaceAltLt),
-      ThemeEnum.surfaceWarm: _pick(ColorManager.cdSurfaceWarmDk, ColorManager.cdSurfaceWarmLt),
+      ThemeEnum.surfaceRaised: _pick(ColorManager.cdSurfaceRaisedDk, ColorManager.cdBgRaisedLt),
       ThemeEnum.borderSubtle: _pick(ColorManager.cdBorderSubtleDk, ColorManager.cdBorderSubtleLt),
       ThemeEnum.borderStrong: _pick(ColorManager.cdBorderStrongDk, ColorManager.cdBorderStrongLt),
 
       ThemeEnum.textBody: _pick(ColorManager.cdTextBodyDk, ColorManager.cdTextBodyLt),
       ThemeEnum.textDisabled: _pick(ColorManager.cdTextDisabledDk, ColorManager.cdTextDisabledLt),
       ThemeEnum.textBright: _pick(ColorManager.cdTextBrightDk, ColorManager.cdTextBrightLt),
-      ThemeEnum.authWash: _pick(ColorManager.cdAuthWashDk, ColorManager.cdAuthWashLt),
 
       ThemeEnum.primaryHover: _pick(ColorManager.cdPrimaryHoverDk, ColorManager.cdPrimaryHoverLt),
-      ThemeEnum.primaryPress: _pick(ColorManager.cdPrimaryPressDk, ColorManager.cdPrimaryPressLt),
       ThemeEnum.primaryTint: _pick(ColorManager.cdPrimaryTintDk, ColorManager.cdPrimaryTintLt),
       ThemeEnum.primaryRing: _pick(ColorManager.cdPrimaryRingDk, ColorManager.cdPrimaryRingLt),
       ThemeEnum.onPrimary: _pick(ColorManager.cdOnPrimaryDk, ColorManager.cdOnPrimaryLt),
+
+      ThemeEnum.track: _pick(ColorManager.cdTrackDk, ColorManager.cdTrackLt),
+      ThemeEnum.chipEasyFill: _pick(ColorManager.cdChipEasyFillDk, ColorManager.cdChipEasyFillLt),
+      ThemeEnum.chipMediumFill: _pick(ColorManager.cdChipMediumFillDk, ColorManager.cdChipMediumFillLt),
+      ThemeEnum.chipHardFill: _pick(ColorManager.cdChipHardFillDk, ColorManager.cdChipHardFillLt),
+      ThemeEnum.chipNeutralFill: _pick(ColorManager.cdChipNeutralFillDk, ColorManager.cdChipNeutralFillLt),
 
       ThemeEnum.onError: _pick(ColorManager.cdOnErrorDk, ColorManager.cdOnErrorLt),
       ThemeEnum.errorRing: _pick(ColorManager.cdErrorRingDk, ColorManager.cdErrorRingLt),
@@ -193,9 +186,11 @@ extension ThemeExtension on BuildContext {
       ThemeEnum.difficultyHard: _pick(ColorManager.cdErrorDk, ColorManager.cdErrorLt),
 
       ThemeEnum.barIdle: _pick(ColorManager.cdBarIdleDk, ColorManager.cdBarIdleLt),
+      ThemeEnum.barExcluded: _pick(ColorManager.cdBarExcludedDk, ColorManager.cdBarExcludedLt),
       ThemeEnum.barCompare: _pick(ColorManager.cdBarCompareDk, ColorManager.cdBarCompareLt),
       ThemeEnum.barSwap: _pick(ColorManager.cdBarSwapDk, ColorManager.cdBarSwapLt),
       ThemeEnum.barDone: _pick(ColorManager.cdBarDoneDk, ColorManager.cdBarDoneLt),
+      ThemeEnum.comparing: _pick(ColorManager.cdComparingDk, ColorManager.cdComparingLt),
 
       ThemeEnum.codeBg: _pick(ColorManager.cdBgRaisedDk, ColorManager.cdBgRaisedLt),
       ThemeEnum.codeGutter: _pick(ColorManager.cdCodeGutterDk, ColorManager.cdCodeGutterLt),
@@ -211,6 +206,9 @@ extension ThemeExtension on BuildContext {
       ThemeEnum.heat1: _pick(ColorManager.cdHeatDk[1], ColorManager.cdHeatLt[1]),
       ThemeEnum.heat2: _pick(ColorManager.cdHeatDk[2], ColorManager.cdHeatLt[2]),
       ThemeEnum.heat3: _pick(ColorManager.cdHeatDk[3], ColorManager.cdHeatLt[3]),
+      ThemeEnum.heat4: _pick(ColorManager.cdHeatDk[4], ColorManager.cdHeatLt[4]),
+
+      ThemeEnum.navInactive: _pick(ColorManager.cdNavInactiveDk, ColorManager.cdNavInactiveLt),
 
       ///-------------------->
       ThemeEnum.solidWhite: ColorManager.white,

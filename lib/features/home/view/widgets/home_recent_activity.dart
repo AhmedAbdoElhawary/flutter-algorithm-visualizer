@@ -4,9 +4,10 @@ import 'package:algorithm_visualizer/core/resources/strings_manager.dart';
 import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
 import 'package:algorithm_visualizer/core/widgets/adaptive/padding/adaptive_padding.dart';
 import 'package:algorithm_visualizer/core/widgets/adaptive/text/adaptive_text.dart';
-import 'package:algorithm_visualizer/core/widgets/custom_widgets/glass_card.dart';
+import 'package:algorithm_visualizer/core/widgets/custom_widgets/difficulty_chip.dart';
+import 'package:algorithm_visualizer/core/widgets/custom_widgets/card_container.dart';
+import 'package:algorithm_visualizer/core/widgets/custom_widgets/section_header.dart';
 import 'package:algorithm_visualizer/features/challenge/domain/enums/problem.dart';
-import 'package:algorithm_visualizer/features/challenge/presentation/helper/problem_style.dart';
 import 'package:algorithm_visualizer/features/profile/presentation/entities/recent_submission.dart';
 import 'package:algorithm_visualizer/features/profile/presentation/view_model/statistics/profile_statistics_provider.dart';
 import 'package:flutter/material.dart';
@@ -30,7 +31,7 @@ class HomeRecentActivity extends ConsumerWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const BoldText(StringsManager.recentActivity, fontSize: 15, color: ThemeEnum.textPrimary),
+          const SectionHeader(title: StringsManager.recentActivity),
           SizedBox(height: 10.h),
           ...recent.take(5).map((item) => _ActivityTile(item: item)),
         ],
@@ -46,26 +47,23 @@ class _ActivityTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final diffColor = ProblemStyle.difficultyColor(item.difficulty);
     final diffLabel = item.difficulty.difficultyString;
 
     final timeAgo = _formatTimeAgo(item.submittedAt);
 
+    final quietDifficulty =item.difficulty;
+
     return GestureDetector(
-      onTap: () => context.pushTo(Routes.code, queryParameters: '${item.problemId}'),
-      child: Container(
-        margin: REdgeInsets.only(bottom: 8),
+      onTap: () => context.pushTo(Routes.problem, queryParameters: '${item.problemId}'),
+      child: CardContainer(
+        surface: CdSurface.main,
         padding: REdgeInsets.symmetric(horizontal: 14, vertical: 10),
-        decoration: SimpleGlassButton.cardDecoration(context),
         child: Row(
           children: [
-            Container(
-              width: 8.r,
-              height: 8.r,
-              decoration: BoxDecoration(
-                color: context.getColor(item.isCorrect ? ThemeEnum.accentGreen : ThemeEnum.accentYellow),
-                shape: BoxShape.circle,
-              ),
+            Icon(
+              Icons.circle,
+              size: 8.r,
+              color: context.getColor(item.isCorrect ? ThemeEnum.difficultyEasy : ThemeEnum.difficultyMedium),
             ),
             SizedBox(width: 10.w),
             Expanded(
@@ -77,15 +75,8 @@ class _ActivityTile extends StatelessWidget {
                 ],
               ),
             ),
-            if (diffLabel.isNotEmpty)
-              Container(
-                padding: REdgeInsets.symmetric(horizontal: 8, vertical: 3),
-                decoration: BoxDecoration(
-                  color: context.getColor(diffColor).withValues(alpha: 0.12),
-                  borderRadius: BorderRadius.circular(6.r),
-                ),
-                child: RegularText(diffLabel, fontSize: 11, color: diffColor),
-              ),
+            if (quietDifficulty != ProblemDifficulty.none)
+              DifficultyChip(difficulty: quietDifficulty, label: diffLabel),
           ],
         ),
       ),

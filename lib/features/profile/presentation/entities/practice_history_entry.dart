@@ -19,3 +19,7 @@ class PracticeHistoryEntry {
   final DateTime lastSubmittedAt;
   final List<RecentSubmission> attempts;
 }
+
+extension PracticeHistoryEntryX on PracticeHistoryEntry {
+  bool get isSolved => !attempts.any((element) => !element.isCorrect);
+}

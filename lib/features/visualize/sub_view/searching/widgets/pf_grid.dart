@@ -1,5 +1,5 @@
-import 'package:algorithm_visualizer/core/resources/color_manager.dart';
 import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
+import 'package:algorithm_visualizer/core/widgets/custom_widgets/card_container.dart';
 import 'package:algorithm_visualizer/features/visualize/sub_view/searching/helper/pf_constants.dart';
 import 'package:algorithm_visualizer/features/visualize/sub_view/searching/widgets/end_point.dart';
 import 'package:algorithm_visualizer/features/visualize/sub_view/searching/widgets/pf_grid_painter.dart';
@@ -8,18 +8,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../view_model/searching_notifier.dart';
-
-const Color kWallGridColor = ColorManager.wallBlack;
-const Color kPathGridColor = ColorManager.accentYellowDk;
-
-const Color kSearcherStartColor = ColorManager.pinkColor;
-const Color kSearcherMediumColor = kSearcherStartColor;
-const Color kSearcherFinishedColor = ColorManager.accentBlueDk;
-
-const Color kStartPointIconColor = ColorManager.white;
-const Color kTargetOuterColor = ColorManager.targetSearchingPoint;
-const Color kTargetMidColor = ColorManager.white;
-const Color kTargetInnerColor = ColorManager.targetSearchingPoint;
 
 enum _DragMode { none, start, end, wall }
 
@@ -149,16 +137,13 @@ class _PFGridState extends ConsumerState<PFGrid> with SingleTickerProviderStateM
           onTapDown: (d) => _handleGestureStart(d.localPosition, cellSize, state),
           onPanStart: (d) => _handleGestureStart(d.localPosition, cellSize, state),
           onPanUpdate: (d) => _handleGestureUpdate(d.localPosition, cellSize),
-          child: Container(
-            width: constraints.maxWidth,
-            height: gridHeight,
-            decoration: BoxDecoration(
-              color: context.getColor(ThemeEnum.primary),
-              borderRadius: BorderRadius.circular(14),
-              border: Border.all(color: context.getColor(ThemeEnum.border)),
-            ),
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(14),
+          child: CardContainer(
+            surface: CdSurface.outline,
+            clip: true,
+            padding: EdgeInsets.zero,
+            child: SizedBox(
+              width: constraints.maxWidth,
+              height: gridHeight,
               child: Stack(
                 children: [
                   CustomPaint(
@@ -167,6 +152,11 @@ class _PFGridState extends ConsumerState<PFGrid> with SingleTickerProviderStateM
                       walls: state.walls,
                       step: state.currentStep,
                       isDark: context.isThemeDark,
+                      wallColor: context.getColor(ThemeEnum.borderStrong),
+                      pathColor: context.getColor(ThemeEnum.difficultyEasy),
+                      searcherColor: context.getColor(ThemeEnum.comparing),
+                      searcherFinishedColor: context.getColor(ThemeEnum.barIdle),
+                      gridLineColor: context.getColor(ThemeEnum.borderSubtle),
                       wallAnimations: _wallAnimations,
                       frontierAnimations: _frontierAnimations,
                       visitedAnimations: _visitedAnimations,
@@ -180,7 +170,7 @@ class _PFGridState extends ConsumerState<PFGrid> with SingleTickerProviderStateM
                     top: state.startRow * cellSize - 2.5,
                     width: cellSize,
                     height: cellSize,
-                    child: PFStartPointWidget(size: cellSize),
+                    child: PFStartPointWidget(size: cellSize, color: context.getColor(ThemeEnum.textBright)),
                   ),
                   PositionedDirectional(
                     // - 1.5: to center the start point
@@ -191,7 +181,12 @@ class _PFGridState extends ConsumerState<PFGrid> with SingleTickerProviderStateM
                     top: state.endRow * cellSize - 1,
                     width: cellSize,
                     height: cellSize,
-                    child: PFEndPointWidget(size: cellSize),
+                    child: PFEndPointWidget(
+                      size: cellSize,
+                      outerColor: context.getColor(ThemeEnum.difficultyEasy),
+                      midColor: context.getColor(ThemeEnum.textBright),
+                      innerColor: context.getColor(ThemeEnum.difficultyEasy),
+                    ),
                   ),
                 ],
               ),

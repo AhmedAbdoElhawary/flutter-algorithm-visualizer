@@ -1,0 +1,195 @@
+:root, [data-theme="dark"] {
+  /* dark — primary */
+  --cd-bg-base: #050605;
+  --cd-bg-raised: #0A0C0B;
+  --cd-surface: #0C0E0D;
+  --cd-surface-alt: #1A1F1D;
+  --cd-surface-warm: #15100A;
+  --cd-border-subtle: #1C201E;
+  --cd-border: #222725;
+  --cd-border-strong: #31372F;
+
+  --cd-primary: #E0A33E;
+  --cd-primary-hover: #F0BC63;
+  --cd-primary-press: #C9922E;
+  --cd-on-primary: #1A1206;
+  --cd-primary-tint: rgba(224,163,62,.14);
+  --cd-primary-ring: rgba(224,163,62,.16);
+
+  /* XP is the brand colour: identity and progress are deliberately the same brass. */
+  --cd-accent-xp: #C9922E;
+  --cd-accent-xp-text: #E0A33E;
+  --cd-on-accent-xp: #1A1206;
+
+  --cd-text-primary: #F5F7F6;
+  --cd-text-body: #B9BEBB;
+  --cd-text-secondary: #7E8582;
+  --cd-text-disabled: #5C6360;
+
+  --cd-success: #4FC38C;
+  --cd-warning: #D97742;
+  --cd-error: #DF5B67;
+  --cd-on-error: #2A0709;
+
+  /* Medium is burnt orange, NOT amber — amber is the brand colour. */
+  --cd-difficulty-easy: #4FC38C;
+  --cd-difficulty-medium: #D97742;
+  --cd-difficulty-hard: #DF5B67;
+
+  /* visualizer bar states — drawn only from the app palette. Brass = the algorithm's
+     hand (comparing), white = the one element it holds, red = the destructive swap
+     frame, green = settled, neutral ramp = at rest. Burnt orange is NOT used here:
+     it is difficulty-medium. No shadow or gradient on a data mark, ever. */
+  --cd-bar-idle: #4E5A57;
+  --cd-bar-compare: #E0A33E;
+  --cd-bar-swap: #DF5B67;
+  --cd-bar-key: #F5F7F6;
+  --cd-bar-sorted: #4FC38C;
+  --cd-bar-excluded: #262B29;
+  --cd-bar-label-idle: #7E8582;
+  --cd-bar-label-active: #F5F7F6;
+  /* deprecated: was pure-white "done". Kept as an alias, use --cd-bar-sorted. */
+  --cd-bar-done: #4FC38C;
+
+  /* code syntax */
+  --cd-code-bg: #0A0C0B;
+  --cd-code-gutter: #4A4F49;
+  --cd-code-line: rgba(224,163,62,.07);
+  --cd-code-keyword: #D97742;
+  --cd-code-type: #F0BC63;
+  --cd-code-plain: #B9BEBB;
+  --cd-code-punct: #E8EAE9;
+  --cd-code-number: #4FC38C;
+  --cd-code-comment: #5C6360;
+
+  /* activity heatmap */
+  --cd-heat-0: #1A1F1D;
+  --cd-heat-1: #5C3F12;
+  --cd-heat-2: #C9922E;
+  --cd-heat-3: #F0BC63;
+
+  /* elevation */
+  --cd-e1: 0 1px 2px rgba(0,0,0,.40);
+  --cd-e2: 0 6px 18px rgba(0,0,0,.45);
+  --cd-e3: 0 24px 60px rgba(0,0,0,.70);
+  --cd-glow: 0 8px 24px rgba(224,163,62,.26);
+}
+
+[data-theme="light"] {
+  --cd-bg-base: #FAF8F4;
+  --cd-bg-raised: #FFFFFF;
+  --cd-surface: #FFFFFF;
+  --cd-surface-alt: #F2EEE6;
+  --cd-surface-warm: #FBF3E3;
+  --cd-border-subtle: #EFEBE2;
+  --cd-border: #E5E0D6;
+  --cd-border-strong: #CBC4B5;
+
+  --cd-primary: #8F6216;
+  --cd-primary-hover: #A9761D;
+  --cd-primary-press: #734E0F;
+  --cd-on-primary: #FFFFFF;
+  --cd-primary-tint: rgba(143,98,22,.10);
+  --cd-primary-ring: rgba(143,98,22,.16);
+
+  --cd-accent-xp: #8F6216;
+  --cd-accent-xp-text: #734E0F;
+  --cd-on-accent-xp: #FFFFFF;
+
+  --cd-text-primary: #12100C;
+  --cd-text-body: #2E2A22;
+  --cd-text-secondary: #6B665C;
+  --cd-text-disabled: #A09A8D;
+
+  --cd-success: #1B7F5A;
+  --cd-warning: #A85426;
+  --cd-error: #C1414D;
+  --cd-on-error: #FFFFFF;
+
+  --cd-difficulty-easy: #1B7F5A;
+  --cd-difficulty-medium: #A85426;
+  --cd-difficulty-hard: #C1414D;
+
+  --cd-bar-idle: #C3CBC8;
+  --cd-bar-compare: #8F6216;
+  --cd-bar-swap: #C1414D;
+  --cd-bar-key: #12100C;
+  --cd-bar-sorted: #1B7F5A;
+  --cd-bar-excluded: #EFEBE2;
+  --cd-bar-label-idle: #6B665C;
+  --cd-bar-label-active: #12100C;
+  --cd-bar-done: #1B7F5A;
+
+  --cd-code-bg: #F5F2EB;
+  --cd-code-gutter: #A6A093;
+  --cd-code-line: rgba(143,98,22,.08);
+  --cd-code-keyword: #A85426;
+  --cd-code-type: #8F6216;
+  --cd-code-plain: #2E2A22;
+  --cd-code-punct: #12100C;
+  --cd-code-number: #1B7F5A;
+  --cd-code-comment: #A09A8D;
+
+  --cd-heat-0: #EFEBE2;
+  --cd-heat-1: #E8CE96;
+  --cd-heat-2: #C9922E;
+  --cd-heat-3: #8F6216;
+
+  --cd-e1: 0 1px 2px rgba(18,16,12,.06);
+  --cd-e2: 0 6px 18px rgba(18,16,12,.08);
+  --cd-e3: 0 24px 60px rgba(18,16,12,.16);
+  --cd-glow: 0 8px 24px rgba(143,98,22,.20);
+}
+
+:root {
+  /* space — 4px base */
+  --cd-space-1: 4px;  --cd-space-2: 8px;  --cd-space-3: 12px; --cd-space-4: 16px;
+  --cd-space-6: 24px; --cd-space-8: 32px; --cd-space-12: 48px; --cd-space-16: 64px;
+
+  --cd-inset-screen: 16px;
+  --cd-inset-auth: 24px;
+  --cd-pad-card: 16px 18px;
+  --cd-pad-row: 13px 14px;
+  --cd-gap-card: 14px;
+  --cd-gap-row: 8px;
+  --cd-tabbar-h: 74px;
+  --cd-cta-reserve: 134px;
+  --cd-hit-min: 44px;
+
+  /* radius */
+  --cd-radius-sm: 9px;
+  --cd-radius-md: 13px;
+  --cd-radius-lg: 19px;
+  --cd-radius-xl: 24px;
+  --cd-radius-pill: 999px;
+
+  /* type — Latin line-heights; add 0.1 for Arabic */
+  /* Primary families load from the Google Fonts CDN in any web build — no files
+     required. The fallbacks cover Latin and Arabic on every platform. */
+  --cd-font-ui: 'IBM Plex Sans Arabic', 'Noto Sans Arabic', 'SF Arabic', system-ui, sans-serif;
+  --cd-font-mono: 'JetBrains Mono', 'Roboto Mono', ui-monospace, Menlo, monospace;
+
+  --cd-display: 700 26px/1.23 var(--cd-font-ui);
+  --cd-h1: 700 21px/1.24 var(--cd-font-ui);
+  --cd-h2: 700 17px/1.29 var(--cd-font-ui);
+  --cd-h3: 600 13px/1.38 var(--cd-font-ui);
+  --cd-body-lg: 400 13.5px/1.63 var(--cd-font-ui);
+  --cd-body: 400 12.5px/1.68 var(--cd-font-ui);
+  --cd-label: 500 11px/1.27 var(--cd-font-ui);
+  --cd-caption: 400 10.5px/1.52 var(--cd-font-ui);
+  --cd-eyebrow: 600 10px/1.2 var(--cd-font-ui);
+  --cd-mono: 400 11.5px/1.74 var(--cd-font-mono);
+
+  --cd-tracking-display: -0.02em;
+  --cd-tracking-h1: -0.01em;
+  --cd-tracking-eyebrow: 0.1em;
+
+  /* motion */
+  --cd-dur-press: 90ms;
+  --cd-dur-fade: 120ms;
+  --cd-dur-step: 180ms;
+  --cd-dur-dialog: 200ms;
+  --cd-dur-expand: 240ms;
+  --cd-ease-out: cubic-bezier(.2,.8,.4,1);
+  --cd-ease-pop: cubic-bezier(.2,1.3,.4,1);
+}
