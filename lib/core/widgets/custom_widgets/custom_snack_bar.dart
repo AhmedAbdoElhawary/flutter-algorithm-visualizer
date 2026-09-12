@@ -1,6 +1,7 @@
 import 'package:algorithm_visualizer/core/resources/dimensions_manager.dart';
 import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
 import 'package:algorithm_visualizer/core/widgets/adaptive/text/adaptive_text.dart';
+import 'package:algorithm_visualizer/core/widgets/custom_widgets/card_container.dart';
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/custom_icon.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -47,19 +48,6 @@ class _AuthErrorBanner extends StatelessWidget {
     }
   }
 
-  ThemeEnum get _fill {
-    switch (type) {
-      case CustomSnackBarType.error:
-        return ThemeEnum.chipHardFill;
-      case CustomSnackBarType.success:
-        return ThemeEnum.chipEasyFill;
-      case CustomSnackBarType.warning:
-        return ThemeEnum.chipMediumFill;
-      case CustomSnackBarType.info:
-        return ThemeEnum.chipNeutralFill;
-    }
-  }
-
   IconData get getIcon {
     switch (type) {
       case CustomSnackBarType.error:
@@ -78,13 +66,10 @@ class _AuthErrorBanner extends StatelessWidget {
     return InkWell(
       onTap: () => context..hideCurrentSnackBar(),
       borderRadius: BorderRadius.circular(CdRadius.smAlt.r),
-      child: Container(
+      child: CardContainer(
+        surface: CdSurface.secondary,
+        radius: CdRadius.smAlt,
         padding: REdgeInsets.symmetric(horizontal: 14, vertical: 12),
-        decoration: BoxDecoration(
-          color: context.getColor(_fill),
-          borderRadius: BorderRadius.circular(CdRadius.smAlt.r),
-          border: Border.all(color: context.getColor(getColor)),
-        ),
         child: Row(
           children: [
             CustomIcon(getIcon, size: 16, color: getColor),
