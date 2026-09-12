@@ -1,6 +1,7 @@
 import 'package:algorithm_visualizer/core/resources/dimensions_manager.dart';
 import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
 import 'package:algorithm_visualizer/core/widgets/adaptive/text/adaptive_text.dart';
+import 'package:algorithm_visualizer/core/widgets/custom_widgets/card_container.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -27,14 +28,10 @@ class StatTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final hasHeaderRow = icon != null || (sub != null && sub!.isNotEmpty);
-    return Container(
+    Widget tile = CardContainer(
+      surface: CdSurface.main,
+      radius: CdRadius.md,
       padding: REdgeInsets.symmetric(horizontal: 12, vertical: 12),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(CdRadius.md.r),
-        border: Border.all(
-          color: context.getColor(emphasized ? ThemeEnum.borderStrong : ThemeEnum.borderSubtle),
-        ),
-      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
@@ -58,5 +55,23 @@ class StatTile extends StatelessWidget {
         ],
       ),
     );
+    if (emphasized) {
+      tile = Stack(
+        children: [
+          tile,
+          Positioned.fill(
+            child: IgnorePointer(
+              child: DecoratedBox(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(CdRadius.md.r),
+                  border: Border.all(color: context.getColor(ThemeEnum.borderStrong)),
+                ),
+              ),
+            ),
+          ),
+        ],
+      );
+    }
+    return tile;
   }
 }
