@@ -1,7 +1,8 @@
 import 'package:algorithm_visualizer/config/routes/route_app.dart';
 import 'package:algorithm_visualizer/core/extensions/navigators.dart';
-import 'package:algorithm_visualizer/features/challenge/presentation/widgets/challenges/error_state.dart';
+import 'package:algorithm_visualizer/core/helpers/constants.dart';
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/loading_state.dart';
+import 'package:algorithm_visualizer/features/challenge/presentation/widgets/challenges/error_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -20,7 +21,10 @@ class ChallengePage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final problems = ref.watch(filteredProblemIdsProvider);
 
+    // Scaffold/Metrial written in base_navigation, why?
+    // to control all main pages with the structure of them
     return CustomScrollView(
+      physics: const BouncingScrollPhysics(),
       slivers: [
         const _SliverAppBar(),
         problems.when(
@@ -29,13 +33,15 @@ class ChallengePage extends ConsumerWidget {
           data: (data) {
             if (data.ids.isEmpty) return const SliverFillRemaining(child: ChallengesEmptyState());
             return SliverPadding(
-              padding: REdgeInsets.fromLTRB(16, 0, 16, 60),
+              padding: REdgeInsets.fromLTRB(16, 0, 16, kBottomPageSpacing),
               sliver: SliverList.builder(
                 itemCount: data.ids.length,
                 itemBuilder: (ctx, i) {
                   final problemId = data.ids[i];
                   return ProblemTile(
                     problemId: problemId,
+                    expanded: ref.watch(challengesProvider.select((s) => s.expandedId == problemId)),
+                    onToggle: () => ref.read(challengesProvider.notifier).toggleExpanded(problemId),
                     onSolveTap: () {
                       context.pushTo(Routes.problem, queryParameters: "$problemId");
                     },
