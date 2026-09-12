@@ -164,12 +164,15 @@ class StringsManager {
   static const String hints = "Hints";
   static const String hint = "Hint";
   static const String similarQuestions = "Similar Questions";
+  static const String noHintsYet = "No hints yet";
+  static const String noSimilarQuestionsYet = "No similar questions yet";
   static const String practiceHistory = "Practice History";
 
   // Bookmarks / History (Aurora screens 07 / 09)
   static const String swipeToRemoveBookmark = "Swipe a row to remove it from bookmarks.";
+  static const String bookmarkEndTitle = "That is the whole bookmarks";
   static const String historyEndTitle = "That is the whole history";
-  static const String historyEndSubtitle = "Every attempt you make lands here, passed or not.";
+  static const String longPressExplain = "Long press on the card to jump to the problem";
   static const String lastLabel = "last";
   static const String dayAgo = "day ago";
   static const String daysAgo = "days ago";
