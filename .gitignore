@@ -97,7 +97,4 @@ app.*.map.json
 .env.*
 !.env.example
 
-# matchesGoldenFile writes before/after/diff PNGs here on a failed golden
-# comparison. Debug output only — never the reference images themselves,
-# which live in test/golden/goldens/ and ARE committed.
-/test/golden/failures/
+
