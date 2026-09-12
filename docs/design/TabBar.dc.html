@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<div style="position:absolute;left:0;right:0;bottom:0;height:74px;background:rgba(5,6,5,.94);backdrop-filter:blur(18px);border-top:1px solid #1C201E;display:flex;align-items:flex-start;padding:11px 6px 0;box-sizing:border-box">
+<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:5px;color:{{ c1 }}">
+<svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.5 12 3.5l9 7V20a1 1 0 0 1-1 1h-5v-6H10v6H4a1 1 0 0 1-1-1z"></path></svg>
+<span style="font:600 9.5px/1 'IBM Plex Sans Arabic',system-ui;letter-spacing:.03em">Home</span>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:5px;color:{{ c2 }}">
+<svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><path d="M5 20V13M12 20V5M19 20v-9"></path></svg>
+<span style="font:600 9.5px/1 'IBM Plex Sans Arabic',system-ui;letter-spacing:.03em">Visual</span>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:5px;color:{{ c3 }}">
+<svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M9 7.5 4.5 12 9 16.5M15 7.5 19.5 12 15 16.5"></path></svg>
+<span style="font:600 9.5px/1 'IBM Plex Sans Arabic',system-ui;letter-spacing:.03em">Code</span>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:5px;color:{{ c4 }}">
+<svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M7 4h10v4a5 5 0 0 1-10 0zM12 13v4M8.5 21h7"></path></svg>
+<span style="font:600 9.5px/1 'IBM Plex Sans Arabic',system-ui;letter-spacing:.03em">Practice</span>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:5px;color:{{ c5 }}">
+<svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="3.4"></circle><path d="M5 20c1.4-3.4 4-5 7-5s5.6 1.6 7 5"></path></svg>
+<span style="font:600 9.5px/1 'IBM Plex Sans Arabic',system-ui;letter-spacing:.03em">Profile</span>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:320,&quot;height&quot;:90},&quot;active&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;home&quot;,&quot;visual&quot;,&quot;code&quot;,&quot;practice&quot;,&quot;profile&quot;],&quot;default&quot;:&quot;home&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;accent&quot;:{&quot;editor&quot;:&quot;color&quot;,&quot;options&quot;:[&quot;#E0A33E&quot;,&quot;#F2F4F3&quot;,&quot;#2CC2AE&quot;],&quot;default&quot;:&quot;#E0A33E&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;muted&quot;:{&quot;editor&quot;:&quot;color&quot;,&quot;options&quot;:[&quot;#5C6360&quot;,&quot;#5A6A66&quot;],&quot;default&quot;:&quot;#5C6360&quot;,&quot;tsType&quot;:&quot;string&quot;}}">
+class Component extends DCLogic {
+  renderVals() {
+    const on = this.props.accent || "#E0A33E", off = this.props.muted || "#5C6360";
+    const a = this.props.active || "home";
+    const c = k => (a === k ? on : off);
+    return { c1: c("home"), c2: c("visual"), c3: c("code"), c4: c("practice"), c5: c("profile") };
+  }
+}
+</script>
+</body>
+</html>
