@@ -834,7 +834,7 @@ void main() {
         expect(result.heatmapData.last, 2);
       });
 
-      test('maps more than 5 submissions to heatmap level 3', () {
+      test('maps 6 to 9 submissions to heatmap level 3', () {
         final today = _today();
 
         final problems = [
@@ -852,6 +852,26 @@ void main() {
         final result = calculator.computeStats(problems);
 
         expect(result.heatmapData.last, 3);
+      });
+
+      test('maps 10 or more submissions to heatmap level 4', () {
+        final today = _today();
+
+        final problems = [
+          _problem(
+            solutions: List.generate(
+              10,
+              (_) => _solution(
+                isCorrect: true,
+                submittedAt: today,
+              ),
+            ),
+          ),
+        ];
+
+        final result = calculator.computeStats(problems);
+
+        expect(result.heatmapData.last, 4);
       });
 
       test('heatmap counts both correct and incorrect submissions', () {

@@ -19,7 +19,7 @@ class GradientLinearProgressIndicator extends StatelessWidget {
         height: 3,
         child: Stack(
           children: [
-            Container(color: context.getColor(ThemeEnum.surfaceAlt)),
+            Container(color: context.getColor(ThemeEnum.hover)),
             FractionallySizedBox(
               alignment: AlignmentDirectional.centerStart,
               widthFactor: value.clamp(0.0, 1.0),

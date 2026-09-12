@@ -18,7 +18,7 @@ class BookmarkButton extends ConsumerWidget {
       },
       child: CustomIcon(
         isBookmarked ? Icons.bookmark_rounded : Icons.bookmark_border_rounded,
-        color: isBookmarked ? ThemeEnum.accent : ThemeEnum.hoverSecond,
+        color: isBookmarked ? ThemeEnum.accent : ThemeEnum.accentBg,
         size: 18,
       ),
     );

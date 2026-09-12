@@ -27,13 +27,6 @@ class ChallengesHeader extends ConsumerWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          MediumText(
-            StringsManager.practice.toUpperCase(),
-            color: ThemeEnum.hover,
-            letterSpacing: 0.5,
-            fontSize: 12,
-          ),
-          const RSizedBox(height: 2),
           Row(
             children: [
               const BoldText(
@@ -48,10 +41,10 @@ class ChallengesHeader extends ConsumerWidget {
                 const CustomIcon(Icons.local_fire_department_rounded, size: 14, color: ThemeEnum.accentRed),
                 const RSizedBox(width: 3),
                 BoldText(solvedText, color: ThemeEnum.accentRed, fontSize: 13),
-                const SemiBoldText(' / ', color: ThemeEnum.hover, fontSize: 13),
-                RegularText(totalText, color: ThemeEnum.hover, fontSize: 13),
+                const SemiBoldText(' / ', color: ThemeEnum.textSecond, fontSize: 13),
+                RegularText(totalText, color: ThemeEnum.textSecond, fontSize: 13),
                 const RSizedBox(width: 2),
-                const RegularText(StringsManager.solved, color: ThemeEnum.hover, fontSize: 13),
+                const RegularText(StringsManager.solved, color: ThemeEnum.textSecond, fontSize: 13),
               ],
             ],
           ),

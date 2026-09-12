@@ -1,6 +1,7 @@
 import 'package:algorithm_visualizer/core/resources/font_manager.dart';
 import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
 import 'package:algorithm_visualizer/core/widgets/adaptive/text/adaptive_text.dart';
+import 'package:algorithm_visualizer/core/widgets/custom_widgets/card_container.dart';
 import 'package:algorithm_visualizer/features/visualize/sub_view/sorting/widgets/linear_progress_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -19,15 +20,9 @@ class AlgorithmStatusText extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
-      child: Container(
-        width: double.infinity,
-        padding: const EdgeInsets.all(12),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(14),
-          border: Border.all(color: context.getColor(ThemeEnum.border)),
-          boxShadow: context.cardShadow,
-        ),
+      padding: REdgeInsets.fromLTRB(16, 0, 16, 0),
+      child: CardContainer(
+        surface: CdSurface.recessed,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -42,7 +37,7 @@ class AlgorithmStatusText extends ConsumerWidget {
                     child: GradientLinearProgressIndicator(value: progressValue),
                   ),
                 ),
-                const RSizedBox(width: 10),
+                if (progressLabel.isNotEmpty) ...[const RSizedBox(width: 10)],
                 AnimatedSwitcher(
                   duration: const Duration(milliseconds: 200),
                   child: MediumText(

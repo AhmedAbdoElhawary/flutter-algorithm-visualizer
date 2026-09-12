@@ -1,13 +1,13 @@
 import 'package:algorithm_visualizer/core/resources/strings_manager.dart';
 import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
 import 'package:algorithm_visualizer/core/widgets/adaptive/text/adaptive_text.dart';
-import 'package:algorithm_visualizer/core/widgets/custom_widgets/custom_icon.dart';
+import 'package:algorithm_visualizer/core/widgets/custom_widgets/custom_back_button.dart';
+import 'package:algorithm_visualizer/core/widgets/custom_widgets/empty_state_quiet.dart';
 import 'package:algorithm_visualizer/features/profile/presentation/view_model/statistics/profile_statistics_provider.dart';
-import 'package:algorithm_visualizer/features/profile/presentation/widgets/profile_practice_history.dart';
+import 'package:algorithm_visualizer/features/profile/presentation/widgets/history_row.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:go_router/go_router.dart';
 
 class RecentSubmissionsPage extends ConsumerWidget {
   const RecentSubmissionsPage({super.key});
@@ -18,26 +18,42 @@ class RecentSubmissionsPage extends ConsumerWidget {
 
     return Scaffold(
       backgroundColor: context.getColor(ThemeEnum.primary),
-      appBar: AppBar(
-        backgroundColor: context.getColor(ThemeEnum.primary),
-        leading: IconButton(
-          icon: const CustomIcon(Icons.arrow_back_ios_rounded, size: 20, color: ThemeEnum.textSecond),
-          onPressed: () => context.pop(),
-        ),
-        title: const BoldText(StringsManager.practiceHistory, color: ThemeEnum.textSecond, fontSize: 16),
-        centerTitle: false,
-      ),
-      body: all.isEmpty
-          ? const Center(child: MediumText(StringsManager.noProblemsFound, color: ThemeEnum.hoverSecond))
-          : ListView.separated(
-              padding: REdgeInsetsDirectional.only(start: 16, top: 8, bottom: 50),
-              itemCount: all.length,
-              separatorBuilder: (_, __) => Divider(height: 1, color: context.getColor(ThemeEnum.border)),
-              itemBuilder: (context, i) => Padding(
-                padding: REdgeInsetsDirectional.only(end: 16),
-                child: PracticeHistoryRow(entry: all[i], isFullPage: true),
+      body: SafeArea(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: REdgeInsets.fromLTRB(16, 4, 16, 16),
+              child: const Row(
+                children: [
+                  CustomBackButton(),
+                  BoldText(StringsManager.practiceHistory, color: ThemeEnum.textPrimary, fontSize: 17),
+                ],
               ),
             ),
+            Expanded(
+              child: all.isEmpty
+                  ? const Center(
+                      child: MediumText(StringsManager.noProblemsFound, color: ThemeEnum.textSecond),
+                    )
+                  : ListView.separated(
+                      padding: REdgeInsets.fromLTRB(16, 0, 16, 16),
+                      itemCount: all.length + 1,
+                      separatorBuilder: (_, __) => const RSizedBox(height: 10),
+                      itemBuilder: (context, i) {
+                        if (i == all.length) {
+                          return const EmptyStateQuiet(
+                            title: StringsManager.historyEndTitle,
+                            caption: StringsManager.longPressExplain,
+                          );
+                        }
+                        return HistoryRow(entry: all[i]);
+                      },
+                    ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
