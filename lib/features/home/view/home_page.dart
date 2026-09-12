@@ -13,6 +13,8 @@ class HomePage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    // Scaffold/Metrial written in base_navigation, why?
+    // to control all main pages with the structure of them
     return CustomScrollView(
       physics: const BouncingScrollPhysics(),
       slivers: [
