@@ -5,12 +5,10 @@ import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
 import 'package:algorithm_visualizer/core/widgets/adaptive/padding/adaptive_padding.dart';
 import 'package:algorithm_visualizer/core/widgets/adaptive/text/adaptive_text.dart';
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/custom_icon.dart';
+import 'package:algorithm_visualizer/core/widgets/custom_widgets/card_container.dart';
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/section_header.dart';
-import 'package:algorithm_visualizer/core/widgets/custom_widgets/surface_card.dart';
-import 'package:algorithm_visualizer/features/challenge/domain/enums/problem.dart';
-import 'package:algorithm_visualizer/features/profile/presentation/entities/practice_history_entry.dart';
 import 'package:algorithm_visualizer/features/profile/presentation/view_model/statistics/profile_statistics_provider.dart';
-import 'package:algorithm_visualizer/core/widgets/custom_widgets/status_box.dart';
+import 'package:algorithm_visualizer/features/profile/presentation/widgets/history_row.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -30,13 +28,17 @@ class ProfilePracticeHistory extends ConsumerWidget {
 
     return HorizontalPadding(
       padding: 16,
-      child: SurfaceCard(
+      child: CardContainer(
+        surface: CdSurface.main,
         padding: EdgeInsets.zero,
         clip: true,
-        child: Column(children: [
-          const _HeaderOfCard(),
-          ...preview.map((entry) => PracticeHistoryRow(entry: entry)),
-        ]),
+        child: Column(
+          children: [
+            const _HeaderOfCard(),
+            Container(height: 1, color: context.getColor(ThemeEnum.border)),
+            ...preview.map((entry) => HistoryRow(entry: entry,addAttemptsCharts: false,addCardDecoration: false)),
+          ],
+        ),
       ),
     );
   }
@@ -49,253 +51,20 @@ class _HeaderOfCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: REdgeInsets.fromLTRB(14, 14, 14, 10),
-      child: Row(children: [
-        const Expanded(child: SectionHeader(title: StringsManager.practiceHistory)),
-        GestureDetector(
-          onTap: () => context.pushTo(Routes.recentSubmissions),
-          child: const Row(children: [
-            SemiBoldText(StringsManager.viewAll, color: ThemeEnum.accent, fontSize: 12),
-            CustomIcon(Icons.chevron_right_rounded, size: 14, color: ThemeEnum.accent),
-          ]),
-        ),
-      ]),
-    );
-  }
-}
-
-class PracticeHistoryRow extends StatefulWidget {
-  const PracticeHistoryRow({super.key, this.isFullPage = false, required this.entry});
-
-  final PracticeHistoryEntry entry;
-  final bool isFullPage;
-  @override
-  State<PracticeHistoryRow> createState() => _PracticeHistoryRowState();
-}
-
-class _PracticeHistoryRowState extends State<PracticeHistoryRow> with SingleTickerProviderStateMixin {
-  bool _expanded = false;
-  late final AnimationController _controller;
-  late final Animation<double> _scaleAnim;
-  late final Animation<double> _opacityAnim;
-
-  @override
-  void initState() {
-    super.initState();
-    _controller = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 280),
-    );
-    final curve = CurvedAnimation(parent: _controller, curve: Curves.easeOutCubic);
-    _scaleAnim = Tween(begin: 0.85, end: 1.0).animate(curve);
-    _opacityAnim = Tween(begin: 0.0, end: 1.0).animate(curve);
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
-
-  void _toggle() {
-    setState(() => _expanded = !_expanded);
-    if (_expanded) {
-      _controller.forward();
-    } else {
-      _controller.reverse();
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final entry = widget.entry;
-    final submissionsText = entry.attempts.length > 1
-        ? StringsManager.submissions.toLowerCase()
-        : StringsManager.submission.toLowerCase();
-    return PracticeHistoryProblemRow(
-      addTopBorder: !widget.isFullPage,
-      problemName: entry.problemName,
-      difficulty: entry.difficulty,
-      isCorrect: entry.lastResult,
-      onTapCard: _toggle,
-      onTapTitle: () => context.pushTo(Routes.problem, queryParameters: "${entry.problemId}"),
-      subTitle: MediumText('${entry.attempts.length} $submissionsText', color: ThemeEnum.hover, fontSize: 11),
-      trailing: GestureDetector(
-        child: AnimatedRotation(
-          turns: _expanded ? 0.5 : 0,
-          duration: const Duration(milliseconds: 200),
-          child: const CustomIcon(
-            Icons.keyboard_arrow_down_rounded,
-            size: 18,
-            color: ThemeEnum.white2DarkColor,
-          ),
-        ),
-      ),
-      subUnderWidget: AnimatedSize(
-        duration: const Duration(milliseconds: 250),
-        curve: Curves.easeInOut,
-        child: _expanded
-            ? ScaleTransition(
-                scale: _scaleAnim,
-                child: FadeTransition(
-                  opacity: _opacityAnim,
-                  child: Container(
-                    width: double.infinity,
-                    margin: REdgeInsetsDirectional.only(
-                        bottom: 10, start: widget.isFullPage ? 37 : 50, end: widget.isFullPage ? 5 : 20),
-                    child: SurfaceCard(
-                    padding: REdgeInsets.symmetric(vertical: 10, horizontal: 10),
-                    child: Column(
-                      children: [
-                        const Row(
-                          children: [
-                            Expanded(
-                              child: SemiBoldText(
-                                StringsManager.date,
-                                color: ThemeEnum.hover,
-                                fontSize: 11,
-                              ),
-                            ),
-                            SemiBoldText(
-                              StringsManager.result,
-                              color: ThemeEnum.hover,
-                              fontSize: 11,
-                            ),
-                          ],
-                        ),
-                        const RSizedBox(height: 6),
-                        for (final attempt in entry.attempts) ...[
-                          Row(children: [
-                            Expanded(
-                              child: SemiBoldText(
-                                _formatDate(attempt.submittedAt),
-                                color: ThemeEnum.textSecond,
-                                fontSize: 12,
-                              ),
-                            ),
-                            SemiBoldText(
-                              attempt.isCorrect ? StringsManager.passed : StringsManager.failed,
-                              color: attempt.isCorrect ? ThemeEnum.accentGreen : ThemeEnum.accentRed,
-                              fontSize: 12,
-                            ),
-                          ]),
-                          if (attempt != entry.attempts.last) const RSizedBox(height: 4),
-                        ],
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-            )
-            : const SizedBox.shrink(),
-      ),
-    );
-  }
-
-  String _formatDate(DateTime dt) {
-    final months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-    return '${months[dt.month - 1]} ${dt.day}, ${dt.year}  ${dt.hour.toString().padLeft(2, '0')}:${dt.minute.toString().padLeft(2, '0')}';
-  }
-}
-
-class PracticeHistoryProblemRow extends StatefulWidget {
-  const PracticeHistoryProblemRow({
-    super.key,
-    this.addTopBorder = false,
-    required this.onTapTitle,
-    required this.onTapCard,
-    required this.trailing,
-    required this.subTitle,
-    required this.subUnderWidget,
-    required this.problemName,
-    required this.difficulty,
-    required this.isCorrect,
-  });
-
-  final bool addTopBorder;
-  final VoidCallback onTapTitle;
-  final VoidCallback onTapCard;
-  final Widget trailing;
-  final Widget subTitle;
-  final Widget subUnderWidget;
-  final String problemName;
-  final ProblemDifficulty difficulty;
-  final bool isCorrect;
-  @override
-  State<PracticeHistoryProblemRow> createState() => _ProblemRowState();
-}
-
-class _ProblemRowState extends State<PracticeHistoryProblemRow> with SingleTickerProviderStateMixin {
-  @override
-  Widget build(BuildContext context) {
-    return InkWell(
-      onTap: widget.onTapCard,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      child: Row(
         children: [
-          if (widget.addTopBorder) Container(height: 1, color: context.getColor(ThemeEnum.border)),
-            Padding(
-              padding: REdgeInsets.symmetric(horizontal: widget.addTopBorder ? 14 : 0, vertical: 10),
-              child: Row(
-                children: [
-                  InkWell(onTap: widget.onTapTitle, child: StatusBox(isCorrect: widget.isCorrect)),
-                  const RSizedBox(width: 10),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        InkWell(
-                            onTap: widget.onTapTitle,
-                            child: BoldText(widget.problemName, color: ThemeEnum.textSecond, fontSize: 13)),
-                        const RSizedBox(height: 2),
-                        InkWell(
-                          onTap: widget.onTapTitle,
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              SemiBoldText(_difficultyLabel(widget.difficulty),
-                                  color: _difficultyColor(widget.difficulty), fontSize: 11),
-                              const RegularText('   ·   ', color: ThemeEnum.hover, fontSize: 11),
-                              widget.subTitle,
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  widget.trailing,
-                ],
-              ),
+          const Expanded(child: SectionHeader(title: StringsManager.practiceHistory)),
+          GestureDetector(
+            onTap: () => context.pushTo(Routes.recentSubmissions),
+            child: const Row(
+              children: [
+                SemiBoldText(StringsManager.viewAll, color: ThemeEnum.accent, fontSize: 12),
+                CustomIcon(Icons.chevron_right_rounded, size: 14, color: ThemeEnum.accent),
+              ],
             ),
-            widget.subUnderWidget,
-          ],
-        ),
+          ),
+        ],
+      ),
     );
-  }
-
-  String _difficultyLabel(ProblemDifficulty diff) {
-    switch (diff) {
-      case ProblemDifficulty.easy:
-        return StringsManager.easy;
-      case ProblemDifficulty.medium:
-        return StringsManager.medium;
-      case ProblemDifficulty.hard:
-        return StringsManager.hard;
-      case ProblemDifficulty.none:
-        return StringsManager.all;
-    }
-  }
-
-  ThemeEnum _difficultyColor(ProblemDifficulty diff) {
-    switch (diff) {
-      case ProblemDifficulty.easy:
-        return ThemeEnum.accentGreen;
-      case ProblemDifficulty.medium:
-        return ThemeEnum.accentYellow;
-      case ProblemDifficulty.hard:
-        return ThemeEnum.accentRed;
-      case ProblemDifficulty.none:
-        return ThemeEnum.hoverSecond;
-    }
   }
 }
