@@ -3,18 +3,6 @@ import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-class SliverChallengesLoadingState extends StatelessWidget {
-  const SliverChallengesLoadingState({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return SliverPadding(
-      padding: REdgeInsets.fromLTRB(16, 0, 16, 60),
-      sliver: SliverList.builder(itemCount: 20, itemBuilder: (ctx, i) => const ProblemTileShimmer()),
-    );
-  }
-}
-
 class ChallengesLoadingState extends StatelessWidget {
   const ChallengesLoadingState({super.key});
 

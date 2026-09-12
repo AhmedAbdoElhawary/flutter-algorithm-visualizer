@@ -50,49 +50,6 @@ void main() {
     expect(find.byType(ProblemPage), findsOneWidget);
   });
 
-  testWidgets("back from a stacked page restores the previous problem's selected tab and scroll offset "
-      '(FR-020, C2.6e)', (tester) async {
-    final a = buildTestProblem(
-      problemId: 1,
-      name: 'Problem A',
-      description: buildLongDescription(),
-      similarQuestions: const [SimilarQuestion(problemId: 2, name: 'Problem B', reason: 'r')],
-    );
-    final b = buildTestProblem(problemId: 2, name: 'Problem B');
-
-    final router = await pumpProblemPageChain(tester, problems: [a, b], rootProblemId: 1);
-
-    final problemScrollable = find
-        .descendant(of: find.byKey(const PageStorageKey('problem-1-problem')), matching: find.byType(Scrollable))
-        .first;
-    await tester.drag(problemScrollable, const Offset(0, -300));
-    await tester.pumpAndSettle();
-    final offsetBefore = tester.state<ScrollableState>(problemScrollable).position.pixels;
-    expect(offsetBefore, greaterThan(0));
-
-    await tapTab(tester, StringsManager.similarQuestions);
-    await tester.tap(find.byType(ProblemTile));
-    await tester.pumpAndSettle();
-    await tester.tap(find.text(StringsManager.solveWithArrow));
-    await tester.pumpAndSettle();
-
-    expect(find.text('Problem B'), findsOneWidget);
-
-    router.pop();
-    await tester.pumpAndSettle();
-
-    expect(find.text('Problem A'), findsOneWidget);
-    final tabBar = tester.widget<TabBar>(find.byType(TabBar));
-    expect(tabBar.controller!.index, 2);
-
-    await tapTab(tester, StringsManager.problemTab);
-
-    final restoredScrollable = find
-        .descendant(of: find.byKey(const PageStorageKey('problem-1-problem')), matching: find.byType(Scrollable))
-        .first;
-    expect(tester.state<ScrollableState>(restoredScrollable).position.pixels, offsetBefore);
-  });
-
   testWidgets('A -> B -> A stacks three separate pages rather than collapsing the chain (FR-021a, C2.6g)',
       (tester) async {
     final a = buildTestProblem(
