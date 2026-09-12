@@ -3,8 +3,8 @@ import 'package:algorithm_visualizer/core/resources/strings_manager.dart';
 import 'package:algorithm_visualizer/core/resources/styles_manager.dart';
 import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
 import 'package:algorithm_visualizer/core/widgets/adaptive/text/adaptive_text.dart';
+import 'package:algorithm_visualizer/core/widgets/custom_widgets/card_container.dart';
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/custom_icon.dart';
-import 'package:algorithm_visualizer/core/widgets/custom_widgets/surface_card.dart';
 import 'package:algorithm_visualizer/features/challenge/presentation/view_model/challenges/challenges_providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -32,11 +32,12 @@ class _ChallengesSearchFieldState extends ConsumerState<ChallengesSearchField> {
 
     return Padding(
       padding: REdgeInsets.fromLTRB(16, 0, 16, 12),
-      child: SurfaceCard(
-        padding: REdgeInsets.symmetric(horizontal: 14, vertical: 10),
+      child: CardContainer(
+        surface: CdSurface.recessed,
+        padding: REdgeInsets.symmetric(horizontal: 14, vertical: 8),
         child: Row(
           children: [
-            const CustomIcon(Icons.search_rounded, size: 16, color: ThemeEnum.hover),
+            const CustomIcon(Icons.search_rounded, size: 18, color: ThemeEnum.hover),
             const RSizedBox(width: 10),
             Expanded(
               child: TextField(
@@ -48,7 +49,7 @@ class _ChallengesSearchFieldState extends ConsumerState<ChallengesSearchField> {
                   isDense: true,
                   hintText: StringsManager.searchProblem,
                   hintStyle: TextStyle(
-                      color: context.getColor(ThemeEnum.textSecond),
+                      color: context.getColor(ThemeEnum.textBody),
                       fontSize: 14.r,
                       fontFamily: FontConstants.fontFamily),
                   border: InputBorder.none,
@@ -56,7 +57,7 @@ class _ChallengesSearchFieldState extends ConsumerState<ChallengesSearchField> {
                 ),
               ),
             ),
-            if (search.isNotEmpty)
+            if (search.isNotEmpty) ...[
               GestureDetector(
                 onTap: () {
                   _controller.clear();
@@ -64,6 +65,9 @@ class _ChallengesSearchFieldState extends ConsumerState<ChallengesSearchField> {
                 },
                 child: const RegularText('×', color: ThemeEnum.hover, fontSize: 18),
               ),
+            ] else ...[
+              const RegularText('', fontSize: 18),
+            ],
           ],
         ),
       ),
