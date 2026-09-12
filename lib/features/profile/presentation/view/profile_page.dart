@@ -1,3 +1,4 @@
+import 'package:algorithm_visualizer/core/helpers/constants.dart';
 import 'package:algorithm_visualizer/features/profile/presentation/widgets/profile_category_chart.dart';
 import 'package:algorithm_visualizer/features/profile/presentation/widgets/profile_difficulty_progress.dart';
 import 'package:algorithm_visualizer/features/profile/presentation/widgets/profile_header.dart';
@@ -15,6 +16,8 @@ class ProfileScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    // Scaffold/Metrial written in base_navigation, why?
+    // to control all main pages with the structure of them
     return SingleChildScrollView(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -28,6 +31,7 @@ class ProfileScreen extends ConsumerWidget {
           ProfileCategoryChart(),
           ProfilePracticeHistory(),
           ProfileLogoutCard(),
+          RSizedBox(height: kBottomPageSpacing),
         ],
       ),
     );
