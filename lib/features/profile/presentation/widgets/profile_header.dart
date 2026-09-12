@@ -5,7 +5,7 @@ import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
 import 'package:algorithm_visualizer/core/widgets/adaptive/padding/adaptive_padding.dart';
 import 'package:algorithm_visualizer/core/widgets/adaptive/text/adaptive_text.dart';
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/avatar_quiet.dart';
-import 'package:algorithm_visualizer/core/widgets/custom_widgets/custom_icon.dart';
+import 'package:algorithm_visualizer/core/widgets/custom_widgets/icon_button_quiet.dart';
 import 'package:algorithm_visualizer/features/profile/presentation/view_model/user_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -30,7 +30,8 @@ class ProfileHeader extends StatelessWidget {
                   ),
                 );
 
-                return AvatarQuiet(initial: name.isNotEmpty ? name[0].toUpperCase() : StringsManager.anonymous);
+                return AvatarQuiet(
+                    initial: name.isNotEmpty ? name[0].toUpperCase() : StringsManager.anonymous);
               }),
               const RSizedBox(width: 14),
               Expanded(
@@ -124,14 +125,23 @@ class _EditableNameState extends ConsumerState<_EditableName> {
 
     return GestureDetector(
       onTap: () => setState(() => _editing = true),
-      child: Row(children: [
-        Flexible(
-          child: BoldText(widget.name,
-              maxLines: 1, color: ThemeEnum.textPrimary, fontSize: 22, fontWeight: FontWeightManager.bold800),
-        ),
-        const RSizedBox(width: 6),
-        const CustomIcon(Icons.edit_rounded, size: 14, color: ThemeEnum.hoverSecond),
-      ]),
+      child: Row(
+        children: [
+          Expanded(
+            child: BoldText(widget.name,
+                maxLines: 1,
+                color: ThemeEnum.textPrimary,
+                fontSize: 22,
+                fontWeight: FontWeightManager.bold800),
+          ),
+          const RSizedBox(width: 6),
+          const IconButtonQuiet(
+            icon: Icons.edit_outlined,
+            size: 32,
+            iconSize: 16,
+          ),
+        ],
+      ),
     );
   }
 }
