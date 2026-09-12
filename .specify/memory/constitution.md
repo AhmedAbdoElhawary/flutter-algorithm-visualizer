@@ -1,13 +1,10 @@
 <!--
 Sync Impact Report
-Version change: [TEMPLATE] → 1.0.0 (initial ratification)
-Modified principles: n/a (first filled-in version; all [PRINCIPLE_*] placeholders replaced)
+Version change: 1.0.0 → 1.1.0
+Modified principles: none
 Added sections:
-  - Core Principles I–VII (derived from AGENTS.md, the existing enforced coding conventions)
-  - Environments & Flavors
-  - Development Workflow
-  - Governance
-Removed sections: none (template placeholder text only)
+  - Visual-only changes (new gate for tasks tagged as a restyle)
+Removed sections: none
 Templates requiring updates:
   - .specify/templates/plan-template.md ⚠ pending manual check (not reviewed in this run)
   - .specify/templates/spec-template.md ⚠ pending manual check (not reviewed in this run)
@@ -106,6 +103,38 @@ configuration, Firebase files, or app identifiers MUST follow
   the one known previously-leaked keystore as already compromised, not as a pattern
   to repeat.
 
+## Visual-only changes
+
+Any task tagged as a restyle is governed by this section. These rules are non-negotiable.
+
+- **Appearance only.** A restyle MUST NOT add, remove, rename, reorder, or move a widget
+  between screens. It MUST NOT change any user-visible string. It MUST NOT touch
+  navigation, routing, state, data, or business logic. It MUST NOT add or remove a
+  dependency.
+- **Values come from the design reference.** Every visual value (colour, radius, size,
+  spacing) MUST be read from the approved design reference committed in the repo. The
+  agent MUST NOT invent a colour, radius, size, or spacing value, and MUST NOT "round"
+  one to a nicer number.
+- **Literals stay in the theme file.** Colour, radius, border, and typography literals
+  MUST live only in the existing theme file. Screen and widget files MUST contain zero
+  such literals.
+- **Shared widgets, semantic parameters.** Any visual pattern that appears on more than
+  one screen MUST be implemented once as a shared widget and called everywhere it's
+  needed. Shared widgets MUST take semantic parameters (e.g. `selected`, `difficulty`,
+  `level`, `depth`) and MUST NOT take a raw colour argument.
+- **Match the surrounding code.** New code MUST match the surrounding code's naming,
+  structure, `const` usage, comment style, and import order. Files not otherwise changed
+  by the restyle MUST NOT be reformatted.
+- **No dead code left behind.** Dead code from a replaced design MUST be deleted in the
+  same PR — not left behind a flag or an alias.
+- **Verify by measurement.** Compliance MUST be verified by measurement — greps,
+  rendered-geometry assertions, contrast numbers — not by looking at a screenshot and
+  calling it good.
+
+Rationale: a restyle is scoped narrowly on purpose. "Looks right" is not sufficient
+evidence for this class of change, because an appearance-only claim is exactly what
+would hide a smuggled behavior change or an invented design value.
+
 ## Governance
 
 This constitution is the source of truth for non-negotiable engineering rules in this
@@ -124,7 +153,8 @@ normal reviewed PR; no separate approval body exists for a project this size.
 - PATCH — wording, clarification, or typo fixes with no rule change.
 
 **Compliance review**: code review MUST verify compliance with the Core Principles
-above (I–VII). Any deviation MUST be called out explicitly in the PR description with
+above (I–VII), and, for any task tagged as a restyle, with the Visual-only changes
+section above. Any deviation MUST be called out explicitly in the PR description with
 its justification — silent deviation is not permitted.
 
-**Version**: 1.0.0 | **Ratified**: 2026-09-11 | **Last Amended**: 2026-09-11
+**Version**: 1.1.0 | **Ratified**: 2026-09-11 | **Last Amended**: 2026-09-11
