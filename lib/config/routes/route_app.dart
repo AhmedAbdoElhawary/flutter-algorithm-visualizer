@@ -65,11 +65,11 @@ class Routes {
     path: '/problem',
     queryParamsName: "problem_id",
   );
-  // static const RouteConfig subProblem = RouteConfig(
-  //   name: 'subProblem',
-  //   path: 'subProblem',
-  //   queryParamsName: "sub_problem_id",
-  // );
+  static const RouteConfig subProblem = RouteConfig(
+    name: 'subProblem',
+    path: 'sub',
+    queryParamsName: "problem_id",
+  );
   static const RouteConfig celebration = RouteConfig(
     name: 'celebration',
     path: '/celebration',
@@ -189,16 +189,16 @@ class AppRoutes {
                   final id = int.tryParse(state.uri.queryParameters["problem_id"] ?? "") ?? -1;
                   return ProblemPage(problemId: id);
                 },
-                // routes: [
-                //   GoRoute(
-                //     path: Routes.subProblem.path,
-                //     name: Routes.subProblem.name,
-                //     builder: (context, state) {
-                //       final id = int.tryParse(state.uri.queryParameters["problem_id"] ?? "") ?? -1;
-                //       return ProblemPage(problemId: id);
-                //     },
-                //   ),
-                // ],
+                routes: [
+                  GoRoute(
+                    path: Routes.subProblem.path,
+                    name: Routes.subProblem.name,
+                    builder: (context, state) {
+                      final id = int.tryParse(state.uri.queryParameters["problem_id"] ?? "") ?? -1;
+                      return ProblemPage(problemId: id);
+                    },
+                  ),
+                ],
               ),
             ],
           ),
