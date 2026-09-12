@@ -55,6 +55,20 @@ final solvedCountProvider = Provider<AsyncValue<int>>((ref) {
   );
 });
 
+/// Resolves [problem]'s similar questions against the local problem set,
+/// keeping only ids that resolve to a real [CodingProblem] and preserving
+/// source order (no sorting, no de-duplication).
+final similarProblemIdsProvider = Provider.family<List<int>, CodingProblem>((ref, problem) {
+  final problems = ref.read(problemsProvider).value ?? const [];
+  final knownIds = problems.map((p) => p.problemId).whereType<int>().toSet();
+
+  return problem.getSimilarQuestions
+      .map((question) => question.problemId)
+      .where((id) => id != null && id > 0 && knownIds.contains(id))
+      .cast<int>()
+      .toList(growable: false);
+});
+
 final specificDifficultyCountProvider = Provider.family<AsyncValue<int>, ProblemDifficulty?>(
   (ref, filter) {
     return ref.watch(

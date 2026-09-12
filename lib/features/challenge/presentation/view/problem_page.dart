@@ -1,3 +1,5 @@
+import 'package:algorithm_visualizer/config/routes/route_app.dart';
+import 'package:algorithm_visualizer/core/extensions/navigators.dart';
 import 'package:algorithm_visualizer/core/helpers/constants.dart';
 import 'package:algorithm_visualizer/core/resources/dimensions_manager.dart';
 import 'package:algorithm_visualizer/core/resources/font_manager.dart';
@@ -6,13 +8,11 @@ import 'package:algorithm_visualizer/core/resources/styles_manager.dart';
 import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
 import 'package:algorithm_visualizer/core/widgets/adaptive/text/adaptive_text.dart';
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/bottom_cta_bar.dart';
+import 'package:algorithm_visualizer/core/widgets/custom_widgets/card_container.dart';
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/custom_back_button.dart';
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/custom_icon.dart';
-import 'package:algorithm_visualizer/core/widgets/custom_widgets/card_container.dart';
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/difficulty_chip.dart';
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/primary_button_quiet.dart';
-import 'package:algorithm_visualizer/config/routes/route_app.dart';
-import 'package:algorithm_visualizer/core/extensions/navigators.dart';
 import 'package:algorithm_visualizer/features/challenge/data/models/example.dart';
 import 'package:algorithm_visualizer/features/challenge/domain/entities/coding_problem.dart';
 import 'package:algorithm_visualizer/features/challenge/domain/enums/problem.dart';
@@ -283,12 +283,7 @@ class _SimilarTabViewState extends ConsumerState<_SimilarTabView> {
   Widget build(BuildContext context) {
     final problem = widget.problem;
 
-    final similarIds = problem.getSimilarQuestions
-        .map((id) => id.problemId != null && id.problemId! > 0 && id.problemId != problem.problemId
-            ? id.problemId
-            : null)
-        .nonNulls
-        .toList();
+    final similarIds = ref.read(similarProblemIdsProvider(problem));
 
     return _MeasuredTabScrollView(
       pageStorageKey: PageStorageKey('problem-${problem.getProblemId}-similar'),
