@@ -1,9 +1,10 @@
-import 'package:algorithm_visualizer/features/visualize/helper/o_notation.dart';
+import 'package:algorithm_visualizer/core/resources/dimensions_manager.dart';
 import 'package:algorithm_visualizer/core/resources/strings_manager.dart';
 import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
 import 'package:algorithm_visualizer/core/widgets/adaptive/text/adaptive_text.dart';
+import 'package:algorithm_visualizer/core/widgets/custom_widgets/card_container.dart';
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/custom_icon.dart';
-import 'package:algorithm_visualizer/core/widgets/custom_widgets/glass_card.dart';
+import 'package:algorithm_visualizer/features/visualize/helper/o_notation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -37,9 +38,9 @@ class TimeComplexityData extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GlassContainer(
-      depth: GlassDepth.recessed,
-      borderRadius: 8,
+    return CardContainer(
+      surface: CdSurface.recessed,
+      radius: CdRadius.xs,
       padding: REdgeInsets.all(6),
       child: Row(
         mainAxisSize: MainAxisSize.min,
@@ -65,9 +66,9 @@ class SpaceComplexityData extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GlassContainer(
-      depth: GlassDepth.recessed,
-      borderRadius: 8,
+    return CardContainer(
+      surface: CdSurface.recessed,
+      radius: CdRadius.xs,
       padding: REdgeInsets.all(6),
       child: Row(
         mainAxisSize: MainAxisSize.min,
@@ -93,9 +94,9 @@ class StabilityData extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GlassContainer(
-      depth: GlassDepth.recessed,
-      borderRadius: 8,
+    return CardContainer(
+      surface: CdSurface.recessed,
+      radius: CdRadius.xs,
       padding: REdgeInsets.all(6),
       child: Row(
         mainAxisSize: MainAxisSize.min,
