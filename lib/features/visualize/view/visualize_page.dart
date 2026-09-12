@@ -71,8 +71,10 @@ class _VisualizePageState extends State<VisualizePage> {
   Widget build(BuildContext context) {
     final (sortingCard, searchingCard) = getCards();
 
+    // Scaffold/Metrial written in base_navigation, why?
+    // to control all main pages with the structure of them
     return CustomScrollView(
-      // physics: const NeverScrollableScrollPhysics(),
+      physics: const BouncingScrollPhysics(),
       slivers: [
         SliverAppBar(
           centerTitle: false,
