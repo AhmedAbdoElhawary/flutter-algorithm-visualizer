@@ -1,5 +1,5 @@
 import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
-import 'package:algorithm_visualizer/core/widgets/custom_widgets/surface_card.dart';
+import 'package:algorithm_visualizer/core/widgets/custom_widgets/card_container.dart';
 import 'package:algorithm_visualizer/features/visualize/sub_view/searching/helper/pf_constants.dart';
 import 'package:algorithm_visualizer/features/visualize/sub_view/searching/widgets/end_point.dart';
 import 'package:algorithm_visualizer/features/visualize/sub_view/searching/widgets/pf_grid_painter.dart';
@@ -137,8 +137,8 @@ class _PFGridState extends ConsumerState<PFGrid> with SingleTickerProviderStateM
           onTapDown: (d) => _handleGestureStart(d.localPosition, cellSize, state),
           onPanStart: (d) => _handleGestureStart(d.localPosition, cellSize, state),
           onPanUpdate: (d) => _handleGestureUpdate(d.localPosition, cellSize),
-          child: SurfaceCard(
-            filled: false,
+          child: CardContainer(
+            surface: CdSurface.outline,
             clip: true,
             padding: EdgeInsets.zero,
             child: SizedBox(
