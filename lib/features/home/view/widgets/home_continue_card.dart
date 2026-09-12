@@ -6,11 +6,10 @@ import 'package:algorithm_visualizer/core/widgets/adaptive/padding/adaptive_padd
 import 'package:algorithm_visualizer/core/widgets/adaptive/text/adaptive_text.dart';
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/difficulty_chip.dart';
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/icon_button_quiet.dart';
+import 'package:algorithm_visualizer/core/widgets/custom_widgets/card_container.dart';
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/live_session_card.dart';
-import 'package:algorithm_visualizer/core/widgets/custom_widgets/surface_card.dart';
 import 'package:algorithm_visualizer/features/challenge/domain/entities/coding_problem.dart';
 import 'package:algorithm_visualizer/features/challenge/domain/enums/problem.dart';
-import 'package:algorithm_visualizer/features/challenge/presentation/helper/problem_style.dart';
 import 'package:algorithm_visualizer/features/home/view_model/home_provider.dart';
 import 'package:algorithm_visualizer/features/visualize/view_model/live_session_provider.dart';
 import 'package:flutter/material.dart';
@@ -36,14 +35,15 @@ class HomeContinueCard extends ConsumerWidget {
 
     if (problem == null) return const SizedBox.shrink();
 
-    final quietDifficulty = ProblemStyle.quietChipDifficulty(problem.getDifficulty);
+    final quietDifficulty =problem.getDifficulty;
     final diffLabel = problem.getDifficulty.difficultyString;
 
     return OnlyPadding(
       startPadding: 16,
       endPadding: 16,
       bottomPadding: 14,
-      child: SurfaceCard(
+      child: CardContainer(
+        surface: CdSurface.main,
         padding: REdgeInsets.all(16),
         onTap: () => context.pushTo(Routes.problem, queryParameters: '${problem.getProblemId}'),
         child: Row(
@@ -68,7 +68,7 @@ class HomeContinueCard extends ConsumerWidget {
                   ],
                 ),
               ),
-              if (quietDifficulty != null) DifficultyChip(difficulty: quietDifficulty, label: diffLabel),
+              if (quietDifficulty != ProblemDifficulty.none) DifficultyChip(difficulty: quietDifficulty, label: diffLabel),
               Icon(Icons.chevron_right_rounded, color: context.getColor(ThemeEnum.textSecond), size: 20.r),
             ],
           ),
