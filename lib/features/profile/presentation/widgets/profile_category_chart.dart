@@ -33,8 +33,8 @@ class ProfileCategoryChart extends ConsumerWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            BoldText(StringsManager.solvedTopics, color: ThemeEnum.textSecond, fontSize: 13),
-            RSizedBox(height: 10),
+            const BoldText(StringsManager.solvedTopics, color: ThemeEnum.textSecond, fontSize: 13),
+            const RSizedBox(height: 10),
             Wrap(
               spacing: 6,
               runSpacing: 6,
@@ -50,7 +50,7 @@ class ProfileCategoryChart extends ConsumerWidget {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       SemiBoldText(e.key, color: ThemeEnum.accent, fontSize: 12),
-                      RSizedBox(width: 6),
+                      const RSizedBox(width: 6),
                       Container(
                         padding: REdgeInsets.symmetric(horizontal: 6, vertical: 1),
                         decoration: BoxDecoration(

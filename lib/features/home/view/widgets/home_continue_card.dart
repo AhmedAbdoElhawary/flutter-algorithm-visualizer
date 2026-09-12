@@ -61,7 +61,7 @@ class HomeContinueCard extends ConsumerWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    RegularText(StringsManager.continueLabel, fontSize: 11,maxLines: 1, color: ThemeEnum.textSecond),
+                    const RegularText(StringsManager.continueLabel, fontSize: 11,maxLines: 1, color: ThemeEnum.textSecond),
                     SizedBox(height: 2.h),
                     BoldText(
                       problem.getName,

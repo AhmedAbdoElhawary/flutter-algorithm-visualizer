@@ -72,9 +72,9 @@ class _VisualizerScreenState extends ConsumerState<SearchingView> {
   Widget build(BuildContext context) {
     final complexity = ref.read(instance.notifier).algoComplexity;
 
-    final searchingValues = SearchingAlgoCards.values;
+    const searchingValues = SearchingAlgoCards.values;
     return CustomScrollView(
-      physics: NeverScrollableScrollPhysics(),
+      physics: const NeverScrollableScrollPhysics(),
       slivers: [
         SliverPadding(
           padding: REdgeInsets.only(bottom: 10),
@@ -114,7 +114,7 @@ class _VisualizerScreenState extends ConsumerState<SearchingView> {
             sliver: SliverToBoxAdapter(child: ComplexityDetails(complexity: complexity))),
 
         SliverToBoxAdapter(child: PFGrid(instance: instance)),
-        SliverToBoxAdapter(child: PFLegend()),
+        const SliverToBoxAdapter(child: PFLegend()),
         SliverPadding(
           padding: REdgeInsets.only(top: 10),
           sliver: SliverToBoxAdapter(child: PFStepInfo(instance: instance)),
@@ -124,7 +124,7 @@ class _VisualizerScreenState extends ConsumerState<SearchingView> {
         //   padding: REdgeInsetsDirectional.only(top: 10, bottom: 10),
         //   sliver: SliverToBoxAdapter(child: _LiveCodeSnippet(instance)),
         // ),
-        SliverToBoxAdapter(child: SizedBox(height: 50)),
+        const SliverToBoxAdapter(child: SizedBox(height: 50)),
 
       ],
     );
