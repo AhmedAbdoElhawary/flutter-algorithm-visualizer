@@ -3,7 +3,8 @@ import 'package:algorithm_visualizer/core/extensions/navigators.dart';
 import 'package:algorithm_visualizer/core/resources/strings_manager.dart';
 import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
 import 'package:algorithm_visualizer/core/widgets/adaptive/text/adaptive_text.dart';
-import 'package:algorithm_visualizer/core/widgets/custom_widgets/icon_button_quiet.dart';
+import 'package:algorithm_visualizer/core/widgets/custom_widgets/custom_back_button.dart';
+import 'package:algorithm_visualizer/core/widgets/custom_widgets/empty_state_quiet.dart';
 import 'package:algorithm_visualizer/features/challenge/domain/entities/coding_problem.dart';
 import 'package:algorithm_visualizer/features/challenge/presentation/view_model/challenges/problems_providers.dart';
 import 'package:algorithm_visualizer/features/challenge/presentation/widgets/challenges/bookmark_row.dart';
@@ -41,14 +42,9 @@ class BookmarkedProblemsPage extends ConsumerWidget {
                                 const RSizedBox(height: 9),
                             itemBuilder: (context, i) {
                               if (i == bookmarked.length) {
-                                return Padding(
-                                  padding: REdgeInsets.only(top: 6),
-                                  child: const RegularText(
-                                    StringsManager.swipeToRemoveBookmark,
-                                    color: ThemeEnum.textSecond,
-                                    fontSize: 11,
-                                    textAlign: TextAlign.center,
-                                  ),
+                                return const EmptyStateQuiet(
+                                  title: StringsManager.bookmarkEndTitle,
+                                  caption: StringsManager.swipeToRemoveBookmark,
                                 );
                               }
                               final problem = bookmarked[i];
@@ -89,8 +85,7 @@ class _Header extends StatelessWidget {
       padding: REdgeInsets.fromLTRB(16, 4, 16, 14),
       child: Row(
         children: [
-        IconButtonQuiet(icon: Icons.arrow_back_ios_new_rounded, size: 30, iconSize: 14, onTap: context.back),
-          const RSizedBox(width: 12),
+          const CustomBackButton(),
           BoldText(StringsManager.bookmarked.trim(),
               color: ThemeEnum.textPrimary, fontSize: 17),
           const Spacer(),
