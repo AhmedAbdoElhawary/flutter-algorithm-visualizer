@@ -36,20 +36,19 @@ class ChallengesFilterTabs extends ConsumerWidget {
                 decoration: BoxDecoration(
                   color: active
                       ? context.getColor(color).withValues(alpha: 0.10)
-                      : context.getColor(ThemeEnum.card),
+                      : null,
                   borderRadius: BorderRadius.circular(10),
                   border: Border.all(
                       color: active
                           ? context.getColor(color).withValues(alpha: 0.35)
                           : context.getColor(ThemeEnum.border)),
-                  boxShadow: context.cardShadow,
                 ),
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    BoldText(f.difficultyString, color: active ? color : ThemeEnum.hover, fontSize: 13),
+                    SemiBoldText(f.difficultyString, color: active ? color : ThemeEnum.textBody, fontSize: 13),
                     const SizedBox(width: 5),
-                    SemiBoldText(count, color: active ? color : ThemeEnum.hoverSecond, fontSize: 11),
+                    SemiBoldText(count, color: active ? color : ThemeEnum.textBody, fontSize: 11),
                   ],
                 ),
               ),

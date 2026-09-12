@@ -164,7 +164,31 @@ class StringsManager {
   static const String hints = "Hints";
   static const String hint = "Hint";
   static const String similarQuestions = "Similar Questions";
+  static const String noHintsYet = "No hints yet";
+  static const String noSimilarQuestionsYet = "No similar questions yet";
   static const String practiceHistory = "Practice History";
+
+  // Bookmarks / History (Aurora screens 07 / 09)
+  static const String swipeToRemoveBookmark = "Swipe a row to remove it from bookmarks.";
+  static const String bookmarkEndTitle = "That is the whole bookmarks";
+  static const String historyEndTitle = "That is the whole history";
+  static const String longPressExplain = "Long press on the card to jump to the problem";
+  static const String lastLabel = "last";
+  static const String dayAgo = "day ago";
+  static const String daysAgo = "days ago";
+
+  // Problem screen (Aurora screen 03)
+  static const String problemTab = "Problem";
+  static const String solveInEditor = "Solve in editor";
+
+  // Celebration (Aurora screen 14)
+  static const String solvedMoment = "Solved";
+  static const String dayLabel = "Day";
+  static const String allNTestsPassedPrefix = "all ";
+  static const String allNTestsPassedSuffix = " test cases passed";
+  static const String nextProblem = "Next problem";
+  static const String seeTheVisualTrace = "See the visual trace";
+
   static const String resetCode = "Reset Code";
   static const String resetCodeConfirm = "Reset to default code?";
   static const String resetCodeDesc =
@@ -315,6 +339,9 @@ class StringsManager {
   static const String cdGalleryThemeToggle = "Toggle theme";
   static const String cdGalleryDirToggle = "Toggle direction";
   static const String cdGallerySample = "The quick brown fox — الخوارزمية";
+
+  // Live session widget
+  static const String live = "LIVE";
 
   // Guest session
   static const String guestProgressWarningTitle = "Replace your local progress?";

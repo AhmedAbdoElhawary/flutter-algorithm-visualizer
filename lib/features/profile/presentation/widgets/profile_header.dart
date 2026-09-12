@@ -1,10 +1,13 @@
+import 'package:algorithm_visualizer/core/helpers/constants.dart';
+import 'package:algorithm_visualizer/core/helpers/current_device.dart';
 import 'package:algorithm_visualizer/core/resources/font_manager.dart';
 import 'package:algorithm_visualizer/core/resources/strings_manager.dart';
 import 'package:algorithm_visualizer/core/resources/styles_manager.dart';
 import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
 import 'package:algorithm_visualizer/core/widgets/adaptive/padding/adaptive_padding.dart';
 import 'package:algorithm_visualizer/core/widgets/adaptive/text/adaptive_text.dart';
-import 'package:algorithm_visualizer/core/widgets/custom_widgets/custom_icon.dart';
+import 'package:algorithm_visualizer/core/widgets/custom_widgets/avatar_quiet.dart';
+import 'package:algorithm_visualizer/core/widgets/custom_widgets/icon_button_quiet.dart';
 import 'package:algorithm_visualizer/features/profile/presentation/view_model/user_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -15,82 +18,25 @@ class ProfileHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return HorizontalPadding(
-      padding: 16,
+    return OnlyPadding(
+      startPadding: 16,
+      endPadding: 16,
+      topPadding: context.isAndroid ? kAndroidTopPageSpacing*1.5 : kIOSTopPageSpacing,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Padding(
-            padding: REdgeInsets.fromLTRB(0, 16, 0, 0),
-            child: Row(
-              children: [
-                MediumText(
-                  StringsManager.profile.toUpperCase(),
-                  color: ThemeEnum.hover,
-                  letterSpacing: 0.5,
-                  fontSize: 12,
-                ),
-                // const Spacer(),
-                // CustomIcon(Icons.settings_rounded, size: 18, color: ThemeEnum.hoverSecond),
-              ],
-            ),
-          ),
-          const RSizedBox(height: 10),
           Row(
             children: [
-              Stack(clipBehavior: Clip.none, children: [
-                Container(
-                  width: 64.r,
-                  height: 64.r,
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      begin: AlignmentDirectional.centerStart,
-                      end: AlignmentDirectional.centerEnd,
-                      colors: [
-                        context.getColor(ThemeEnum.accent),
-                        context.getColor(ThemeEnum.pink),
-                      ],
-                    ),
-                    borderRadius: BorderRadius.circular(20.r),
+              Consumer(builder: (context, ref, child) {
+                final name = ref.watch(
+                  currentUserNameProvider.select(
+                    (value) => value.maybeWhen(data: (data) => data, orElse: () => StringsManager.anonymous),
                   ),
-                  child: Center(
-                    child: Consumer(builder: (context, ref, child) {
-                      final name = ref.watch(
-                        currentUserNameProvider.select(
-                          (value) =>
-                              value.maybeWhen(data: (data) => data, orElse: () => StringsManager.anonymous),
-                        ),
-                      );
+                );
 
-                      return BoldText(
-                        name.isNotEmpty ? name[0].toUpperCase() : StringsManager.anonymous,
-                        color: ThemeEnum.solidWhite,
-                        fontSize: 26,
-                      );
-                    }),
-                  ),
-                ),
-                Positioned(
-                  bottom: -6.r,
-                  right: -6.r,
-                  child: Container(
-                    padding: REdgeInsets.all(1),
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        begin: AlignmentDirectional.centerStart,
-                        end: AlignmentDirectional.centerEnd,
-                        colors: [
-                          context.getColor(ThemeEnum.accent),
-                          context.getColor(ThemeEnum.pink),
-                        ],
-                      ),
-                      borderRadius: BorderRadius.circular(7.r),
-                      border: Border.all(color: context.getColor(ThemeEnum.primary), width: 2.r),
-                    ),
-                    child: const CustomIcon(Icons.bolt_rounded, size: 14, color: ThemeEnum.solidWhite),
-                  ),
-                ),
-              ]),
+                return AvatarQuiet(
+                    initial: name.isNotEmpty ? name[0].toUpperCase() : StringsManager.anonymous);
+              }),
               const RSizedBox(width: 14),
               Expanded(
                 child: Consumer(
@@ -183,14 +129,23 @@ class _EditableNameState extends ConsumerState<_EditableName> {
 
     return GestureDetector(
       onTap: () => setState(() => _editing = true),
-      child: Row(children: [
-        Flexible(
-          child: BoldText(widget.name,
-              maxLines: 1, color: ThemeEnum.textPrimary, fontSize: 22, fontWeight: FontWeightManager.bold800),
-        ),
-        const RSizedBox(width: 6),
-        const CustomIcon(Icons.edit_rounded, size: 14, color: ThemeEnum.hoverSecond),
-      ]),
+      child: Row(
+        children: [
+          Expanded(
+            child: BoldText(widget.name,
+                maxLines: 1,
+                color: ThemeEnum.textPrimary,
+                fontSize: 22,
+                fontWeight: FontWeightManager.bold800),
+          ),
+          const RSizedBox(width: 6),
+          const IconButtonQuiet(
+            icon: Icons.edit_outlined,
+            size: 32,
+            iconSize: 16,
+          ),
+        ],
+      ),
     );
   }
 }

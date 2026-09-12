@@ -1,9 +1,11 @@
+import 'package:algorithm_visualizer/core/resources/dimensions_manager.dart';
 import 'package:algorithm_visualizer/core/resources/styles_manager.dart';
 import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
 import 'package:algorithm_visualizer/core/widgets/adaptive/text/adaptive_text.dart';
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/algo_tab.dart';
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/algorithm_control.dart';
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/algorithm_status_text.dart';
+import 'package:algorithm_visualizer/core/widgets/custom_widgets/bar_chart_quiet.dart';
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/complexity_details.dart';
 import 'package:algorithm_visualizer/features/base/view_model/base_view_model.dart';
 import 'package:algorithm_visualizer/features/visualize/helper/playback_speed.dart';
@@ -272,11 +274,22 @@ class _ShowUpSortingListState extends ConsumerState<ShowUpSortingList> {
                           size: size,
                           itemWidth: itemWidth,
                           instance: widget.instance,
-                          speedDuration: speed.stepSortingDuration * 0.5,
                           selectedAlgorithmLength: widget.selectedAlgorithmLength,
                           isLastItem: index == items.length - 1),
                       const RSizedBox(height: 4),
-                      MediumText('$index', fontSize: 10, color: ThemeEnum.textDisabled),
+                      Consumer(
+                        builder: (context, ref, _) {
+                          final status = ref.watch(widget.instance.select((s) =>
+                              index < s.list.length ? s.list[index].sortedStatus : SortingStatus.none));
+                          return MediumText(
+                            '$index',
+                            fontSize: 10,
+                            color: status == SortingStatus.compared
+                                ? ThemeEnum.comparing
+                                : ThemeEnum.textDisabled,
+                          );
+                        },
+                      ),
                     ],
                   ),
                 );
@@ -293,7 +306,6 @@ class _BuildItem extends ConsumerWidget {
   const _BuildItem({
     required this.item,
     required this.index,
-    required this.speedDuration,
     required this.instance,
     required this.selectedAlgorithmLength,
     required this.isLastItem,
@@ -304,7 +316,6 @@ class _BuildItem extends ConsumerWidget {
   final int size;
   final int index;
   final SortableItem item;
-  final Duration speedDuration;
   final NotifierProvider<SortingNotifier, SortingNotifierState> instance;
   final int selectedAlgorithmLength;
   final bool isLastItem;
@@ -314,29 +325,39 @@ class _BuildItem extends ConsumerWidget {
         ref.watch(instance.select((state) => index < state.list.length ? state.list[index] : null));
     final (actualHeight, writtenHeight) =
         SortingNotifier.calculateItemHeight(item.value, size, selectedAlgorithmLength);
-    final color = context.getColor(currentItem?.getColor ?? SortingNotifier.itemColor);
+    final fill = currentItem?.getColor ?? SortingNotifier.itemColor;
+
+    // Value labels: text primary above a white bar (compared/held), success
+    // when locked in, text secondary otherwise (per PROMPT_QUIET.md Step 6).
+    final labelColor = context.getColor(switch (currentItem?.sortedStatus ?? SortingStatus.none) {
+      SortingStatus.compared || SortingStatus.temporary => ThemeEnum.textPrimary,
+      SortingStatus.sorted => ThemeEnum.difficultyEasy,
+      SortingStatus.swapping || SortingStatus.none => ThemeEnum.textSecond,
+    });
 
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        AnimatedDefaultTextStyle(
-          duration: speedDuration,
-          style: GetMediumStyle(fontSize: 10, color: color),
-          child: Text(writtenHeight),
-        ),
-        const RSizedBox(height: 4),
-        AnimatedContainer(
-          duration: speedDuration,
-          width: itemWidth,
-          height: actualHeight,
-          decoration: BoxDecoration(
-            color: color,
-            boxShadow: currentItem == null || currentItem.getColor == SortingNotifier.itemColor
-                ? null
-                : [BoxShadow(color: color.withValues(alpha: 0.35), blurRadius: 10)],
-            borderRadius: BorderRadius.vertical(top: Radius.circular(3.r), bottom: Radius.circular(3.r)),
+        // Fixed-height label row: the value/max fraction below always
+        // resolves against the bar's own track height alone, never against
+        // label + gap + bar (FR-015) — a column can't overflow the label
+        // into the bar's allotted box.
+        SizedBox(
+          height: 14.h,
+          child: Center(
+            child: AnimatedDefaultTextStyle(
+              // Label + colour react fast (180ms); the bar's geometry eases at
+              // 240ms — the split keeps the number legible while the bar resizes.
+              duration: CdMotion.barColour,
+              style: GetMediumStyle(fontSize: 10, color: labelColor),
+              child: Text(writtenHeight),
+            ),
           ),
         ),
+        const RSizedBox(height: 4),
+        // Colour and height carry all meaning — no shadow, glow, gradient, or
+        // opacity on the bar.
+        QuietBar(width: itemWidth, height: actualHeight, fill: fill),
       ],
     );
   }

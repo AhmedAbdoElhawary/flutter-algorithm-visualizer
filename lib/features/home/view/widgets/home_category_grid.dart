@@ -3,7 +3,7 @@ import 'package:algorithm_visualizer/core/extensions/navigators.dart';
 import 'package:algorithm_visualizer/core/resources/strings_manager.dart';
 import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
 import 'package:algorithm_visualizer/core/widgets/adaptive/padding/adaptive_padding.dart';
-import 'package:algorithm_visualizer/core/widgets/adaptive/text/adaptive_text.dart';
+import 'package:algorithm_visualizer/core/widgets/custom_widgets/section_header.dart';
 import 'package:algorithm_visualizer/features/base/view_model/base_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -24,7 +24,7 @@ class HomeCategoryGrid extends ConsumerWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const BoldText(StringsManager.topics, fontSize: 15, color: ThemeEnum.textPrimary),
+          const SectionHeader(title: StringsManager.topics),
           SizedBox(height: 12.h),
           GridView.builder(
             itemCount: 6,
@@ -51,7 +51,6 @@ class HomeCategoryGrid extends ConsumerWidget {
               }
 
               return InkWell(
-                  borderRadius: BorderRadius.circular(20),
                   highlightColor: context.getColor(ThemeEnum.primary),
                   onTap: () {
                     context.pushTo(Routes.visualize, queryParameters: name);

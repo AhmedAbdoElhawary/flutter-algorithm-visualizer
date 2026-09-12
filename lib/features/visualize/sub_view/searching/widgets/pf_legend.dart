@@ -1,8 +1,7 @@
-import 'package:algorithm_visualizer/core/resources/font_manager.dart';
 import 'package:algorithm_visualizer/core/resources/strings_manager.dart';
 import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
+import 'package:algorithm_visualizer/core/widgets/adaptive/text/adaptive_text.dart';
 import 'package:algorithm_visualizer/features/visualize/sub_view/searching/widgets/end_point.dart';
-import 'package:algorithm_visualizer/features/visualize/sub_view/searching/widgets/pf_grid.dart';
 import 'package:algorithm_visualizer/features/visualize/sub_view/searching/widgets/start_point.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -13,12 +12,12 @@ class PFLegend extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final items = [
-      (context.getColor(ThemeEnum.accentGreen), StringsManager.start),
-      (context.getColor(ThemeEnum.accentGreen), StringsManager.end),
-      (kWallGridColor, StringsManager.wall),
-      (kSearcherFinishedColor, StringsManager.visited),
-      (kSearcherStartColor, StringsManager.frontier),
-      (kPathGridColor, StringsManager.path),
+      (ThemeEnum.difficultyEasy, StringsManager.start),
+      (ThemeEnum.difficultyEasy, StringsManager.end),
+      (ThemeEnum.borderStrong, StringsManager.wall),
+      (ThemeEnum.barIdle, StringsManager.visited),
+      (ThemeEnum.comparing, StringsManager.frontier),
+      (ThemeEnum.difficultyEasy, StringsManager.path),
     ];
 
     return Center(
@@ -28,24 +27,21 @@ class PFLegend extends StatelessWidget {
           spacing: 12,
           runSpacing: 4,
           children: items.map((item) {
-            final (color, label) = item;
+            final (role, label) = item;
             return Row(mainAxisSize: MainAxisSize.min, children: [
               if (label == StringsManager.start)
-                PFStartPointWidget(size: 10.r)
+                PFStartPointWidget(size: 10.r, color: context.getColor(ThemeEnum.textBright))
               else if (label == StringsManager.end)
-                PFEndPointWidget(size: 12.r)
+                PFEndPointWidget(
+                  size: 12.r,
+                  outerColor: context.getColor(ThemeEnum.difficultyEasy),
+                  midColor: context.getColor(ThemeEnum.textBright),
+                  innerColor: context.getColor(ThemeEnum.difficultyEasy),
+                )
               else
-                Container(
-                  width: 10,
-                  height: 10,
-                  decoration: BoxDecoration(color: color, borderRadius: BorderRadius.circular(2)),
-                ),
-              const SizedBox(width: 4),
-              Text(label,
-                  style: TextStyle(
-                      color: context.getColor(ThemeEnum.hover),
-                      fontSize: 10,
-                      fontFamily: FontConstants.fontFamily)),
+                Icon(Icons.circle, size: 10.r, color: context.getColor(role)),
+              const RSizedBox(width: 4),
+              RegularText(label, color: ThemeEnum.textSecond, fontSize: 10),
             ]);
           }).toList(),
         ),

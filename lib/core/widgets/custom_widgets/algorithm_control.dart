@@ -1,7 +1,5 @@
-import 'package:algorithm_visualizer/core/resources/color_manager.dart';
-import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
-import 'package:algorithm_visualizer/core/widgets/adaptive/text/adaptive_text.dart';
-import 'package:algorithm_visualizer/core/widgets/custom_widgets/glass_card.dart';
+import 'package:algorithm_visualizer/core/widgets/custom_widgets/icon_button_quiet.dart';
+import 'package:algorithm_visualizer/core/widgets/custom_widgets/segmented_control_quiet.dart';
 import 'package:algorithm_visualizer/features/base/view_model/algorithm_control_interface.dart';
 import 'package:algorithm_visualizer/features/visualize/helper/playback_speed.dart';
 import 'package:flutter/material.dart';
@@ -78,36 +76,12 @@ class _PlayButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
+    return IconButtonQuiet(
+      icon: playing ? Icons.pause_rounded : Icons.play_arrow_rounded,
       onTap: onTap,
-      child: Container(
-        width: 48.r,
-        height: 48.r,
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: AlignmentDirectional.topStart,
-            end: AlignmentDirectional.bottomEnd,
-            colors: [
-              context.getColor(ThemeEnum.accent),
-              ColorManager.pinkColor,
-            ],
-          ),
-          borderRadius: BorderRadius.circular(14),
-          boxShadow: [
-            BoxShadow(
-              color: context.getColor(ThemeEnum.accent).withValues(alpha: 0.25),
-              blurRadius: 1,
-              spreadRadius: 0.4,
-              offset: const Offset(0, 0),
-            ),
-          ],
-        ),
-        child: Icon(
-          playing ? Icons.pause_rounded : Icons.play_arrow_rounded,
-          color: Colors.white,
-          size: 26.r,
-        ),
-      ),
+      size: 44,
+      iconSize: 22,
+      filled: true,
     );
   }
 }
@@ -117,26 +91,22 @@ class CtrlButton extends StatelessWidget {
   final VoidCallback? onTap;
   final String? messageTip;
   final double size;
-  const CtrlButton({super.key, required this.icon, required this.onTap, this.size = 20, this.messageTip});
-
-  bool get _disabled => onTap == null;
+  const CtrlButton({super.key, required this.icon, required this.onTap, this.size = 22, this.messageTip});
 
   @override
   Widget build(BuildContext context) {
-    return SimpleGlassButton(
-      onTap: onTap,
-      messageTip: messageTip,
-      child: Icon(icon,
-          size: size.r,
-          color:
-              _disabled ? context.getColor(ThemeEnum.hoverSecond) : context.getColor(ThemeEnum.textSecond)),
-    );
+    final button = IconButtonQuiet(icon: icon, onTap: onTap, size: 36, iconSize: size);
+    return messageTip != null ? Tooltip(message: messageTip!, child: button) : button;
   }
 }
 
 class SpeedSelector extends ConsumerWidget {
-  const SpeedSelector(
-      {required this.interface, required this.expandSpeedEscalator, required this.getSpeed, super.key});
+  const SpeedSelector({
+    required this.interface,
+    required this.expandSpeedEscalator,
+    required this.getSpeed,
+    super.key,
+  });
   final AlgorithmControlInterface interface;
   final PlaybackSpeed getSpeed;
   final bool expandSpeedEscalator;
@@ -149,63 +119,13 @@ class SpeedSelector extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return SimpleGlassButton(
-      padding: 7,
-      child: expandSpeedEscalator
-          ? Row(
-              children: getPlaybackSpeedsForSorting()
-                  .map((e) => Padding(
-                        padding: REdgeInsetsDirectional.only(end: 5),
-                        child: _BuildChildForSpeedSelector(
-                            interface: interface,
-                            selectedSpeed: getSpeed,
-                            speed: e,
-                            onTap: () => interface.changeSpeed(e)),
-                      ))
-                  .toList(),
-            )
-          : _BuildChildForSpeedSelector(
-              interface: interface,
-              selectedSpeed: getSpeed,
-              speed: getSpeed,
-              onTap: () => interface.changeSpeed(getSpeed)),
-    );
-  }
-}
+    final speeds = expandSpeedEscalator ? getPlaybackSpeedsForSorting() : [getSpeed];
+    final selectedIndex = speeds.indexOf(getSpeed).clamp(0, speeds.length - 1);
 
-class _BuildChildForSpeedSelector extends StatelessWidget {
-  const _BuildChildForSpeedSelector({
-    required this.interface,
-    required this.selectedSpeed,
-    required this.speed,
-    this.onTap,
-  });
-
-  final AlgorithmControlInterface interface;
-  final PlaybackSpeed selectedSpeed;
-  final PlaybackSpeed speed;
-  final VoidCallback? onTap;
-  @override
-  Widget build(BuildContext context) {
-    return InkWell(
-      onTap: onTap,
-      child: Container(
-        width: 22.r,
-        height: 22.r,
-        decoration: speed != selectedSpeed
-            ? null
-            : BoxDecoration(
-                color: context.getColor(ThemeEnum.accentBg),
-                borderRadius: BorderRadius.circular(5),
-              ),
-        child: Center(
-          child: MediumText(
-            '${speed.level}×',
-            color: speed != selectedSpeed ? ThemeEnum.textDarkColor : ThemeEnum.accent,
-            fontSize: 10,
-          ),
-        ),
-      ),
+    return SegmentedControlQuiet(
+      labels: speeds.map((e) => '${e.level}×').toList(),
+      selectedIndex: selectedIndex,
+      onChanged: (i) => interface.changeSpeed(speeds[i]),
     );
   }
 }

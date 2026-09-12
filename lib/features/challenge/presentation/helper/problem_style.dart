@@ -5,7 +5,8 @@ import 'package:flutter/material.dart';
 class ProblemStyle {
   const ProblemStyle._();
 
-  static ThemeEnum difficultyCodeDescriptionColor(ProblemDifficulty difficulty) {
+  static ThemeEnum difficultyCodeDescriptionColor(
+      ProblemDifficulty difficulty) {
     switch (difficulty) {
       case ProblemDifficulty.easy:
         return ThemeEnum.accentGreen;
@@ -38,7 +39,7 @@ class ProblemStyle {
       case ProblemStatus.attempted:
         return (ThemeEnum.accentYellowRc, Icons.error_outline_rounded);
       default:
-        return (ThemeEnum.hoverSecond, Icons.radio_button_unchecked_rounded);
+        return (ThemeEnum.accentBg, Icons.radio_button_unchecked_rounded);
     }
   }
 }

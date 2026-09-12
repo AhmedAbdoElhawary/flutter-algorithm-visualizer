@@ -1,5 +1,3 @@
-import 'dart:ui' show ImageFilter;
-
 import 'package:flutter/material.dart';
 
 typedef PopupBuilder = Widget Function(VoidCallback removeOverlay);
@@ -97,10 +95,7 @@ class _AnimatedPopupOverlayState extends State<_AnimatedPopupOverlay>
               animation: _controller,
               builder: (_, child) {
                 final value = Curves.easeOut.transform(_controller.value);
-                return BackdropFilter(
-                  filter: ImageFilter.blur(sigmaX: value * 12, sigmaY: value * 12),
-                  child: Container(color: Colors.black.withValues(alpha: value * 0.2)),
-                );
+                return Container(color: Colors.black.withValues(alpha: value * 0.2));
               },
             ),
           ),

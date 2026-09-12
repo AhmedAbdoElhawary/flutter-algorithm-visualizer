@@ -1,13 +1,19 @@
-import 'package:algorithm_visualizer/core/resources/color_manager.dart';
 import 'package:algorithm_visualizer/features/visualize/sub_view/searching/helper/pf_constants.dart';
 import 'package:algorithm_visualizer/features/visualize/sub_view/searching/helper/pf_step.dart';
-import 'package:algorithm_visualizer/features/visualize/sub_view/searching/widgets/pf_grid.dart';
 import 'package:flutter/material.dart';
 
 class PFGridPainter extends CustomPainter {
   final List<List<bool>> walls;
   final PFStep? step;
   final bool isDark;
+
+  /// Resolved theme colours — the painter has no BuildContext, so the caller
+  /// resolves these via `context.getColor(ThemeEnum.x)` and passes them in.
+  final Color wallColor;
+  final Color pathColor;
+  final Color searcherColor;
+  final Color searcherFinishedColor;
+  final Color gridLineColor;
 
   final Map<int, double> wallAnimations;
   final Map<int, double> frontierAnimations;
@@ -18,6 +24,11 @@ class PFGridPainter extends CustomPainter {
     required this.walls,
     required this.step,
     required this.isDark,
+    required this.wallColor,
+    required this.pathColor,
+    required this.searcherColor,
+    required this.searcherFinishedColor,
+    required this.gridLineColor,
     required this.wallAnimations,
     required this.frontierAnimations,
     required this.visitedAnimations,
@@ -32,7 +43,7 @@ class PFGridPainter extends CustomPainter {
     final cellH = size.height / kPFCells;
 
     final gridPaint = Paint()
-      ..color = (isDark ? Colors.white : Colors.black).withValues(alpha: 0.07)
+      ..color = gridLineColor
       ..strokeWidth = 0.5
       ..style = PaintingStyle.stroke;
 
@@ -53,7 +64,7 @@ class PFGridPainter extends CustomPainter {
         if (isPath) {
           final startT = pathAnimations[encoded];
           final t = startT != null ? ((now - startT) / 500.0) : 1.0;
-          _drawElasticCell(canvas, rect, t, kPathGridColor);
+          _drawElasticCell(canvas, rect, t, pathColor);
         } else if (isVisited) {
           final startT = visitedAnimations[encoded];
           final t = startT != null ? ((now - startT) / 1500.0) : 1.0;
@@ -65,7 +76,7 @@ class PFGridPainter extends CustomPainter {
         } else if (isWall) {
           final startT = wallAnimations[encoded];
           final t = startT != null ? ((now - startT) / 500.0) : 1.0;
-          _drawElasticCell(canvas, rect, t, kWallGridColor);
+          _drawElasticCell(canvas, rect, t, wallColor);
         }
       }
     }
@@ -91,16 +102,16 @@ class PFGridPainter extends CustomPainter {
     }
     Color color;
     if (t < 0.4) {
-      color = Color.lerp(ColorManager.transparent, kSearcherStartColor, t / 0.4)!;
+      color = Color.lerp(Colors.transparent, searcherColor, t / 0.4)!;
     } else if (t <= 0.5) {
       double localT = (t - 0.3) / 0.2;
-      color = Color.lerp(kSearcherStartColor, kSearcherMediumColor, localT)!;
+      color = Color.lerp(searcherColor, searcherColor, localT)!;
     } else if (t <= 0.8) {
       double localT = (t - 0.5) / 0.3;
       color = Color.lerp(
-          kSearcherMediumColor, isFinalVisited ? kSearcherFinishedColor : kSearcherMediumColor, localT)!;
+          searcherColor, isFinalVisited ? searcherFinishedColor : searcherColor, localT)!;
     } else {
-      color = isFinalVisited ? kSearcherFinishedColor : kSearcherMediumColor;
+      color = isFinalVisited ? searcherFinishedColor : searcherColor;
     }
 
     final center = rect.center;
