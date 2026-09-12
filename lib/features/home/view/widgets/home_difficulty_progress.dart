@@ -9,7 +9,7 @@ class HomeDifficultyProgress extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return OnlyPadding(
+    return const OnlyPadding(
       bottomPadding: 14,
       child: ProfileDifficultyProgress(titleColor: ThemeEnum.textPrimary),
     );

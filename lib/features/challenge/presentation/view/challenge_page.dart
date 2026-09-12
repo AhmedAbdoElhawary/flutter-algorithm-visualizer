@@ -24,12 +24,12 @@ class ChallengePage extends ConsumerWidget {
       body: SafeArea(
         child: CustomScrollView(
           slivers: [
-            _SliverAppBar(),
+            const _SliverAppBar(),
             problems.when(
               loading: () => const SliverChallengesLoadingState(),
-              error: (_, __) => SliverFillRemaining(child: ChallengesErrorState()),
+              error: (_, __) => const SliverFillRemaining(child: ChallengesErrorState()),
               data: (data) {
-                if (data.ids.isEmpty) return SliverFillRemaining(child: const ChallengesEmptyState());
+                if (data.ids.isEmpty) return const SliverFillRemaining(child: ChallengesEmptyState());
                 return SliverPadding(
                   padding: REdgeInsets.fromLTRB(16, 0, 16, 60),
                   sliver: SliverList.builder(
@@ -66,16 +66,16 @@ class _SliverAppBar extends StatelessWidget {
       centerTitle: false,
       titleSpacing: 0,
       leadingWidth: 16.r,
-      leading: SizedBox(),
+      leading: const SizedBox(),
       bottom: PreferredSize(
         preferredSize: Size.fromHeight(138.r),
-        child: SingleChildScrollView(
+        child: const SingleChildScrollView(
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              const ChallengesHeader(),
-              const ChallengesSearchField(),
-              const ChallengesFilterTabs(),
+              ChallengesHeader(),
+              ChallengesSearchField(),
+              ChallengesFilterTabs(),
             ],
           ),
         ),

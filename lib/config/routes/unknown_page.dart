@@ -7,7 +7,7 @@ class _UnknownPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(),
-      body: UnknownView(),
+      body: const UnknownView(),
     );
   }
 }

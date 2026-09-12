@@ -38,7 +38,7 @@ class ProfilePracticeHistory extends ConsumerWidget {
         ),
         clipBehavior: Clip.hardEdge,
         child: Column(children: [
-          _HeaderOfCard(),
+          const _HeaderOfCard(),
           ...preview.map((entry) => PracticeHistoryRow(entry: entry)),
         ]),
       ),
@@ -54,12 +54,12 @@ class _HeaderOfCard extends StatelessWidget {
     return Padding(
       padding: REdgeInsets.fromLTRB(14, 14, 14, 10),
       child: Row(children: [
-        BoldText(StringsManager.practiceHistory,
+        const BoldText(StringsManager.practiceHistory,
             color: ThemeEnum.textSecond, fontSize: 13, fontWeight: FontWeightManager.bold800),
         const Spacer(),
         GestureDetector(
           onTap: () => context.pushTo(Routes.recentSubmissions),
-          child: Row(children: [
+          child: const Row(children: [
             SemiBoldText(StringsManager.viewAll, color: ThemeEnum.accent, fontSize: 12),
             CustomIcon(Icons.chevron_right_rounded, size: 14, color: ThemeEnum.accent),
           ]),
@@ -129,7 +129,7 @@ class _PracticeHistoryRowState extends State<PracticeHistoryRow> with SingleTick
         child: AnimatedRotation(
           turns: _expanded ? 0.5 : 0,
           duration: const Duration(milliseconds: 200),
-          child: CustomIcon(
+          child: const CustomIcon(
             Icons.keyboard_arrow_down_rounded,
             size: 18,
             color: ThemeEnum.hoverSecond,
@@ -156,7 +156,7 @@ class _PracticeHistoryRowState extends State<PracticeHistoryRow> with SingleTick
                     ),
                     child: Column(
                       children: [
-                        Row(
+                        const Row(
                           children: [
                             Expanded(
                               child: SemiBoldText(
@@ -172,7 +172,7 @@ class _PracticeHistoryRowState extends State<PracticeHistoryRow> with SingleTick
                             ),
                           ],
                         ),
-                        RSizedBox(height: 6),
+                        const RSizedBox(height: 6),
                         for (final attempt in entry.attempts) ...[
                           Row(children: [
                             Expanded(
@@ -188,7 +188,7 @@ class _PracticeHistoryRowState extends State<PracticeHistoryRow> with SingleTick
                               fontSize: 12,
                             ),
                           ]),
-                          if (attempt != entry.attempts.last) RSizedBox(height: 4),
+                          if (attempt != entry.attempts.last) const RSizedBox(height: 4),
                         ],
                       ],
                     ),
@@ -252,7 +252,7 @@ class _ProblemRowState extends State<ProblemRow> with SingleTickerProviderStateM
               child: Row(
                 children: [
                   InkWell(onTap: widget.onTapTitle, child: StatusBox(isCorrect: widget.isCorrect)),
-                  RSizedBox(width: 10),
+                  const RSizedBox(width: 10),
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -261,7 +261,7 @@ class _ProblemRowState extends State<ProblemRow> with SingleTickerProviderStateM
                         InkWell(
                             onTap: widget.onTapTitle,
                             child: BoldText(widget.problemName, color: ThemeEnum.textSecond, fontSize: 13)),
-                        RSizedBox(height: 2),
+                        const RSizedBox(height: 2),
                         InkWell(
                           onTap: widget.onTapTitle,
                           child: Row(
@@ -269,7 +269,7 @@ class _ProblemRowState extends State<ProblemRow> with SingleTickerProviderStateM
                             children: [
                               SemiBoldText(_difficultyLabel(widget.difficulty),
                                   color: _difficultyColor(widget.difficulty), fontSize: 11),
-                              RegularText('   ·   ', color: ThemeEnum.hover, fontSize: 11),
+                              const RegularText('   ·   ', color: ThemeEnum.hover, fontSize: 11),
                               widget.subTitle,
                             ],
                           ),

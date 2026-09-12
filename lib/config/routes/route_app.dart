@@ -141,7 +141,7 @@ class AppRoutes {
                 GoRoute(
                   path: Routes.home.path,
                   name: Routes.home.name,
-                  builder: (context, state) => HomePage(),
+                  builder: (context, state) => const HomePage(),
                 ),
               ],
             ),
@@ -153,14 +153,18 @@ class AppRoutes {
                   name: Routes.visualize.name,
                   builder: (context, state) {
                     final instance = state.uri.queryParameters["instance"];
-                    final sortingAlgo =
-                        SortingAlgoCards.values.firstWhereOrNull((element) => element.name == instance);
-                    final searchingAlgo =
-                        SearchingAlgoCards.values.firstWhereOrNull((element) => element.name == instance);
-                    if (instance != null && (sortingAlgo == null && searchingAlgo == null)) {
-                      return _UnknownPage();
+                    final sortingAlgo = SortingAlgoCards.values
+                        .firstWhereOrNull(
+                            (element) => element.name == instance);
+                    final searchingAlgo = SearchingAlgoCards.values
+                        .firstWhereOrNull(
+                            (element) => element.name == instance);
+                    if (instance != null &&
+                        (sortingAlgo == null && searchingAlgo == null)) {
+                      return const _UnknownPage();
                     }
-                    return VisualizePage(sortingCard: sortingAlgo, searchingCard: searchingAlgo);
+                    return VisualizePage(
+                        sortingCard: sortingAlgo, searchingCard: searchingAlgo);
                   },
                 ),
               ],
@@ -172,7 +176,9 @@ class AppRoutes {
                   path: Routes.code.path,
                   name: Routes.code.name,
                   builder: (context, state) {
-                    final id = int.tryParse(state.uri.queryParameters["problem_id"] ?? "") ?? -1;
+                    final id = int.tryParse(
+                            state.uri.queryParameters["problem_id"] ?? "") ??
+                        -1;
 
                     return CodeEditorPage(problemId: id);
                   },
@@ -185,7 +191,7 @@ class AppRoutes {
                 GoRoute(
                   path: Routes.practice.path,
                   name: Routes.practice.name,
-                  builder: (context, state) => ChallengePage(),
+                  builder: (context, state) => const ChallengePage(),
                 ),
               ],
             ),
@@ -195,17 +201,19 @@ class AppRoutes {
                 GoRoute(
                   path: Routes.profile.path,
                   name: Routes.profile.name,
-                  builder: (context, state) => ProfileScreen(),
+                  builder: (context, state) => const ProfileScreen(),
                   routes: [
                     GoRoute(
                       path: Routes.recentSubmissions.path,
                       name: Routes.recentSubmissions.name,
-                      builder: (context, state) => const RecentSubmissionsPage(),
+                      builder: (context, state) =>
+                          const RecentSubmissionsPage(),
                     ),
                     GoRoute(
                       path: Routes.bookmarkedProblems.path,
                       name: Routes.bookmarkedProblems.name,
-                      builder: (context, state) => const BookmarkedProblemsPage(),
+                      builder: (context, state) =>
+                          const BookmarkedProblemsPage(),
                     ),
                   ],
                 ),

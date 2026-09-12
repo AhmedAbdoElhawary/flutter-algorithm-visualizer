@@ -119,7 +119,7 @@ class _AccountCardBody extends StatelessWidget {
               ),
             ),
           ),
-          RSizedBox(width: 6),
+          const RSizedBox(width: 6),
           Expanded(
             child: _AccountCardLabels(
               title: title,
@@ -127,7 +127,7 @@ class _AccountCardBody extends StatelessWidget {
               accentColor: accentColor,
             ),
           ),
-          CustomIcon(
+          const CustomIcon(
             Icons.chevron_right_rounded,
             size: 18,
             color: ThemeEnum.hover,
@@ -168,7 +168,7 @@ class _AccountCardLabels extends ConsumerWidget {
           fontWeight: FontWeightManager.bold800,
         ),
         if (caption != null && caption.isNotEmpty) ...[
-          RSizedBox(height: 2),
+          const RSizedBox(height: 2),
           RegularText(
             caption,
             color: ThemeEnum.textSecond,

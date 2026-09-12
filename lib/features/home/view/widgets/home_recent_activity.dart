@@ -30,7 +30,7 @@ class HomeRecentActivity extends ConsumerWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          BoldText(StringsManager.recentActivity, fontSize: 15, color: ThemeEnum.textPrimary),
+          const BoldText(StringsManager.recentActivity, fontSize: 15, color: ThemeEnum.textPrimary),
           SizedBox(height: 10.h),
           ...recent.take(5).map((item) => _ActivityTile(item: item)),
         ],

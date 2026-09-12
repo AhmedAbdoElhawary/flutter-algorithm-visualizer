@@ -19,13 +19,13 @@ class ComplexityDetails extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
-          RSizedBox(width: 16),
+          const RSizedBox(width: 16),
           TimeComplexityData(complexity: complexity),
-          RSizedBox(width: 10),
+          const RSizedBox(width: 10),
           SpaceComplexityData(complexity: complexity),
-          RSizedBox(width: 10),
+          const RSizedBox(width: 10),
           StabilityData(complexity: complexity),
-          RSizedBox(width: 16),
+          const RSizedBox(width: 16),
         ],
       ),
     );
@@ -46,10 +46,10 @@ class TimeComplexityData extends StatelessWidget {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          CustomIcon(Icons.access_time_rounded, size: 14, color: ThemeEnum.hover),
-          RSizedBox(width: 4),
-          RegularText(StringsManager.time, color: ThemeEnum.hover, fontSize: 14),
-          RSizedBox(width: 2),
+          const CustomIcon(Icons.access_time_rounded, size: 14, color: ThemeEnum.hover),
+          const RSizedBox(width: 4),
+          const RegularText(StringsManager.time, color: ThemeEnum.hover, fontSize: 14),
+          const RSizedBox(width: 2),
           SemiBoldText(complexity.worstTimeComplexity.getText, color: ThemeEnum.accent, fontSize: 14),
         ],
       ),
@@ -71,10 +71,10 @@ class SpaceComplexityData extends StatelessWidget {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          CustomIcon(Icons.storage_rounded, size: 14, color: ThemeEnum.hover),
-          RSizedBox(width: 4),
-          RegularText(StringsManager.space, color: ThemeEnum.hover, fontSize: 14),
-          RSizedBox(width: 2),
+          const CustomIcon(Icons.storage_rounded, size: 14, color: ThemeEnum.hover),
+          const RSizedBox(width: 4),
+          const RegularText(StringsManager.space, color: ThemeEnum.hover, fontSize: 14),
+          const RSizedBox(width: 2),
           SemiBoldText(complexity.spaceComplexity.getText, color: ThemeEnum.accent, fontSize: 14),
         ],
       ),
@@ -96,10 +96,10 @@ class StabilityData extends StatelessWidget {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          CustomIcon(Icons.balance_rounded, size: 14, color: ThemeEnum.hover),
-          RSizedBox(width: 4),
-          RegularText(StringsManager.stable, color: ThemeEnum.hover, fontSize: 14),
-          RSizedBox(width: 2),
+          const CustomIcon(Icons.balance_rounded, size: 14, color: ThemeEnum.hover),
+          const RSizedBox(width: 4),
+          const RegularText(StringsManager.stable, color: ThemeEnum.hover, fontSize: 14),
+          const RSizedBox(width: 2),
           SemiBoldText(complexity.getStabilityText, color: ThemeEnum.accentGreen, fontSize: 14),
         ],
       ),

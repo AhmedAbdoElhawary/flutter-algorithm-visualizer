@@ -42,7 +42,7 @@ class AlgorithmStatusText extends ConsumerWidget {
                     child: GradientLinearProgressIndicator(value: progressValue),
                   ),
                 ),
-                RSizedBox(width: 10),
+                const RSizedBox(width: 10),
                 AnimatedSwitcher(
                   duration: const Duration(milliseconds: 200),
                   child: MediumText(

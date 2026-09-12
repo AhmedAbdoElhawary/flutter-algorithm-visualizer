@@ -41,7 +41,7 @@ class _ChallengesSearchFieldState extends ConsumerState<ChallengesSearchField> {
         ),
         child: Row(
           children: [
-            CustomIcon(Icons.search_rounded, size: 16, color: ThemeEnum.hover),
+            const CustomIcon(Icons.search_rounded, size: 16, color: ThemeEnum.hover),
             const RSizedBox(width: 10),
             Expanded(
               child: TextField(
@@ -67,7 +67,7 @@ class _ChallengesSearchFieldState extends ConsumerState<ChallengesSearchField> {
                   _controller.clear();
                   ref.read(challengesProvider.notifier).clearSearch();
                 },
-                child: RegularText('×', color: ThemeEnum.hover, fontSize: 18),
+                child: const RegularText('×', color: ThemeEnum.hover, fontSize: 18),
               ),
           ],
         ),

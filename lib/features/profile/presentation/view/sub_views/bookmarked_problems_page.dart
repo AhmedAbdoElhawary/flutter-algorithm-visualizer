@@ -27,7 +27,7 @@ class BookmarkedProblemsPage extends ConsumerWidget {
       appBar: AppBar(
         backgroundColor: context.getColor(ThemeEnum.primary),
         leading: IconButton(
-          icon: CustomIcon(Icons.arrow_back_ios_rounded, size: 20, color: ThemeEnum.textSecond),
+          icon: const CustomIcon(Icons.arrow_back_ios_rounded, size: 20, color: ThemeEnum.textSecond),
           onPressed: () => context.pop(),
         ),
         title: BoldText(StringsManager.bookmarked.trim(), color: ThemeEnum.textSecond, fontSize: 16),
@@ -37,7 +37,7 @@ class BookmarkedProblemsPage extends ConsumerWidget {
         data: (all) {
           final bookmarked = all.where((p) => p.getIsBookmarked).toList();
           if (bookmarked.isEmpty) {
-            return Center(child: MediumText(StringsManager.noProblemsFound, color: ThemeEnum.hoverSecond));
+            return const Center(child: MediumText(StringsManager.noProblemsFound, color: ThemeEnum.hoverSecond));
           }
           return ListView.separated(
             padding: REdgeInsetsDirectional.only(start: 16, top: 8, bottom: 50),
@@ -57,14 +57,14 @@ class BookmarkedProblemsPage extends ConsumerWidget {
                   padding: REdgeInsets.symmetric(horizontal: 16),
                   child: BookmarkButton(isBookmarked: problem.getIsBookmarked, problem: problem),
                 ),
-                subUnderWidget: SizedBox.shrink(),
+                subUnderWidget: const SizedBox.shrink(),
               );
             },
           );
         },
         loading: () => Center(child: CircularProgressIndicator(strokeWidth: 2.r)),
         error: (_, __) =>
-            Center(child: MediumText(StringsManager.notAbleToLoadAnyChallenge, color: ThemeEnum.hover)),
+            const Center(child: MediumText(StringsManager.notAbleToLoadAnyChallenge, color: ThemeEnum.hover)),
       ),
     );
   }

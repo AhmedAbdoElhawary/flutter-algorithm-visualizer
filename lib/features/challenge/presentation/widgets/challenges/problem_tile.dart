@@ -105,7 +105,7 @@ class _MainRow extends StatelessWidget {
             AnimatedRotation(
               turns: expanded ? 0.25 : 0,
               duration: const Duration(milliseconds: 200),
-              child: CustomIcon(Icons.chevron_right_rounded, size: 16, color: ThemeEnum.hoverSecond),
+              child: const CustomIcon(Icons.chevron_right_rounded, size: 16, color: ThemeEnum.hoverSecond),
             ),
           ],
         ),
@@ -141,11 +141,11 @@ class _DetailsPanel extends ConsumerWidget {
                 value: problem.getProblemStatus.difficultyString,
                 color: statusColor,
               ),
-              RSizedBox(width: 36),
+              const RSizedBox(width: 36),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  OnlyPadding(
+                  const OnlyPadding(
                     startPadding: 3,
                     child: MediumText(StringsManager.bookmarked, color: ThemeEnum.hover, fontSize: 10),
                   ),
@@ -163,7 +163,7 @@ class _DetailsPanel extends ConsumerWidget {
                     borderRadius: BorderRadius.circular(9),
                     border: Border.all(color: context.getColor(ThemeEnum.borderAccent)),
                   ),
-                  child: BoldText(StringsManager.solveWithArrow, color: ThemeEnum.accent, fontSize: 12),
+                  child: const BoldText(StringsManager.solveWithArrow, color: ThemeEnum.accent, fontSize: 12),
                 ),
               ),
             ],

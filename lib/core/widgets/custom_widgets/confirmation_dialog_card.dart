@@ -59,7 +59,7 @@ class ConfirmationDialogCard extends StatelessWidget {
               ),
             ),
           ),
-          RSizedBox(height: 14),
+          const RSizedBox(height: 14),
           BoldText(
             title,
             color: ThemeEnum.textPrimary,
@@ -67,28 +67,28 @@ class ConfirmationDialogCard extends StatelessWidget {
             fontWeight: FontWeightManager.bold800,
             textAlign: TextAlign.center,
           ),
-          RSizedBox(height: 6),
+          const RSizedBox(height: 6),
           RegularText(
             description,
             color: ThemeEnum.textSecond,
             fontSize: 12,
             textAlign: TextAlign.center,
           ),
-          RSizedBox(height: 20),
+          const RSizedBox(height: 20),
           Row(
             children: [
               Expanded(
                 child: RoundedOutlinedButton(
                   borderColor: ThemeEnum.border,
                   onPressed: onCancel,
-                  child: MediumText(
+                  child: const MediumText(
                     StringsManager.cancel,
                     color: ThemeEnum.textSecond,
                     fontSize: 13,
                   ),
                 ),
               ),
-              RSizedBox(width: 10),
+              const RSizedBox(width: 10),
               Expanded(
                 child: CustomRoundedElevatedButton(
                   backgroundColor: accentColor,
