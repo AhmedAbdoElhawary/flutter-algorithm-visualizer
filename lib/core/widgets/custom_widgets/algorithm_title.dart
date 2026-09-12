@@ -1,3 +1,5 @@
+import 'package:algorithm_visualizer/core/helpers/constants.dart';
+import 'package:algorithm_visualizer/core/helpers/current_device.dart';
 import 'package:algorithm_visualizer/core/resources/font_manager.dart';
 import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
 import 'package:algorithm_visualizer/core/widgets/adaptive/text/adaptive_text.dart';
@@ -17,7 +19,7 @@ class AlgorithmTitle extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: REdgeInsets.only(top: 5),
+      padding: REdgeInsets.only(top: context.isAndroid ? kAndroidTopPageSpacing :kIOSTopPageSpacing),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.start,

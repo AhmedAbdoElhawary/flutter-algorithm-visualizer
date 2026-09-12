@@ -1,3 +1,5 @@
+import 'package:algorithm_visualizer/core/helpers/constants.dart';
+import 'package:algorithm_visualizer/core/helpers/current_device.dart';
 import 'package:algorithm_visualizer/core/resources/font_manager.dart';
 import 'package:algorithm_visualizer/core/resources/strings_manager.dart';
 import 'package:algorithm_visualizer/core/resources/styles_manager.dart';
@@ -16,8 +18,10 @@ class ProfileHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return HorizontalPadding(
-      padding: 16,
+    return OnlyPadding(
+      startPadding: 16,
+      endPadding: 16,
+      topPadding: context.isAndroid ? kAndroidTopPageSpacing*1.5 : kIOSTopPageSpacing,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
