@@ -22,7 +22,7 @@ class _SortSnapshot {
 abstract class SortingNotifier extends Notifier<SortingNotifierState>
     implements AlgorithmDescriptionNotifier, AlgorithmControlInterface {
   /// Test-only: when set, [build] uses this fixed list instead of a random
-  /// shuffle, so widget/golden tests get a deterministic initial bar order.
+  /// shuffle, so widget tests get a deterministic initial bar order.
   /// Always null in production — nothing outside tests ever sets it.
   @visibleForTesting
   static List<SortableItem>? debugInitialListOverride;
