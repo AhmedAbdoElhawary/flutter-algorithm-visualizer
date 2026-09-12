@@ -1,6 +1,0 @@
-tags:
-  golden:
-    description: >-
-      Pixel-reference tests under test/golden/. Platform-specific (recorded
-      on macOS) — excluded from the Linux quality job, run on a dedicated
-      macOS job instead. See .github/workflows/ci.yml and FR-019a/FR-019b.
