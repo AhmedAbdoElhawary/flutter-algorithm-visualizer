@@ -91,11 +91,11 @@ class CtrlButton extends StatelessWidget {
   final VoidCallback? onTap;
   final String? messageTip;
   final double size;
-  const CtrlButton({super.key, required this.icon, required this.onTap, this.size = 20, this.messageTip});
+  const CtrlButton({super.key, required this.icon, required this.onTap, this.size = 22, this.messageTip});
 
   @override
   Widget build(BuildContext context) {
-    final button = IconButtonQuiet(icon: icon, onTap: onTap, size: 32, iconSize: size);
+    final button = IconButtonQuiet(icon: icon, onTap: onTap, size: 36, iconSize: size);
     return messageTip != null ? Tooltip(message: messageTip!, child: button) : button;
   }
 }
