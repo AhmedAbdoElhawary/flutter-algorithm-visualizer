@@ -17,9 +17,7 @@ class SentryCrashReporter implements CrashReporter {
     await Sentry.captureException(
       error,
       stackTrace: stackTrace,
-      withScope: context == null
-          ? null
-          : (scope) => scope.setContexts('app', context),
+      withScope: context == null ? null : (scope) => scope.setContexts('app', context),
     );
   }
 

@@ -29,8 +29,7 @@ void main() {
     await tester.pumpAndSettle();
   }
 
-  testWidgets('Solve on a Similar-tab row stacks a new problem page (FR-018a, C2.6b, C2.6c)',
-      (tester) async {
+  testWidgets('Solve on a Similar-tab row stacks a new problem page (FR-018a, C2.6b, C2.6c)', (tester) async {
     final a = buildTestProblem(
       problemId: 1,
       name: 'Problem A',

@@ -95,7 +95,9 @@ void main() {
 
     await tester.pumpWidget(
       ProviderScope(
-        overrides: [problemsProvider.overrideWithBuild((ref, notifier) => AsyncValue.data([p1, p2]))],
+        overrides: [
+          problemsProvider.overrideWithBuild((ref, notifier) => AsyncValue.data([p1, p2]))
+        ],
         child: ScreenUtilInit(
           designSize: surfaceSize,
           builder: (context, _) => MaterialApp.router(theme: AppTheme.light, routerConfig: router),

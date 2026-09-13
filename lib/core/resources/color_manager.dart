@@ -75,6 +75,16 @@ abstract final class ColorManager {
   static const cdBarSwapDk = cdErrorDk;
   static const cdBarDoneDk = cdSuccessDk;
 
+  /// Held anchor (minimum / held value / pivot / right run) — orange, one
+  /// consistent meaning everywhere it appears (FR-019, FR-020). Exact value
+  /// from the design reference — do not round or substitute.
+  static const cdBarAnchorDk = Color(0xFFD9AE72);
+
+  /// Destination / boundary / left run — blue, one consistent meaning
+  /// everywhere it appears (FR-019, FR-020). Exact value from the design
+  /// reference — do not round or substitute.
+  static const cdBarTargetDk = Color(0xFF72A8D9);
+
   /// Quiet's "primary" ink/action role (see research.md R3) — repoints this
   /// existing member instead of adding a new one.
   static const cdTextBrightDk = Color(0xFFFFFFFF);
@@ -156,6 +166,15 @@ abstract final class ColorManager {
   static const cdBarCompareLt = cdComparingLt;
   static const cdBarSwapLt = cdErrorLt;
   static const cdBarDoneLt = cdSuccessLt;
+
+  /// Same hue as [cdBarAnchorDk] (~35°), darkened and saturated for contrast
+  /// against the light card surface — the same transform already applied to
+  /// [cdWarningDk] → [cdWarningLt], which happens to share this exact hue.
+  static const cdBarAnchorLt = cdWarningLt;
+
+  /// Same hue as [cdBarTargetDk] (~208°), darkened and saturated for contrast
+  /// against the light card surface — never a different hue (C5.3).
+  static const cdBarTargetLt = Color(0xFF12518A);
 
   /// Quiet's "primary" ink/action role (see research.md R3) — repoints this
   /// existing member instead of adding a new one.

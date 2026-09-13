@@ -35,7 +35,7 @@ class HomeContinueCard extends ConsumerWidget {
 
     if (problem == null) return const SizedBox.shrink();
 
-    final quietDifficulty =problem.getDifficulty;
+    final quietDifficulty = problem.getDifficulty;
     final diffLabel = problem.getDifficulty.difficultyString;
 
     return OnlyPadding(
@@ -47,31 +47,31 @@ class HomeContinueCard extends ConsumerWidget {
         padding: REdgeInsets.all(16),
         onTap: () => context.pushTo(Routes.problem, queryParameters: '${problem.getProblemId}'),
         child: Row(
-            children: [
-              const IconButtonQuiet(icon: Icons.play_arrow_rounded, size: 48, iconSize: 24, filled: true),
-              SizedBox(width: 14.w),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const RegularText(StringsManager.continueLabel, fontSize: 11,maxLines: 1, color: ThemeEnum.textSecond),
-                    SizedBox(height: 2.h),
-                    BoldText(
-                      problem.getName,
-                      fontSize: 14,
-                      color: ThemeEnum.textPrimary,
-                      maxLines: 1,
-                    ),
-                    SizedBox(height: 4.h),
-
-
-                  ],
-                ),
+          children: [
+            const IconButtonQuiet(icon: Icons.play_arrow_rounded, size: 48, iconSize: 24, filled: true),
+            SizedBox(width: 14.w),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const RegularText(StringsManager.continueLabel,
+                      fontSize: 11, maxLines: 1, color: ThemeEnum.textSecond),
+                  SizedBox(height: 2.h),
+                  BoldText(
+                    problem.getName,
+                    fontSize: 14,
+                    color: ThemeEnum.textPrimary,
+                    maxLines: 1,
+                  ),
+                  SizedBox(height: 4.h),
+                ],
               ),
-              if (quietDifficulty != ProblemDifficulty.none) DifficultyChip(difficulty: quietDifficulty, label: diffLabel),
-              Icon(Icons.chevron_right_rounded, color: context.getColor(ThemeEnum.textSecond), size: 20.r),
-            ],
-          ),
+            ),
+            if (quietDifficulty != ProblemDifficulty.none)
+              DifficultyChip(difficulty: quietDifficulty, label: diffLabel),
+            Icon(Icons.chevron_right_rounded, color: context.getColor(ThemeEnum.textSecond), size: 20.r),
+          ],
+        ),
       ),
     );
   }

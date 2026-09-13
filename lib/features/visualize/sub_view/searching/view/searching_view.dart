@@ -125,7 +125,6 @@ class _VisualizerScreenState extends ConsumerState<SearchingView> {
         //   sliver: SliverToBoxAdapter(child: _LiveCodeSnippet(instance)),
         // ),
         const SliverToBoxAdapter(child: SizedBox(height: 50)),
-
       ],
     );
   }

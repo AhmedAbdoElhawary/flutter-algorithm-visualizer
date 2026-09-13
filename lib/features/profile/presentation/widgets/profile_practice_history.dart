@@ -36,7 +36,8 @@ class ProfilePracticeHistory extends ConsumerWidget {
           children: [
             const _HeaderOfCard(),
             Container(height: 1, color: context.getColor(ThemeEnum.border)),
-            ...preview.map((entry) => HistoryRow(entry: entry,addAttemptsCharts: false,addCardDecoration: false)),
+            ...preview
+                .map((entry) => HistoryRow(entry: entry, addAttemptsCharts: false, addCardDecoration: false)),
           ],
         ),
       ),

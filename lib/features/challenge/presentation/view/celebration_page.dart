@@ -36,12 +36,10 @@ class CelebrationPage extends StatefulWidget {
   State<CelebrationPage> createState() => _CelebrationPageState();
 }
 
-class _CelebrationPageState extends State<CelebrationPage>
-    with TickerProviderStateMixin {
-  late final AnimationController _rings =
-      AnimationController(vsync: this, duration: CdMotion.ring)..repeat();
-  late final AnimationController _entrance = AnimationController(
-      vsync: this, duration: const Duration(milliseconds: 1150));
+class _CelebrationPageState extends State<CelebrationPage> with TickerProviderStateMixin {
+  late final AnimationController _rings = AnimationController(vsync: this, duration: CdMotion.ring)..repeat();
+  late final AnimationController _entrance =
+      AnimationController(vsync: this, duration: const Duration(milliseconds: 1150));
 
   bool _reduceMotion = false;
 
@@ -71,89 +69,88 @@ class _CelebrationPageState extends State<CelebrationPage>
     return Scaffold(
       backgroundColor: context.getColor(ThemeEnum.primary),
       body: SafeArea(
-          child: Stack(
-            children: [
-              SingleChildScrollView(
-                padding: REdgeInsets.fromLTRB(26, 56, 26, 120),
+        child: Stack(
+          children: [
+            SingleChildScrollView(
+              padding: REdgeInsets.fromLTRB(26, 56, 26, 120),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  _Stage(rings: _rings, reduceMotion: _reduceMotion),
+                  _Rise(
+                    controller: _entrance,
+                    start: 0.15,
+                    reduceMotion: _reduceMotion,
+                    child: Padding(
+                      padding: REdgeInsets.only(top: 32),
+                      child: const BoldText(
+                        StringsManager.solvedMoment,
+                        color: ThemeEnum.textPrimary,
+                        fontSize: 25,
+                        letterSpacing: -0.5,
+                      ),
+                    ),
+                  ),
+                  _Rise(
+                    controller: _entrance,
+                    start: 0.25,
+                    reduceMotion: _reduceMotion,
+                    child: Padding(
+                      padding: REdgeInsets.only(top: 9),
+                      child: RegularText(
+                        '${args.problemName} · ${StringsManager.allNTestsPassedPrefix}${args.passedCount}${StringsManager.allNTestsPassedSuffix}',
+                        color: ThemeEnum.textBody,
+                        fontSize: 12.5,
+                        textAlign: TextAlign.center,
+                        maxLines: 2,
+                      ),
+                    ),
+                  ),
+                  _Rise(
+                    controller: _entrance,
+                    start: 0.35,
+                    reduceMotion: _reduceMotion,
+                    child: Padding(
+                      padding: REdgeInsets.only(top: 30),
+                      child: SizedBox(
+                        width: 132.w,
+                        child: StatTile(
+                          value: '${args.dayStreak}',
+                          label: '${StringsManager.dayLabel} ${StringsManager.streak.toLowerCase()}',
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Positioned(
+              left: 20.w,
+              right: 20.w,
+              bottom: 26.h,
+              child: _Rise(
+                controller: _entrance,
+                start: 0.55,
+                reduceMotion: _reduceMotion,
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisSize: MainAxisSize.min,
                   children: [
-                    _Stage(rings: _rings, reduceMotion: _reduceMotion),
-                    _Rise(
-                      controller: _entrance,
-                      start: 0.15,
-                      reduceMotion: _reduceMotion,
-                      child: Padding(
-                        padding: REdgeInsets.only(top: 32),
-                        child: const BoldText(
-                          StringsManager.solvedMoment,
-                          color: ThemeEnum.textPrimary,
-                          fontSize: 25,
-                          letterSpacing: -0.5,
-                        ),
-                      ),
+                    PrimaryButtonQuiet(
+                      label: StringsManager.nextProblem,
+                      onPressed: () => context.go(Routes.practice.path),
                     ),
-                    _Rise(
-                      controller: _entrance,
-                      start: 0.25,
-                      reduceMotion: _reduceMotion,
-                      child: Padding(
-                        padding: REdgeInsets.only(top: 9),
-                        child: RegularText(
-                          '${args.problemName} · ${StringsManager.allNTestsPassedPrefix}${args.passedCount}${StringsManager.allNTestsPassedSuffix}',
-                          color: ThemeEnum.textBody,
-                          fontSize: 12.5,
-                          textAlign: TextAlign.center,
-                          maxLines: 2,
-                        ),
-                      ),
-                    ),
-                    _Rise(
-                      controller: _entrance,
-                      start: 0.35,
-                      reduceMotion: _reduceMotion,
-                      child: Padding(
-                        padding: REdgeInsets.only(top: 30),
-                        child: SizedBox(
-                          width: 132.w,
-                          child: StatTile(
-                            value: '${args.dayStreak}',
-                            label:
-                                '${StringsManager.dayLabel} ${StringsManager.streak.toLowerCase()}',
-                          ),
-                        ),
-                      ),
+                    const RSizedBox(height: 10),
+                    SecondaryButtonQuiet(
+                      label: StringsManager.seeTheVisualTrace,
+                      onPressed: () => context.pop(),
                     ),
                   ],
                 ),
               ),
-              Positioned(
-                left: 20.w,
-                right: 20.w,
-                bottom: 26.h,
-                child: _Rise(
-                  controller: _entrance,
-                  start: 0.55,
-                  reduceMotion: _reduceMotion,
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      PrimaryButtonQuiet(
-                        label: StringsManager.nextProblem,
-                        onPressed: () => context.go(Routes.practice.path),
-                      ),
-                      const RSizedBox(height: 10),
-                      SecondaryButtonQuiet(
-                        label: StringsManager.seeTheVisualTrace,
-                        onPressed: () => context.pop(),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ],
-          ),
+            ),
+          ],
         ),
+      ),
     );
   }
 }
@@ -203,8 +200,7 @@ class _RingPainter extends CustomPainter {
 }
 
 class _Ring extends StatelessWidget {
-  const _Ring(
-      {required this.controller, required this.color, required this.phase});
+  const _Ring({required this.controller, required this.color, required this.phase});
 
   final AnimationController controller;
   final Color color;
@@ -258,8 +254,7 @@ class _Checkmark extends StatefulWidget {
   State<_Checkmark> createState() => _CheckmarkState();
 }
 
-class _CheckmarkState extends State<_Checkmark>
-    with SingleTickerProviderStateMixin {
+class _CheckmarkState extends State<_Checkmark> with SingleTickerProviderStateMixin {
   late final AnimationController _pop = AnimationController(
     vsync: this,
     duration: const Duration(milliseconds: 500),
@@ -326,15 +321,13 @@ class _Rise extends StatelessWidget {
     if (reduceMotion) return child;
     final anim = CurvedAnimation(
       parent: controller,
-      curve: Interval(start, (start + 0.43).clamp(0.0, 1.0),
-          curve: Curves.easeOut),
+      curve: Interval(start, (start + 0.43).clamp(0.0, 1.0), curve: Curves.easeOut),
     );
     return AnimatedBuilder(
       animation: anim,
       builder: (context, child) => Opacity(
         opacity: anim.value,
-        child: Transform.translate(
-            offset: Offset(0, (1 - anim.value) * 12), child: child),
+        child: Transform.translate(offset: Offset(0, (1 - anim.value) * 12), child: child),
       ),
       child: child,
     );

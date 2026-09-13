@@ -19,7 +19,7 @@ class AlgorithmTitle extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: REdgeInsets.only(top: context.isAndroid ? kAndroidTopPageSpacing :kIOSTopPageSpacing),
+      padding: REdgeInsets.only(top: context.isAndroid ? kAndroidTopPageSpacing : kIOSTopPageSpacing),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.start,

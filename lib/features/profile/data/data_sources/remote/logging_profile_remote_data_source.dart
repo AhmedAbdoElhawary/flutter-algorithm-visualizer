@@ -17,8 +17,7 @@ class LoggingProfileRemoteDataSource implements ProfileRemoteDataSource {
       _scope,
       'getCurrentUser',
       _source.getCurrentUser,
-      describeResult: (user) =>
-          user == null ? 'no user' : 'uid=${FirebaseLogger.id(user.uid)}',
+      describeResult: (user) => user == null ? 'no user' : 'uid=${FirebaseLogger.id(user.uid)}',
     );
   }
 

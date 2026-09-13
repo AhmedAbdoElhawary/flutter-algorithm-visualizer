@@ -93,7 +93,7 @@ class _VisualizePageState extends State<VisualizePage> {
         ),
         SliverToBoxAdapter(
           child: Padding(
-            padding: REdgeInsets.only(left: 16, right: 16,bottom: 10),
+            padding: REdgeInsets.only(left: 16, right: 16, bottom: 10),
             child: Row(
               children: [
                 Expanded(
@@ -140,25 +140,25 @@ class _VisualizePageState extends State<VisualizePage> {
         SliverFillRemaining(
             child: tabView == 0 && sortingCard != null
                 ? SortingView(
-              card: sortingCard,
-              onAlgoChanged: (title, description) {
-                WidgetsBinding.instance.addPostFrameCallback((_) {
-                  this.title.value = title;
-                  this.description.value = description;
-                });
-              },
-            )
+                    card: sortingCard,
+                    onAlgoChanged: (title, description) {
+                      WidgetsBinding.instance.addPostFrameCallback((_) {
+                        this.title.value = title;
+                        this.description.value = description;
+                      });
+                    },
+                  )
                 : searchingCard != null
-                ? SearchingView(
-              card: searchingCard,
-              onAlgoChanged: (title, description) {
-                WidgetsBinding.instance.addPostFrameCallback((_) {
-                  this.title.value = title;
-                  this.description.value = description;
-                });
-              },
-            )
-                : const UnknownView()),
+                    ? SearchingView(
+                        card: searchingCard,
+                        onAlgoChanged: (title, description) {
+                          WidgetsBinding.instance.addPostFrameCallback((_) {
+                            this.title.value = title;
+                            this.description.value = description;
+                          });
+                        },
+                      )
+                    : const UnknownView()),
       ],
     );
   }
