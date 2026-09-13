@@ -10,11 +10,11 @@ class SortingNotifierState {
   final int currentStepIndex;
 
   final int totalPlaySteps;
-  final List<SortingStep> sortedSteps;
+  final List<SortStep> sortedSteps;
 
-  final SortingStep? previousStep;
-  final SortingStep? currentStep;
-final bool isAllSorted;
+  final SortStep? currentStep;
+  final bool isAllSorted;
+  final List<SortRole> rolePerIndex;
   SortingNotifierState({
     this.operationStatus = SortingEnum.none,
     this.size = SortingNotifier._defaultSize,
@@ -26,7 +26,7 @@ final bool isAllSorted;
     this.currentStepIndex = 0,
     this.totalPlaySteps = 0,
     this.currentStep,
-    this.previousStep,
+    this.rolePerIndex = const [],
   });
 
   bool get isPlaying => operationStatus == SortingEnum.played;
@@ -46,16 +46,16 @@ final bool isAllSorted;
     int? size,
     PlaybackSpeed? speed,
     List<SortableItem>? list,
-    List<SortingStep>? sortedSteps,
+    List<SortStep>? sortedSteps,
     Map<int, Offset>? positions,
     SortingEnum? operationStatus,
     int? currentStepIndex,
     int? totalPlaySteps,
-    SortingStep? currentStep,
+    SortStep? currentStep,
+    bool clearCurrentStep = false,
     bool? isAllSorted,
+    List<SortRole>? rolePerIndex,
   }) {
-    final previousStepTemp = currentStep == null ? null : this.currentStep;
-
     return SortingNotifierState(
       isAllSorted: isAllSorted ?? this.isAllSorted,
       operationStatus: operationStatus ?? this.operationStatus,
@@ -65,9 +65,9 @@ final bool isAllSorted;
       positions: positions ?? this.positions,
       currentStepIndex: currentStepIndex ?? this.currentStepIndex,
       totalPlaySteps: totalPlaySteps ?? this.totalPlaySteps,
-      currentStep: currentStep ?? this.currentStep,
-      previousStep: previousStepTemp ?? previousStep,
+      currentStep: clearCurrentStep ? null : (currentStep ?? this.currentStep),
       sortedSteps: sortedSteps ?? this.sortedSteps,
+      rolePerIndex: rolePerIndex ?? this.rolePerIndex,
     );
   }
 }
