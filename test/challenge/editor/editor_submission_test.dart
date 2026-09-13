@@ -18,8 +18,7 @@ void main() {
     await tester.pump(const Duration(milliseconds: 1200));
   }
 
-  testWidgets('an all-pass run records the submission and navigates to celebration (FR-020)',
-      (tester) async {
+  testWidgets('an all-pass run records the submission and navigates to celebration (FR-020)', (tester) async {
     final repository = FakeProblemRepository();
     final problem = buildGradableTestProblem();
 
@@ -54,7 +53,8 @@ void main() {
     expect(repository.updated, isEmpty);
   });
 
-  testWidgets('a problem with no test cases reads 0 / 0 passed and never celebrates (SC-006)', (tester) async {
+  testWidgets('a problem with no test cases reads 0 / 0 passed and never celebrates (SC-006)',
+      (tester) async {
     final repository = FakeProblemRepository();
     final problem = buildGradableTestProblem(testCases: const []);
 
