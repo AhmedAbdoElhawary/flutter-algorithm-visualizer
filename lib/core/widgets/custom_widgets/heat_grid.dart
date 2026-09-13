@@ -70,9 +70,8 @@ class _HeatCell extends StatelessWidget {
       decoration: BoxDecoration(
         color: context.getColor(level),
         borderRadius: BorderRadius.circular(CdRadius.tiny.r),
-        border: level == HeatGrid.heatLevels.first
-            ? Border.all(color: context.getColor(ThemeEnum.border))
-            : null,
+        border:
+            level == HeatGrid.heatLevels.first ? Border.all(color: context.getColor(ThemeEnum.border)) : null,
       ),
     );
   }
