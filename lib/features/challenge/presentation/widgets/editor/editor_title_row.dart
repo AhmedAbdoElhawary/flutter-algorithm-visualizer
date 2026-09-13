@@ -23,7 +23,7 @@ class EditorTitleRow extends StatelessWidget {
       children: [
         const CustomBackButton(),
         Expanded(
-          child: SemiBoldText(problemName,  color: ThemeEnum.textPrimary, maxLines: 1),
+          child: SemiBoldText(problemName, color: ThemeEnum.textPrimary, maxLines: 1),
         ),
         const RSizedBox(width: 8),
         const _LanguageChip(),
