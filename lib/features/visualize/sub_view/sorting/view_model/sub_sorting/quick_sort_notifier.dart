@@ -8,31 +8,46 @@ class QuickSortNotifier extends SortingNotifier {
   SortingNotifierState build() => SortingNotifier.initState();
 
   @override
+  Set<SortRole> get roles =>
+      const {SortRole.sorted, SortRole.pivot, SortRole.boundary, SortRole.compare, SortRole.swap};
+
+  @override
+  Map<SortRole, String> get pointerHints => const {
+        SortRole.boundary: StringsManager.pointerHintI,
+        SortRole.compare: StringsManager.pointerHintJ,
+      };
+
+  @override
   SortingResult buildSorting(List<int> values) {
-    final steps = <SortingStep>[];
     final arr = List<int>.from(values);
+    final ctx = RoleContext(roles);
 
     int partition(int low, int high) {
       final pivot = arr[high];
       int i = low - 1;
+      ctx.hold(SortRole.pivot, high);
 
       for (int j = low; j < high; j++) {
-        steps.add(SortingStep(index1: j, index2: high, action: SortingStatus.compared));
-        steps.add(SortingStep(index1: j, index2: high, action: SortingStatus.none));
+        ctx.emit(StepKind.compare, j, high);
 
         if (arr[j] <= pivot) {
           i++;
+          ctx.hold(SortRole.boundary, i);
           if (i != j) {
-            steps.add(SortingStep(index1: i, index2: j, action: SortingStatus.swapping));
             arr.swap(i, j);
+            ctx.emit(StepKind.swap, i, j);
           }
         }
       }
 
+      // `sorted` is never marked mid-run here — only the final completion
+      // sweep paints green, once every bar is truly done moving.
       if (i + 1 != high) {
-        steps.add(SortingStep(index1: i + 1, index2: high, action: SortingStatus.swapping));
         arr.swap(i + 1, high);
+        ctx.emit(StepKind.swap, i + 1, high);
       }
+      ctx.release(SortRole.pivot);
+      ctx.release(SortRole.boundary);
 
       return i + 1;
     }
@@ -47,7 +62,7 @@ class QuickSortNotifier extends SortingNotifier {
 
     if (arr.isNotEmpty) quickSort(0, arr.length - 1);
 
-    return SortingResult(sortedValues: arr, steps: steps);
+    return SortingResult(sortedValues: arr, steps: ctx.steps);
   }
 
   static final algorithmComplexity = AlgorithmComplexity(
@@ -100,10 +115,9 @@ class QuickSortNotifier extends SortingNotifier {
       ];
 
   @override
-  int codeLineForStep(SortingStep step) => switch (step.action) {
-        SortingStatus.compared => 15, // arr[j] <= pivot
-        SortingStatus.swapping => 19, // arr[i] = arr[j]
-        SortingStatus.none => 14, // advance j
-        _ => -1,
+  int codeLineForStep(SortStep step) => switch (step.kind) {
+        StepKind.compare => 15, // arr[j] <= pivot
+        StepKind.swap => 19, // arr[i] = arr[j]
+        StepKind.write => -1, // quick sort never writes
       };
 }
