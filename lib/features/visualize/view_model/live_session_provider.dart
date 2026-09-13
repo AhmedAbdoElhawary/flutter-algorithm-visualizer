@@ -44,8 +44,7 @@ class LiveSessionData {
     required this.syncedAt,
   });
 
-  Duration get liveElapsed =>
-      isPlaying ? elapsed + DateTime.now().difference(syncedAt) : elapsed;
+  Duration get liveElapsed => isPlaying ? elapsed + DateTime.now().difference(syncedAt) : elapsed;
 }
 
 /// Holds the current [LiveSessionData] plus a callback back into the visualizer
@@ -69,7 +68,6 @@ class LiveSessionController extends Notifier<LiveSessionData?> {
   }
 }
 
-final liveSessionProvider =
-    NotifierProvider<LiveSessionController, LiveSessionData?>(
+final liveSessionProvider = NotifierProvider<LiveSessionController, LiveSessionData?>(
   LiveSessionController.new,
 );
