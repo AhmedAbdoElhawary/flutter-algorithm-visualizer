@@ -15,8 +15,8 @@ class CustomBackButton extends StatelessWidget {
       endPadding: 14,
       child: IconButtonQuiet(
         icon: Icons.arrow_back_ios_new_rounded,
-        size: 32,
-        iconSize: 16,
+        size: 34,
+        iconSize: 18,
         onTap: context.back,
       ),
     );
