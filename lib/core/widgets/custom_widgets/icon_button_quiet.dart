@@ -47,8 +47,7 @@ class IconButtonQuiet extends StatelessWidget {
           size: iconSize,
           color: filled
               ? ThemeEnum.onPrimary
-              : iconColor ??
-                  (disabled ? ThemeEnum.textDisabled : ThemeEnum.textBody),
+              : iconColor ?? (disabled ? ThemeEnum.textDisabled : ThemeEnum.textBody),
         ),
       ),
     );
