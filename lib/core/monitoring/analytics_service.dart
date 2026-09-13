@@ -75,13 +75,15 @@ class FirebaseAnalyticsService implements AnalyticsService {
       );
 
   @override
-  Future<void> visualizationCompleted({required String algorithm, required int durationMs}) => _analytics.logEvent(
+  Future<void> visualizationCompleted({required String algorithm, required int durationMs}) =>
+      _analytics.logEvent(
         name: 'visualization_completed',
         parameters: {'algorithm': algorithm, 'duration_ms': durationMs},
       );
 
   @override
-  Future<void> algorithmSelected({required String algorithm, required String category}) => _analytics.logEvent(
+  Future<void> algorithmSelected({required String algorithm, required String category}) =>
+      _analytics.logEvent(
         name: 'algorithm_selected',
         parameters: {'algorithm': algorithm, 'category': category},
       );

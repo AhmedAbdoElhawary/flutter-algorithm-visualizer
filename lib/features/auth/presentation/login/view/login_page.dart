@@ -158,7 +158,8 @@ class _PasswordFieldState extends ConsumerState<_PasswordField> {
       onChanged: (v) => ref.read(authLoginProvider.notifier).setPassword(v),
       trailingLabelWidget: GestureDetector(
         onTap: () => context.push(Routes.forgotPassword.path),
-        child: const MediumText(StringsManager.forgotShort, color: ThemeEnum.primaryHover, fontSize: 11, maxLines: 1),
+        child: const MediumText(StringsManager.forgotShort,
+            color: ThemeEnum.primaryHover, fontSize: 11, maxLines: 1),
       ),
     );
   }

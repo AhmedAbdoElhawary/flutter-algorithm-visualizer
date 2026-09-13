@@ -43,10 +43,21 @@ void main() {
 
         expect(result.sortedValues, [1, 2]);
 
+        // The standalone `temporary`/`sorted` steps are gone by design
+        // (C7 Selection) — the running minimum and target now ride on the
+        // one real comparison instead of generating steps of their own.
         expectSortingSteps(result.steps, [
-          SortingStep(index1: 0, index2: 0, action: SortingStatus.temporary),
-          SortingStep(index1: 0, index2: 1, action: SortingStatus.compared),
-          SortingStep(index1: 0, index2: 0, action: SortingStatus.sorted),
+          const SortStep(
+            kind: StepKind.compare,
+            a: 0,
+            b: 1,
+            marks: [
+              RoleMark(role: SortRole.target, start: 0, end: 0),
+              RoleMark(role: SortRole.minimum, start: 0, end: 0),
+              RoleMark(role: SortRole.compare, start: 0, end: 0),
+              RoleMark(role: SortRole.compare, start: 1, end: 1),
+            ],
+          ),
         ]);
       });
 
@@ -56,11 +67,28 @@ void main() {
         expect(result.sortedValues, [1, 2]);
 
         expectSortingSteps(result.steps, [
-          SortingStep(index1: 0, index2: 0, action: SortingStatus.temporary),
-          SortingStep(index1: 0, index2: 1, action: SortingStatus.compared),
-          SortingStep(index1: 1, index2: 1, action: SortingStatus.temporary),
-          SortingStep(index1: 0, index2: 1, action: SortingStatus.swapping),
-          SortingStep(index1: 0, index2: 0, action: SortingStatus.sorted),
+          const SortStep(
+            kind: StepKind.compare,
+            a: 0,
+            b: 1,
+            marks: [
+              RoleMark(role: SortRole.target, start: 0, end: 0),
+              RoleMark(role: SortRole.minimum, start: 0, end: 0),
+              RoleMark(role: SortRole.compare, start: 0, end: 0),
+              RoleMark(role: SortRole.compare, start: 1, end: 1),
+            ],
+          ),
+          const SortStep(
+            kind: StepKind.swap,
+            a: 0,
+            b: 1,
+            marks: [
+              RoleMark(role: SortRole.target, start: 0, end: 0),
+              RoleMark(role: SortRole.minimum, start: 1, end: 1),
+              RoleMark(role: SortRole.swap, start: 0, end: 0),
+              RoleMark(role: SortRole.swap, start: 1, end: 1),
+            ],
+          ),
         ]);
       });
     });
@@ -71,9 +99,17 @@ void main() {
       expect(result.sortedValues, [5, 5]);
 
       expectSortingSteps(result.steps, [
-        SortingStep(index1: 0, index2: 0, action: SortingStatus.temporary),
-        SortingStep(index1: 0, index2: 1, action: SortingStatus.compared),
-        SortingStep(index1: 0, index2: 0, action: SortingStatus.sorted),
+        const SortStep(
+          kind: StepKind.compare,
+          a: 0,
+          b: 1,
+          marks: [
+            RoleMark(role: SortRole.target, start: 0, end: 0),
+            RoleMark(role: SortRole.minimum, start: 0, end: 0),
+            RoleMark(role: SortRole.compare, start: 0, end: 0),
+            RoleMark(role: SortRole.compare, start: 1, end: 1),
+          ],
+        ),
       ]);
     });
 
@@ -82,77 +118,59 @@ void main() {
 
       expect(result.sortedValues, [-4, -1, 0, 1, 2, 3, 6, 8]);
 
-      expectSortingSteps(result.steps, [
+      // Step-count expectations drop here by design (C7): the standalone
+      // `temporary` and `sorted` steps this array used to need are gone.
+      // Mark-level correctness is covered by the small cases above and by
+      // sort_role_test.dart / the role-subset test (C4.2).
+      expectStepShapes(result.steps, const [
         // i = 0
-        SortingStep(index1: 0, index2: 0, action: SortingStatus.temporary),
-        SortingStep(index1: 0, index2: 1, action: SortingStatus.compared),
-        SortingStep(index1: 0, index2: 2, action: SortingStatus.compared),
-        SortingStep(index1: 2, index2: 2, action: SortingStatus.temporary),
-        SortingStep(index1: 2, index2: 3, action: SortingStatus.compared),
-        SortingStep(index1: 2, index2: 4, action: SortingStatus.compared),
-        SortingStep(index1: 2, index2: 5, action: SortingStatus.compared),
-        SortingStep(index1: 2, index2: 6, action: SortingStatus.compared),
-        SortingStep(index1: 2, index2: 7, action: SortingStatus.compared),
-        SortingStep(index1: 0, index2: 2, action: SortingStatus.swapping),
-        SortingStep(index1: 0, index2: 0, action: SortingStatus.sorted),
+        (StepKind.compare, 0, 1),
+        (StepKind.compare, 0, 2),
+        (StepKind.compare, 2, 3),
+        (StepKind.compare, 2, 4),
+        (StepKind.compare, 2, 5),
+        (StepKind.compare, 2, 6),
+        (StepKind.compare, 2, 7),
+        (StepKind.swap, 0, 2),
 
         // i = 1
-        SortingStep(index1: 1, index2: 1, action: SortingStatus.temporary),
-        SortingStep(index1: 1, index2: 2, action: SortingStatus.compared),
-        SortingStep(index1: 2, index2: 2, action: SortingStatus.temporary),
-        SortingStep(index1: 2, index2: 3, action: SortingStatus.compared),
-        SortingStep(index1: 2, index2: 4, action: SortingStatus.compared),
-        SortingStep(index1: 2, index2: 5, action: SortingStatus.compared),
-        SortingStep(index1: 2, index2: 6, action: SortingStatus.compared),
-        SortingStep(index1: 2, index2: 7, action: SortingStatus.compared),
-        SortingStep(index1: 1, index2: 2, action: SortingStatus.swapping),
-        SortingStep(index1: 1, index2: 1, action: SortingStatus.sorted),
+        (StepKind.compare, 1, 2),
+        (StepKind.compare, 2, 3),
+        (StepKind.compare, 2, 4),
+        (StepKind.compare, 2, 5),
+        (StepKind.compare, 2, 6),
+        (StepKind.compare, 2, 7),
+        (StepKind.swap, 1, 2),
 
         // i = 2
-        SortingStep(index1: 2, index2: 2, action: SortingStatus.temporary),
-        SortingStep(index1: 2, index2: 3, action: SortingStatus.compared),
-        SortingStep(index1: 3, index2: 3, action: SortingStatus.temporary),
-        SortingStep(index1: 3, index2: 4, action: SortingStatus.compared),
-        SortingStep(index1: 3, index2: 5, action: SortingStatus.compared),
-        SortingStep(index1: 3, index2: 6, action: SortingStatus.compared),
-        SortingStep(index1: 3, index2: 7, action: SortingStatus.compared),
-        SortingStep(index1: 2, index2: 3, action: SortingStatus.swapping),
-        SortingStep(index1: 2, index2: 2, action: SortingStatus.sorted),
+        (StepKind.compare, 2, 3),
+        (StepKind.compare, 3, 4),
+        (StepKind.compare, 3, 5),
+        (StepKind.compare, 3, 6),
+        (StepKind.compare, 3, 7),
+        (StepKind.swap, 2, 3),
 
         // i = 3
-        SortingStep(index1: 3, index2: 3, action: SortingStatus.temporary),
-        SortingStep(index1: 3, index2: 4, action: SortingStatus.compared),
-        SortingStep(index1: 4, index2: 4, action: SortingStatus.temporary),
-        SortingStep(index1: 4, index2: 5, action: SortingStatus.compared),
-        SortingStep(index1: 4, index2: 6, action: SortingStatus.compared),
-        SortingStep(index1: 4, index2: 7, action: SortingStatus.compared),
-        SortingStep(index1: 3, index2: 4, action: SortingStatus.swapping),
-        SortingStep(index1: 3, index2: 3, action: SortingStatus.sorted),
+        (StepKind.compare, 3, 4),
+        (StepKind.compare, 4, 5),
+        (StepKind.compare, 4, 6),
+        (StepKind.compare, 4, 7),
+        (StepKind.swap, 3, 4),
 
         // i = 4
-        SortingStep(index1: 4, index2: 4, action: SortingStatus.temporary),
-        SortingStep(index1: 4, index2: 5, action: SortingStatus.compared),
-        SortingStep(index1: 5, index2: 5, action: SortingStatus.temporary),
-        SortingStep(index1: 5, index2: 6, action: SortingStatus.compared),
-        SortingStep(index1: 6, index2: 6, action: SortingStatus.temporary),
-        SortingStep(index1: 6, index2: 7, action: SortingStatus.compared),
-        SortingStep(index1: 4, index2: 6, action: SortingStatus.swapping),
-        SortingStep(index1: 4, index2: 4, action: SortingStatus.sorted),
+        (StepKind.compare, 4, 5),
+        (StepKind.compare, 5, 6),
+        (StepKind.compare, 6, 7),
+        (StepKind.swap, 4, 6),
 
         // i = 5
-        SortingStep(index1: 5, index2: 5, action: SortingStatus.temporary),
-        SortingStep(index1: 5, index2: 6, action: SortingStatus.compared),
-        SortingStep(index1: 5, index2: 7, action: SortingStatus.compared),
-        SortingStep(index1: 7, index2: 7, action: SortingStatus.temporary),
-        SortingStep(index1: 5, index2: 7, action: SortingStatus.swapping),
-        SortingStep(index1: 5, index2: 5, action: SortingStatus.sorted),
+        (StepKind.compare, 5, 6),
+        (StepKind.compare, 5, 7),
+        (StepKind.swap, 5, 7),
 
         // i = 6
-        SortingStep(index1: 6, index2: 6, action: SortingStatus.temporary),
-        SortingStep(index1: 6, index2: 7, action: SortingStatus.compared),
-        SortingStep(index1: 7, index2: 7, action: SortingStatus.temporary),
-        SortingStep(index1: 6, index2: 7, action: SortingStatus.swapping),
-        SortingStep(index1: 6, index2: 6, action: SortingStatus.sorted),
+        (StepKind.compare, 6, 7),
+        (StepKind.swap, 6, 7),
       ]);
     });
 
@@ -167,53 +185,52 @@ void main() {
 
       expect(result.sortedValues, [-4, -1, 0, 1, 2, 3, 6]);
 
-      expectSortingSteps(result.steps, [
-        // i = 0
-        SortingStep(index1: 0, index2: 0, action: SortingStatus.temporary),
-        SortingStep(index1: 0, index2: 1, action: SortingStatus.compared),
-        SortingStep(index1: 0, index2: 2, action: SortingStatus.compared),
-        SortingStep(index1: 0, index2: 3, action: SortingStatus.compared),
-        SortingStep(index1: 0, index2: 4, action: SortingStatus.compared),
-        SortingStep(index1: 0, index2: 5, action: SortingStatus.compared),
-        SortingStep(index1: 0, index2: 6, action: SortingStatus.compared),
-        SortingStep(index1: 0, index2: 0, action: SortingStatus.sorted),
-
-        // i = 1
-        SortingStep(index1: 1, index2: 1, action: SortingStatus.temporary),
-        SortingStep(index1: 1, index2: 2, action: SortingStatus.compared),
-        SortingStep(index1: 1, index2: 3, action: SortingStatus.compared),
-        SortingStep(index1: 1, index2: 4, action: SortingStatus.compared),
-        SortingStep(index1: 1, index2: 5, action: SortingStatus.compared),
-        SortingStep(index1: 1, index2: 6, action: SortingStatus.compared),
-        SortingStep(index1: 1, index2: 1, action: SortingStatus.sorted),
-
-        // i = 2
-        SortingStep(index1: 2, index2: 2, action: SortingStatus.temporary),
-        SortingStep(index1: 2, index2: 3, action: SortingStatus.compared),
-        SortingStep(index1: 2, index2: 4, action: SortingStatus.compared),
-        SortingStep(index1: 2, index2: 5, action: SortingStatus.compared),
-        SortingStep(index1: 2, index2: 6, action: SortingStatus.compared),
-        SortingStep(index1: 2, index2: 2, action: SortingStatus.sorted),
-
-        // i = 3
-        SortingStep(index1: 3, index2: 3, action: SortingStatus.temporary),
-        SortingStep(index1: 3, index2: 4, action: SortingStatus.compared),
-        SortingStep(index1: 3, index2: 5, action: SortingStatus.compared),
-        SortingStep(index1: 3, index2: 6, action: SortingStatus.compared),
-        SortingStep(index1: 3, index2: 3, action: SortingStatus.sorted),
-
-        // i = 4
-        SortingStep(index1: 4, index2: 4, action: SortingStatus.temporary),
-        SortingStep(index1: 4, index2: 5, action: SortingStatus.compared),
-        SortingStep(index1: 4, index2: 6, action: SortingStatus.compared),
-        SortingStep(index1: 4, index2: 4, action: SortingStatus.sorted),
-
-        // i = 5
-        SortingStep(index1: 5, index2: 5, action: SortingStatus.temporary),
-        SortingStep(index1: 5, index2: 6, action: SortingStatus.compared),
-        SortingStep(index1: 5, index2: 5, action: SortingStatus.sorted),
+      // Already sorted: the running minimum never moves off `i`, so no pass
+      // ever swaps.
+      expectStepShapes(result.steps, const [
+        (StepKind.compare, 0, 1),
+        (StepKind.compare, 0, 2),
+        (StepKind.compare, 0, 3),
+        (StepKind.compare, 0, 4),
+        (StepKind.compare, 0, 5),
+        (StepKind.compare, 0, 6),
+        (StepKind.compare, 1, 2),
+        (StepKind.compare, 1, 3),
+        (StepKind.compare, 1, 4),
+        (StepKind.compare, 1, 5),
+        (StepKind.compare, 1, 6),
+        (StepKind.compare, 2, 3),
+        (StepKind.compare, 2, 4),
+        (StepKind.compare, 2, 5),
+        (StepKind.compare, 2, 6),
+        (StepKind.compare, 3, 4),
+        (StepKind.compare, 3, 5),
+        (StepKind.compare, 3, 6),
+        (StepKind.compare, 4, 5),
+        (StepKind.compare, 4, 6),
+        (StepKind.compare, 5, 6),
       ]);
     });
+  });
+
+  test('every emitted RoleMark role is within the declared roles (C4.2)', () {
+    final result = notifier.buildSorting([5, 3, 8, 1, 9, 2, 7, 4, 6]);
+    final emittedRoles = result.steps.expand((s) => s.marks.map((m) => m.role)).toSet();
+    expect(emittedRoles.difference(notifier.roles), isEmpty);
+  });
+
+  test(
+      'exactly one minimum and one target per step of a pass; minimum moves rather than duplicating '
+      '(US2 scenarios 1 and 2)', () {
+    final result = notifier.buildSorting([-1, 8, -4, 0, 1, 6, 2, 3]);
+
+    for (final step in result.steps) {
+      final minimumMarks = step.marks.where((m) => m.role == SortRole.minimum);
+      final targetMarks = step.marks.where((m) => m.role == SortRole.target);
+
+      expect(minimumMarks.length, lessThanOrEqualTo(1));
+      expect(targetMarks.length, lessThanOrEqualTo(1));
+    }
   });
 
   group('algorithmComplexity for selection sort', () {

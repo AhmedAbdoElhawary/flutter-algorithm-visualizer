@@ -143,5 +143,4 @@ class AuthSignUpNotifier extends Notifier<AuthSignUpState> {
       return false;
     }
   }
-
 }

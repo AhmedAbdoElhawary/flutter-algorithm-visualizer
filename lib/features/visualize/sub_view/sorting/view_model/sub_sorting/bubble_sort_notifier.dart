@@ -5,20 +5,22 @@ import 'package:collection/collection.dart';
 
 class BubbleSortNotifier extends SortingNotifier {
   @override
+  Set<SortRole> get roles => const {SortRole.sorted, SortRole.compare, SortRole.swap};
+
+  @override
   SortingResult buildSorting(List<int> values) {
-    final steps = <SortingStep>[];
     final arr = List<int>.from(values);
+    final ctx = RoleContext(roles);
 
     for (int i = 0; i < arr.length - 1; i++) {
       bool isSorted = true;
 
       for (int j = 0; j < arr.length - i - 1; j++) {
-        steps.add(SortingStep(index1: j, index2: j + 1, action: SortingStatus.compared));
+        ctx.emit(StepKind.compare, j, j + 1);
 
         if (arr[j] > arr[j + 1]) {
-          steps.add(SortingStep(index1: j, index2: j + 1, action: SortingStatus.swapping));
-
           arr.swap(j, j + 1);
+          ctx.emit(StepKind.swap, j, j + 1);
           isSorted = false;
         }
       }
@@ -26,7 +28,7 @@ class BubbleSortNotifier extends SortingNotifier {
       if (isSorted) break;
     }
 
-    return SortingResult(sortedValues: arr, steps: steps);
+    return SortingResult(sortedValues: arr, steps: ctx.steps);
   }
 
   List<int> bubbleSort(List<int> arr) {
@@ -79,10 +81,9 @@ class BubbleSortNotifier extends SortingNotifier {
       ];
 
   @override
-  int codeLineForStep(SortingStep step) => switch (step.action) {
-        SortingStatus.compared => 6, // evaluating arr[j] > arr[j + 1]
-        SortingStatus.swapping => 8, // executing arr[j] = arr[j + 1]
-        SortingStatus.none => 5, // continuing the inner loop
-        _ => -1,
+  int codeLineForStep(SortStep step) => switch (step.kind) {
+        StepKind.compare => 6, // evaluating arr[j] > arr[j + 1]
+        StepKind.swap => 8, // executing arr[j] = arr[j + 1]
+        StepKind.write => -1, // bubble sort never writes
       };
 }

@@ -70,6 +70,8 @@ enum ThemeEnum {
   barCompare,
   barSwap,
   barDone,
+  barAnchor,
+  barTarget,
 
   /// "currently comparing" — cyan, the same mark everywhere (bars, live dot)
   comparing,
@@ -195,6 +197,8 @@ extension ThemeExtension on BuildContext {
       ThemeEnum.barCompare: _pick(ColorManager.cdBarCompareDk, ColorManager.cdBarCompareLt),
       ThemeEnum.barSwap: _pick(ColorManager.cdBarSwapDk, ColorManager.cdBarSwapLt),
       ThemeEnum.barDone: _pick(ColorManager.cdBarDoneDk, ColorManager.cdBarDoneLt),
+      ThemeEnum.barAnchor: _pick(ColorManager.cdBarAnchorDk, ColorManager.cdBarAnchorLt),
+      ThemeEnum.barTarget: _pick(ColorManager.cdBarTargetDk, ColorManager.cdBarTargetLt),
       ThemeEnum.comparing: _pick(ColorManager.cdComparingDk, ColorManager.cdComparingLt),
 
       ThemeEnum.codeBg: _pick(ColorManager.cdEditorCodeBgDk, ColorManager.cdEditorCodeBgLt),
@@ -206,7 +210,8 @@ extension ThemeExtension on BuildContext {
       ThemeEnum.codePunct: _pick(ColorManager.cdCodePunctDk, ColorManager.cdCodePunctLt),
       ThemeEnum.codeNumber: _pick(ColorManager.cdCodeNumberDk, ColorManager.cdCodeNumberLt),
       ThemeEnum.codeComment: _pick(ColorManager.cdEditorCodeMutedDk, ColorManager.cdEditorCodeMutedLt),
-      ThemeEnum.editorResetBorder: _pick(ColorManager.cdEditorResetBorderDk, ColorManager.cdEditorResetBorderLt),
+      ThemeEnum.editorResetBorder:
+          _pick(ColorManager.cdEditorResetBorderDk, ColorManager.cdEditorResetBorderLt),
 
       ThemeEnum.heat0: _pick(ColorManager.cdHeatDk[0], ColorManager.cdHeatLt[0]),
       ThemeEnum.heat1: _pick(ColorManager.cdHeatDk[1], ColorManager.cdHeatLt[1]),

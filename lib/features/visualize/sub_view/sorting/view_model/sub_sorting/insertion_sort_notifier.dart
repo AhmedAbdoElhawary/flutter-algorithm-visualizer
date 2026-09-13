@@ -3,29 +3,38 @@ import 'package:algorithm_visualizer/features/visualize/helper/o_notation.dart';
 import 'package:algorithm_visualizer/features/visualize/sub_view/sorting/view_model/sorting_notifier.dart';
 import 'package:collection/collection.dart';
 
-
 class InsertionSortNotifier extends SortingNotifier {
+  @override
+  Set<SortRole> get roles => const {SortRole.sorted, SortRole.heldValue, SortRole.compare, SortRole.swap};
 
   @override
   SortingResult buildSorting(List<int> values) {
-    final steps = <SortingStep>[];
     final arr = List<int>.from(values);
+    final ctx = RoleContext(roles);
 
+    // `sorted` is never marked mid-run here: the built prefix looks settled
+    // but a later insertion can still shift it rightward, so it is not
+    // actually final — only the completion sweep paints green (FR request:
+    // green means "will never move again", never a guess).
     for (int i = 1; i < arr.length; i++) {
+      ctx.hold(SortRole.heldValue, i);
+
       for (int j = i; j > 0; j--) {
-        steps.add(SortingStep(index1: j, index2: j - 1, action: SortingStatus.compared));
+        ctx.emit(StepKind.compare, j, j - 1);
 
         if (arr[j] < arr[j - 1]) {
-          steps.add(SortingStep(index1: j, index2: j - 1, action: SortingStatus.swapping));
-
           arr.swap(j, j - 1);
-        }else{
+          ctx.hold(SortRole.heldValue, j - 1);
+          ctx.emit(StepKind.swap, j, j - 1);
+        } else {
           break;
         }
       }
+
+      ctx.release(SortRole.heldValue);
     }
 
-    return SortingResult(sortedValues: arr, steps: steps);
+    return SortingResult(sortedValues: arr, steps: ctx.steps);
   }
 
   static final algorithmComplexity = AlgorithmComplexity(
@@ -59,10 +68,9 @@ class InsertionSortNotifier extends SortingNotifier {
       ];
 
   @override
-  int codeLineForStep(SortingStep step) => switch (step.action) {
-        SortingStatus.compared => 4, // arr[j] < arr[j - 1]
-        SortingStatus.swapping => 6, // arr[j] = arr[j - 1]
-        SortingStatus.none => 8, // j--
-        _ => -1,
+  int codeLineForStep(SortStep step) => switch (step.kind) {
+        StepKind.compare => 4, // arr[j] < arr[j - 1]
+        StepKind.swap => 6, // arr[j] = arr[j - 1]
+        StepKind.write => -1, // insertion sort never writes
       };
 }

@@ -27,20 +27,20 @@ class AuthScaffold extends StatelessWidget {
     return Scaffold(
       backgroundColor: context.getColor(ThemeEnum.primary),
       body: SafeArea(
-          child: SingleChildScrollView(
-            physics: const BouncingScrollPhysics(),
-            child: HorizontalPadding(
-              padding: CdSpace.authInset,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  SizedBox(height: topInset.h),
-                  ...children,
-                  SizedBox(height: CdSpace.x6.h),
-                ],
-              ),
+        child: SingleChildScrollView(
+          physics: const BouncingScrollPhysics(),
+          child: HorizontalPadding(
+            padding: CdSpace.authInset,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                SizedBox(height: topInset.h),
+                ...children,
+                SizedBox(height: CdSpace.x6.h),
+              ],
             ),
           ),
+        ),
       ),
     );
   }

@@ -63,17 +63,10 @@ void _drawCornerRibbon(img.Image icon, String text) {
   // 1. Horizontal band with darker top/bottom edge lines.
   final band = img.Image(width: bandWidth, height: bandHeight, numChannels: 4);
   img.fill(band, color: img.ColorRgba8(0, 0, 0, 0));
-  img.fillRect(band,
-      x1: 0, y1: 0, x2: bandWidth - 1, y2: bandHeight - 1, color: _ribbonColor);
+  img.fillRect(band, x1: 0, y1: 0, x2: bandWidth - 1, y2: bandHeight - 1, color: _ribbonColor);
   final edge = (bandHeight * 0.09).round().clamp(2, 14);
-  img.fillRect(band,
-      x1: 0, y1: 0, x2: bandWidth - 1, y2: edge - 1, color: _ribbonEdge);
-  img.fillRect(band,
-      x1: 0,
-      y1: bandHeight - edge,
-      x2: bandWidth - 1,
-      y2: bandHeight - 1,
-      color: _ribbonEdge);
+  img.fillRect(band, x1: 0, y1: 0, x2: bandWidth - 1, y2: edge - 1, color: _ribbonEdge);
+  img.fillRect(band, x1: 0, y1: bandHeight - edge, x2: bandWidth - 1, y2: bandHeight - 1, color: _ribbonEdge);
 
   // 2. Centered, letter-spaced label (arial48 is the largest bundled font).
   final label = text.toUpperCase().split('').join('  ');
@@ -84,9 +77,7 @@ void _drawCornerRibbon(img.Image icon, String text) {
     label,
     font: font,
     x: ((bandWidth - textWidth) / 2).round().clamp(0, bandWidth - 1),
-    y: ((bandHeight - font.lineHeight) / 2 + bandHeight * 0.04)
-        .round()
-        .clamp(0, bandHeight - 1),
+    y: ((bandHeight - font.lineHeight) / 2 + bandHeight * 0.04).round().clamp(0, bandHeight - 1),
     color: _textColor,
   );
 
