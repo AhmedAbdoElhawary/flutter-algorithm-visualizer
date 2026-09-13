@@ -110,8 +110,8 @@ class AlgorithmGlassCard extends StatelessWidget {
           const SizedBox(height: 6),
           RSizedBox(
             height: 20,
-            child: CustomScrollView(      physics: const BouncingScrollPhysics(),
-
+            child: CustomScrollView(
+              physics: const BouncingScrollPhysics(),
               scrollDirection: Axis.horizontal,
               slivers: [
                 SliverToBoxAdapter(
