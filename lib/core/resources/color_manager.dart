@@ -108,6 +108,15 @@ abstract final class ColorManager {
   static const cdChipHardFillDk = Color(0xFF291619);
   static const cdChipNeutralFillDk = Color(0xFF1C1D22);
 
+  /// Editor screen (`04 · EDITOR`, Quiet artboard) — exact values the shared
+  /// `cdBgRaisedDk` / `cdTextSecondaryDk` / `cdCodeLineDk` / `cdBorderStrongDk`
+  /// constants do not carry. Scoped to the editor so other screens that
+  /// already depend on those shared constants are unaffected.
+  static const cdEditorCodeBgDk = Color(0xFF101115);
+  static const cdEditorCodeMutedDk = Color(0xFF63687A);
+  static const cdEditorCodeLineDk = Color(0xFF181A1F);
+  static const cdEditorResetBorderDk = Color(0xFF2F323A);
+
   /// ======================================================================
   /// Aurora primitives — LIGHT (cool off-white, cool greys)
   /// ======================================================================
@@ -161,6 +170,14 @@ abstract final class ColorManager {
   static const cdCodeTypeLt = cdTextPrimaryLt;
   static const cdCodePunctLt = cdTextPrimaryLt;
   static const cdCodeNumberLt = cdSuccessLt;
+
+  /// Editor screen — no light `04 · EDITOR` artboard exists (research R2), so
+  /// each light counterpart reuses the existing light value of the role it
+  /// stands in for.
+  static const cdEditorCodeBgLt = cdBgRaisedLt;
+  static const cdEditorCodeMutedLt = cdTextSecondaryLt;
+  static const cdEditorCodeLineLt = cdCodeLineLt;
+  static const cdEditorResetBorderLt = cdBorderStrongLt;
 
   static const cdHeatLt = <Color>[
     Color(0xFFEDEEF1),
