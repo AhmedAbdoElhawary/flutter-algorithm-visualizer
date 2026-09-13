@@ -16,6 +16,9 @@ class CardContainer extends StatelessWidget {
   final VoidCallback? onTap;
   final bool clip;
 
+  final ThemeEnum? fillColor;
+  final ThemeEnum? borderColorOverride;
+
   const CardContainer({
     super.key,
     required this.child,
@@ -24,16 +27,22 @@ class CardContainer extends StatelessWidget {
     this.padding = const EdgeInsets.all(CdSpace.gapCard),
     this.onTap,
     this.clip = false,
+    this.fillColor,
+    this.borderColorOverride,
   });
 
-  ThemeEnum? get _fill => switch (surface) {
+  ThemeEnum? get _fill =>
+      fillColor ??
+      switch (surface) {
         CdSurface.main => ThemeEnum.mainCard,
         CdSurface.secondary => ThemeEnum.surfaceRaised,
         CdSurface.recessed => ThemeEnum.bgBase,
         CdSurface.outline => null,
       };
 
-  ThemeEnum get _borderColor => switch (surface) {
+  ThemeEnum get _borderColor =>
+      borderColorOverride ??
+      switch (surface) {
         CdSurface.main => ThemeEnum.borderSubtle,
         CdSurface.secondary => ThemeEnum.border,
         CdSurface.recessed => ThemeEnum.borderSubtle,

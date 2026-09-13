@@ -1,5 +1,7 @@
 import 'package:algorithm_visualizer/config/routes/route_app.dart';
 import 'package:algorithm_visualizer/core/extensions/navigators.dart';
+import 'package:algorithm_visualizer/core/helpers/constants.dart';
+import 'package:algorithm_visualizer/core/helpers/current_device.dart';
 import 'package:algorithm_visualizer/core/resources/strings_manager.dart';
 import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
 import 'package:algorithm_visualizer/core/widgets/adaptive/text/adaptive_text.dart';
@@ -82,7 +84,7 @@ class _Header extends StatelessWidget {
   Widget build(BuildContext context) {
     final unit = count == 1 ? StringsManager.problem : StringsManager.problems;
     return Padding(
-      padding: REdgeInsets.fromLTRB(16, 4, 16, 14),
+      padding: REdgeInsets.fromLTRB(16, context.isAndroid?kAndroidTopPageSpacing:kIOSTopPageSpacing, 16, 14),
       child: Row(
         children: [
           const CustomBackButton(),

@@ -22,6 +22,7 @@ import 'package:algorithm_visualizer/features/home/view_model/home_provider.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 
 enum _ProblemTab { problem, hints, similar }
 
@@ -103,11 +104,11 @@ class _ProblemPageState extends ConsumerState<ProblemPage> with SingleTickerProv
           ),
           _PinnedCta(
             onSolve: () {
-              /// TODO: move to new editor page
-              // context.pushTo(
-              // Routes.code,
-              // queryParameters: "${problem.getProblemId}",
-              // );
+              final isSubProblem = GoRouterState.of(context).name == Routes.subProblem.name;
+              context.pushRoute(
+                isSubProblem ? Routes.subEditor : Routes.editor,
+                queryParameters: "${problem.getProblemId}",
+              );
             },
           ),
         ],
