@@ -69,7 +69,8 @@ class _HomeLiveSessionCard extends StatelessWidget {
               ),
               const RSizedBox(width: 8),
               Expanded(
-                child: SemiBoldText(data.algorithmName, fontSize: 12, color: ThemeEnum.textPrimary, maxLines: 1),
+                child:
+                    SemiBoldText(data.algorithmName, fontSize: 12, color: ThemeEnum.textPrimary, maxLines: 1),
               ),
               RegularText(
                 timer,
