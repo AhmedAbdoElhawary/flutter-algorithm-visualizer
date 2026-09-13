@@ -108,8 +108,7 @@ class PFGridPainter extends CustomPainter {
       color = Color.lerp(searcherColor, searcherColor, localT)!;
     } else if (t <= 0.8) {
       double localT = (t - 0.5) / 0.3;
-      color = Color.lerp(
-          searcherColor, isFinalVisited ? searcherFinishedColor : searcherColor, localT)!;
+      color = Color.lerp(searcherColor, isFinalVisited ? searcherFinishedColor : searcherColor, localT)!;
     } else {
       color = isFinalVisited ? searcherFinishedColor : searcherColor;
     }
