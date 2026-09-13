@@ -4,7 +4,7 @@ import 'package:algorithm_visualizer/features/visualize/sub_view/sorting/view_mo
 import 'package:algorithm_visualizer/features/visualize/sub_view/sorting/view_model/sub_sorting/insertion_sort_notifier.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import '../custom_expects.dart' show expectSortingSteps;
+import '../custom_expects.dart' show expectSortingSteps, expectStepShapes;
 
 void main() {
   late InsertionSortNotifier notifier;
@@ -43,7 +43,18 @@ void main() {
 
         expect(result.sortedValues, [1, 2]);
 
-        expectSortingSteps(result.steps, [SortingStep(index1: 1, index2: 0, action: SortingStatus.compared)]);
+        expectSortingSteps(result.steps, [
+          const SortStep(
+            kind: StepKind.compare,
+            a: 1,
+            b: 0,
+            marks: [
+              RoleMark(role: SortRole.heldValue, start: 1, end: 1),
+              RoleMark(role: SortRole.compare, start: 1, end: 1),
+              RoleMark(role: SortRole.compare, start: 0, end: 0),
+            ],
+          ),
+        ]);
       });
 
       test('items need swapping', () {
@@ -52,8 +63,26 @@ void main() {
         expect(result.sortedValues, [1, 2]);
 
         expectSortingSteps(result.steps, [
-          SortingStep(index1: 1, index2: 0, action: SortingStatus.compared),
-          SortingStep(index1: 1, index2: 0, action: SortingStatus.swapping),
+          const SortStep(
+            kind: StepKind.compare,
+            a: 1,
+            b: 0,
+            marks: [
+              RoleMark(role: SortRole.heldValue, start: 1, end: 1),
+              RoleMark(role: SortRole.compare, start: 1, end: 1),
+              RoleMark(role: SortRole.compare, start: 0, end: 0),
+            ],
+          ),
+          const SortStep(
+            kind: StepKind.swap,
+            a: 1,
+            b: 0,
+            marks: [
+              RoleMark(role: SortRole.heldValue, start: 0, end: 0),
+              RoleMark(role: SortRole.swap, start: 1, end: 1),
+              RoleMark(role: SortRole.swap, start: 0, end: 0),
+            ],
+          ),
         ]);
       });
     });
@@ -64,7 +93,16 @@ void main() {
       expect(result.sortedValues, [5, 5]);
 
       expectSortingSteps(result.steps, [
-        SortingStep(index1: 1, index2: 0, action: SortingStatus.compared),
+        const SortStep(
+          kind: StepKind.compare,
+          a: 1,
+          b: 0,
+          marks: [
+            RoleMark(role: SortRole.heldValue, start: 1, end: 1),
+            RoleMark(role: SortRole.compare, start: 1, end: 1),
+            RoleMark(role: SortRole.compare, start: 0, end: 0),
+          ],
+        ),
       ]);
     });
 
@@ -73,31 +111,33 @@ void main() {
 
       expect(result.sortedValues, [-4, -1, 0, 1, 2, 3, 6, 8]);
 
-      expectSortingSteps(result.steps, [
-        SortingStep(index1: 1, index2: 0, action: SortingStatus.compared),
-        SortingStep(index1: 2, index2: 1, action: SortingStatus.compared),
-        SortingStep(index1: 2, index2: 1, action: SortingStatus.swapping),
-        SortingStep(index1: 1, index2: 0, action: SortingStatus.compared),
-        SortingStep(index1: 1, index2: 0, action: SortingStatus.swapping),
-        SortingStep(index1: 3, index2: 2, action: SortingStatus.compared),
-        SortingStep(index1: 3, index2: 2, action: SortingStatus.swapping),
-        SortingStep(index1: 2, index2: 1, action: SortingStatus.compared),
-        SortingStep(index1: 4, index2: 3, action: SortingStatus.compared),
-        SortingStep(index1: 4, index2: 3, action: SortingStatus.swapping),
-        SortingStep(index1: 3, index2: 2, action: SortingStatus.compared),
-        SortingStep(index1: 5, index2: 4, action: SortingStatus.compared),
-        SortingStep(index1: 5, index2: 4, action: SortingStatus.swapping),
-        SortingStep(index1: 4, index2: 3, action: SortingStatus.compared),
-        SortingStep(index1: 6, index2: 5, action: SortingStatus.compared),
-        SortingStep(index1: 6, index2: 5, action: SortingStatus.swapping),
-        SortingStep(index1: 5, index2: 4, action: SortingStatus.compared),
-        SortingStep(index1: 5, index2: 4, action: SortingStatus.swapping),
-        SortingStep(index1: 4, index2: 3, action: SortingStatus.compared),
-        SortingStep(index1: 7, index2: 6, action: SortingStatus.compared),
-        SortingStep(index1: 7, index2: 6, action: SortingStatus.swapping),
-        SortingStep(index1: 6, index2: 5, action: SortingStatus.compared),
-        SortingStep(index1: 6, index2: 5, action: SortingStatus.swapping),
-        SortingStep(index1: 5, index2: 4, action: SortingStatus.compared),
+      // Mark-level correctness is covered by the small cases above and the
+      // role-subset test (C4.2); this pins the operation sequence.
+      expectStepShapes(result.steps, const [
+        (StepKind.compare, 1, 0),
+        (StepKind.compare, 2, 1),
+        (StepKind.swap, 2, 1),
+        (StepKind.compare, 1, 0),
+        (StepKind.swap, 1, 0),
+        (StepKind.compare, 3, 2),
+        (StepKind.swap, 3, 2),
+        (StepKind.compare, 2, 1),
+        (StepKind.compare, 4, 3),
+        (StepKind.swap, 4, 3),
+        (StepKind.compare, 3, 2),
+        (StepKind.compare, 5, 4),
+        (StepKind.swap, 5, 4),
+        (StepKind.compare, 4, 3),
+        (StepKind.compare, 6, 5),
+        (StepKind.swap, 6, 5),
+        (StepKind.compare, 5, 4),
+        (StepKind.swap, 5, 4),
+        (StepKind.compare, 4, 3),
+        (StepKind.compare, 7, 6),
+        (StepKind.swap, 7, 6),
+        (StepKind.compare, 6, 5),
+        (StepKind.swap, 6, 5),
+        (StepKind.compare, 5, 4),
       ]);
     });
 
@@ -112,15 +152,21 @@ void main() {
 
       expect(result.sortedValues, [-4, -1, 0, 1, 2, 3, 6]);
 
-      expectSortingSteps(result.steps, [
-        SortingStep(index1: 1, index2: 0, action: SortingStatus.compared),
-        SortingStep(index1: 2, index2: 1, action: SortingStatus.compared),
-        SortingStep(index1: 3, index2: 2, action: SortingStatus.compared),
-        SortingStep(index1: 4, index2: 3, action: SortingStatus.compared),
-        SortingStep(index1: 5, index2: 4, action: SortingStatus.compared),
-        SortingStep(index1: 6, index2: 5, action: SortingStatus.compared),
+      expectStepShapes(result.steps, const [
+        (StepKind.compare, 1, 0),
+        (StepKind.compare, 2, 1),
+        (StepKind.compare, 3, 2),
+        (StepKind.compare, 4, 3),
+        (StepKind.compare, 5, 4),
+        (StepKind.compare, 6, 5),
       ]);
     });
+  });
+
+  test('every emitted RoleMark role is within the declared roles (C4.2)', () {
+    final result = notifier.buildSorting([5, 3, 8, 1, 9, 2, 7, 4, 6]);
+    final emittedRoles = result.steps.expand((s) => s.marks.map((m) => m.role)).toSet();
+    expect(emittedRoles.difference(notifier.roles), isEmpty);
   });
 
   group(
