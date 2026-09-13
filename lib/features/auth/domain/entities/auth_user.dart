@@ -43,12 +43,8 @@ class AuthUser {
           id == other.id &&
           name == other.name &&
           email == other.email &&
-          token == other.token ;
+          token == other.token;
 
   @override
-  int get hashCode =>
-      id.hashCode ^
-      name.hashCode ^
-      email.hashCode ^
-      (token?.hashCode ?? 0);
+  int get hashCode => id.hashCode ^ name.hashCode ^ email.hashCode ^ (token?.hashCode ?? 0);
 }
