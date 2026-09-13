@@ -10,6 +10,7 @@ import 'package:algorithm_visualizer/core/widgets/custom_widgets/complexity_deta
 import 'package:algorithm_visualizer/features/base/view_model/base_view_model.dart';
 import 'package:algorithm_visualizer/features/visualize/helper/playback_speed.dart';
 import 'package:algorithm_visualizer/features/visualize/sub_view/sorting/view_model/sorting_notifier.dart';
+import 'package:algorithm_visualizer/features/visualize/sub_view/sorting/widgets/sorting_legend.dart';
 import 'package:algorithm_visualizer/features/visualize/widgets/grid_squares_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -18,7 +19,11 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 part '../widgets/control_buttons.dart';
 
 class SortingView extends ConsumerStatefulWidget {
-  const SortingView({this.card = SortingAlgoCards.bubble, required this.onAlgoChanged, super.key});
+  const SortingView({
+    this.card = SortingAlgoCards.bubble,
+    required this.onAlgoChanged,
+    super.key,
+  });
   final SortingAlgoCards card;
   final void Function(String title, String description) onAlgoChanged;
   @override
@@ -96,6 +101,15 @@ class _SortingPageState extends ConsumerState<SortingView> {
           sliver: SliverToBoxAdapter(child: ComplexityDetails(complexity: complexity)),
         ),
         SliverToBoxAdapter(child: ShowUpSortingList(instance)),
+        SliverPadding(
+          padding: REdgeInsetsDirectional.only(top: 10),
+          sliver: SliverToBoxAdapter(
+            child: SortingLegend(
+              roles: ref.read(instance.notifier).roles,
+              pointerHints: ref.read(instance.notifier).pointerHints,
+            ),
+          ),
+        ),
         SliverPadding(
           padding: REdgeInsetsDirectional.only(top: 10),
           sliver: SliverToBoxAdapter(child: _StatusText(instance)),
@@ -198,8 +212,7 @@ class _StatusText extends ConsumerWidget {
     return AlgorithmStatusText(
       progressLabel: label,
       progressValue: progress,
-      statusText: inst.statusText(
-          previousStep: ref.read(instance).previousStep, currentStep: currentStep, list: list),
+      statusText: inst.statusText(currentStep: currentStep, list: list),
     );
   }
 }
@@ -279,14 +292,12 @@ class _ShowUpSortingListState extends ConsumerState<ShowUpSortingList> {
                       const RSizedBox(height: 4),
                       Consumer(
                         builder: (context, ref, _) {
-                          final status = ref.watch(widget.instance.select((s) =>
-                              index < s.list.length ? s.list[index].sortedStatus : SortingStatus.none));
+                          final role = ref.watch(widget.instance.select(
+                              (s) => index < s.rolePerIndex.length ? s.rolePerIndex[index] : SortRole.idle));
                           return MediumText(
                             '$index',
                             fontSize: 10,
-                            color: status == SortingStatus.compared
-                                ? ThemeEnum.comparing
-                                : ThemeEnum.textDisabled,
+                            color: role == SortRole.compare ? ThemeEnum.comparing : ThemeEnum.textDisabled,
                           );
                         },
                       ),
@@ -321,33 +332,26 @@ class _BuildItem extends ConsumerWidget {
   final bool isLastItem;
   @override
   Widget build(BuildContext context, ref) {
-    final currentItem =
-        ref.watch(instance.select((state) => index < state.list.length ? state.list[index] : null));
+    final role = ref.watch(
+        instance.select((state) => index < state.rolePerIndex.length ? state.rolePerIndex[index] : null));
     final (actualHeight, writtenHeight) =
         SortingNotifier.calculateItemHeight(item.value, size, selectedAlgorithmLength);
-    final fill = currentItem?.getColor ?? SortingNotifier.itemColor;
+    final resolvedRole = role ?? SortRole.idle;
+    final fill = roleColor(resolvedRole);
 
-    // Value labels: text primary above a white bar (compared/held), success
-    // when locked in, text secondary otherwise (per PROMPT_QUIET.md Step 6).
-    final labelColor = context.getColor(switch (currentItem?.sortedStatus ?? SortingStatus.none) {
-      SortingStatus.compared || SortingStatus.temporary => ThemeEnum.textPrimary,
-      SortingStatus.sorted => ThemeEnum.difficultyEasy,
-      SortingStatus.swapping || SortingStatus.none => ThemeEnum.textSecond,
+    final labelColor = context.getColor(switch (resolvedRole) {
+      SortRole.compare => ThemeEnum.textPrimary,
+      SortRole.sorted => ThemeEnum.difficultyEasy,
+      _ => ThemeEnum.textSecond,
     });
 
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        // Fixed-height label row: the value/max fraction below always
-        // resolves against the bar's own track height alone, never against
-        // label + gap + bar (FR-015) — a column can't overflow the label
-        // into the bar's allotted box.
-        SizedBox(
-          height: 14.h,
+        RSizedBox(
+          height: 14,
           child: Center(
             child: AnimatedDefaultTextStyle(
-              // Label + colour react fast (180ms); the bar's geometry eases at
-              // 240ms — the split keeps the number legible while the bar resizes.
               duration: CdMotion.barColour,
               style: GetMediumStyle(fontSize: 10, color: labelColor),
               child: Text(writtenHeight),
@@ -355,8 +359,6 @@ class _BuildItem extends ConsumerWidget {
           ),
         ),
         const RSizedBox(height: 4),
-        // Colour and height carry all meaning — no shadow, glow, gradient, or
-        // opacity on the bar.
         QuietBar(width: itemWidth, height: actualHeight, fill: fill),
       ],
     );
