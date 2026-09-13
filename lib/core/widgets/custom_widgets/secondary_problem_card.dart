@@ -15,7 +15,7 @@ class SecondaryProblemCard extends StatefulWidget {
     required this.subTitle,
     required this.leading,
     required this.onTap,
-     this.onLongTap,
+    this.onLongTap,
     required this.isSolved,
     required this.problemName,
     required this.problemId,
