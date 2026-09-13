@@ -24,8 +24,7 @@ class ProfileHeatmap extends StatelessWidget {
           const RSizedBox(height: 10),
           Consumer(
             builder: (context, ref, child) {
-              final heatmapData =
-                  ref.watch(profileStatisticsProvider.select((value) => value.heatmapData));
+              final heatmapData = ref.watch(profileStatisticsProvider.select((value) => value.heatmapData));
 
               return HeatGrid(dailyCounts: heatmapData);
             },
