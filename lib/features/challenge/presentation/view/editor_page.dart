@@ -183,7 +183,8 @@ class _EditorContent extends ConsumerWidget {
                 );
               },
             ),
-             SliverToBoxAdapter(child: RSizedBox(height:MediaQuery.of(context).viewInsets.bottom+ CdSpace.ctaReserve)),
+            SliverToBoxAdapter(
+                child: RSizedBox(height: MediaQuery.of(context).viewInsets.bottom + CdSpace.ctaReserve)),
           ],
         ),
         Positioned(
