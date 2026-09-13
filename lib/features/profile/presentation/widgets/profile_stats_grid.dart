@@ -18,13 +18,15 @@ class ProfileStatsGrid extends ConsumerWidget {
     final solvedSub = '${stats.easySolved}E · ${stats.mediumSolved}M · ${stats.hardSolved}H';
     final streakSub = '${StringsManager.best} ${stats.bestStreak} ${StringsManager.days}';
     final accuracySub = '${(stats.accuracyRate * 100).toStringAsFixed(0)}%';
-    final bookmarkSub = '${stats.bookmarkedCount} ${stats.bookmarkedCount>1?StringsManager.problems:StringsManager.problem}';
+    final bookmarkSub =
+        '${stats.bookmarkedCount} ${stats.bookmarkedCount > 1 ? StringsManager.problems : StringsManager.problem}';
 
     final statsList = [
       (
         icon: Icons.check_circle_outline_rounded,
         value: '${stats.solvedCount}',
-        label: "${stats.solvedCount>1?StringsManager.problems:StringsManager.problem}\n${StringsManager.solved}",
+        label:
+            "${stats.solvedCount > 1 ? StringsManager.problems : StringsManager.problem}\n${StringsManager.solved}",
         sub: solvedSub
       ),
       (
@@ -33,12 +35,7 @@ class ProfileStatsGrid extends ConsumerWidget {
         label: StringsManager.dayStreak,
         sub: streakSub
       ),
-      (
-        icon: Icons.gps_fixed_rounded,
-        value: accuracySub,
-        label: StringsManager.accuracyRate,
-        sub: ''
-      ),
+      (icon: Icons.gps_fixed_rounded, value: accuracySub, label: StringsManager.accuracyRate, sub: ''),
       (
         icon: Icons.bookmark_outline_rounded,
         value: '${stats.bookmarkedCount}',
