@@ -4,66 +4,47 @@ import 'package:algorithm_visualizer/features/visualize/sub_view/sorting/view_mo
 import 'package:collection/collection.dart';
 
 class SelectionSortNotifier extends SortingNotifier {
-
+  @override
+  Set<SortRole> get roles =>
+      const {SortRole.sorted, SortRole.minimum, SortRole.compare, SortRole.target, SortRole.swap};
 
   @override
-  String statusText({
-    required SortingStep? previousStep,
-    required SortingStep? currentStep,
-    required List<SortableItem> list,
-  }) {
-    final text = super.statusText(previousStep: previousStep, currentStep: currentStep, list: list);
-    if (currentStep == null) return text;
-    final action = currentStep.action;
-
-    if ((action == SortingStatus.swapping || action == SortingStatus.compared)) {
-      final minValue = getWrittenHeight(list[currentStep.index1].value);
-      return "${StringsManager.minValue}: $minValue \n$text";
-    }
-
-    if (action == SortingStatus.temporary) {
-      final minValue = getWrittenHeight(list[currentStep.index1].value);
-
-      final previousText =
-          super.statusText(previousStep: previousStep, currentStep: previousStep, list: list);
-      return "${StringsManager.minValue}: $minValue \n$previousText";
-    }
-
-    if (action == SortingStatus.sorted) {
-      final minValue = getWrittenHeight(list[currentStep.index1].value);
-      return "arr[${currentStep.index1}] = $minValue ${StringsManager.sortedNow}";
-    }
-
-    return text;
-  }
+  Map<SortRole, String> get pointerHints => const {
+        SortRole.compare: StringsManager.pointerHintJ,
+        SortRole.target: StringsManager.pointerHintI,
+      };
 
   @override
   SortingResult buildSorting(List<int> values) {
-    final steps = <SortingStep>[];
     final arr = List<int>.from(values);
+    final ctx = RoleContext(roles);
 
+    // `sorted` is never marked mid-run here — only the final completion
+    // sweep paints green, once every bar is truly done moving.
     for (int i = 0; i < arr.length - 1; i++) {
       int minIndex = i;
-      steps.add(SortingStep(index1: minIndex, index2: minIndex, action: SortingStatus.temporary));
+      ctx.hold(SortRole.target, i);
+      ctx.hold(SortRole.minimum, minIndex);
 
       for (int j = i + 1; j < arr.length; j++) {
-        steps.add(SortingStep(index1: minIndex, index2: j, action: SortingStatus.compared));
+        ctx.emit(StepKind.compare, minIndex, j);
 
         if (arr[j] < arr[minIndex]) {
           minIndex = j;
-          steps.add(SortingStep(index1: minIndex, index2: minIndex, action: SortingStatus.temporary));
+          ctx.hold(SortRole.minimum, minIndex);
         }
       }
 
       if (minIndex != i) {
-        steps.add(SortingStep(index1: i, index2: minIndex, action: SortingStatus.swapping));
-
         arr.swap(minIndex, i);
+        ctx.emit(StepKind.swap, i, minIndex);
       }
-      steps.add(SortingStep(index1: i, index2: i, action: SortingStatus.sorted));
+
+      ctx.release(SortRole.minimum);
+      ctx.release(SortRole.target);
     }
 
-    return SortingResult(sortedValues: arr, steps: steps);
+    return SortingResult(sortedValues: arr, steps: ctx.steps);
   }
 
   static final algorithmComplexity = AlgorithmComplexity(
@@ -101,10 +82,9 @@ class SelectionSortNotifier extends SortingNotifier {
       ];
 
   @override
-  int codeLineForStep(SortingStep step) => switch (step.action) {
-        SortingStatus.compared => 5, // arr[j] < arr[minIndex]
-        SortingStatus.swapping => 11, // arr[i] = arr[minIndex]
-        SortingStatus.none => 4, // advance inner loop
-        _ => -1,
+  int codeLineForStep(SortStep step) => switch (step.kind) {
+        StepKind.compare => 5, // arr[j] < arr[minIndex]
+        StepKind.swap => 11, // arr[i] = arr[minIndex]
+        StepKind.write => -1, // selection sort never writes
       };
 }

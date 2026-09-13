@@ -119,7 +119,6 @@ class _MainRow extends StatelessWidget {
             const RSizedBox(width: 6),
             Expanded(child: BoldText(problem.getName, color: ThemeEnum.textBody, fontSize: 13)),
             const RSizedBox(width: 4),
-
             BoldText(problem.getDifficulty.difficultyString, color: diffColor, fontSize: 11),
             const RSizedBox(width: 4),
             AnimatedRotation(

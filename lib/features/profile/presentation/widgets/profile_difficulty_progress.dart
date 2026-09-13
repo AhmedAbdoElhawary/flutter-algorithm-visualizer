@@ -22,19 +22,19 @@ class ProfileDifficultyProgress extends ConsumerWidget {
         label: StringsManager.easy,
         solved: stats.easySolved,
         total: stats.easyTotal,
-      color: ThemeEnum.accentGreen
+        color: ThemeEnum.accentGreen
       ),
       (
         label: StringsManager.medium,
         solved: stats.mediumSolved,
         total: stats.mediumTotal,
-      color: ThemeEnum.accentYellow
+        color: ThemeEnum.accentYellow
       ),
       (
         label: StringsManager.hard,
         solved: stats.hardSolved,
         total: stats.hardTotal,
-      color: ThemeEnum.accentRed
+        color: ThemeEnum.accentRed
       ),
     ];
     return HorizontalPadding(

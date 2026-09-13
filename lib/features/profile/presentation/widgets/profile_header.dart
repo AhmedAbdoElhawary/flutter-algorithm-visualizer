@@ -21,7 +21,7 @@ class ProfileHeader extends StatelessWidget {
     return OnlyPadding(
       startPadding: 16,
       endPadding: 16,
-      topPadding: context.isAndroid ? kAndroidTopPageSpacing*1.5 : kIOSTopPageSpacing,
+      topPadding: context.isAndroid ? kAndroidTopPageSpacing * 1.5 : kIOSTopPageSpacing,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

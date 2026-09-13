@@ -16,8 +16,7 @@ Map<String, dynamic> _$TestCaseToJson(TestCase instance) => <String, dynamic>{
       'expected_output': instance.expectedOutput,
     };
 
-TestCaseResult _$TestCaseResultFromJson(Map<String, dynamic> json) =>
-    TestCaseResult(
+TestCaseResult _$TestCaseResultFromJson(Map<String, dynamic> json) => TestCaseResult(
       input: json['input'] as String?,
       expectedOutput: json['expected_output'] as String?,
       actualOutput: json['actual_output'] as String,
@@ -25,8 +24,7 @@ TestCaseResult _$TestCaseResultFromJson(Map<String, dynamic> json) =>
       errorMessage: json['error_message'] as String?,
     );
 
-Map<String, dynamic> _$TestCaseResultToJson(TestCaseResult instance) =>
-    <String, dynamic>{
+Map<String, dynamic> _$TestCaseResultToJson(TestCaseResult instance) => <String, dynamic>{
       'input': instance.input,
       'expected_output': instance.expectedOutput,
       'actual_output': instance.actualOutput,

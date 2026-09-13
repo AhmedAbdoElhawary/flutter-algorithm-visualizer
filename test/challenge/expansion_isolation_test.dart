@@ -16,8 +16,7 @@ import 'support/problem_page_test_support.dart';
 void main() {
   testWidgets(
       'expanding a page-scoped row (Similar tab shape) does not collapse or expand a '
-      'challengesProvider-backed row (Practice list shape) with the same id (FR-022, C2.5d)',
-      (tester) async {
+      'challengesProvider-backed row (Practice list shape) with the same id (FR-022, C2.5d)', (tester) async {
     final problem = buildTestProblem(problemId: 5, name: 'Shared Problem');
     late ProviderContainer container;
     var localExpanded = false;
@@ -28,7 +27,9 @@ void main() {
 
     await tester.pumpWidget(
       ProviderScope(
-        overrides: [problemsProvider.overrideWithBuild((ref, notifier) => AsyncValue.data([problem]))],
+        overrides: [
+          problemsProvider.overrideWithBuild((ref, notifier) => AsyncValue.data([problem]))
+        ],
         child: Consumer(
           builder: (context, ref, _) {
             container = ProviderScope.containerOf(context);

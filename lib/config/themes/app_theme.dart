@@ -9,9 +9,7 @@ class AppTheme {
   /// IBM Plex Sans Arabic, loaded at runtime by google_fonts. One family for
   /// both scripts; mono is opt-in per style and never the default.
   static TextTheme _uiTextTheme(Brightness brightness) {
-    final base = brightness == Brightness.dark
-        ? ThemeData.dark().textTheme
-        : ThemeData.light().textTheme;
+    final base = brightness == Brightness.dark ? ThemeData.dark().textTheme : ThemeData.light().textTheme;
     return GoogleFonts.ibmPlexSansArabicTextTheme(base);
   }
 

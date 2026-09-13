@@ -34,8 +34,7 @@ class CodeEditorState {
     return CodeEditorState(
       isRunning: isRunning ?? this.isRunning,
       copied: copied ?? this.copied,
-      highlightedLine:
-          identical(highlightedLine, _unset) ? this.highlightedLine : highlightedLine as int?,
+      highlightedLine: identical(highlightedLine, _unset) ? this.highlightedLine : highlightedLine as int?,
       grade: identical(grade, _unset) ? this.grade : grade as CodeGradeResult?,
     );
   }

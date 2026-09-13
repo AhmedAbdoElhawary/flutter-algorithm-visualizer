@@ -7,6 +7,7 @@ extension StringX on String {
       (match) => '${match.group(1)}_${match.group(2)}',
     ).toLowerCase();
   }
+
   String get getNameWithLanguageName {
     final snakeCase = toSnakeCase.replaceAll(RegExp(r'\s+'), '_').toLowerCase();
     final parts = snakeCase.split('_');

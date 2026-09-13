@@ -1,8 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 
 class FirebaseExceptions {
-
- static Exception handleFirebaseAuthException(FirebaseAuthException e) {
+  static Exception handleFirebaseAuthException(FirebaseAuthException e) {
     switch (e.code) {
       case 'user-not-found':
       case 'invalid-email':

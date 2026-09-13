@@ -52,8 +52,7 @@ void main() {
     expect(afterRunCard.highlightedLine == null || afterRunCard.highlightedLine == -1, isTrue);
   });
 
-  testWidgets('the test case card is absent before the first run and present after (FR-023)',
-      (tester) async {
+  testWidgets('the test case card is absent before the first run and present after (FR-023)', (tester) async {
     await pumpEditorPage(tester, problem: buildGradableTestProblem(code: gradableWrongCode));
 
     expect(find.byType(EditorTestCaseCard), findsNothing);
