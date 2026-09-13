@@ -107,7 +107,7 @@ class AStarSearchingNotifier extends SearchingNotifier {
       ];
 
   @override
-  int codeLineForStep(SortingStep step) {
+  int codeLineForStep(SortStep step) {
     final pfStep = step as PFStep;
     final desc = pfStep.statusText;
 
