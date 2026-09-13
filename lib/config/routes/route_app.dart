@@ -8,6 +8,7 @@ import 'package:algorithm_visualizer/features/base/view/base_navigation.dart';
 import 'package:algorithm_visualizer/features/base/view_model/base_view_model.dart';
 import 'package:algorithm_visualizer/features/challenge/presentation/view/celebration_page.dart';
 import 'package:algorithm_visualizer/features/challenge/presentation/view/challenge_page.dart';
+import 'package:algorithm_visualizer/features/challenge/presentation/view/editor_page.dart';
 import 'package:algorithm_visualizer/features/challenge/presentation/view/problem_page.dart';
 import 'package:algorithm_visualizer/features/home/view/home_page.dart';
 import 'package:algorithm_visualizer/features/profile/presentation/view/profile_page.dart';
@@ -69,6 +70,16 @@ class Routes {
     name: 'subProblem',
     path: 'sub',
     queryParamsName: "problem_id",
+  );
+  static const RouteConfig editor = RouteConfig(
+    name: 'editor',
+    path: 'editor',
+    queryParamsName: 'problem_id',
+  );
+  static const RouteConfig subEditor = RouteConfig(
+    name: 'subEditor',
+    path: 'editor',
+    queryParamsName: 'problem_id',
   );
   static const RouteConfig celebration = RouteConfig(
     name: 'celebration',
@@ -196,6 +207,24 @@ class AppRoutes {
                     builder: (context, state) {
                       final id = int.tryParse(state.uri.queryParameters["problem_id"] ?? "") ?? -1;
                       return ProblemPage(problemId: id);
+                    },
+                    routes: [
+                      GoRoute(
+                        path: Routes.subEditor.path,
+                        name: Routes.subEditor.name,
+                        builder: (context, state) {
+                          final id = int.tryParse(state.uri.queryParameters["problem_id"] ?? "") ?? -1;
+                          return EditorPage(problemId: id);
+                        },
+                      ),
+                    ],
+                  ),
+                  GoRoute(
+                    path: Routes.editor.path,
+                    name: Routes.editor.name,
+                    builder: (context, state) {
+                      final id = int.tryParse(state.uri.queryParameters["problem_id"] ?? "") ?? -1;
+                      return EditorPage(problemId: id);
                     },
                   ),
                 ],
