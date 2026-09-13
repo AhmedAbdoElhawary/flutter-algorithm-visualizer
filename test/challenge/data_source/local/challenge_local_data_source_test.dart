@@ -214,7 +214,7 @@ void main() {
         final problem = _createProblem(problemId: 1);
 
         await dataSource.saveProblem(problem);
-await dataSource.saveProblem(problem);
+        await dataSource.saveProblem(problem);
         await expectLater(
           dataSource.getProblems(),
           [problem],
@@ -378,10 +378,7 @@ await dataSource.saveProblem(problem);
 
         expect(
           dataSource.getProblems(),
-          [
-            first,
-            third
-          ],
+          [first, third],
         );
       });
 
