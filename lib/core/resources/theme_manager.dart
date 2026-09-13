@@ -85,6 +85,11 @@ enum ThemeEnum {
   codeNumber,
   codeComment,
 
+  /// Editor screen's **Reset** button border — `borderStrong` carries a
+  /// different hex on other screens (color_manager.dart cdBorderStrongDk),
+  /// so this stays a separate role rather than repointing it (research R2).
+  editorResetBorder,
+
   /// Activity heat ramp (low → high) — five steps
   heat0,
   heat1,
@@ -192,15 +197,16 @@ extension ThemeExtension on BuildContext {
       ThemeEnum.barDone: _pick(ColorManager.cdBarDoneDk, ColorManager.cdBarDoneLt),
       ThemeEnum.comparing: _pick(ColorManager.cdComparingDk, ColorManager.cdComparingLt),
 
-      ThemeEnum.codeBg: _pick(ColorManager.cdBgRaisedDk, ColorManager.cdBgRaisedLt),
-      ThemeEnum.codeGutter: _pick(ColorManager.cdCodeGutterDk, ColorManager.cdCodeGutterLt),
-      ThemeEnum.codeLine: _pick(ColorManager.cdCodeLineDk, ColorManager.cdCodeLineLt),
+      ThemeEnum.codeBg: _pick(ColorManager.cdEditorCodeBgDk, ColorManager.cdEditorCodeBgLt),
+      ThemeEnum.codeGutter: _pick(ColorManager.cdEditorCodeMutedDk, ColorManager.cdEditorCodeMutedLt),
+      ThemeEnum.codeLine: _pick(ColorManager.cdEditorCodeLineDk, ColorManager.cdEditorCodeLineLt),
       ThemeEnum.codeKeyword: _pick(ColorManager.cdCodeKeywordDk, ColorManager.cdCodeKeywordLt),
       ThemeEnum.codeType: _pick(ColorManager.cdCodeTypeDk, ColorManager.cdCodeTypeLt),
       ThemeEnum.codePlain: _pick(ColorManager.cdTextBodyDk, ColorManager.cdTextBodyLt),
       ThemeEnum.codePunct: _pick(ColorManager.cdCodePunctDk, ColorManager.cdCodePunctLt),
       ThemeEnum.codeNumber: _pick(ColorManager.cdCodeNumberDk, ColorManager.cdCodeNumberLt),
-      ThemeEnum.codeComment: _pick(ColorManager.cdTextDisabledDk, ColorManager.cdTextDisabledLt),
+      ThemeEnum.codeComment: _pick(ColorManager.cdEditorCodeMutedDk, ColorManager.cdEditorCodeMutedLt),
+      ThemeEnum.editorResetBorder: _pick(ColorManager.cdEditorResetBorderDk, ColorManager.cdEditorResetBorderLt),
 
       ThemeEnum.heat0: _pick(ColorManager.cdHeatDk[0], ColorManager.cdHeatLt[0]),
       ThemeEnum.heat1: _pick(ColorManager.cdHeatDk[1], ColorManager.cdHeatLt[1]),
