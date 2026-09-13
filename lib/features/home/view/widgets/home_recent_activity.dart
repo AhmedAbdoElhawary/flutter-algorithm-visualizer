@@ -51,7 +51,7 @@ class _ActivityTile extends StatelessWidget {
 
     final timeAgo = _formatTimeAgo(item.submittedAt);
 
-    final quietDifficulty =item.difficulty;
+    final quietDifficulty = item.difficulty;
 
     return GestureDetector(
       onTap: () => context.pushTo(Routes.problem, queryParameters: '${item.problemId}'),
