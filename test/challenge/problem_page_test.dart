@@ -41,7 +41,8 @@ void main() {
     expect(activeController(tester).index, 0);
   });
 
-  testWidgets('the pinned CTA stays visible and hit-testable across tabs and at a deep scroll offset (FR-014)',
+  testWidgets(
+      'the pinned CTA stays visible and hit-testable across tabs and at a deep scroll offset (FR-014)',
       (tester) async {
     final problem = buildTestProblem(description: buildLongDescription(), hints: const ['h1']);
     await pumpProblemPage(tester, problem: problem);
@@ -75,7 +76,8 @@ void main() {
     expect(find.byType(DifficultyChip), findsOneWidget);
   });
 
-  testWidgets('a problem with no hints shows the T039 message, not the word "Hints" (FR-015)', (tester) async {
+  testWidgets('a problem with no hints shows the T039 message, not the word "Hints" (FR-015)',
+      (tester) async {
     final problem = buildTestProblem(hints: const []);
     await pumpProblemPage(tester, problem: problem);
 
