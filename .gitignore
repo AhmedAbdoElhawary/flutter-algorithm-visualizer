@@ -99,3 +99,4 @@ app.*.map.json
 
 /specs/
 /docs/
+/.specify/
