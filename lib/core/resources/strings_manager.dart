@@ -350,6 +350,12 @@ class StringsManager {
   static const String continueToLogin = "Log In Anyway";
   static const String guestAccountTitle = "Log In or Sign Up";
   static const String guestAccountDesc = "Save your progress and sync it across your devices.";
+
+  // Editor screen (Aurora screen 04)
+  static const String runAndSubmit = "▸ Run & submit";
+  static const String testCases = "TEST CASES";
+  static const String gotPrefix = "→ got ";
+  static String passedOfTotal(int passed, int total) => '$passed / $total passed';
 }
 
 
