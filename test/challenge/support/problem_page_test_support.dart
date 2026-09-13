@@ -121,8 +121,8 @@ CodingProblem buildGradableTestProblem({
 
 /// A long description forces the Problem tab to overflow the viewport, so
 /// header-collapse tests have something to scroll past.
-String buildLongDescription() => List.generate(60, (i) => 'Line $i of a very long problem description.')
-    .join('\n');
+String buildLongDescription() =>
+    List.generate(60, (i) => 'Line $i of a very long problem description.').join('\n');
 
 /// Pumps [ProblemPage] behind a minimal [GoRouter] (`CustomBackButton` reads
 /// `context.canPop()`, which needs a real `GoRouter` ancestor) and a fixed
