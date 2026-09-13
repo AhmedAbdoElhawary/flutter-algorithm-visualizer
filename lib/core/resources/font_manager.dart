@@ -22,5 +22,4 @@ class FontWeightManager {
   static const FontWeight bold = FontWeight.w700;
   static const FontWeight bold800 = FontWeight.w800;
   static const FontWeight bold900 = FontWeight.w900;
-
 }
