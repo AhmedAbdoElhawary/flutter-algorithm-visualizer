@@ -31,7 +31,7 @@ class ProblemStorageDTO {
 
   @override
   int get hashCode {
-    return Object.hash(problemId, problemStatus?.name, isBookmarked,solutionsStatus);
+    return Object.hash(problemId, problemStatus?.name, isBookmarked, solutionsStatus);
   }
 }
 
