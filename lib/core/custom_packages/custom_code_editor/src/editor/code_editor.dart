@@ -221,25 +221,28 @@ class _CodeEditorState extends State<CodeEditor> {
       ),
       child: Row(
         children: <Widget>[
-          LineNumbers(
-            numbersPadding: _numbersPadding,
-            borderRadius: borderRadius == null
-                ? null
-                : borderRadius.bottomStart != Radius.zero && borderRadius.topStart != Radius.zero
-                    ? BorderRadiusDirectional.only(
-                        bottomStart: borderRadius.bottomStart, topStart: borderRadius.topStart)
-                    : borderRadius.bottomStart != Radius.zero
-                        ? BorderRadiusDirectional.only(bottomStart: borderRadius.bottomStart)
-                        : borderRadius.topStart != Radius.zero
-                            ? BorderRadiusDirectional.only(topStart: borderRadius.topStart)
-                            : null,
-            lineCount: _lineCount,
-            theme: theme,
-            scrollController: _mirrorScrollController(),
-            lineHeight: lineHeight,
-            activeLine: _activeLine,
-            errorLine: _errorLine,
-            highlightedLines: widget.controller.highlightedLines,
+          Padding(
+            padding: REdgeInsetsDirectional.only(start: 22, end: 2),
+            child: LineNumbers(
+              numbersPadding: _numbersPadding,
+              borderRadius: borderRadius == null
+                  ? null
+                  : borderRadius.bottomStart != Radius.zero && borderRadius.topStart != Radius.zero
+                      ? BorderRadiusDirectional.only(
+                          bottomStart: borderRadius.bottomStart, topStart: borderRadius.topStart)
+                      : borderRadius.bottomStart != Radius.zero
+                          ? BorderRadiusDirectional.only(bottomStart: borderRadius.bottomStart)
+                          : borderRadius.topStart != Radius.zero
+                              ? BorderRadiusDirectional.only(topStart: borderRadius.topStart)
+                              : null,
+              lineCount: _lineCount,
+              theme: theme,
+              scrollController: _mirrorScrollController(),
+              lineHeight: lineHeight,
+              activeLine: _activeLine,
+              errorLine: _errorLine,
+              highlightedLines: widget.controller.highlightedLines,
+            ),
           ),
           Expanded(
             child: ClipRRect(
