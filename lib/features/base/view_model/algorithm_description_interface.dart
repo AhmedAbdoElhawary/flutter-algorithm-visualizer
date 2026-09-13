@@ -8,7 +8,7 @@ abstract class AlgorithmDescriptionNotifier {
 
   List<String> get codeSnippet;
 
-  int codeLineForStep(SortingStep step);
+  int codeLineForStep(SortStep step);
 }
 
 extension AlgorithmNotifierExt on AlgorithmDescriptionNotifier {
