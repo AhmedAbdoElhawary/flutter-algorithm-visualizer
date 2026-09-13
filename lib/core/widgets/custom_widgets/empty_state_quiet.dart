@@ -3,7 +3,6 @@ import 'package:algorithm_visualizer/core/widgets/adaptive/text/adaptive_text.da
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-
 class EmptyStateQuiet extends StatelessWidget {
   final String title;
   final String? caption;
