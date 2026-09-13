@@ -73,6 +73,37 @@ class StringsManager {
   static const String arrayFullySorted = "✓ Array fully sorted!";
   static const String swapPositions = "Swap positions";
   static const String compare = "Compare";
+  static const String fromRun = "from";
+  static const String intoPosition = "into position";
+
+  /// Role-catalogue labels (FR-017) — one constant per [SortRole], shared
+  /// verbatim between the legend and the status text (C2.2, FR-040).
+  /// [roleCompare] aliases the existing [compare] constant rather than
+  /// duplicating its text (C14).
+  static const String roleCompare = compare;
+  static const String roleSwap = "Swap";
+  static const String roleWrite = "Write";
+  static const String roleSorted = "Sorted";
+  static const String roleMinimum = "Minimum";
+  static const String roleHeldValue = "Held value";
+  static const String rolePivot = "Pivot";
+  static const String roleRightRun = "Right run";
+  static const String roleTarget = "Target";
+  static const String roleBoundary = "Boundary";
+  static const String roleLeftRun = "Left run";
+  static const String base = "Base";
+
+  /// Anchor-context status-line prefixes (FR-041), keyed by role rather than
+  /// by algorithm (C13, research Decision 6). [pivotPrefix] aliases
+  /// [rolePivot] rather than duplicating its text (C14) — "Pivot" reads the
+  /// same whether it names the role or prefixes the line.
+  static const String minPrefix = "Min";
+  static const String pivotPrefix = rolePivot;
+  static const String heldPrefix = "Held";
+
+  /// Per-algorithm pointer hints appended to a shared legend label (FR-007).
+  static const String pointerHintI = "(i)";
+  static const String pointerHintJ = "(j)";
 
   static const String stop = "Stop";
   static const String play = "Play";
@@ -219,8 +250,6 @@ class StringsManager {
   static const String attempts = "Attempts";
   static const String continueLabel = "Continue Learning";
   static const String anonymous = "Anonymous";
-  static const String minValue = "Min Value";
-  static const String sortedNow = "Sorted now";
   static const String submissions = "Submissions";
   static const String submission = "Submission";
 
@@ -269,7 +298,8 @@ class StringsManager {
 
   static const String accountRecovery = "ACCOUNT RECOVERY";
   static const String forgotPasswordTitle = "Reset your password";
-  static const String forgotPasswordSubtitle = "Enter the email on your account and we will send a six-digit code.";
+  static const String forgotPasswordSubtitle =
+      "Enter the email on your account and we will send a six-digit code.";
   static const String registeredEmail = "Registered email";
   static const String recoveryEmailNote = "We'll send a 6-digit verification code to this inbox.";
   static const String codeExpiryNote = "The code expires after 10 minutes.";
@@ -322,7 +352,8 @@ class StringsManager {
   // Logout
   static const String logout = "Log Out";
   static const String logoutConfirmTitle = "Log out of your account?";
-  static const String logoutConfirmDesc = "You can sign back in anytime to continue your algorithmic journey.";
+  static const String logoutConfirmDesc =
+      "You can sign back in anytime to continue your algorithmic journey.";
   static const String yesLogout = "Log Out";
   static const String notValidName = "Please enter a valid name";
 
@@ -357,5 +388,3 @@ class StringsManager {
   static const String gotPrefix = "→ got ";
   static String passedOfTotal(int passed, int total) => '$passed / $total passed';
 }
-
-
