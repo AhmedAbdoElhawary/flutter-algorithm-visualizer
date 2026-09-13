@@ -77,6 +77,7 @@ class CodeEditorTheme {
   factory CodeEditorTheme.dark() {
     const Color fg = Color(0xFFD4D4D4);
     return const CodeEditorTheme(
+      borderRadius: BorderRadiusDirectional.all(Radius.circular(15)),
       background: Color(0xFF1E1E1E),
       caretColor: Color(0xFFAEAFAD),
       selectionColor: Color(0x554B6EAF),
