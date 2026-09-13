@@ -54,8 +54,7 @@ class _AnimatedPopupOverlay extends StatefulWidget {
   State<_AnimatedPopupOverlay> createState() => _AnimatedPopupOverlayState();
 }
 
-class _AnimatedPopupOverlayState extends State<_AnimatedPopupOverlay>
-    with SingleTickerProviderStateMixin {
+class _AnimatedPopupOverlayState extends State<_AnimatedPopupOverlay> with SingleTickerProviderStateMixin {
   late final AnimationController _controller = AnimationController(
     vsync: this,
     duration: const Duration(milliseconds: 280),
