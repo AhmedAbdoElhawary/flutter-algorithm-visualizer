@@ -29,11 +29,10 @@ class _ForgotPasswordPageState extends ConsumerState<ForgotPasswordPage> {
     super.dispose();
   }
 
-  void _onSendCode() async {
+  void _onSendLink() async {
     final success = await ref.read(authForgotPasswordProvider.notifier).forgotPassword();
     if (success && mounted) {
-      /// TODO: create info page
-      // context.push(Routes.resetPassword.path);
+      context.push(Routes.confirmationPassword.path);
     }
   }
 
@@ -41,6 +40,8 @@ class _ForgotPasswordPageState extends ConsumerState<ForgotPasswordPage> {
   Widget build(BuildContext context) {
     final isLoading = ref.watch(authForgotPasswordProvider.select((s) => s.isLoading));
     final emailError = ref.watch(authForgotPasswordProvider.select((s) => s.emailError));
+    final canResend = ref.watch(authForgotPasswordProvider.select((s) => s.canResend));
+    final resendCountdown = ref.watch(authForgotPasswordProvider.select((s) => s.resendCountdown));
 
     ref.listen(
       authForgotPasswordProvider.select((s) => s.errorMessage),
@@ -76,13 +77,13 @@ class _ForgotPasswordPageState extends ConsumerState<ForgotPasswordPage> {
           helperText: StringsManager.codeExpiryNote,
           errorText: emailError,
           onChanged: (v) => ref.read(authForgotPasswordProvider.notifier).setEmail(v),
-          onSubmitted: (_) => _onSendCode(),
+          onSubmitted: (_) => _onSendLink(),
         ),
-        SizedBox(height: CdSpace.x6.h),
+        SizedBox(height: CdSpace.x16.h),
         PrimaryButtonQuiet(
-          label: StringsManager.sendCode,
+          label: canResend ? StringsManager.sendLink : "${StringsManager.sendLink} (${resendCountdown}s)",
           loading: isLoading,
-          onPressed: _onSendCode,
+          onPressed: canResend ? _onSendLink : null,
         ),
         SizedBox(height: CdSpace.x6.h),
         const AuthReturnLink(StringsManager.returnToSignIn),
