@@ -1,6 +1,7 @@
 import 'package:algorithm_visualizer/config/routes/route_app.dart';
 import 'package:algorithm_visualizer/core/resources/dimensions_manager.dart';
 import 'package:algorithm_visualizer/core/resources/strings_manager.dart';
+import 'package:algorithm_visualizer/core/widgets/custom_widgets/custom_back_button.dart';
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/custom_snack_bar.dart';
 import 'package:algorithm_visualizer/features/auth/presentation/common/view_model/auth_providers.dart';
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/primary_button_quiet.dart';
@@ -84,7 +85,13 @@ class _SignUpPageState extends ConsumerState<SignUpPage> {
     return AuthScaffold(
       topInset: CdSpace.x6,
       children: [
-        const AuthTitle(StringsManager.createAccount),
+        const Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            CustomBackButton(),
+            AuthTitle(StringsManager.createAccount),
+          ],
+        ),
         SizedBox(height: CdSpace.x2.h),
         const AuthSubtitle(StringsManager.signUpSubtitle),
         SizedBox(height: CdSpace.x6.h),
