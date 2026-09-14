@@ -26,8 +26,8 @@ class AlgoTab extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return CardContainer(
       padding: REdgeInsets.symmetric(vertical: 8),
-      radius: CdRadius.medium,
-      surface: isSelected ? CdSurface.secondary : CdSurface.recessed,
+      radius: CdRadius.sm,
+      surface: isSelected ? CdSurface.secondary : CdSurface.unColoredFill,
       child: Padding(
         padding: REdgeInsets.symmetric(horizontal: 10, vertical: verticalPadding),
         child: Row(
