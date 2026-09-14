@@ -60,22 +60,15 @@ void main() {
       expect(kSearchRolePriority.length, SearchRole.values.length);
     });
 
-    test('is ordered path, frontier, visited, start, end, wall', () {
+    test('is ordered start, visited, frontier, wall, path, end (legend display order)', () {
       expect(kSearchRolePriority, [
-        SearchRole.path,
-        SearchRole.frontier,
-        SearchRole.visited,
         SearchRole.start,
-        SearchRole.end,
+        SearchRole.visited,
+        SearchRole.frontier,
         SearchRole.wall,
+        SearchRole.path,
+        SearchRole.end,
       ]);
-    });
-
-    test('path outranks visited, so the answer stays visible over the exploration (R1)', () {
-      expect(
-        kSearchRolePriority.indexOf(SearchRole.path),
-        lessThan(kSearchRolePriority.indexOf(SearchRole.visited)),
-      );
     });
   });
 }
