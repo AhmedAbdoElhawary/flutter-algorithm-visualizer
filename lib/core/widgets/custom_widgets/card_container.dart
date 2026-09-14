@@ -6,7 +6,7 @@ import 'package:algorithm_visualizer/features/visualize/helper/o_notation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-enum CdSurface { main, secondary, recessed, outline }
+enum CdSurface { main, secondary, unColoredFill, simpleColored,outlined }
 
 class CardContainer extends StatelessWidget {
   final Widget child;
@@ -36,8 +36,9 @@ class CardContainer extends StatelessWidget {
       switch (surface) {
         CdSurface.main => ThemeEnum.mainCard,
         CdSurface.secondary => ThemeEnum.surfaceRaised,
-        CdSurface.recessed => ThemeEnum.bgBase,
-        CdSurface.outline => null,
+        CdSurface.unColoredFill => ThemeEnum.bgBase,
+        CdSurface.simpleColored => ThemeEnum.bgRaised,
+        CdSurface.outlined => null,
       };
 
   ThemeEnum get _borderColor =>
@@ -45,8 +46,9 @@ class CardContainer extends StatelessWidget {
       switch (surface) {
         CdSurface.main => ThemeEnum.borderSubtle,
         CdSurface.secondary => ThemeEnum.border,
-        CdSurface.recessed => ThemeEnum.borderSubtle,
-        CdSurface.outline => ThemeEnum.borderSubtle,
+        CdSurface.unColoredFill => ThemeEnum.borderSubtle,
+        CdSurface.simpleColored => ThemeEnum.borderSubtle,
+        CdSurface.outlined => ThemeEnum.borderSubtle,
       };
 
   @override
@@ -107,7 +109,7 @@ class AlgorithmGlassCard extends StatelessWidget {
           ),
           const Spacer(flex: 1),
           SemiBoldText(algoComplexity.name, fontSize: 14, color: ThemeEnum.textPrimary),
-          const SizedBox(height: 6),
+          const RSizedBox(height: 6),
           RSizedBox(
             height: 20,
             child: CustomScrollView(

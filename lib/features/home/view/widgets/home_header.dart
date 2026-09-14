@@ -1,11 +1,15 @@
+import 'package:algorithm_visualizer/config/routes/route_app.dart';
+import 'package:algorithm_visualizer/core/resources/strings_manager.dart';
 import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
 import 'package:algorithm_visualizer/core/widgets/adaptive/padding/adaptive_padding.dart';
 import 'package:algorithm_visualizer/core/widgets/adaptive/text/adaptive_text.dart';
+import 'package:algorithm_visualizer/core/widgets/custom_widgets/icon_button_quiet.dart';
 import 'package:algorithm_visualizer/features/home/view_model/home_provider.dart';
 import 'package:algorithm_visualizer/features/profile/presentation/view_model/user_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 
 class HomeHeader extends ConsumerWidget {
   const HomeHeader({super.key});
@@ -43,6 +47,28 @@ class HomeHeader extends ConsumerWidget {
                 ),
               ],
             ),
+          ),
+          Consumer(
+            builder: (context, ref, child) {
+              final isSignedIn = ref.watch(isSignedInProvider);
+              if (isSignedIn) return const SizedBox.shrink();
+              return GestureDetector(
+                onTap: () => context.push(Routes.login.path),
+                child: const Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    BoldText(StringsManager.signIn, fontSize: 14),
+                    RSizedBox(width: 5),
+                    IconButtonQuiet(
+                      icon: Icons.login_rounded,
+                      size: 36,
+                      iconSize: 18,
+                      iconColor: ThemeEnum.accent,
+                    )
+                  ],
+                ),
+              );
+            },
           ),
         ],
       ),

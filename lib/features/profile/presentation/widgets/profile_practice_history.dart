@@ -26,8 +26,10 @@ class ProfilePracticeHistory extends ConsumerWidget {
 
     final preview = practiceHistory.take(_maxPreview).toList();
 
-    return HorizontalPadding(
-      padding: 16,
+    return OnlyPadding(
+      startPadding: 16,
+      endPadding: 16,
+      topPadding: 14,
       child: CardContainer(
         surface: CdSurface.main,
         padding: EdgeInsets.zero,

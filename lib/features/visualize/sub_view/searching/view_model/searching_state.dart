@@ -35,12 +35,20 @@ class SearchingState {
         endCol: kPFEndCol,
       );
 
-  static List<List<bool>> emptyWalls() => List.generate(kPFCells, (_) => List.filled(kPFCells, false));
+  static List<List<bool>> emptyWalls() => List.generate(kPFRows, (_) => List.filled(kPFCols, false));
 
   bool get hasSteps => steps != null;
   bool get isAtStart => stepIndex == 0;
   bool get isAtEnd => steps != null && stepIndex >= steps!.length - 1;
   PFStep? get currentStep => steps != null ? steps![stepIndex] : null;
+
+  PFGridInput get gridInput => PFGridInput(
+        walls: walls,
+        startRow: startRow,
+        startCol: startCol,
+        endRow: endRow,
+        endCol: endCol,
+      );
 
   SearchingState copyWith({
     List<List<bool>>? walls,

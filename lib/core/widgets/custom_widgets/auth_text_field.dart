@@ -106,12 +106,12 @@ class _AuthTextFieldState extends State<AuthTextField> {
         DecoratedBox(
           decoration: BoxDecoration(
             color: context.getColor(ThemeEnum.card),
-            borderRadius: BorderRadius.circular(CdRadius.md.r),
+            borderRadius: BorderRadius.circular(CdRadius.sm.r),
             border: Border.all(color: context.getColor(borderColor)),
           ),
           child: SymmetricPadding(
             horizontal: 14,
-            vertical: 13,
+            vertical: 16,
             child: Row(
               children: [
                 if (widget.prefixIcon != null) ...[
@@ -162,12 +162,13 @@ class _AuthTextFieldState extends State<AuthTextField> {
           TopPadding(
             padding: 6,
             child: RegularText(widget.errorText!, color: ThemeEnum.difficultyHard, fontSize: 10.5),
-          )
-        else if (widget.helperText != null && widget.helperText!.isNotEmpty)
-          TopPadding(
-            padding: 8,
-            child: RegularText(widget.helperText!, color: ThemeEnum.textDisabled, fontSize: 10.5),
           ),
+
+        // else if (widget.helperText != null && widget.helperText!.isNotEmpty)
+        //   TopPadding(
+        //     padding: 8,
+        //     child: RegularText(widget.helperText!, color: ThemeEnum.textDisabled, fontSize: 10.5),
+        //   ),
       ],
     );
   }
