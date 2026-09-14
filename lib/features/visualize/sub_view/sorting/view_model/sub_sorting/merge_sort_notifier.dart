@@ -35,16 +35,18 @@ class MergeSortNotifier extends SortingNotifier {
         if (arr[i] <= arr[j]) {
           merged.add(arr[i]);
           i++;
-          ctx.emit(StepKind.write, k, -1, i - 1);
+          ctx.emit(StepKind.write, k, -1, k);
           if (i > mid) {
             ctx.release(SortRole.leftRun);
           } else {
             ctx.hold(SortRole.leftRun, i, mid);
           }
         } else {
+          final remainingLeft = mid - i + 1;
+          final currentIndex = k + remainingLeft;
           merged.add(arr[j]);
           j++;
-          ctx.emit(StepKind.write, k, -1, j - 1);
+          ctx.emit(StepKind.write, k, -1, currentIndex);
           if (j > right) {
             ctx.release(SortRole.rightRun);
           } else {
@@ -57,7 +59,7 @@ class MergeSortNotifier extends SortingNotifier {
       while (i <= mid) {
         merged.add(arr[i]);
         i++;
-        ctx.emit(StepKind.write, k, -1, i - 1);
+        ctx.emit(StepKind.write, k, -1, k);
         k++;
         if (i > mid) {
           ctx.release(SortRole.leftRun);
@@ -67,9 +69,11 @@ class MergeSortNotifier extends SortingNotifier {
       }
 
       while (j <= right) {
+        final remainingLeft = mid - i + 1;
+        final currentIndex = k + remainingLeft;
         merged.add(arr[j]);
         j++;
-        ctx.emit(StepKind.write, k, -1, j - 1);
+        ctx.emit(StepKind.write, k, -1, currentIndex);
         k++;
         if (j > right) {
           ctx.release(SortRole.rightRun);
