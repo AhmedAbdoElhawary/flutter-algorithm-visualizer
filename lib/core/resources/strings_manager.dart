@@ -333,7 +333,8 @@ class StringsManager {
   static const String accountRecovery = "ACCOUNT RECOVERY";
   static const String resendEmailLink = "Resend email link";
   static const String checkEmail = "Check your email";
-  static const String noteReceiveTheLinkDescription = "Didn't receive the link? Check your spam folder or request a new link in";
+  static const String noteReceiveTheLinkDescription =
+      "Didn't receive the link? Check your spam folder or request a new link in";
   static const String forgotPasswordTitle = "Reset your password";
   static const String weSendToYourEmailPart1Subtitle = "We sent a password reset link to";
   static const String weSendToYourEmailPart2Subtitle =
