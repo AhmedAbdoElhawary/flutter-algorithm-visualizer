@@ -60,11 +60,38 @@ String _buildBinaryTree(
   String className,
   CustomObjectShape shape,
 ) {
+  if (items.isEmpty || items.first is NullTestValue) return 'null';
+
+  // LeetCode level-order: a `null` marks one missing child and claims no child
+  // slots of its own, so children are handed out from a queue of real nodes
+  // rather than sitting at fixed 2i+1 / 2i+2 offsets. The two differ for any
+  // tree that isn't perfectly filled.
+  final left = List<int>.filled(items.length, -1);
+  final right = List<int>.filled(items.length, -1);
+  final queue = <int>[0];
+  var head = 0;
+  var next = 1;
+  while (head < queue.length && next < items.length) {
+    final node = queue[head++];
+    if (next < items.length) {
+      if (items[next] is! NullTestValue) {
+        left[node] = next;
+        queue.add(next);
+      }
+      next++;
+    }
+    if (next < items.length) {
+      if (items[next] is! NullTestValue) {
+        right[node] = next;
+        queue.add(next);
+      }
+      next++;
+    }
+  }
+
   String build(int i) {
-    if (i >= items.length) return 'null';
-    final value = items[i];
-    if (value is NullTestValue) return 'null';
-    return '$className(${testValueToSource(value)}, ${build(2 * i + 1)}, ${build(2 * i + 2)})';
+    if (i == -1) return 'null';
+    return '$className(${testValueToSource(items[i])}, ${build(left[i])}, ${build(right[i])})';
   }
 
   return build(0);

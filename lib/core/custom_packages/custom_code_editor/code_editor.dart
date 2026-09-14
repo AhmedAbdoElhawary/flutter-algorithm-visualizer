@@ -36,6 +36,7 @@ export 'src/testcase/custom_object_shape.dart';
 export 'src/testcase/function_signature.dart';
 export 'src/testcase/object_builder.dart';
 export 'src/testcase/object_serializer.dart';
+export 'src/testcase/output_comparison.dart';
 export 'src/testcase/parsing_utils.dart';
 export 'src/testcase/problem_runner.dart';
 export 'src/testcase/test_case.dart';

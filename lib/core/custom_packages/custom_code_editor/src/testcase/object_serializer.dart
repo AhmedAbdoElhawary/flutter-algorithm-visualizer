@@ -34,26 +34,25 @@ String _instanceToString(ObjectInstance instance, CustomObjectShape? shape) {
       }
       return '[${values.join(',')}]';
     case CustomObjectShape.binaryTree:
-      // Level-order BFS that includes nulls for missing children and
-      // strips trailing nulls, matching LeetCode's tree serialization.
+      // LeetCode level-order: only real nodes enqueue children, so a `null`
+      // records one missing child and contributes no slots of its own. Must
+      // stay the exact inverse of the tree builder in `object_builder.dart`.
       final values = <String>[];
-      var queue = <ObjectInstance?>[instance];
-      while (queue.any((n) => n != null)) {
-        final next = <ObjectInstance?>[];
-        for (final node in queue) {
-          if (node == null) {
-            values.add('null');
-            next.add(null);
-            next.add(null);
-          } else {
-            values.add(canonicalString(node.fields[s.valueField]));
-            final left = node.fields[s.leftField];
-            final right = node.fields[s.rightField];
-            next.add(left is ObjectInstance ? left : null);
-            next.add(right is ObjectInstance ? right : null);
-          }
+      final queue = <ObjectInstance?>[instance];
+      final seen = <ObjectInstance>{};
+      var head = 0;
+      while (head < queue.length) {
+        final node = queue[head++];
+        if (node == null) {
+          values.add('null');
+          continue;
         }
-        queue = next;
+        if (!seen.add(node)) continue; // cycle guard: a malformed tree
+        values.add(canonicalString(node.fields[s.valueField]));
+        final left = node.fields[s.leftField];
+        final right = node.fields[s.rightField];
+        queue.add(left is ObjectInstance ? left : null);
+        queue.add(right is ObjectInstance ? right : null);
       }
       while (values.isNotEmpty && values.last == 'null') {
         values.removeLast();

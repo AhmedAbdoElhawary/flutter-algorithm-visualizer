@@ -51,6 +51,7 @@ ProblemDTO _$ProblemDTOFromJson(Map<String, dynamic> json) => ProblemDTO(
       similarQuestions: (json['similar_questions'] as List<dynamic>?)
           ?.map((e) => SimilarQuestion.fromJson(e as Map<String, dynamic>))
           .toList(),
+      comparison: json['comparison'] as String?,
     );
 
 Map<String, dynamic> _$ProblemDTOToJson(ProblemDTO instance) => <String, dynamic>{
@@ -82,6 +83,7 @@ Map<String, dynamic> _$ProblemDTOToJson(ProblemDTO instance) => <String, dynamic
       'follow_up_concepts': instance.followUpConcepts,
       'common_mistakes': instance.commonMistakes,
       'similar_questions': instance.similarQuestions?.map((e) => e.toJson()).toList(),
+      'comparison': instance.comparison,
     };
 
 const _$ProblemDifficultyEnumMap = {
