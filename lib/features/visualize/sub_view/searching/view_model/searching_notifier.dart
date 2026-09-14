@@ -7,6 +7,8 @@ import 'package:algorithm_visualizer/features/base/view_model/algorithm_descript
 import 'package:algorithm_visualizer/features/visualize/helper/o_notation.dart';
 import 'package:algorithm_visualizer/features/visualize/helper/playback_speed.dart';
 import 'package:algorithm_visualizer/features/visualize/sub_view/searching/helper/pf_constants.dart';
+import 'package:algorithm_visualizer/features/visualize/sub_view/searching/helper/pf_grid_input.dart';
+import 'package:algorithm_visualizer/features/visualize/sub_view/searching/helper/pf_status_text.dart';
 import 'package:algorithm_visualizer/features/visualize/sub_view/searching/helper/pf_step.dart';
 import 'package:algorithm_visualizer/features/visualize/sub_view/sorting/view_model/sorting_notifier.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -23,7 +25,10 @@ const _kReverseOrthogonalDirs = [(0, -1), (1, 0), (0, 1), (-1, 0)];
 abstract class SearchingNotifier extends Notifier<SearchingState>
     implements AlgorithmDescriptionNotifier, AlgorithmControlInterface {
   Timer? _timer;
+
   bool _erasingGesture = false;
+  final Set<int> _strokeToggled = {};
+  int? _strokeLastCell;
 
   @override
   SearchingState build() {
@@ -42,18 +47,21 @@ abstract class SearchingNotifier extends Notifier<SearchingState>
   @override
   PlaybackSpeed get getSpeed => state.speed;
 
-  List<PFStep> buildAlgorithm(List<List<bool>> walls);
+  /// How this algorithm chooses the next cell — what the explanation line teaches.
+  PFRule get rule;
 
-  bool _inBounds(int row, int col) => row >= 0 && row < kPFCells && col >= 0 && col < kPFCells;
+  List<PFStep> buildAlgorithm(PFGridInput grid);
 
-  Set<int> _buildPath(int end, Map<int, int> parent) {
-    final path = <int>{};
+  /// Walks the parent chain backward from [end], then reverses it, so the
+  /// result runs start → end in reveal order.
+  List<int> _buildPath(int end, Map<int, int> parent) {
+    final path = <int>[];
     int? node = end;
     while (node != null) {
       path.add(node);
       node = parent[node];
     }
-    return path;
+    return path.reversed.toList();
   }
 
   void _clearTimer() {
@@ -79,49 +87,107 @@ abstract class SearchingNotifier extends Notifier<SearchingState>
     state = state.copyWith(stepIndex: 0, playing: false, clearSteps: true);
   }
 
-  // ── Start / End Point Methods (Now allow dragging & auto-reset steps) ──
+  /// Every edit clears a displayed result before it is applied, so the grid
+  /// never shows a path that belongs to a different maze.
+  void _clearResultBeforeEdit() {
+    if (state.hasSteps) _resetSteps();
+  }
+
+  // ── Start / End markers ────────────────────────────────────────────────
 
   void setStartPoint(int row, int col) {
+    if (!state.gridInput.inBounds(row, col)) return;
     if (row == state.endRow && col == state.endCol) return;
-    if (state.walls[row][col]) return; // Cannot place on a wall
-    _resetSteps();
+    if (state.walls[row][col]) return;
+    _clearResultBeforeEdit();
     state = state.copyWith(startRow: row, startCol: col);
   }
 
   void setEndPoint(int row, int col) {
+    if (!state.gridInput.inBounds(row, col)) return;
     if (row == state.startRow && col == state.startCol) return;
-    if (state.walls[row][col]) return; // Cannot place on a wall
-    _resetSteps();
+    if (state.walls[row][col]) return;
+    _clearResultBeforeEdit();
     state = state.copyWith(endRow: row, endCol: col);
   }
 
+  // ── Walls ──────────────────────────────────────────────────────────────
+
   void setWall(int row, int col, {required bool isGestureStart}) {
-    if (state.hasSteps) return;
-    if (row == state.startRow && col == state.startCol) return;
-    if (row == state.endRow && col == state.endCol) return;
+    if (!state.gridInput.inBounds(row, col)) return;
 
     if (isGestureStart) {
       _erasingGesture = state.walls[row][col];
+      _strokeToggled.clear();
+      _strokeLastCell = null;
     }
-    final wantWall = !_erasingGesture;
-    if (state.walls[row][col] == wantWall) return;
 
-    final updatedWalls = [for (final r in state.walls) List<bool>.from(r)];
-    updatedWalls[row][col] = wantWall;
+    final cells = _strokeCells(_strokeLastCell, row, col);
+    _strokeLastCell = pfEncode(row, col);
+
+    final wantWall = !_erasingGesture;
+    List<List<bool>>? updatedWalls;
+
+    for (final cell in cells) {
+      if (!_strokeToggled.add(cell)) continue;
+
+      final cellRow = pfDecodeRow(cell);
+      final cellCol = pfDecodeCol(cell);
+      if (cellRow == state.startRow && cellCol == state.startCol) continue;
+      if (cellRow == state.endRow && cellCol == state.endCol) continue;
+      if (state.walls[cellRow][cellCol] == wantWall) continue;
+
+      updatedWalls ??= [for (final r in state.walls) List<bool>.from(r)];
+      updatedWalls[cellRow][cellCol] = wantWall;
+    }
+
+    if (updatedWalls == null) return;
+    _clearResultBeforeEdit();
     state = state.copyWith(walls: updatedWalls);
   }
 
+  /// The cells a stroke crosses moving from [from] to (`row`, `col`). A fast
+  /// drag reports distant points, so the segment between them is filled in
+  /// rather than left as a gap.
+  List<int> _strokeCells(int? from, int row, int col) {
+    if (from == null) return [pfEncode(row, col)];
+
+    int fromRow = pfDecodeRow(from);
+    int fromCol = pfDecodeCol(from);
+    final deltaRow = (row - fromRow).abs();
+    final deltaCol = (col - fromCol).abs();
+    final stepRow = fromRow < row ? 1 : -1;
+    final stepCol = fromCol < col ? 1 : -1;
+    int error = deltaCol - deltaRow;
+
+    final cells = <int>[];
+    while (true) {
+      cells.add(pfEncode(fromRow, fromCol));
+      if (fromRow == row && fromCol == col) break;
+      final doubleError = error * 2;
+      if (doubleError > -deltaRow) {
+        error -= deltaRow;
+        fromCol += stepCol;
+      }
+      if (doubleError < deltaCol) {
+        error += deltaCol;
+        fromRow += stepRow;
+      }
+    }
+    return cells;
+  }
+
   void clearWalls() {
-    _resetSteps();
+    _clearResultBeforeEdit();
     state = state.copyWith(walls: SearchingState.emptyWalls());
   }
 
   void randomizeWalls() {
-    _resetSteps();
+    _clearResultBeforeEdit();
     final rng = math.Random();
     final walls = List.generate(
-      kPFCells,
-      (r) => List.generate(kPFCells, (c) {
+      kPFRows,
+      (r) => List.generate(kPFCols, (c) {
         if (r == state.startRow && c == state.startCol) return false;
         if (r == state.endRow && c == state.endCol) return false;
         return rng.nextDouble() < 0.30;
@@ -134,7 +200,7 @@ abstract class SearchingNotifier extends Notifier<SearchingState>
 
   void _runAlgorithm() {
     _clearTimer();
-    final steps = buildAlgorithm(state.walls);
+    final steps = buildAlgorithm(state.gridInput);
 
     state = state.copyWith(steps: steps, stepIndex: 0, playing: true);
     _startTimer();
@@ -157,17 +223,21 @@ abstract class SearchingNotifier extends Notifier<SearchingState>
   }
 
   @override
-  void stepForward() {
-    _clearTimer();
-    if (state.steps == null || state.isAtEnd) return;
-    state = state.copyWith(stepIndex: state.stepIndex + 1, playing: false);
-  }
+  void stepForward() => _stepTo(state.stepIndex + 1);
 
   @override
-  void stepBackward() {
+  void stepBackward() => _stepTo(state.stepIndex - 1);
+
+  /// One shared path for all three algorithms — playback behaves identically
+  /// whichever one is selected.
+  void _stepTo(int index) {
     _clearTimer();
-    if (state.isAtStart) return;
-    state = state.copyWith(stepIndex: state.stepIndex - 1, playing: false);
+    final steps = state.steps;
+    if (steps == null) {
+      state = state.copyWith(playing: false);
+      return;
+    }
+    state = state.copyWith(stepIndex: index.clamp(0, steps.length - 1), playing: false);
   }
 
   @override
