@@ -5,61 +5,62 @@ class BFSSearchingNotifier extends SearchingNotifier {
   SearchingState build() => SearchingState.initial();
 
   @override
-  List<PFStep> buildAlgorithm(List<List<bool>> walls) {
+  PFRule get rule => PFRule.oldestFirst;
+
+  @override
+  List<PFStep> buildAlgorithm(PFGridInput grid) {
+    final start = grid.start;
+    final end = grid.end;
+
+    if (start == end) {
+      return [
+        PFStep(visited: {start}, frontier: {}, path: [start], phase: PFPhase.found, metricA: 0),
+      ];
+    }
+
     final steps = <PFStep>[];
+    final discovered = <int>{start};
     final visited = <int>{};
     final parent = <int, int>{};
-    final start = pfEncode(kPFStartRow, kPFStartCol);
-    final end = pfEncode(kPFEndRow, kPFEndCol);
-
-    visited.add(start);
     final queue = <int>[start];
 
-    steps.add(PFStep(
-      visited: {start},
-      frontier: {start},
-      statusText: 'BFS: queue initialized with start ($kPFStartRow, $kPFStartCol)',
-    ));
+    steps.add(PFStep(visited: {}, frontier: {start}, phase: PFPhase.exploring, metricA: queue.length));
 
     while (queue.isNotEmpty) {
       final current = queue.removeAt(0);
-      final row = pfDecodeRow(current);
-      final col = pfDecodeCol(current);
+      visited.add(current);
 
       if (current == end) {
-        final path = _buildPath(current, parent);
         steps.add(PFStep(
-          visited: Set.from(visited),
-          frontier: Set.from(queue),
-          path: path,
-          statusText: '✓ BFS found shortest path! Length: ${path.length - 1} steps',
+          visited: Set.of(visited),
+          frontier: queue.toSet(),
+          path: _buildPath(current, parent),
+          phase: PFPhase.found,
+          metricA: queue.length,
         ));
         return steps;
       }
 
+      final row = pfDecodeRow(current);
+      final col = pfDecodeCol(current);
       for (final (dr, dc) in _kOrthogonalDirs) {
         final nextRow = row + dr;
         final nextCol = col + dc;
-        if (!_inBounds(nextRow, nextCol) || walls[nextRow][nextCol]) continue;
+        if (!grid.inBounds(nextRow, nextCol) || grid.isWall(nextRow, nextCol)) continue;
         final next = pfEncode(nextRow, nextCol);
-        if (visited.contains(next)) continue;
-        visited.add(next);
+        if (!discovered.add(next)) continue;
         parent[next] = current;
         queue.add(next);
       }
 
       steps.add(PFStep(
-        visited: Set.from(visited),
-        frontier: Set.from(queue),
-        statusText: 'BFS: dequeued ($row, $col) — queue size: ${queue.length}',
+        visited: Set.of(visited),
+        frontier: queue.toSet(),
+        phase: queue.isEmpty ? PFPhase.exhausted : PFPhase.exploring,
+        metricA: queue.length,
       ));
     }
 
-    steps.add(PFStep(
-      visited: Set.from(visited),
-      frontier: {},
-      statusText: '✗ No path — all reachable cells explored',
-    ));
     return steps;
   }
 
@@ -93,13 +94,14 @@ class BFSSearchingNotifier extends SearchingNotifier {
   @override
   int codeLineForStep(SortStep step) {
     final pfStep = step as PFStep;
-    final desc = pfStep.statusText;
 
-    if (desc.startsWith('BFS: queue initialized')) return 0;
-    if (desc.startsWith('✓')) return 3;
-    if (desc.startsWith('✗')) return 1;
-    if (desc.contains('dequeued')) return 2;
-
-    return 4;
+    switch (pfStep.phase) {
+      case PFPhase.found:
+        return 3;
+      case PFPhase.exhausted:
+        return 1;
+      case PFPhase.exploring:
+        return 2;
+    }
   }
 }

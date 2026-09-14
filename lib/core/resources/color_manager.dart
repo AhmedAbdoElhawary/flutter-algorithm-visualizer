@@ -33,7 +33,7 @@ abstract final class ColorManager {
   /// Aurora primitives — DARK (primary theme)
   /// ======================================================================
   static const cdBgBaseDk = Color(0xFF0B0B0D);
-  static const cdBgRaisedDk = Color(0xFF101112);
+  static const cdBgRaisedDk = Color(0x690F0F12);
   static const cdSurfaceDk = Color(0xFF121317);
   static const cdSurfaceRaisedDk = Color(0xFF181A1F);
   static const cdSurfaceAltDk = Color(0xFF0E1119);
@@ -220,7 +220,7 @@ abstract final class ColorManager {
   /// -------- dark ------------>
   static const primaryDk = cdBgBaseDk;
   static const cardDk = Color.fromRGBO(21, 22, 27, 1.0);
-  static const outputHeaderDk = cdBgRaisedDk;
+  static const outputHeaderDk = Color(0xFF101112);
   static const accentDk = cdPrimaryDk;
   static const accentGreenDk = cdSuccessDk;
   static const accentGreenBgDk = cdSuccessDk;

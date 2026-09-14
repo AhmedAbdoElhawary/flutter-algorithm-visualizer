@@ -1,0 +1,56 @@
+import 'package:algorithm_visualizer/core/resources/strings_manager.dart';
+import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
+
+/// The six meanings a grid cell can carry, drawn from the same shared palette
+/// the sorting bars use.
+enum SearchRole { wall, frontier, visited, path, start, end }
+
+/// Total, single-valued, exhaustive — no `default`, no fallback.
+ThemeEnum searchRoleColor(SearchRole role) {
+  switch (role) {
+    case SearchRole.start:
+      return ThemeEnum.barAnchor;
+    case SearchRole.end:
+      return ThemeEnum.barSwap;
+    case SearchRole.frontier:
+      return ThemeEnum.barCompare;
+    case SearchRole.visited:
+      return ThemeEnum.barTarget;
+    case SearchRole.path:
+      return ThemeEnum.barDone;
+    case SearchRole.wall:
+      return ThemeEnum.borderStrong;
+  }
+}
+
+/// Total, centralized — every string is a [StringsManager] constant.
+String searchRoleLabel(SearchRole role) {
+  switch (role) {
+    case SearchRole.start:
+      return StringsManager.searchRoleStart;
+    case SearchRole.end:
+      return StringsManager.searchRoleEnd;
+    case SearchRole.frontier:
+      return StringsManager.searchRoleFrontier;
+    case SearchRole.visited:
+      return StringsManager.searchRoleVisited;
+    case SearchRole.path:
+      return StringsManager.searchRolePath;
+    case SearchRole.wall:
+      return StringsManager.searchRoleWall;
+  }
+}
+
+/// Display order for the legend. The painter does NOT use this order directly
+/// for color precedence — it special-cases [SearchRole.path] to win over
+/// every other role first (see `_roleFor` in `pf_grid_painter.dart`), so the
+/// answer stays visible over the exploration that found it, regardless of
+/// where `path` sits in this list.
+const List<SearchRole> kSearchRolePriority = [
+  SearchRole.start,
+  SearchRole.visited,
+  SearchRole.frontier,
+  SearchRole.wall,
+  SearchRole.path,
+  SearchRole.end,
+];
