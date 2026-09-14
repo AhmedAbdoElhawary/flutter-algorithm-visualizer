@@ -3,6 +3,6 @@ import 'package:algorithm_visualizer/features/auth/presentation/forgot_password/
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 final authForgotPasswordProvider =
-    NotifierProvider.autoDispose<AuthForgotPasswordNotifier, AuthForgotPasswordState>(() {
+    NotifierProvider<AuthForgotPasswordNotifier, AuthForgotPasswordState>(() {
   return AuthForgotPasswordNotifier();
 });
