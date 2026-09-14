@@ -90,13 +90,16 @@ class PFGridPainter extends CustomPainter {
     }
   }
 
-  /// The first role in [kSearchRolePriority] this cell carries, or null when it
-  /// carries none — so a path cell paints as path even though it is also
-  /// visited.
+  /// The role this cell paints as. [SearchRole.path] always wins, regardless
+  /// of its position in [kSearchRolePriority] (that list only orders the
+  /// legend) — so a path cell paints as path even though it is also visited.
+  /// Every other role falls back to list order.
   SearchRole? _roleFor(int encoded, bool isWall) {
+    if (step?.path?.contains(encoded) == true) return SearchRole.path;
+
     for (final role in kSearchRolePriority) {
       final present = switch (role) {
-        SearchRole.path => step?.path?.contains(encoded) == true,
+        SearchRole.path => false,
         SearchRole.frontier => step?.frontier.contains(encoded) == true,
         SearchRole.visited => step?.visited.contains(encoded) == true,
         SearchRole.wall => isWall,
