@@ -23,14 +23,14 @@ class PrimaryButtonQuiet extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final disabled = onPressed == null || loading;
-    final button = GestureDetector(
+    return GestureDetector(
       onTap: disabled ? null : onPressed,
       child: Container(
         width: expand ? double.infinity : null,
-        padding: REdgeInsets.symmetric(vertical: 14),
+        padding: REdgeInsets.symmetric(vertical: 16),
         alignment: Alignment.center,
         decoration: BoxDecoration(
-          color: context.getColor(ThemeEnum.textBright),
+          color: context.getColor(ThemeEnum.textBright).withValues(alpha: disabled ? 0.5 : 1),
           borderRadius: BorderRadius.circular(CdRadius.md.r),
         ),
         child: loading
@@ -45,6 +45,5 @@ class PrimaryButtonQuiet extends StatelessWidget {
             : SemiBoldText(label, color: ThemeEnum.onPrimary, fontSize: 13.5),
       ),
     );
-    return disabled ? Opacity(opacity: 0.5, child: button) : button;
   }
 }
