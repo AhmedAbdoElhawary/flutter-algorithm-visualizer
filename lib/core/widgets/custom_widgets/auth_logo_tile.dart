@@ -31,10 +31,9 @@ class AuthLogoTile extends StatelessWidget {
   }
 }
 
-/// 56px tinted tile with a recovery glyph — CoreDive screen 12.
 class AuthRecoveryTile extends StatelessWidget {
-  const AuthRecoveryTile({super.key});
-
+  const AuthRecoveryTile({this.icon = Icons.key_rounded, super.key});
+  final IconData icon;
   @override
   Widget build(BuildContext context) {
     final side = 56.r;
@@ -47,11 +46,7 @@ class AuthRecoveryTile extends StatelessWidget {
         borderRadius: BorderRadius.circular(CdRadius.lg.r),
         border: Border.all(color: context.getColor(ThemeEnum.borderAccent)),
       ),
-      child: const CustomIcon(
-        Icons.key_rounded,
-        size: 26,
-        color: ThemeEnum.primaryHover,
-      ),
+      child: CustomIcon(icon, size: 26, color: ThemeEnum.primaryHover),
     );
   }
 }
