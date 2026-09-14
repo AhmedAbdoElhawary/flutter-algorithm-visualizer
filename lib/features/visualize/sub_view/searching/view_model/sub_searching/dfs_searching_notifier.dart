@@ -5,64 +5,69 @@ class DFSSearchingNotifier extends SearchingNotifier {
   SearchingState build() => SearchingState.initial();
 
   @override
-  List<PFStep> buildAlgorithm(List<List<bool>> walls) {
+  PFRule get rule => PFRule.newestFirst;
+
+  @override
+  List<PFStep> buildAlgorithm(PFGridInput grid) {
+    final start = grid.start;
+    final end = grid.end;
+
+    if (start == end) {
+      return [
+        PFStep(visited: {start}, frontier: {}, path: [start], phase: PFPhase.found, metricA: 0),
+      ];
+    }
+
     final steps = <PFStep>[];
     final visited = <int>{};
-    final discovered = <int>{};
     final parent = <int, int>{};
-    final start = pfEncode(kPFStartRow, kPFStartCol);
-    final end = pfEncode(kPFEndRow, kPFEndCol);
 
-    final stack = <int>[start];
-    discovered.add(start);
+    // Each entry carries the cell that pushed it, so the parent chain is
+    // recorded at expansion time — a cell can sit on the stack more than once
+    // and only the branch actually expanded may claim it.
+    final stack = <(int cell, int? from)>[(start, null)];
 
-    steps.add(PFStep(
-      visited: {},
-      frontier: {start},
-      statusText: 'DFS: stack initialized with start ($kPFStartRow, $kPFStartCol)',
-    ));
+    Set<int> frontierOf() => {for (final entry in stack) entry.$1}..removeAll(visited);
+
+    steps.add(PFStep(visited: {}, frontier: {start}, phase: PFPhase.exploring, metricA: stack.length));
 
     while (stack.isNotEmpty) {
-      final current = stack.removeLast();
+      final (current, from) = stack.removeLast();
       if (visited.contains(current)) continue;
       visited.add(current);
-      final row = pfDecodeRow(current);
-      final col = pfDecodeCol(current);
+      if (from != null) parent[current] = from;
 
       if (current == end) {
-        final path = _buildPath(current, parent);
         steps.add(PFStep(
-          visited: Set.from(visited),
-          frontier: Set.from(stack),
-          path: path,
-          statusText: '✓ DFS found a path! Length: ${path.length - 1} steps (may not be shortest)',
+          visited: Set.of(visited),
+          frontier: frontierOf(),
+          path: _buildPath(current, parent),
+          phase: PFPhase.found,
+          metricA: stack.length,
         ));
         return steps;
       }
 
+      final row = pfDecodeRow(current);
+      final col = pfDecodeCol(current);
       for (final (dr, dc) in _kReverseOrthogonalDirs) {
         final nextRow = row + dr;
         final nextCol = col + dc;
-        if (!_inBounds(nextRow, nextCol) || walls[nextRow][nextCol]) continue;
+        if (!grid.inBounds(nextRow, nextCol) || grid.isWall(nextRow, nextCol)) continue;
         final next = pfEncode(nextRow, nextCol);
-        if (discovered.contains(next)) continue;
-        discovered.add(next);
-        parent[next] = current;
-        stack.add(next);
+        if (visited.contains(next)) continue;
+        stack.add((next, current));
       }
 
+      final frontier = frontierOf();
       steps.add(PFStep(
-        visited: Set.from(visited),
-        frontier: Set.from(stack),
-        statusText: 'DFS: popped ($row, $col) — stack depth: ${stack.length}',
+        visited: Set.of(visited),
+        frontier: frontier,
+        phase: frontier.isEmpty ? PFPhase.exhausted : PFPhase.exploring,
+        metricA: stack.length,
       ));
     }
 
-    steps.add(PFStep(
-      visited: Set.from(visited),
-      frontier: {},
-      statusText: '✗ No path — all reachable cells exhausted',
-    ));
     return steps;
   }
 
@@ -95,13 +100,14 @@ class DFSSearchingNotifier extends SearchingNotifier {
   @override
   int codeLineForStep(SortStep step) {
     final pfStep = step as PFStep;
-    final desc = pfStep.statusText;
 
-    if (desc.startsWith('DFS: stack initialized')) return 0;
-    if (desc.startsWith('✓')) return 3;
-    if (desc.startsWith('✗')) return 1;
-    if (desc.contains('popped')) return 2;
-
-    return 4;
+    switch (pfStep.phase) {
+      case PFPhase.found:
+        return 3;
+      case PFPhase.exhausted:
+        return 1;
+      case PFPhase.exploring:
+        return 2;
+    }
   }
 }
