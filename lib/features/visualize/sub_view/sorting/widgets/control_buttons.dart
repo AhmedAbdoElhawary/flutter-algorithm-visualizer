@@ -1,7 +1,11 @@
-part of '../view/sorting_view.dart';
 
-class _SortingControlButtons extends ConsumerWidget {
-  const _SortingControlButtons(this.notifier);
+import 'package:algorithm_visualizer/core/widgets/custom_widgets/algorithm_control.dart';
+import 'package:algorithm_visualizer/features/visualize/sub_view/sorting/view_model/sorting_notifier.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+class SortingControlButtons extends ConsumerWidget {
+  const SortingControlButtons(this.notifier, {super.key});
   final NotifierProvider<SortingNotifier, SortingNotifierState> notifier;
 
   @override
