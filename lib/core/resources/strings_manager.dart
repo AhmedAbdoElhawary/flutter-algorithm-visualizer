@@ -126,6 +126,40 @@ class StringsManager {
   static const String visited = "Visited";
   static const String path = "Path";
   static const String wall = "Wall";
+
+  /// Searching role-catalogue labels — one constant per `SearchRole`, shared
+  /// verbatim between the grid legend and the explanation line. Each aliases
+  /// the existing generic constant above rather than duplicating its text.
+  static const String searchRoleStart = start;
+  static const String searchRoleEnd = end;
+  static const String searchRoleFrontier = frontier;
+  static const String searchRoleVisited = visited;
+  static const String searchRolePath = path;
+  static const String searchRoleWall = wall;
+
+  /// Selection-rule phrases — what the algorithm does, never its name.
+  static const String searchRuleOldestFirst = "Oldest first";
+  static const String searchRuleNewestFirst = "Newest first";
+  static const String searchRuleCheapestFirst = "Cheapest first";
+  static const String searchRuleSeparator = " · ";
+  static const String searchWaiting = "waiting";
+  static const String searchDepth = "depth";
+  static const String searchCost = "cost";
+  static const String searchToGo = "to go";
+
+  /// Terminal lines and the pre-run hint.
+  static const String searchPathFound = "Path found";
+  static const String searchStepsSuffix = "steps";
+  static const String searchNotShortest = "(not the shortest)";
+  static const String searchNoPath = "No path — every reachable cell explored";
+  static const String searchPreRunHint = "Drag cells to draw walls, then press ▶ Run";
+
+  /// Playback counter — `{current}` and `{total}` are substituted at render time.
+  static const String searchStepCounterTemplate = "Step {current} of {total}";
+
+  /// Wall-editing button tooltips.
+  static const String clearWalls = "Clear walls";
+  static const String randomWalls = "Random walls";
   static const String solved = "solved";
   static const String attempted = "attempted";
   static const String easy = "Easy";
@@ -297,14 +331,20 @@ class StringsManager {
   static const String pwStrengthEmpty = "Use at least 8 characters.";
 
   static const String accountRecovery = "ACCOUNT RECOVERY";
+  static const String resendEmailLink = "Resend email link";
+  static const String checkEmail = "Check your email";
+  static const String noteReceiveTheLinkDescription = "Didn't receive the link? Check your spam folder or request a new link in";
   static const String forgotPasswordTitle = "Reset your password";
+  static const String weSendToYourEmailPart1Subtitle = "We sent a password reset link to";
+  static const String weSendToYourEmailPart2Subtitle =
+      "Check your inbox and follow the link to create a new password.";
   static const String forgotPasswordSubtitle =
-      "Enter the email on your account and we will send a six-digit code.";
+      "Enter the email on your account and, and you will get the changing password link.";
   static const String registeredEmail = "Registered email";
   static const String recoveryEmailNote = "We'll send a 6-digit verification code to this inbox.";
   static const String codeExpiryNote = "The code expires after 10 minutes.";
   static const String sendResetLink = "Send Reset Link";
-  static const String sendCode = "Send code";
+  static const String sendLink = "Send link";
   static const String returnToLogin = "Return to Login";
   static const String returnToSignIn = "Return to sign in";
 
