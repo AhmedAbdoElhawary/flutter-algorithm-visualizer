@@ -1,5 +1,5 @@
 import 'package:algorithm_visualizer/core/custom_packages/custom_code_editor/code_editor.dart'
-    show CustomObjectShape, ProblemData, ProblemRunner, ProblemTestCase;
+    show CustomObjectShape, OutputComparison, ProblemData, ProblemRunner, ProblemTestCase;
 import 'package:algorithm_visualizer/features/challenge/data/models/custom_object.dart';
 import 'package:algorithm_visualizer/features/challenge/data/models/test_case.dart';
 import 'package:algorithm_visualizer/features/challenge/domain/entities/coding_problem.dart';
@@ -70,6 +70,7 @@ class GradeCodeUseCase {
           .toList(growable: false),
       customObjects: _buildCustomShapes(problem.getCustomObjects),
       customObjectSources: _buildCustomSources(problem.getCustomObjects),
+      comparison: OutputComparison.fromKey(problem.comparison),
     );
 
     final result = const ProblemRunner().runAll(problem: problemData, userCode: userCode);
