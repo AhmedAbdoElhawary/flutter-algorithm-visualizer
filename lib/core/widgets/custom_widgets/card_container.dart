@@ -6,7 +6,7 @@ import 'package:algorithm_visualizer/features/visualize/helper/o_notation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-enum CdSurface { main, secondary, unColoredFill, simpleColored,outlined }
+enum CdSurface { main, secondary, unColoredFill, simpleColored, outlined }
 
 class CardContainer extends StatelessWidget {
   final Widget child;
