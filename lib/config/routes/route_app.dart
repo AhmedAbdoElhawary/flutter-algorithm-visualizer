@@ -1,6 +1,7 @@
 import 'package:algorithm_visualizer/core/monitoring/monitoring.dart';
 import 'package:algorithm_visualizer/core/resources/strings_manager.dart';
 import 'package:algorithm_visualizer/core/widgets/adaptive/text/adaptive_text.dart';
+import 'package:algorithm_visualizer/features/auth/presentation/confirmation_password/view/confirmation_password_page.dart';
 import 'package:algorithm_visualizer/features/auth/presentation/forgot_password/view/forgot_password_page.dart';
 import 'package:algorithm_visualizer/features/auth/presentation/login/view/login_page.dart';
 import 'package:algorithm_visualizer/features/auth/presentation/signup/view/sign_up_page.dart';
@@ -41,10 +42,10 @@ class Routes {
     name: 'forgotPassword',
     path: '/forgot-password',
   );
-  // static const RouteConfig resetPassword = RouteConfig(
-  //   name: 'resetPassword',
-  //   path: '/reset-password',
-  // );
+  static const RouteConfig confirmationPassword = RouteConfig(
+    name: 'confirmationPassword',
+    path: '/confirmationPassword',
+  );
 
   static const RouteConfig home = RouteConfig(
     name: 'home',
@@ -144,11 +145,11 @@ class AppRoutes {
         name: Routes.forgotPassword.name,
         builder: (context, state) => const ForgotPasswordPage(),
       ),
-      // GoRoute(
-      //   path: Routes.resetPassword.path,
-      //   name: Routes.resetPassword.name,
-      //   builder: (context, state) => const ResetPasswordPage(),
-      // ),
+      GoRoute(
+        path: Routes.confirmationPassword.path,
+        name: Routes.confirmationPassword.name,
+        builder: (context, state) => const ConfirmationPasswordPage(),
+      ),
       GoRoute(
         path: Routes.celebration.path,
         name: Routes.celebration.name,

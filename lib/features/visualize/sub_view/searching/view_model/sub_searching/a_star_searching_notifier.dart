@@ -5,77 +5,99 @@ class AStarSearchingNotifier extends SearchingNotifier {
   SearchingState build() => SearchingState.initial();
 
   @override
-  List<PFStep> buildAlgorithm(List<List<bool>> walls) {
-    final steps = <PFStep>[];
-    final start = pfEncode(kPFStartRow, kPFStartCol);
-    final end = pfEncode(kPFEndRow, kPFEndCol);
+  PFRule get rule => PFRule.cheapestFirst;
+
+  @override
+  List<PFStep> buildAlgorithm(PFGridInput grid) {
+    final start = grid.start;
+    final end = grid.end;
+
+    if (start == end) {
+      return [
+        PFStep(visited: {start}, frontier: {}, path: [start], phase: PFPhase.found, metricA: 0, metricB: 0),
+      ];
+    }
 
     int heuristic(int encoded) =>
-        (pfDecodeRow(encoded) - kPFEndRow).abs() + (pfDecodeCol(encoded) - kPFEndCol).abs();
+        (pfDecodeRow(encoded) - grid.endRow).abs() + (pfDecodeCol(encoded) - grid.endCol).abs();
 
+    final steps = <PFStep>[];
     final gScore = <int, int>{start: 0};
-    final fScore = <int, int>{start: heuristic(start)};
     final parent = <int, int>{};
     final openSet = <int>{start};
     final closed = <int>{};
 
+    int fOf(int cell) => (gScore[cell] ?? _kInfinity) + heuristic(cell);
+
+    /// Lowest `f` wins; on a tie the cell closer to the goal wins, and on a
+    /// further tie the lower encoded id — so expansion order never depends on
+    /// set iteration order.
+    int cheapest() {
+      var best = openSet.first;
+      for (final cell in openSet) {
+        final df = fOf(cell) - fOf(best);
+        if (df < 0) {
+          best = cell;
+        } else if (df == 0) {
+          final dh = heuristic(cell) - heuristic(best);
+          if (dh < 0 || (dh == 0 && cell < best)) best = cell;
+        }
+      }
+      return best;
+    }
+
     steps.add(PFStep(
       visited: {},
       frontier: {start},
-      statusText: 'A*: start h=${heuristic(start)}, f=${heuristic(start)}',
+      phase: PFPhase.exploring,
+      metricA: 0,
+      metricB: heuristic(start),
     ));
 
     while (openSet.isNotEmpty) {
-      final current = openSet.reduce(
-        (a, b) => (fScore[a] ?? _kInfinity) <= (fScore[b] ?? _kInfinity) ? a : b,
-      );
+      final current = cheapest();
+      openSet.remove(current);
+      closed.add(current);
+
+      final g = gScore[current]!;
 
       if (current == end) {
-        final path = _buildPath(current, parent);
         steps.add(PFStep(
-          visited: Set.from(closed),
-          frontier: Set.from(openSet),
-          path: path,
-          statusText: '✓ A* found optimal path! Length: ${path.length - 1} steps',
+          visited: Set.of(closed),
+          frontier: Set.of(openSet),
+          path: _buildPath(current, parent),
+          phase: PFPhase.found,
+          metricA: g,
+          metricB: heuristic(current),
         ));
         return steps;
       }
 
-      openSet.remove(current);
-      closed.add(current);
-
       final row = pfDecodeRow(current);
       final col = pfDecodeCol(current);
-      final g = gScore[current]!;
-
       for (final (dr, dc) in _kOrthogonalDirs) {
         final nextRow = row + dr;
         final nextCol = col + dc;
-        if (!_inBounds(nextRow, nextCol) || walls[nextRow][nextCol]) continue;
+        if (!grid.inBounds(nextRow, nextCol) || grid.isWall(nextRow, nextCol)) continue;
         final next = pfEncode(nextRow, nextCol);
         if (closed.contains(next)) continue;
         final tentativeG = g + 1;
         if (tentativeG < (gScore[next] ?? _kInfinity)) {
           parent[next] = current;
           gScore[next] = tentativeG;
-          fScore[next] = tentativeG + heuristic(next);
           openSet.add(next);
         }
       }
 
       steps.add(PFStep(
-        visited: Set.from(closed),
-        frontier: Set.from(openSet),
-        statusText:
-            'A*: visited ($row, $col) g=$g h=${heuristic(current)} f=${g + heuristic(current)}, open: ${openSet.length}',
+        visited: Set.of(closed),
+        frontier: Set.of(openSet),
+        phase: openSet.isEmpty ? PFPhase.exhausted : PFPhase.exploring,
+        metricA: g,
+        metricB: heuristic(current),
       ));
     }
 
-    steps.add(PFStep(
-      visited: Set.from(closed),
-      frontier: {},
-      statusText: '✗ No path — search space exhausted',
-    ));
     return steps;
   }
 
@@ -109,13 +131,14 @@ class AStarSearchingNotifier extends SearchingNotifier {
   @override
   int codeLineForStep(SortStep step) {
     final pfStep = step as PFStep;
-    final desc = pfStep.statusText;
 
-    if (desc.startsWith('A*: start')) return 0;
-    if (desc.startsWith('✓')) return 3;
-    if (desc.startsWith('✗')) return 1;
-    if (desc.contains('visited')) return 2;
-
-    return 4;
+    switch (pfStep.phase) {
+      case PFPhase.found:
+        return 3;
+      case PFPhase.exhausted:
+        return 1;
+      case PFPhase.exploring:
+        return 2;
+    }
   }
 }

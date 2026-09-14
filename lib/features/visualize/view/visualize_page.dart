@@ -1,28 +1,34 @@
 import 'package:algorithm_visualizer/config/routes/route_app.dart';
 import 'package:algorithm_visualizer/core/resources/strings_manager.dart';
+import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/algo_tab.dart';
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/algorithm_title.dart';
+import 'package:algorithm_visualizer/core/widgets/custom_widgets/complexity_details.dart';
 import 'package:algorithm_visualizer/features/base/view_model/base_view_model.dart';
+import 'package:algorithm_visualizer/features/visualize/helper/o_notation.dart';
 import 'package:algorithm_visualizer/features/visualize/sub_view/searching/view/searching_view.dart';
+import 'package:algorithm_visualizer/features/visualize/sub_view/searching/view_model/grid_scroll_lock.dart';
 import 'package:algorithm_visualizer/features/visualize/sub_view/sorting/view/sorting_view.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-class VisualizePage extends StatefulWidget {
+class VisualizePage extends ConsumerStatefulWidget {
   const VisualizePage({this.sortingCard, this.searchingCard, super.key});
   final SortingAlgoCards? sortingCard;
   final SearchingAlgoCards? searchingCard;
 
   @override
-  State<VisualizePage> createState() => _VisualizePageState();
+  ConsumerState<VisualizePage> createState() => _VisualizePageState();
 }
 
-class _VisualizePageState extends State<VisualizePage> {
+class _VisualizePageState extends ConsumerState<VisualizePage> {
   late var sortingCard = widget.sortingCard;
   late var searchingCard = widget.searchingCard;
 
   final ValueNotifier<String> title = ValueNotifier("");
   final ValueNotifier<String> description = ValueNotifier("");
+  final ValueNotifier<AlgorithmComplexity?> complexity = ValueNotifier(null);
 
   late int tabView = getTabView;
 
@@ -63,6 +69,7 @@ class _VisualizePageState extends State<VisualizePage> {
   void dispose() {
     title.dispose();
     description.dispose();
+    complexity.dispose();
 
     super.dispose();
   }
@@ -71,14 +78,17 @@ class _VisualizePageState extends State<VisualizePage> {
   Widget build(BuildContext context) {
     final (sortingCard, searchingCard) = getCards();
 
+    final gridLocked = tabView == 1 && ref.watch(gridScrollLockProvider);
+
     // Scaffold/Metrial written in base_navigation, why?
-    // to control all main pages with the structure of them
-    return CustomScrollView(
-      physics: const BouncingScrollPhysics(),
-      slivers: [
+    // to control all main pages with the structure of the base
+
+    return NestedScrollView(
+      physics: gridLocked ? const NeverScrollableScrollPhysics() : const BouncingScrollPhysics(),
+      headerSliverBuilder: (context, innerBoxIsScrolled) => [
         SliverAppBar(
+          pinned: true,
           centerTitle: false,
-          forceMaterialTransparency: true,
           titleSpacing: 0,
           leadingWidth: 16.r,
           leading: const SizedBox(),
@@ -91,75 +101,143 @@ class _VisualizePageState extends State<VisualizePage> {
             ),
           ),
         ),
-        SliverToBoxAdapter(
-          child: Padding(
-            padding: REdgeInsets.only(left: 16, right: 16, bottom: 10),
-            child: Row(
+        SliverAppBar(
+          snap: true,
+          floating: true,
+          toolbarHeight: 140.r,
+          title: Container(
+            color: context.getColor(ThemeEnum.primary),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
               children: [
-                Expanded(
-                  child: InkWell(
-                    onTap: () {
-                      setState(() {
-                        tabView = 0;
-                        this.sortingCard = SortingAlgoCards.bubble;
-                        this.searchingCard = null;
-                      });
-                    },
-                    child: AlgoTab(
-                      isSelected: tabView == 0,
-                      addEndPadding: false,
-                      label: StringsManager.sorting,
-                      verticalPadding: 3,
-                      icon: Icons.filter_list_rounded,
-                    ),
+                Padding(
+                  padding: REdgeInsets.only(left: 16, right: 16, bottom: 10),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: InkWell(
+                          onTap: () {
+                            setState(() {
+                              tabView = 0;
+                              this.sortingCard = SortingAlgoCards.bubble;
+                              this.searchingCard = null;
+                            });
+                          },
+                          child: AlgoTab(
+                            isSelected: tabView == 0,
+                            addEndPadding: false,
+                            label: StringsManager.sorting,
+                            verticalPadding: 2,
+                            icon: Icons.filter_list_rounded,
+                          ),
+                        ),
+                      ),
+                      const RSizedBox(width: 10),
+                      Expanded(
+                        child: InkWell(
+                          onTap: () {
+                            setState(() {
+                              tabView = 1;
+                              this.sortingCard = null;
+                              this.searchingCard = SearchingAlgoCards.bfs;
+                            });
+                          },
+                          child: AlgoTab(
+                            isSelected: tabView == 1,
+                            addEndPadding: false,
+                            label: StringsManager.searching,
+                            verticalPadding: 2,
+                            icon: Icons.map_rounded,
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-                const RSizedBox(width: 10),
-                Expanded(
-                  child: InkWell(
-                    onTap: () {
-                      setState(() {
-                        tabView = 1;
-                        this.sortingCard = null;
-                        this.searchingCard = SearchingAlgoCards.bfs;
-                      });
-                    },
-                    child: AlgoTab(
-                      isSelected: tabView == 1,
-                      addEndPadding: false,
-                      label: StringsManager.searching,
-                      verticalPadding: 3,
-                      icon: Icons.map_rounded,
+                if (tabView == 0 && sortingCard != null) ...[
+                  Padding(
+                    padding: REdgeInsetsDirectional.only(bottom: 10),
+                    child: SortingSelectionList(
+                        card: sortingCard,
+                        onChangedTab: (SortingAlgoCards cardValue) async {
+                          if (sortingCard == cardValue) return;
+
+                          this.sortingCard = cardValue;
+                          setState(() {});
+                        }),
+                  ),
+                ] else if (searchingCard != null) ...[
+                  Padding(
+                    padding: REdgeInsets.only(bottom: 10),
+                    child: Row(
+                      children: List.generate(
+                        SearchingAlgoCards.values.length,
+                        (index) {
+                          final cardValue = SearchingAlgoCards.values[index];
+                          final searchingCardValues =
+                              BaseViewModel.searchingCards(SearchingAlgoCards.values[index]);
+
+                          return Expanded(
+                            child: Padding(
+                              padding: REdgeInsetsDirectional.only(
+                                  start: index == 0 ? 16 : 8,
+                                  end: index < SearchingAlgoCards.values.length - 1 ? 0 : 16),
+                              child: InkWell(
+                                onTap: () async {
+                                  if (searchingCard == cardValue) return;
+
+                                  this.searchingCard = cardValue;
+                                  setState(() {});
+                                },
+                                child: AlgoTab(
+                                  isSelected: cardValue == searchingCard,
+                                  addEndPadding: false,
+                                  label: searchingCardValues.card.algoComplexity.name,
+                                ),
+                              ),
+                            ),
+                          );
+                        },
+                      ),
                     ),
+                  ),
+                ],
+                Padding(
+                  padding: REdgeInsets.only(bottom: 10),
+                  child: ValueListenableBuilder(
+                    valueListenable: complexity,
+                    builder: (context, value, child) =>
+                        value == null ? const SizedBox.shrink() : ComplexityDetails(complexity: value),
                   ),
                 ),
               ],
             ),
           ),
         ),
-        SliverFillRemaining(
-            child: tabView == 0 && sortingCard != null
-                ? SortingView(
-                    card: sortingCard,
-                    onAlgoChanged: (title, description) {
-                      WidgetsBinding.instance.addPostFrameCallback((_) {
-                        this.title.value = title;
-                        this.description.value = description;
-                      });
-                    },
-                  )
-                : searchingCard != null
-                    ? SearchingView(
-                        card: searchingCard,
-                        onAlgoChanged: (title, description) {
-                          WidgetsBinding.instance.addPostFrameCallback((_) {
-                            this.title.value = title;
-                            this.description.value = description;
-                          });
-                        },
-                      )
-                    : const UnknownView()),
       ],
+      body: tabView == 0 && sortingCard != null
+          ? SortingView(
+              card: sortingCard,
+              onAlgoChanged: (title, description, complexity) {
+                WidgetsBinding.instance.addPostFrameCallback((_) {
+                  this.title.value = title;
+                  this.description.value = description;
+                  this.complexity.value = complexity;
+                });
+              },
+            )
+          : searchingCard != null
+              ? SearchingView(
+                  card: searchingCard,
+                  onAlgoChanged: (title, description, complexity) {
+                    WidgetsBinding.instance.addPostFrameCallback((_) {
+                      this.title.value = title;
+                      this.description.value = description;
+                      this.complexity.value = complexity;
+                    });
+                  },
+                )
+              : const UnknownView(),
     );
   }
 }

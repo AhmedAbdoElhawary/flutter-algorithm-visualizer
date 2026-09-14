@@ -3,20 +3,18 @@ import 'package:algorithm_visualizer/core/resources/styles_manager.dart';
 import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
 import 'package:algorithm_visualizer/core/widgets/adaptive/text/adaptive_text.dart';
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/algo_tab.dart';
-import 'package:algorithm_visualizer/core/widgets/custom_widgets/algorithm_control.dart';
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/algorithm_status_text.dart';
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/bar_chart_quiet.dart';
-import 'package:algorithm_visualizer/core/widgets/custom_widgets/complexity_details.dart';
 import 'package:algorithm_visualizer/features/base/view_model/base_view_model.dart';
+import 'package:algorithm_visualizer/features/visualize/helper/o_notation.dart';
 import 'package:algorithm_visualizer/features/visualize/helper/playback_speed.dart';
 import 'package:algorithm_visualizer/features/visualize/sub_view/sorting/view_model/sorting_notifier.dart';
+import 'package:algorithm_visualizer/features/visualize/sub_view/sorting/widgets/control_buttons.dart';
 import 'package:algorithm_visualizer/features/visualize/sub_view/sorting/widgets/sorting_legend.dart';
 import 'package:algorithm_visualizer/features/visualize/widgets/grid_squares_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-
-part '../widgets/control_buttons.dart';
 
 class SortingView extends ConsumerStatefulWidget {
   const SortingView({
@@ -25,7 +23,7 @@ class SortingView extends ConsumerStatefulWidget {
     super.key,
   });
   final SortingAlgoCards card;
-  final void Function(String title, String description) onAlgoChanged;
+  final void Function(String title, String description, AlgorithmComplexity complexity) onAlgoChanged;
   @override
   ConsumerState<SortingView> createState() => _SortingPageState();
 }
@@ -73,33 +71,16 @@ class _SortingPageState extends ConsumerState<SortingView> {
     instance = cardValue.instance;
 
     final description = ref.read(cardValue.instance.notifier).algorithmDescription;
-    widget.onAlgoChanged(cardValue.title, description);
+    final complexity = ref.read(cardValue.instance.notifier).algoComplexity;
+    widget.onAlgoChanged(cardValue.title, description, complexity);
     setState(() {});
   }
 
   @override
   Widget build(BuildContext context) {
-    final complexity = ref.read(instance.notifier).algoComplexity;
-
     return CustomScrollView(
       physics: const BouncingScrollPhysics(),
       slivers: [
-        SliverPadding(
-          padding: REdgeInsetsDirectional.only(bottom: 10),
-          sliver: SliverToBoxAdapter(
-            child: _SortingSelectionList(
-                card: card,
-                onChangedTab: (SortingAlgoCards cardValue) async {
-                  if (card == cardValue) return;
-
-                  _jump(card: cardValue, cleanInstance: true);
-                }),
-          ),
-        ),
-        SliverPadding(
-          padding: REdgeInsetsDirectional.only(bottom: 10),
-          sliver: SliverToBoxAdapter(child: ComplexityDetails(complexity: complexity)),
-        ),
         SliverToBoxAdapter(child: ShowUpSortingList(instance)),
         SliverPadding(
           padding: REdgeInsetsDirectional.only(top: 10),
@@ -114,7 +95,7 @@ class _SortingPageState extends ConsumerState<SortingView> {
           padding: REdgeInsetsDirectional.only(top: 10),
           sliver: SliverToBoxAdapter(child: _StatusText(instance)),
         ),
-        SliverToBoxAdapter(child: _SortingControlButtons(instance)),
+        SliverToBoxAdapter(child: SortingControlButtons(instance)),
         // SliverToBoxAdapter(child: Consumer(builder: (context, ref, child) {
         //   final currentStep = ref.watch(instance.select((s) => s.currentStep));
         //   final currentLine =
@@ -123,21 +104,20 @@ class _SortingPageState extends ConsumerState<SortingView> {
         //
         //   return LiveCodeSnippet(code: codeSnippet, currentLine: currentLine, title: title);
         // })),
-        const SliverToBoxAdapter(child: SizedBox(height: 50)),
       ],
     );
   }
 }
 
-class _SortingSelectionList extends StatefulWidget {
-  const _SortingSelectionList({required this.card, required this.onChangedTab});
+class SortingSelectionList extends StatefulWidget {
+  const SortingSelectionList({super.key, required this.card, required this.onChangedTab});
   final SortingAlgoCards card;
   final Future<void> Function(SortingAlgoCards cardValue) onChangedTab;
   @override
-  State<_SortingSelectionList> createState() => _SortingSelectionListState();
+  State<SortingSelectionList> createState() => _SortingSelectionListState();
 }
 
-class _SortingSelectionListState extends State<_SortingSelectionList> {
+class _SortingSelectionListState extends State<SortingSelectionList> {
   final cardValues = SortingAlgoCards.values;
   final controller = ScrollController();
 
@@ -148,7 +128,7 @@ class _SortingSelectionListState extends State<_SortingSelectionList> {
   }
 
   @override
-  void didUpdateWidget(covariant _SortingSelectionList oldWidget) {
+  void didUpdateWidget(covariant SortingSelectionList oldWidget) {
     if (widget.card != oldWidget.card) _jump();
 
     super.didUpdateWidget(oldWidget);
@@ -165,6 +145,12 @@ class _SortingSelectionListState extends State<_SortingSelectionList> {
         );
       }
     });
+  }
+
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
   }
 
   @override

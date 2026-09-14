@@ -9,17 +9,21 @@ class AuthForgotPasswordState {
 
   final String? emailError;
 
+  final int resendCountdown;
+
   const AuthForgotPasswordState({
     this.status = NotifierStatus.initial,
     this.errorMessage,
     this.successMessage,
     this.email = '',
     this.emailError,
+    this.resendCountdown = 0,
   });
 
   bool get isLoading => status == NotifierStatus.loading;
   bool get isSuccess => status == NotifierStatus.success;
   bool get isError => status == NotifierStatus.error;
+  bool get canResend => resendCountdown <= 0;
 
   AuthForgotPasswordState copyWith({
     NotifierStatus? status,
@@ -30,6 +34,7 @@ class AuthForgotPasswordState {
     String? email,
     String? emailError,
     bool clearEmailError = false,
+    int? resendCountdown,
   }) {
     return AuthForgotPasswordState(
       status: status ?? this.status,
@@ -37,6 +42,7 @@ class AuthForgotPasswordState {
       successMessage: clearSuccessMessage ? null : (successMessage ?? this.successMessage),
       email: email ?? this.email,
       emailError: clearEmailError ? null : (emailError ?? this.emailError),
+      resendCountdown: resendCountdown ?? this.resendCountdown,
     );
   }
 }

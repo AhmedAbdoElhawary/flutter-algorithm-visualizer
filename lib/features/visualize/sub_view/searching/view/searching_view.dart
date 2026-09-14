@@ -1,6 +1,5 @@
-import 'package:algorithm_visualizer/core/widgets/custom_widgets/algo_tab.dart';
-import 'package:algorithm_visualizer/core/widgets/custom_widgets/complexity_details.dart';
 import 'package:algorithm_visualizer/features/base/view_model/base_view_model.dart';
+import 'package:algorithm_visualizer/features/visualize/helper/o_notation.dart';
 import 'package:algorithm_visualizer/features/visualize/sub_view/searching/view_model/searching_notifier.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -14,7 +13,7 @@ import '../widgets/pf_step_info.dart';
 class SearchingView extends ConsumerStatefulWidget {
   const SearchingView({this.card = SearchingAlgoCards.bfs, required this.onAlgoChanged, super.key});
   final SearchingAlgoCards card;
-  final void Function(String title, String description) onAlgoChanged;
+  final void Function(String title, String description, AlgorithmComplexity complexity) onAlgoChanged;
 
   @override
   ConsumerState<SearchingView> createState() => _VisualizerScreenState();
@@ -63,56 +62,17 @@ class _VisualizerScreenState extends ConsumerState<SearchingView> {
     });
 
     final description = ref.read(instance.notifier).algorithmDescription;
+    final complexity = ref.read(instance.notifier).algoComplexity;
     final cardValue = BaseViewModel.searchingCards(card);
 
-    widget.onAlgoChanged(cardValue.title, description);
+    widget.onAlgoChanged(cardValue.title, description, complexity);
   }
 
   @override
   Widget build(BuildContext context) {
-    final complexity = ref.read(instance.notifier).algoComplexity;
-
-    const searchingValues = SearchingAlgoCards.values;
     return CustomScrollView(
       physics: const NeverScrollableScrollPhysics(),
       slivers: [
-        SliverPadding(
-          padding: REdgeInsets.only(bottom: 10),
-          sliver: SliverToBoxAdapter(
-            child: Row(
-              children: List.generate(
-                searchingValues.length,
-                (index) {
-                  final cardValue = searchingValues[index];
-                  final searchingCardValues = BaseViewModel.searchingCards(searchingValues[index]);
-
-                  return Expanded(
-                    child: Padding(
-                      padding: REdgeInsetsDirectional.only(
-                          start: index == 0 ? 16 : 8, end: index < searchingValues.length - 1 ? 0 : 16),
-                      child: InkWell(
-                        onTap: () async {
-                          if (card == cardValue) return;
-
-                          _jump(card: cardValue, cleanInstance: true);
-                        },
-                        child: AlgoTab(
-                          isSelected: cardValue == card,
-                          addEndPadding: false,
-                          label: searchingCardValues.card.algoComplexity.name,
-                        ),
-                      ),
-                    ),
-                  );
-                },
-              ),
-            ),
-          ),
-        ),
-        SliverPadding(
-            padding: REdgeInsetsDirectional.only(bottom: 10),
-            sliver: SliverToBoxAdapter(child: ComplexityDetails(complexity: complexity))),
-
         SliverToBoxAdapter(child: PFGrid(instance: instance)),
         const SliverToBoxAdapter(child: PFLegend()),
         SliverPadding(
@@ -124,7 +84,6 @@ class _VisualizerScreenState extends ConsumerState<SearchingView> {
         //   padding: REdgeInsetsDirectional.only(top: 10, bottom: 10),
         //   sliver: SliverToBoxAdapter(child: _LiveCodeSnippet(instance)),
         // ),
-        const SliverToBoxAdapter(child: SizedBox(height: 50)),
       ],
     );
   }
