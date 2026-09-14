@@ -41,10 +41,11 @@ String searchRoleLabel(SearchRole role) {
   }
 }
 
-/// Fixed precedence, shared by the painter and the legend so the two can never
-/// disagree. [SearchRole.path] outranks everything so the answer stays visible
-/// over the exploration that found it; [SearchRole.wall] is last because a wall
-/// is never also a search state.
+/// Display order for the legend. The painter does NOT use this order directly
+/// for color precedence — it special-cases [SearchRole.path] to win over
+/// every other role first (see `_roleFor` in `pf_grid_painter.dart`), so the
+/// answer stays visible over the exploration that found it, regardless of
+/// where `path` sits in this list.
 const List<SearchRole> kSearchRolePriority = [
   SearchRole.start,
   SearchRole.visited,
