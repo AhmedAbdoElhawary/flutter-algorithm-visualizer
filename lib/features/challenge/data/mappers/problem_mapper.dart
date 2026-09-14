@@ -33,6 +33,7 @@ class ProblemMapper {
       followUpConcepts: dto.followUpConcepts,
       commonMistakes: dto.commonMistakes,
       similarQuestions: dto.similarQuestions,
+      comparison: dto.comparison,
       problemStatus: storage?.problemStatus,
       isBookmarked: storage?.isBookmarked,
       solutionsStatus: storage?.solutionsStatus,

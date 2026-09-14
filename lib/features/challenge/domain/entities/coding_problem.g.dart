@@ -56,6 +56,7 @@ CodingProblem _$CodingProblemFromJson(Map<String, dynamic> json) => CodingProble
       solutionsStatus: (json['solutions_status'] as List<dynamic>?)
           ?.map((e) => ProblemSolutionStatusDTO.fromJson(e as Map<String, dynamic>))
           .toList(),
+      comparison: json['comparison'] as String?,
     );
 
 Map<String, dynamic> _$CodingProblemToJson(CodingProblem instance) => <String, dynamic>{
@@ -87,6 +88,7 @@ Map<String, dynamic> _$CodingProblemToJson(CodingProblem instance) => <String, d
       'follow_up_concepts': instance.followUpConcepts,
       'common_mistakes': instance.commonMistakes,
       'similar_questions': instance.similarQuestions?.map((e) => e.toJson()).toList(),
+      'comparison': instance.comparison,
       'problem_status': _$ProblemStatusEnumMap[instance.problemStatus],
       'is_bookmarked': instance.isBookmarked,
       'solutions_status': instance.solutionsStatus?.map((e) => e.toJson()).toList(),

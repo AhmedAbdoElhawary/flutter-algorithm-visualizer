@@ -46,6 +46,7 @@ class CodingProblem {
     required this.problemStatus,
     required this.isBookmarked,
     required this.solutionsStatus,
+    this.comparison,
   });
 
   final int? number;
@@ -76,6 +77,10 @@ class CodingProblem {
   final List<String>? followUpConcepts;
   final List<String>? commonMistakes;
   final List<SimilarQuestion>? similarQuestions;
+
+  /// How the grader matches this problem's output; see `OutputComparison`.
+  /// Absent for the usual case of a single exactly-specified answer.
+  final String? comparison;
   final ProblemStatus? problemStatus;
   final bool? isBookmarked;
   final List<ProblemSolutionStatusDTO>? solutionsStatus;

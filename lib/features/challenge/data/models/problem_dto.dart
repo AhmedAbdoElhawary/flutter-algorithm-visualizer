@@ -40,6 +40,7 @@ class ProblemDTO {
     required this.followUpConcepts,
     required this.commonMistakes,
     required this.similarQuestions,
+    this.comparison,
   });
 
   final int? problemId;
@@ -70,6 +71,10 @@ class ProblemDTO {
   final List<String>? followUpConcepts;
   final List<String>? commonMistakes;
   final List<SimilarQuestion>? similarQuestions;
+
+  /// How the grader matches this problem's output; see `OutputComparison`.
+  /// Absent for the usual case of a single exactly-specified answer.
+  final String? comparison;
 
   factory ProblemDTO.fromJson(Map<String, dynamic> json) => _$ProblemDTOFromJson(json);
 

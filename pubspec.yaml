@@ -17,10 +17,10 @@ dependencies:
   get_it: ^9.2.1
   flutter_screenutil: ^5.9.3
   flutter_svg: ^2.3.0
-  riverpod: ^3.4.2 # not used yet
+  riverpod: ^3.4.2
   flutter_riverpod: ^3.4.2
   get_storage: ^2.1.1
-  animations: ^2.2.0 # not used yet
+  animations: ^2.2.0
   collection: ^1.19.1
   async: ^2.13.1
   google_fonts: ^8.2.1
