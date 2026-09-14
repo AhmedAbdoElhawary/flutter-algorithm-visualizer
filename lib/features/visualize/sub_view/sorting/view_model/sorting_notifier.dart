@@ -110,7 +110,7 @@ abstract class SortingNotifier extends Notifier<SortingNotifierState>
                 : selectedAlgorithmsLength <= 6
                     ? 0.7
                     : 0.6;
-    final height = scaledHeight.h / selectedAlgorithmsLength * (per - 0.15);
+    final height = scaledHeight.r / selectedAlgorithmsLength * (per - 0.15);
     return (height, '$value');
   }
 
