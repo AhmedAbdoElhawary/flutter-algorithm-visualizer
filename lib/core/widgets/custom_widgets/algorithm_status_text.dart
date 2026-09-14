@@ -22,7 +22,7 @@ class AlgorithmStatusText extends ConsumerWidget {
     return Padding(
       padding: REdgeInsets.fromLTRB(16, 0, 16, 0),
       child: CardContainer(
-        surface: CdSurface.recessed,
+        surface: CdSurface.unColoredFill,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
