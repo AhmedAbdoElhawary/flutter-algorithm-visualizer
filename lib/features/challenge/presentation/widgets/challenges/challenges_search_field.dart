@@ -1,3 +1,4 @@
+import 'package:algorithm_visualizer/core/resources/dimensions_manager.dart';
 import 'package:algorithm_visualizer/core/resources/font_manager.dart';
 import 'package:algorithm_visualizer/core/resources/strings_manager.dart';
 import 'package:algorithm_visualizer/core/resources/styles_manager.dart';
@@ -33,7 +34,8 @@ class _ChallengesSearchFieldState extends ConsumerState<ChallengesSearchField> {
     return Padding(
       padding: REdgeInsets.fromLTRB(16, 0, 16, 12),
       child: CardContainer(
-        surface: CdSurface.recessed,
+        radius: CdRadius.medium,
+        surface: CdSurface.unColoredFill,
         padding: REdgeInsets.symmetric(horizontal: 14, vertical: 8),
         child: Row(
           children: [
