@@ -1,5 +1,6 @@
 import 'package:algorithm_visualizer/features/visualize/sub_view/searching/helper/pf_constants.dart';
 import 'package:algorithm_visualizer/features/visualize/sub_view/searching/helper/pf_step.dart';
+import 'package:algorithm_visualizer/features/visualize/sub_view/searching/helper/search_role.dart';
 import 'package:flutter/material.dart';
 
 class PFGridPainter extends CustomPainter {
@@ -39,47 +40,71 @@ class PFGridPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final double now = DateTime.now().millisecondsSinceEpoch.toDouble();
-    final cellW = size.width / kPFCells;
-    final cellH = size.height / kPFCells;
+    final cellW = size.width / kPFCols;
+    final cellH = size.height / kPFRows;
+
+    final path = step?.path;
+    final pathIndex = <int, int>{
+      if (path != null)
+        for (int i = 0; i < path.length; i++) path[i]: i,
+    };
 
     final gridPaint = Paint()
       ..color = gridLineColor
       ..strokeWidth = 0.5
       ..style = PaintingStyle.stroke;
 
-    for (int row = 0; row < kPFCells; row++) {
-      for (int col = 0; col < kPFCells; col++) {
-        final left = col * cellW;
-        final top = row * cellH;
-        final rect = Rect.fromLTWH(left, top, cellW, cellH);
-
-        final encoded = pfEncode(row, col);
-        final isWall = walls[row][col];
-        final isPath = step?.path?.contains(encoded) == true;
-        final isFrontier = step?.frontier.contains(encoded) == true;
-        final isVisited = step?.visited.contains(encoded) == true;
-
+    for (int row = 0; row < kPFRows; row++) {
+      for (int col = 0; col < kPFCols; col++) {
+        final rect = Rect.fromLTWH(col * cellW, row * cellH, cellW, cellH);
         canvas.drawRect(rect, gridPaint);
 
-        if (isPath) {
-          final startT = pathAnimations[encoded];
-          final t = startT != null ? ((now - startT) / 500.0) : 1.0;
-          _drawElasticCell(canvas, rect, t, pathColor);
-        } else if (isVisited) {
-          final startT = visitedAnimations[encoded];
-          final t = startT != null ? ((now - startT) / 1500.0) : 1.0;
-          _drawSearcherCell(canvas, rect, t, isFinalVisited: true);
-        } else if (isFrontier) {
-          final startT = frontierAnimations[encoded];
-          final t = startT != null ? ((now - startT) / 1500.0) : 1.0;
-          _drawSearcherCell(canvas, rect, t, isFinalVisited: false);
-        } else if (isWall) {
-          final startT = wallAnimations[encoded];
-          final t = startT != null ? ((now - startT) / 500.0) : 1.0;
-          _drawElasticCell(canvas, rect, t, wallColor);
+        final encoded = pfEncode(row, col);
+        final role = _roleFor(encoded, walls[row][col]);
+        if (role == null) continue;
+
+        switch (role) {
+          case SearchRole.path:
+            // The path draws itself out from start to end: each cell waits its
+            // ordered turn before its own 500 ms pop begins.
+            final startT = (pathAnimations[encoded] ?? now) + pathIndex[encoded]! * kPathStaggerMs;
+            if (now < startT) continue;
+            _drawElasticCell(canvas, rect, (now - startT) / 500.0, pathColor);
+          case SearchRole.visited:
+            final startT = visitedAnimations[encoded];
+            final t = startT != null ? ((now - startT) / 1500.0) : 1.0;
+            _drawSearcherCell(canvas, rect, t, isFinalVisited: true);
+          case SearchRole.frontier:
+            final startT = frontierAnimations[encoded];
+            final t = startT != null ? ((now - startT) / 1500.0) : 1.0;
+            _drawSearcherCell(canvas, rect, t, isFinalVisited: false);
+          case SearchRole.wall:
+            final startT = wallAnimations[encoded];
+            final t = startT != null ? ((now - startT) / 500.0) : 1.0;
+            _drawElasticCell(canvas, rect, t, wallColor);
+          case SearchRole.start:
+          case SearchRole.end:
+            break; // drawn as marker widgets above the canvas
         }
       }
     }
+  }
+
+  /// The first role in [kSearchRolePriority] this cell carries, or null when it
+  /// carries none — so a path cell paints as path even though it is also
+  /// visited.
+  SearchRole? _roleFor(int encoded, bool isWall) {
+    for (final role in kSearchRolePriority) {
+      final present = switch (role) {
+        SearchRole.path => step?.path?.contains(encoded) == true,
+        SearchRole.frontier => step?.frontier.contains(encoded) == true,
+        SearchRole.visited => step?.visited.contains(encoded) == true,
+        SearchRole.wall => isWall,
+        SearchRole.start || SearchRole.end => false,
+      };
+      if (present) return role;
+    }
+    return null;
   }
 
   void _drawSearcherCell(Canvas canvas, Rect rect, double t, {required bool isFinalVisited}) {
@@ -102,7 +127,7 @@ class PFGridPainter extends CustomPainter {
     }
     Color color;
     if (t < 0.4) {
-      color = Color.lerp(Colors.transparent, searcherColor, t / 0.4)!;
+      color = Color.lerp(searcherColor.withValues(alpha: 0), searcherColor, t / 0.4)!;
     } else if (t <= 0.5) {
       double localT = (t - 0.3) / 0.2;
       color = Color.lerp(searcherColor, searcherColor, localT)!;
