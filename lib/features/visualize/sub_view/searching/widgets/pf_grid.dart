@@ -1,6 +1,9 @@
 import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
+import 'package:algorithm_visualizer/core/widgets/adaptive/padding/adaptive_padding.dart';
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/card_container.dart';
 import 'package:algorithm_visualizer/features/visualize/sub_view/searching/helper/pf_constants.dart';
+import 'package:algorithm_visualizer/features/visualize/sub_view/searching/helper/search_role.dart';
+import 'package:algorithm_visualizer/features/visualize/sub_view/searching/view_model/grid_scroll_lock.dart';
 import 'package:algorithm_visualizer/features/visualize/sub_view/searching/widgets/end_point.dart';
 import 'package:algorithm_visualizer/features/visualize/sub_view/searching/widgets/pf_grid_painter.dart';
 import 'package:algorithm_visualizer/features/visualize/sub_view/searching/widgets/start_point.dart';
@@ -44,9 +47,14 @@ class _PFGridState extends ConsumerState<PFGrid> with SingleTickerProviderStateM
     super.dispose();
   }
 
-  void _handleGestureStart(Offset localPosition, double cellSize, SearchingState state) {
-    final col = (localPosition.dx / cellSize).floor().clamp(0, kPFCells - 1);
-    final row = (localPosition.dy / cellSize).floor().clamp(0, kPFCells - 1);
+  (int row, int col) _cellAt(Offset localPosition, double cellSize) => (
+        (localPosition.dy / cellSize).floor().clamp(0, kPFRows - 1),
+        (localPosition.dx / cellSize).floor().clamp(0, kPFCols - 1),
+      );
+
+  void _handleGestureStart(Offset localPosition, double cellSize) {
+    final (row, col) = _cellAt(localPosition, cellSize);
+    final state = ref.read(widget.instance);
 
     if (row == state.startRow && col == state.startCol) {
       _dragMode = _DragMode.start;
@@ -59,8 +67,7 @@ class _PFGridState extends ConsumerState<PFGrid> with SingleTickerProviderStateM
   }
 
   void _handleGestureUpdate(Offset localPosition, double cellSize) {
-    final col = (localPosition.dx / cellSize).floor().clamp(0, kPFCells - 1);
-    final row = (localPosition.dy / cellSize).floor().clamp(0, kPFCells - 1);
+    final (row, col) = _cellAt(localPosition, cellSize);
 
     if (_dragMode == _DragMode.start) {
       ref.read(widget.instance.notifier).setStartPoint(row, col);
@@ -71,9 +78,24 @@ class _PFGridState extends ConsumerState<PFGrid> with SingleTickerProviderStateM
     }
   }
 
+  /// Stamps for cells that are no longer in a set are dropped, so stepping
+  /// backward or resetting settles the display on the earlier state instead of
+  /// leaving motion behind.
+  void _syncStamps(Map<int, double> stamps, Set<int> previous, Set<int> next, double now) {
+    stamps.removeWhere((id, _) => !next.contains(id));
+    for (final id in next.difference(previous)) {
+      stamps[id] = now;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    final state = ref.watch(widget.instance);
+    final walls = ref.watch(widget.instance.select((s) => s.walls));
+    final step = ref.watch(widget.instance.select((s) => s.currentStep));
+    final markers = ref.watch(
+      widget.instance.select((s) => (s.startRow, s.startCol, s.endRow, s.endCol)),
+    );
+    final (startRow, startCol, endRow, endCol) = markers;
 
     ref.listen(widget.instance, (prev, next) {
       final now = DateTime.now().millisecondsSinceEpoch.toDouble();
@@ -83,8 +105,8 @@ class _PFGridState extends ConsumerState<PFGrid> with SingleTickerProviderStateM
       _visitedAnimations.removeWhere((_, v) => now - v > 1500);
       _pathAnimations.removeWhere((_, v) => now - v > 500);
 
-      for (int r = 0; r < kPFCells; r++) {
-        for (int c = 0; c < kPFCells; c++) {
+      for (int r = 0; r < kPFRows; r++) {
+        for (int c = 0; c < kPFCols; c++) {
           final pW = prev?.walls[r][c] ?? false;
           final nW = next.walls[r][c];
           final encoded = pfEncode(r, c);
@@ -96,104 +118,102 @@ class _PFGridState extends ConsumerState<PFGrid> with SingleTickerProviderStateM
         }
       }
 
-      final prevF = prev?.currentStep?.frontier.toSet() ?? {};
-      final nextF = next.currentStep?.frontier.toSet() ?? {};
-      if (nextF.length < prevF.length && nextF.isEmpty) {
-        _frontierAnimations.clear();
-      } else {
-        for (final id in nextF.difference(prevF)) {
-          _frontierAnimations[id] = now;
-        }
-      }
-
-      final prevV = prev?.currentStep?.visited.toSet() ?? {};
-      final nextV = next.currentStep?.visited.toSet() ?? {};
-      if (nextV.length < prevV.length && nextV.isEmpty) {
-        _visitedAnimations.clear();
-      } else {
-        for (final id in nextV.difference(prevV)) {
-          _visitedAnimations[id] = now;
-        }
-      }
-
-      final prevP = prev?.currentStep?.path?.toSet() ?? {};
-      final nextP = next.currentStep?.path?.toSet() ?? {};
-      if (nextP.length < prevP.length && nextP.isEmpty) {
-        _pathAnimations.clear();
-      } else {
-        for (final id in nextP.difference(prevP)) {
-          _pathAnimations[id] = now;
-        }
-      }
+      _syncStamps(
+        _frontierAnimations,
+        prev?.currentStep?.frontier ?? {},
+        next.currentStep?.frontier ?? {},
+        now,
+      );
+      _syncStamps(
+        _visitedAnimations,
+        prev?.currentStep?.visited ?? {},
+        next.currentStep?.visited ?? {},
+        now,
+      );
+      _syncStamps(
+        _pathAnimations,
+        prev?.currentStep?.path?.toSet() ?? {},
+        next.currentStep?.path?.toSet() ?? {},
+        now,
+      );
     });
 
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
-      child: LayoutBuilder(builder: (context, constraints) {
-        final cellSize = constraints.maxWidth / kPFCells;
-        final gridHeight = cellSize * kPFCells;
+    return HorizontalPadding(
+      padding: 16,
+      // The card's outline eats a pixel or so on each side, so the cell size is
+      // measured inside it — otherwise the painter divides a narrower box by
+      // kPFCols and the cells stop being square.
+      child: CardContainer(
+        surface: CdSurface.outlined,
+        clip: true,
+        padding: EdgeInsets.zero,
+        child: LayoutBuilder(builder: (context, constraints) {
+          final cellSize = constraints.maxWidth / kPFCols;
+          final gridHeight = cellSize * kPFRows;
 
-        return GestureDetector(
-          onTapDown: (d) => _handleGestureStart(d.localPosition, cellSize, state),
-          onPanStart: (d) => _handleGestureStart(d.localPosition, cellSize, state),
-          onPanUpdate: (d) => _handleGestureUpdate(d.localPosition, cellSize),
-          child: CardContainer(
-            surface: CdSurface.outline,
-            clip: true,
-            padding: EdgeInsets.zero,
-            child: SizedBox(
-              width: constraints.maxWidth,
-              height: gridHeight,
-              child: Stack(
-                children: [
-                  CustomPaint(
-                    size: Size(constraints.maxWidth, gridHeight),
-                    painter: PFGridPainter(
-                      walls: state.walls,
-                      step: state.currentStep,
-                      isDark: context.isThemeDark,
-                      wallColor: context.getColor(ThemeEnum.borderStrong),
-                      pathColor: context.getColor(ThemeEnum.difficultyEasy),
-                      searcherColor: context.getColor(ThemeEnum.comparing),
-                      searcherFinishedColor: context.getColor(ThemeEnum.barIdle),
-                      gridLineColor: context.getColor(ThemeEnum.borderSubtle),
-                      wallAnimations: _wallAnimations,
-                      frontierAnimations: _frontierAnimations,
-                      visitedAnimations: _visitedAnimations,
-                      pathAnimations: _pathAnimations,
-                      repaint: _controller,
+          // Pointer-down fires before touch slop is exceeded, so the page has
+          // already swapped its physics by the time the gesture arena would
+          // otherwise hand the drag to the enclosing Scrollable.
+          return Listener(
+            onPointerDown: (_) => ref.read(gridScrollLockProvider.notifier).lock(),
+            onPointerUp: (_) => ref.read(gridScrollLockProvider.notifier).release(),
+            onPointerCancel: (_) => ref.read(gridScrollLockProvider.notifier).release(),
+            child: GestureDetector(
+              onTapDown: (d) => _handleGestureStart(d.localPosition, cellSize),
+              onPanStart: (d) => _handleGestureStart(d.localPosition, cellSize),
+              onPanUpdate: (d) => _handleGestureUpdate(d.localPosition, cellSize),
+              child: SizedBox(
+                width: constraints.maxWidth,
+                height: gridHeight,
+                child: Stack(
+                  children: [
+                    CustomPaint(
+                      size: Size(constraints.maxWidth, gridHeight),
+                      painter: PFGridPainter(
+                        walls: walls,
+                        step: step,
+                        isDark: context.isThemeDark,
+                        wallColor: context.getColor(searchRoleColor(SearchRole.wall)),
+                        pathColor: context.getColor(searchRoleColor(SearchRole.path)),
+                        searcherColor: context.getColor(searchRoleColor(SearchRole.frontier)),
+                        searcherFinishedColor: context.getColor(searchRoleColor(SearchRole.visited)),
+                        gridLineColor: context.getColor(ThemeEnum.borderSubtle),
+                        wallAnimations: _wallAnimations,
+                        frontierAnimations: _frontierAnimations,
+                        visitedAnimations: _visitedAnimations,
+                        pathAnimations: _pathAnimations,
+                        repaint: _controller,
+                      ),
                     ),
-                  ),
-                  PositionedDirectional(
-                    start: state.startCol * cellSize,
-                    // - 2.5: to center the start point
-                    top: state.startRow * cellSize - 2.5,
-                    width: cellSize,
-                    height: cellSize,
-                    child: PFStartPointWidget(size: cellSize, color: context.getColor(ThemeEnum.textBright)),
-                  ),
-                  PositionedDirectional(
-                    // - 1.5: to center the start point
-
-                    start: state.endCol * cellSize - 1.5,
-                    // - 1: to center the start point
-
-                    top: state.endRow * cellSize - 1,
-                    width: cellSize,
-                    height: cellSize,
-                    child: PFEndPointWidget(
-                      size: cellSize,
-                      outerColor: context.getColor(ThemeEnum.difficultyEasy),
-                      midColor: context.getColor(ThemeEnum.textBright),
-                      innerColor: context.getColor(ThemeEnum.difficultyEasy),
+                    PositionedDirectional(
+                      start: startCol * cellSize,
+                      top: startRow * cellSize,
+                      width: cellSize,
+                      height: cellSize,
+                      child: PFStartPointWidget(
+                        size: cellSize,
+                        color: context.getColor(searchRoleColor(SearchRole.start)),
+                      ),
                     ),
-                  ),
-                ],
+                    PositionedDirectional(
+                      start: endCol * cellSize,
+                      top: endRow * cellSize,
+                      width: cellSize,
+                      height: cellSize,
+                      child: PFEndPointWidget(
+                        size: cellSize,
+                        outerColor: context.getColor(searchRoleColor(SearchRole.end)),
+                        midColor: context.getColor(ThemeEnum.textBright),
+                        innerColor: context.getColor(searchRoleColor(SearchRole.end)),
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
-          ),
-        );
-      }),
+          );
+        }),
+      ),
     );
   }
 }
