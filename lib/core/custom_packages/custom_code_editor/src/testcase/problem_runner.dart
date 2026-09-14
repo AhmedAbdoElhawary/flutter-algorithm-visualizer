@@ -3,10 +3,12 @@ import 'custom_object_shape.dart';
 import 'function_signature.dart';
 import 'object_builder.dart';
 import 'object_serializer.dart';
+import 'output_comparison.dart';
 import 'test_case.dart';
 import 'test_value.dart';
 import 'value_parser.dart';
 
+export 'output_comparison.dart';
 export 'test_case.dart';
 
 /// Everything the runner needs to know about a coding problem.
@@ -17,6 +19,7 @@ class ProblemData {
     this.hiddenTestCases = const <ProblemTestCase>[],
     this.customObjects = const <String, CustomObjectShape>{},
     this.customObjectSources = const <String>[],
+    this.comparison = OutputComparison.exact,
   });
 
   /// The `function_signature.dart` string, e.g.
@@ -32,6 +35,11 @@ class ProblemData {
   /// Raw `class` source (e.g. the `ListNode` definition) to prepend when the
   /// user's code doesn't already define the class.
   final List<String> customObjectSources;
+
+  /// How the result is matched against the expected output. Problems whose
+  /// answer has no required ordering relax this so a correct solution isn't
+  /// failed for the order it returned.
+  final OutputComparison comparison;
 }
 
 /// Grades user-written Dart code against a problem's test cases using the
@@ -122,7 +130,8 @@ class ProblemRunner {
 
       results.add(SingleTestCaseResult(
         testCase: testCase,
-        passed: actual == expectedCanonical,
+        passed: normalizeForComparison(actual, problem.comparison) ==
+            normalizeForComparison(expectedCanonical, problem.comparison),
         actualOutput: actual,
       ));
     }
