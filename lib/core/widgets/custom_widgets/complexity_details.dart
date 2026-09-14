@@ -39,7 +39,7 @@ class TimeComplexityData extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CardContainer(
-      surface: CdSurface.recessed,
+      surface: CdSurface.unColoredFill,
       radius: CdRadius.xs,
       padding: REdgeInsets.all(6),
       child: Row(
@@ -64,7 +64,7 @@ class SpaceComplexityData extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CardContainer(
-      surface: CdSurface.recessed,
+      surface: CdSurface.unColoredFill,
       radius: CdRadius.xs,
       padding: REdgeInsets.all(6),
       child: Row(
@@ -89,7 +89,7 @@ class StabilityData extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CardContainer(
-      surface: CdSurface.recessed,
+      surface: CdSurface.unColoredFill,
       radius: CdRadius.xs,
       padding: REdgeInsets.all(6),
       child: Row(
