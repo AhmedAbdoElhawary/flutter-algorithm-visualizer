@@ -66,6 +66,11 @@ class LoggingProblemRemoteDataSource implements ProblemRemoteDataSource {
     );
   }
 
+  @override
+  Future<void> deleteAllProblems() {
+    return FirebaseLogger.trace(_scope, 'deleteAllProblems', () => _source.deleteAllProblems());
+  }
+
   Map<String, Object?> _problemArgs(ProblemStorageDTO problem) {
     return {
       'problemId': problem.problemId,
