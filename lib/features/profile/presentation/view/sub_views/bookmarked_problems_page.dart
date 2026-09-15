@@ -22,7 +22,7 @@ class BookmarkedProblemsPage extends ConsumerWidget {
     final problems = ref.watch(problemsProvider);
 
     return Scaffold(
-      backgroundColor: context.getColor(ThemeEnum.primary),
+      backgroundColor: context.getColor(ThemeEnum.ground),
       body: SafeArea(
         child: problems.when(
           data: (all) {
@@ -34,7 +34,7 @@ class BookmarkedProblemsPage extends ConsumerWidget {
                 Expanded(
                   child: bookmarked.isEmpty
                       ? const Center(
-                          child: MediumText(StringsManager.noProblemsFound, color: ThemeEnum.textSecond),
+                          child: MediumText(StringsManager.noProblemsFound, color: ThemeEnum.inkBody),
                         )
                       : ListView.separated(
                           padding: REdgeInsets.fromLTRB(16, 4, 16, 16),
@@ -63,7 +63,7 @@ class BookmarkedProblemsPage extends ConsumerWidget {
           },
           loading: () => Center(child: CircularProgressIndicator(strokeWidth: 2.r)),
           error: (_, __) => const Center(
-            child: MediumText(StringsManager.notAbleToLoadAnyChallenge, color: ThemeEnum.textSecond),
+            child: MediumText(StringsManager.notAbleToLoadAnyChallenge, color: ThemeEnum.inkBody),
           ),
         ),
       ),
@@ -85,9 +85,9 @@ class _Header extends StatelessWidget {
       child: Row(
         children: [
           const CustomBackButton(),
-          BoldText(StringsManager.bookmarked.trim(), color: ThemeEnum.textPrimary, fontSize: 17),
+          BoldText(StringsManager.bookmarked.trim(), color: ThemeEnum.inkTitle, fontSize: 17),
           const Spacer(),
-          RegularText('$count ${unit.toLowerCase()}', color: ThemeEnum.textSecond, fontSize: 11),
+          RegularText('$count ${unit.toLowerCase()}', color: ThemeEnum.inkBody, fontSize: 11),
         ],
       ),
     );
