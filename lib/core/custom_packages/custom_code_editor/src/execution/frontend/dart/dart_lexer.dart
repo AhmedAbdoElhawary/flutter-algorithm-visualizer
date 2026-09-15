@@ -7,17 +7,51 @@ library;
 import '../../errors/failure.dart';
 
 enum DartTokenType {
-  leftParen, rightParen, leftBrace, rightBrace, leftBracket, rightBracket,
-  comma, dot, question, questionDot, questionQuestion, questionQuestionEqual,
-  colon, semicolon,
-  plus, minus, star, slash, tildeSlash, percent,
-  plusPlus, minusMinus,
-  plusEqual, minusEqual, starEqual, slashEqual, tildeSlashEqual, percentEqual,
-  equal, equalEqual, bangEqual, bang,
-  less, lessEqual, greater, greaterEqual,
-  ampAmp, pipePipe,
+  leftParen,
+  rightParen,
+  leftBrace,
+  rightBrace,
+  leftBracket,
+  rightBracket,
+  comma,
+  dot,
+  question,
+  questionDot,
+  questionQuestion,
+  questionQuestionEqual,
+  colon,
+  semicolon,
+  plus,
+  minus,
+  star,
+  slash,
+  tildeSlash,
+  percent,
+  plusPlus,
+  minusMinus,
+  plusEqual,
+  minusEqual,
+  starEqual,
+  slashEqual,
+  tildeSlashEqual,
+  percentEqual,
+  equal,
+  equalEqual,
+  bangEqual,
+  bang,
+  less,
+  lessEqual,
+  greater,
+  greaterEqual,
+  ampAmp,
+  pipePipe,
   arrow,
-  identifier, intLiteral, doubleLiteral, stringLiteral, boolLiteral, nullLiteral,
+  identifier,
+  intLiteral,
+  doubleLiteral,
+  stringLiteral,
+  boolLiteral,
+  nullLiteral,
   eof,
 }
 
@@ -95,7 +129,11 @@ class DartLexer {
       if (c == '"' || c == "'") {
         final start = line;
         final (literal, newIndex, newLine) = _scanString(source, i, line);
-        tokens.add(DartToken(type: DartTokenType.stringLiteral, lexeme: source.substring(i, newIndex), line: start, literal: literal));
+        tokens.add(DartToken(
+            type: DartTokenType.stringLiteral,
+            lexeme: source.substring(i, newIndex),
+            line: start,
+            literal: literal));
         i = newIndex;
         line = newLine;
         continue;
@@ -118,7 +156,8 @@ class DartLexer {
           case 'true':
             tokens.add(DartToken(type: DartTokenType.boolLiteral, lexeme: lexeme, line: line, literal: true));
           case 'false':
-            tokens.add(DartToken(type: DartTokenType.boolLiteral, lexeme: lexeme, line: line, literal: false));
+            tokens
+                .add(DartToken(type: DartTokenType.boolLiteral, lexeme: lexeme, line: line, literal: false));
           case 'null':
             tokens.add(DartToken(type: DartTokenType.nullLiteral, lexeme: lexeme, line: line));
           default:
@@ -186,7 +225,11 @@ class DartLexer {
           } else if (_peek(source, i, '~/')) {
             addSimple(DartTokenType.tildeSlash, '~/', 2);
           } else {
-            throw FrontendFailure(kind: FailureKind.syntax, code: 'unexpectedCharacter', data: <String, Object?>{'char': c}, line: line);
+            throw FrontendFailure(
+                kind: FailureKind.syntax,
+                code: 'unexpectedCharacter',
+                data: <String, Object?>{'char': c},
+                line: line);
           }
         case '/':
           if (_peek(source, i, '/=')) {
@@ -230,16 +273,28 @@ class DartLexer {
           if (_peek(source, i, '&&')) {
             addSimple(DartTokenType.ampAmp, '&&', 2);
           } else {
-            throw FrontendFailure(kind: FailureKind.syntax, code: 'unexpectedCharacter', data: <String, Object?>{'char': c}, line: line);
+            throw FrontendFailure(
+                kind: FailureKind.syntax,
+                code: 'unexpectedCharacter',
+                data: <String, Object?>{'char': c},
+                line: line);
           }
         case '|':
           if (_peek(source, i, '||')) {
             addSimple(DartTokenType.pipePipe, '||', 2);
           } else {
-            throw FrontendFailure(kind: FailureKind.syntax, code: 'unexpectedCharacter', data: <String, Object?>{'char': c}, line: line);
+            throw FrontendFailure(
+                kind: FailureKind.syntax,
+                code: 'unexpectedCharacter',
+                data: <String, Object?>{'char': c},
+                line: line);
           }
         default:
-          throw FrontendFailure(kind: FailureKind.syntax, code: 'unexpectedCharacter', data: <String, Object?>{'char': c}, line: line);
+          throw FrontendFailure(
+              kind: FailureKind.syntax,
+              code: 'unexpectedCharacter',
+              data: <String, Object?>{'char': c},
+              line: line);
       }
     }
 
@@ -247,7 +302,8 @@ class DartLexer {
     return tokens;
   }
 
-  bool _peek(String source, int i, String expect) => i + expect.length <= source.length && source.substring(i, i + expect.length) == expect;
+  bool _peek(String source, int i, String expect) =>
+      i + expect.length <= source.length && source.substring(i, i + expect.length) == expect;
 
   bool _isDigit(String c) => c.codeUnitAt(0) >= 0x30 && c.codeUnitAt(0) <= 0x39;
   bool _isIdentStart(String c) => RegExp(r'[A-Za-z_$]').hasMatch(c);
@@ -276,7 +332,10 @@ class DartLexer {
     }
     final text = source.substring(start, i);
     if (isDouble) {
-      return (DartToken(type: DartTokenType.doubleLiteral, lexeme: text, line: line, literal: double.parse(text)), i);
+      return (
+        DartToken(type: DartTokenType.doubleLiteral, lexeme: text, line: line, literal: double.parse(text)),
+        i
+      );
     }
     return (DartToken(type: DartTokenType.intLiteral, lexeme: text, line: line, literal: int.parse(text)), i);
   }
@@ -338,7 +397,9 @@ class DartLexer {
             if (source[j] == '\n') line++;
             j++;
           }
-          if (depth != 0) throw FrontendFailure(kind: FailureKind.syntax, code: 'unterminatedString', line: line);
+          if (depth != 0) {
+            throw FrontendFailure(kind: FailureKind.syntax, code: 'unterminatedString', line: line);
+          }
           parts.add(InterpolationSlice(source.substring(exprStart, j), line));
           i = j + 1;
           continue;
@@ -363,7 +424,11 @@ class DartLexer {
     return (parts, i, line);
   }
 
-  bool _peek3(String source, int i, String quoteChar) => i + 3 <= source.length && source[i] == quoteChar && source[i + 1] == quoteChar && source[i + 2] == quoteChar;
+  bool _peek3(String source, int i, String quoteChar) =>
+      i + 3 <= source.length &&
+      source[i] == quoteChar &&
+      source[i + 1] == quoteChar &&
+      source[i + 2] == quoteChar;
 
   String _unescape(String c) {
     switch (c) {
