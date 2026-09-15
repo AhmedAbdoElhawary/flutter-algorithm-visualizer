@@ -102,8 +102,7 @@ if (!0) { console.log("zero falsy") }
 if (!"") { console.log("empty string falsy") }
 ''');
       expect(r.failure, isNull, reason: '$r');
-      expect(r.stdout,
-          <String>['array truthy', 'object truthy', 'zero falsy', 'empty string falsy']);
+      expect(r.stdout, <String>['array truthy', 'object truthy', 'zero falsy', 'empty string falsy']);
     });
 
     test('NaN is falsy', () {
@@ -214,12 +213,15 @@ console.log(Math.max(...xs))
     });
 
     test('recursion', () {
-      final r = callJs('''
+      final r = callJs(
+          '''
 function fib(n) {
   if (n < 2) return n
   return fib(n - 1) + fib(n - 2)
 }
-''', 'fib', <Object?>[15]);
+''',
+          'fib',
+          <Object?>[15]);
       expect(r.failure, isNull, reason: '$r');
       expect(r.value, 610);
     });
@@ -794,14 +796,17 @@ console.log(o?.name)
 
   group('line fidelity', () {
     test('a runtime failure reports the learner line, not a harness line', () {
-      final r = callJs('''
+      final r = callJs(
+          '''
 function solve(xs) {
   let total = 0
   return xs[0].missing.deep
 }
-''', 'solve', <Object?>[
-        <Object?>[1, 2],
-      ]);
+''',
+          'solve',
+          <Object?>[
+            <Object?>[1, 2],
+          ]);
       expect(r.failure, isNotNull);
       expect(r.failure!.line, 3);
     });

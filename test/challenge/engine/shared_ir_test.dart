@@ -99,8 +99,8 @@ void main() {
     });
 
     test('strings slice to strings, including reversal', () {
-      expect(evalToPlain(IrSlice(line: 1, receiver: strLit('hello'), start: intLit(1), end: intLit(4))),
-          'ell');
+      expect(
+          evalToPlain(IrSlice(line: 1, receiver: strLit('hello'), start: intLit(1), end: intLit(4))), 'ell');
       expect(evalToPlain(IrSlice(line: 1, receiver: strLit('hello'), step: intLit(-1))), 'olleh');
     });
 
@@ -207,13 +207,14 @@ void main() {
     test('byProperty unpacks named fields — JavaScript object destructuring', () {
       final result = runProgram([
         IrClassDecl(line: 1, name: 'P', methods: [
-          IrFunctionDecl(line: 2, name: '<init>', params: const [IrParam('x'), IrParam('y')], body: [
+          IrFunctionDecl(line: 2, name: '<init>', params: const [
+            IrParam('x'),
+            IrParam('y')
+          ], body: [
             IrExprStmt(
-                line: 3,
-                expr: IrPropertySet(line: 3, receiver: id('this'), name: 'x', value: id('x'))),
+                line: 3, expr: IrPropertySet(line: 3, receiver: id('this'), name: 'x', value: id('x'))),
             IrExprStmt(
-                line: 4,
-                expr: IrPropertySet(line: 4, receiver: id('this'), name: 'y', value: id('y'))),
+                line: 4, expr: IrPropertySet(line: 4, receiver: id('this'), name: 'y', value: id('y'))),
           ]),
         ]),
         IrDestructure(
@@ -260,8 +261,12 @@ void main() {
     test('spreading copies rather than aliasing the source list', () {
       final result = runProgram([
         IrVarDecl(line: 1, name: 'a', initializer: listOf([1, 2])),
-        IrVarDecl(line: 2, name: 'b', initializer: IrListLiteral(line: 2, items: [IrSpread(line: 2, value: id('a'))])),
-        IrExprStmt(line: 3, expr: IrIndexSet(line: 3, receiver: id('b'), index: intLit(0), value: intLit(99))),
+        IrVarDecl(
+            line: 2,
+            name: 'b',
+            initializer: IrListLiteral(line: 2, items: [IrSpread(line: 2, value: id('a'))])),
+        IrExprStmt(
+            line: 3, expr: IrIndexSet(line: 3, receiver: id('b'), index: intLit(0), value: intLit(99))),
         IrReturn(line: 4, value: id('a')),
       ]);
       expect(plain(result.returned!), [1, 2]);
@@ -284,7 +289,10 @@ void main() {
     test('spread as a call argument expands to separate parameters', () {
       // f(a, b) called as f(...[3, 4]) — this is `Math.max(...xs)` in JS.
       final result = runProgram([
-        IrFunctionDecl(line: 1, name: 'f', params: const [IrParam('a'), IrParam('b')], body: [
+        IrFunctionDecl(line: 1, name: 'f', params: const [
+          IrParam('a'),
+          IrParam('b')
+        ], body: [
           IrReturn(line: 2, value: IrBinary(line: 2, op: IrBinaryOp.sub, left: id('a'), right: id('b'))),
         ]),
         IrReturn(
@@ -299,7 +307,11 @@ void main() {
 
     test('spread mixes with plain arguments in the right order', () {
       final result = runProgram([
-        IrFunctionDecl(line: 1, name: 'f', params: const [IrParam('a'), IrParam('b'), IrParam('c')], body: [
+        IrFunctionDecl(line: 1, name: 'f', params: const [
+          IrParam('a'),
+          IrParam('b'),
+          IrParam('c')
+        ], body: [
           IrReturn(line: 2, value: IrListLiteral(line: 2, items: [id('a'), id('b'), id('c')])),
         ]),
         IrReturn(
@@ -315,7 +327,9 @@ void main() {
 
     test('spreading the wrong argument count still reports wrongArgumentCount', () {
       final result = runProgram([
-        IrFunctionDecl(line: 1, name: 'f', params: const [IrParam('a')], body: [
+        IrFunctionDecl(line: 1, name: 'f', params: const [
+          IrParam('a')
+        ], body: [
           IrReturn(line: 2, value: id('a')),
         ]),
         IrReturn(

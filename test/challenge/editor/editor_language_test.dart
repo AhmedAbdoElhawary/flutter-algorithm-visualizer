@@ -142,7 +142,8 @@ void main() {
       expect(editorText(), contains('int add'));
 
       // Edit the Dart draft, then leave it.
-      tester.widget<CodeEditor>(find.byType(CodeEditor)).controller.text = 'int add(int a, int b) { return 99; }';
+      tester.widget<CodeEditor>(find.byType(CodeEditor)).controller.text =
+          'int add(int a, int b) { return 99; }';
       await tester.pumpAndSettle();
 
       await tester.tap(chip('Python'));

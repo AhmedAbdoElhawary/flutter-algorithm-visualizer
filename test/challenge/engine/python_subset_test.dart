@@ -419,8 +419,7 @@ print(c)
     });
 
     test('a nested comprehension flattens in reading order', () {
-      expect(value('[(a, b) for a in range(2) for b in range(2)]'),
-          '[(0, 0), (0, 1), (1, 0), (1, 1)]');
+      expect(value('[(a, b) for a in range(2) for b in range(2)]'), '[(0, 0), (0, 1), (1, 0), (1, 1)]');
     });
 
     test('a comprehension over pairs unpacks them', () {
@@ -772,13 +771,16 @@ except:
 
   group('line fidelity', () {
     test('a runtime failure reports the learner line, not a harness line', () {
-      final r = callPython('''
+      final r = callPython(
+          '''
 def solve(xs):
     total = 0
     return xs[99]
-''', 'solve', <Object?>[
-        <Object?>[1, 2],
-      ]);
+''',
+          'solve',
+          <Object?>[
+            <Object?>[1, 2],
+          ]);
       expect(r.failure, isNotNull);
       expect(r.failure!.line, 3);
     });

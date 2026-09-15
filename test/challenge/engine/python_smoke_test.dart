@@ -129,21 +129,27 @@ print(sorted(pairs, key=lambda p: p[1]))
   });
 
   test('the harness calls a named function with arguments', () {
-    final r = callPython('''
+    final r = callPython(
+        '''
 def add(a, b):
     return a + b
-''', 'add', <Object?>[2, 3]);
+''',
+        'add',
+        <Object?>[2, 3]);
     expect(r.failure, isNull, reason: '$r');
     expect(r.value, 5);
   });
 
   test('recursion', () {
-    final r = callPython('''
+    final r = callPython(
+        '''
 def fib(n):
     if n < 2:
         return n
     return fib(n - 1) + fib(n - 2)
-''', 'fib', <Object?>[15]);
+''',
+        'fib',
+        <Object?>[15]);
     expect(r.failure, isNull, reason: '$r');
     expect(r.value, 610);
   });
