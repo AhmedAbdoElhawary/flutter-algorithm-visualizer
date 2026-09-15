@@ -740,8 +740,13 @@ except:
       'yield': 'def f():\n    yield 1\n',
       'async def': 'async def f():\n    return 1\n',
       'await': 'def f():\n    await g()\n',
+      // `collections` and `heapq` *are* shipped now (see
+      // python_collections_test.dart); every other module is still refused,
+      // and refused by name rather than as a syntax error.
       'import': 'import math\n',
-      'from import': 'from collections import deque\n',
+      'from import of an unshipped module': 'from math import sqrt\n',
+      'from import of a member that does not exist': 'from collections import OrderedDict\n',
+      'import star': 'from collections import *\n',
       'with': 'with open("f") as f:\n    pass\n',
       'decorator': '@staticmethod\ndef f():\n    return 1\n',
       'global': 'def f():\n    global x\n',
