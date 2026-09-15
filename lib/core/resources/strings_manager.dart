@@ -290,7 +290,7 @@ class StringsManager {
   static const String demoAccountUser = "Ahmed Elhawary (3 solved)";
   static const String autoFill = "Auto-fill";
   static const String dontHaveAccount = "Don't have an account?";
-  static const String noAccountYet = "No account yet?";
+  static const String noAccountYet = "Not have account yet?";
   static const String signUp = "Sign up";
   static const String orDivider = "or";
   static const String continueWithGoogle = "Continue with Google";
