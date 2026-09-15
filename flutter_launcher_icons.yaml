@@ -1,0 +1,29 @@
+# Default (non-flavored) launcher icon: same production art as
+# flutter_launcher_icons-production.yaml, written to android/app/src/main/res/**
+# and the default AppIcon set instead of a flavor-suffixed one. This is what a
+# plain `flutter run` (no --flavor) falls back to, and what Android Studio /
+# Xcode show before a flavor is picked, so it should never be left as the
+# original `flutter create` placeholder.
+#
+# The package switches into "flavor mode" (and ignores this file) whenever
+# any flutter_launcher_icons-*.yaml file is present, so regenerating this one
+# needs those moved out of the way first:
+#   mkdir -p /tmp/flavor_yaml_backup
+#   mv flutter_launcher_icons-dev.yaml flutter_launcher_icons-staging.yaml \
+#      flutter_launcher_icons-production.yaml /tmp/flavor_yaml_backup/
+#   dart run flutter_launcher_icons -f flutter_launcher_icons.yaml
+#   mv /tmp/flavor_yaml_backup/*.yaml .
+flutter_launcher_icons:
+  image_path: "assets/logo/png/app-icon-1024.png"
+  image_path_ios_dark_transparent: "assets/logo/png/mark-white-1024.png"
+  image_path_ios_tinted_grayscale: "assets/logo/png/mark-white-1024.png"
+  desaturate_tinted_to_grayscale_ios: true
+
+  android: true
+  min_sdk_android: 21
+  adaptive_icon_background: "#0B0B0D"
+  adaptive_icon_foreground: "assets/logo/png/android-adaptive-foreground-432.png"
+  adaptive_icon_monochrome: "assets/logo/png/android-adaptive-foreground-432.png"
+
+  ios: true
+  remove_alpha_ios: true
