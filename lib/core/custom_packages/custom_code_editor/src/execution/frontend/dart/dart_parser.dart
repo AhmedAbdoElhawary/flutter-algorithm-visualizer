@@ -112,18 +112,27 @@ class DartParser {
     if (_check(DartTokenType.question)) _advance();
   }
 
-  void _skipGenericArgs() {
+  /// Returns how many top-level comma-separated type arguments it skipped
+  /// (`<int>` -> 1, `<String, int>` -> 2) — the only way to tell `<int>{}`
+  /// (a `Set<int>` literal) from `<String, int>{}` (a `Map` literal) apart
+  /// once both are empty and the `:`-vs-no-`:` heuristic in
+  /// [_mapOrSetLiteral] has nothing to look at.
+  int _skipGenericArgs() {
     _expect(DartTokenType.less, 'expectedGenericOpen');
     var depth = 1;
+    var argCount = 1;
     while (depth > 0) {
       if (_isAtEnd) throw _syntaxError('unexpectedEndOfInput');
       if (_check(DartTokenType.less)) {
         depth++;
       } else if (_check(DartTokenType.greater)) {
         depth--;
+      } else if (_check(DartTokenType.comma) && depth == 1) {
+        argCount++;
       }
       _advance();
     }
+    return argCount;
   }
 
   void _skipParens() {
@@ -167,15 +176,23 @@ class DartParser {
     return _statement();
   }
 
+  /// `var a = 1, b = 2;` — every declarator lands in the surrounding scope,
+  /// so multiple declarators come back as an [IrStmtGroup], never an
+  /// [IrBlock] (which would scope them away from the rest of the function).
   IrStmt _varDeclKeywordForm() {
     final line = _peek.line;
     _advance();
     if (_looksLikeTypedDeclarationHere()) _trySkipType();
-    final name = _expect(DartTokenType.identifier, 'expectedVariableName').lexeme;
-    IrExpr? init;
-    if (_match(DartTokenType.equal)) init = _expression();
+    final decls = <IrStmt>[];
+    while (true) {
+      final name = _expect(DartTokenType.identifier, 'expectedVariableName').lexeme;
+      IrExpr? init;
+      if (_match(DartTokenType.equal)) init = _expression();
+      decls.add(IrVarDecl(line: line, name: name, initializer: init));
+      if (!_match(DartTokenType.comma)) break;
+    }
     _expect(DartTokenType.semicolon, 'expectedSemicolon');
-    return IrVarDecl(line: line, name: name, initializer: init);
+    return decls.length == 1 ? decls.single : IrStmtGroup(line: line, statements: decls);
   }
 
   IrStmt _typedDeclaration() {
@@ -186,8 +203,15 @@ class DartParser {
     if (_check(DartTokenType.leftParen)) return _functionDeclAfterName(line, name);
     IrExpr? init;
     if (_match(DartTokenType.equal)) init = _expression();
+    final decls = <IrStmt>[IrVarDecl(line: line, name: name, initializer: init)];
+    while (_match(DartTokenType.comma)) {
+      final nextName = _expect(DartTokenType.identifier, 'expectedVariableName').lexeme;
+      IrExpr? nextInit;
+      if (_match(DartTokenType.equal)) nextInit = _expression();
+      decls.add(IrVarDecl(line: line, name: nextName, initializer: nextInit));
+    }
     _expect(DartTokenType.semicolon, 'expectedSemicolon');
-    return IrVarDecl(line: line, name: name, initializer: init);
+    return decls.length == 1 ? decls.single : IrStmtGroup(line: line, statements: decls);
   }
 
   /// `async`, `async*` and `sync*` function modifiers, and bare `await`/
@@ -681,6 +705,23 @@ class DartParser {
   IrExpr _postfix(IrExpr expr) {
     while (true) {
       final line = _peek.line;
+      if (_check(DartTokenType.dot) && _peekAhead(1).type == DartTokenType.dot) {
+        final operations = <IrCascadeOp>[];
+        while (_check(DartTokenType.dot) && _peekAhead(1).type == DartTokenType.dot) {
+          _advance();
+          _advance();
+          final name = _expect(DartTokenType.identifier, 'expectedPropertyName').lexeme;
+          if (_check(DartTokenType.leftParen)) {
+            operations.add(IrCascadeOp.call(name, _argumentList()));
+          } else if (_match(DartTokenType.equal)) {
+            operations.add(IrCascadeOp.set(name, _assignment()));
+          } else {
+            throw _syntaxError('expectedCascadeOperation');
+          }
+        }
+        expr = IrCascade(line: line, receiver: expr, operations: operations);
+        continue;
+      }
       if (_match(DartTokenType.bang)) {
         // Null-assertion (`expr!`). The engine has no compile-time
         // null-safety to assert against, so this is a no-op at runtime — a
@@ -782,9 +823,9 @@ class DartParser {
     }
 
     if (_check(DartTokenType.less)) {
-      _skipGenericArgs();
+      final argCount = _skipGenericArgs();
       if (_check(DartTokenType.leftBracket)) return _listLiteral();
-      if (_check(DartTokenType.leftBrace)) return _mapOrSetLiteral();
+      if (_check(DartTokenType.leftBrace)) return _mapOrSetLiteral(forceSet: argCount == 1);
       throw _syntaxError('expectedCollectionLiteral');
     }
     if (_check(DartTokenType.leftBracket)) return _listLiteral();
@@ -822,12 +863,12 @@ class DartParser {
     return IrListLiteral(line: line, items: items);
   }
 
-  IrExpr _mapOrSetLiteral() {
+  IrExpr _mapOrSetLiteral({bool forceSet = false}) {
     final line = _peek.line;
     _advance();
     if (_check(DartTokenType.rightBrace)) {
       _advance();
-      return const IrMapLiteral(line: 0, keys: <IrExpr>[], values: <IrExpr>[]);
+      return forceSet ? const IrSetLiteral(line: 0, items: <IrExpr>[]) : const IrMapLiteral(line: 0, keys: <IrExpr>[], values: <IrExpr>[]);
     }
     final first = _expression();
     if (_match(DartTokenType.colon)) {

@@ -169,6 +169,10 @@ class Compiler {
           _compileStmt(fc, s);
         }
         fc.endScope();
+      case IrStmtGroup(:final statements):
+        for (final s in statements) {
+          _compileStmt(fc, s);
+        }
       case IrVarDecl(:final name, :final initializer):
         if (initializer != null) {
           _compileExpr(fc, initializer);
@@ -596,6 +600,27 @@ class Compiler {
         fc.builder.emitU16(items.length, line: expr.line, synthetic: expr.synthetic);
       case IrSpread():
         throw CompilerUnsupported('spread is only meaningful inside a call or collection literal');
+      case IrCascade(:final receiver, :final operations):
+        _compileExpr(fc, receiver);
+        for (final op in operations) {
+          fc.builder.emitOp(OpCode.dup, line: expr.line, synthetic: expr.synthetic);
+          if (op.callArgs != null) {
+            final idx = fc.builder.addConstant(StrValue(op.name));
+            fc.builder.emitOp(OpCode.getProperty, line: expr.line, synthetic: expr.synthetic);
+            fc.builder.emitU16(idx, line: expr.line, synthetic: expr.synthetic);
+            for (final a in op.callArgs!) {
+              _compileExpr(fc, a);
+            }
+            fc.builder.emitOp(OpCode.call, line: expr.line, synthetic: expr.synthetic);
+            fc.builder.emitByte(op.callArgs!.length, line: expr.line, synthetic: expr.synthetic);
+          } else {
+            _compileExpr(fc, op.setValue!);
+            final idx = fc.builder.addConstant(StrValue(op.name));
+            fc.builder.emitOp(OpCode.setProperty, line: expr.line, synthetic: expr.synthetic);
+            fc.builder.emitU16(idx, line: expr.line, synthetic: expr.synthetic);
+          }
+          fc.builder.emitOp(OpCode.pop, line: expr.line, synthetic: expr.synthetic);
+        }
       case IrLambda(:final name, :final params, :final body):
         final fnValue = _compileFunction(fc, name ?? '<anonymous>', params, body, isMethod: false);
         final protoIdx = fc.builder.addConstant(fnValue);

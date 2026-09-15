@@ -442,6 +442,16 @@ class Vm {
       final i = _resolveIndex(index, receiver.items.length);
       return receiver.items[i];
     }
+    if (receiver is SetValue) {
+      // Real Dart iterates a `Set` via its `Iterator`, not `[]` (which
+      // `Set` doesn't even define) — this engine's `for (x in aSet)`
+      // desugars to cursor-based indexing (`compile/compiler.dart`'s
+      // `_compileForIn`),
+      // so `[]` needs to work for a `LinkedHashSet` too. Insertion order
+      // makes `elementAt` well-defined.
+      final i = _resolveIndex(index, receiver.items.length);
+      return receiver.items.elementAt(i);
+    }
     if (receiver is StrValue) {
       final i = _resolveIndex(index, receiver.value.length);
       return dialect.stringIndexYields == StringIndexResult.codeUnit
