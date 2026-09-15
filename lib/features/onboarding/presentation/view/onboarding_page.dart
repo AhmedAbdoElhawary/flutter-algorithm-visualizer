@@ -89,7 +89,7 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
   Widget build(BuildContext context) {
     // 0 on page 3, 1 on page 4, and every value in between while swiping.
     final reveal = (_offset - (OnboardingPage.pageCount - 2)).clamp(0.0, 1.0);
-    print("-------------");
+
     return Scaffold(
       backgroundColor: context.getColor(ThemeEnum.ground),
       body: SafeArea(
