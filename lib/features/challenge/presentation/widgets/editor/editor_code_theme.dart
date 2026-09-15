@@ -11,12 +11,12 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 /// research R4) — every value below traces back to a role in
 /// `contracts/ui-contract.md` §2.2.
 CodeEditorTheme buildEditorCodeTheme(BuildContext context) {
-  final plain = context.getColor(ThemeEnum.codePlain);
+  final plain = context.getColor(ThemeEnum.inkBody);
 
   return CodeEditorTheme(
-    background: context.getColor(ThemeEnum.codeBg),
-    caretColor: context.getColor(ThemeEnum.textPrimary),
-    selectionColor: context.getColor(ThemeEnum.textPrimary).withValues(alpha: 0.24),
+    background: context.getColor(ThemeEnum.surface),
+    caretColor: context.getColor(ThemeEnum.inkTitle),
+    selectionColor: context.getColor(ThemeEnum.inkTitle).withValues(alpha: 0.24),
     border: null,
     borderRadius: const BorderRadiusDirectional.all(Radius.circular(15)),
     editorPadding: REdgeInsets.symmetric(vertical: 12),
@@ -31,22 +31,22 @@ CodeEditorTheme buildEditorCodeTheme(BuildContext context) {
       fontFamily: FontConstants.fontJetBrainsMono,
       fontSize: 13.sp,
       height: 1.85,
-      color: context.getColor(ThemeEnum.codeGutter),
+      color: context.getColor(ThemeEnum.inkMuted),
     ),
-    lineNumberBackground: context.getColor(ThemeEnum.codeBg),
+    lineNumberBackground: context.getColor(ThemeEnum.surface),
     tokenColors: <TokenType, Color>{
-      TokenType.keyword: context.getColor(ThemeEnum.codeKeyword),
-      TokenType.builtin: context.getColor(ThemeEnum.codeType),
+      TokenType.keyword: context.getColor(ThemeEnum.dataMedium),
+      TokenType.builtin: context.getColor(ThemeEnum.inkTitle),
       TokenType.identifier: plain,
       TokenType.plain: plain,
-      TokenType.operator: context.getColor(ThemeEnum.codePunct),
-      TokenType.punctuation: context.getColor(ThemeEnum.codePunct),
-      TokenType.number: context.getColor(ThemeEnum.codeNumber),
+      TokenType.operator: context.getColor(ThemeEnum.inkPrimary),
+      TokenType.punctuation: context.getColor(ThemeEnum.inkPrimary),
+      TokenType.number: context.getColor(ThemeEnum.dataTarget),
       // No dedicated "string" role exists on ThemeEnum — only six code*
       // roles cover the package's nine TokenTypes, so string literals share
-      // codeNumber's hue with numeric literals (both read as literal values).
-      TokenType.string: context.getColor(ThemeEnum.codeNumber),
-      TokenType.comment: context.getColor(ThemeEnum.codeComment),
+      // dataTarget's hue with numeric literals (both read as literal values).
+      TokenType.string: context.getColor(ThemeEnum.dataTarget),
+      TokenType.comment: context.getColor(ThemeEnum.inkMuted),
     },
   );
 }
