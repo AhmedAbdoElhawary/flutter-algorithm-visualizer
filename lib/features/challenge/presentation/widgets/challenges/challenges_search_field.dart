@@ -39,19 +39,19 @@ class _ChallengesSearchFieldState extends ConsumerState<ChallengesSearchField> {
         padding: REdgeInsets.symmetric(horizontal: 14, vertical: 8),
         child: Row(
           children: [
-            const CustomIcon(Icons.search_rounded, size: 18, color: ThemeEnum.hover),
+            const CustomIcon(Icons.search_rounded, size: 18, color: ThemeEnum.track),
             const RSizedBox(width: 10),
             Expanded(
               child: TextField(
                 controller: _controller,
                 onChanged: (v) => ref.read(challengesProvider.notifier).setSearch(v),
                 style: GetSemiBoldStyle(
-                    color: context.getColor(ThemeEnum.textPrimary), fontSize: 14, letterSpacing: 0.2),
+                    color: context.getColor(ThemeEnum.inkTitle), fontSize: 14, letterSpacing: 0.2),
                 decoration: InputDecoration(
                   isDense: true,
                   hintText: StringsManager.searchProblem,
                   hintStyle: TextStyle(
-                      color: context.getColor(ThemeEnum.textBody),
+                      color: context.getColor(ThemeEnum.inkBody),
                       fontSize: 14.r,
                       fontFamily: FontConstants.fontFamily),
                   border: InputBorder.none,
@@ -65,7 +65,7 @@ class _ChallengesSearchFieldState extends ConsumerState<ChallengesSearchField> {
                   _controller.clear();
                   ref.read(challengesProvider.notifier).clearSearch();
                 },
-                child: const RegularText('×', color: ThemeEnum.hover, fontSize: 18),
+                child: const RegularText('×', color: ThemeEnum.track, fontSize: 18),
               ),
             ] else ...[
               const RegularText('', fontSize: 18),
