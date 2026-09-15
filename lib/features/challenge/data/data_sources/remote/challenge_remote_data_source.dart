@@ -24,6 +24,13 @@ abstract class ProblemRemoteDataSource {
   /// Unlike [saveProblem] this awaits the commit, because the caller has to know
   /// whether the hand over succeeded before it erases the local copy.
   Future<void> batchSaveProblems(List<ProblemStorageDTO> problems);
+
+  /// Erases every problem document owned by the signed in account.
+  ///
+  /// Deleting a Firebase user does **not** cascade into Firestore, so account
+  /// deletion has to clear this subtree itself or the progress is orphaned
+  /// under a uid nobody can sign in as again.
+  Future<void> deleteAllProblems();
 }
 
 class ProblemRemoteDataSourceImpl implements ProblemRemoteDataSource {
@@ -100,6 +107,30 @@ class ProblemRemoteDataSourceImpl implements ProblemRemoteDataSource {
 
       for (final problem in writable.sublist(start, end)) {
         batch.set(ref.doc(problem.problemId.toString()), problem.toJson());
+      }
+
+      await batch.commit().timeout(_commitTimeout);
+    }
+  }
+
+  @override
+  Future<void> deleteAllProblems() async {
+    final ref = _problemsRef();
+    if (ref == null) return;
+
+    /// Read the ids first: Firestore has no "delete a collection" call, the
+    /// documents have to be named one by one. The await matters here — unlike
+    /// [saveProblem] the caller is about to destroy the credential that
+    /// authorises these writes, so they must land before that happens.
+    final snapshot = await ref.get().timeout(_commitTimeout);
+    if (snapshot.docs.isEmpty) return;
+
+    for (var start = 0; start < snapshot.docs.length; start += _batchSizeLimit) {
+      final end = (start + _batchSizeLimit).clamp(0, snapshot.docs.length);
+      final batch = _firestore.batch();
+
+      for (final doc in snapshot.docs.sublist(start, end)) {
+        batch.delete(doc.reference);
       }
 
       await batch.commit().timeout(_commitTimeout);
