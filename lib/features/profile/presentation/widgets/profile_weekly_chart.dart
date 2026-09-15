@@ -51,19 +51,19 @@ class ProfileWeeklyChart extends ConsumerWidget {
                             MediumText(
                               '$val',
                               fontSize: 9,
-                              color: ThemeEnum.textSecond,
+                              color: ThemeEnum.inkBody,
                             ),
                           const RSizedBox(height: 4),
                           QuietBar(
                             width: double.infinity,
                             height: (50.r * fraction).clamp(4.0, 50.0),
-                            fill: isToday ? ThemeEnum.difficultyEasy : ThemeEnum.barIdle,
+                            fill: isToday ? ThemeEnum.dataEasy : ThemeEnum.track,
                           ),
                           const RSizedBox(height: 6),
                           RegularText(
                             _dayLabels[i],
                             fontSize: 10,
-                            color: isToday ? ThemeEnum.textPrimary : ThemeEnum.textSecond,
+                            color: isToday ? ThemeEnum.inkTitle : ThemeEnum.inkBody,
                           ),
                         ],
                       ),
