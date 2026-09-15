@@ -29,6 +29,12 @@ class _FunctionCompiler {
   final List<_LoopContext> loopStack = <_LoopContext>[];
   final List<ExceptionHandler> exceptionTable = <ExceptionHandler>[];
 
+  /// `finally` bodies of the `try` statements currently being compiled,
+  /// innermost last. A `return`, `break` or `continue` that leaves one of
+  /// those `try` blocks has to run them on the way out — see
+  /// [Compiler._unwindFinally].
+  final List<IrStmt> pendingFinally = <IrStmt>[];
+
   int declareLocal(String name) {
     final slot = nextSlot++;
     locals.add(_LocalVar(name, scopeDepth, slot));
@@ -45,7 +51,11 @@ class _FunctionCompiler {
 }
 
 class _LoopContext {
-  _LoopContext();
+  _LoopContext({this.finallyDepth = 0});
+
+  /// How many `finally` bodies were pending when this loop started, so a
+  /// `break` knows which of them it is leaving and which it is still inside.
+  final int finallyDepth;
   final List<int> breakJumps = <int>[];
 
   /// Where a `continue` should jump to. Set once the loop's increment/
@@ -86,6 +96,26 @@ class Compiler {
       maxLocals: fc.maxLocalsSeen,
     );
     return FunctionValue(name: '<script>', arity: 0, chunk: proto);
+  }
+
+  /// Emits the `finally` bodies that a jump out of the enclosing `try`
+  /// blocks has to run on its way, innermost first, down to [downTo].
+  ///
+  /// `return` in particular is easy to get wrong: the `finally` code emitted
+  /// after a `try` body is simply skipped by a `RET` inside that body, so it
+  /// has to be emitted again here, ahead of the jump. The pending list is
+  /// popped while each copy is emitted, so a `return` *inside* a `finally`
+  /// does not try to run that same `finally` again.
+  void _unwindFinally(_FunctionCompiler fc, {int downTo = 0}) {
+    if (fc.pendingFinally.length <= downTo) return;
+    final saved = List<IrStmt>.of(fc.pendingFinally);
+    for (var i = saved.length - 1; i >= downTo; i--) {
+      fc.pendingFinally.removeLast();
+      _compileStmt(fc, saved[i]);
+    }
+    fc.pendingFinally
+      ..clear()
+      ..addAll(saved);
   }
 
   /// Binds one name of an [IrDestructure], consuming the value on top of the
@@ -268,7 +298,7 @@ class Compiler {
           fc.builder.patchU16At(elseJump, fc.builder.offset);
         }
       case IrWhile(:final condition, :final body):
-        final loop = _LoopContext();
+        final loop = _LoopContext(finallyDepth: fc.pendingFinally.length);
         fc.loopStack.add(loop);
         final loopStart = fc.builder.offset;
         loop.continueTarget = loopStart;
@@ -285,7 +315,7 @@ class Compiler {
       case IrFor(:final init, :final condition, :final increment, :final body):
         fc.beginScope();
         if (init != null) _compileStmt(fc, init);
-        final loop = _LoopContext();
+        final loop = _LoopContext(finallyDepth: fc.pendingFinally.length);
         fc.loopStack.add(loop);
         final condStart = fc.builder.offset;
         int? exitJump;
@@ -314,19 +344,24 @@ class Compiler {
       case IrForIn(:final varName, :final iterable, :final body):
         _compileForIn(fc, stmt, varName, iterable, body);
       case IrReturn(:final value):
+        // The return value is computed first and sits under whatever the
+        // finally bodies do, which leave the stack as they found it.
         if (value != null) {
           _compileExpr(fc, value);
         } else {
           fc.builder.emitOp(OpCode.nullLit, line: stmt.line, synthetic: stmt.synthetic);
         }
+        _unwindFinally(fc);
         fc.builder.emitOp(OpCode.ret, line: stmt.line, synthetic: stmt.synthetic);
       case IrBreak():
         if (fc.loopStack.isEmpty) throw CompilerUnsupported('break outside a loop');
+        _unwindFinally(fc, downTo: fc.loopStack.last.finallyDepth);
         final j = fc.builder.emitJump(OpCode.jump, line: stmt.line, synthetic: stmt.synthetic);
         fc.loopStack.last.breakJumps.add(j);
       case IrContinue():
         if (fc.loopStack.isEmpty) throw CompilerUnsupported('continue outside a loop');
         final loop = fc.loopStack.last;
+        _unwindFinally(fc, downTo: loop.finallyDepth);
         if (loop.continueTarget != null) {
           fc.builder.emitOp(OpCode.jump, line: stmt.line, synthetic: stmt.synthetic);
           fc.builder.emitU16(loop.continueTarget!, line: stmt.line, synthetic: stmt.synthetic);
@@ -372,7 +407,7 @@ class Compiler {
     fc.builder.emitU16(cursorSlot, line: stmt.line, synthetic: true);
     fc.builder.emitOp(OpCode.pop, line: stmt.line, synthetic: true);
 
-    final loop = _LoopContext();
+    final loop = _LoopContext(finallyDepth: fc.pendingFinally.length);
     fc.loopStack.add(loop);
     final loopStart = fc.builder.offset;
     loop.continueTarget = loopStart;
@@ -535,12 +570,20 @@ class Compiler {
   }
 
   void _compileTry(_FunctionCompiler fc, IrTry stmt) {
+    // While the guarded bodies are being compiled, this `finally` is pending:
+    // any `return`, `break` or `continue` inside them emits a copy of it
+    // before jumping (see [_unwindFinally]).
+    if (stmt.finallyBody != null) fc.pendingFinally.add(stmt.finallyBody!);
+
     final startPc = fc.builder.offset;
     _compileStmt(fc, stmt.body);
     final endPc = fc.builder.offset;
 
     if (stmt.catchBody != null) {
-      if (stmt.finallyBody != null) _compileStmt(fc, stmt.finallyBody!);
+      if (stmt.finallyBody != null) {
+        fc.pendingFinally.removeLast();
+        _compileStmt(fc, stmt.finallyBody!);
+      }
       final normalJump = fc.builder.emitJump(OpCode.jump, line: stmt.line, synthetic: true);
       final catchPc = fc.builder.offset;
       fc.beginScope();
@@ -548,8 +591,12 @@ class Compiler {
       fc.builder.emitOp(OpCode.setLocal, line: stmt.line, synthetic: true);
       fc.builder.emitU16(slot, line: stmt.line, synthetic: true);
       fc.builder.emitOp(OpCode.pop, line: stmt.line, synthetic: true);
+      if (stmt.finallyBody != null) fc.pendingFinally.add(stmt.finallyBody!);
       _compileStmt(fc, stmt.catchBody!);
-      if (stmt.finallyBody != null) _compileStmt(fc, stmt.finallyBody!);
+      if (stmt.finallyBody != null) {
+        fc.pendingFinally.removeLast();
+        _compileStmt(fc, stmt.finallyBody!);
+      }
       fc.endScope();
       fc.builder.patchU16At(normalJump, fc.builder.offset);
       fc.exceptionTable.add(ExceptionHandler(startPc: startPc, endPc: endPc, catchPc: catchPc));
@@ -559,6 +606,7 @@ class Compiler {
     if (stmt.finallyBody != null) {
       // No catch clause: run finally, then rethrow (desugared as if this
       // were `try { body } catch (e) { finally-body; throw e; } finally { finally-body; }`).
+      fc.pendingFinally.removeLast();
       _compileStmt(fc, stmt.finallyBody!);
       final normalJump = fc.builder.emitJump(OpCode.jump, line: stmt.line, synthetic: true);
       final catchPc = fc.builder.offset;
