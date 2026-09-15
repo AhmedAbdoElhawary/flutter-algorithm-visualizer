@@ -1,10 +1,9 @@
 import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
 import 'package:algorithm_visualizer/core/widgets/adaptive/padding/adaptive_padding.dart';
-import 'package:algorithm_visualizer/features/onboarding/presentation/widgets/onboarding_tokens.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-/// Four dots. Inactive 6 x 6 in [OnboardingTokens.border], active 18 x 6 in the
+/// Four dots. Inactive 6 x 6 in [ThemeEnum.track], active 18 x 6 in the
 /// page's own accent.
 ///
 /// [offset] is the live scroll position (2.4 means "40% of the way from page 3
@@ -23,7 +22,7 @@ class OnboardingDots extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final inactive = context.getColor(OnboardingTokens.border);
+    final inactive = context.getColor(ThemeEnum.track);
 
     return Row(
       mainAxisSize: MainAxisSize.min,
