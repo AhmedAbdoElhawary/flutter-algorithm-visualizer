@@ -158,6 +158,34 @@ class MapValue extends Value {
   String toString() => 'MapValue($entries)';
 }
 
+/// A [MapValue] that answers a missing key with a freshly built value instead
+/// of `null` — Python's `defaultdict` and `Counter`.
+///
+/// It deliberately *is* a [MapValue], so every `is MapValue` check in the VM,
+/// the stdlib and the grader's serializer keeps working and a `Counter` grades
+/// as the plain dict it prints as.
+///
+/// [defaultFactory] is a pure Dart closure rather than a callable [Value]
+/// because the miss is serviced inside the VM's index-read, which has no frame
+/// to run interpreted code on. That covers `defaultdict(int)`,
+/// `defaultdict(list)`, `defaultdict(set)` and friends; a `lambda` factory is
+/// rejected at construction with a message that says so.
+class DefaultMapValue extends MapValue {
+  DefaultMapValue(this.defaultFactory, [LinkedHashMap<Value, Value>? entries]) : super(entries);
+
+  final Value Function() defaultFactory;
+
+  /// Reading a missing key *inserts* it, exactly as Python does — which is why
+  /// `len(d)` grows after a bare `d[k]` on a `defaultdict`.
+  Value readOrCreate(Value key) {
+    final existing = entries[key];
+    if (existing != null) return existing;
+    final created = defaultFactory();
+    entries[key] = created;
+    return created;
+  }
+}
+
 /// Insertion-ordered in all three languages.
 class SetValue extends Value {
   SetValue([LinkedHashSet<Value>? items]) : items = items ?? LinkedHashSet<Value>();
@@ -379,11 +407,32 @@ int compareValues(Value a, Value b, Dialect dialect) {
   if (a is BoolValue && b is BoolValue) {
     return (a.value ? 1 : 0).compareTo(b.value ? 1 : 0);
   }
+  final seqA = _sequenceItems(a);
+  final seqB = _sequenceItems(b);
+  if (seqA != null && seqB != null && dialect.defaultSortOrder == SortOrder.natural) {
+    // Python orders sequences element by element, first difference wins, and
+    // a prefix sorts before the longer sequence it is a prefix of. This is
+    // what makes `(distance, node)` tuples usable as heap and sort keys.
+    final shared = seqA.length < seqB.length ? seqA.length : seqB.length;
+    for (var i = 0; i < shared; i++) {
+      final step = compareValues(seqA[i], seqB[i], dialect);
+      if (step != 0) return step;
+    }
+    return seqA.length.compareTo(seqB.length);
+  }
   if (dialect.defaultSortOrder == SortOrder.lexicographic) {
     return _displayString(a).compareTo(_displayString(b));
   }
   throw VmRuntimeError('typeMismatch',
       <String, Object?>{'expected': 'comparable values', 'actual': '${a.runtimeType} and ${b.runtimeType}'});
+}
+
+/// The items of anything Python orders element-wise. `null` for everything
+/// else, so [compareValues] can fall through to its usual handling.
+List<Value>? _sequenceItems(Value v) {
+  if (v is TupleValue) return v.items;
+  if (v is ListValue) return v.items;
+  return null;
 }
 
 /// Dialect-aware `toString()` used by string interpolation and the

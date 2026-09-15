@@ -569,6 +569,12 @@ class Vm {
           ? IntValue(receiver.value.codeUnitAt(i))
           : StrValue(receiver.value[i]);
     }
+    if (receiver is DefaultMapValue) {
+      // Checked before the plain `MapValue` branch below, which it extends.
+      // A miss here builds the default *and stores it*, which is what makes
+      // `counts[c] += 1` work without seeding the key first.
+      return receiver.readOrCreate(index);
+    }
     if (receiver is MapValue) {
       // Dart's `Map[]` never throws for a missing key — it returns `null`
       // (unlike `List[]`, which does bounds-check). `m[k] ?? 0` is the

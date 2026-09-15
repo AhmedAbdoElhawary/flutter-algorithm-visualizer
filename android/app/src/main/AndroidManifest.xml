@@ -45,5 +45,23 @@
             <action android:name="android.intent.action.PROCESS_TEXT"/>
             <data android:mimeType="text/plain"/>
         </intent>
+        <!-- Android 11+ hides other apps unless they are declared here, and
+             `url_launcher` reports "cannot launch" for anything it cannot see.
+             These three cover the settings screen's links: the privacy policy
+             and account-deletion pages (https), the GitHub and LinkedIn
+             profiles (https, or their own app via the same intent), and the
+             support address (mailto). -->
+        <intent>
+            <action android:name="android.intent.action.VIEW"/>
+            <data android:scheme="https"/>
+        </intent>
+        <intent>
+            <action android:name="android.intent.action.VIEW"/>
+            <data android:scheme="http"/>
+        </intent>
+        <intent>
+            <action android:name="android.intent.action.SENDTO"/>
+            <data android:scheme="mailto"/>
+        </intent>
     </queries>
 </manifest>

@@ -257,7 +257,7 @@ class PythonParser {
           return _raiseStatement();
         case 'import':
         case 'from':
-          throw _unsupported('import');
+          return _importStatement();
         case 'with':
           throw _unsupported('with');
         case 'global':
@@ -278,6 +278,87 @@ class PythonParser {
     }
     if (_checkOp('@')) throw _unsupported('decorator');
     return _simpleStatementLine();
+  }
+
+  /// The modules this engine actually ships: `import heapq` and
+  /// `from collections import deque` and nothing else.
+  ///
+  /// Listing them explicitly is the point. A solution that opens with
+  /// `import numpy` is far better told so on line 1 than left to fail later on
+  /// a name it never bound, and a member that is not here is one that does not
+  /// work — see `python_collections.dart` on why `OrderedDict` is missing.
+  static const Map<String, Set<String>> _supportedModules = <String, Set<String>>{
+    'collections': <String>{'deque', 'Counter', 'defaultdict'},
+    'heapq': <String>{
+      'heappush',
+      'heappop',
+      'heapify',
+      'heappushpop',
+      'heapreplace',
+      'nlargest',
+      'nsmallest',
+    },
+  };
+
+  /// `import heapq` / `from collections import deque, Counter`.
+  ///
+  /// `import x` compiles to nothing: both modules are already bound as
+  /// namespace globals, so the statement only has to agree that the name
+  /// exists. `from x import a` does need a binding, and lowers to `a = x.a` —
+  /// the same desugar-rather-than-represent approach comprehensions get.
+  IrStmt _importStatement() {
+    final line = _peek.line;
+
+    if (_matchKeyword('from')) {
+      final module = _expectModuleName(line);
+      if (!_matchKeyword('import')) throw _syntax('expectedImport');
+      if (_checkOp('*')) throw _unsupported('importStar', line);
+
+      final bindings = <IrStmt>[];
+      do {
+        final name = _expectName();
+        if (_checkKeyword('as')) throw _unsupported('importAs', line);
+        _requireMember(module, name, line);
+
+        bindings.add(IrVarDecl(
+          line: line,
+          synthetic: true,
+          name: name,
+          initializer: IrPropertyGet(
+            line: line,
+            synthetic: true,
+            receiver: IrIdentifier(line: line, synthetic: true, name: module),
+            name: name,
+          ),
+        ));
+      } while (_matchOp(','));
+
+      _expectNewline();
+      return bindings.length == 1 ? bindings.single : IrStmtGroup(line: line, statements: bindings);
+    }
+
+    _advance();
+    do {
+      _expectModuleName(line);
+      if (_checkKeyword('as')) throw _unsupported('importAs', line);
+    } while (_matchOp(','));
+
+    _expectNewline();
+    return IrBlock(line: line, statements: const <IrStmt>[]);
+  }
+
+  String _expectModuleName(int line) {
+    final name = _expectName();
+    if (!_supportedModules.containsKey(name)) {
+      throw _unsupported('module:$name', line);
+    }
+    return name;
+  }
+
+  void _requireMember(String module, String member, int line) {
+    if (!_supportedModules[module]!.contains(member)) {
+      throw _unsupported('$module.$member', line);
+    }
   }
 
   /// One line of simple statements: `a = 1` or `a = 1; b = 2`.

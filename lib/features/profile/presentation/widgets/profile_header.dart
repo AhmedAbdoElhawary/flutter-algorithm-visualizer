@@ -1,3 +1,5 @@
+import 'package:algorithm_visualizer/config/routes/route_app.dart';
+import 'package:algorithm_visualizer/core/extensions/navigators.dart';
 import 'package:algorithm_visualizer/core/helpers/constants.dart';
 import 'package:algorithm_visualizer/core/helpers/current_device.dart';
 import 'package:algorithm_visualizer/core/resources/font_manager.dart';
@@ -50,9 +52,32 @@ class ProfileHeader extends StatelessWidget {
                   ),
                 ),
               ),
+              const RSizedBox(width: 6),
+              const _SettingsButton(),
             ],
           ),
         ],
+      ),
+    );
+  }
+}
+
+/// The only way into [SettingsPage], and therefore the only way to the privacy
+/// policy and to account deletion — both of which the stores require to be
+/// reachable, so this button is not decoration.
+class _SettingsButton extends StatelessWidget {
+  const _SettingsButton();
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () => context.pushRoute(Routes.settings),
+      child: const IconButtonQuiet(
+        icon: Icons.settings_outlined,
+        iconColor: ThemeEnum.inkBody,
+        borderColor: ThemeEnum.inkBody,
+        size: 36,
+        iconSize: 18,
       ),
     );
   }

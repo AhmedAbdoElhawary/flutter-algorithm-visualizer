@@ -5,6 +5,7 @@ import 'package:algorithm_visualizer/features/auth/data/data_sources/remote/auth
 import 'package:algorithm_visualizer/features/auth/data/data_sources/remote/logging_auth_remote_data_source.dart';
 import 'package:algorithm_visualizer/features/auth/data/repositories/auth_repository_impl.dart';
 import 'package:algorithm_visualizer/features/auth/domain/repositories/auth_repository.dart';
+import 'package:algorithm_visualizer/features/auth/domain/services/account_deletion_service.dart';
 import 'package:algorithm_visualizer/features/auth/domain/services/guest_data_service.dart';
 import 'package:algorithm_visualizer/features/challenge/presentation/view_model/challenges/problems_providers.dart';
 import 'package:algorithm_visualizer/features/profile/presentation/view_model/user_provider.dart';
@@ -31,5 +32,13 @@ final guestDataServiceProvider = Provider<GuestDataService>((ref) {
     problemRemoteDataSource: ref.watch(problemRemoteDataSourceProvider),
     profileLocalDataSource: ref.watch(profileLocalDataSourceProvider),
     storage: ref.watch(localStorageProvider),
+  );
+});
+
+final accountDeletionServiceProvider = Provider<AccountDeletionService>((ref) {
+  return AccountDeletionService(
+    authRepository: ref.watch(authRepositoryProvider),
+    problemRemoteDataSource: ref.watch(problemRemoteDataSourceProvider),
+    guestDataService: ref.watch(guestDataServiceProvider),
   );
 });

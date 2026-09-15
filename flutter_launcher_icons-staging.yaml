@@ -2,7 +2,7 @@
 # version (legacy, adaptive, Android 13+ monochrome/themed) and every iOS
 # appearance (light, dark, tinted).
 #
-# Source art: tool/flavor_icons/custom/stagingLogoHere.png. It's currently
+# Source art: assets/logo/algodive-icon-dev.png. It's currently
 # just a copy of the production icon (see tool/flavor_icons/custom/README.md)
 # — drop a custom staging design in at that same path, no config changes
 # needed, then:
@@ -11,16 +11,16 @@
 # Writes Android output to android/app/src/staging/res/** and an `AppIcon-staging`
 # set into the iOS asset catalog.
 flutter_launcher_icons:
-  image_path: "tool/flavor_icons/custom/stagingLogoHere.png"
-  image_path_ios_dark_transparent: "tool/flavor_icons/custom/stagingLogoHere.png"
-  image_path_ios_tinted_grayscale: "tool/flavor_icons/custom/stagingLogoHere.png"
+  image_path: "assets/logo/algodive-icon-dev.png"
+  image_path_ios_dark_transparent: "assets/logo/algodive-icon-dev.png"
+  image_path_ios_tinted_grayscale: "assets/logo/algodive-icon-dev.png"
   desaturate_tinted_to_grayscale_ios: true
 
   android: true
   min_sdk_android: 21
   adaptive_icon_background: "#0B0B0D"
-  adaptive_icon_foreground: "tool/flavor_icons/custom/stagingLogoHere.png"
-  adaptive_icon_monochrome: "tool/flavor_icons/custom/stagingLogoHere.png"
+  adaptive_icon_foreground: "assets/logo/algodive-icon-dev.png"
+  adaptive_icon_monochrome: "assets/logo/algodive-icon-dev.png"
 
   ios: true
   remove_alpha_ios: true

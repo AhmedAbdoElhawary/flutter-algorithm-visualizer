@@ -8,6 +8,22 @@ abstract class AuthRemoteDataSource {
   Future<void> forgotPassword({required String email});
   Future<void> resetPassword({required String code, required String newPassword});
   Future<void> signOut();
+
+  /// Re-authenticates with [password], then permanently deletes the Firebase
+  /// user.
+  ///
+  /// Firebase refuses `delete()` on a credential older than a few minutes
+  /// (`requires-recent-login`), so the password is not an extra confirmation
+  /// step invented by the UI — the operation genuinely needs it.
+  ///
+  /// [onReauthenticated] runs after the re-login succeeds but before the user
+  /// is destroyed. That ordering is required: clearing Firestore needs a live
+  /// credential, and once `delete()` returns there is no longer an account
+  /// authorised to write under `users/{uid}`.
+  Future<void> deleteAccount({
+    required String password,
+    required Future<void> Function() onReauthenticated,
+  });
 }
 
 class FirebaseAuthRemoteDataSourceImpl implements AuthRemoteDataSource {
@@ -104,6 +120,33 @@ class FirebaseAuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   Future<void> signOut() async {
     try {
       await _firebaseAuth.signOut();
+    } on FirebaseAuthException catch (e) {
+      throw FirebaseExceptions.handleFirebaseAuthException(e);
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  @override
+  Future<void> deleteAccount({
+    required String password,
+    required Future<void> Function() onReauthenticated,
+  }) async {
+    try {
+      final user = _firebaseAuth.currentUser;
+      if (user == null) throw Exception('No signed in user to delete');
+
+      final email = user.email;
+      if (email == null) throw Exception('This account has no e-mail to re-authenticate with');
+
+      await user.reauthenticateWithCredential(
+        EmailAuthProvider.credential(email: email, password: password),
+      );
+
+      /// Owned data goes first, while the credential is still valid.
+      await onReauthenticated();
+
+      await user.delete();
     } on FirebaseAuthException catch (e) {
       throw FirebaseExceptions.handleFirebaseAuthException(e);
     } catch (e) {

@@ -45,4 +45,20 @@ class AuthRepositoryImpl implements AuthRepository {
     await localDataSource.clearUser();
     await remoteDataSource.signOut();
   }
+
+  @override
+  Future<void> deleteAccount({
+    required String password,
+    required Future<void> Function() onReauthenticated,
+  }) async {
+    await remoteDataSource.deleteAccount(
+      password: password,
+      onReauthenticated: onReauthenticated,
+    );
+
+    /// Only once the remote user is really gone, so a failed deletion leaves
+    /// the session intact instead of stranding a signed in user with no
+    /// cached credentials.
+    await localDataSource.clearUser();
+  }
 }

@@ -1,5 +1,9 @@
 import 'package:algorithm_visualizer/config/routes/route_app.dart';
+import 'package:algorithm_visualizer/core/helpers/constants.dart';
+import 'package:algorithm_visualizer/core/helpers/link_launcher.dart';
 import 'package:algorithm_visualizer/core/resources/dimensions_manager.dart';
+import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
+import 'package:algorithm_visualizer/core/widgets/adaptive/text/adaptive_text.dart';
 import 'package:algorithm_visualizer/core/resources/strings_manager.dart';
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/custom_back_button.dart';
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/custom_snack_bar.dart';
@@ -126,6 +130,8 @@ class _SignUpPageState extends ConsumerState<SignUpPage> {
           loading: isLoading,
           onPressed: _onRegister,
         ),
+        SizedBox(height: CdSpace.x3.h),
+        const _LegalConsent(),
         SizedBox(height: CdSpace.x4.h),
         AuthFooterPrompt(
           prompt: StringsManager.alreadyHaveAccount,
@@ -133,6 +139,68 @@ class _SignUpPageState extends ConsumerState<SignUpPage> {
           onTap: () => context.canPop() ? context.pop() : context.go(Routes.login.path),
         ),
       ],
+    );
+  }
+}
+
+/// Consent, shown where consent is actually given.
+///
+/// Creating the account is the moment personal data starts being stored, so
+/// this is the honest place to say so — and the stores expect both documents to
+/// be reachable from it, not only buried in settings. Each link opens the
+/// published page, the same URLs the Play Console listing carries.
+///
+/// A [Wrap] rather than a [Row]: the sentence is four pieces long and has to
+/// reflow on a narrow screen, and in Arabic it gets longer still.
+class _LegalConsent extends StatelessWidget {
+  const _LegalConsent();
+
+  @override
+  Widget build(BuildContext context) {
+    return const Wrap(
+      alignment: WrapAlignment.center,
+      crossAxisAlignment: WrapCrossAlignment.center,
+      spacing: 4,
+      runSpacing: 2,
+      children: [
+        RegularText(
+          StringsManager.signUpConsentPrefix,
+          color: ThemeEnum.inkMuted,
+          fontSize: 11,
+          maxLines: 2,
+          textAlign: TextAlign.center,
+        ),
+        _ConsentLink(label: StringsManager.termsOfService, url: kTermsOfServiceUrl),
+        RegularText(
+          StringsManager.signUpConsentAnd,
+          color: ThemeEnum.inkMuted,
+          fontSize: 11,
+          maxLines: 1,
+        ),
+        _ConsentLink(label: StringsManager.privacyPolicy, url: kPrivacyPolicyUrl),
+      ],
+    );
+  }
+}
+
+class _ConsentLink extends StatelessWidget {
+  const _ConsentLink({required this.label, required this.url});
+
+  final String label;
+  final String url;
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      behavior: HitTestBehavior.opaque,
+      onTap: () => context.openLink(url),
+      child: MediumText(
+        label,
+        color: ThemeEnum.inkTitle,
+        fontSize: 11,
+        maxLines: 1,
+        decoration: TextDecoration.underline,
+      ),
     );
   }
 }
