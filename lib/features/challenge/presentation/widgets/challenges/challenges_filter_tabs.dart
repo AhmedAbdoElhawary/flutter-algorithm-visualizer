@@ -23,7 +23,8 @@ class ChallengesFilterTabs extends ConsumerWidget {
         child: Row(
           children: ChallengesNotifier.filters.map((f) {
             final active = activeFilter == f;
-            final color = f == ProblemDifficulty.none ? ThemeEnum.accent : ProblemStyle.difficultyColor(f);
+            final color =
+                f == ProblemDifficulty.none ? ThemeEnum.inkPrimary : ProblemStyle.difficultyColor(f);
             final count = ref
                 .watch(specificDifficultyCountProvider(f))
                 .maybeWhen(data: (data) => "$data", orElse: () => "");
@@ -39,15 +40,14 @@ class ChallengesFilterTabs extends ConsumerWidget {
                   border: Border.all(
                       color: active
                           ? context.getColor(color).withValues(alpha: 0.35)
-                          : context.getColor(ThemeEnum.border)),
+                          : context.getColor(ThemeEnum.hairline)),
                 ),
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    SemiBoldText(f.difficultyString,
-                        color: active ? color : ThemeEnum.textBody, fontSize: 13),
+                    SemiBoldText(f.difficultyString, color: active ? color : ThemeEnum.inkBody, fontSize: 13),
                     const SizedBox(width: 5),
-                    SemiBoldText(count, color: active ? color : ThemeEnum.textBody, fontSize: 11),
+                    SemiBoldText(count, color: active ? color : ThemeEnum.inkBody, fontSize: 11),
                   ],
                 ),
               ),
