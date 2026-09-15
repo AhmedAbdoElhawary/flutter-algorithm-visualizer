@@ -44,7 +44,7 @@ class _PFLegendChip extends StatelessWidget {
       children: [
         _PFLegendSwatch(role: role, color: color),
         const RSizedBox(width: 4),
-        RegularText(searchRoleLabel(role), color: ThemeEnum.textSecond, fontSize: 10),
+        RegularText(searchRoleLabel(role), color: ThemeEnum.inkBody, fontSize: 10),
       ],
     );
   }
@@ -65,7 +65,7 @@ class _PFLegendSwatch extends StatelessWidget {
         return PFEndPointWidget(
           size: 12.r,
           outerColor: color,
-          midColor: context.getColor(ThemeEnum.textBright),
+          midColor: context.getColor(ThemeEnum.inkPrimary),
           innerColor: color,
         );
       case SearchRole.path:
