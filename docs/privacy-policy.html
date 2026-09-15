@@ -1,0 +1,174 @@
+<!--
+  ────────────────────────────────────────────────────────────────────────────
+  LEGAL DOCUMENT VERSION: 1.0 (September 2026)
+
+  This version is deliberately NOT the app version. The policy changes on its
+  own clock, and the app ships constantly without touching it.
+
+  When you edit anything substantive on this page, in the SAME commit:
+    1. bump the version + date in the <p class="meta"> line below,
+    2. bump the sibling pages (privacy-policy.html / delete-account.html /
+       terms.html) so the set never disagrees,
+    3. bump kLegalVersion and kLegalUpdated in lib/core/helpers/constants.dart —
+       the app prints that version in Settings -> Legal, so a drift means the
+       app is telling users something untrue.
+  ────────────────────────────────────────────────────────────────────────────
+-->
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Privacy Policy — AlgoDive</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="wrap">
+
+<header class="brand">
+  <div class="mark">A</div>
+  <b>AlgoDive</b>
+</header>
+
+<h1>Privacy Policy</h1>
+<p class="meta">Version 1.0 · Last updated September 2026 · Applies to the AlgoDive mobile app (<code>com.elhawary.algodive</code>)</p>
+
+<p>AlgoDive is an algorithm learning app. This policy explains exactly what it
+stores, why, and how to get rid of it. It is written to be read, not to be
+skimmed past.</p>
+
+<div class="card">
+  <h3>The short version</h3>
+  <ul>
+    <li>You can use almost the whole app <b>without an account</b>. Nothing leaves your phone in that mode.</li>
+    <li>Your code runs <b>on your device</b>. It is never uploaded to a server.</li>
+    <li>We do <b>not</b> sell your data, show ads, or run advertising trackers.</li>
+    <li>You can <b>delete your account and all its data</b> from inside the app at any time.</li>
+  </ul>
+</div>
+
+<h2>1. Who is responsible</h2>
+<p>AlgoDive is an independent, open-source project by Ahmed Abdo Elhawary.
+For any privacy question or request, contact
+<a href="mailto:elhawarydev@gmail.com">elhawarydev@gmail.com</a>.</p>
+
+<h2>2. Using AlgoDive without an account</h2>
+<p>You can browse the visualizers, open problems, write code and run it without
+signing in. In this mode your display name, your progress and your saved code
+are stored <b>only in your device's local storage</b>. They are not transmitted
+anywhere, and they are removed when you uninstall the app.</p>
+
+<h2>3. What we collect if you create an account</h2>
+<p>Creating an account is optional. It exists so your progress survives a lost
+phone and follows you across devices.</p>
+
+<table>
+  <tr><th>Data</th><th>Why</th><th>Where it is stored</th></tr>
+  <tr>
+    <td>Email address</td>
+    <td>To identify your account, let you sign in, and send password resets</td>
+    <td>Firebase Authentication</td>
+  </tr>
+  <tr>
+    <td>Password</td>
+    <td>To secure your account</td>
+    <td>Firebase Authentication — stored hashed. AlgoDive never sees or stores your password.</td>
+  </tr>
+  <tr>
+    <td>Display name</td>
+    <td>Shown on your profile screen</td>
+    <td>Firebase Authentication</td>
+  </tr>
+  <tr>
+    <td>Problem progress — which problems you solved, attempted or bookmarked, your submitted code, and timestamps</td>
+    <td>To show your statistics, streak and history, and to sync them across your devices</td>
+    <td>Cloud Firestore, under <code>users/&lt;your-user-id&gt;/</code></td>
+  </tr>
+</table>
+
+<h2>4. Analytics and crash reports</h2>
+
+<h3>Firebase Analytics</h3>
+<p>We collect anonymous, aggregated usage events — for example that a sorting
+visualizer was opened, or that a problem was submitted. This tells us which
+parts of the app are actually used so we know what to improve. These events are
+not linked to your email address and are not used for advertising.</p>
+
+<h3>Sentry (crash reporting)</h3>
+<p>When the app crashes, a crash report is sent to Sentry. It contains the
+error, the stack trace, and basic device information such as the operating
+system version and device model. Crash reporting runs in release builds only.
+It helps us fix bugs we cannot reproduce ourselves.</p>
+
+<h2>5. What we never collect</h2>
+<ul>
+  <li>Your contacts, photos, files, microphone or camera.</li>
+  <li>Your precise location.</li>
+  <li>Advertising identifiers. AlgoDive contains no ad networks.</li>
+</ul>
+
+<h2>6. Who your data is shared with</h2>
+<p>We do not sell or rent your data, and we do not share it with advertisers.
+Your data is processed only by the service providers that make the app work:</p>
+<ul>
+  <li><b>Google Firebase</b> (Authentication, Cloud Firestore, Analytics) —
+      <a href="https://firebase.google.com/support/privacy" target="_blank" rel="noopener">Firebase privacy</a></li>
+  <li><b>Sentry</b> (crash reporting) —
+      <a href="https://sentry.io/privacy/" target="_blank" rel="noopener">Sentry privacy</a></li>
+</ul>
+<p>We may disclose data if we are legally required to do so by a valid legal
+process.</p>
+
+<h2>7. How long data is kept</h2>
+<ul>
+  <li><b>Account data and progress</b> — kept until you delete your account, then removed as described below.</li>
+  <li><b>Crash reports</b> — retained by Sentry for up to 90 days, then deleted automatically.</li>
+  <li><b>Analytics events</b> — retained by Firebase Analytics under Google's standard retention period.</li>
+</ul>
+
+<h2>8. Your rights and choices</h2>
+<ul>
+  <li><b>Access</b> — your data is visible to you on the Profile screen in the app.</li>
+  <li><b>Correction</b> — you can change your display name in the app at any time.</li>
+  <li><b>Deletion</b> — you can delete your account and all associated data from
+      <b>Profile → Settings → Delete account</b>, or by following the instructions on the
+      <a href="delete-account.html">account deletion page</a>.</li>
+  <li><b>Use without an account</b> — you can simply not sign in. The app remains usable.</li>
+</ul>
+<p>If you are in the EEA or UK, the legal basis for processing your account data
+is performance of a contract (providing the sync service you asked for), and for
+analytics and crash reporting it is our legitimate interest in keeping the app
+working and improving it.</p>
+
+<h2>9. Children</h2>
+<p>AlgoDive is not directed at children under 13, and we do not knowingly collect
+personal data from them. If you believe a child has created an account, contact
+us at <a href="mailto:elhawarydev@gmail.com">elhawarydev@gmail.com</a> and we
+will delete it.</p>
+
+<h2>10. Security</h2>
+<p>Traffic between the app and Firebase is encrypted in transit. Firestore
+security rules restrict every document under <code>users/&lt;user-id&gt;/</code>
+so that it can only be read or written by that signed-in account. No system is
+perfectly secure, but we do not store payment details or any sensitive category
+of personal data.</p>
+
+<h2>11. Changes to this policy</h2>
+<p>If this policy changes materially, we will update the date at the top of this
+page and note the change in the app's release notes. The current version is
+always published at this URL.</p>
+
+<h2>12. Contact</h2>
+<p>Questions, requests or complaints:
+<a href="mailto:elhawarydev@gmail.com">elhawarydev@gmail.com</a></p>
+
+<footer>
+  <a href="index.html">AlgoDive</a> ·
+  <a href="terms.html">Terms of service</a> ·
+  <a href="delete-account.html">Delete your account</a> ·
+  <a href="https://github.com/AhmedAbdoElhawary/flutter-algorithm-visualizer" target="_blank" rel="noopener">Source code</a>
+</footer>
+
+</div>
+</body>
+</html>
