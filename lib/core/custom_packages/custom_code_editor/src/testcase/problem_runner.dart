@@ -112,7 +112,8 @@ class ProblemRunner {
       try {
         final program = frontend.parse(built.program);
         final script = Compiler().compileProgram(program);
-        final vm = Vm(dialect: frontend.dialect, budget: ExecutionBudget(instructionsPerBudgetCheck: 2000));
+        final vm =
+            Vm(dialect: frontend.dialect, budget: const ExecutionBudget(instructionsPerBudgetCheck: 2000));
         run = vm.run(script, timeout: const Duration(seconds: 2));
         failure = run.failure;
       } on FrontendFailure catch (e) {
@@ -124,7 +125,8 @@ class ProblemRunner {
         // (e.g. the function's signature inside `class Solution { ... }`)
         // instead of the generated program.
         final line = failure.line + built.lineOffset;
-        final message = '${failure.kind.name} error (line $line): ${StringsManager.executionFailureMessage(failure.code, failure.data)}';
+        final message =
+            '${failure.kind.name} error (line $line): ${StringsManager.executionFailureMessage(failure.code, failure.data)}';
         results.add(SingleTestCaseResult(
           testCase: testCase,
           passed: false,
@@ -307,7 +309,9 @@ class ProblemRunner {
       case engine.SetValue(:final items):
         return items.map((e) => _unwrapValue(e, visited)).toList();
       case engine.MapValue(:final entries):
-        return <dynamic, dynamic>{for (final e in entries.entries) _unwrapValue(e.key, visited): _unwrapValue(e.value, visited)};
+        return <dynamic, dynamic>{
+          for (final e in entries.entries) _unwrapValue(e.key, visited): _unwrapValue(e.value, visited)
+        };
       case engine.InstanceValue():
         final existing = visited[value];
         if (existing != null) return existing;
