@@ -105,6 +105,9 @@ app.*.map.json
 !/docs/delete-account.html
 !/docs/terms.html
 !/docs/style.css
+!/docs/app-icon.png
+!/docs/favicon-16.png
+!/docs/favicon-32.png
 /.specify/
 /assets/onboarding/
 /assets/screenshots/
