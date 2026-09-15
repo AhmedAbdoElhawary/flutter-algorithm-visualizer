@@ -29,18 +29,17 @@ class FilterChipQuiet extends StatelessWidget {
       child: Container(
         padding: REdgeInsets.symmetric(horizontal: 10, vertical: 7),
         decoration: BoxDecoration(
-          color: selected ? context.getColor(ThemeEnum.primaryTint) : null,
+          color: selected ? context.getColor(ThemeEnum.hairline) : null,
           borderRadius: BorderRadius.circular(CdRadius.pill.r),
-          border: selected ? null : Border.all(color: context.getColor(ThemeEnum.borderSubtle)),
+          border: selected ? null : Border.all(color: context.getColor(ThemeEnum.hairline)),
         ),
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            MediumText(label, color: selected ? ThemeEnum.textPrimary : ThemeEnum.textSecond, fontSize: 12),
+            MediumText(label, color: selected ? ThemeEnum.inkTitle : ThemeEnum.inkBody, fontSize: 12),
             if (count != null && count!.isNotEmpty) ...[
               const RSizedBox(width: 5),
-              MediumText(count!,
-                  color: selected ? ThemeEnum.textPrimary : ThemeEnum.textSecond, fontSize: 11),
+              MediumText(count!, color: selected ? ThemeEnum.inkTitle : ThemeEnum.inkBody, fontSize: 11),
             ],
           ],
         ),

@@ -26,7 +26,7 @@ class CustomCheckBox extends StatelessWidget {
         color: ColorManager.transparent,
         border: Border.all(
             width: 1.5.r,
-            color: isSelected ? context.getColor(ThemeEnum.focus) : context.getColor(ThemeEnum.whiteD5Color)),
+            color: isSelected ? context.getColor(ThemeEnum.inkTitle) : context.getColor(ThemeEnum.inkTitle)),
       ),
       child: Padding(
         padding: const EdgeInsets.all(3),
@@ -36,11 +36,11 @@ class CustomCheckBox extends StatelessWidget {
           height: isSelected ? 20 : 0,
           width: isSelected ? 20 : 0,
           decoration: BoxDecoration(
-            color: isSelected ? context.getColor(ThemeEnum.focus) : null,
+            color: isSelected ? context.getColor(ThemeEnum.inkTitle) : null,
             shape: isCircle ? BoxShape.circle : BoxShape.rectangle,
           ),
           child: isSelected && withCheckIcon
-              ? const CustomIcon(Icons.check_rounded, color: ThemeEnum.whiteColor, size: 18)
+              ? const CustomIcon(Icons.check_rounded, color: ThemeEnum.ground, size: 18)
               : null,
         ),
       ),
