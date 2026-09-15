@@ -8,7 +8,6 @@ import 'package:algorithm_visualizer/features/onboarding/presentation/widgets/on
 import 'package:algorithm_visualizer/features/onboarding/presentation/widgets/onboarding_header.dart';
 import 'package:algorithm_visualizer/features/onboarding/presentation/widgets/onboarding_slide.dart';
 import 'package:algorithm_visualizer/features/onboarding/presentation/widgets/onboarding_text.dart';
-import 'package:algorithm_visualizer/features/onboarding/presentation/widgets/onboarding_tokens.dart';
 import 'package:algorithm_visualizer/features/onboarding/presentation/widgets/visuals/editor_visual.dart';
 import 'package:algorithm_visualizer/features/onboarding/presentation/widgets/visuals/heatmap_visual.dart';
 import 'package:algorithm_visualizer/features/onboarding/presentation/widgets/visuals/pathfinding_visual.dart';
@@ -42,10 +41,10 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
 
   /// White, white, white, then sand — the accent progression the flow tells.
   static const List<ThemeEnum> _accents = [
-    OnboardingTokens.accent,
-    OnboardingTokens.accent,
-    OnboardingTokens.accent,
-    OnboardingTokens.sand,
+    ThemeEnum.inkPrimary,
+    ThemeEnum.inkPrimary,
+    ThemeEnum.inkPrimary,
+    ThemeEnum.dataMedium,
   ];
 
   @override
@@ -90,12 +89,12 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
   Widget build(BuildContext context) {
     // 0 on page 3, 1 on page 4, and every value in between while swiping.
     final reveal = (_offset - (OnboardingPage.pageCount - 2)).clamp(0.0, 1.0);
-
+    print("-------------");
     return Scaffold(
-      backgroundColor: context.getColor(OnboardingTokens.bgBase),
+      backgroundColor: context.getColor(ThemeEnum.ground),
       body: SafeArea(
         child: HorizontalPadding(
-          padding: OnboardingTokens.screenPadding,
+          padding: 22,
           child: Column(
             children: [
               OnboardingHeader(onSkip: () => _finish(toLogin: false)),
@@ -126,9 +125,9 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
                   ],
                 ),
               ),
-              SizedBox(height: 20.h),
+              const RSizedBox(height: 10),
               OnboardingDots(offset: _offset, accents: _accents),
-              SizedBox(height: 20.h),
+              const RSizedBox(height: 10),
               _Controls(
                 reveal: reveal,
                 onNext: _next,
@@ -167,8 +166,8 @@ class _Controls extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const single = OnboardingTokens.footerSingle;
-    const dual = OnboardingTokens.footerDual;
+    const single = 52;
+    const dual = single * 2 + 10 * 2 + 24;
 
     return SizedBox(
       height: (single + (dual - single) * reveal).h,
