@@ -2,7 +2,7 @@ import 'package:algorithm_visualizer/core/resources/strings_manager.dart';
 
 import '../execution/compile/compiler.dart';
 import '../execution/errors/failure.dart';
-import '../execution/frontend/dart/dart_harness.dart';
+import '../execution/frontend/language_registry.dart';
 import '../execution/legacy/object_instance.dart';
 import '../execution/values/value.dart' as engine;
 import '../execution/vm/budget.dart';
@@ -28,7 +28,13 @@ class ProblemData {
     this.customObjects = const <String, CustomObjectShape>{},
     this.customObjectSources = const <String>[],
     this.comparison = OutputComparison.exact,
+    this.language = EditorLanguage.dart,
   });
+
+  /// The language the learner wrote their solution in. The test cases and
+  /// the expected output are the same whichever it is — that is the whole
+  /// point of grading on canonical values (SC-013).
+  final EditorLanguage language;
 
   /// The `function_signature.dart` string, e.g.
   /// `List<int> twoSum(List<int> nums, int target)`.
@@ -96,7 +102,22 @@ class ProblemRunner {
       );
     }
 
-    final frontend = DartFrontend();
+    if (problem.language != EditorLanguage.dart && problem.customObjects.isNotEmpty) {
+      // Linked lists and trees are still built as Dart source text
+      // (`object_builder.dart`), so a problem that needs them can only be
+      // graded in Dart for now. Say so rather than failing every test case
+      // with something that reads like the learner's fault.
+      return ProblemRunResult(
+        testCaseResults: const <SingleTestCaseResult>[],
+        allPassed: false,
+        passedCount: 0,
+        totalCount: all.length,
+        error: StringsManager.executionFailureMessage(
+            'customObjectsInThisLanguage', const <String, Object?>{}),
+      );
+    }
+
+    final frontend = frontendFor(problem.language);
     final results = <SingleTestCaseResult>[];
     String? firstError;
 
@@ -105,17 +126,41 @@ class ProblemRunner {
       final expected = testCase.expectedOutput.trim();
 
       final argValues = parseTestCaseInput(input);
-      final built = _buildProgram(problem, sig, userCode, argValues);
+      final built = problem.language == EditorLanguage.dart
+          ? _buildProgram(problem, sig, userCode, argValues)
+          : (program: userCode, lineOffset: 0);
+
+      // Built once, so that an in-place function's mutations are visible on
+      // the very objects handed to it — that mutated argument *is* the answer
+      // for a `void` signature.
+      final engineArgs = problem.language == EditorLanguage.dart
+          ? const <engine.Value>[]
+          : <engine.Value>[for (final param in sig.params) _toEngineValue(argValues[param.name])];
 
       Failure? failure;
       VmResult? run;
+      engine.Value? answer;
       try {
-        final program = frontend.parse(built.program);
+        final userProgram = frontend.parse(built.program);
+        // Dart still runs through a generated `main()` built as source text,
+        // which the grading suite is pinned against. Every other language
+        // goes through the frontend contract's own harness, so no per-language
+        // source templates exist anywhere (FR-017).
+        final program = problem.language == EditorLanguage.dart
+            ? userProgram
+            : frontend.buildHarness(
+                userProgram: userProgram,
+                functionName: sig.name,
+                arguments: engineArgs,
+                preludeSources: const <String>[],
+              );
         final script = Compiler().compileProgram(program);
         final vm =
             Vm(dialect: frontend.dialect, budget: const ExecutionBudget(instructionsPerBudgetCheck: 2000));
+        frontend.globals.forEach(vm.defineGlobal);
         run = vm.run(script, timeout: const Duration(seconds: 2));
         failure = run.failure;
+        answer = run.returned;
       } on FrontendFailure catch (e) {
         failure = e.toFailure();
       }
@@ -137,7 +182,13 @@ class ProblemRunner {
         continue;
       }
 
-      final raw = run!.rawOutput.isEmpty ? null : _unwrapValue(run.rawOutput.last);
+      // Dart's generated `main()` prints the answer; every other language
+      // returns it from the harness. An in-place (`void`) function has
+      // mutated its first argument instead, and that argument is the answer.
+      final engine.Value? resultValue = problem.language == EditorLanguage.dart
+          ? (run!.rawOutput.isEmpty ? null : run.rawOutput.last)
+          : (sig.isVoid && engineArgs.isNotEmpty ? engineArgs.first : answer);
+      final raw = resultValue == null ? null : _unwrapValue(resultValue);
       // For in-place (`void`) functions the printed value is the mutated
       // first argument, so its shape comes from the first parameter's type.
       final shape = sig.isVoid && sig.params.isNotEmpty
@@ -288,6 +339,33 @@ class ProblemRunner {
   /// [engine.Value] into that same raw shape, preserving node identity (via
   /// [seen]) so a cyclic structure still round-trips through the existing
   /// cycle guard correctly.
+  /// A parsed test-case argument as a runtime [engine.Value], for the
+  /// languages that pass their arguments through `buildHarness` rather than
+  /// through generated source text. Collections are built mutable, so an
+  /// in-place solution really does modify what it was given.
+  engine.Value _toEngineValue(TestValue? value) => _rawToEngineValue(
+        value == null ? null : testValueToRaw(value),
+      );
+
+  engine.Value _rawToEngineValue(dynamic raw) {
+    if (raw == null) return engine.NullValue.instance;
+    if (raw is bool) return engine.BoolValue(raw);
+    if (raw is int) return engine.IntValue(raw);
+    if (raw is double) return engine.NumValue(raw);
+    if (raw is String) return engine.StrValue(raw);
+    if (raw is List) {
+      return engine.ListValue(<engine.Value>[for (final item in raw) _rawToEngineValue(item)]);
+    }
+    if (raw is Map) {
+      final map = engine.MapValue();
+      raw.forEach((key, dynamic v) {
+        map.entries[_rawToEngineValue(key)] = _rawToEngineValue(v);
+      });
+      return map;
+    }
+    throw ArgumentError('$raw has no engine representation');
+  }
+
   dynamic _unwrapValue(engine.Value value, [Map<engine.InstanceValue, ObjectInstance>? seen]) {
     final visited = seen ?? <engine.InstanceValue, ObjectInstance>{};
     switch (value) {

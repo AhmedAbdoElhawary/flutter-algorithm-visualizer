@@ -521,7 +521,13 @@ class Solution {
       case 'notAvailableInThisEnvironment':
         return "'${data['name']}' isn't available in this environment";
       case 'indentationError':
-        return "Inconsistent indentation";
+        return switch (data['reason']) {
+          'mixedTabsAndSpaces' => "This line mixes tabs and spaces, so its indentation is ambiguous",
+          'unexpectedIndent' => "This line's indentation doesn't line up with any block above it",
+          _ => "Inconsistent indentation",
+        };
+      case 'customObjectsInThisLanguage':
+        return "This problem uses a linked list or tree, which the editor can only build in Dart so far";
       case 'missingEntryPoint':
         return "Couldn't find a function named '${data['name']}' to run";
       case 'timeLimitExceeded':
