@@ -128,10 +128,6 @@ class AppRoutes {
     debugLogDiagnostics: true,
     navigatorKey: _rootKey,
 
-    /// First run starts in onboarding; every later run goes straight to home.
-    /// Read once, here, rather than as a `redirect` that would re-check the
-    /// flag on every navigation. `GetStorage.init()` has already run by the
-    /// time anything touches [AppRoutes.instance] (see `bootstrap.dart`).
     initialLocation: OnboardingStore.standalone().isSeen ? Routes.home.path : Routes.onboarding.path,
     errorBuilder: (context, state) => const _UnknownPage(),
     // Screen tracking with no per-page code: Firebase logs each route
