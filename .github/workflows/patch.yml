@@ -38,7 +38,7 @@ jobs:
       DART_DEFINE: dart_define/prod.json
       SHOREBIRD_TOKEN: ${{ secrets.SHOREBIRD_TOKEN }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - name: Refuse to patch anything but production
         # The patch must be built from the code that is actually live.
@@ -49,7 +49,7 @@ jobs:
             exit 1
           fi
 
-      - uses: actions/setup-java@v4
+      - uses: actions/setup-java@v6
         with:
           distribution: temurin
           java-version: "17"
