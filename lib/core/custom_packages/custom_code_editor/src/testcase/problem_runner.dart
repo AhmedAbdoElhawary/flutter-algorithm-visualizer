@@ -1,4 +1,4 @@
-import '../execution/runner.dart';
+import '../execution/legacy/runner.dart';
 import 'custom_object_shape.dart';
 import 'function_signature.dart';
 import 'object_builder.dart';

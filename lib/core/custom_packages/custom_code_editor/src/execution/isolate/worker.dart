@@ -11,6 +11,7 @@ import 'dart:collection';
 
 import '../compile/compiler.dart';
 import '../errors/failure.dart';
+import '../frontend/dart/dart_harness.dart';
 import '../frontend/frontend.dart';
 import '../ir/ir.dart';
 import '../values/dialect.dart';
@@ -19,9 +20,17 @@ import '../vm/budget.dart';
 import '../vm/vm.dart';
 
 final Map<EditorLanguage, LanguageFrontend> _frontends = <EditorLanguage, LanguageFrontend>{};
+var _registered = false;
 
-/// Populated as each language frontend lands (Dart in Phase 3, Python in
-/// Phase 7, JavaScript in Phase 8). Safe to call more than once.
+/// Populated as each language frontend lands (Dart now, Python in Phase 7,
+/// JavaScript in Phase 8). Safe to call more than once — [executeEncodedRequest]
+/// calls it before every request so a fresh isolate is always ready.
+void registerAllFrontends() {
+  if (_registered) return;
+  _registered = true;
+  registerFrontend(DartFrontend());
+}
+
 void registerFrontend(LanguageFrontend frontend) => _frontends[frontend.language] = frontend;
 
 /// A magic, never-naturally-occurring source string that lets Phase 2's
@@ -61,6 +70,7 @@ const Dialect _stubDialect = Dialect(
 /// Runs one request end to end and returns a wire-encoded outcome. Never
 /// throws — every failure path is captured and encoded.
 Map<String, Object?> executeEncodedRequest(Map<String, Object?> encoded, bool Function() isCancelled) {
+  registerAllFrontends();
   final stopwatch = Stopwatch()..start();
   try {
     final language = EditorLanguage.values.byName(encoded['language']! as String);

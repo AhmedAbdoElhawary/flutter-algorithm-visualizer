@@ -114,25 +114,30 @@ class FunctionProto {
   FunctionProto({
     required this.name,
     required this.arity,
+    int? minArity,
     required this.chunk,
     this.upvalues = const <UpvalueDescriptor>[],
     this.exceptionTable = const <ExceptionHandler>[],
     this.maxLocals = 0,
-    this.paramDefaults = const <int>[],
-  });
+  }) : minArity = minArity ?? arity;
 
   final String name;
+
+  /// Total parameter count (required + optional).
   final int arity;
+
+  /// Minimum argument count the caller must supply; optional trailing
+  /// parameters (`ListNode([this.val = 0, this.next])`) fall in
+  /// `[minArity, arity)`. Their default-value expressions are compiled as a
+  /// prologue inside the function body itself (`if (param == null) param =
+  /// <default>`), so the VM's call protocol only needs this range check —
+  /// see `compile/compiler.dart`'s `_compileFunction`.
+  final int minArity;
+
   final BytecodeChunk chunk;
   final List<UpvalueDescriptor> upvalues;
   final List<ExceptionHandler> exceptionTable;
   final int maxLocals;
-
-  /// Constant-pool indices of default-value expressions' compiled thunks;
-  /// empty when no parameter has a default. Reserved for frontends that need
-  /// default arguments (Python, JavaScript) — the Dart frontend does not
-  /// currently populate it.
-  final List<int> paramDefaults;
 }
 
 class BytecodeChunk {

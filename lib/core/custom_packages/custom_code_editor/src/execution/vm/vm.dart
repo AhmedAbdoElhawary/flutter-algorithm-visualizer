@@ -17,9 +17,15 @@ import 'budget.dart';
 import 'chunk.dart';
 
 class VmResult {
-  const VmResult({this.returned, this.stdout = const <String>[], this.truncated = false, this.failure});
+  const VmResult({this.returned, this.stdout = const <String>[], this.rawOutput = const <Value>[], this.truncated = false, this.failure});
   final Value? returned;
   final List<String> stdout;
+
+  /// The raw evaluated value of each `print(...)` argument, parallel to
+  /// [stdout]. Lets a caller grade the last printed value directly (e.g. a
+  /// custom object) rather than its stringified form — used by the
+  /// "learner wrote their own `main()`" fallback path in `testcase/`.
+  final List<Value> rawOutput;
   final bool truncated;
   final Failure? failure;
 }
@@ -57,6 +63,7 @@ class Vm {
   final Map<String, Value> _globals = <String, Value>{};
   final List<_Frame> _frames = <_Frame>[];
   final List<String> _stdout = <String>[];
+  final List<Value> _rawOutput = <Value>[];
   int _outputChars = 0;
   bool _truncated = false;
   int _instructionCount = 0;
@@ -74,7 +81,7 @@ class Vm {
     _frames.add(_Frame(script));
     try {
       final result = _dispatchLoop(0);
-      return VmResult(returned: result, stdout: List<String>.of(_stdout), truncated: _truncated);
+      return VmResult(returned: result, stdout: List<String>.of(_stdout), rawOutput: List<Value>.of(_rawOutput), truncated: _truncated);
     } on _EngineHalt catch (h) {
       return VmResult(
         stdout: List<String>.of(_stdout),
@@ -335,7 +342,8 @@ class Vm {
       case OpCode.ret:
         return _returnFromFrame(frame);
       case OpCode.print:
-        _emitOutput(displayString(frame.stack.removeLast(), dialect));
+        final value = frame.stack.removeLast();
+        _emitOutput(displayString(value, dialect), value);
 
       case OpCode.classDecl:
         _buildClass(frame);
@@ -350,12 +358,13 @@ class Vm {
     return null;
   }
 
-  void _emitOutput(String line) {
+  void _emitOutput(String line, Value raw) {
     if (_stdout.length >= budget.maxOutputEntries || _outputChars >= budget.maxOutputChars) {
       _truncated = true;
       return;
     }
     _stdout.add(line);
+    _rawOutput.add(raw);
     _outputChars += line.length;
   }
 
@@ -546,7 +555,7 @@ class Vm {
       throw const _EngineHalt(FailureKind.recursionLimit, 'recursionLimitExceeded');
     }
     final proto = fn.chunk as FunctionProto;
-    if (args.length != proto.arity) {
+    if (args.length < proto.minArity || args.length > proto.arity) {
       throw VmRuntimeError('wrongArgumentCount', <String, Object?>{'expected': proto.arity, 'actual': args.length});
     }
     final frame = _Frame(fn);
