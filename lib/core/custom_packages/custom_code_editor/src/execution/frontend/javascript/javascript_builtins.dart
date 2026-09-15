@@ -172,8 +172,10 @@ Map<String, Value> javascriptGlobals() => <String, Value>{
       '__charCodeAt': _method('__charCodeAt', 'charCodeAt', 2, _charCodeAt),
       '__substring': _method('__substring', 'substring', 3, _substring),
       '__split': _method('__split', 'split', 2, _split),
-      '__toUpperCase': _method('__toUpperCase', 'toUpperCase', 1, (a, i) => StrValue(_str(a[0]).toUpperCase())),
-      '__toLowerCase': _method('__toLowerCase', 'toLowerCase', 1, (a, i) => StrValue(_str(a[0]).toLowerCase())),
+      '__toUpperCase':
+          _method('__toUpperCase', 'toUpperCase', 1, (a, i) => StrValue(_str(a[0]).toUpperCase())),
+      '__toLowerCase':
+          _method('__toLowerCase', 'toLowerCase', 1, (a, i) => StrValue(_str(a[0]).toLowerCase())),
       '__trim': _method('__trim', 'trim', 1, (a, i) => StrValue(_str(a[0]).trim())),
       '__replace': _method('__replace', 'replace', 3, _replaceFirst),
       '__replaceAll': _method('__replaceAll', 'replaceAll', 3, _replaceAll),
@@ -316,11 +318,14 @@ Value _objectValues(List<Value> a, InvokeCallback i) {
 Value _objectEntries(List<Value> a, InvokeCallback i) {
   final o = a[0];
   if (o is MapValue) {
-    return ListValue(<Value>[for (final e in o.entries.entries) ListValue(<Value>[e.key, e.value])]);
+    return ListValue(<Value>[
+      for (final e in o.entries.entries) ListValue(<Value>[e.key, e.value])
+    ]);
   }
   if (o is InstanceValue) {
-    return ListValue(
-        <Value>[for (final e in o.fields.entries) ListValue(<Value>[StrValue(e.key), e.value])]);
+    return ListValue(<Value>[
+      for (final e in o.fields.entries) ListValue(<Value>[StrValue(e.key), e.value])
+    ]);
   }
   throw const VmRuntimeError('typeMismatch', <String, Object?>{'expected': 'an object'});
 }
@@ -379,8 +384,7 @@ Value _parseFloat(List<Value> a, InvokeCallback i) {
   return _number(double.parse(match.group(0)!));
 }
 
-Value _fromCharCode(List<Value> a, InvokeCallback i) =>
-    StrValue(String.fromCharCodes(a.map(_int)));
+Value _fromCharCode(List<Value> a, InvokeCallback i) => StrValue(String.fromCharCodes(a.map(_int)));
 
 // --- typeof, ==, constructors ----------------------------------------------
 
@@ -437,8 +441,8 @@ Value _newMap(List<Value> a, InvokeCallback i) {
   return map;
 }
 
-Value _newSet(List<Value> a, InvokeCallback i) => SetValue(
-    LinkedHashSet<Value>.of(a.isEmpty || a[0] is NullValue || a[0] is UndefinedValue ? <Value>[] : _iter(a[0])));
+Value _newSet(List<Value> a, InvokeCallback i) => SetValue(LinkedHashSet<Value>.of(
+    a.isEmpty || a[0] is NullValue || a[0] is UndefinedValue ? <Value>[] : _iter(a[0])));
 
 Value _newArray(List<Value> a, InvokeCallback i) {
   // `new Array(3)` is three empty slots; `new Array(1, 2)` is those elements.
@@ -716,8 +720,7 @@ Value _split(List<Value> a, InvokeCallback i) {
 Value _replaceFirst(List<Value> a, InvokeCallback i) =>
     StrValue(_str(a[0]).replaceFirst(_str(a[1]), _str(a[2])));
 
-Value _replaceAll(List<Value> a, InvokeCallback i) =>
-    StrValue(_str(a[0]).replaceAll(_str(a[1]), _str(a[2])));
+Value _replaceAll(List<Value> a, InvokeCallback i) => StrValue(_str(a[0]).replaceAll(_str(a[1]), _str(a[2])));
 
 Value _pad(List<Value> a, {required bool start}) {
   final s = _str(a[0]);
@@ -792,8 +795,9 @@ Value _valuesOf(List<Value> a, InvokeCallback i) {
 Value _entriesOf(List<Value> a, InvokeCallback i) {
   final receiver = a[0];
   if (receiver is MapValue) {
-    return ListValue(
-        <Value>[for (final e in receiver.entries.entries) ListValue(<Value>[e.key, e.value])]);
+    return ListValue(<Value>[
+      for (final e in receiver.entries.entries) ListValue(<Value>[e.key, e.value])
+    ]);
   }
   if (receiver is ListValue) {
     return ListValue(<Value>[

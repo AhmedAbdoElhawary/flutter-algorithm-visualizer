@@ -324,7 +324,9 @@ class PythonParser {
         return IrExprStmt(
             line: line,
             expr: IrAssign(
-                line: line, name: target.name, value: IrLiteral(line: line, kind: IrLiteralKind.nullLit, value: null)));
+                line: line,
+                name: target.name,
+                value: IrLiteral(line: line, kind: IrLiteralKind.nullLit, value: null)));
       }
       final value = _expressionList();
       _noteAssignment(target.name);
@@ -347,9 +349,7 @@ class PythonParser {
         if (_checkOp('=')) targets.add(value);
       }
       final assignments = <IrStmt>[for (final t in targets) _assignTo(line, t, value)];
-      return assignments.length == 1
-          ? assignments.single
-          : IrStmtGroup(line: line, statements: assignments);
+      return assignments.length == 1 ? assignments.single : IrStmtGroup(line: line, statements: assignments);
     }
 
     if (_checkOp(':=')) throw _unsupported('walrus');
@@ -544,8 +544,7 @@ class PythonParser {
 
     if (catchBody == null && finallyBody == null) throw _syntax('expectedExceptOrFinally');
     if (catchVar != null) _noteAssignment(catchVar);
-    return IrTry(
-        line: line, body: body, catchVar: catchVar, catchBody: catchBody, finallyBody: finallyBody);
+    return IrTry(line: line, body: body, catchVar: catchVar, catchBody: catchBody, finallyBody: finallyBody);
   }
 
   IrStmt _functionDef({bool isMethod = false}) {
@@ -565,8 +564,7 @@ class PythonParser {
     final body = _functionBody(params);
     _selfName = savedSelf;
 
-    return IrFunctionDecl(
-        line: line, name: name == '__init__' ? '<init>' : name, params: params, body: body);
+    return IrFunctionDecl(line: line, name: name == '__init__' ? '<init>' : name, params: params, body: body);
   }
 
   /// Parses a suite as a function body, hoisting the names it assigns.
@@ -795,8 +793,8 @@ class PythonParser {
         right = _arithmetic();
         // Python's `is` is identity, which for the values this engine models
         // — `None`, `True`, `False` — is the same question as equality.
-        comparison = IrBinary(
-            line: line, op: negated ? IrBinaryOp.notEq : IrBinaryOp.eq, left: left, right: right);
+        comparison =
+            IrBinary(line: line, op: negated ? IrBinaryOp.notEq : IrBinaryOp.eq, left: left, right: right);
       } else {
         final op = switch (_peek.lexeme) {
           '<' => IrBinaryOp.lt,
@@ -843,10 +841,7 @@ class PythonParser {
     while (_checkOp('+') || _checkOp('-')) {
       final op = _advance();
       left = IrBinary(
-          line: op.line,
-          op: op.lexeme == '+' ? IrBinaryOp.add : IrBinaryOp.sub,
-          left: left,
-          right: _term());
+          line: op.line, op: op.lexeme == '+' ? IrBinaryOp.add : IrBinaryOp.sub, left: left, right: _term());
     }
     return left;
   }
@@ -875,7 +870,12 @@ class PythonParser {
       _advance();
       return _factor();
     }
-    if (_checkOp('~') || _checkOp('&') || _checkOp('|') || _checkOp('^') || _checkOp('<<') || _checkOp('>>')) {
+    if (_checkOp('~') ||
+        _checkOp('&') ||
+        _checkOp('|') ||
+        _checkOp('^') ||
+        _checkOp('<<') ||
+        _checkOp('>>')) {
       throw _unsupported('bitwiseOperator');
     }
     return _power();
@@ -1004,11 +1004,12 @@ class PythonParser {
     final ordered = <IrExpr>[...args];
     for (var i = args.length; i < params.length; i++) {
       final supplied = keywords.remove(params[i]);
-      ordered.add(supplied ??
-          IrLiteral(line: line, synthetic: true, kind: IrLiteralKind.nullLit, value: null));
+      ordered
+          .add(supplied ?? IrLiteral(line: line, synthetic: true, kind: IrLiteralKind.nullLit, value: null));
     }
     if (keywords.isNotEmpty) throw _unsupported('unknownKeywordArgument', line);
-    while (ordered.length > args.length && ordered.last is IrLiteral && (ordered.last as IrLiteral).synthetic) {
+    while (
+        ordered.length > args.length && ordered.last is IrLiteral && (ordered.last as IrLiteral).synthetic) {
       ordered.removeLast();
     }
     return IrCall(line: line, callee: callee, args: ordered);
@@ -1032,9 +1033,8 @@ class PythonParser {
         final expr = _ternary();
         // `sum(x * 2 for x in xs)` — a generator expression may be a call's
         // sole argument without parentheses of its own.
-        positional.add(_checkKeyword('for')
-            ? _comprehension(_peek.line, expr, null, IrComprehensionKind.list)
-            : expr);
+        positional.add(
+            _checkKeyword('for') ? _comprehension(_peek.line, expr, null, IrComprehensionKind.list) : expr);
       }
       if (!_matchOp(',')) break;
     }

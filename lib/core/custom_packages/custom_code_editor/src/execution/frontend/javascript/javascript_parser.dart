@@ -246,9 +246,7 @@ class JavascriptParser {
       }
     } while (_matchOp(','));
     _consumeSemicolon();
-    return declarations.length == 1
-        ? declarations.single
-        : IrStmtGroup(line: line, statements: declarations);
+    return declarations.length == 1 ? declarations.single : IrStmtGroup(line: line, statements: declarations);
   }
 
   /// `const [a, b] = xs` and `const {x, y} = o`.
@@ -517,8 +515,7 @@ class JavascriptParser {
     if (_matchKeyword('finally')) finallyBody = _block();
 
     if (catchBody == null && finallyBody == null) throw _syntax('expectedCatchOrFinally');
-    return IrTry(
-        line: line, body: body, catchVar: catchVar, catchBody: catchBody, finallyBody: finallyBody);
+    return IrTry(line: line, body: body, catchVar: catchVar, catchBody: catchBody, finallyBody: finallyBody);
   }
 
   IrStmt _expressionStatement() {
@@ -539,7 +536,13 @@ class JavascriptParser {
   /// The global objects whose members must never be mistaken for instance
   /// methods: `Object.keys` is not the same function as `someMap.keys`.
   static const Set<String> _globalNamespaces = <String>{
-    'Object', 'Math', 'Array', 'Number', 'String', 'JSON', 'console',
+    'Object',
+    'Math',
+    'Array',
+    'Number',
+    'String',
+    'JSON',
+    'console',
   };
 
   IrStmt _printStatement() {
@@ -619,8 +622,7 @@ class JavascriptParser {
     return target;
   }
 
-  bool _isAssignable(IrExpr expr) =>
-      expr is IrIdentifier || expr is IrIndexGet || expr is IrPropertyGet;
+  bool _isAssignable(IrExpr expr) => expr is IrIdentifier || expr is IrIndexGet || expr is IrPropertyGet;
 
   IrExpr _assignBack(int line, IrExpr target, IrExpr value) => switch (target) {
         IrIdentifier(:final name) => IrAssign(line: line, name: name, value: value),
@@ -832,8 +834,10 @@ class JavascriptParser {
         params: const <IrParam>[],
         body: <IrStmt>[
           IrVarDecl(line: line, synthetic: true, name: saved, initializer: target),
-          IrExprStmt(line: line, synthetic: true, expr: _assignBack(line, target, _stepped(line, target, op))),
-          IrReturn(line: line, synthetic: true, value: IrIdentifier(line: line, synthetic: true, name: saved)),
+          IrExprStmt(
+              line: line, synthetic: true, expr: _assignBack(line, target, _stepped(line, target, op))),
+          IrReturn(
+              line: line, synthetic: true, value: IrIdentifier(line: line, synthetic: true, name: saved)),
         ],
       ),
       args: const <IrExpr>[],
@@ -894,8 +898,7 @@ class JavascriptParser {
             line: line,
             callee: IrIdentifier(line: line, synthetic: true, name: methodHelper),
             args: <IrExpr>[receiver, ...args])
-        : IrCall(
-            line: line, callee: IrPropertyGet(line: line, receiver: receiver, name: name), args: args);
+        : IrCall(line: line, callee: IrPropertyGet(line: line, receiver: receiver, name: name), args: args);
     return optional ? _guardOptional(line, receiver, call) : call;
   }
 
@@ -1065,8 +1068,7 @@ class JavascriptParser {
     };
     final builtin = builtinConstructors[name];
     if (builtin != null && !_classNames.contains(name)) {
-      return IrCall(
-          line: line, callee: IrIdentifier(line: line, synthetic: true, name: builtin), args: args);
+      return IrCall(line: line, callee: IrIdentifier(line: line, synthetic: true, name: builtin), args: args);
     }
     if (name == 'Error' && !_classNames.contains(name)) {
       // `throw new Error("...")` is the idiom; the message is what matters.

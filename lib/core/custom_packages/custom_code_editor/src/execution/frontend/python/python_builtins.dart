@@ -129,12 +129,12 @@ Map<String, Value> pythonGlobals() => <String, Value>{
       '__strip': _method('__strip', 'strip', 1, (a, i) => _mapString(a[0], (s) => s.trim())),
       '__lstrip': _method('__lstrip', 'lstrip', 1, (a, i) => _mapString(a[0], (s) => s.trimLeft())),
       '__rstrip': _method('__rstrip', 'rstrip', 1, (a, i) => _mapString(a[0], (s) => s.trimRight())),
-      '__startswith': _method('__startswith', 'startswith', 2,
-          (a, i) => BoolValue(_str2(a[0]).startsWith(_str2(a[1])))),
+      '__startswith':
+          _method('__startswith', 'startswith', 2, (a, i) => BoolValue(_str2(a[0]).startsWith(_str2(a[1])))),
       '__endswith':
           _method('__endswith', 'endswith', 2, (a, i) => BoolValue(_str2(a[0]).endsWith(_str2(a[1])))),
-      '__replace': _method('__replace', 'replace', 3,
-          (a, i) => StrValue(_str2(a[0]).replaceAll(_str2(a[1]), _str2(a[2])))),
+      '__replace': _method(
+          '__replace', 'replace', 3, (a, i) => StrValue(_str2(a[0]).replaceAll(_str2(a[1]), _str2(a[2])))),
       '__rjust': _method('__rjust', 'rjust', 3, (a, i) => _pad(a, left: true)),
       '__ljust': _method('__ljust', 'ljust', 3, (a, i) => _pad(a, left: false)),
       '__pop': _method('__pop', 'pop', 3, _pop),
@@ -246,7 +246,9 @@ Value _sorted(List<Value> args, InvokeCallback invoke) {
   } else {
     // Decorate-sort-undecorate, so the key function runs once per element
     // rather than once per comparison.
-    final decorated = <(Value, Value)>[for (final e in items) (invoke(key, <Value>[e]), e)];
+    final decorated = <(Value, Value)>[
+      for (final e in items) (invoke(key, <Value>[e]), e)
+    ];
     decorated.sort((a, b) => compareValues(a.$1, b.$1, pythonDialect));
     items
       ..clear()
@@ -323,8 +325,7 @@ Value _zip(List<Value> args, InvokeCallback invoke) {
   ]);
 }
 
-Value _reversed(List<Value> args, InvokeCallback invoke) =>
-    ListValue(_iter(args[0]).reversed.toList());
+Value _reversed(List<Value> args, InvokeCallback invoke) => ListValue(_iter(args[0]).reversed.toList());
 
 Value _any(List<Value> args, InvokeCallback invoke) => BoolValue(_iter(args[0]).any(_truthy));
 
@@ -332,7 +333,9 @@ Value _all(List<Value> args, InvokeCallback invoke) => BoolValue(_iter(args[0]).
 
 Value _map(List<Value> args, InvokeCallback invoke) {
   final f = args[0] as FunctionValue;
-  return ListValue(<Value>[for (final e in _iter(args[1])) invoke(f, <Value>[e])]);
+  return ListValue(<Value>[
+    for (final e in _iter(args[1])) invoke(f, <Value>[e])
+  ]);
 }
 
 Value _filter(List<Value> args, InvokeCallback invoke) {
@@ -353,7 +356,8 @@ Value _int(List<Value> args, InvokeCallback invoke) {
   if (v is StrValue) {
     final parsed = int.tryParse(v.value.trim());
     if (parsed == null) {
-      throw VmRuntimeError('typeMismatch', <String, Object?>{'expected': 'an integer string', 'actual': v.value});
+      throw VmRuntimeError(
+          'typeMismatch', <String, Object?>{'expected': 'an integer string', 'actual': v.value});
     }
     return IntValue(parsed);
   }
@@ -371,7 +375,8 @@ Value _float(List<Value> args, InvokeCallback invoke) {
     if (text == 'nan') return const NumValue(double.nan);
     final parsed = double.tryParse(v.value.trim());
     if (parsed == null) {
-      throw VmRuntimeError('typeMismatch', <String, Object?>{'expected': 'a number string', 'actual': v.value});
+      throw VmRuntimeError(
+          'typeMismatch', <String, Object?>{'expected': 'a number string', 'actual': v.value});
     }
     return NumValue(parsed);
   }
@@ -608,7 +613,8 @@ Value _sortInPlace(List<Value> args, InvokeCallback invoke) {
   if (receiver is! ListValue) {
     throw const VmRuntimeError('typeMismatch', <String, Object?>{'expected': 'a list'});
   }
-  final sorted = _sorted(<Value>[receiver, if (args.length > 1) args[1], if (args.length > 2) args[2]], invoke);
+  final sorted =
+      _sorted(<Value>[receiver, if (args.length > 1) args[1], if (args.length > 2) args[2]], invoke);
   receiver.items
     ..clear()
     ..addAll((sorted as ListValue).items);
@@ -742,8 +748,7 @@ Value _isalpha(List<Value> args, InvokeCallback invoke) => _charTest(args[0], (c
       return (u >= 0x41 && u <= 0x5A) || (u >= 0x61 && u <= 0x7A);
     });
 
-Value _isspace(List<Value> args, InvokeCallback invoke) =>
-    _charTest(args[0], (c) => c.trim().isEmpty);
+Value _isspace(List<Value> args, InvokeCallback invoke) => _charTest(args[0], (c) => c.trim().isEmpty);
 
 Value _isupper(List<Value> args, InvokeCallback invoke) =>
     _charTest(args[0], (c) => c.toUpperCase() == c && c.toLowerCase() != c);

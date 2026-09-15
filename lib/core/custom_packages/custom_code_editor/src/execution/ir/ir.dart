@@ -321,7 +321,11 @@ class IrVarDecl extends IrStmt {
 /// `a, b = 1, 2` / `[a, b] = xs` / `{x, y} = point`.
 class IrDestructure extends IrStmt {
   const IrDestructure(
-      {required super.line, super.synthetic, required this.names, required this.value, this.byProperty = false});
+      {required super.line,
+      super.synthetic,
+      required this.names,
+      required this.value,
+      this.byProperty = false});
   final List<String> names;
   final IrExpr value;
 

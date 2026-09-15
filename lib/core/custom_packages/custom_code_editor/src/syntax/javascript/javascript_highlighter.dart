@@ -91,8 +91,7 @@ class JavascriptTokenizer extends Tokenizer {
           tokens.add(Token(type: TokenType.comment, text: line.substring(i), start: i, end: line.length));
           return TokenizeResult(tokens, const _JavascriptLineState(inBlockComment: true));
         }
-        tokens
-            .add(Token(type: TokenType.comment, text: line.substring(i, end + 2), start: i, end: end + 2));
+        tokens.add(Token(type: TokenType.comment, text: line.substring(i, end + 2), start: i, end: end + 2));
         i = end + 2;
         continue;
       }

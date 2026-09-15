@@ -112,8 +112,8 @@ class ProblemRunner {
         allPassed: false,
         passedCount: 0,
         totalCount: all.length,
-        error: StringsManager.executionFailureMessage(
-            'customObjectsInThisLanguage', const <String, Object?>{}),
+        error:
+            StringsManager.executionFailureMessage('customObjectsInThisLanguage', const <String, Object?>{}),
       );
     }
 

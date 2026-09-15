@@ -370,8 +370,7 @@ class _Scanner {
 
     while (true) {
       if (i >= source.length) {
-        throw FrontendFailure(
-            kind: FailureKind.syntax, code: 'unterminatedString', line: startLine);
+        throw FrontendFailure(kind: FailureKind.syntax, code: 'unterminatedString', line: startLine);
       }
       if (source.startsWith(terminator, i)) {
         i += terminator.length;
@@ -380,8 +379,7 @@ class _Scanner {
       final c = source[i];
       if (c == '\n') {
         if (!isTriple) {
-          throw FrontendFailure(
-              kind: FailureKind.syntax, code: 'unterminatedString', line: startLine);
+          throw FrontendFailure(kind: FailureKind.syntax, code: 'unterminatedString', line: startLine);
         }
         buffer.write('\n');
         _consumeNewline();
@@ -390,8 +388,7 @@ class _Scanner {
       if (c == '\\' && !isRaw) {
         i++;
         if (i >= source.length) {
-          throw FrontendFailure(
-              kind: FailureKind.syntax, code: 'unterminatedString', line: startLine);
+          throw FrontendFailure(kind: FailureKind.syntax, code: 'unterminatedString', line: startLine);
         }
         buffer.write(_unescape(source[i]));
         i++;
@@ -472,8 +469,7 @@ class _Scanner {
     final expr = source.substring(start, i);
     i++; // past '}'
     if (expr.trim().isEmpty) {
-      throw FrontendFailure(
-          kind: FailureKind.syntax, code: 'expectedExpression', line: holeLine);
+      throw FrontendFailure(kind: FailureKind.syntax, code: 'expectedExpression', line: holeLine);
     }
     return PythonInterpolation(expr, holeLine);
   }

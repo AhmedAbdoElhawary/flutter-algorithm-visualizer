@@ -394,7 +394,9 @@ String _displayString(Value v, [Dialect? dialect]) {
   if (v is StrValue) return v.value;
   if (v is IntValue) return v.value.toString();
   if (v is NumValue) {
-    if ((dialect?.wholeFloatsPrintAsIntegers ?? false) && v.value.isFinite && v.value == v.value.roundToDouble()) {
+    if ((dialect?.wholeFloatsPrintAsIntegers ?? false) &&
+        v.value.isFinite &&
+        v.value == v.value.roundToDouble()) {
       return v.value.toInt().toString();
     }
     return v.value.toString();
