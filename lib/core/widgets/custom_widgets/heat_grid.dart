@@ -44,14 +44,14 @@ class HeatGridLegend extends StatelessWidget {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        const RegularText(StringsManager.less, color: ThemeEnum.textSecond, fontSize: 11),
+        const RegularText(StringsManager.less, color: ThemeEnum.inkBody, fontSize: 11),
         const RSizedBox(width: 4),
         Wrap(
           spacing: 3.5.w,
           children: HeatGrid.heatLevels.map((level) => _HeatCell(level: level)).toList(),
         ),
         const RSizedBox(width: 4),
-        const RegularText(StringsManager.more, color: ThemeEnum.textSecond, fontSize: 11),
+        const RegularText(StringsManager.more, color: ThemeEnum.inkBody, fontSize: 11),
       ],
     );
   }
@@ -70,8 +70,9 @@ class _HeatCell extends StatelessWidget {
       decoration: BoxDecoration(
         color: context.getColor(level),
         borderRadius: BorderRadius.circular(CdRadius.tiny.r),
-        border:
-            level == HeatGrid.heatLevels.first ? Border.all(color: context.getColor(ThemeEnum.border)) : null,
+        border: level == HeatGrid.heatLevels.first
+            ? Border.all(color: context.getColor(ThemeEnum.hairline))
+            : null,
       ),
     );
   }
