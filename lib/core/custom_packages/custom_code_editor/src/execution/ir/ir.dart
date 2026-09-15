@@ -64,7 +64,8 @@ class IrIdentifier extends IrExpr {
 enum IrBinaryOp { add, sub, mul, div, floorDiv, truncDiv, mod, eq, notEq, lt, lte, gt, gte, and, or, ifNull }
 
 class IrBinary extends IrExpr {
-  const IrBinary({required super.line, super.synthetic, required this.op, required this.left, required this.right});
+  const IrBinary(
+      {required super.line, super.synthetic, required this.op, required this.left, required this.right});
   final IrBinaryOp op;
   final IrExpr left;
   final IrExpr right;
@@ -79,7 +80,12 @@ class IrUnary extends IrExpr {
 }
 
 class IrConditional extends IrExpr {
-  const IrConditional({required super.line, super.synthetic, required this.condition, required this.thenExpr, required this.elseExpr});
+  const IrConditional(
+      {required super.line,
+      super.synthetic,
+      required this.condition,
+      required this.thenExpr,
+      required this.elseExpr});
   final IrExpr condition;
   final IrExpr thenExpr;
   final IrExpr elseExpr;
@@ -101,7 +107,12 @@ class IrIndexGet extends IrExpr {
 
 /// `receiver[index] = value`.
 class IrIndexSet extends IrExpr {
-  const IrIndexSet({required super.line, super.synthetic, required this.receiver, required this.index, required this.value});
+  const IrIndexSet(
+      {required super.line,
+      super.synthetic,
+      required this.receiver,
+      required this.index,
+      required this.value});
   final IrExpr receiver;
   final IrExpr index;
   final IrExpr value;
@@ -109,7 +120,8 @@ class IrIndexSet extends IrExpr {
 
 /// `a[start:end]` — Python slicing, including negative indices (IrSlice).
 class IrSlice extends IrExpr {
-  const IrSlice({required super.line, super.synthetic, required this.receiver, this.start, this.end, this.step});
+  const IrSlice(
+      {required super.line, super.synthetic, required this.receiver, this.start, this.end, this.step});
   final IrExpr receiver;
   final IrExpr? start;
   final IrExpr? end;
@@ -125,7 +137,12 @@ class IrPropertyGet extends IrExpr {
 
 /// `receiver.name = value`.
 class IrPropertySet extends IrExpr {
-  const IrPropertySet({required super.line, super.synthetic, required this.receiver, required this.name, required this.value});
+  const IrPropertySet(
+      {required super.line,
+      super.synthetic,
+      required this.receiver,
+      required this.name,
+      required this.value});
   final IrExpr receiver;
   final String name;
   final IrExpr value;
@@ -185,7 +202,9 @@ class IrCascade extends IrExpr {
 
 class IrCascadeOp {
   const IrCascadeOp.call(this.name, this.callArgs) : setValue = null;
-  const IrCascadeOp.set(this.name, IrExpr value) : callArgs = null, setValue = value;
+  const IrCascadeOp.set(this.name, IrExpr value)
+      : callArgs = null,
+        setValue = value;
   final String name;
   final List<IrExpr>? callArgs;
   final IrExpr? setValue;
@@ -193,7 +212,13 @@ class IrCascadeOp {
 
 /// Function expression / arrow / `lambda` (FR-002a).
 class IrLambda extends IrExpr {
-  const IrLambda({required super.line, super.synthetic, this.name, required this.params, required this.body, this.isExpressionBody = false});
+  const IrLambda(
+      {required super.line,
+      super.synthetic,
+      this.name,
+      required this.params,
+      required this.body,
+      this.isExpressionBody = false});
   final String? name;
   final List<IrParam> params;
 
@@ -281,7 +306,12 @@ class IrDestructure extends IrStmt {
 }
 
 class IrIf extends IrStmt {
-  const IrIf({required super.line, super.synthetic, required this.condition, required this.thenBranch, this.elseBranch});
+  const IrIf(
+      {required super.line,
+      super.synthetic,
+      required this.condition,
+      required this.thenBranch,
+      this.elseBranch});
   final IrExpr condition;
   final IrStmt thenBranch;
   final IrStmt? elseBranch;
@@ -295,7 +325,8 @@ class IrWhile extends IrStmt {
 
 /// Classic C-style `for (init; condition; increment)`.
 class IrFor extends IrStmt {
-  const IrFor({required super.line, super.synthetic, this.init, this.condition, this.increment, required this.body});
+  const IrFor(
+      {required super.line, super.synthetic, this.init, this.condition, this.increment, required this.body});
   final IrStmt? init;
   final IrExpr? condition;
   final IrExpr? increment;
@@ -304,7 +335,12 @@ class IrFor extends IrStmt {
 
 /// `for (x in xs)` / `for x in xs:` / `for (const x of xs)`.
 class IrForIn extends IrStmt {
-  const IrForIn({required super.line, super.synthetic, required this.varName, required this.iterable, required this.body});
+  const IrForIn(
+      {required super.line,
+      super.synthetic,
+      required this.varName,
+      required this.iterable,
+      required this.body});
   final String varName;
   final IrExpr iterable;
   final IrStmt body;
@@ -330,14 +366,21 @@ class IrParam {
 }
 
 class IrFunctionDecl extends IrStmt {
-  const IrFunctionDecl({required super.line, super.synthetic, required this.name, required this.params, required this.body});
+  const IrFunctionDecl(
+      {required super.line, super.synthetic, required this.name, required this.params, required this.body});
   final String name;
   final List<IrParam> params;
   final List<IrStmt> body;
 }
 
 class IrClassDecl extends IrStmt {
-  const IrClassDecl({required super.line, super.synthetic, required this.name, this.superclass, required this.methods, this.fieldNames = const <String>[]});
+  const IrClassDecl(
+      {required super.line,
+      super.synthetic,
+      required this.name,
+      this.superclass,
+      required this.methods,
+      this.fieldNames = const <String>[]});
   final String name;
 
   /// Single inheritance (FR-002b).
@@ -351,7 +394,13 @@ class IrClassDecl extends IrStmt {
 
 /// `try { ... } catch (e) { ... } finally { ... }` (FR-002c).
 class IrTry extends IrStmt {
-  const IrTry({required super.line, super.synthetic, required this.body, this.catchVar, this.catchBody, this.finallyBody});
+  const IrTry(
+      {required super.line,
+      super.synthetic,
+      required this.body,
+      this.catchVar,
+      this.catchBody,
+      this.finallyBody});
   final IrStmt body;
   final String? catchVar;
   final IrStmt? catchBody;
