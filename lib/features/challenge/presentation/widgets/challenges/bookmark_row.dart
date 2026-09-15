@@ -43,7 +43,7 @@ class BookmarkRow extends ConsumerWidget {
         ),
         leading: GestureDetector(
           onTap: () => _unbookmark(ref),
-          child: const CustomIcon(Icons.bookmark_rounded, size: 14, color: ThemeEnum.textPrimary),
+          child: const CustomIcon(Icons.bookmark_rounded, size: 14, color: ThemeEnum.inkTitle),
         ),
       ),
     );
