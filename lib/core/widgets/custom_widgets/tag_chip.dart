@@ -17,10 +17,10 @@ class TagChip extends StatelessWidget {
     return Container(
       padding: REdgeInsets.symmetric(horizontal: 8, vertical: 3),
       decoration: BoxDecoration(
-        color: context.getColor(ThemeEnum.chipNeutralFill),
+        color: context.getColor(ThemeEnum.raised),
         borderRadius: BorderRadius.circular(radius.r),
       ),
-      child: SemiBoldText(label, color: ThemeEnum.textBody, fontSize: fontSize),
+      child: SemiBoldText(label, color: ThemeEnum.inkBody, fontSize: fontSize),
     );
   }
 }
