@@ -18,7 +18,7 @@ dependencies:
   flutter_screenutil: ^5.9.3
   flutter_svg: ^2.3.0
   riverpod: ^3.4.2
-  flutter_riverpod: ^3.4.2
+  flutter_riverpod: ^3.4.3
   get_storage: ^2.1.1
   animations: ^2.2.0
   collection: ^1.19.1
@@ -31,7 +31,7 @@ dependencies:
   firebase_core: ^4.14.0
   firebase_auth: ^6.6.1
   cloud_firestore: ^6.9.0
-  sentry_flutter: ^9.29.0
+  sentry_flutter: ^10.0.0-alpha.5
   firebase_analytics: ^12.5.0
 
 dev_dependencies:
@@ -39,7 +39,7 @@ dev_dependencies:
     sdk: flutter
 #  very_good_analysis: ^10.3.0
   flutter_lints: ^6.0.0
-  build_runner: ^2.4.0
+  build_runner: ^2.16.1
   json_serializable: ^6.7.0
   # Flavor tooling (build-time only, never shipped):
   # - flutter_launcher_icons: regenerates mipmap-*/AppIcon.appiconset per flavor
