@@ -21,7 +21,7 @@ void main() {
     });
 
     test('Python (0, 1) == [0, 1] — tuple collapses to list', () {
-      final tuple = const TupleValue(<Value>[IntValue(0), IntValue(1)]);
+      const tuple = TupleValue(<Value>[IntValue(0), IntValue(1)]);
       final list = ListValue(<Value>[const IntValue(0), const IntValue(1)]);
       expect(normalize(tuple), equals(normalize(list)));
     });
@@ -63,7 +63,8 @@ void main() {
     });
 
     test('{a:1} != [1] — structure matters', () {
-      final map = MapValue(LinkedHashMap<Value, Value>.of(<Value, Value>{const StrValue('a'): const IntValue(1)}));
+      final map =
+          MapValue(LinkedHashMap<Value, Value>.of(<Value, Value>{const StrValue('a'): const IntValue(1)}));
       final list = ListValue(<Value>[const IntValue(1)]);
       expect(normalize(map), isNot(equals(normalize(list))));
     });
