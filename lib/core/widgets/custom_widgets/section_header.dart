@@ -16,8 +16,8 @@ class SectionHeader extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        SemiBoldText(title, fontSize: 15, color: ThemeEnum.textPrimary),
-        if (trailing != null) RegularText(trailing!, fontSize: 11, color: ThemeEnum.textSecond),
+        SemiBoldText(title, fontSize: 15, color: ThemeEnum.inkTitle),
+        if (trailing != null) RegularText(trailing!, fontSize: 11, color: ThemeEnum.inkBody),
       ],
     );
   }
