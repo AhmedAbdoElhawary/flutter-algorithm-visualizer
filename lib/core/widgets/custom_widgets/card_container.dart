@@ -34,21 +34,21 @@ class CardContainer extends StatelessWidget {
   ThemeEnum? get _fill =>
       fillColor ??
       switch (surface) {
-        CdSurface.main => ThemeEnum.mainCard,
-        CdSurface.secondary => ThemeEnum.surfaceRaised,
-        CdSurface.unColoredFill => ThemeEnum.bgBase,
-        CdSurface.simpleColored => ThemeEnum.bgRaised,
+        CdSurface.main => ThemeEnum.surface,
+        CdSurface.secondary => ThemeEnum.raised,
+        CdSurface.unColoredFill => ThemeEnum.ground,
+        CdSurface.simpleColored => ThemeEnum.raised,
         CdSurface.outlined => null,
       };
 
   ThemeEnum get _borderColor =>
       borderColorOverride ??
       switch (surface) {
-        CdSurface.main => ThemeEnum.borderSubtle,
-        CdSurface.secondary => ThemeEnum.border,
-        CdSurface.unColoredFill => ThemeEnum.borderSubtle,
-        CdSurface.simpleColored => ThemeEnum.borderSubtle,
-        CdSurface.outlined => ThemeEnum.borderSubtle,
+        CdSurface.main => ThemeEnum.hairline,
+        CdSurface.secondary => ThemeEnum.hairline,
+        CdSurface.unColoredFill => ThemeEnum.hairline,
+        CdSurface.simpleColored => ThemeEnum.hairline,
+        CdSurface.outlined => ThemeEnum.hairline,
       };
 
   @override
@@ -98,17 +98,17 @@ class AlgorithmGlassCard extends StatelessWidget {
             height: 30.r,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(CdRadius.smAlt.r),
-              color: context.getColor(ThemeEnum.chipNeutralFill),
-              border: Border.all(color: context.getColor(ThemeEnum.borderSubtle)),
+              color: context.getColor(ThemeEnum.raised),
+              border: Border.all(color: context.getColor(ThemeEnum.hairline)),
             ),
             child: CustomIcon(
               icon,
-              color: ThemeEnum.textBody,
+              color: ThemeEnum.inkBody,
               size: 20,
             ),
           ),
           const Spacer(flex: 1),
-          SemiBoldText(algoComplexity.name, fontSize: 14, color: ThemeEnum.textPrimary),
+          SemiBoldText(algoComplexity.name, fontSize: 14, color: ThemeEnum.inkTitle),
           const RSizedBox(height: 6),
           RSizedBox(
             height: 20,
@@ -119,10 +119,10 @@ class AlgorithmGlassCard extends StatelessWidget {
                 SliverToBoxAdapter(
                   child: Row(
                     children: [
-                      const CustomIcon(Icons.access_time_rounded, size: 11, color: ThemeEnum.text2DarkColor),
+                      const CustomIcon(Icons.access_time_rounded, size: 11, color: ThemeEnum.inkBody),
                       const RSizedBox(width: 2),
                       RegularText(algoComplexity.worstTimeComplexity.getText,
-                          color: ThemeEnum.textDarkColor, fontSize: 10),
+                          color: ThemeEnum.inkBody, fontSize: 10),
                     ],
                   ),
                 ),
@@ -131,10 +131,10 @@ class AlgorithmGlassCard extends StatelessWidget {
                   sliver: SliverToBoxAdapter(
                     child: Row(
                       children: [
-                        const CustomIcon(Icons.storage_rounded, size: 11, color: ThemeEnum.text2DarkColor),
+                        const CustomIcon(Icons.storage_rounded, size: 11, color: ThemeEnum.inkBody),
                         const RSizedBox(width: 2),
                         RegularText(algoComplexity.spaceComplexity.getText,
-                            color: ThemeEnum.textDarkColor, fontSize: 10),
+                            color: ThemeEnum.inkBody, fontSize: 10),
                       ],
                     ),
                   ),
