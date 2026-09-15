@@ -38,7 +38,7 @@ class MyApp extends StatelessWidget {
                 return SystemOverlay(
                   isBlackTheme: isDarkMode,
                   child: Container(
-                    color: isDarkMode ? ColorManager.black : ColorManager.white,
+                    color: isDarkMode ? ColorManager.groundDk : ColorManager.inkPrimaryDk,
                     child: Padding(
                       padding: EdgeInsets.symmetric(horizontal: padding),
                       child: MaterialApp.router(
