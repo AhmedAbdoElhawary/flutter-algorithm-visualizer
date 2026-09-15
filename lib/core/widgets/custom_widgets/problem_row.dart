@@ -43,7 +43,7 @@ class ProblemRow extends StatelessWidget {
               child: DecoratedBox(
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(CdRadius.md.r),
-                  border: Border.all(color: context.getColor(ThemeEnum.borderStrong)),
+                  border: Border.all(color: context.getColor(ThemeEnum.track)),
                 ),
               ),
             ),
