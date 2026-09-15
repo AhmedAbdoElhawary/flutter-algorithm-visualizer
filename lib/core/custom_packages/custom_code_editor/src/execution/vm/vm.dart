@@ -4,6 +4,7 @@
 library;
 
 import 'dart:collection';
+import 'dart:math' as math;
 
 import '../errors/failure.dart';
 import '../stdlib/collections.dart' as collections;
@@ -256,6 +257,10 @@ class Vm {
         final receiver = frame.stack.removeLast();
         _setIndex(receiver, index, value);
         frame.stack.add(value);
+      case OpCode.iterElement:
+        final at = frame.stack.removeLast();
+        final over = frame.stack.removeLast();
+        frame.stack.add(_iterElement(over, at));
       case OpCode.slice:
         final flags = _u8(frame);
         // Pushed by the compiler in receiver, start, end, step order, so they
@@ -314,6 +319,8 @@ class Vm {
           if (b == 0) throw const VmRuntimeError('divisionByZero');
           return a % b;
         });
+      case OpCode.power:
+        _binaryPower(frame);
       case OpCode.negate:
         final v = frame.stack.removeLast();
         if (v is IntValue) {
@@ -467,6 +474,28 @@ class Vm {
     throw const VmRuntimeError('typeMismatch', <String, Object?>{'expected': 'two integers'});
   }
 
+  /// `a ** b`. Two whole numbers and a non-negative exponent stay whole — so
+  /// Python's `2 ** 10` is `1024`, not `1024.0` — via repeated squaring,
+  /// which keeps even a huge exponent to about 60 iterations. Anything else
+  /// falls back to floating point.
+  void _binaryPower(_Frame frame) {
+    final b = frame.stack.removeLast();
+    final a = frame.stack.removeLast();
+    if (a is IntValue && b is IntValue && b.value >= 0) {
+      var result = 1;
+      var base = a.value;
+      var exp = b.value;
+      while (exp > 0) {
+        if (exp & 1 == 1) result *= base;
+        base *= base;
+        exp >>= 1;
+      }
+      frame.stack.add(IntValue(result));
+      return;
+    }
+    frame.stack.add(NumValue(math.pow(_asDouble(a), _asDouble(b)).toDouble()));
+  }
+
   void _binaryDivide(_Frame frame) {
     final b = frame.stack.removeLast();
     final a = frame.stack.removeLast();
@@ -526,6 +555,16 @@ class Vm {
       return;
     }
     throw const VmRuntimeError('typeMismatch', <String, Object?>{'expected': 'a mutable indexable value'});
+  }
+
+  /// The element at [position] in iteration order, which for a map means its
+  /// *keys* — `for k in d` walks keys, even though `d[k]` looks values up.
+  Value _iterElement(Value over, Value position) {
+    if (over is MapValue) {
+      final i = _resolveIndex(position, over.entries.length);
+      return over.entries.keys.elementAt(i);
+    }
+    return _getIndex(over, position);
   }
 
   /// Every element of a value that can be spread or iterated over.

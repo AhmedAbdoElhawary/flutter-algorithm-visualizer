@@ -101,6 +101,15 @@ abstract final class OpCode {
   /// Pops an argument list and then the callee, and calls the callee with
   /// exactly those arguments — the spread-aware counterpart of [call].
   static const int callSpread = 52;
+
+  /// Python's and JavaScript's `**`.
+  static const int power = 53;
+
+  /// Pops an index and an iterable and pushes the element at that position in
+  /// *iteration* order. Distinct from [getIndex] because the two genuinely
+  /// disagree on a map: `d[k]` looks a key up, while `for k in d` walks the
+  /// keys by position.
+  static const int iterElement = 54;
 }
 
 class UpvalueDescriptor {

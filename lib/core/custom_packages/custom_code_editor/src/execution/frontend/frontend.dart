@@ -17,6 +17,16 @@ abstract class LanguageFrontend {
   EditorLanguage get language;
   Dialect get dialect;
 
+  /// Builtins this language adds on top of the engine's own prelude, layered
+  /// over it so that where the two disagree — Python's `min` takes a whole
+  /// list, the engine's takes two arguments — this language wins.
+  ///
+  /// This is part of the per-language surface for the same reason [dialect]
+  /// is: the shared runtime must not learn the name of any one language
+  /// (FR-031, SC-011), and a language's builtins are exactly the kind of
+  /// thing that would otherwise leak into it.
+  Map<String, Value> get globals => const <String, Value>{};
+
   /// Learner source -> shared Core IR. Throws [FrontendFailure] (`syntax` or
   /// `unsupported`) — never a raw Dart error (O3).
   IrProgram parse(String source);

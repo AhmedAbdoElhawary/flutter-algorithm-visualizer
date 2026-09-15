@@ -393,7 +393,7 @@ class Compiler {
     fc.builder.emitU16(iterableSlot, line: stmt.line, synthetic: true);
     fc.builder.emitOp(OpCode.getLocal, line: stmt.line, synthetic: true);
     fc.builder.emitU16(cursorSlot, line: stmt.line, synthetic: true);
-    fc.builder.emitOp(OpCode.getIndex, line: stmt.line, synthetic: true);
+    fc.builder.emitOp(OpCode.iterElement, line: stmt.line, synthetic: true);
     final varSlot = fc.declareLocal(varName);
     fc.builder.emitOp(OpCode.setLocal, line: stmt.line, synthetic: true);
     fc.builder.emitU16(varSlot, line: stmt.line, synthetic: true);
@@ -825,6 +825,7 @@ class Compiler {
       IrBinaryOp.floorDiv => OpCode.floorDivide,
       IrBinaryOp.truncDiv => OpCode.truncDivide,
       IrBinaryOp.mod => OpCode.modulo,
+      IrBinaryOp.pow => OpCode.power,
       IrBinaryOp.eq => OpCode.equal,
       IrBinaryOp.notEq => OpCode.notEqual,
       IrBinaryOp.lt => OpCode.less,
