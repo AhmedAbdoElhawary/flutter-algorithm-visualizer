@@ -387,6 +387,60 @@ class StringsManager {
   static const String yesLogout = "Log Out";
   static const String notValidName = "Please enter a valid name";
 
+  // Settings screen
+  static const String settings = "Settings";
+  static const String settingsAccountSection = "Account";
+  static const String settingsLegalSection = "Legal";
+  static const String settingsAboutSection = "About";
+  static const String settingsSignedInAs = "Signed in as";
+  static const String settingsGuestMode = "Guest mode";
+  static const String settingsGuestModeDesc = "Your progress is saved on this device only.";
+  static const String privacyPolicy = "Privacy Policy";
+  static const String privacyPolicyDesc = "What AlgoDive stores, and why.";
+  static const String termsOfService = "Terms of Service";
+  static const String termsOfServiceDesc = "The rules for using AlgoDive.";
+  static const String sourceCode = "Source code";
+  static const String sourceCodeDesc = "AlgoDive is open source on GitHub.";
+  static const String appVersionLabel = "Version";
+
+  // Delete account
+  static const String deleteAccount = "Delete account";
+  static const String deleteAccountDesc = "Permanently erase your account and all its data.";
+  static const String deleteAccountConfirmTitle = "Delete your account?";
+  static const String deleteAccountConfirmDesc =
+      "Your solved problems, streak and statistics will be erased for everyone and forever. This cannot be undone.";
+  static const String deleteAccountContinue = "Continue";
+  static const String deleteAccountPasswordTitle = "Confirm it's you";
+  static const String deleteAccountPasswordDesc =
+      "Enter your password to permanently delete this account.";
+  static const String deleteAccountConfirmButton = "Delete Forever";
+  static const String deleteAccountDeleting = "Deleting your account…";
+  static const String deleteAccountSuccess = "Your account has been deleted.";
+  static const String deleteAccountWebNotice = "Can't sign in? Request deletion by email instead";
+
+  // Contact / author links (Settings -> Contact)
+  static const String settingsContactSection = "Contact";
+  static const String contactEmail = "Email support";
+  static const String contactEmailDesc = "Questions, bugs, or a deletion request.";
+  static const String contactGithub = "GitHub";
+  static const String contactGithubDesc = "Follow the project and the author.";
+  static const String contactLinkedIn = "LinkedIn";
+  static const String contactLinkedInDesc = "Connect with the developer.";
+  // static const String madeBy = "Made by Ahmed Abdo Elhawary";
+
+  // Opening an external link
+  static const String linkCouldNotOpen = "Couldn't open that link";
+  static const String linkNoMailApp = "No mail app is set up on this device";
+
+  // Legal
+  static const String legalVersionPrefix = "Policy version";
+  static const String deleteAccountHowItWorks = "How deletion works";
+  static const String deleteAccountHowItWorksDesc = "What is erased, and how to request it by email.";
+
+  // Sign up consent
+  static const String signUpConsentPrefix = "By creating an account, you agree to our";
+  static const String signUpConsentAnd = "and";
+
   // CoreDive token gallery (dev only)
   static const String cdGalleryTitle = "CoreDive tokens";
   static const String cdGallerySurfaces = "Surfaces";
@@ -486,7 +540,7 @@ class Solution {
   static const String runnerLimitationLabel = "Runner limitation";
   static const String wrongAnswerLabel = "Wrong answer";
   static const String notRunLabel = "Not run";
-
+/// TODO: refactor this
   static String executionFailureMessage(String code, Map<String, Object?> data) {
     switch (code) {
       case 'undefinedVariable':
