@@ -20,12 +20,11 @@ class HomeCategoryGrid extends ConsumerWidget {
     return OnlyPadding(
       startPadding: 16,
       endPadding: 16,
-      bottomPadding: 14,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const SectionHeader(title: StringsManager.topics),
-          SizedBox(height: 12.h),
+          const RSizedBox(height: 12),
           GridView.builder(
             itemCount: 6,
             physics: const NeverScrollableScrollPhysics(),
@@ -51,7 +50,7 @@ class HomeCategoryGrid extends ConsumerWidget {
               }
 
               return InkWell(
-                  highlightColor: context.getColor(ThemeEnum.primary),
+                  highlightColor: context.getColor(ThemeEnum.ground),
                   onTap: () {
                     context.pushTo(Routes.visualize, queryParameters: name);
                   },
