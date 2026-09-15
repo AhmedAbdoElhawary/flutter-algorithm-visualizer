@@ -257,7 +257,14 @@ class Vm {
         _setIndex(receiver, index, value);
         frame.stack.add(value);
       case OpCode.slice:
-        throw const VmRuntimeError('unsupportedConstruct', <String, Object?>{'construct': 'slicing'});
+        final flags = _u8(frame);
+        // Pushed by the compiler in receiver, start, end, step order, so they
+        // come back off the stack in reverse.
+        final step = (flags & 4) != 0 ? frame.stack.removeLast() : null;
+        final end = (flags & 2) != 0 ? frame.stack.removeLast() : null;
+        final start = (flags & 1) != 0 ? frame.stack.removeLast() : null;
+        final sliceTarget = frame.stack.removeLast();
+        frame.stack.add(_slice(sliceTarget, start, end, step));
 
       case OpCode.equal:
         final b = frame.stack.removeLast();
@@ -361,6 +368,20 @@ class Vm {
         final items = frame.stack.sublist(frame.stack.length - count);
         frame.stack.removeRange(frame.stack.length - count, frame.stack.length);
         frame.stack.add(SetValue(LinkedHashSet<Value>.of(items)));
+
+      case OpCode.appendOne:
+        final item = frame.stack.removeLast();
+        (frame.stack.last as ListValue).items.add(item);
+      case OpCode.extendAll:
+        final source = frame.stack.removeLast();
+        final into = frame.stack.last;
+        if (into is SetValue) {
+          into.items.addAll(_iterableOf(source));
+        } else {
+          (into as ListValue).items.addAll(_iterableOf(source));
+        }
+      case OpCode.callSpread:
+        _callSpread();
 
       case OpCode.call:
         _call(_u8(frame));
@@ -507,6 +528,68 @@ class Vm {
     throw const VmRuntimeError('typeMismatch', <String, Object?>{'expected': 'a mutable indexable value'});
   }
 
+  /// Every element of a value that can be spread or iterated over.
+  List<Value> _iterableOf(Value source) {
+    if (source is ListValue) return source.items;
+    if (source is TupleValue) return source.items;
+    if (source is SetValue) return source.items.toList();
+    if (source is StrValue) return <Value>[for (final c in source.value.split('')) StrValue(c)];
+    throw const VmRuntimeError('typeMismatch', <String, Object?>{'expected': 'an iterable'});
+  }
+
+  /// `a[start:end:step]`. Follows Python's rules, which are the only ones the
+  /// engine needs: omitted bounds default by the sign of [step], out-of-range
+  /// bounds **clamp** rather than raising (unlike plain `[]` indexing), and
+  /// negative bounds count from the end.
+  Value _slice(Value receiver, Value? start, Value? end, Value? step) {
+    final int length;
+    if (receiver is ListValue) {
+      length = receiver.items.length;
+    } else if (receiver is TupleValue) {
+      length = receiver.items.length;
+    } else if (receiver is StrValue) {
+      length = receiver.value.length;
+    } else {
+      throw const VmRuntimeError('typeMismatch', <String, Object?>{'expected': 'a sliceable value'});
+    }
+
+    final stride = step == null ? 1 : _sliceBound(step);
+    if (stride == 0) {
+      throw const VmRuntimeError('typeMismatch', <String, Object?>{'expected': 'a non-zero slice step'});
+    }
+
+    int clamp(int raw) {
+      var i = raw;
+      if (i < 0) {
+        i += length;
+        if (i < 0) i = stride < 0 ? -1 : 0;
+      } else if (i > length) {
+        i = stride < 0 ? length - 1 : length;
+      }
+      return i;
+    }
+
+    final from = start == null ? (stride < 0 ? length - 1 : 0) : clamp(_sliceBound(start));
+    final to = end == null ? (stride < 0 ? -1 : length) : clamp(_sliceBound(end));
+
+    final picked = <int>[];
+    for (var i = from; stride > 0 ? i < to : i > to; i += stride) {
+      picked.add(i);
+    }
+
+    if (receiver is StrValue) {
+      return StrValue(<String>[for (final i in picked) receiver.value[i]].join());
+    }
+    final items = receiver is ListValue ? receiver.items : (receiver as TupleValue).items;
+    final sliced = <Value>[for (final i in picked) items[i]];
+    return receiver is TupleValue ? TupleValue(sliced) : ListValue(sliced);
+  }
+
+  int _sliceBound(Value v) {
+    if (v is IntValue) return v.value;
+    throw const VmRuntimeError('typeMismatch', <String, Object?>{'expected': 'an integer slice bound'});
+  }
+
   int _resolveIndex(Value index, int length) {
     if (index is! IntValue) {
       throw const VmRuntimeError('typeMismatch', <String, Object?>{'expected': 'an integer index'});
@@ -582,7 +665,22 @@ class Vm {
         List<Value>.generate(argCount, (i) => _frames.last.stack[_frames.last.stack.length - argCount + i]);
     _frames.last.stack.removeRange(_frames.last.stack.length - argCount, _frames.last.stack.length);
     final callee = _frames.last.stack.removeLast();
+    _invoke(callee, args);
+  }
 
+  /// The spread-aware call form: the argument list was assembled at runtime
+  /// (`f(...xs, y)`) rather than counted at compile time, so it arrives as a
+  /// single [ListValue] on top of the callee instead of as loose stack slots.
+  void _callSpread() {
+    final packed = _frames.last.stack.removeLast();
+    if (packed is! ListValue) {
+      throw const VmRuntimeError('typeMismatch', <String, Object?>{'expected': 'an argument list'});
+    }
+    final callee = _frames.last.stack.removeLast();
+    _invoke(callee, List<Value>.of(packed.items));
+  }
+
+  void _invoke(Value callee, List<Value> args) {
     if (callee is FunctionValue) {
       _pushCallFrame(callee, args);
       return;

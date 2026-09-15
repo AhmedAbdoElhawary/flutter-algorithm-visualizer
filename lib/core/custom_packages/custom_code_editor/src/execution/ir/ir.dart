@@ -300,9 +300,15 @@ class IrVarDecl extends IrStmt {
 /// Tuple unpacking / array + object destructuring:
 /// `a, b = 1, 2` / `[a, b] = xs` / `{x, y} = point`.
 class IrDestructure extends IrStmt {
-  const IrDestructure({required super.line, super.synthetic, required this.names, required this.value});
+  const IrDestructure(
+      {required super.line, super.synthetic, required this.names, required this.value, this.byProperty = false});
   final List<String> names;
   final IrExpr value;
+
+  /// False (the default): positional — each name takes `value[i]`, which is
+  /// Python tuple unpacking and JavaScript array destructuring. True: each
+  /// name takes `value.<name>`, which is JavaScript object destructuring.
+  final bool byProperty;
 }
 
 class IrIf extends IrStmt {

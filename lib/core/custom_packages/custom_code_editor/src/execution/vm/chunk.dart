@@ -67,6 +67,7 @@ abstract final class OpCode {
   static const int buildSet = 41; // u16 count
 
   static const int call = 42; // u8 argCount
+
   /// u16 index of a prototype-carrier `FunctionValue` constant (its `chunk`
   /// field is the real `FunctionProto`, which already carries its own
   /// `upvalues` descriptor list — nothing else follows in the bytecode).
@@ -86,6 +87,20 @@ abstract final class OpCode {
   static const int superCall = 48; // u16 name-constant index, u8 argCount
 
   static const int throwOp = 49;
+
+  /// Pops a value and appends it to the list beneath it, which stays on the
+  /// stack. Together with [extendAll] this is how a literal or argument list
+  /// containing a spread (`[...a, b]`, `f(...a, b)`) is built: its final
+  /// length is not known until runtime, so it cannot be a [buildList] operand.
+  static const int appendOne = 50;
+
+  /// Pops an iterable and appends every element of it to the list beneath it,
+  /// which stays on the stack.
+  static const int extendAll = 51;
+
+  /// Pops an argument list and then the callee, and calls the callee with
+  /// exactly those arguments — the spread-aware counterpart of [call].
+  static const int callSpread = 52;
 }
 
 class UpvalueDescriptor {
