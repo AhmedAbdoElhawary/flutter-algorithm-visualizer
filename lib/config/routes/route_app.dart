@@ -12,6 +12,8 @@ import 'package:algorithm_visualizer/features/challenge/presentation/view/challe
 import 'package:algorithm_visualizer/features/challenge/presentation/view/editor_page.dart';
 import 'package:algorithm_visualizer/features/challenge/presentation/view/problem_page.dart';
 import 'package:algorithm_visualizer/features/home/view/home_page.dart';
+import 'package:algorithm_visualizer/features/onboarding/data/onboarding_store.dart';
+import 'package:algorithm_visualizer/features/onboarding/presentation/view/onboarding_page.dart';
 import 'package:algorithm_visualizer/features/profile/presentation/view/profile_page.dart';
 import 'package:algorithm_visualizer/features/profile/presentation/view/sub_views/bookmarked_problems_page.dart';
 import 'package:algorithm_visualizer/features/profile/presentation/view/sub_views/practice_history_page.dart';
@@ -30,6 +32,10 @@ final _tabDKey = GlobalKey<NavigatorState>();
 final _tabEKey = GlobalKey<NavigatorState>();
 
 class Routes {
+  static const RouteConfig onboarding = RouteConfig(
+    name: 'onboarding',
+    path: '/onboarding',
+  );
   static const RouteConfig login = RouteConfig(
     name: 'login',
     path: '/login',
@@ -121,7 +127,12 @@ class AppRoutes {
   final routerProvider = GoRouter(
     debugLogDiagnostics: true,
     navigatorKey: _rootKey,
-    initialLocation: Routes.home.path,
+
+    /// First run starts in onboarding; every later run goes straight to home.
+    /// Read once, here, rather than as a `redirect` that would re-check the
+    /// flag on every navigation. `GetStorage.init()` has already run by the
+    /// time anything touches [AppRoutes.instance] (see `bootstrap.dart`).
+    initialLocation: OnboardingStore.standalone().isSeen ? Routes.home.path : Routes.onboarding.path,
     errorBuilder: (context, state) => const _UnknownPage(),
     // Screen tracking with no per-page code: Firebase logs each route
     // change as a `screen_view`, Sentry times how long the screen took to
@@ -130,6 +141,12 @@ class AppRoutes {
     // an observer backed by an uninitialized SDK.
     observers: Monitoring.navigatorObservers,
     routes: [
+      GoRoute(
+        path: Routes.onboarding.path,
+        name: Routes.onboarding.name,
+        parentNavigatorKey: _rootKey,
+        builder: (context, state) => const OnboardingPage(),
+      ),
       GoRoute(
         path: Routes.login.path,
         name: Routes.login.name,
