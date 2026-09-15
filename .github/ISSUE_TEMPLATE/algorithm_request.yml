@@ -1,0 +1,96 @@
+name: 🧮 Algorithm request
+description: Suggest an algorithm or data structure to visualize
+title: "[Algorithm]: "
+labels: ["algorithm", "enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        AlgoDive exists to make algorithms visible, so these requests are the
+        most welcome kind.
+
+        Before filing, check the **Roadmap** in the
+        [README](https://github.com/AhmedAbdoElhawary/flutter-algorithm-visualizer#roadmap) —
+        quite a few are already planned, and five sorting algorithms are already
+        written and just need UI wiring.
+
+  - type: input
+    id: name
+    attributes:
+      label: Algorithm name
+      placeholder: Dijkstra's shortest path
+    validations:
+      required: true
+
+  - type: dropdown
+    id: category
+    attributes:
+      label: Category
+      options:
+        - Sorting
+        - Pathfinding / Graphs
+        - Maze generation
+        - Trees
+        - Linked lists
+        - Searching
+        - String algorithms
+        - Dynamic programming
+        - Other
+    validations:
+      required: true
+
+  - type: textarea
+    id: why-visual
+    attributes:
+      label: Why does this one visualize well?
+      description: >
+        The key question. Some algorithms are fascinating to watch and some are
+        a blur. What is the moment worth seeing — the frontier expanding, a
+        pivot settling, a tree rebalancing?
+      placeholder: >
+        You can watch the distance estimates get relaxed one edge at a time, and
+        see how it differs from BFS the moment edge weights stop being equal.
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: What should each step show?
+      description: >
+        Optional but very helpful. In this app, one step = one visible state
+        change, and every element carries a role (comparing, visited, frontier,
+        path, done). What are the roles here?
+      placeholder: |
+        - Roles: unvisited, frontier, relaxing, settled, path
+        - One step = one node settled + its neighbours relaxed
+
+  - type: input
+    id: reference
+    attributes:
+      label: Reference link
+      description: Wikipedia, a paper, a course page, or a visualization you liked.
+      placeholder: https://en.wikipedia.org/wiki/Dijkstra%27s_algorithm
+
+  - type: textarea
+    id: complexity
+    attributes:
+      label: Complexity
+      description: Optional. Every algorithm card in the app displays these.
+      value: |
+        - Best:
+        - Average:
+        - Worst:
+        - Space:
+
+  - type: checkboxes
+    id: contribute
+    attributes:
+      label: Would you like to implement it?
+      description: >
+        CONTRIBUTING.md has a step-by-step walkthrough for adding one. Say yes
+        and you'll get pointed at the right files — no prior knowledge of this
+        codebase needed.
+      options:
+        - label: I'd like to implement this myself
+        - label: I'd like to try, but I'd need some guidance
