@@ -18,23 +18,23 @@ void main() {
     });
 
     test('matches the normative role table (FR-023)', () {
-      expect(searchRoleColor(SearchRole.start), ThemeEnum.barAnchor);
-      expect(searchRoleColor(SearchRole.end), ThemeEnum.barSwap);
-      expect(searchRoleColor(SearchRole.frontier), ThemeEnum.barCompare);
-      expect(searchRoleColor(SearchRole.visited), ThemeEnum.barTarget);
-      expect(searchRoleColor(SearchRole.path), ThemeEnum.barDone);
-      expect(searchRoleColor(SearchRole.wall), ThemeEnum.borderStrong);
+      expect(searchRoleColor(SearchRole.start), ThemeEnum.dataMedium);
+      expect(searchRoleColor(SearchRole.end), ThemeEnum.dataHard);
+      expect(searchRoleColor(SearchRole.frontier), ThemeEnum.dataActive);
+      expect(searchRoleColor(SearchRole.visited), ThemeEnum.dataTarget);
+      expect(searchRoleColor(SearchRole.path), ThemeEnum.dataEasy);
+      expect(searchRoleColor(SearchRole.wall), ThemeEnum.track);
     });
 
     test('path is the only role carrying the success green (C3, C4, SC-014)', () {
-      final green = SearchRole.values.where((r) => searchRoleColor(r) == ThemeEnum.barDone).toSet();
+      final green = SearchRole.values.where((r) => searchRoleColor(r) == ThemeEnum.dataEasy).toSet();
 
       expect(green, {SearchRole.path});
     });
 
     test('difficultyEasy is no longer used for any grid state (C4)', () {
       for (final role in SearchRole.values) {
-        expect(searchRoleColor(role), isNot(ThemeEnum.difficultyEasy));
+        expect(searchRoleColor(role), isNot(ThemeEnum.dataEasy));
       }
     });
 
