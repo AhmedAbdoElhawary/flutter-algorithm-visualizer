@@ -23,7 +23,7 @@ class SegmentedControlQuiet extends StatelessWidget {
     return Container(
       padding: REdgeInsets.all(5),
       decoration: BoxDecoration(
-        border: Border.all(color: context.getColor(ThemeEnum.border)),
+        border: Border.all(color: context.getColor(ThemeEnum.hairline)),
         borderRadius: BorderRadius.circular(CdRadius.smAlt.r),
       ),
       child: Row(
@@ -35,12 +35,12 @@ class SegmentedControlQuiet extends StatelessWidget {
             child: Container(
               padding: REdgeInsets.symmetric(horizontal: 11, vertical: 5),
               decoration: BoxDecoration(
-                color: selected ? context.getColor(ThemeEnum.textBright) : null,
+                color: selected ? context.getColor(ThemeEnum.inkPrimary) : null,
                 borderRadius: BorderRadius.circular(CdRadius.segment.r),
               ),
               child: SemiBoldText(
                 labels[i],
-                color: selected ? ThemeEnum.onPrimary : ThemeEnum.textSecond,
+                color: selected ? ThemeEnum.ground : ThemeEnum.inkBody,
                 fontSize: 10,
               ),
             ),
