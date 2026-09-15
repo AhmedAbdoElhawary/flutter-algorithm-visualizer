@@ -60,7 +60,9 @@ Value callStringMethod(String s, String name, List<Value> args, InvokeCallback i
       return StrValue(s.padRight(width, pad));
     case 'codeUnitAt':
       final idx = (args[0] as IntValue).value;
-      if (idx < 0 || idx >= s.length) throw VmRuntimeError('indexOutOfRange', <String, Object?>{'index': idx, 'length': s.length});
+      if (idx < 0 || idx >= s.length) {
+        throw VmRuntimeError('indexOutOfRange', <String, Object?>{'index': idx, 'length': s.length});
+      }
       return IntValue(s.codeUnitAt(idx));
     case 'compareTo':
       return IntValue(s.compareTo((args[0] as StrValue).value));
@@ -76,7 +78,9 @@ Value callStringMethod(String s, String name, List<Value> args, InvokeCallback i
       return ListValue(s.split('').map<Value>(StrValue.new).toList());
     case 'toInt':
       final v = int.tryParse(s);
-      if (v == null) throw VmRuntimeError('typeMismatch', <String, Object?>{'expected': 'an integer string', 'actual': s});
+      if (v == null) {
+        throw VmRuntimeError('typeMismatch', <String, Object?>{'expected': 'an integer string', 'actual': s});
+      }
       return IntValue(v);
     case '*':
       final n = (args[0] as IntValue).value;
