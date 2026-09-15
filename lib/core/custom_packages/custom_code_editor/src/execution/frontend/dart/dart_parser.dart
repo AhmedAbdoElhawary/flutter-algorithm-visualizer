@@ -10,9 +10,17 @@ import '../../ir/ir.dart';
 import 'dart_lexer.dart';
 
 class _ClassMember {
-  _ClassMember.field(this.fieldName) : method = null, isConstructor = false;
-  _ClassMember.method(IrFunctionDecl m) : method = m, fieldName = null, isConstructor = false;
-  _ClassMember.constructor(IrFunctionDecl m) : method = m, fieldName = null, isConstructor = true;
+  _ClassMember.field(this.fieldName)
+      : method = null,
+        isConstructor = false;
+  _ClassMember.method(IrFunctionDecl m)
+      : method = m,
+        fieldName = null,
+        isConstructor = false;
+  _ClassMember.constructor(IrFunctionDecl m)
+      : method = m,
+        fieldName = null,
+        isConstructor = true;
   final String? fieldName;
   final IrFunctionDecl? method;
   final bool isConstructor;
@@ -71,8 +79,11 @@ class DartParser {
   FrontendFailure _syntaxError(String code, [Map<String, Object?> data = const <String, Object?>{}]) =>
       FrontendFailure(kind: FailureKind.syntax, code: code, data: data, line: _peek.line);
 
-  FrontendFailure _unsupported(String construct, [int? line]) =>
-      FrontendFailure(kind: FailureKind.unsupported, code: 'unsupportedConstruct', data: <String, Object?>{'construct': construct}, line: line ?? _peek.line);
+  FrontendFailure _unsupported(String construct, [int? line]) => FrontendFailure(
+      kind: FailureKind.unsupported,
+      code: 'unsupportedConstruct',
+      data: <String, Object?>{'construct': construct},
+      line: line ?? _peek.line);
 
   // ---------------------------------------------------------------------
   // Types (parsed and ignored — must never cause a syntax error)
@@ -82,10 +93,36 @@ class DartParser {
   /// the speculative lookahead below — without this, `return fib(n - 1);`
   /// reads as "a function named `fib` of return-type `return`".
   static const Set<String> _reservedWords = <String>{
-    'return', 'if', 'else', 'while', 'for', 'break', 'continue', 'throw',
-    'try', 'catch', 'finally', 'class', 'var', 'final', 'const', 'true',
-    'false', 'null', 'new', 'super', 'this', 'extends', 'implements',
-    'with', 'static', 'in', 'on', 'async', 'await', 'yield',
+    'return',
+    'if',
+    'else',
+    'while',
+    'for',
+    'break',
+    'continue',
+    'throw',
+    'try',
+    'catch',
+    'finally',
+    'class',
+    'var',
+    'final',
+    'const',
+    'true',
+    'false',
+    'null',
+    'new',
+    'super',
+    'this',
+    'extends',
+    'implements',
+    'with',
+    'static',
+    'in',
+    'on',
+    'async',
+    'await',
+    'yield',
   };
 
   bool _trySkipType() {
@@ -159,7 +196,10 @@ class DartParser {
       // declared name itself, before the real parameter list.
       if (_check(DartTokenType.less)) _skipGenericArgs();
       final t = _peek.type;
-      ok = t == DartTokenType.leftParen || t == DartTokenType.equal || t == DartTokenType.semicolon || t == DartTokenType.comma;
+      ok = t == DartTokenType.leftParen ||
+          t == DartTokenType.equal ||
+          t == DartTokenType.semicolon ||
+          t == DartTokenType.comma;
     }
     _pos = mark;
     return ok;
@@ -233,7 +273,8 @@ class DartParser {
     if (_match(DartTokenType.arrow)) {
       final expr = _expression();
       _expect(DartTokenType.semicolon, 'expectedSemicolon');
-      return IrFunctionDecl(line: line, name: name, params: params, body: <IrStmt>[IrReturn(line: line, value: expr)]);
+      return IrFunctionDecl(
+          line: line, name: name, params: params, body: <IrStmt>[IrReturn(line: line, value: expr)]);
     }
     final body = _block();
     return IrFunctionDecl(line: line, name: name, params: params, body: body.statements);
@@ -242,7 +283,9 @@ class DartParser {
   List<IrParam> _parseParamList({required bool allowThis}) {
     _expect(DartTokenType.leftParen, 'expectedOpenParen');
     final params = <IrParam>[];
-    while (!_check(DartTokenType.rightParen) && !_check(DartTokenType.leftBracket) && !_check(DartTokenType.leftBrace)) {
+    while (!_check(DartTokenType.rightParen) &&
+        !_check(DartTokenType.leftBracket) &&
+        !_check(DartTokenType.leftBrace)) {
       params.add(_parseParam(allowThis: allowThis));
       if (!_match(DartTokenType.comma)) break;
     }
@@ -316,7 +359,8 @@ class DartParser {
     }
     _expect(DartTokenType.rightBrace, 'expectedCloseBrace');
     if (constructor != null) methods.add(constructor);
-    return IrClassDecl(line: line, name: name, superclass: superclass, methods: methods, fieldNames: fieldNames);
+    return IrClassDecl(
+        line: line, name: name, superclass: superclass, methods: methods, fieldNames: fieldNames);
   }
 
   _ClassMember _classMember(String className) {
@@ -366,7 +410,8 @@ class DartParser {
     if (_match(DartTokenType.arrow)) {
       final expr = _expression();
       _expect(DartTokenType.semicolon, 'expectedSemicolon');
-      return IrFunctionDecl(line: line, name: name, params: params, body: <IrStmt>[IrReturn(line: line, value: expr)]);
+      return IrFunctionDecl(
+          line: line, name: name, params: params, body: <IrStmt>[IrReturn(line: line, value: expr)]);
     }
     if (_match(DartTokenType.semicolon)) {
       return IrFunctionDecl(line: line, name: name, params: params, body: const <IrStmt>[]);
@@ -399,7 +444,12 @@ class DartParser {
         prologue.add(IrExprStmt(
           line: line,
           synthetic: true,
-          expr: IrPropertySet(line: line, synthetic: true, receiver: IrIdentifier(line: line, name: 'this'), name: fieldName, value: IrIdentifier(line: line, name: fieldName)),
+          expr: IrPropertySet(
+              line: line,
+              synthetic: true,
+              receiver: IrIdentifier(line: line, name: 'this'),
+              name: fieldName,
+              value: IrIdentifier(line: line, name: fieldName)),
         ));
       } else {
         cleanParams.add(p);
@@ -456,7 +506,8 @@ class DartParser {
       _advance();
       final args = _argumentList();
       _expect(DartTokenType.semicolon, 'expectedSemicolon');
-      final value = args.isEmpty ? const IrLiteral(line: 0, kind: IrLiteralKind.nullLit, value: null) : args[0];
+      final value =
+          args.isEmpty ? const IrLiteral(line: 0, kind: IrLiteralKind.nullLit, value: null) : args[0];
       return IrPrint(line: line, value: value);
     }
     if (_checkId('var') || _checkId('final') || _checkId('const')) return _varDeclKeywordForm();
@@ -578,7 +629,9 @@ class DartParser {
 
   IrExpr _assignment() {
     final expr = _conditional();
-    if (_check(DartTokenType.equal) || _compoundOps.containsKey(_peek.type) || _check(DartTokenType.questionQuestionEqual)) {
+    if (_check(DartTokenType.equal) ||
+        _compoundOps.containsKey(_peek.type) ||
+        _check(DartTokenType.questionQuestionEqual)) {
       final opToken = _advance();
       final value = _assignment();
       final line = opToken.line;
@@ -595,8 +648,12 @@ class DartParser {
 
   IrExpr _wrapAssign(IrExpr target, IrExpr value, int line) {
     if (target is IrIdentifier) return IrAssign(line: line, name: target.name, value: value);
-    if (target is IrIndexGet) return IrIndexSet(line: line, receiver: target.receiver, index: target.index, value: value);
-    if (target is IrPropertyGet) return IrPropertySet(line: line, receiver: target.receiver, name: target.name, value: value);
+    if (target is IrIndexGet) {
+      return IrIndexSet(line: line, receiver: target.receiver, index: target.index, value: value);
+    }
+    if (target is IrPropertyGet) {
+      return IrPropertySet(line: line, receiver: target.receiver, name: target.name, value: value);
+    }
     throw FrontendFailure(kind: FailureKind.syntax, code: 'invalidAssignmentTarget', line: line);
   }
 
@@ -642,14 +699,21 @@ class DartParser {
     var expr = _relational();
     while (_check(DartTokenType.equalEqual) || _check(DartTokenType.bangEqual)) {
       final opTok = _advance();
-      expr = IrBinary(line: opTok.line, op: opTok.type == DartTokenType.equalEqual ? IrBinaryOp.eq : IrBinaryOp.notEq, left: expr, right: _relational());
+      expr = IrBinary(
+          line: opTok.line,
+          op: opTok.type == DartTokenType.equalEqual ? IrBinaryOp.eq : IrBinaryOp.notEq,
+          left: expr,
+          right: _relational());
     }
     return expr;
   }
 
   IrExpr _relational() {
     var expr = _additive();
-    while (_check(DartTokenType.less) || _check(DartTokenType.lessEqual) || _check(DartTokenType.greater) || _check(DartTokenType.greaterEqual)) {
+    while (_check(DartTokenType.less) ||
+        _check(DartTokenType.lessEqual) ||
+        _check(DartTokenType.greater) ||
+        _check(DartTokenType.greaterEqual)) {
       final opTok = _advance();
       final op = switch (opTok.type) {
         DartTokenType.less => IrBinaryOp.lt,
@@ -667,14 +731,21 @@ class DartParser {
     var expr = _multiplicative();
     while (_check(DartTokenType.plus) || _check(DartTokenType.minus)) {
       final opTok = _advance();
-      expr = IrBinary(line: opTok.line, op: opTok.type == DartTokenType.plus ? IrBinaryOp.add : IrBinaryOp.sub, left: expr, right: _multiplicative());
+      expr = IrBinary(
+          line: opTok.line,
+          op: opTok.type == DartTokenType.plus ? IrBinaryOp.add : IrBinaryOp.sub,
+          left: expr,
+          right: _multiplicative());
     }
     return expr;
   }
 
   IrExpr _multiplicative() {
     var expr = _unary();
-    while (_check(DartTokenType.star) || _check(DartTokenType.slash) || _check(DartTokenType.tildeSlash) || _check(DartTokenType.percent)) {
+    while (_check(DartTokenType.star) ||
+        _check(DartTokenType.slash) ||
+        _check(DartTokenType.tildeSlash) ||
+        _check(DartTokenType.percent)) {
       final opTok = _advance();
       final op = switch (opTok.type) {
         DartTokenType.star => IrBinaryOp.mul,
@@ -696,7 +767,11 @@ class DartParser {
     if (_check(DartTokenType.plusPlus) || _check(DartTokenType.minusMinus)) {
       final opTok = _advance();
       final operand = _unary();
-      final newVal = IrBinary(line: line, op: opTok.type == DartTokenType.plusPlus ? IrBinaryOp.add : IrBinaryOp.sub, left: operand, right: const IrLiteral(line: 0, kind: IrLiteralKind.intLit, value: 1));
+      final newVal = IrBinary(
+          line: line,
+          op: opTok.type == DartTokenType.plusPlus ? IrBinaryOp.add : IrBinaryOp.sub,
+          left: operand,
+          right: const IrLiteral(line: 0, kind: IrLiteralKind.intLit, value: 1));
       return _wrapAssign(operand, newVal, line);
     }
     return _postfix(_primary());
@@ -732,16 +807,32 @@ class DartParser {
       }
       if (_match(DartTokenType.dot)) {
         final name = _expect(DartTokenType.identifier, 'expectedPropertyName').lexeme;
-        expr = _check(DartTokenType.leftParen) ? IrCall(line: line, callee: IrPropertyGet(line: line, receiver: expr, name: name), args: _argumentList()) : IrPropertyGet(line: line, receiver: expr, name: name);
+        expr = _check(DartTokenType.leftParen)
+            ? IrCall(
+                line: line,
+                callee: IrPropertyGet(line: line, receiver: expr, name: name),
+                args: _argumentList())
+            : IrPropertyGet(line: line, receiver: expr, name: name);
         continue;
       }
       if (_match(DartTokenType.questionDot)) {
         final name = _expect(DartTokenType.identifier, 'expectedPropertyName').lexeme;
-        final nullCheck = IrBinary(line: line, op: IrBinaryOp.eq, left: expr, right: const IrLiteral(line: 0, kind: IrLiteralKind.nullLit, value: null));
+        final nullCheck = IrBinary(
+            line: line,
+            op: IrBinaryOp.eq,
+            left: expr,
+            right: const IrLiteral(line: 0, kind: IrLiteralKind.nullLit, value: null));
         final access = _check(DartTokenType.leftParen)
-            ? IrCall(line: line, callee: IrPropertyGet(line: line, receiver: expr, name: name), args: _argumentList())
+            ? IrCall(
+                line: line,
+                callee: IrPropertyGet(line: line, receiver: expr, name: name),
+                args: _argumentList())
             : IrPropertyGet(line: line, receiver: expr, name: name);
-        expr = IrConditional(line: line, condition: nullCheck, thenExpr: const IrLiteral(line: 0, kind: IrLiteralKind.nullLit, value: null), elseExpr: access);
+        expr = IrConditional(
+            line: line,
+            condition: nullCheck,
+            thenExpr: const IrLiteral(line: 0, kind: IrLiteralKind.nullLit, value: null),
+            elseExpr: access);
         continue;
       }
       if (_match(DartTokenType.leftBracket)) {
@@ -756,7 +847,11 @@ class DartParser {
       }
       if (_check(DartTokenType.plusPlus) || _check(DartTokenType.minusMinus)) {
         final opTok = _advance();
-        final newVal = IrBinary(line: line, op: opTok.type == DartTokenType.plusPlus ? IrBinaryOp.add : IrBinaryOp.sub, left: expr, right: const IrLiteral(line: 0, kind: IrLiteralKind.intLit, value: 1));
+        final newVal = IrBinary(
+            line: line,
+            op: opTok.type == DartTokenType.plusPlus ? IrBinaryOp.add : IrBinaryOp.sub,
+            left: expr,
+            right: const IrLiteral(line: 0, kind: IrLiteralKind.intLit, value: 1));
         expr = _wrapAssign(expr, newVal, line);
         continue;
       }
@@ -804,9 +899,15 @@ class DartParser {
 
   IrExpr _primary() {
     final line = _peek.line;
-    if (_check(DartTokenType.intLiteral)) return IrLiteral(line: line, kind: IrLiteralKind.intLit, value: _advance().literal);
-    if (_check(DartTokenType.doubleLiteral)) return IrLiteral(line: line, kind: IrLiteralKind.numLit, value: _advance().literal);
-    if (_check(DartTokenType.boolLiteral)) return IrLiteral(line: line, kind: IrLiteralKind.boolLit, value: _advance().literal);
+    if (_check(DartTokenType.intLiteral)) {
+      return IrLiteral(line: line, kind: IrLiteralKind.intLit, value: _advance().literal);
+    }
+    if (_check(DartTokenType.doubleLiteral)) {
+      return IrLiteral(line: line, kind: IrLiteralKind.numLit, value: _advance().literal);
+    }
+    if (_check(DartTokenType.boolLiteral)) {
+      return IrLiteral(line: line, kind: IrLiteralKind.boolLit, value: _advance().literal);
+    }
     if (_check(DartTokenType.nullLiteral)) {
       _advance();
       return IrLiteral(line: line, kind: IrLiteralKind.nullLit, value: null);
@@ -853,7 +954,9 @@ class DartParser {
     _advance();
     final items = <IrExpr>[];
     while (!_check(DartTokenType.rightBracket)) {
-      if (_check(DartTokenType.dot) && _peekAhead(1).type == DartTokenType.dot && _peekAhead(2).type == DartTokenType.dot) {
+      if (_check(DartTokenType.dot) &&
+          _peekAhead(1).type == DartTokenType.dot &&
+          _peekAhead(2).type == DartTokenType.dot) {
         throw _unsupported('spread in collection literals');
       }
       items.add(_expression());
@@ -868,7 +971,9 @@ class DartParser {
     _advance();
     if (_check(DartTokenType.rightBrace)) {
       _advance();
-      return forceSet ? const IrSetLiteral(line: 0, items: <IrExpr>[]) : const IrMapLiteral(line: 0, keys: <IrExpr>[], values: <IrExpr>[]);
+      return forceSet
+          ? const IrSetLiteral(line: 0, items: <IrExpr>[])
+          : const IrMapLiteral(line: 0, keys: <IrExpr>[], values: <IrExpr>[]);
     }
     final first = _expression();
     if (_match(DartTokenType.colon)) {
