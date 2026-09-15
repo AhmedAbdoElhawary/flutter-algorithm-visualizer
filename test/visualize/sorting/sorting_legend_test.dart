@@ -126,30 +126,30 @@ void main() {
     }
 
     test('barAnchor meets 3:1 against the dark card surface', () {
-      expect(contrastRatio(ColorManager.cdBarAnchorDk, ColorManager.cdSurfaceDk), greaterThanOrEqualTo(3.0));
+      expect(contrastRatio(ColorManager.dataMediumDk, ColorManager.surfaceDk), greaterThanOrEqualTo(3.0));
     });
 
     test('barTarget meets 3:1 against the dark card surface', () {
-      expect(contrastRatio(ColorManager.cdBarTargetDk, ColorManager.cdSurfaceDk), greaterThanOrEqualTo(3.0));
+      expect(contrastRatio(ColorManager.dataTargetDk, ColorManager.surfaceDk), greaterThanOrEqualTo(3.0));
     });
 
     test('barAnchor meets 3:1 against the light card surface', () {
-      expect(contrastRatio(ColorManager.cdBarAnchorLt, ColorManager.cdSurfaceLt), greaterThanOrEqualTo(3.0));
+      expect(contrastRatio(ColorManager.dataMediumLt, ColorManager.surfaceLt), greaterThanOrEqualTo(3.0));
     });
 
     test('barTarget meets 3:1 against the light card surface', () {
-      expect(contrastRatio(ColorManager.cdBarTargetLt, ColorManager.cdSurfaceLt), greaterThanOrEqualTo(3.0));
+      expect(contrastRatio(ColorManager.dataTargetLt, ColorManager.surfaceLt), greaterThanOrEqualTo(3.0));
     });
 
     test('barAnchor and barTarget keep the same hue in both themes (C5.3)', () {
       HSLColor hslOf(Color c) => HSLColor.fromColor(c);
 
-      final anchorDkHue = hslOf(ColorManager.cdBarAnchorDk).hue;
-      final anchorLtHue = hslOf(ColorManager.cdBarAnchorLt).hue;
+      final anchorDkHue = hslOf(ColorManager.dataMediumDk).hue;
+      final anchorLtHue = hslOf(ColorManager.dataMediumLt).hue;
       expect((anchorDkHue - anchorLtHue).abs(), lessThan(5));
 
-      final targetDkHue = hslOf(ColorManager.cdBarTargetDk).hue;
-      final targetLtHue = hslOf(ColorManager.cdBarTargetLt).hue;
+      final targetDkHue = hslOf(ColorManager.dataTargetDk).hue;
+      final targetLtHue = hslOf(ColorManager.dataTargetLt).hue;
       expect((targetDkHue - targetLtHue).abs(), lessThan(5));
     });
   });
