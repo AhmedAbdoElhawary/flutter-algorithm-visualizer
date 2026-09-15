@@ -65,17 +65,16 @@ class _HomeLiveSessionCard extends StatelessWidget {
               const MediumText(
                 'LIVE',
                 fontSize: 9.5,
-                color: ThemeEnum.textBody,
+                color: ThemeEnum.inkBody,
               ),
               const RSizedBox(width: 8),
               Expanded(
-                child:
-                    SemiBoldText(data.algorithmName, fontSize: 12, color: ThemeEnum.textPrimary, maxLines: 1),
+                child: SemiBoldText(data.algorithmName, fontSize: 12, color: ThemeEnum.inkTitle, maxLines: 1),
               ),
               RegularText(
                 timer,
                 fontSize: 11,
-                color: ThemeEnum.textSecond,
+                color: ThemeEnum.inkBody,
                 fontFamily: FontConstants.fontJetBrainsMono,
               ),
             ],
@@ -108,7 +107,7 @@ class _HomeLiveSessionCard extends StatelessWidget {
               RegularText(
                 '${data.currentStep} / ${data.totalSteps}',
                 fontSize: 11,
-                color: ThemeEnum.textSecond,
+                color: ThemeEnum.inkBody,
                 fontFamily: FontConstants.fontJetBrainsMono,
               ),
               const RSizedBox(width: 10),
@@ -151,7 +150,7 @@ class _PulsingDotState extends State<_PulsingDot> with SingleTickerProviderState
               width: 6.r,
               height: 6.r,
               decoration: BoxDecoration(
-                color: context.getColor(ThemeEnum.textBright),
+                color: context.getColor(ThemeEnum.inkPrimary),
                 shape: BoxShape.circle,
               ),
             ),
@@ -174,13 +173,13 @@ class _PauseSquare extends StatelessWidget {
       height: 26.r,
       alignment: Alignment.center,
       decoration: BoxDecoration(
-        color: context.getColor(ThemeEnum.textBright),
+        color: context.getColor(ThemeEnum.inkPrimary),
         borderRadius: BorderRadius.circular(CdRadius.xs.r),
       ),
       child: Icon(
         playing ? Icons.pause_rounded : Icons.play_arrow_rounded,
         size: 15.r,
-        color: context.getColor(ThemeEnum.onPrimary),
+        color: context.getColor(ThemeEnum.ground),
       ),
     );
   }
