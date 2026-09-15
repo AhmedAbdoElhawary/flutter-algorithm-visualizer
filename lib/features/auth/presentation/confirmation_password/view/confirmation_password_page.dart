@@ -27,7 +27,9 @@ class _ForgotPasswordPageState extends ConsumerState<ConfirmationPasswordPage> {
     ref.listen(
       authForgotPasswordProvider.select((s) => s.errorMessage),
       (previous, next) {
-        if (next != null) context.showSnackBar(message: next, type: CustomSnackBarType.error);
+        if (next != null) {
+          context.showSnackBar(message: next, type: CustomSnackBarType.error);
+        }
       },
     );
 
@@ -82,7 +84,7 @@ class _ForgotPasswordPageState extends ConsumerState<ConfirmationPasswordPage> {
               child: Center(
                 child: MediumText(
                   StringsManager.resendEmailLink,
-                  color: canResend ? ThemeEnum.primaryHover : ThemeEnum.textDisabled,
+                  color: canResend ? ThemeEnum.inkTitle : ThemeEnum.inkMuted,
                   fontSize: 14,
                   maxLines: 1,
                 ),
