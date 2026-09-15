@@ -11,7 +11,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class ProfileDifficultyProgress extends ConsumerWidget {
-  const ProfileDifficultyProgress({super.key, this.titleColor = ThemeEnum.textSecond});
+  const ProfileDifficultyProgress({super.key, this.titleColor = ThemeEnum.inkBody});
   final ThemeEnum titleColor;
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -22,19 +22,19 @@ class ProfileDifficultyProgress extends ConsumerWidget {
         label: StringsManager.easy,
         solved: stats.easySolved,
         total: stats.easyTotal,
-        color: ThemeEnum.accentGreen
+        color: ThemeEnum.dataEasy
       ),
       (
         label: StringsManager.medium,
         solved: stats.mediumSolved,
         total: stats.mediumTotal,
-        color: ThemeEnum.accentYellow
+        color: ThemeEnum.dataMedium
       ),
       (
         label: StringsManager.hard,
         solved: stats.hardSolved,
         total: stats.hardTotal,
-        color: ThemeEnum.accentRed
+        color: ThemeEnum.dataHard
       ),
     ];
     return HorizontalPadding(
@@ -70,11 +70,11 @@ class _DifficultyRow extends StatelessWidget {
               SemiBoldText(b.label, color: b.color, fontSize: 12),
               RichText(
                 text: TextSpan(
-                  style: GetMediumStyle(color: context.getColor(ThemeEnum.hover), fontSize: 12),
+                  style: GetMediumStyle(color: context.getColor(ThemeEnum.track), fontSize: 12),
                   children: [
                     TextSpan(
                         text: '${b.solved}',
-                        style: GetMediumStyle(color: context.getColor(ThemeEnum.textSecond), fontSize: 12)),
+                        style: GetMediumStyle(color: context.getColor(ThemeEnum.inkBody), fontSize: 12)),
                     TextSpan(text: ' / ${b.total}'),
                   ],
                 ),
