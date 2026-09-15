@@ -19,7 +19,7 @@ class CustomIcon extends StatelessWidget {
   Widget build(BuildContext context) {
     return Icon(
       icon,
-      color: color == null ? ColorManager.black : context.getColor(color!),
+      color: color == null ? ColorManager.groundDk : context.getColor(color!),
       size: size.r,
       shadows: shadows,
     );
