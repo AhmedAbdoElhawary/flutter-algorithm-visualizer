@@ -33,6 +33,17 @@ HEADING = re.compile(r"^##\s*\[([^\]]+)\]")
 # v1.3.0-dev.2 -> stage "dev"; v1.3.0-stag.1 -> stage "stag"; v1.3.0 -> stage "" (production).
 STAGE = re.compile(r"^v[^-]+(?:-(dev|stag)\.\d+)?$")
 
+# Firebase App Distribution rejects release notes over 16384 characters.
+# Stay comfortably under that so a truncation marker still fits.
+MAX_NOTES_LENGTH = 16000
+
+
+def truncate_notes(notes: str) -> str:
+    if len(notes) <= MAX_NOTES_LENGTH:
+        return notes
+    marker = "\n... (truncated)\n"
+    return notes[: MAX_NOTES_LENGTH - len(marker)].rstrip() + marker
+
 
 def stage_of(tag: str) -> str:
     match = STAGE.match(tag)
@@ -65,16 +76,30 @@ def previous_tag_same_stage(tag: str) -> str | None:
     return None
 
 
+# No same-stage tag exists yet (first-ever dev/staging build): rather than
+# dumping the whole repo history, show only the most recent commits.
+FIRST_BUILD_COMMIT_COUNT = 20
+
+
 def auto_notes_since_previous_tag(tag: str) -> str:
     previous = previous_tag_same_stage(tag)
-    range_spec = f"{previous}..{tag}" if previous else tag
+    if previous:
+        log = subprocess.run(
+            ["git", "log", f"{previous}..{tag}", "--pretty=format:- %s", "--no-merges"],
+            capture_output=True,
+            text=True,
+            check=True,
+        ).stdout.strip()
+        return (log or "- No changes recorded since the previous build.") + "\n"
+
     log = subprocess.run(
-        ["git", "log", range_spec, "--pretty=format:- %s", "--no-merges"],
+        ["git", "log", tag, f"-{FIRST_BUILD_COMMIT_COUNT}", "--pretty=format:- %s", "--no-merges"],
         capture_output=True,
         text=True,
         check=True,
     ).stdout.strip()
-    return (log or "- No changes recorded since the previous build.") + "\n"
+    header = "First build in this stage. Most recent commits:\n"
+    return header + (log or "- No changes recorded.") + "\n"
 
 
 def top_entry(text: str) -> tuple[str, str]:
@@ -112,11 +137,12 @@ def main() -> None:
     args = parser.parse_args()
 
     if args.auto_since_previous_tag:
-        sys.stdout.write(auto_notes_since_previous_tag(args.auto_since_previous_tag))
+        notes = auto_notes_since_previous_tag(args.auto_since_previous_tag)
+        sys.stdout.write(truncate_notes(notes))
         return
 
     version, notes = top_entry(Path(args.changelog).read_text(encoding="utf-8"))
-    sys.stdout.write(version + "\n" if args.field == "version" else notes)
+    sys.stdout.write(version + "\n" if args.field == "version" else truncate_notes(notes))
 
 
 if __name__ == "__main__":
