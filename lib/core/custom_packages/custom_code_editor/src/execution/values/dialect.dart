@@ -39,6 +39,7 @@ class Dialect {
     required this.hasUndefined,
     required this.printsTrueAs,
     required this.printsFalseAs,
+    this.printsNullAs = 'null',
     required this.stringIndexYields,
     required this.arbitraryPrecisionInts,
     required this.negativeIndexing,
@@ -51,6 +52,10 @@ class Dialect {
   final bool hasUndefined;
   final String printsTrueAs;
   final String printsFalseAs;
+
+  /// How the absent value prints: `null` in Dart and JavaScript, `None` in
+  /// Python. Defaulted, since only Python differs.
+  final String printsNullAs;
   final StringIndexResult stringIndexYields;
   final bool arbitraryPrecisionInts;
   final bool negativeIndexing;

@@ -397,7 +397,7 @@ String _displayString(Value v, [Dialect? dialect]) {
   if (v is BoolValue) {
     return v.value ? (dialect?.printsTrueAs ?? 'true') : (dialect?.printsFalseAs ?? 'false');
   }
-  if (v is NullValue) return 'null';
+  if (v is NullValue) return dialect?.printsNullAs ?? 'null';
   if (v is UndefinedValue) return 'undefined';
   if (v is ListValue) return '[${v.items.map((e) => _displayString(e, dialect)).join(', ')}]';
   if (v is TupleValue) return '(${v.items.map((e) => _displayString(e, dialect)).join(', ')})';

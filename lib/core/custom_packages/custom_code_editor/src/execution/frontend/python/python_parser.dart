@@ -74,6 +74,7 @@ class PythonParser {
     _signatures
       ..clear()
       ..addAll(pythonBuiltinParams);
+    _rejectUnsupportedOperators();
     _collectSignatures();
 
     _scopes.add(_FunctionScope(isModule: true));
@@ -90,6 +91,40 @@ class PythonParser {
     }
     _scopes.removeLast();
     return statements;
+  }
+
+  /// Operators that are real Python but outside the supported subset. They
+  /// are rejected up front, by name, because catching them where they happen
+  /// to appear in the grammar would report them as a plain syntax error —
+  /// and "you typed it wrong" is the wrong thing to tell someone whose code
+  /// is perfectly valid (FR-002d, SC-009).
+  static const Map<String, String> _unsupportedOperators = <String, String>{
+    ':=': 'walrus',
+    '&': 'bitwiseOperator',
+    '|': 'bitwiseOperator',
+    '^': 'bitwiseOperator',
+    '~': 'bitwiseOperator',
+    '<<': 'bitwiseOperator',
+    '>>': 'bitwiseOperator',
+    '&=': 'bitwiseOperator',
+    '|=': 'bitwiseOperator',
+    '^=': 'bitwiseOperator',
+    '<<=': 'bitwiseOperator',
+    '>>=': 'bitwiseOperator',
+    '@': 'decorator',
+  };
+
+  void _rejectUnsupportedOperators() {
+    for (final token in _tokens) {
+      if (token.type != PythonTokenType.op) continue;
+      final construct = _unsupportedOperators[token.lexeme];
+      if (construct == null) continue;
+      throw FrontendFailure(
+          kind: FailureKind.unsupported,
+          code: 'unsupportedConstruct',
+          data: <String, Object?>{'construct': construct},
+          line: token.line);
+    }
   }
 
   /// Records every `def name(a, b)` signature up front, so a call written
@@ -929,10 +964,12 @@ class PythonParser {
       );
     }
 
+    // Not a method the frontend translates: leave it exactly as written, so
+    // the learner's own methods reach their own class.
     if (keywords.isNotEmpty) throw _unsupported('keywordArgumentsForMethod', line);
     return IrCall(
       line: line,
-      callee: IrPropertyGet(line: line, receiver: receiver, name: pythonMethodAliases[name] ?? name),
+      callee: IrPropertyGet(line: line, receiver: receiver, name: name),
       args: args,
     );
   }
@@ -992,7 +1029,12 @@ class PythonParser {
         _expectOp('=');
         keywords[name] = _ternary();
       } else {
-        positional.add(_ternary());
+        final expr = _ternary();
+        // `sum(x * 2 for x in xs)` — a generator expression may be a call's
+        // sole argument without parentheses of its own.
+        positional.add(_checkKeyword('for')
+            ? _comprehension(_peek.line, expr, null, IrComprehensionKind.list)
+            : expr);
       }
       if (!_matchOp(',')) break;
     }

@@ -23,6 +23,7 @@ const pythonDialect = Dialect(
   hasUndefined: false,
   printsTrueAs: 'True',
   printsFalseAs: 'False',
+  printsNullAs: 'None',
 
   /// `"abc"[0]` is `"a"`, a one-character string — Python has no char type.
   stringIndexYields: StringIndexResult.oneCharString,

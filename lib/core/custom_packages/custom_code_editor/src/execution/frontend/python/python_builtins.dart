@@ -20,58 +20,61 @@ import '../../errors/failure.dart';
 import '../../values/value.dart';
 import 'python_dialect.dart';
 
-/// Python method name -> the shared stdlib name that does the same thing.
-/// Renames only: anything whose *shape* differs (`pop`, `sort(key=)`,
-/// `"".join(xs)`) goes through [pythonMethodHelpers] instead, because a
-/// rename alone would be wrong.
-const Map<String, String> pythonMethodAliases = <String, String>{
-  // list
-  'append': 'add',
-  'extend': 'addAll',
-  'insert': 'insert',
-  // str
-  'upper': 'toUpperCase',
-  'lower': 'toLowerCase',
-  'strip': 'trim',
-  'lstrip': 'trimLeft',
-  'rstrip': 'trimRight',
-  'startswith': 'startsWith',
-  'endswith': 'endsWith',
-  'rjust': 'padLeft',
-  'ljust': 'padRight',
-  'replace': 'replaceAll',
-  // set
-  'union': 'union',
-  'intersection': 'intersection',
-  'difference': 'difference',
-};
-
 /// Python methods the engine spells as a **property**: `d.keys()` is a call
 /// in Python but `d.keys` is a plain getter here, so the parser drops the
 /// call rather than trying to invoke the list that comes back.
 const Set<String> pythonPropertyMethods = <String>{'keys', 'values'};
 
-/// Python methods whose shape has no direct counterpart, mapped to a helper
-/// global that takes the receiver as its first argument. Each helper decides
-/// at runtime what the receiver actually is, because Python spells the list
-/// and dict versions of `pop`, `remove` and `count` identically.
+/// Every Python method the frontend translates, mapped to the helper global
+/// that implements it. The helper takes the receiver as its first argument.
+///
+/// These are *not* plain renames onto the shared stdlib, even where a rename
+/// would be enough. A learner who writes `class Stack` with a `pop` method,
+/// or `class LinkedList` with `append`, must get their own method — and the
+/// parser cannot tell what a receiver will be at runtime. Routing everything
+/// through a helper means one place makes that decision, with the value in
+/// hand: see [_userDefined].
+///
+/// A method that is not listed here is left exactly as the learner wrote it,
+/// so their own methods, and the names Python and the engine already agree
+/// on (`add` on a set), keep working untouched.
 const Map<String, String> pythonMethodHelpers = <String, String>{
+  // list
+  'append': '__append',
+  'extend': '__extend',
+  'insert': '__insert',
   'pop': '__pop',
   'remove': '__remove',
-  'discard': '__discard',
-  'count': '__count',
-  'index': '__index_of',
-  'find': '__find',
   'sort': '__sort',
   'reverse': '__reverse',
+  'index': '__index_of',
+  'count': '__count',
   'copy': '__copy',
   'clear': '__clear',
+  // dict
   'get': '__get',
   'items': '__items',
   'update': '__update',
   'setdefault': '__setdefault',
+  // set
+  'discard': '__discard',
+  'union': '__union',
+  'intersection': '__intersection',
+  'difference': '__difference',
+  // str
+  'upper': '__upper',
+  'lower': '__lower',
+  'strip': '__strip',
+  'lstrip': '__lstrip',
+  'rstrip': '__rstrip',
+  'startswith': '__startswith',
+  'endswith': '__endswith',
+  'replace': '__replace',
+  'find': '__find',
   'split': '__split',
   'join': '__join',
+  'rjust': '__rjust',
+  'ljust': '__ljust',
   'isdigit': '__isdigit',
   'isalpha': '__isalpha',
   'isspace': '__isspace',
@@ -114,29 +117,58 @@ Map<String, Value> pythonGlobals() => <String, Value>{
       // by a learner. Each one exists because the choice it makes — is this
       // a list or a dict? one separator or whitespace? — can only be made
       // once the value is in hand, at runtime.
-      '__contains__': const NativeFunctionValue('__contains__', 2, _contains),
-      '__pop': const NativeFunctionValue('__pop', 3, _pop),
-      '__remove': const NativeFunctionValue('__remove', 2, _remove),
-      '__discard': const NativeFunctionValue('__discard', 2, _discard),
-      '__count': const NativeFunctionValue('__count', 2, _count),
-      '__index_of': const NativeFunctionValue('__index_of', 2, _indexOf),
-      '__find': const NativeFunctionValue('__find', 2, _find),
-      '__sort': const NativeFunctionValue('__sort', 3, _sortInPlace),
-      '__reverse': const NativeFunctionValue('__reverse', 1, _reverseInPlace),
-      '__copy': const NativeFunctionValue('__copy', 1, _copy),
-      '__clear': const NativeFunctionValue('__clear', 1, _clear),
-      '__get': const NativeFunctionValue('__get', 3, _get),
-      '__items': const NativeFunctionValue('__items', 1, _items),
-      '__update': const NativeFunctionValue('__update', 2, _update),
-      '__setdefault': const NativeFunctionValue('__setdefault', 3, _setdefault),
-      '__split': const NativeFunctionValue('__split', 2, _split),
-      '__join': const NativeFunctionValue('__join', 2, _join),
-      '__isdigit': const NativeFunctionValue('__isdigit', 1, _isdigit),
-      '__isalpha': const NativeFunctionValue('__isalpha', 1, _isalpha),
-      '__isspace': const NativeFunctionValue('__isspace', 1, _isspace),
-      '__isupper': const NativeFunctionValue('__isupper', 1, _isupper),
-      '__islower': const NativeFunctionValue('__islower', 1, _islower),
+      '__contains__': _method('__contains__', '__contains__', 2, _contains),
+      '__append': _method('__append', 'append', 2, _append),
+      '__extend': _method('__extend', 'extend', 2, _extend),
+      '__insert': _method('__insert', 'insert', 3, _insert),
+      '__union': _method('__union', 'union', 2, _union),
+      '__intersection': _method('__intersection', 'intersection', 2, _intersection),
+      '__difference': _method('__difference', 'difference', 2, _difference),
+      '__upper': _method('__upper', 'upper', 1, (a, i) => _mapString(a[0], (s) => s.toUpperCase())),
+      '__lower': _method('__lower', 'lower', 1, (a, i) => _mapString(a[0], (s) => s.toLowerCase())),
+      '__strip': _method('__strip', 'strip', 1, (a, i) => _mapString(a[0], (s) => s.trim())),
+      '__lstrip': _method('__lstrip', 'lstrip', 1, (a, i) => _mapString(a[0], (s) => s.trimLeft())),
+      '__rstrip': _method('__rstrip', 'rstrip', 1, (a, i) => _mapString(a[0], (s) => s.trimRight())),
+      '__startswith': _method('__startswith', 'startswith', 2,
+          (a, i) => BoolValue(_str2(a[0]).startsWith(_str2(a[1])))),
+      '__endswith':
+          _method('__endswith', 'endswith', 2, (a, i) => BoolValue(_str2(a[0]).endsWith(_str2(a[1])))),
+      '__replace': _method('__replace', 'replace', 3,
+          (a, i) => StrValue(_str2(a[0]).replaceAll(_str2(a[1]), _str2(a[2])))),
+      '__rjust': _method('__rjust', 'rjust', 3, (a, i) => _pad(a, left: true)),
+      '__ljust': _method('__ljust', 'ljust', 3, (a, i) => _pad(a, left: false)),
+      '__pop': _method('__pop', 'pop', 3, _pop),
+      '__remove': _method('__remove', 'remove', 2, _remove),
+      '__discard': _method('__discard', 'discard', 2, _discard),
+      '__count': _method('__count', 'count', 2, _count),
+      '__index_of': _method('__index_of', 'index', 2, _indexOf),
+      '__find': _method('__find', 'find', 2, _find),
+      '__sort': _method('__sort', 'sort', 3, _sortInPlace),
+      '__reverse': _method('__reverse', 'reverse', 1, _reverseInPlace),
+      '__copy': _method('__copy', 'copy', 1, _copy),
+      '__clear': _method('__clear', 'clear', 1, _clear),
+      '__get': _method('__get', 'get', 3, _get),
+      '__items': _method('__items', 'items', 1, _items),
+      '__update': _method('__update', 'update', 2, _update),
+      '__setdefault': _method('__setdefault', 'setdefault', 3, _setdefault),
+      '__split': _method('__split', 'split', 2, _split),
+      '__join': _method('__join', 'join', 2, _join),
+      '__isdigit': _method('__isdigit', 'isdigit', 1, _isdigit),
+      '__isalpha': _method('__isalpha', 'isalpha', 1, _isalpha),
+      '__isspace': _method('__isspace', 'isspace', 1, _isspace),
+      '__isupper': _method('__isupper', 'isupper', 1, _isupper),
+      '__islower': _method('__islower', 'islower', 1, _islower),
     };
+
+/// Wraps one method helper so that a learner's own method of the same name
+/// always wins over the builtin. See [_userDefined].
+NativeFunctionValue _method(String globalName, String pythonName, int arity,
+    Value Function(List<Value> args, InvokeCallback invoke) builtin) {
+  return NativeFunctionValue(globalName, arity, (args, invoke) {
+    final own = _userDefined(args[0], pythonName, args.sublist(1), invoke);
+    return own ?? builtin(args, invoke);
+  });
+}
 
 /// Parameter names of the builtins that accept keyword arguments, so the
 /// parser can turn `sorted(xs, reverse=True)` into a positional call.
@@ -396,6 +428,77 @@ Value _divmod(List<Value> args, InvokeCallback invoke) {
 // ---------------------------------------------------------------------------
 // Method helpers. Each takes the receiver first.
 // ---------------------------------------------------------------------------
+
+/// Hands a helper call back to the learner's own method when the receiver
+/// turns out to be one of their objects.
+///
+/// The parser rewrites `x.pop()` into `__pop(x)` without knowing what `x`
+/// is — it cannot, since the same spelling means different things for a list
+/// and for a dict. But a learner writing `class Stack` with a `pop` method
+/// would otherwise have their call stolen by the builtin, which is both
+/// wrong and baffling. So every helper checks first: if the receiver is an
+/// instance with a method of that name, that method wins.
+Value? _userDefined(Value receiver, String name, List<Value> args, InvokeCallback invoke) {
+  if (receiver is! InstanceValue) return null;
+  final method = receiver.klass.findMethod(name);
+  if (method == null) return null;
+  return invoke(method.bindTo(receiver), args);
+}
+
+String _str2(Value v) {
+  if (v is StrValue) return v.value;
+  throw const VmRuntimeError('typeMismatch', <String, Object?>{'expected': 'a string'});
+}
+
+Value _mapString(Value v, String Function(String) f) => StrValue(f(_str2(v)));
+
+ListValue _listArg(Value v) {
+  if (v is ListValue) return v;
+  throw const VmRuntimeError('typeMismatch', <String, Object?>{'expected': 'a list'});
+}
+
+SetValue _setArg(Value v) {
+  if (v is SetValue) return v;
+  throw const VmRuntimeError('typeMismatch', <String, Object?>{'expected': 'a set'});
+}
+
+Value _append(List<Value> args, InvokeCallback invoke) {
+  _listArg(args[0]).items.add(args[1]);
+  return NullValue.instance;
+}
+
+Value _extend(List<Value> args, InvokeCallback invoke) {
+  _listArg(args[0]).items.addAll(_iter(args[1]));
+  return NullValue.instance;
+}
+
+Value _insert(List<Value> args, InvokeCallback invoke) {
+  final items = _listArg(args[0]).items;
+  var i = _intArg(args[1]);
+  if (i < 0) i += items.length;
+  items.insert(i.clamp(0, items.length), args[2]);
+  return NullValue.instance;
+}
+
+Value _union(List<Value> args, InvokeCallback invoke) =>
+    SetValue(LinkedHashSet<Value>.of(_setArg(args[0]).items)..addAll(_iter(args[1])));
+
+Value _intersection(List<Value> args, InvokeCallback invoke) {
+  final other = _iter(args[1]).toSet();
+  return SetValue(LinkedHashSet<Value>.of(_setArg(args[0]).items.where(other.contains)));
+}
+
+Value _difference(List<Value> args, InvokeCallback invoke) {
+  final other = _iter(args[1]).toSet();
+  return SetValue(LinkedHashSet<Value>.of(_setArg(args[0]).items.where((e) => !other.contains(e))));
+}
+
+Value _pad(List<Value> args, {required bool left}) {
+  final s = _str2(args[0]);
+  final width = _intArg(args[1]);
+  final fill = args.length > 2 && args[2] is StrValue ? (args[2] as StrValue).value : ' ';
+  return StrValue(left ? s.padLeft(width, fill) : s.padRight(width, fill));
+}
 
 /// `xs.pop()` / `xs.pop(i)` / `d.pop(k)` / `d.pop(k, default)`.
 Value _pop(List<Value> args, InvokeCallback invoke) {
