@@ -29,7 +29,8 @@ Value? getNumberProperty(Value receiver, String name) {
   }
 }
 
-Value callNumberMethod(Value receiver, String name, List<Value> args, InvokeCallback invoke, Dialect dialect) {
+Value callNumberMethod(
+    Value receiver, String name, List<Value> args, InvokeCallback invoke, Dialect dialect) {
   final n = _num(receiver);
   switch (name) {
     case 'abs':
@@ -65,18 +66,18 @@ Map<String, Value> buildPreludeGlobals() {
     'min': const NativeFunctionValue('min', 2, _minWrapper),
     'max': const NativeFunctionValue('max', 2, _maxWrapper),
     'sqrt': const NativeFunctionValue('sqrt', 1, _sqrtWrapper),
-    'int': NamespaceValue('int', <String, Value>{
-      'parse': const NativeFunctionValue('int.parse', 1, _intParse),
-      'tryParse': const NativeFunctionValue('int.tryParse', 1, _intTryParse),
+    'int': const NamespaceValue('int', <String, Value>{
+      'parse': NativeFunctionValue('int.parse', 1, _intParse),
+      'tryParse': NativeFunctionValue('int.tryParse', 1, _intTryParse),
     }),
-    'double': NamespaceValue('double', <String, Value>{
-      'parse': const NativeFunctionValue('double.parse', 1, _doubleParse),
-      'tryParse': const NativeFunctionValue('double.tryParse', 1, _doubleTryParse),
+    'double': const NamespaceValue('double', <String, Value>{
+      'parse': NativeFunctionValue('double.parse', 1, _doubleParse),
+      'tryParse': NativeFunctionValue('double.tryParse', 1, _doubleTryParse),
     }),
-    'List': NamespaceValue('List', <String, Value>{
-      'generate': const NativeFunctionValue('List.generate', 2, _listGenerate),
-      'filled': const NativeFunctionValue('List.filled', 2, _listFilled),
-      'from': const NativeFunctionValue('List.from', 1, _listFrom),
+    'List': const NamespaceValue('List', <String, Value>{
+      'generate': NativeFunctionValue('List.generate', 2, _listGenerate),
+      'filled': NativeFunctionValue('List.filled', 2, _listFilled),
+      'from': NativeFunctionValue('List.from', 1, _listFrom),
     }),
   };
 }
@@ -98,7 +99,9 @@ Value _sqrtWrapper(List<Value> args, InvokeCallback invoke) => NumValue(math.sqr
 Value _intParse(List<Value> args, InvokeCallback invoke) {
   final s = (args[0] as StrValue).value;
   final v = int.tryParse(s);
-  if (v == null) throw VmRuntimeError('typeMismatch', <String, Object?>{'expected': 'an integer string', 'actual': s});
+  if (v == null) {
+    throw VmRuntimeError('typeMismatch', <String, Object?>{'expected': 'an integer string', 'actual': s});
+  }
   return IntValue(v);
 }
 
@@ -110,7 +113,9 @@ Value _intTryParse(List<Value> args, InvokeCallback invoke) {
 Value _doubleParse(List<Value> args, InvokeCallback invoke) {
   final s = (args[0] as StrValue).value;
   final v = double.tryParse(s);
-  if (v == null) throw VmRuntimeError('typeMismatch', <String, Object?>{'expected': 'a number string', 'actual': s});
+  if (v == null) {
+    throw VmRuntimeError('typeMismatch', <String, Object?>{'expected': 'a number string', 'actual': s});
+  }
   return NumValue(v);
 }
 
