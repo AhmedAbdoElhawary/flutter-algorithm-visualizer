@@ -73,6 +73,7 @@ class CodeEditorTheme {
   /// Padding around the editable text area.
   final EdgeInsets editorPadding;
 
+  /// TODO: handle the colors after MVP
   /// A dark theme reminiscent of common editor "dark" presets.
   factory CodeEditorTheme.dark() {
     const Color fg = Color(0xFFD4D4D4);
