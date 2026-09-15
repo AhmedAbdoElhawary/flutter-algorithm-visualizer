@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 /// Every filled CTA — solid `textBright` (primary ink/action role) fill,
-/// `onPrimary` label, no glow. [expand] makes it fill the row's width.
+/// `ground` label, no glow. [expand] makes it fill the row's width.
 class PrimaryButtonQuiet extends StatelessWidget {
   final String label;
   final VoidCallback? onPressed;
@@ -30,7 +30,7 @@ class PrimaryButtonQuiet extends StatelessWidget {
         padding: REdgeInsets.symmetric(vertical: 16),
         alignment: Alignment.center,
         decoration: BoxDecoration(
-          color: context.getColor(ThemeEnum.textBright).withValues(alpha: disabled ? 0.5 : 1),
+          color: context.getColor(ThemeEnum.inkPrimary).withValues(alpha: disabled ? 0.5 : 1),
           borderRadius: BorderRadius.circular(CdRadius.md.r),
         ),
         child: loading
@@ -39,10 +39,10 @@ class PrimaryButtonQuiet extends StatelessWidget {
                 height: 18.r,
                 child: CircularProgressIndicator(
                   strokeWidth: 2,
-                  color: context.getColor(ThemeEnum.onPrimary),
+                  color: context.getColor(ThemeEnum.ground),
                 ),
               )
-            : SemiBoldText(label, color: ThemeEnum.onPrimary, fontSize: 13.5),
+            : SemiBoldText(label, color: ThemeEnum.ground, fontSize: 13.5),
       ),
     );
   }
