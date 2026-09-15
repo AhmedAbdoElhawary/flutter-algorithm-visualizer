@@ -18,7 +18,7 @@ class SecondaryButtonQuiet extends StatelessWidget {
     required this.onPressed,
     this.horizontalInnerPadding = 0,
     this.expand = true,
-    this.borderColor = ThemeEnum.borderStrong,
+    this.borderColor = ThemeEnum.track,
   });
 
   @override
@@ -30,11 +30,11 @@ class SecondaryButtonQuiet extends StatelessWidget {
         padding: REdgeInsets.symmetric(vertical: 14, horizontal: horizontalInnerPadding),
         alignment: Alignment.center,
         decoration: BoxDecoration(
-          color: context.getColor(ThemeEnum.primary),
+          color: context.getColor(ThemeEnum.ground),
           borderRadius: BorderRadius.circular(CdRadius.md.r),
           border: Border.all(color: context.getColor(borderColor)),
         ),
-        child: SemiBoldText(label, color: ThemeEnum.textPrimary, fontSize: 13.5),
+        child: SemiBoldText(label, color: ThemeEnum.inkTitle, fontSize: 13.5),
       ),
     );
   }
