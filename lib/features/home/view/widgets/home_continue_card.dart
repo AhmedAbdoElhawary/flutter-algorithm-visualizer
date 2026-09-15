@@ -46,7 +46,7 @@ class HomeContinueCard extends ConsumerWidget {
         surface: CdSurface.main,
         borderColorOverride: ThemeEnum.inkBody,
         padding: REdgeInsets.all(16),
-        onTap: () => context.pushTo(Routes.problem, queryParameters: '${problem.getProblemId}'),
+        onTap: () => context.pushRoute(Routes.problem, queryParameters: '${problem.getProblemId}'),
         child: Row(
           children: [
             const IconButtonQuiet(icon: Icons.play_arrow_rounded, size: 48, iconSize: 24, filled: true),

@@ -63,7 +63,8 @@ class _SecondaryProblemCardState extends State<SecondaryProblemCard> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   GestureDetector(
-                    onTap: () => context.pushTo(Routes.problem, queryParameters: widget.problemId.toString()),
+                    onTap: () =>
+                        context.pushRoute(Routes.problem, queryParameters: widget.problemId.toString()),
                     child: SemiBoldText(
                       widget.problemName,
                       color: ThemeEnum.inkPrimary,

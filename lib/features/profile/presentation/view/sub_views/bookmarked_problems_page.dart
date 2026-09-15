@@ -50,7 +50,7 @@ class BookmarkedProblemsPage extends ConsumerWidget {
                             final problem = bookmarked[i];
                             return BookmarkRow(
                               problem: problem,
-                              onTap: () => context.pushTo(
+                              onTap: () => context.pushRoute(
                                 Routes.problem,
                                 queryParameters: "${problem.getProblemId}",
                               ),

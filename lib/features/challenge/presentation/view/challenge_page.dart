@@ -42,7 +42,7 @@ class ChallengePage extends ConsumerWidget {
                   expanded: ref.watch(challengesProvider.select((s) => s.expandedId == problemId)),
                   onToggle: () => ref.read(challengesProvider.notifier).toggleExpanded(problemId),
                   onSolveTap: () {
-                    context.pushTo(Routes.problem, queryParameters: "$problemId");
+                    context.pushRoute(Routes.problem, queryParameters: "$problemId");
                   },
                 );
               },
