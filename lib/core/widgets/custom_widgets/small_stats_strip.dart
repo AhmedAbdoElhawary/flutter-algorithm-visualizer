@@ -5,8 +5,16 @@ import 'package:algorithm_visualizer/features/profile/presentation/view_model/st
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class HomeStatsStrip extends ConsumerWidget {
-  const HomeStatsStrip({super.key});
+class SmallStatsStrip extends ConsumerWidget {
+  const SmallStatsStrip({
+    this.showAttempts = true,
+    this.showIcons = true,
+    this.centerTheContent = false,
+    super.key,
+  });
+  final bool showAttempts;
+  final bool showIcons;
+  final bool centerTheContent;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -28,11 +36,12 @@ class HomeStatsStrip extends ConsumerWidget {
         value: '${(stats.accuracyRate * 100).round()}%',
         label: StringsManager.accuracy,
       ),
-      (
-        icon: Icons.trending_up_rounded,
-        value: '${stats.totalAttempts}',
-        label: StringsManager.attempts,
-      ),
+      if (showAttempts)
+        (
+          icon: Icons.trending_up_rounded,
+          value: '${stats.totalAttempts}',
+          label: StringsManager.attempts,
+        ),
     ];
 
     return OnlyPadding(
@@ -43,7 +52,11 @@ class HomeStatsStrip extends ConsumerWidget {
         spacing: 10,
         children: items.map((s) {
           return Expanded(
-            child: StatTile(icon: s.icon, value: s.value, label: s.label),
+            child: StatTile(
+                icon: showIcons ? s.icon : null,
+                value: s.value,
+                label: s.label,
+                centerTheContent: centerTheContent),
           );
         }).toList(),
       ),
