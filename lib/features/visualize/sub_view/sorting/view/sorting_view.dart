@@ -283,7 +283,7 @@ class _ShowUpSortingListState extends ConsumerState<ShowUpSortingList> {
                           return MediumText(
                             '$index',
                             fontSize: 10,
-                            color: role == SortRole.compare ? ThemeEnum.comparing : ThemeEnum.textDisabled,
+                            color: role == SortRole.compare ? ThemeEnum.dataActive : ThemeEnum.inkMuted,
                           );
                         },
                       ),
@@ -326,9 +326,9 @@ class _BuildItem extends ConsumerWidget {
     final fill = roleColor(resolvedRole);
 
     final labelColor = context.getColor(switch (resolvedRole) {
-      SortRole.compare => ThemeEnum.textPrimary,
-      SortRole.sorted => ThemeEnum.difficultyEasy,
-      _ => ThemeEnum.textSecond,
+      SortRole.compare => ThemeEnum.inkTitle,
+      SortRole.sorted => ThemeEnum.dataEasy,
+      _ => ThemeEnum.inkBody,
     });
 
     return Column(
