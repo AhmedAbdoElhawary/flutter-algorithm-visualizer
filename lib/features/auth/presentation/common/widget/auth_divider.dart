@@ -14,8 +14,7 @@ class AuthDivider extends StatelessWidget {
       children: [
         Expanded(child: _Rule()),
         const HorizontalGap(),
-        const RegularText(StringsManager.orDivider,
-            color: ThemeEnum.textDisabled, fontSize: 10.5, maxLines: 1),
+        const RegularText(StringsManager.orDivider, color: ThemeEnum.inkMuted, fontSize: 10.5, maxLines: 1),
         const HorizontalGap(),
         Expanded(child: _Rule()),
       ],
@@ -33,6 +32,6 @@ class HorizontalGap extends StatelessWidget {
 class _Rule extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Container(height: 1.h, color: context.getColor(ThemeEnum.borderSubtle));
+    return Container(height: 1.h, color: context.getColor(ThemeEnum.hairline));
   }
 }
