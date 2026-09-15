@@ -25,7 +25,7 @@ class AuthScaffold extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: context.getColor(ThemeEnum.primary),
+      backgroundColor: context.getColor(ThemeEnum.ground),
       body: SafeArea(
         child: SingleChildScrollView(
           physics: const BouncingScrollPhysics(),
