@@ -5,22 +5,19 @@ import 'package:algorithm_visualizer/core/widgets/custom_widgets/card_container.
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-/// Solved / Accuracy / Attempts, Profile stats, celebration stats — an
-/// outlined tile with a label under a value. [emphasized] swaps the hairline
-/// for `border strong` and the value ink for `textBright` — the one
-/// highlighted tile in a row (e.g. celebration's `+40 XP`).
 class StatTile extends StatelessWidget {
   final String label;
   final String value;
   final bool emphasized;
   final IconData? icon;
   final String? sub;
-
+  final bool centerTheContent;
   const StatTile({
     super.key,
     required this.label,
     required this.value,
     this.emphasized = false,
+    this.centerTheContent = false,
     this.icon,
     this.sub,
   });
@@ -33,25 +30,25 @@ class StatTile extends StatelessWidget {
       radius: CdRadius.md,
       padding: REdgeInsets.symmetric(horizontal: 12, vertical: 12),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: centerTheContent ? CrossAxisAlignment.center : CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: [
           if (hasHeaderRow) ...[
             Row(
               children: [
-                if (icon != null) Icon(icon, size: 18.r, color: context.getColor(ThemeEnum.textBody)),
+                if (icon != null) Icon(icon, size: 18.r, color: context.getColor(ThemeEnum.inkBody)),
                 const Spacer(),
                 if (sub != null && sub!.isNotEmpty)
                   Flexible(
-                    child: RegularText(sub!, fontSize: 10, color: ThemeEnum.textSecond, maxLines: 1),
+                    child: RegularText(sub!, fontSize: 10, color: ThemeEnum.inkBody, maxLines: 1),
                   ),
               ],
             ),
             const RSizedBox(height: 6),
           ],
-          SemiBoldText(value, fontSize: 19, color: emphasized ? ThemeEnum.textBright : ThemeEnum.textPrimary),
+          SemiBoldText(value, fontSize: 19, color: emphasized ? ThemeEnum.inkPrimary : ThemeEnum.inkTitle),
           const RSizedBox(height: 4),
-          RegularText(label, fontSize: 10, color: ThemeEnum.textSecond),
+          RegularText(label, fontSize: 10, color: ThemeEnum.inkBody),
         ],
       ),
     );
@@ -64,7 +61,7 @@ class StatTile extends StatelessWidget {
               child: DecoratedBox(
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(CdRadius.md.r),
-                  border: Border.all(color: context.getColor(ThemeEnum.borderStrong)),
+                  border: Border.all(color: context.getColor(ThemeEnum.track)),
                 ),
               ),
             ),
