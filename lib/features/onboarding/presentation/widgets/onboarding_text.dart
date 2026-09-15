@@ -2,16 +2,14 @@ import 'package:algorithm_visualizer/core/resources/font_manager.dart';
 import 'package:algorithm_visualizer/core/resources/styles_manager.dart';
 import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
 import 'package:algorithm_visualizer/core/widgets/adaptive/text/adaptive_text.dart';
-import 'package:algorithm_visualizer/features/onboarding/presentation/widgets/onboarding_tokens.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-/// JetBrains Mono line — legends, captions and the Skip label all use it.
 class MonoText extends StatelessWidget {
   const MonoText(
     this.text, {
-    this.color = OnboardingTokens.textBody,
-    this.fontSize = OnboardingTokens.monoSize,
+    this.color = ThemeEnum.inkBody,
+    this.fontSize = 12,
     this.letterSpacing = 0,
     this.textAlign,
     super.key,
@@ -37,7 +35,6 @@ class MonoText extends StatelessWidget {
   }
 }
 
-/// Bold mono — only the `12 / 12 passed` verdict uses this.
 class MonoBoldText extends StatelessWidget {
   const MonoBoldText(this.text, {required this.color, this.fontSize = 13, super.key});
 
@@ -78,18 +75,18 @@ class OnboardingCopy extends StatelessWidget {
           headline,
           maxLines: 3,
           style: GetSemiBoldStyle(
-            fontSize: OnboardingTokens.headlineSize,
-            height: OnboardingTokens.headlineHeight,
-            letterSpacing: OnboardingTokens.headlineTracking,
-            color: context.getColor(OnboardingTokens.textHi),
+            fontSize: 28,
+            height: 1.1,
+            letterSpacing: -0.6,
+            color: context.getColor(ThemeEnum.inkTitle),
           ),
         ),
-        SizedBox(height: OnboardingTokens.headlineToBody.h),
+        const RSizedBox(height: 12),
         RegularText(
           body,
-          fontSize: OnboardingTokens.bodySize,
-          height: OnboardingTokens.bodyHeight,
-          color: OnboardingTokens.textBody,
+          fontSize: 14,
+          height: 1.5,
+          color: ThemeEnum.inkBody,
           maxLines: 3,
         ),
       ],
