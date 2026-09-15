@@ -78,10 +78,6 @@ app.*.map.json
 /ios/fastlane/*.mobileprovision
 /ios/**/*.p12
 
-# --- Flavor icon intermediates (regenerated from base/app_icon.png) ---
-# Final icons in android/app/src/*/res and AppIcon-*.appiconset ARE committed.
-/tool/flavor_icons/generated/
-
 # --- dart-define ---
 # THIS REPO IS PUBLIC. dart_define/*.json hold only non-secret selectors
 # (flavor, app name, public base URL) and ARE committed. Anything that must
@@ -100,3 +96,9 @@ app.*.map.json
 /specs/
 /docs/
 /.specify/
+/assets/onboarding/
+/assets/screenshots/
+/assets/logo/png/
+/assets/logo/svg/
+/assets/logo/README.md
+/tool/flavor_icons/custom/README.md

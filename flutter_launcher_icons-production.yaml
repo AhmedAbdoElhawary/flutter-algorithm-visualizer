@@ -1,17 +1,29 @@
-# Regenerates the clean production launcher icon (NO ribbon) for every density.
-#   dart run tool/flavor_icons/generate_ribbon_icons.dart
+# Regenerates the production launcher icon for every density, every Android
+# version (legacy, adaptive, Android 13+ monochrome/themed) and every iOS
+# appearance (light, dark, tinted), straight from the brand art in
+# assets/logo/png/ (see assets/logo/README.md).
 #   dart run flutter_launcher_icons -f flutter_launcher_icons-production.yaml
 #
-# Writes Android output to android/app/src/production/res/** and the default
-# `AppIcon` set in the iOS asset catalog. Run this whenever the base artwork in
-# tool/flavor_icons/base/app_icon.png changes.
+# Writes Android output to android/app/src/production/res/** and the
+# `AppIcon-production` set in the iOS asset catalog. Run this whenever the
+# brand art in assets/logo/png/ changes.
 flutter_launcher_icons:
-  image_path: "tool/flavor_icons/generated/production.png"
+  image_path: "assets/logo/png/app-icon-1024.png"
+  image_path_ios_dark_transparent: "assets/logo/png/mark-white-1024.png"
+  image_path_ios_tinted_grayscale: "assets/logo/png/mark-white-1024.png"
+  desaturate_tinted_to_grayscale_ios: true
 
   android: true
   min_sdk_android: 21
-  adaptive_icon_background: "#5A5A5A"
-  adaptive_icon_foreground: "tool/flavor_icons/generated/production.png"
+  # Ground colour from assets/logo/README.md. Flutter writes this as a
+  # @color/ic_launcher_background resource, so Android draws it natively
+  # instead of us shipping a flat background PNG.
+  adaptive_icon_background: "#0B0B0D"
+  adaptive_icon_foreground: "assets/logo/png/android-adaptive-foreground-432.png"
+  # Android 13+ "themed icon" layer: the OS tints this to match the user's
+  # wallpaper/theme. Only the alpha channel is used, so the mark's own
+  # colours don't matter here.
+  adaptive_icon_monochrome: "assets/logo/png/android-adaptive-foreground-432.png"
 
   ios: true
   remove_alpha_ios: true

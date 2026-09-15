@@ -1,0 +1,11 @@
+blank_issues_enabled: false
+contact_links:
+  - name: 💬 Questions & ideas
+    url: https://github.com/AhmedAbdoElhawary/flutter-algorithm-visualizer/discussions
+    about: Ask how something works, or float an idea before it becomes an issue.
+  - name: 🔒 Report a security vulnerability
+    url: https://github.com/AhmedAbdoElhawary/flutter-algorithm-visualizer/security/advisories/new
+    about: Please report security issues privately, never as a public issue.
+  - name: 🛠️ Trouble building the project?
+    url: https://github.com/AhmedAbdoElhawary/flutter-algorithm-visualizer#getting-started
+    about: The setup guide covers the git-ignored config files a fresh clone needs.
