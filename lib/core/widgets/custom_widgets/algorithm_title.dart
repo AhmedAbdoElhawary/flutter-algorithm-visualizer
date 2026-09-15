@@ -29,7 +29,7 @@ class AlgorithmTitle extends StatelessWidget {
           RegularText(
             description,
             fontSize: 11,
-            color: ThemeEnum.hover,
+            color: ThemeEnum.inkMuted,
           )
         ],
       ),

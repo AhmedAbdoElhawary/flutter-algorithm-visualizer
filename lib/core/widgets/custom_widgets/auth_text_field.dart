@@ -9,9 +9,9 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 /// CoreDive auth field (screens 11 / 12 / 13).
 ///
-/// Label (500 11) 7px above; box bg [ThemeEnum.card], 1px [ThemeEnum.border],
+/// Label (500 11) 7px above; box bg [ThemeEnum.surface], 1px [ThemeEnum.hairline],
 /// radius md, 13/14 padding, 15px leading icon. Focus → teal border + 3px ring,
-/// icon turns [ThemeEnum.primaryHover]. Error → clay border + 3px ring, message
+/// icon turns [ThemeEnum.inkTitle]. Error → clay border + 3px ring, message
 /// below. Obscured passwords render in mono with wide tracking.
 class AuthTextField extends StatefulWidget {
   final String label;
@@ -81,16 +81,16 @@ class _AuthTextFieldState extends State<AuthTextField> {
     final obscured = widget.isPassword && !widget.isPasswordVisible;
 
     final borderColor = hasError
-        ? ThemeEnum.difficultyHard
+        ? ThemeEnum.dataHard
         : _focused
-            ? ThemeEnum.accent
-            : ThemeEnum.border;
+            ? ThemeEnum.inkPrimary
+            : ThemeEnum.hairline;
 
     final iconColor = hasError
-        ? ThemeEnum.difficultyHard
+        ? ThemeEnum.dataHard
         : _focused
-            ? ThemeEnum.primaryHover
-            : ThemeEnum.textDisabled;
+            ? ThemeEnum.inkTitle
+            : ThemeEnum.inkMuted;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -98,14 +98,14 @@ class _AuthTextFieldState extends State<AuthTextField> {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            MediumText(widget.label, color: ThemeEnum.text2DarkColor, fontSize: 11, maxLines: 1),
+            MediumText(widget.label, color: ThemeEnum.inkBody, fontSize: 11, maxLines: 1),
             if (widget.trailingLabelWidget != null) widget.trailingLabelWidget!,
           ],
         ),
         SizedBox(height: 7.h),
         DecoratedBox(
           decoration: BoxDecoration(
-            color: context.getColor(ThemeEnum.card),
+            color: context.getColor(ThemeEnum.surface),
             borderRadius: BorderRadius.circular(CdRadius.sm.r),
             border: Border.all(color: context.getColor(borderColor)),
           ),
@@ -127,9 +127,9 @@ class _AuthTextFieldState extends State<AuthTextField> {
                     obscureText: obscured,
                     onChanged: widget.onChanged,
                     onSubmitted: widget.onSubmitted,
-                    cursorColor: context.getColor(ThemeEnum.accent),
+                    cursorColor: context.getColor(ThemeEnum.inkPrimary),
                     style: const GetMediumStyle().copyWith(
-                      color: context.getColor(ThemeEnum.textBright),
+                      color: context.getColor(ThemeEnum.inkPrimary),
                       fontSize: (obscured ? 13 : 12.5).sp,
                       letterSpacing: obscured ? 1.8.sp : 0.2,
                     ),
@@ -137,7 +137,7 @@ class _AuthTextFieldState extends State<AuthTextField> {
                       isDense: true,
                       hintText: widget.hintText,
                       hintStyle: const GetMediumStyle().copyWith(
-                        color: context.getColor(ThemeEnum.textDisabled),
+                        color: context.getColor(ThemeEnum.inkMuted),
                         fontSize: 12.5.sp,
                       ),
                       border: InputBorder.none,
@@ -151,7 +151,7 @@ class _AuthTextFieldState extends State<AuthTextField> {
                     child: CustomIcon(
                       widget.isPasswordVisible ? Icons.visibility_off_outlined : Icons.visibility_outlined,
                       size: 15,
-                      color: ThemeEnum.textDisabled,
+                      color: ThemeEnum.inkMuted,
                     ),
                   ),
               ],
@@ -161,13 +161,13 @@ class _AuthTextFieldState extends State<AuthTextField> {
         if (hasError)
           TopPadding(
             padding: 6,
-            child: RegularText(widget.errorText!, color: ThemeEnum.difficultyHard, fontSize: 10.5),
+            child: RegularText(widget.errorText!, color: ThemeEnum.dataHard, fontSize: 10.5),
           ),
 
         // else if (widget.helperText != null && widget.helperText!.isNotEmpty)
         //   TopPadding(
         //     padding: 8,
-        //     child: RegularText(widget.helperText!, color: ThemeEnum.textDisabled, fontSize: 10.5),
+        //     child: RegularText(widget.helperText!, color: ThemeEnum.inkMuted, fontSize: 10.5),
         //   ),
       ],
     );

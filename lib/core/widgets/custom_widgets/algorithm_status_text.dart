@@ -27,7 +27,7 @@ class AlgorithmStatusText extends ConsumerWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             RegularText(statusText,
-                color: ThemeEnum.white2DarkColor, fontFamily: FontConstants.fontJetBrainsMono, fontSize: 12),
+                color: ThemeEnum.inkBody, fontFamily: FontConstants.fontJetBrainsMono, fontSize: 12),
             const SizedBox(height: 8),
             Row(
               children: [
@@ -44,7 +44,7 @@ class AlgorithmStatusText extends ConsumerWidget {
                     key: ValueKey(progressLabel),
                     progressLabel,
                     fontSize: 12,
-                    color: ThemeEnum.hover,
+                    color: ThemeEnum.inkMuted,
                   ),
                 ),
               ],
