@@ -1,6 +1,5 @@
 import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
 import 'package:algorithm_visualizer/features/onboarding/presentation/widgets/onboarding_text.dart';
-import 'package:algorithm_visualizer/features/onboarding/presentation/widgets/onboarding_tokens.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -18,13 +17,13 @@ class OnboardingCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return DecoratedBox(
       decoration: BoxDecoration(
-        color: context.getColor(OnboardingTokens.surface),
-        border: Border.all(color: context.getColor(OnboardingTokens.hairline)),
-        borderRadius: BorderRadius.circular(OnboardingTokens.cardRadius.r),
+        color: context.getColor(ThemeEnum.raised),
+        border: Border.all(color: context.getColor(ThemeEnum.hairline)),
+        borderRadius: BorderRadius.circular(14.r),
       ),
       child: clip
           ? ClipRRect(
-              borderRadius: BorderRadius.circular(OnboardingTokens.cardRadius.r),
+              borderRadius: BorderRadius.circular(14.r),
               child: child,
             )
           : child,
@@ -88,7 +87,7 @@ class OnboardingCaptionBar extends StatelessWidget {
       padding: EdgeInsets.only(top: 4.h),
       decoration: BoxDecoration(
         border: Border(
-          top: BorderSide(color: context.getColor(OnboardingTokens.hairline)),
+          top: BorderSide(color: context.getColor(ThemeEnum.hairline)),
         ),
       ),
       child: child,
