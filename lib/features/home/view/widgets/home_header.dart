@@ -36,13 +36,13 @@ class HomeHeader extends ConsumerWidget {
                 MediumText(
                   '$greeting,',
                   fontSize: 13,
-                  color: ThemeEnum.textSecond,
+                  color: ThemeEnum.inkBody,
                 ),
                 SizedBox(height: 2.h),
                 BoldText(
                   '$name 👋',
                   fontSize: 22,
-                  color: ThemeEnum.textPrimary,
+                  color: ThemeEnum.inkTitle,
                   letterSpacing: -0.5,
                 ),
               ],
@@ -63,7 +63,7 @@ class HomeHeader extends ConsumerWidget {
                       icon: Icons.login_rounded,
                       size: 36,
                       iconSize: 18,
-                      iconColor: ThemeEnum.accent,
+                      iconColor: ThemeEnum.inkPrimary,
                     )
                   ],
                 ),
