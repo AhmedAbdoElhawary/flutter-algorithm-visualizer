@@ -174,6 +174,23 @@ class IrSpread extends IrExpr {
   final IrExpr value;
 }
 
+/// `receiver..method(args)` / `receiver..name = value`, possibly chained.
+/// Evaluates [receiver] once, performs each operation against it in order
+/// (discarding each operation's own result), and yields the receiver.
+class IrCascade extends IrExpr {
+  const IrCascade({required super.line, super.synthetic, required this.receiver, required this.operations});
+  final IrExpr receiver;
+  final List<IrCascadeOp> operations;
+}
+
+class IrCascadeOp {
+  const IrCascadeOp.call(this.name, this.callArgs) : setValue = null;
+  const IrCascadeOp.set(this.name, IrExpr value) : callArgs = null, setValue = value;
+  final String name;
+  final List<IrExpr>? callArgs;
+  final IrExpr? setValue;
+}
+
 /// Function expression / arrow / `lambda` (FR-002a).
 class IrLambda extends IrExpr {
   const IrLambda({required super.line, super.synthetic, this.name, required this.params, required this.body, this.isExpressionBody = false});
@@ -238,6 +255,14 @@ class IrExprStmt extends IrStmt {
 
 class IrBlock extends IrStmt {
   const IrBlock({required super.line, super.synthetic, required this.statements});
+  final List<IrStmt> statements;
+}
+
+/// A flat sequence of statements that, unlike [IrBlock], introduces **no**
+/// new scope — for `var a = 1, b = 2;`, where every declarator must land in
+/// the surrounding scope, not a nested one.
+class IrStmtGroup extends IrStmt {
+  const IrStmtGroup({required super.line, super.synthetic, required this.statements});
   final List<IrStmt> statements;
 }
 

@@ -76,6 +76,7 @@ Map<String, Value> buildPreludeGlobals() {
     'List': NamespaceValue('List', <String, Value>{
       'generate': const NativeFunctionValue('List.generate', 2, _listGenerate),
       'filled': const NativeFunctionValue('List.filled', 2, _listFilled),
+      'from': const NativeFunctionValue('List.from', 1, _listFrom),
     }),
   };
 }
@@ -122,6 +123,14 @@ Value _listGenerate(List<Value> args, InvokeCallback invoke) {
   final count = (args[0] as IntValue).value;
   final generator = args[1] as FunctionValue;
   return ListValue(List<Value>.generate(count, (i) => invoke(generator, <Value>[IntValue(i)])));
+}
+
+Value _listFrom(List<Value> args, InvokeCallback invoke) {
+  final source = args[0];
+  if (source is ListValue) return ListValue(List<Value>.of(source.items));
+  if (source is TupleValue) return ListValue(List<Value>.of(source.items));
+  if (source is SetValue) return ListValue(List<Value>.of(source.items));
+  throw const VmRuntimeError('typeMismatch', <String, Object?>{'expected': 'an iterable'});
 }
 
 Value _listFilled(List<Value> args, InvokeCallback invoke) {
