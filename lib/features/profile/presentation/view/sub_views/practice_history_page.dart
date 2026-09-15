@@ -17,7 +17,7 @@ class RecentSubmissionsPage extends ConsumerWidget {
     final all = ref.watch(profileStatisticsProvider.select((value) => value.practiceHistory));
 
     return Scaffold(
-      backgroundColor: context.getColor(ThemeEnum.primary),
+      backgroundColor: context.getColor(ThemeEnum.ground),
       body: SafeArea(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -27,14 +27,14 @@ class RecentSubmissionsPage extends ConsumerWidget {
               child: const Row(
                 children: [
                   CustomBackButton(),
-                  BoldText(StringsManager.practiceHistory, color: ThemeEnum.textPrimary, fontSize: 17),
+                  BoldText(StringsManager.practiceHistory, color: ThemeEnum.inkTitle, fontSize: 17),
                 ],
               ),
             ),
             Expanded(
               child: all.isEmpty
                   ? const Center(
-                      child: MediumText(StringsManager.noProblemsFound, color: ThemeEnum.textSecond),
+                      child: MediumText(StringsManager.noProblemsFound, color: ThemeEnum.inkBody),
                     )
                   : ListView.separated(
                       padding: REdgeInsets.fromLTRB(16, 0, 16, 16),
