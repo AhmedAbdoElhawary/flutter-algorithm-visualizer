@@ -37,7 +37,7 @@ class ProfilePracticeHistory extends ConsumerWidget {
         child: Column(
           children: [
             const _HeaderOfCard(),
-            Container(height: 1, color: context.getColor(ThemeEnum.border)),
+            Container(height: 1, color: context.getColor(ThemeEnum.hairline)),
             ...preview
                 .map((entry) => HistoryRow(entry: entry, addAttemptsCharts: false, addCardDecoration: false)),
           ],
@@ -61,8 +61,8 @@ class _HeaderOfCard extends StatelessWidget {
             onTap: () => context.pushTo(Routes.recentSubmissions),
             child: const Row(
               children: [
-                SemiBoldText(StringsManager.viewAll, color: ThemeEnum.accent, fontSize: 12),
-                CustomIcon(Icons.chevron_right_rounded, size: 14, color: ThemeEnum.accent),
+                SemiBoldText(StringsManager.viewAll, color: ThemeEnum.inkPrimary, fontSize: 12),
+                CustomIcon(Icons.chevron_right_rounded, size: 14, color: ThemeEnum.inkPrimary),
               ],
             ),
           ),
