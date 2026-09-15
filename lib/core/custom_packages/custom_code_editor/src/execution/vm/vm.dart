@@ -687,6 +687,7 @@ class Vm {
     if (i < 0 && dialect.negativeIndexing) i += length;
     if (i < 0 || i >= length) {
       if (readOnly && dialect.outOfRangeIndexIsUndefined) return null;
+
       throw VmRuntimeError('indexOutOfRange', <String, Object?>{'index': index.value, 'length': length});
     }
     return i;

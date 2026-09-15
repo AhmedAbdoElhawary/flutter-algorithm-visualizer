@@ -158,6 +158,7 @@ class ProblemRunner {
         final vm =
             Vm(dialect: frontend.dialect, budget: const ExecutionBudget(instructionsPerBudgetCheck: 2000));
         frontend.globals.forEach(vm.defineGlobal);
+
         run = vm.run(script, timeout: const Duration(seconds: 2));
         failure = run.failure;
         answer = run.returned;
