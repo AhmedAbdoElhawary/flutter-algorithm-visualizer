@@ -34,14 +34,14 @@ class AlgoTab extends ConsumerWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             if (icon != null) ...[
-              CustomIcon(icon!, color: isSelected ? ThemeEnum.accent : ThemeEnum.hover, size: 20),
+              CustomIcon(icon!, color: isSelected ? ThemeEnum.inkPrimary : ThemeEnum.track, size: 20),
               const RSizedBox(width: 5)
             ],
             BoldText(
               label,
               textAlign: TextAlign.center,
               fontFamily: FontConstants.fontJetBrainsMono,
-              color: isSelected ? ThemeEnum.accent : ThemeEnum.hover,
+              color: isSelected ? ThemeEnum.inkPrimary : ThemeEnum.track,
               fontSize: 13,
             ),
           ],
