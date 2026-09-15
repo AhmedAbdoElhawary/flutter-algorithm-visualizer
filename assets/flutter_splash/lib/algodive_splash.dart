@@ -1,4 +1,5 @@
 import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
 
 /// AlgoDive splash. No packages.
@@ -74,7 +75,7 @@ class _AlgoDiveSplashState extends State<AlgoDiveSplash> with SingleTickerProvid
                   child: CustomPaint(
                     painter: _BarsPainter(
                       progress: bars,
-                      color: ink.withOpacity(barOpacity),
+                      color: ink.withValues(alpha: barOpacity),
                       heights: _heights,
                     ),
                   ),
@@ -163,10 +164,10 @@ class _MarkPainter extends CustomPainter {
       canvas.translate(-c.dx, -c.dy);
       canvas.drawRRect(
         RRect.fromRectAndRadius(
-          Rect.fromLTWH(228, 228, 56, 56),
+          const Rect.fromLTWH(228, 228, 56, 56),
           const Radius.circular(8),
         ),
-        Paint()..color = ink.withOpacity(cell),
+        Paint()..color = ink.withValues(alpha: cell),
       );
       canvas.restore();
     }
@@ -184,7 +185,7 @@ class _MarkPainter extends CustomPainter {
           ..style = PaintingStyle.stroke
           ..strokeWidth = width
           ..strokeJoin = StrokeJoin.round
-          ..color = ink.withOpacity(alpha * t),
+          ..color = ink.withValues(alpha: alpha * t),
       );
       canvas.restore();
     }
@@ -195,10 +196,10 @@ class _MarkPainter extends CustomPainter {
     if (route > 0) {
       canvas.drawRRect(
         RRect.fromRectAndRadius(
-          Rect.fromLTWH(398, 228, 56, 56),
+          const Rect.fromLTWH(398, 228, 56, 56),
           const Radius.circular(8),
         ),
-        Paint()..color = _green.withOpacity(route),
+        Paint()..color = _green.withValues(alpha: route),
       );
     }
     canvas.restore();
