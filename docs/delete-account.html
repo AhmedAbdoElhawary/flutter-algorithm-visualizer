@@ -1,0 +1,98 @@
+<!--
+  ────────────────────────────────────────────────────────────────────────────
+  LEGAL DOCUMENT VERSION: 1.0 (September 2026)
+
+  This version is deliberately NOT the app version. The policy changes on its
+  own clock, and the app ships constantly without touching it.
+
+  When you edit anything substantive on this page, in the SAME commit:
+    1. bump the version + date in the <p class="meta"> line below,
+    2. bump the sibling pages (privacy-policy.html / delete-account.html /
+       terms.html) so the set never disagrees,
+    3. bump kLegalVersion and kLegalUpdated in lib/core/helpers/constants.dart —
+       the app prints that version in Settings -> Legal, so a drift means the
+       app is telling users something untrue.
+  ────────────────────────────────────────────────────────────────────────────
+-->
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Delete Your Account — AlgoDive</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="wrap">
+
+<header class="brand">
+  <div class="mark">A</div>
+  <b>AlgoDive</b>
+</header>
+
+<h1>Delete your AlgoDive account</h1>
+<p class="meta">Version 1.0 · Last updated September 2026 · Applies to the AlgoDive mobile app (<code>com.elhawary.algodive</code>)</p>
+
+<p>You can delete your AlgoDive account and everything stored with it at any
+time. There are two ways to do it.</p>
+
+<h2>Option 1 — From inside the app (fastest)</h2>
+<ol class="steps">
+  <li>Open AlgoDive and make sure you are signed in.</li>
+  <li>Go to the <b>Profile</b> tab.</li>
+  <li>Tap the <b>settings icon</b> in the top-right corner.</li>
+  <li>Tap <b>Delete account</b>.</li>
+  <li>Enter your password to confirm it is really you, then confirm the deletion.</li>
+</ol>
+<p>Deletion happens immediately. You will be signed out and returned to the
+login screen.</p>
+
+<h2>Option 2 — By email</h2>
+<p>If you cannot access the app — for example you lost your device — send an
+email from <b>the address your account is registered with</b> to:</p>
+<div class="card">
+  <h3><a href="mailto:elhawarydev@gmail.com?subject=AlgoDive%20account%20deletion%20request">elhawarydev@gmail.com</a></h3>
+  <p style="margin-bottom:0">Subject: <code>AlgoDive account deletion request</code></p>
+</div>
+<p>The request must come from the registered email address so we can verify
+ownership. We will delete the account and confirm by reply <b>within 30 days</b>,
+and in practice much sooner.</p>
+
+<h2>What gets deleted</h2>
+<table>
+  <tr><th>Data</th><th>What happens</th></tr>
+  <tr><td>Your email address and display name</td><td>Permanently deleted from Firebase Authentication</td></tr>
+  <tr><td>Your password</td><td>Permanently deleted with the account</td></tr>
+  <tr><td>Solved / attempted / bookmarked problems</td><td>Permanently deleted from Cloud Firestore</td></tr>
+  <tr><td>Your submitted code and practice history</td><td>Permanently deleted from Cloud Firestore</td></tr>
+  <tr><td>Local data on your device</td><td>Cleared as part of the same action</td></tr>
+</table>
+
+<h3>What is not deleted</h3>
+<p>Anonymous, aggregated analytics events and crash reports are not tied to your
+account and cannot be traced back to you individually, so they are not removed
+by an account deletion. Crash reports are deleted automatically within 90 days.</p>
+
+<div class="card warn">
+  <h3>This cannot be undone</h3>
+  <p style="margin-bottom:0">Deleting your account is permanent. Your streak,
+  statistics and solved problems are gone and cannot be restored. If you only
+  want to stop syncing, you can log out instead and keep using the app as a
+  guest.</p>
+</div>
+
+<h2>Retention after deletion</h2>
+<p>Once the deletion completes, no personal data is retained. Routine encrypted
+backups held by our infrastructure providers may keep residual copies for a
+short period before they expire on their normal rotation schedule.</p>
+
+<footer>
+  <a href="index.html">AlgoDive</a> ·
+  <a href="terms.html">Terms of service</a> ·
+  <a href="privacy-policy.html">Privacy policy</a> ·
+  <a href="https://github.com/AhmedAbdoElhawary/flutter-algorithm-visualizer" target="_blank" rel="noopener">Source code</a>
+</footer>
+
+</div>
+</body>
+</html>
