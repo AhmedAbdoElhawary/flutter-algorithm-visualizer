@@ -18,7 +18,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:riverpod/misc.dart' show Override;
 
 /// In-memory [ProblemRepository] so `updateProblemSubmission` (called from
@@ -153,8 +152,6 @@ Future<void> pumpProblemPage(
     ],
   );
 
-  GoogleFonts.config.allowRuntimeFetching = false;
-
   await tester.binding.setSurfaceSize(surfaceSize);
   tester.view.physicalSize = surfaceSize * problemPageDevicePixelRatio;
   tester.view.devicePixelRatio = problemPageDevicePixelRatio;
@@ -224,8 +221,6 @@ Future<GoRouter> pumpProblemPageChain(
     ],
   );
 
-  GoogleFonts.config.allowRuntimeFetching = false;
-
   await tester.binding.setSurfaceSize(surfaceSize);
   tester.view.physicalSize = surfaceSize * problemPageDevicePixelRatio;
   tester.view.devicePixelRatio = problemPageDevicePixelRatio;
@@ -294,8 +289,6 @@ Future<void> pumpEditorPage(
       ),
     ],
   );
-
-  GoogleFonts.config.allowRuntimeFetching = false;
 
   await tester.binding.setSurfaceSize(surfaceSize);
   tester.view.physicalSize = surfaceSize * problemPageDevicePixelRatio;
@@ -389,8 +382,6 @@ Future<GoRouter> pumpProblemToEditorChain(
       ),
     ],
   );
-
-  GoogleFonts.config.allowRuntimeFetching = false;
 
   await tester.binding.setSurfaceSize(surfaceSize);
   tester.view.physicalSize = surfaceSize * problemPageDevicePixelRatio;

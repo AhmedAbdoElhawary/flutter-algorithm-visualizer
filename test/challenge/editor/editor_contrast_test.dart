@@ -3,7 +3,6 @@ import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 /// WCAG contrast ratio between two colours — `(L1 + 0.05) / (L2 + 0.05)`,
 /// `L1` the lighter relative luminance (SC-007, research R10).
@@ -67,8 +66,6 @@ const _pairs = [
 ];
 
 void main() {
-  GoogleFonts.config.allowRuntimeFetching = false;
-
   for (final brightness in [Brightness.dark, Brightness.light]) {
     testWidgets('every role pair meets its WCAG threshold in $brightness', (tester) async {
       final resolved = <ThemeEnum, Color>{};

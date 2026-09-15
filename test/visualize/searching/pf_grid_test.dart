@@ -8,7 +8,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 const _surface = Size(430, 932);
 
@@ -61,8 +60,6 @@ PFGridPainter _painter(WidgetTester tester) =>
 Offset _gridOrigin(WidgetTester tester) => tester.getTopLeft(_gridCanvas);
 
 void main() {
-  GoogleFonts.config.allowRuntimeFetching = false;
-
   group('geometry G1–G3 (FR-034, FR-035, FR-036, SC-011)', () {
     testWidgets('the rendered box is 0.8 of its width, with square cells', (tester) async {
       await _pump(tester);
