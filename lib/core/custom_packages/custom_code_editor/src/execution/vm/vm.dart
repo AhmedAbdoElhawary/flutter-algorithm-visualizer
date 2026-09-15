@@ -242,10 +242,13 @@ class Vm {
         final name = (frame.proto.chunk.constants[_u16(frame)] as StrValue).value;
         final value = frame.stack.removeLast();
         final receiver = frame.stack.removeLast();
-        if (receiver is! InstanceValue) {
+        if (receiver is InstanceValue) {
+          receiver.fields[name] = value;
+        } else if (receiver is MapValue && dialect.propertyAccessReadsMapKeys) {
+          receiver.entries[StrValue(name)] = value;
+        } else {
           throw const VmRuntimeError('typeMismatch', <String, Object?>{'expected': 'an object'});
         }
-        receiver.fields[name] = value;
         frame.stack.add(value);
       case OpCode.getIndex:
         final index = frame.stack.removeLast();
@@ -512,12 +515,12 @@ class Vm {
 
   Value _getIndex(Value receiver, Value index) {
     if (receiver is ListValue) {
-      final i = _resolveIndex(index, receiver.items.length);
-      return receiver.items[i];
+      final i = _resolveIndex(index, receiver.items.length, readOnly: true);
+      return i == null ? UndefinedValue.instance : receiver.items[i];
     }
     if (receiver is TupleValue) {
-      final i = _resolveIndex(index, receiver.items.length);
-      return receiver.items[i];
+      final i = _resolveIndex(index, receiver.items.length, readOnly: true);
+      return i == null ? UndefinedValue.instance : receiver.items[i];
     }
     if (receiver is SetValue) {
       // Real Dart iterates a `Set` via its `Iterator`, not `[]` (which
@@ -526,11 +529,12 @@ class Vm {
       // `_compileForIn`),
       // so `[]` needs to work for a `LinkedHashSet` too. Insertion order
       // makes `elementAt` well-defined.
-      final i = _resolveIndex(index, receiver.items.length);
+      final i = _requireIndex(index, receiver.items.length);
       return receiver.items.elementAt(i);
     }
     if (receiver is StrValue) {
-      final i = _resolveIndex(index, receiver.value.length);
+      final i = _resolveIndex(index, receiver.value.length, readOnly: true);
+      if (i == null) return UndefinedValue.instance;
       return dialect.stringIndexYields == StringIndexResult.codeUnit
           ? IntValue(receiver.value.codeUnitAt(i))
           : StrValue(receiver.value[i]);
@@ -546,7 +550,17 @@ class Vm {
 
   void _setIndex(Value receiver, Value index, Value value) {
     if (receiver is ListValue) {
-      final i = _resolveIndex(index, receiver.items.length);
+      // Writing past the end grows the array in a language where reading
+      // past it is not an error either — `xs[xs.length] = v` is a normal way
+      // to append in JavaScript.
+      if (dialect.outOfRangeIndexIsUndefined && index is IntValue && index.value >= receiver.items.length) {
+        while (receiver.items.length < index.value) {
+          receiver.items.add(UndefinedValue.instance);
+        }
+        receiver.items.add(value);
+        return;
+      }
+      final i = _requireIndex(index, receiver.items.length);
       receiver.items[i] = value;
       return;
     }
@@ -561,7 +575,7 @@ class Vm {
   /// *keys* — `for k in d` walks keys, even though `d[k]` looks values up.
   Value _iterElement(Value over, Value position) {
     if (over is MapValue) {
-      final i = _resolveIndex(position, over.entries.length);
+      final i = _requireIndex(position, over.entries.length);
       return over.entries.keys.elementAt(i);
     }
     return _getIndex(over, position);
@@ -629,17 +643,28 @@ class Vm {
     throw const VmRuntimeError('typeMismatch', <String, Object?>{'expected': 'an integer slice bound'});
   }
 
-  int _resolveIndex(Value index, int length) {
+  /// Resolves an index, or returns null when it is out of range and the
+  /// language says that is not an error — JavaScript's `[1, 2][9]` is
+  /// `undefined`, which is why a JavaScript off-by-one surfaces as a strange
+  /// answer rather than as a crash. [readOnly] is false for writes, which
+  /// still bounds-check everywhere.
+  int? _resolveIndex(Value index, int length, {bool readOnly = false}) {
     if (index is! IntValue) {
+      if (readOnly && dialect.outOfRangeIndexIsUndefined) return null;
       throw const VmRuntimeError('typeMismatch', <String, Object?>{'expected': 'an integer index'});
     }
     var i = index.value;
     if (i < 0 && dialect.negativeIndexing) i += length;
     if (i < 0 || i >= length) {
+      if (readOnly && dialect.outOfRangeIndexIsUndefined) return null;
       throw VmRuntimeError('indexOutOfRange', <String, Object?>{'index': index.value, 'length': length});
     }
     return i;
   }
+
+  /// The bounds-checking form, for the callers that must always fail on a bad
+  /// index (writes, and every indexable that is not a list).
+  int _requireIndex(Value index, int length) => _resolveIndex(index, length)!;
 
   Value _getProperty(Value receiver, String name) {
     if (receiver is InstanceValue) {
@@ -665,7 +690,18 @@ class Vm {
     if (receiver is StrValue) {
       return strings.getStringProperty(receiver.value, name, dialect) ?? IntrinsicMethod(receiver, name);
     }
-    if (receiver is MapValue) return maps.getMapProperty(receiver, name) ?? IntrinsicMethod(receiver, name);
+    if (receiver is MapValue) {
+      // In a language whose objects are maps, `o.b` and `o["b"]` are the same
+      // lookup — but only after the real map members, so `o.length` still
+      // means the size rather than an entry that happens to be called that.
+      final member = maps.getMapProperty(receiver, name);
+      if (member != null) return member;
+      if (dialect.propertyAccessReadsMapKeys) {
+        final entry = receiver.entries[StrValue(name)];
+        if (entry != null) return entry;
+      }
+      return IntrinsicMethod(receiver, name);
+    }
     if (receiver is SetValue) return maps.getSetProperty(receiver, name) ?? IntrinsicMethod(receiver, name);
     if (receiver is IntValue || receiver is NumValue) {
       return numbers.getNumberProperty(receiver, name) ?? IntrinsicMethod(receiver, name);

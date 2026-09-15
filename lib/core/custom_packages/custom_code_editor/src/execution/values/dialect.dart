@@ -40,6 +40,9 @@ class Dialect {
     required this.printsTrueAs,
     required this.printsFalseAs,
     this.printsNullAs = 'null',
+    this.wholeFloatsPrintAsIntegers = false,
+    this.propertyAccessReadsMapKeys = false,
+    this.outOfRangeIndexIsUndefined = false,
     required this.stringIndexYields,
     required this.arbitraryPrecisionInts,
     required this.negativeIndexing,
@@ -56,6 +59,25 @@ class Dialect {
   /// How the absent value prints: `null` in Dart and JavaScript, `None` in
   /// Python. Defaulted, since only Python differs.
   final String printsNullAs;
+
+  /// Whether a float that happens to be whole prints without its fraction.
+  /// JavaScript has one number type, so `4 / 2` is `2`, not `2.0`. Dart and
+  /// Python both keep the distinction visible.
+  final bool wholeFloatsPrintAsIntegers;
+
+  /// Whether `a.b` on a map reads the entry under `"b"`.
+  ///
+  /// True for JavaScript only, where an object literal *is* a map and `.b`
+  /// and `["b"]` are the same lookup. Leaving it false elsewhere keeps
+  /// `someMap.foo` an error in Dart and Python, where it is a genuine
+  /// mistake rather than the ordinary way to read a field.
+  final bool propertyAccessReadsMapKeys;
+
+  /// Whether reading past the end of a list gives `undefined` instead of
+  /// failing. JavaScript alone says yes — `[1, 2][9]` is `undefined`, not an
+  /// error — which is why a JavaScript off-by-one shows up as a strange
+  /// answer rather than as a crash.
+  final bool outOfRangeIndexIsUndefined;
   final StringIndexResult stringIndexYields;
   final bool arbitraryPrecisionInts;
   final bool negativeIndexing;
