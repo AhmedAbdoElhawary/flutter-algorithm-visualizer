@@ -1,8 +1,10 @@
+import 'package:algorithm_visualizer/core/resources/logo_assets.dart';
 import 'package:algorithm_visualizer/core/resources/strings_manager.dart';
 import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
 import 'package:algorithm_visualizer/features/onboarding/presentation/widgets/onboarding_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 /// Brand mark on the leading edge, Skip on the trailing edge. Fixed 44 px tall
 /// and present on every page — Skip must never disappear (spec §1).
@@ -38,8 +40,8 @@ class OnboardingHeader extends StatelessWidget {
   }
 }
 
-/// The AlgoDive mark at header size: a filled cell, two diamond rings and the
-/// green destination cell.
+/// The AlgoDive mark at header size — the two-tone brand SVG (ink + green
+/// destination cell), swapped by theme brightness since it isn't tinted.
 class AlgoDiveMark extends StatelessWidget {
   const AlgoDiveMark({super.key});
 
@@ -48,63 +50,9 @@ class AlgoDiveMark extends StatelessWidget {
     return SizedBox(
       width: 26.r,
       height: 26.r,
-      child: CustomPaint(
-        painter: _MarkPainter(
-          ink: context.getColor(ThemeEnum.inkPrimary),
-          green: context.getColor(ThemeEnum.dataEasy),
-        ),
+      child: SvgPicture.asset(
+        context.isThemeDark ? LogoAssets.markSmallWhite : LogoAssets.markSmallBlack,
       ),
     );
   }
-}
-
-class _MarkPainter extends CustomPainter {
-  const _MarkPainter({required this.ink, required this.green});
-
-  final Color ink;
-  final Color green;
-
-  Path _diamond(Offset c, double r) => Path()
-    ..moveTo(c.dx, c.dy - r)
-    ..lineTo(c.dx + r, c.dy)
-    ..lineTo(c.dx, c.dy + r)
-    ..lineTo(c.dx - r, c.dy)
-    ..close();
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    // Authored on the 512 grid of the brand SVG, then scaled to fit.
-    canvas.scale(size.width / 512);
-    const c = Offset(256, 256);
-
-    canvas.drawRRect(
-      RRect.fromRectAndRadius(const Rect.fromLTWH(228, 228, 56, 56), const Radius.circular(8)),
-      Paint()..color = ink,
-    );
-    canvas.drawPath(
-      _diamond(c, 104),
-      Paint()
-        ..style = PaintingStyle.stroke
-        ..strokeWidth = 30
-        ..strokeJoin = StrokeJoin.round
-        ..color = ink,
-    );
-    canvas.drawPath(
-      _diamond(c, 180),
-      Paint()
-        ..style = PaintingStyle.stroke
-        ..strokeWidth = 22
-        ..strokeJoin = StrokeJoin.round
-        ..color = ink.withValues(alpha: 0.55),
-    );
-    // The destination cell — always green, the same "path found" colour the
-    // visualizer uses.
-    canvas.drawRRect(
-      RRect.fromRectAndRadius(const Rect.fromLTWH(398, 228, 56, 56), const Radius.circular(8)),
-      Paint()..color = green,
-    );
-  }
-
-  @override
-  bool shouldRepaint(_MarkPainter old) => old.ink != ink || old.green != green;
 }
