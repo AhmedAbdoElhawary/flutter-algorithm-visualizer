@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_collection_literals
+
 /// The shared runtime value space every language frontend produces and the
 /// VM consumes. See `specs/007-multi-language-interpreter/data-model.md` §2.
 library;
@@ -188,7 +190,12 @@ class Cell {
 /// The single change that unblocks `.map`/`.where`/`sort(cmp)`/`reduce`:
 /// functions are values. Compares by identity.
 class FunctionValue extends Value {
-  FunctionValue({required this.name, required this.arity, required this.chunk, this.upvalues = const <Cell>[], this.boundThis});
+  FunctionValue(
+      {required this.name,
+      required this.arity,
+      required this.chunk,
+      this.upvalues = const <Cell>[],
+      this.boundThis});
   final String name;
   final int arity;
 
@@ -208,7 +215,8 @@ class FunctionValue extends Value {
   ClassValue? homeClass;
 
   FunctionValue bindTo(InstanceValue instance) =>
-      FunctionValue(name: name, arity: arity, chunk: chunk, upvalues: upvalues, boundThis: instance)..homeClass = homeClass;
+      FunctionValue(name: name, arity: arity, chunk: chunk, upvalues: upvalues, boundThis: instance)
+        ..homeClass = homeClass;
 
   @override
   bool operator ==(Object other) => identical(this, other);
@@ -374,7 +382,8 @@ int compareValues(Value a, Value b, Dialect dialect) {
   if (dialect.defaultSortOrder == SortOrder.lexicographic) {
     return _displayString(a).compareTo(_displayString(b));
   }
-  throw VmRuntimeError('typeMismatch', <String, Object?>{'expected': 'comparable values', 'actual': '${a.runtimeType} and ${b.runtimeType}'});
+  throw VmRuntimeError('typeMismatch',
+      <String, Object?>{'expected': 'comparable values', 'actual': '${a.runtimeType} and ${b.runtimeType}'});
 }
 
 /// Dialect-aware `toString()` used by string interpolation and the
@@ -385,7 +394,9 @@ String _displayString(Value v, [Dialect? dialect]) {
   if (v is StrValue) return v.value;
   if (v is IntValue) return v.value.toString();
   if (v is NumValue) return v.value.toString();
-  if (v is BoolValue) return v.value ? (dialect?.printsTrueAs ?? 'true') : (dialect?.printsFalseAs ?? 'false');
+  if (v is BoolValue) {
+    return v.value ? (dialect?.printsTrueAs ?? 'true') : (dialect?.printsFalseAs ?? 'false');
+  }
   if (v is NullValue) return 'null';
   if (v is UndefinedValue) return 'undefined';
   if (v is ListValue) return '[${v.items.map((e) => _displayString(e, dialect)).join(', ')}]';
