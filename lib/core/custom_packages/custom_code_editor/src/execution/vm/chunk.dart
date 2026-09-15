@@ -110,6 +110,11 @@ abstract final class OpCode {
   /// disagree on a map: `d[k]` looks a key up, while `for k in d` walks the
   /// keys by position.
   static const int iterElement = 54;
+
+  /// Pops a value and pushes whether it is "nothing" — `null`, and in
+  /// JavaScript `undefined` too. Backs `??`, which fires for both, unlike
+  /// `==` which keeps them apart.
+  static const int isNullish = 55;
 }
 
 class UpvalueDescriptor {

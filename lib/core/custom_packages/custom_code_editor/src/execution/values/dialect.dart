@@ -43,6 +43,7 @@ class Dialect {
     this.wholeFloatsPrintAsIntegers = false,
     this.propertyAccessReadsMapKeys = false,
     this.outOfRangeIndexIsUndefined = false,
+    this.sequenceRepetition = false,
     required this.stringIndexYields,
     required this.arbitraryPrecisionInts,
     required this.negativeIndexing,
@@ -78,6 +79,11 @@ class Dialect {
   /// error — which is why a JavaScript off-by-one shows up as a strange
   /// answer rather than as a crash.
   final bool outOfRangeIndexIsUndefined;
+
+  /// Whether `*` repeats a list or a string. Python alone says yes: `[0] * n`
+  /// is how you build a zeroed list and `"-" * 20` how you draw a rule.
+  /// Elsewhere multiplying a sequence is a type error, and should stay one.
+  final bool sequenceRepetition;
   final StringIndexResult stringIndexYields;
   final bool arbitraryPrecisionInts;
   final bool negativeIndexing;

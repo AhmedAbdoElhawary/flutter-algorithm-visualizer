@@ -41,11 +41,23 @@ class ProblemSolutionStatusDTO {
     required this.code,
     required this.isCorrect,
     this.submittedAt,
+    this.language,
   });
 
   final String? code;
   final bool? isCorrect;
   final DateTime? submittedAt;
+
+  /// Which language this solution was written in, as a dataset key
+  /// (`dart`, `python`, `javascript`).
+  ///
+  /// Purely additive: a solution saved before the editor offered a choice has
+  /// no language, and **null reads as `dart`** (see [languageKey]). No stored
+  /// solution is rewritten, moved, or lost by this field appearing.
+  final String? language;
+
+  /// The language this solution belongs to, defaulting older saves to Dart.
+  String get languageKey => language ?? 'dart';
 
   factory ProblemSolutionStatusDTO.fromJson(Map<String, dynamic> json) =>
       _$ProblemSolutionStatusDTOFromJson(json);
@@ -59,8 +71,9 @@ class ProblemSolutionStatusDTO {
           runtimeType == other.runtimeType &&
           code == other.code &&
           isCorrect == other.isCorrect &&
-          submittedAt == other.submittedAt;
+          submittedAt == other.submittedAt &&
+          languageKey == other.languageKey;
 
   @override
-  int get hashCode => Object.hash(runtimeType, code, isCorrect, submittedAt);
+  int get hashCode => Object.hash(runtimeType, code, isCorrect, submittedAt, languageKey);
 }

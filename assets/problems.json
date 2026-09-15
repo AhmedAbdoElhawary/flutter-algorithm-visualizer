@@ -35,7 +35,9 @@
         "dart": "List<int> twoSum(List<int> nums, int target)"
       },
       "default_code": {
-        "dart": "class Solution {\n  List<int> twoSum(List<int> nums, int target) {\n\n\n  }\n}"
+        "dart": "class Solution {\n  List<int> twoSum(List<int> nums, int target) {\n\n\n  }\n}",
+        "python": "def twoSum(nums, target):\n    # Write your solution here\n    pass\n",
+        "javascript": "function twoSum(nums, target) {\n  // Write your solution here\n}\n"
       },
       "custom_objects": {
         "dart": []
@@ -1500,7 +1502,9 @@
         }
       ],
       "default_code": {
-        "dart": "class Solution {\n  bool isValid(String s) {\n\n\n  }\n}"
+        "dart": "class Solution {\n  bool isValid(String s) {\n\n\n  }\n}",
+        "python": "def isValid(s):\n    # Write your solution here\n    pass\n",
+        "javascript": "function isValid(s) {\n  // Write your solution here\n}\n"
       },
       "custom_objects": {
         "dart": []
@@ -2759,7 +2763,9 @@
         }
       ],
       "default_code": {
-        "dart": "class Solution {\n  List<List<String>> groupAnagrams(List<String> strs) {\n\n\n  }\n}"
+        "dart": "class Solution {\n  List<List<String>> groupAnagrams(List<String> strs) {\n\n\n  }\n}",
+        "python": "def groupAnagrams(strs):\n    # Write your solution here\n    pass\n",
+        "javascript": "function groupAnagrams(strs) {\n  // Write your solution here\n}\n"
       },
       "custom_objects": {
         "dart": []
@@ -3057,7 +3063,9 @@
         }
       ],
       "default_code": {
-        "dart": "class Solution {\n  int maxSubArray(List<int> nums) {\n\n\n  }\n}"
+        "dart": "class Solution {\n  int maxSubArray(List<int> nums) {\n\n\n  }\n}",
+        "python": "def maxSubArray(nums):\n    # Write your solution here\n    pass\n",
+        "javascript": "function maxSubArray(nums) {\n  // Write your solution here\n}\n"
       },
       "custom_objects": {
         "dart": []
@@ -3371,7 +3379,9 @@
         }
       ],
       "default_code": {
-        "dart": "class Solution {\n  List<List<int>> merge(List<List<int>> intervals) {\n\n\n  }\n}"
+        "dart": "class Solution {\n  List<List<int>> merge(List<List<int>> intervals) {\n\n\n  }\n}",
+        "python": "def merge(intervals):\n    # Write your solution here\n    pass\n",
+        "javascript": "function merge(intervals) {\n  // Write your solution here\n}\n"
       },
       "custom_objects": {
         "dart": []
@@ -3805,7 +3815,9 @@
         }
       ],
       "default_code": {
-        "dart": "class Solution {\n  int climbStairs(int n) {\n\n\n  }\n}"
+        "dart": "class Solution {\n  int climbStairs(int n) {\n\n\n  }\n}",
+        "python": "def climbStairs(n):\n    # Write your solution here\n    pass\n",
+        "javascript": "function climbStairs(n) {\n  // Write your solution here\n}\n"
       },
       "custom_objects": {
         "dart": []
@@ -6958,7 +6970,9 @@
         }
       ],
       "default_code": {
-        "dart": "class Solution {\n  int maxProfit(List<int> prices) {\n\n\n  }\n}"
+        "dart": "class Solution {\n  int maxProfit(List<int> prices) {\n\n\n  }\n}",
+        "python": "def maxProfit(prices):\n    # Write your solution here\n    pass\n",
+        "javascript": "function maxProfit(prices) {\n  // Write your solution here\n}\n"
       },
       "custom_objects": {
         "dart": []
@@ -7276,7 +7290,9 @@
         }
       ],
       "default_code": {
-        "dart": "class Solution {\n  bool isPalindrome(String s) {\n\n\n  }\n}"
+        "dart": "class Solution {\n  bool isPalindrome(String s) {\n\n\n  }\n}",
+        "python": "def isPalindrome(s):\n    # Write your solution here\n    pass\n",
+        "javascript": "function isPalindrome(s) {\n  // Write your solution here\n}\n"
       },
       "custom_objects": {
         "dart": []
@@ -10887,7 +10903,9 @@
         "dart": "bool containsDuplicate(List<int> nums)"
       },
       "default_code": {
-        "dart": "class Solution {\n  bool containsDuplicate(List<int> nums) {\n\n\n  }\n}"
+        "dart": "class Solution {\n  bool containsDuplicate(List<int> nums) {\n\n\n  }\n}",
+        "python": "def containsDuplicate(nums):\n    # Write your solution here\n    pass\n",
+        "javascript": "function containsDuplicate(nums) {\n  // Write your solution here\n}\n"
       },
       "custom_objects": {
         "dart": []
@@ -11729,7 +11747,9 @@
         }
       ],
       "default_code": {
-        "dart": "class Solution {\n  List<int> productExceptSelf(List<int> nums) {\n\n\n  }\n}"
+        "dart": "class Solution {\n  List<int> productExceptSelf(List<int> nums) {\n\n\n  }\n}",
+        "python": "def productExceptSelf(nums):\n    # Write your solution here\n    pass\n",
+        "javascript": "function productExceptSelf(nums) {\n  // Write your solution here\n}\n"
       },
       "custom_objects": {
         "dart": []
@@ -12039,7 +12059,9 @@
         }
       ],
       "default_code": {
-        "dart": "class Solution {\n  bool isAnagram(String s, String t) {\n\n\n  }\n}"
+        "dart": "class Solution {\n  bool isAnagram(String s, String t) {\n\n\n  }\n}",
+        "python": "def isAnagram(s, t):\n    # Write your solution here\n    pass\n",
+        "javascript": "function isAnagram(s, t) {\n  // Write your solution here\n}\n"
       },
       "custom_objects": {
         "dart": []
@@ -12493,7 +12515,9 @@
         }
       ],
       "default_code": {
-        "dart": "class Solution {\n  void moveZeroes(List<int> nums) {\n\n\n  }\n}"
+        "dart": "class Solution {\n  void moveZeroes(List<int> nums) {\n\n\n  }\n}",
+        "python": "def moveZeroes(nums):\n    # Write your solution here\n    pass\n",
+        "javascript": "function moveZeroes(nums) {\n  // Write your solution here\n}\n"
       },
       "custom_objects": {
         "dart": []

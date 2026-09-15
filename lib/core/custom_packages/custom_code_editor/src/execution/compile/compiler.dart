@@ -853,11 +853,13 @@ class Compiler {
       return;
     }
     if (op == IrBinaryOp.ifNull) {
+      // Asks IS_NULLISH rather than comparing against null, because
+      // JavaScript's `??` fires for `undefined` as well — and `undefined` is
+      // deliberately *not* equal to `null` under `===`.
       _compileExpr(fc, left);
       fc.builder.emitOp(OpCode.dup, line: line, synthetic: synthetic);
-      fc.builder.emitOp(OpCode.nullLit, line: line, synthetic: synthetic);
-      fc.builder.emitOp(OpCode.notEqual, line: line, synthetic: synthetic);
-      final keepLeft = fc.builder.emitJump(OpCode.jumpIfTrue, line: line, synthetic: synthetic);
+      fc.builder.emitOp(OpCode.isNullish, line: line, synthetic: synthetic);
+      final keepLeft = fc.builder.emitJump(OpCode.jumpIfFalse, line: line, synthetic: synthetic);
       fc.builder.emitOp(OpCode.pop, line: line, synthetic: synthetic);
       _compileExpr(fc, right);
       fc.builder.patchU16At(keepLeft, fc.builder.offset);

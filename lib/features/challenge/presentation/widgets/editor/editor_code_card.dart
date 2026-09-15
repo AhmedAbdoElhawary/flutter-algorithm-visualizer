@@ -5,6 +5,7 @@ import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
 import 'package:algorithm_visualizer/core/widgets/adaptive/text/adaptive_text.dart';
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/card_container.dart';
 import 'package:algorithm_visualizer/features/challenge/presentation/widgets/editor/editor_code_theme.dart';
+import 'package:algorithm_visualizer/features/challenge/presentation/widgets/editor/editor_language_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -20,6 +21,9 @@ class EditorCodeCard extends StatelessWidget {
     required this.highlightedLine,
     required this.running,
     required this.onControllerAttached,
+    this.language = EditorLanguage.dart,
+    this.languages = const <EditorLanguage>[EditorLanguage.dart],
+    this.onLanguageSelected,
   });
 
   final String fileName;
@@ -27,6 +31,14 @@ class EditorCodeCard extends StatelessWidget {
   final int? highlightedLine;
   final bool running;
   final void Function(CodeController controller) onControllerAttached;
+
+  /// The language the editor is showing, which decides the syntax colouring
+  /// and which chip in the header reads as selected.
+  final EditorLanguage language;
+
+  /// Exactly the languages this problem offers. One language means no picker.
+  final List<EditorLanguage> languages;
+  final ValueChanged<EditorLanguage>? onLanguageSelected;
 
   @override
   Widget build(BuildContext context) {
@@ -38,9 +50,16 @@ class EditorCodeCard extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          _CodeCardHeader(fileName: fileName),
+          _CodeCardHeader(
+            fileName: fileName,
+            language: language,
+            languages: languages,
+            running: running,
+            onLanguageSelected: onLanguageSelected,
+          ),
           _CodeArea(
             initialCode: initialCode,
+            language: language,
             highlightedLine: highlightedLine,
             running: running,
             onControllerAttached: onControllerAttached,
@@ -52,9 +71,19 @@ class EditorCodeCard extends StatelessWidget {
 }
 
 class _CodeCardHeader extends StatelessWidget {
-  const _CodeCardHeader({required this.fileName});
+  const _CodeCardHeader({
+    required this.fileName,
+    required this.language,
+    required this.languages,
+    required this.running,
+    required this.onLanguageSelected,
+  });
 
   final String fileName;
+  final EditorLanguage language;
+  final List<EditorLanguage> languages;
+  final bool running;
+  final ValueChanged<EditorLanguage>? onLanguageSelected;
 
   @override
   Widget build(BuildContext context) {
@@ -71,12 +100,20 @@ class _CodeCardHeader extends StatelessWidget {
           const RSizedBox(width: 5),
           const _Dot(ThemeEnum.dataEasy),
           const Spacer(),
-          RegularText(
-            fileName,
-            fontFamily: FontConstants.fontJetBrainsMono,
-            fontSize: 10,
-            color: ThemeEnum.inkMuted,
-            maxLines: 1,
+          EditorLanguagePicker(
+            languages: languages,
+            selected: language,
+            enabled: !running,
+            onSelected: onLanguageSelected ?? (_) {},
+          ),
+          Flexible(
+            child: RegularText(
+              fileName,
+              fontFamily: FontConstants.fontJetBrainsMono,
+              fontSize: 10,
+              color: ThemeEnum.inkMuted,
+              maxLines: 1,
+            ),
           ),
         ],
       ),
@@ -102,12 +139,14 @@ class _Dot extends StatelessWidget {
 class _CodeArea extends StatefulWidget {
   const _CodeArea({
     required this.initialCode,
+    required this.language,
     required this.highlightedLine,
     required this.running,
     required this.onControllerAttached,
   });
 
   final String initialCode;
+  final EditorLanguage language;
   final int? highlightedLine;
   final bool running;
   final void Function(CodeController controller) onControllerAttached;
@@ -115,6 +154,16 @@ class _CodeArea extends StatefulWidget {
   @override
   State<_CodeArea> createState() => _CodeAreaState();
 }
+
+/// The tokenizer for each language. Python indents by four, which is not a
+/// preference but the width its own tooling assumes.
+Tokenizer _tokenizerFor(EditorLanguage language) => switch (language) {
+      EditorLanguage.dart => const DartTokenizer(),
+      EditorLanguage.python => const PythonTokenizer(),
+      EditorLanguage.javascript => const JavascriptTokenizer(),
+    };
+
+int _tabSizeFor(EditorLanguage language) => language == EditorLanguage.python ? 4 : 2;
 
 class _CodeAreaState extends State<_CodeArea> {
   late final CodeController _controller;
@@ -125,9 +174,9 @@ class _CodeAreaState extends State<_CodeArea> {
     _controller = CodeController(
       text: widget.initialCode,
       theme: CodeEditorTheme.dark(),
-      tokenizer: const DartTokenizer(),
+      tokenizer: _tokenizerFor(widget.language),
       runner: const DartInterpreterRunner(),
-      config: const CodeEditorConfig(tabSize: 2, showLineNumbers: true),
+      config: CodeEditorConfig(tabSize: _tabSizeFor(widget.language), showLineNumbers: true),
     )..addListener(_onTextChanged);
     widget.onControllerAttached(_controller);
     _applyHighlight();
@@ -136,6 +185,12 @@ class _CodeAreaState extends State<_CodeArea> {
   @override
   void didUpdateWidget(covariant _CodeArea oldWidget) {
     super.didUpdateWidget(oldWidget);
+    if (oldWidget.language != widget.language) {
+      // The controller's text is swapped by the editor controller, which owns
+      // the per-language drafts; only the colouring is this widget's to do.
+      _controller.setTokenizer(_tokenizerFor(widget.language));
+      _controller.config = CodeEditorConfig(tabSize: _tabSizeFor(widget.language), showLineNumbers: true);
+    }
     if (oldWidget.highlightedLine != widget.highlightedLine) _applyHighlight();
   }
 

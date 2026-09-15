@@ -36,4 +36,7 @@ const pythonDialect = Dialect(
 
   /// `xs[-1]` is the last element.
   negativeIndexing: true,
+
+  /// `[0] * n` and `"-" * 20`.
+  sequenceRepetition: true,
 );

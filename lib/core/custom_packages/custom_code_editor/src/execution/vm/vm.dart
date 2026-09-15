@@ -304,7 +304,7 @@ class Vm {
       case OpCode.subtract:
         _binaryArith(frame, (a, b) => a - b);
       case OpCode.multiply:
-        _binaryArith(frame, (a, b) => a * b);
+        _binaryMultiply(frame);
       case OpCode.divide:
         _binaryDivide(frame);
       case OpCode.floorDivide:
@@ -336,6 +336,9 @@ class Vm {
       case OpCode.not:
         final v = frame.stack.removeLast();
         frame.stack.add(BoolValue(!isTruthy(v, dialect)));
+      case OpCode.isNullish:
+        final v = frame.stack.removeLast();
+        frame.stack.add(BoolValue(v is NullValue || v is UndefinedValue));
       case OpCode.stringify:
         final v = frame.stack.removeLast();
         frame.stack.add(StrValue(displayString(v, dialect)));
@@ -455,6 +458,33 @@ class Vm {
       return;
     }
     throw const VmRuntimeError('typeMismatch', <String, Object?>{'expected': 'matching operand types for +'});
+  }
+
+  /// `*`, which in Python also repeats a sequence — `[0] * n` is how a zeroed
+  /// list gets built, and it is far too common to leave out.
+  void _binaryMultiply(_Frame frame) {
+    if (dialect.sequenceRepetition) {
+      final b = frame.stack.last;
+      final a = frame.stack[frame.stack.length - 2];
+      final (Value sequence, Value count) = switch ((a, b)) {
+        (IntValue(), ListValue() || StrValue()) => (b, a),
+        (ListValue() || StrValue(), IntValue()) => (a, b),
+        _ => (NullValue.instance, NullValue.instance),
+      };
+      if (count is IntValue) {
+        frame.stack.removeLast();
+        frame.stack.removeLast();
+        final times = count.value < 0 ? 0 : count.value;
+        if (sequence is StrValue) {
+          frame.stack.add(StrValue(sequence.value * times));
+        } else {
+          final items = (sequence as ListValue).items;
+          frame.stack.add(ListValue(<Value>[for (var i = 0; i < times; i++) ...items]));
+        }
+        return;
+      }
+    }
+    _binaryArith(frame, (a, b) => a * b);
   }
 
   void _binaryArith(_Frame frame, double Function(double, double) op) {

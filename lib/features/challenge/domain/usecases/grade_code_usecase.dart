@@ -1,5 +1,5 @@
 import 'package:algorithm_visualizer/core/custom_packages/custom_code_editor/code_editor.dart'
-    show CustomObjectShape, OutputComparison, ProblemData, ProblemRunner, ProblemTestCase;
+    show CustomObjectShape, EditorLanguage, OutputComparison, ProblemData, ProblemRunner, ProblemTestCase;
 import 'package:algorithm_visualizer/features/challenge/data/models/custom_object.dart';
 import 'package:algorithm_visualizer/features/challenge/data/models/test_case.dart';
 import 'package:algorithm_visualizer/features/challenge/domain/entities/coding_problem.dart';
@@ -11,11 +11,16 @@ class CodeGradeResult {
     required this.allTestCaseResults,
     required this.totalCount,
     required this.code,
+    this.language = EditorLanguage.dart,
     this.error,
   });
   final List<TestCaseResult> allTestCaseResults;
   final int totalCount;
   final String code;
+
+  /// The language [code] was written in, so the saved solution is filed under
+  /// the right one rather than overwriting another language's draft.
+  final EditorLanguage language;
 
   /// A whole-program failure (e.g. the user code never compiles), which
   /// invalidates every test case at once. Null when each test ran.
@@ -54,10 +59,12 @@ class GradeCodeUseCase {
   CodeGradeResult grade({
     required CodingProblem problem,
     required String userCode,
+    EditorLanguage language = EditorLanguage.dart,
   }) {
     final allCases = <TestCase>[...problem.getTestCases, ...problem.getHiddenTestCases];
     if (allCases.isEmpty) {
-      return CodeGradeResult(allTestCaseResults: <TestCaseResult>[], totalCount: 0, code: userCode);
+      return CodeGradeResult(
+          allTestCaseResults: <TestCaseResult>[], totalCount: 0, code: userCode, language: language);
     }
 
     final problemData = ProblemData(
@@ -71,12 +78,14 @@ class GradeCodeUseCase {
       customObjects: _buildCustomShapes(problem.getCustomObjects),
       customObjectSources: _buildCustomSources(problem.getCustomObjects),
       comparison: OutputComparison.fromKey(problem.comparison),
+      language: language,
     );
 
     final result = const ProblemRunner().runAll(problem: problemData, userCode: userCode);
 
     return CodeGradeResult(
       code: userCode,
+      language: language,
       allTestCaseResults: [
         for (final r in result.testCaseResults)
           TestCaseResult(
