@@ -20,17 +20,17 @@ class SystemOverlay extends StatelessWidget {
 
   SystemUiOverlayStyle blackTheme() {
     return const SystemUiOverlayStyle(
-        statusBarColor: ColorManager.black,
+        statusBarColor: ColorManager.groundDk,
         statusBarIconBrightness: Brightness.light,
-        systemNavigationBarColor: ColorManager.black,
+        systemNavigationBarColor: ColorManager.groundDk,
         systemNavigationBarIconBrightness: Brightness.light);
   }
 
   SystemUiOverlayStyle whiteTheme() {
     return const SystemUiOverlayStyle(
-        statusBarColor: ColorManager.white,
+        statusBarColor: ColorManager.inkPrimaryDk,
         statusBarIconBrightness: Brightness.dark,
-        systemNavigationBarColor: ColorManager.white,
+        systemNavigationBarColor: ColorManager.inkPrimaryDk,
         systemNavigationBarIconBrightness: Brightness.dark);
   }
 }
