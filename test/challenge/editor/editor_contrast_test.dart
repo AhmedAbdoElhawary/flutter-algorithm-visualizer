@@ -43,27 +43,27 @@ const _bodyMin = 4.5;
 const _largeMin = 3.0;
 
 const _pairs = [
-  _Pair(ThemeEnum.textPrimary, ThemeEnum.codeBg, _bodyMin, 'textPrimary on codeBg'),
-  _Pair(ThemeEnum.textBody, ThemeEnum.codeBg, _bodyMin, 'textBody on codeBg'),
+  _Pair(ThemeEnum.inkTitle, ThemeEnum.surface, _bodyMin, 'textPrimary on surface'),
+  _Pair(ThemeEnum.inkBody, ThemeEnum.surface, _bodyMin, 'textBody on surface'),
   // Line-number gutter text is supplementary UI, not read-for-meaning body
   // content — WCAG's UI-component tier (3:1) applies, not the 4.5:1 body
   // tier (constitution: "WCAG AA (4.5:1 body, 3:1 large text and glyphs)").
-  _Pair(ThemeEnum.codeGutter, ThemeEnum.codeBg, _largeMin, 'codeGutter on codeBg'),
+  _Pair(ThemeEnum.inkMuted, ThemeEnum.surface, _largeMin, 'codeGutter on surface'),
   // Same tier as codeGutter above, and the same artboard hex — comments are
   // de-emphasized/skimmable by design, not primary reading content.
-  _Pair(ThemeEnum.codeComment, ThemeEnum.codeBg, _largeMin, 'codeComment on codeBg'),
-  _Pair(ThemeEnum.codeKeyword, ThemeEnum.codeBg, _bodyMin, 'codeKeyword on codeBg'),
-  _Pair(ThemeEnum.codeType, ThemeEnum.codeBg, _bodyMin, 'codeType on codeBg'),
-  _Pair(ThemeEnum.codePlain, ThemeEnum.codeBg, _bodyMin, 'codePlain on codeBg'),
-  _Pair(ThemeEnum.codeNumber, ThemeEnum.codeBg, _bodyMin, 'codeNumber on codeBg'),
-  _Pair(ThemeEnum.textPrimary, ThemeEnum.codeLine, _bodyMin, 'textPrimary on codeLine (marked row)'),
-  _Pair(ThemeEnum.codeComment, ThemeEnum.mainCard, _largeMin, 'section label on mainCard'),
-  _Pair(ThemeEnum.difficultyEasy, ThemeEnum.mainCard, _bodyMin, 'difficultyEasy summary on mainCard'),
-  _Pair(ThemeEnum.textBody, ThemeEnum.mainCard, _bodyMin, 'textBody on mainCard'),
-  _Pair(ThemeEnum.difficultyHard, ThemeEnum.mainCard, _bodyMin, 'difficultyHard on mainCard'),
-  _Pair(ThemeEnum.difficultyEasy, ThemeEnum.chipEasyFill, _largeMin, 'difficultyEasy glyph on chipEasyFill'),
-  _Pair(ThemeEnum.difficultyHard, ThemeEnum.chipHardFill, _largeMin, 'difficultyHard glyph on chipHardFill'),
-  _Pair(ThemeEnum.onPrimary, ThemeEnum.textBright, _largeMin, 'onPrimary on textBright (primary action)'),
+  _Pair(ThemeEnum.inkMuted, ThemeEnum.surface, _largeMin, 'codeComment on surface'),
+  _Pair(ThemeEnum.dataMedium, ThemeEnum.surface, _bodyMin, 'codeKeyword on surface'),
+  _Pair(ThemeEnum.inkTitle, ThemeEnum.surface, _bodyMin, 'codeType on surface'),
+  _Pair(ThemeEnum.inkBody, ThemeEnum.surface, _bodyMin, 'inkBody on surface'),
+  _Pair(ThemeEnum.dataTarget, ThemeEnum.surface, _bodyMin, 'dataTarget on surface'),
+  _Pair(ThemeEnum.inkTitle, ThemeEnum.raised, _bodyMin, 'textPrimary on codeLine (marked row)'),
+  _Pair(ThemeEnum.inkMuted, ThemeEnum.surface, _largeMin, 'section label on surface'),
+  _Pair(ThemeEnum.dataEasy, ThemeEnum.surface, _bodyMin, 'difficultyEasy summary on surface'),
+  _Pair(ThemeEnum.inkBody, ThemeEnum.surface, _bodyMin, 'textBody on surface'),
+  _Pair(ThemeEnum.dataHard, ThemeEnum.surface, _bodyMin, 'difficultyHard on surface'),
+  _Pair(ThemeEnum.dataEasy, ThemeEnum.raised, _largeMin, 'difficultyEasy glyph on chipEasyFill'),
+  _Pair(ThemeEnum.dataHard, ThemeEnum.raised, _largeMin, 'difficultyHard glyph on chipHardFill'),
+  _Pair(ThemeEnum.ground, ThemeEnum.inkPrimary, _largeMin, 'ground on textBright (primary action)'),
 ];
 
 void main() {
@@ -91,12 +91,12 @@ void main() {
         ),
       );
 
-      final codeBg = resolved[ThemeEnum.codeBg]!;
+      final surface = resolved[ThemeEnum.surface]!;
 
       for (final pair in _pairs) {
         final fg = resolved[pair.fg]!;
         var bg = resolved[pair.bg]!;
-        if (bg.a < 1) bg = _compositeOver(bg, codeBg);
+        if (bg.a < 1) bg = _compositeOver(bg, surface);
         final ratio = _contrastRatio(fg, bg);
 
         expect(
