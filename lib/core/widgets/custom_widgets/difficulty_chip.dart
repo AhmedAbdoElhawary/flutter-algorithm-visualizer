@@ -5,10 +5,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 (ThemeEnum fill, ThemeEnum label) _difficultyRoles(ProblemDifficulty d) => switch (d) {
-      ProblemDifficulty.easy => (ThemeEnum.chipEasyFill, ThemeEnum.difficultyEasy),
-      ProblemDifficulty.medium => (ThemeEnum.chipMediumFill, ThemeEnum.difficultyMedium),
-      ProblemDifficulty.hard => (ThemeEnum.chipHardFill, ThemeEnum.difficultyHard),
-      ProblemDifficulty.none => (ThemeEnum.primary, ThemeEnum.primary),
+      ProblemDifficulty.easy => (ThemeEnum.raised, ThemeEnum.dataEasy),
+      ProblemDifficulty.medium => (ThemeEnum.raised, ThemeEnum.dataMedium),
+      ProblemDifficulty.hard => (ThemeEnum.raised, ThemeEnum.dataHard),
+      ProblemDifficulty.none => (ThemeEnum.ground, ThemeEnum.ground),
     };
 
 /// Easy / Medium / Hard pill — solid tinted fill, never an alpha wash.
@@ -62,8 +62,7 @@ class DifficultySquareBadge extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final d = difficulty;
-    final (fill, labelRole) =
-        d == null ? (ThemeEnum.chipNeutralFill, ThemeEnum.textSecond) : _difficultyRoles(d);
+    final (fill, labelRole) = d == null ? (ThemeEnum.raised, ThemeEnum.inkBody) : _difficultyRoles(d);
     return Container(
       width: size.r,
       height: size.r,
