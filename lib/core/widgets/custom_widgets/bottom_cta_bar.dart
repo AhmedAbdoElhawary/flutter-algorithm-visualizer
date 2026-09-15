@@ -18,7 +18,7 @@ class BottomCtaBar extends StatelessWidget {
           margin: REdgeInsets.fromLTRB(16, 0, 16, 0),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.vertical(top: Radius.circular(CdRadius.md.r)),
-            color: context.getColor(ThemeEnum.primary),
+            color: context.getColor(ThemeEnum.ground),
           ),
         ),
         Padding(padding: REdgeInsets.fromLTRB(16, 12, 16, 12), child: child)
