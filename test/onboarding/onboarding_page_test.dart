@@ -148,6 +148,67 @@ void main() {
     expect(find.byKey(const ValueKey('home')), findsOneWidget);
   });
 
+  testWidgets('the controls cross-fade during the swipe instead of swapping on arrival', (tester) async {
+    await _pumpOnboarding(tester, theme: _Theme.dark, disableAnimations: true);
+
+    for (var i = 0; i < 2; i++) {
+      await _swipe(tester);
+    }
+    await tester.pump(const Duration(milliseconds: 400));
+
+    // Page 3: Next owns the strip on its own.
+    expect(find.text(StringsManager.onboardingNext), findsOneWidget);
+    expect(find.text(StringsManager.onboardingGetStarted), findsNothing);
+
+    // Hold a drag halfway between page 3 and page 4 without releasing.
+    final gesture = await tester.startGesture(tester.getCenter(find.byType(PageView)));
+    await tester.pump();
+    // Stepped, so the drag clears the touch slop and the scroll actually moves.
+    for (var i = 0; i < 6; i++) {
+      await gesture.moveBy(const Offset(-32, 0));
+      await tester.pump();
+    }
+
+    // Mid-swipe both layouts are on screen at once — that is the cross-fade.
+    // Before the fix, Next was still the only child until the page settled.
+    expect(find.text(StringsManager.onboardingNext), findsOneWidget);
+    expect(find.text(StringsManager.onboardingGetStarted), findsOneWidget);
+    expect(find.text(StringsManager.onboardingContinueAsGuest), findsOneWidget);
+
+    // Carry the drag past the halfway mark so it settles on page 4 instead of
+    // springing back to page 3.
+    for (var i = 0; i < 5; i++) {
+      await gesture.moveBy(const Offset(-32, 0));
+      await tester.pump();
+    }
+    await gesture.up();
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 600));
+
+    // Landed: Next is gone, the pair owns the strip.
+    expect(find.text(StringsManager.onboardingNext), findsNothing);
+    expect(find.text(StringsManager.onboardingGetStarted), findsOneWidget);
+  });
+
+  testWidgets('the final buttons are usable as soon as the page lands', (tester) async {
+    // They used to wait ~1.4 s for the heatmap to finish filling.
+    await _pumpOnboarding(tester, theme: _Theme.dark, disableAnimations: true);
+
+    for (var i = 0; i < 3; i++) {
+      await _swipe(tester);
+    }
+
+    final opacity = tester.widget<Opacity>(
+      find
+          .ancestor(
+            of: find.text(StringsManager.onboardingGetStarted),
+            matching: find.byType(Opacity),
+          )
+          .first,
+    );
+    expect(opacity.opacity, 1.0);
+  });
+
   testWidgets('page 4 buttons share height, radius and label size', (tester) async {
     await _pumpOnboarding(tester, theme: _Theme.dark, disableAnimations: true);
 
