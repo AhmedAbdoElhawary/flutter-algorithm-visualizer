@@ -24,9 +24,9 @@ class ProblemTileShimmer extends StatelessWidget {
       padding: REdgeInsets.only(bottom: 6),
       child: Container(
         decoration: BoxDecoration(
-          color: context.getColor(ThemeEnum.card),
+          color: context.getColor(ThemeEnum.surface),
           borderRadius: BorderRadius.circular(CdRadius.medium.r),
-          border: Border.all(color: context.getColor(ThemeEnum.border)),
+          border: Border.all(color: context.getColor(ThemeEnum.hairline)),
         ),
         clipBehavior: Clip.hardEdge,
         child: _MainRowShimmer(),
@@ -99,7 +99,7 @@ class _ShimmerBoxState extends State<_ShimmerBox> with SingleTickerProviderState
       height: widget.height?.r,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(CdRadius.tiny.r),
-        color: context.getColor(ThemeEnum.primaryTint),
+        color: context.getColor(ThemeEnum.hairline),
       ),
     );
 
