@@ -15,7 +15,7 @@ class QuietProgressBar extends StatelessWidget {
   const QuietProgressBar({
     super.key,
     required this.value,
-    this.fill = ThemeEnum.textBright,
+    this.fill = ThemeEnum.inkPrimary,
     this.track = ThemeEnum.track,
   });
 
