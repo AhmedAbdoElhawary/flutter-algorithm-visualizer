@@ -28,7 +28,7 @@ ProblemData dataFor(Problem problem, EditorLanguage language) => ProblemData(
     );
 
 final problems = <String, Problem>{
-  'twoSum': Problem(
+  'twoSum': const Problem(
     signature: 'List<int> twoSum(List<int> nums, int target)',
     cases: <(String, String)>[
       ('nums=[2,7,11,15], target=9', '[0,1]'),
@@ -70,7 +70,7 @@ function twoSum(nums, target) {
 ''',
     },
   ),
-  'isPalindrome': Problem(
+  'isPalindrome': const Problem(
     signature: 'bool isPalindrome(String s)',
     cases: <(String, String)>[
       ('s="A man, a plan, a canal: Panama"', 'true'),
@@ -122,7 +122,7 @@ function isPalindrome(s) {
 ''',
     },
   ),
-  'maxSubArray': Problem(
+  'maxSubArray': const Problem(
     signature: 'int maxSubArray(List<int> nums)',
     cases: <(String, String)>[
       ('nums=[-2,1,-3,4,-1,2,1,-5,4]', '6'),
@@ -164,7 +164,7 @@ function maxSubArray(nums) {
 ''',
     },
   ),
-  'groupCount': Problem(
+  'groupCount': const Problem(
     signature: 'Map<String, int> groupCount(List<String> words)',
     cases: <(String, String)>[
       ('words=["a","b","a"]', '{a:2,b:1}'),
