@@ -99,6 +99,5 @@ app.*.map.json
 /assets/onboarding/
 /assets/screenshots/
 /assets/logo/png/
-/assets/logo/svg/
 /assets/logo/README.md
 /tool/flavor_icons/custom/README.md
