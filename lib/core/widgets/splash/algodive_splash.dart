@@ -1,7 +1,10 @@
 import 'dart:math' as math;
 
+import 'package:algorithm_visualizer/core/resources/color_manager.dart';
+import 'package:algorithm_visualizer/core/resources/font_manager.dart';
+import 'package:algorithm_visualizer/core/resources/strings_manager.dart';
+import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 /// AlgoDive splash. Continues the motion the native launch screen starts:
 /// the native side shows the static mark on the brand ground (see
@@ -54,17 +57,14 @@ class _AlgoDiveSplashState extends State<AlgoDiveSplash> with SingleTickerProvid
 
   @override
   Widget build(BuildContext context) {
-    final ground = widget.dark ? const Color(0xFF0B0B0D) : const Color(0xFFFBFBFC);
-    final ink = widget.dark ? Colors.white : const Color(0xFF0B0B0D);
+    final ink = context.getColor(ThemeEnum.inkPrimary);
+    final ground = context.getColor(ThemeEnum.ground);
     final barOpacity = widget.dark ? 0.20 : 0.14;
 
-    // Shown before MaterialApp exists, so nothing else supplies text
-    // direction. "AlgoDive" is a fixed brand string, not translated, so ltr
-    // is correct regardless of the app's locale.
     return Directionality(
       textDirection: TextDirection.ltr,
       child: ColoredBox(
-        color: ground,
+        color: ink,
         child: AnimatedBuilder(
           animation: _c,
           builder: (context, _) {
@@ -86,7 +86,7 @@ class _AlgoDiveSplashState extends State<AlgoDiveSplash> with SingleTickerProvid
                     child: CustomPaint(
                       painter: _BarsPainter(
                         progress: bars,
-                        color: ink.withValues(alpha: barOpacity),
+                        color: ground.withValues(alpha: barOpacity),
                         heights: _heights,
                       ),
                     ),
@@ -101,7 +101,7 @@ class _AlgoDiveSplashState extends State<AlgoDiveSplash> with SingleTickerProvid
                         height: 156,
                         child: CustomPaint(
                           painter: _MarkPainter(
-                            ink: ink,
+                            ink: ground,
                             cell: cell,
                             ring1: ring1,
                             ring2: ring2,
@@ -115,11 +115,11 @@ class _AlgoDiveSplashState extends State<AlgoDiveSplash> with SingleTickerProvid
                         child: Transform.translate(
                           offset: Offset(0, 12 * (1 - word)),
                           child: Text(
-                            'AlgoDive',
-                            style: GoogleFonts.ibmPlexSansArabic(
-                              color: ink,
+                            StringsManager.algoDive,
+                            style: TextStyle(
+                              fontFamily: FontConstants.fontFamily,
+                              color: ground,
                               fontSize: 54,
-                              height: 1,
                               fontWeight: FontWeight.w600,
                               letterSpacing: -1.9,
                             ),
@@ -150,7 +150,7 @@ class _MarkPainter extends CustomPainter {
   final Color ink;
   final double cell, ring1, ring2, route;
 
-  static const _green = Color(0xFF79C9A4);
+  static const _green = ColorManager.heat3;
 
   Path _diamond(Offset c, double r) => Path()
     ..moveTo(c.dx, c.dy - r)
@@ -256,10 +256,14 @@ class _BarsPainter extends CustomPainter {
       if (t <= 0) continue;
       final eased = Curves.easeOutCubic.transform(t);
       final h = size.height * heights[i];
-      // starts fully below the bottom edge, lands on it
+
       final top = size.height - h * eased + size.height * (1 - eased);
-      canvas.drawRect(
-        Rect.fromLTWH(pad + i * (w + gap), top, w, h),
+      canvas.drawRRect(
+        RRect.fromRectAndCorners(
+          Rect.fromLTWH(pad + i * (w + gap), top, w, h),
+          topLeft: const Radius.circular(3),
+          topRight: const Radius.circular(3),
+        ),
         paint,
       );
     }
