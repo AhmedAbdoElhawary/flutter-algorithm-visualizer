@@ -45,10 +45,14 @@ IrProgram? _stubProgram(String source) {
   switch (source) {
     case stubInfiniteLoopSource:
       return const IrProgram(<IrStmt>[
-        IrWhile(line: 1, condition: IrLiteral(line: 1, kind: IrLiteralKind.boolLit, value: true), body: IrBlock(line: 1, statements: <IrStmt>[])),
+        IrWhile(
+            line: 1,
+            condition: IrLiteral(line: 1, kind: IrLiteralKind.boolLit, value: true),
+            body: IrBlock(line: 1, statements: <IrStmt>[])),
       ]);
     case stubReturnConstantSource:
-      return const IrProgram(<IrStmt>[IrReturn(line: 1, value: IrLiteral(line: 1, kind: IrLiteralKind.intLit, value: 42))]);
+      return const IrProgram(
+          <IrStmt>[IrReturn(line: 1, value: IrLiteral(line: 1, kind: IrLiteralKind.intLit, value: 42))]);
     default:
       return null;
   }
@@ -90,7 +94,12 @@ Map<String, Object?> executeEncodedRequest(Map<String, Object?> encoded, bool Fu
       final frontend = _frontends[language];
       if (frontend == null) {
         return _encodeOutcome(
-          const VmResult(failure: Failure(kind: FailureKind.unsupported, code: 'unsupportedConstruct', data: {'construct': 'this language'}, line: 0)),
+          const VmResult(
+              failure: Failure(
+                  kind: FailureKind.unsupported,
+                  code: 'unsupportedConstruct',
+                  data: {'construct': 'this language'},
+                  line: 0)),
           stopwatch.elapsed,
         );
       }
@@ -112,7 +121,12 @@ Map<String, Object?> executeEncodedRequest(Map<String, Object?> encoded, bool Fu
     return _encodeOutcome(VmResult(failure: e.toFailure()), stopwatch.elapsed);
   } catch (e) {
     return _encodeOutcome(
-      VmResult(failure: Failure(kind: FailureKind.runtime, code: 'uncaughtThrow', data: <String, Object?>{'message': e.toString()}, line: 0)),
+      VmResult(
+          failure: Failure(
+              kind: FailureKind.runtime,
+              code: 'uncaughtThrow',
+              data: <String, Object?>{'message': e.toString()},
+              line: 0)),
       stopwatch.elapsed,
     );
   }
@@ -173,7 +187,9 @@ Object? encodeValue(Value v) {
   if (v is MapValue) {
     return <String, Object?>{
       'k': 'map',
-      'v': v.entries.entries.map((e) => <String, Object?>{'key': encodeValue(e.key), 'value': encodeValue(e.value)}).toList(),
+      'v': v.entries.entries
+          .map((e) => <String, Object?>{'key': encodeValue(e.key), 'value': encodeValue(e.value)})
+          .toList(),
     };
   }
   if (v is InstanceValue) {
