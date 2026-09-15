@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="288dp" android:height="288dp"
+    android:viewportWidth="512" android:viewportHeight="512">
+    <!-- mark occupies the inner 2/3 required by the Android 12 splash icon -->
+    <group android:name="mark" android:pivotX="256" android:pivotY="256" android:scaleX="0.66" android:scaleY="0.66">
+        <group android:name="cell" android:pivotX="256" android:pivotY="256">
+            <path android:fillColor="#0B0B0D" android:pathData="M236,228 h40 a8,8 0 0 1 8,8 v40 a8,8 0 0 1 -8,8 h-40 a8,8 0 0 1 -8,-8 v-40 a8,8 0 0 1 8,-8 z" />
+        </group>
+        <group android:name="ring1" android:pivotX="256" android:pivotY="256">
+            <path android:strokeColor="#0B0B0D" android:strokeWidth="30" android:strokeLineJoin="round"
+                android:pathData="M256,152 L360,256 L256,360 L152,256 Z" />
+        </group>
+        <group android:name="ring2" android:pivotX="256" android:pivotY="256">
+            <path android:strokeColor="#0B0B0D" android:strokeWidth="22" android:strokeAlpha="0.55" android:strokeLineJoin="round"
+                android:pathData="M256,76 L436,256 L256,436 L76,256 Z" />
+        </group>
+        <group android:name="route" android:pivotX="426" android:pivotY="256">
+            <path android:fillColor="#79C9A4" android:pathData="M406,228 h40 a8,8 0 0 1 8,8 v40 a8,8 0 0 1 -8,8 h-40 a8,8 0 0 1 -8,-8 v-40 a8,8 0 0 1 8,-8 z" />
+        </group>
+    </group>
+</vector>
