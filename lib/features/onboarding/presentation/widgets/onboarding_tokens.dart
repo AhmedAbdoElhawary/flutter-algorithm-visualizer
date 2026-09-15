@@ -66,6 +66,12 @@ abstract final class OnboardingTokens {
   static const double cardToHeadline = 34;
   static const double headlineToBody = 12;
 
+  /// The controls strip is one box whose height is interpolated between these
+  /// two as you swipe onto the last page, so it grows with your finger instead
+  /// of snapping when the page settles.
+  static const double footerSingle = buttonHeight;
+  static const double footerDual = buttonHeight * 2 + 10 * 2 + 24;
+
   /// ---- type (spec §2) ----
   static const double headlineSize = 30;
   static const double headlineHeight = 1.1;
