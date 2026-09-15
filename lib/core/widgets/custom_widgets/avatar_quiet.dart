@@ -3,7 +3,7 @@ import 'package:algorithm_visualizer/core/widgets/adaptive/text/adaptive_text.da
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-/// The one profile avatar shape — solid `textBright` fill, `onPrimary`
+/// The one profile avatar shape — solid `textBright` fill, `ground`
 /// initial, radius scaling with [size]. Single-screen today, but any literal
 /// still has to live in a shared widget, not the screen file.
 class AvatarQuiet extends StatelessWidget {
@@ -19,11 +19,11 @@ class AvatarQuiet extends StatelessWidget {
       width: size.r,
       height: size.r,
       decoration: BoxDecoration(
-        color: context.getColor(ThemeEnum.textBright),
+        color: context.getColor(ThemeEnum.inkPrimary),
         borderRadius: BorderRadius.circular((size * 0.28).r),
       ),
       alignment: Alignment.center,
-      child: BoldText(initial, color: ThemeEnum.onPrimary, fontSize: fontSize),
+      child: BoldText(initial, color: ThemeEnum.ground, fontSize: fontSize),
     );
   }
 }

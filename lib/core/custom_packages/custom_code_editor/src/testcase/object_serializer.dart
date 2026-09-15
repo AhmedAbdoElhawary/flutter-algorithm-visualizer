@@ -1,4 +1,4 @@
-import '../execution/object_instance.dart';
+import '../execution/legacy/object_instance.dart';
 import 'custom_object_shape.dart';
 
 /// Produces a canonical, whitespace-free string form of a raw interpreted

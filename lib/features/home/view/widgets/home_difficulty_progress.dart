@@ -11,7 +11,7 @@ class HomeDifficultyProgress extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return const OnlyPadding(
       bottomPadding: 14,
-      child: ProfileDifficultyProgress(titleColor: ThemeEnum.textPrimary),
+      child: ProfileDifficultyProgress(titleColor: ThemeEnum.inkTitle),
     );
   }
 }

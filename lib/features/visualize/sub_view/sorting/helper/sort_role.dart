@@ -22,23 +22,23 @@ enum SortRole {
 ThemeEnum roleColor(SortRole role) {
   switch (role) {
     case SortRole.idle:
-      return ThemeEnum.barIdle;
+      return ThemeEnum.track;
     case SortRole.compare:
-      return ThemeEnum.barCompare;
+      return ThemeEnum.dataActive;
     case SortRole.swap:
     case SortRole.write:
-      return ThemeEnum.barSwap;
+      return ThemeEnum.dataHard;
     case SortRole.sorted:
-      return ThemeEnum.barDone;
+      return ThemeEnum.dataEasy;
     case SortRole.minimum:
     case SortRole.heldValue:
     case SortRole.pivot:
     case SortRole.rightRun:
-      return ThemeEnum.barAnchor;
+      return ThemeEnum.dataMedium;
     case SortRole.target:
     case SortRole.boundary:
     case SortRole.leftRun:
-      return ThemeEnum.barTarget;
+      return ThemeEnum.dataTarget;
   }
 }
 

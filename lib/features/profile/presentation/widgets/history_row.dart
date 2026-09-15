@@ -52,7 +52,7 @@ class _HistoryRowState extends State<HistoryRow> {
       addCardDecoration: widget.addCardDecoration,
       subTitle: RegularText(
         '$count ${unit.toLowerCase()} · ${StringsManager.lastLabel} ${_relative(entry.lastSubmittedAt)}',
-        color: ThemeEnum.textSecond,
+        color: ThemeEnum.inkBody,
         fontSize: 10.5,
       ),
       leading: _AnimatedArrow(expanded: _expanded),
@@ -101,7 +101,7 @@ class _AnimatedArrow extends StatelessWidget {
         child: const CustomIcon(
           Icons.keyboard_arrow_down_rounded,
           size: 18,
-          color: ThemeEnum.textSecond,
+          color: ThemeEnum.inkBody,
         ),
       ),
     );
@@ -123,7 +123,7 @@ class _AttemptStrip extends StatelessWidget {
             child: QuietBar(
                 width: double.infinity,
                 height: 4.r,
-                fill: attempts[i].isCorrect ? ThemeEnum.difficultyEasy : ThemeEnum.difficultyHard),
+                fill: attempts[i].isCorrect ? ThemeEnum.dataEasy : ThemeEnum.dataHard),
           ),
         );
       }),
@@ -145,8 +145,8 @@ class _AttemptTable extends StatelessWidget {
         children: [
           const Row(
             children: [
-              Expanded(child: SemiBoldText(StringsManager.date, color: ThemeEnum.textSecond, fontSize: 11)),
-              SemiBoldText(StringsManager.result, color: ThemeEnum.textSecond, fontSize: 11),
+              Expanded(child: SemiBoldText(StringsManager.date, color: ThemeEnum.inkBody, fontSize: 11)),
+              SemiBoldText(StringsManager.result, color: ThemeEnum.inkBody, fontSize: 11),
             ],
           ),
           const RSizedBox(height: 6),
@@ -155,11 +155,11 @@ class _AttemptTable extends StatelessWidget {
               children: [
                 Expanded(
                   child:
-                      SemiBoldText(_formatDate(attempt.submittedAt), color: ThemeEnum.textBody, fontSize: 12),
+                      SemiBoldText(_formatDate(attempt.submittedAt), color: ThemeEnum.inkBody, fontSize: 12),
                 ),
                 SemiBoldText(
                   attempt.isCorrect ? StringsManager.passed : StringsManager.failed,
-                  color: attempt.isCorrect ? ThemeEnum.difficultyEasy : ThemeEnum.difficultyHard,
+                  color: attempt.isCorrect ? ThemeEnum.dataEasy : ThemeEnum.dataHard,
                   fontSize: 12,
                 ),
               ],

@@ -66,7 +66,7 @@ class _SecondaryProblemCardState extends State<SecondaryProblemCard> {
                     onTap: () => context.pushTo(Routes.problem, queryParameters: widget.problemId.toString()),
                     child: SemiBoldText(
                       widget.problemName,
-                      color: ThemeEnum.textBright,
+                      color: ThemeEnum.inkPrimary,
                       fontSize: 12.5,
                       maxLines: 2,
                     ),

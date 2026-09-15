@@ -106,7 +106,7 @@ class _VisualizePageState extends ConsumerState<VisualizePage> {
           floating: true,
           toolbarHeight: 140.r,
           title: Container(
-            color: context.getColor(ThemeEnum.primary),
+            color: context.getColor(ThemeEnum.ground),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [

@@ -80,7 +80,9 @@ class _EditableNameState extends ConsumerState<_EditableName> {
   @override
   void didUpdateWidget(covariant _EditableName oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (!_editing && oldWidget.name != widget.name) _controller.text = widget.name;
+    if (!_editing && oldWidget.name != widget.name) {
+      _controller.text = widget.name;
+    }
   }
 
   @override
@@ -98,7 +100,7 @@ class _EditableNameState extends ConsumerState<_EditableName> {
         controller: _controller,
         autofocus: true,
         style: GetBoldStyle(
-          color: context.getColor(ThemeEnum.textPrimary),
+          color: context.getColor(ThemeEnum.inkTitle),
           fontSize: 22,
           letterSpacing: -0.4,
         ),
@@ -106,21 +108,25 @@ class _EditableNameState extends ConsumerState<_EditableName> {
           isDense: true,
           contentPadding: REdgeInsets.symmetric(vertical: 4),
           border: UnderlineInputBorder(
-            borderSide: BorderSide(color: context.getColor(ThemeEnum.accent)),
+            borderSide: BorderSide(color: context.getColor(ThemeEnum.inkPrimary)),
           ),
           focusedBorder: UnderlineInputBorder(
-            borderSide: BorderSide(color: context.getColor(ThemeEnum.accent), width: 2),
+            borderSide: BorderSide(color: context.getColor(ThemeEnum.inkPrimary), width: 2),
           ),
         ),
         onSubmitted: (value) {
           final text = value.trim();
-          if (text.isNotEmpty) ref.read(profileProvider.notifier).updateDisplayName(name: text);
+          if (text.isNotEmpty) {
+            ref.read(profileProvider.notifier).updateDisplayName(name: text);
+          }
 
           setState(() => _editing = false);
         },
         onTapOutside: (event) {
           final text = _controller.text.trim();
-          if (text.isNotEmpty) ref.read(profileProvider.notifier).updateDisplayName(name: text);
+          if (text.isNotEmpty) {
+            ref.read(profileProvider.notifier).updateDisplayName(name: text);
+          }
 
           setState(() => _editing = false);
         },
@@ -133,10 +139,7 @@ class _EditableNameState extends ConsumerState<_EditableName> {
         children: [
           Expanded(
             child: BoldText(widget.name,
-                maxLines: 1,
-                color: ThemeEnum.textPrimary,
-                fontSize: 22,
-                fontWeight: FontWeightManager.bold800),
+                maxLines: 1, color: ThemeEnum.inkTitle, fontSize: 22, fontWeight: FontWeightManager.bold800),
           ),
           const RSizedBox(width: 6),
           const IconButtonQuiet(

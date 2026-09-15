@@ -1,11 +1,12 @@
 import 'package:algorithm_visualizer/config/routes/route_app.dart';
 import 'package:algorithm_visualizer/core/resources/dimensions_manager.dart';
+import 'package:algorithm_visualizer/core/resources/font_manager.dart';
 import 'package:algorithm_visualizer/core/resources/strings_manager.dart';
 import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
 import 'package:algorithm_visualizer/core/widgets/adaptive/text/adaptive_text.dart';
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/primary_button_quiet.dart';
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/secondary_button_quiet.dart';
-import 'package:algorithm_visualizer/core/widgets/custom_widgets/stat_tile.dart';
+import 'package:algorithm_visualizer/core/widgets/custom_widgets/small_stats_strip.dart' show SmallStatsStrip;
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
@@ -67,12 +68,13 @@ class _CelebrationPageState extends State<CelebrationPage> with TickerProviderSt
     final args = widget.args;
 
     return Scaffold(
-      backgroundColor: context.getColor(ThemeEnum.primary),
+      backgroundColor: context.getColor(ThemeEnum.ground),
       body: SafeArea(
         child: Stack(
+          fit: StackFit.expand,
           children: [
             SingleChildScrollView(
-              padding: REdgeInsets.fromLTRB(26, 56, 26, 120),
+              padding: REdgeInsets.fromLTRB(26, 100, 26, 120),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
@@ -85,9 +87,10 @@ class _CelebrationPageState extends State<CelebrationPage> with TickerProviderSt
                       padding: REdgeInsets.only(top: 32),
                       child: const BoldText(
                         StringsManager.solvedMoment,
-                        color: ThemeEnum.textPrimary,
+                        color: ThemeEnum.inkTitle,
                         fontSize: 25,
                         letterSpacing: -0.5,
+                        fontWeight: FontWeightManager.bold900,
                       ),
                     ),
                   ),
@@ -99,7 +102,7 @@ class _CelebrationPageState extends State<CelebrationPage> with TickerProviderSt
                       padding: REdgeInsets.only(top: 9),
                       child: RegularText(
                         '${args.problemName} · ${StringsManager.allNTestsPassedPrefix}${args.passedCount}${StringsManager.allNTestsPassedSuffix}',
-                        color: ThemeEnum.textBody,
+                        color: ThemeEnum.inkBody,
                         fontSize: 12.5,
                         textAlign: TextAlign.center,
                         maxLines: 2,
@@ -112,12 +115,10 @@ class _CelebrationPageState extends State<CelebrationPage> with TickerProviderSt
                     reduceMotion: _reduceMotion,
                     child: Padding(
                       padding: REdgeInsets.only(top: 30),
-                      child: SizedBox(
-                        width: 132.w,
-                        child: StatTile(
-                          value: '${args.dayStreak}',
-                          label: '${StringsManager.dayLabel} ${StringsManager.streak.toLowerCase()}',
-                        ),
+                      child: const SmallStatsStrip(
+                        showAttempts: false,
+                        showIcons: false,
+                        centerTheContent: true,
                       ),
                     ),
                   ),
@@ -127,7 +128,7 @@ class _CelebrationPageState extends State<CelebrationPage> with TickerProviderSt
             Positioned(
               left: 20.w,
               right: 20.w,
-              bottom: 26.h,
+              bottom: 50.h,
               child: _Rise(
                 controller: _entrance,
                 start: 0.55,
@@ -163,10 +164,10 @@ class _Stage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final white = context.getColor(ThemeEnum.solidWhite);
+    final white = context.getColor(ThemeEnum.inkPrimary);
     return SizedBox(
-      width: 104.r,
-      height: 104.r,
+      width: 140.r,
+      height: 140.r,
       child: Stack(
         alignment: Alignment.center,
         children: [
@@ -217,8 +218,8 @@ class _Ring extends StatelessWidget {
           child: Transform.scale(
             scale: 0.5 + t,
             child: SizedBox(
-              width: 104.r,
-              height: 104.r,
+              width: 140.r,
+              height: 140.r,
               child: CustomPaint(painter: _RingPainter(color: color)),
             ),
           ),
@@ -278,22 +279,22 @@ class _CheckmarkState extends State<_Checkmark> with SingleTickerProviderStateMi
     return ScaleTransition(
       scale: CurvedAnimation(parent: _pop, curve: CdMotion.easePop),
       child: SizedBox(
-        width: 82.r,
-        height: 82.r,
+        width: 100.r,
+        height: 100.r,
         child: Stack(
           alignment: Alignment.center,
           children: [
             CustomPaint(
-              size: Size(82.r, 82.r),
+              size: Size(100.r, 100.r),
               painter: _RoundedSquarePainter(
-                color: context.getColor(ThemeEnum.solidWhite),
+                color: context.getColor(ThemeEnum.inkPrimary),
                 radius: 28.r,
               ),
             ),
             Icon(
               Icons.check_rounded,
-              size: 40.r,
-              color: context.getColor(ThemeEnum.onPrimary),
+              size: 50.r,
+              color: context.getColor(ThemeEnum.ground),
             ),
           ],
         ),

@@ -23,7 +23,7 @@ class EditorTitleRow extends StatelessWidget {
       children: [
         const CustomBackButton(),
         Expanded(
-          child: SemiBoldText(problemName, color: ThemeEnum.textPrimary, maxLines: 1),
+          child: SemiBoldText(problemName, color: ThemeEnum.inkTitle, maxLines: 1),
         ),
         const RSizedBox(width: 8),
         const _LanguageChip(),
@@ -37,7 +37,7 @@ class EditorTitleRow extends StatelessWidget {
               icon: copied ? Icons.check_rounded : Icons.copy_rounded,
               size: 34,
               iconSize: 18,
-              iconColor: copied ? ThemeEnum.difficultyEasy : null,
+              iconColor: copied ? ThemeEnum.dataEasy : null,
               onTap: () => ref.read(provider.notifier).copyCode(),
             );
           },
@@ -56,13 +56,13 @@ class _LanguageChip extends StatelessWidget {
       padding: REdgeInsets.symmetric(vertical: 8, horizontal: 11),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(CdRadius.sm.r),
-        border: Border.all(color: context.getColor(ThemeEnum.border)),
+        border: Border.all(color: context.getColor(ThemeEnum.hairline)),
       ),
       child: const RegularText(
         StringsManager.dart,
         fontFamily: FontConstants.fontJetBrainsMono,
         fontSize: 11,
-        color: ThemeEnum.textBody,
+        color: ThemeEnum.inkBody,
         maxLines: 1,
       ),
     );

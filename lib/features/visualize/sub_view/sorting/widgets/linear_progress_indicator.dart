@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 /// Sorting progress rail. CoreDive keeps gradients to two places (XP fill and the
-/// auth wash), so this is a solid teal fill on a [ThemeEnum.surfaceAlt] track,
+/// auth wash), so this is a solid teal fill on a [ThemeEnum.surface] track,
 /// anchored to the start edge.
 class GradientLinearProgressIndicator extends StatelessWidget {
   final double value;
@@ -19,11 +19,11 @@ class GradientLinearProgressIndicator extends StatelessWidget {
         height: 3,
         child: Stack(
           children: [
-            Container(color: context.getColor(ThemeEnum.hover)),
+            Container(color: context.getColor(ThemeEnum.track)),
             FractionallySizedBox(
               alignment: AlignmentDirectional.centerStart,
               widthFactor: value.clamp(0.0, 1.0),
-              child: Container(color: context.getColor(ThemeEnum.accent)),
+              child: Container(color: context.getColor(ThemeEnum.inkPrimary)),
             ),
           ],
         ),

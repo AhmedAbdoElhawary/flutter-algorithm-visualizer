@@ -29,7 +29,7 @@ class ConfirmationDialogCard extends StatelessWidget {
     required this.confirmLabel,
     required this.onConfirm,
     required this.onCancel,
-    this.accentColor = ThemeEnum.accentRed,
+    this.accentColor = ThemeEnum.dataHard,
   });
 
   @override
@@ -47,7 +47,7 @@ class ConfirmationDialogCard extends StatelessWidget {
               height: 48.r,
               alignment: Alignment.center,
               decoration: BoxDecoration(
-                color: context.getColor(ThemeEnum.chipNeutralFill),
+                color: context.getColor(ThemeEnum.raised),
                 shape: BoxShape.circle,
               ),
               child: CustomIcon(icon, size: 24, color: accentColor),
@@ -55,7 +55,7 @@ class ConfirmationDialogCard extends StatelessWidget {
             const RSizedBox(height: 14),
             BoldText(
               title,
-              color: ThemeEnum.textPrimary,
+              color: ThemeEnum.inkTitle,
               fontSize: 16,
               fontWeight: FontWeightManager.bold800,
               textAlign: TextAlign.center,
@@ -63,7 +63,7 @@ class ConfirmationDialogCard extends StatelessWidget {
             const RSizedBox(height: 6),
             RegularText(
               description,
-              color: ThemeEnum.textSecond,
+              color: ThemeEnum.inkBody,
               fontSize: 12,
               textAlign: TextAlign.center,
             ),

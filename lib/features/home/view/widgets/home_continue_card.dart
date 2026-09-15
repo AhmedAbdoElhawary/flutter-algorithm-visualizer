@@ -44,6 +44,7 @@ class HomeContinueCard extends ConsumerWidget {
       bottomPadding: 14,
       child: CardContainer(
         surface: CdSurface.main,
+        borderColorOverride: ThemeEnum.inkBody,
         padding: REdgeInsets.all(16),
         onTap: () => context.pushTo(Routes.problem, queryParameters: '${problem.getProblemId}'),
         child: Row(
@@ -55,12 +56,12 @@ class HomeContinueCard extends ConsumerWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const RegularText(StringsManager.continueLabel,
-                      fontSize: 11, maxLines: 1, color: ThemeEnum.textSecond),
+                      fontSize: 11, maxLines: 1, color: ThemeEnum.inkBody),
                   SizedBox(height: 2.h),
                   BoldText(
                     problem.getName,
                     fontSize: 14,
-                    color: ThemeEnum.textPrimary,
+                    color: ThemeEnum.inkTitle,
                     maxLines: 1,
                   ),
                   SizedBox(height: 4.h),
@@ -69,7 +70,7 @@ class HomeContinueCard extends ConsumerWidget {
             ),
             if (quietDifficulty != ProblemDifficulty.none)
               DifficultyChip(difficulty: quietDifficulty, label: diffLabel),
-            Icon(Icons.chevron_right_rounded, color: context.getColor(ThemeEnum.textSecond), size: 20.r),
+            Icon(Icons.chevron_right_rounded, color: context.getColor(ThemeEnum.inkBody), size: 20.r),
           ],
         ),
       ),

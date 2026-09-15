@@ -7,12 +7,12 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 enum BarState { sorted, excluded, key, swap, comparing, idle }
 
 ThemeEnum barStateRole(BarState state) => switch (state) {
-      BarState.sorted => ThemeEnum.barDone,
-      BarState.excluded => ThemeEnum.barExcluded,
-      BarState.key => ThemeEnum.comparing,
-      BarState.swap => ThemeEnum.barSwap,
-      BarState.comparing => ThemeEnum.comparing,
-      BarState.idle => ThemeEnum.barIdle,
+      BarState.sorted => ThemeEnum.dataEasy,
+      BarState.excluded => ThemeEnum.raised,
+      BarState.key => ThemeEnum.dataActive,
+      BarState.swap => ThemeEnum.dataHard,
+      BarState.comparing => ThemeEnum.dataActive,
+      BarState.idle => ThemeEnum.track,
     };
 
 class BarChartBar {
@@ -97,7 +97,7 @@ class _Bar extends StatelessWidget {
               child: MediumText(
                 bar.label ?? bar.value.toStringAsFixed(0),
                 fontSize: 10,
-                color: bar.state == BarState.sorted ? ThemeEnum.difficultyEasy : ThemeEnum.textPrimary,
+                color: bar.state == BarState.sorted ? ThemeEnum.dataEasy : ThemeEnum.inkTitle,
               ),
             ),
           ),

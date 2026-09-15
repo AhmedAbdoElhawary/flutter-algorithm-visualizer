@@ -489,4 +489,51 @@ class Solution {
   static const String onboardingSolved = "solved";
   static const String onboardingHeatLess = "Less";
   static const String onboardingHeatMore = "More";
+
+  // Multi-language code-execution engine (007) — the engine (`Failure`)
+  // never emits English prose itself (research decision 7); it hands
+  // presentation a stable `code` plus structured `data`, and this is where
+  // that pair becomes a sentence the learner reads.
+  static const String runnerLimitationLabel = "Runner limitation";
+  static const String wrongAnswerLabel = "Wrong answer";
+  static const String notRunLabel = "Not run";
+
+  static String executionFailureMessage(String code, Map<String, Object?> data) {
+    switch (code) {
+      case 'undefinedVariable':
+        return "Undefined variable '${data['name']}'";
+      case 'undefinedFunction':
+        return "Undefined function '${data['name']}'";
+      case 'indexOutOfRange':
+        return "Index ${data['index']} is out of range for a list of length ${data['length']}";
+      case 'keyNotFound':
+        return "Key '${data['key']}' was not found";
+      case 'divisionByZero':
+        return "Division by zero";
+      case 'typeMismatch':
+        return "Expected ${data['expected']} but got ${data['actual']}";
+      case 'wrongArgumentCount':
+        return "Expected ${data['expected']} argument(s) but got ${data['actual']}";
+      case 'uncaughtThrow':
+        return "Uncaught error: ${data['message']}";
+      case 'unsupportedConstruct':
+        return "'${data['construct']}' isn't supported in this editor yet";
+      case 'notAvailableInThisEnvironment':
+        return "'${data['name']}' isn't available in this environment";
+      case 'indentationError':
+        return "Inconsistent indentation";
+      case 'missingEntryPoint':
+        return "Couldn't find a function named '${data['name']}' to run";
+      case 'timeLimitExceeded':
+        return "This ran for too long and was stopped";
+      case 'memoryLimitExceeded':
+        return "This used too much memory and was stopped";
+      case 'recursionLimitExceeded':
+        return "This recursed too deeply and was stopped";
+      case 'cancelled':
+        return "Cancelled";
+      default:
+        return "Something went wrong while running this code";
+    }
+  }
 }

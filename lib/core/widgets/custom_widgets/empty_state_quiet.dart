@@ -14,7 +14,7 @@ class EmptyStateQuiet extends StatelessWidget {
     return Padding(
       padding: REdgeInsets.only(top: 6),
       child: CustomPaint(
-        painter: _DashedBorderPainter(color: context.getColor(ThemeEnum.border), radius: 14.r),
+        painter: _DashedBorderPainter(color: context.getColor(ThemeEnum.hairline), radius: 14.r),
         child: Container(
           width: double.infinity,
           padding: REdgeInsets.symmetric(horizontal: 22, vertical: 18),
@@ -22,13 +22,13 @@ class EmptyStateQuiet extends StatelessWidget {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              SemiBoldText(title, fontSize: 12.5, color: ThemeEnum.textBody, textAlign: TextAlign.center),
+              SemiBoldText(title, fontSize: 12.5, color: ThemeEnum.inkBody, textAlign: TextAlign.center),
               if (caption != null) ...[
                 const RSizedBox(height: 6),
                 RegularText(
                   caption!,
                   fontSize: 11,
-                  color: ThemeEnum.textSecond,
+                  color: ThemeEnum.inkBody,
                   textAlign: TextAlign.center,
                   maxLines: 3,
                 ),

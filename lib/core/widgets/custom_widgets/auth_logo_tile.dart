@@ -23,7 +23,7 @@ class AuthLogoTile extends StatelessWidget {
         child: Center(
           child: CustomPaint(
             size: Size(32.r, 32.r),
-            painter: _CoreDiveLogoMark(color: context.getColor(ThemeEnum.textPrimary)),
+            painter: _CoreDiveLogoMark(color: context.getColor(ThemeEnum.inkTitle)),
           ),
         ),
       ),
@@ -42,11 +42,11 @@ class AuthRecoveryTile extends StatelessWidget {
       height: side,
       alignment: Alignment.center,
       decoration: BoxDecoration(
-        color: context.getColor(ThemeEnum.primaryTint),
+        color: context.getColor(ThemeEnum.hairline),
         borderRadius: BorderRadius.circular(CdRadius.lg.r),
-        border: Border.all(color: context.getColor(ThemeEnum.borderAccent)),
+        border: Border.all(color: context.getColor(ThemeEnum.inkPrimary)),
       ),
-      child: CustomIcon(icon, size: 26, color: ThemeEnum.primaryHover),
+      child: CustomIcon(icon, size: 26, color: ThemeEnum.inkTitle),
     );
   }
 }

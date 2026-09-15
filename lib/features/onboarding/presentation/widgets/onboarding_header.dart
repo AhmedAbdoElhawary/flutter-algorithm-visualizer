@@ -1,7 +1,6 @@
 import 'package:algorithm_visualizer/core/resources/strings_manager.dart';
 import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
 import 'package:algorithm_visualizer/features/onboarding/presentation/widgets/onboarding_text.dart';
-import 'package:algorithm_visualizer/features/onboarding/presentation/widgets/onboarding_tokens.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -15,7 +14,7 @@ class OnboardingHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: OnboardingTokens.headerHeight.h,
+      height: 44.h,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -24,10 +23,10 @@ class OnboardingHeader extends StatelessWidget {
           // label is centred inside it.
           InkResponse(
             onTap: onSkip,
-            radius: OnboardingTokens.headerHeight.r / 2,
+            radius: 44.r / 2,
             child: SizedBox(
-              width: OnboardingTokens.headerHeight.w,
-              height: OnboardingTokens.headerHeight.h,
+              width: 44.w,
+              height: 44.h,
               child: const Center(
                 child: MonoText(StringsManager.onboardingSkip, fontSize: 15),
               ),
@@ -47,12 +46,12 @@ class AlgoDiveMark extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: OnboardingTokens.markSize.r,
-      height: OnboardingTokens.markSize.r,
+      width: 26.r,
+      height: 26.r,
       child: CustomPaint(
         painter: _MarkPainter(
-          ink: context.getColor(OnboardingTokens.accent),
-          green: context.getColor(OnboardingTokens.green),
+          ink: context.getColor(ThemeEnum.inkPrimary),
+          green: context.getColor(ThemeEnum.dataEasy),
         ),
       ),
     );

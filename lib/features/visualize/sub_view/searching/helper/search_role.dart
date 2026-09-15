@@ -9,17 +9,17 @@ enum SearchRole { wall, frontier, visited, path, start, end }
 ThemeEnum searchRoleColor(SearchRole role) {
   switch (role) {
     case SearchRole.start:
-      return ThemeEnum.barAnchor;
+      return ThemeEnum.dataMedium;
     case SearchRole.end:
-      return ThemeEnum.barSwap;
+      return ThemeEnum.dataHard;
     case SearchRole.frontier:
-      return ThemeEnum.barCompare;
+      return ThemeEnum.dataActive;
     case SearchRole.visited:
-      return ThemeEnum.barTarget;
+      return ThemeEnum.dataTarget;
     case SearchRole.path:
-      return ThemeEnum.barDone;
+      return ThemeEnum.dataEasy;
     case SearchRole.wall:
-      return ThemeEnum.borderStrong;
+      return ThemeEnum.track;
   }
 }
 

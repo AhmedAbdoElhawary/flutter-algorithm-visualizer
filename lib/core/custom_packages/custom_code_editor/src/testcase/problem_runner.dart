@@ -1,4 +1,12 @@
-import '../execution/runner.dart';
+import 'package:algorithm_visualizer/core/resources/strings_manager.dart';
+
+import '../execution/compile/compiler.dart';
+import '../execution/errors/failure.dart';
+import '../execution/frontend/dart/dart_harness.dart';
+import '../execution/legacy/object_instance.dart';
+import '../execution/values/value.dart' as engine;
+import '../execution/vm/budget.dart';
+import '../execution/vm/vm.dart';
 import 'custom_object_shape.dart';
 import 'function_signature.dart';
 import 'object_builder.dart';
@@ -88,7 +96,7 @@ class ProblemRunner {
       );
     }
 
-    final runner = DartInterpreterRunner(maxSteps: maxSteps);
+    final frontend = DartFrontend();
     final results = <SingleTestCaseResult>[];
     String? firstError;
 
@@ -98,28 +106,38 @@ class ProblemRunner {
 
       final argValues = parseTestCaseInput(input);
       final built = _buildProgram(problem, sig, userCode, argValues);
-      final run = runner.run(built.program);
 
-      if (run.error != null) {
+      Failure? failure;
+      VmResult? run;
+      try {
+        final program = frontend.parse(built.program);
+        final script = Compiler().compileProgram(program);
+        final vm =
+            Vm(dialect: frontend.dialect, budget: const ExecutionBudget(instructionsPerBudgetCheck: 2000));
+        run = vm.run(script, timeout: const Duration(seconds: 2));
+        failure = run.failure;
+      } on FrontendFailure catch (e) {
+        failure = e.toFailure();
+      }
+
+      if (failure != null) {
         // Rebase the reported line so it points at the user's original code
         // (e.g. the function's signature inside `class Solution { ... }`)
         // instead of the generated program.
-        final error = RunError(
-          line: run.error!.line + built.lineOffset,
-          message: run.error!.message,
-          kind: run.error!.kind,
-        );
+        final line = failure.line + built.lineOffset;
+        final message =
+            '${failure.kind.name} error (line $line): ${StringsManager.executionFailureMessage(failure.code, failure.data)}';
         results.add(SingleTestCaseResult(
           testCase: testCase,
           passed: false,
-          actualOutput: run.stdout.isEmpty ? '' : run.stdout.join('\n'),
-          errorMessage: error.toString(),
+          actualOutput: (run?.stdout ?? const <String>[]).isEmpty ? '' : run!.stdout.join('\n'),
+          errorMessage: message,
         ));
-        firstError ??= error.toString();
+        firstError ??= message;
         continue;
       }
 
-      final raw = run.rawOutput.isEmpty ? null : run.rawOutput.last;
+      final raw = run!.rawOutput.isEmpty ? null : _unwrapValue(run.rawOutput.last);
       // For in-place (`void`) functions the printed value is the mutated
       // first argument, so its shape comes from the first parameter's type.
       final shape = sig.isVoid && sig.params.isNotEmpty
@@ -258,8 +276,58 @@ class ProblemRunner {
   }
 
   // ---------------------------------------------------------------------
-  // Serialization / comparison
+  // Bridging the new engine's Value model to the raw shape
+  // object_serializer.dart still expects
   // ---------------------------------------------------------------------
+
+  /// `object_serializer.dart`'s `canonicalString` (and its shape-aware
+  /// linked-list/tree serializers, including their cycle guards) still
+  /// operate on plain Dart primitives and the legacy `ObjectInstance` —
+  /// rewiring them onto the new engine's canonical-value model directly is
+  /// Phase 6 (US6, T059-T061) work. Until then, this recursively unwraps a
+  /// [engine.Value] into that same raw shape, preserving node identity (via
+  /// [seen]) so a cyclic structure still round-trips through the existing
+  /// cycle guard correctly.
+  dynamic _unwrapValue(engine.Value value, [Map<engine.InstanceValue, ObjectInstance>? seen]) {
+    final visited = seen ?? <engine.InstanceValue, ObjectInstance>{};
+    switch (value) {
+      case engine.IntValue(:final value):
+        return value;
+      case engine.NumValue(:final value):
+        return value;
+      case engine.BoolValue(:final value):
+        return value;
+      case engine.StrValue(:final value):
+        return value;
+      case engine.NullValue():
+      case engine.UndefinedValue():
+        return null;
+      case engine.ListValue(:final items):
+        return items.map((e) => _unwrapValue(e, visited)).toList();
+      case engine.TupleValue(:final items):
+        return items.map((e) => _unwrapValue(e, visited)).toList();
+      case engine.SetValue(:final items):
+        return items.map((e) => _unwrapValue(e, visited)).toList();
+      case engine.MapValue(:final entries):
+        return <dynamic, dynamic>{
+          for (final e in entries.entries) _unwrapValue(e.key, visited): _unwrapValue(e.value, visited)
+        };
+      case engine.InstanceValue():
+        final existing = visited[value];
+        if (existing != null) return existing;
+        final instance = ObjectInstance(value.klass.name, <String, dynamic>{});
+        visited[value] = instance;
+        value.fields.forEach((key, v) => instance.fields[key] = _unwrapValue(v, visited));
+        return instance;
+      case engine.FunctionValue():
+      case engine.ClassValue():
+      case engine.ErrorValue():
+      case engine.NativeFunctionValue():
+      case engine.IntrinsicMethod():
+      case engine.NamespaceValue():
+        throw ArgumentError('$value has no raw representation for grading');
+    }
+  }
 
   String _serialize(dynamic raw, CustomObjectShape? shape) {
     if (raw == null && (shape == CustomObjectShape.linkedList || shape == CustomObjectShape.binaryTree)) {

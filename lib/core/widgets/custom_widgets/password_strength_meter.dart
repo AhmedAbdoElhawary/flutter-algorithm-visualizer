@@ -29,7 +29,7 @@ class PasswordStrengthMeter extends StatelessWidget {
                   height: 3.h,
                   decoration: BoxDecoration(
                     color: context.getColor(
-                      i < strength.filledSegments ? ThemeEnum.difficultyEasy : ThemeEnum.surfaceAlt,
+                      i < strength.filledSegments ? ThemeEnum.dataEasy : ThemeEnum.surface,
                     ),
                     borderRadius: BorderRadius.circular(CdRadius.pill.r),
                   ),
@@ -39,7 +39,7 @@ class PasswordStrengthMeter extends StatelessWidget {
           ],
         ),
         SizedBox(height: 6.h),
-        RegularText(strength.caption, color: ThemeEnum.textSecond, fontSize: 10.5, maxLines: 1),
+        RegularText(strength.caption, color: ThemeEnum.inkBody, fontSize: 10.5, maxLines: 1),
       ],
     );
   }

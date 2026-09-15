@@ -6,7 +6,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 /// Back arrow, transport controls, header actions, the Visualizer's play
 /// control — a 32px/44px square, radius scaling with size. [filled] swaps
 /// the default 1px `border subtle` outline for a solid `textBright` fill
-/// with an `onPrimary` icon (the one 44px play button, no glow).
+/// with an `ground` icon (the one 44px play button, no glow).
 class IconButtonQuiet extends StatelessWidget {
   final IconData icon;
   final VoidCallback? onTap;
@@ -38,16 +38,14 @@ class IconButtonQuiet extends StatelessWidget {
         height: size.r,
         alignment: Alignment.center,
         decoration: BoxDecoration(
-          color: filled ? context.getColor(ThemeEnum.textBright) : null,
+          color: filled ? context.getColor(ThemeEnum.inkPrimary) : null,
           borderRadius: BorderRadius.circular((size >= 44 ? 14 : 10).r),
-          border: filled ? null : Border.all(color: context.getColor(ThemeEnum.borderSubtle)),
+          border: filled ? null : Border.all(color: context.getColor(ThemeEnum.hairline)),
         ),
         child: CustomIcon(
           icon,
           size: iconSize,
-          color: filled
-              ? ThemeEnum.onPrimary
-              : iconColor ?? (disabled ? ThemeEnum.textDisabled : ThemeEnum.textBody),
+          color: filled ? ThemeEnum.ground : iconColor ?? (disabled ? ThemeEnum.track : ThemeEnum.inkBody),
         ),
       ),
     );

@@ -1,5 +1,4 @@
 import 'package:algorithm_visualizer/features/onboarding/presentation/widgets/onboarding_text.dart';
-import 'package:algorithm_visualizer/features/onboarding/presentation/widgets/onboarding_tokens.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -29,13 +28,12 @@ class OnboardingSlide extends StatelessWidget {
             constraints: BoxConstraints(minHeight: constraints.maxHeight),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
-              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 Padding(
                   padding: REdgeInsets.symmetric(horizontal: 5),
                   child: visual,
                 ),
-                SizedBox(height: OnboardingTokens.cardToHeadline.h),
                 OnboardingCopy(headline: headline, body: body),
               ],
             ),

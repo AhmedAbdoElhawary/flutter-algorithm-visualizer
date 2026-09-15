@@ -26,7 +26,9 @@ class LoginPage extends ConsumerWidget {
     ref.listen(
       authLoginProvider.select((s) => s.errorMessage),
       (previous, next) {
-        if (next != null) context.showSnackBar(message: next, type: CustomSnackBarType.error);
+        if (next != null) {
+          context.showSnackBar(message: next, type: CustomSnackBarType.error);
+        }
       },
     );
 
@@ -159,7 +161,7 @@ class _PasswordFieldState extends ConsumerState<_PasswordField> {
       trailingLabelWidget: GestureDetector(
         onTap: () => context.push(Routes.forgotPassword.path),
         child: const MediumText(StringsManager.forgotShort,
-            color: ThemeEnum.primaryHover, fontSize: 11, maxLines: 1),
+            color: ThemeEnum.inkTitle, fontSize: 11, maxLines: 1),
       ),
     );
   }

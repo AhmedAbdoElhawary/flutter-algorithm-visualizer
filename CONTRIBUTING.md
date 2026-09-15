@@ -154,7 +154,7 @@ BorderRadius.circular(8)
 
 ```dart
 // ✅
-context.getColor(ThemeEnum.accent) // i will boost the preformance and changing them later
+context.getColor(ThemeEnum.inkPrimary) // i will boost the preformance and changing them later
 
 // ❌
 Colors.white

@@ -1,6 +1,6 @@
 import 'package:flutter/widgets.dart';
 
-import '../execution/runner.dart';
+import '../execution/legacy/runner.dart';
 import '../formatting/formatter.dart';
 import '../models/code_editor_config.dart';
 import '../models/code_editor_theme.dart';
