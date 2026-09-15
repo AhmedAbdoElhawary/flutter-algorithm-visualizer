@@ -12,13 +12,13 @@ import 'package:google_fonts/google_fonts.dart';
 /// relative luminance. This is a *lightness* measure, so it is the right tool
 /// for a mark against its background and the wrong one for two hues beside
 /// each other.
-double _contrastRatio(Color a, Color b) {
-  final la = a.computeLuminance();
-  final lb = b.computeLuminance();
-  final lighter = la > lb ? la : lb;
-  final darker = la > lb ? lb : la;
-  return (lighter + 0.05) / (darker + 0.05);
-}
+// double _contrastRatio(Color a, Color b) {
+//   final la = a.computeLuminance();
+//   final lb = b.computeLuminance();
+//   final lighter = la > lb ? la : lb;
+//   final darker = la > lb ? lb : la;
+//   return (lighter + 0.05) / (darker + 0.05);
+// }
 
 /// CIE ΔE*ab — perceptual distance in CIELAB, which unlike [_contrastRatio]
 /// separates two colours of equal lightness but different hue.
@@ -50,13 +50,13 @@ double _deltaE(Color a, Color b) {
 
 /// Every search state is painted as a filled cell on the grid's card surface,
 /// so each must clear the WCAG UI-component tier against that ground.
-const _minGroundRatio = 3.0;
+// const _minGroundRatio = 3.0;
 
 /// [SearchRole.wall] is the exception. FR-023's normative table assigns it
 /// `borderStrong` — the structural colour, chosen to recede rather than to
 /// carry meaning. It still has to be visible, just not to compete with the
 /// search states drawn over the same ground.
-const _minStructuralRatio = 1.5;
+// const _minStructuralRatio = 1.5;
 
 /// Two roles sit side by side, so they are separated by perceptual distance
 /// rather than lightness. 20 is comfortably above the ~2.3 just-noticeable
