@@ -1,7 +1,6 @@
 import 'package:algorithm_visualizer/core/resources/styles_manager.dart';
 import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
 import 'package:algorithm_visualizer/core/widgets/adaptive/text/adaptive_text.dart';
-import 'package:algorithm_visualizer/features/onboarding/presentation/widgets/onboarding_tokens.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -47,12 +46,12 @@ class _OnboardingButtonState extends State<OnboardingButton> {
     // Pressed states come from the spec: the filled button darkens its fill,
     // the outlined one lifts fill + border one step and dims its label to 80%.
     final Color fill = isFilled
-        ? context.getColor(_pressed ? ThemeEnum.primaryHover : OnboardingTokens.accent)
-        : context.getColor(_pressed ? ThemeEnum.primaryTint : OnboardingTokens.surface);
+        ? context.getColor(_pressed ? ThemeEnum.inkTitle : ThemeEnum.inkPrimary)
+        : context.getColor(_pressed ? ThemeEnum.hairline : ThemeEnum.raised);
 
     final labelColor = isFilled
-        ? context.getColor(OnboardingTokens.onAccent)
-        : context.getColor(OnboardingTokens.textHi).withValues(alpha: _pressed ? 0.8 : 1);
+        ? context.getColor(ThemeEnum.ground)
+        : context.getColor(ThemeEnum.inkTitle).withValues(alpha: _pressed ? 0.8 : 1);
 
     return GestureDetector(
       onTap: widget.onPressed,
@@ -60,24 +59,21 @@ class _OnboardingButtonState extends State<OnboardingButton> {
       onTapUp: (_) => _setPressed(false),
       onTapCancel: () => _setPressed(false),
       child: Container(
-        height: OnboardingTokens.buttonHeight.h,
+        height: 52.h,
         alignment: Alignment.center,
         decoration: BoxDecoration(
           color: fill,
-          borderRadius: BorderRadius.circular(OnboardingTokens.buttonRadius.r),
+          borderRadius: BorderRadius.circular(12.r),
           border: isFilled
               ? null
               : Border.all(
-                  color: context.getColor(_pressed ? ThemeEnum.hover : OnboardingTokens.border),
+                  color: context.getColor(_pressed ? ThemeEnum.track : ThemeEnum.track),
                 ),
         ),
         child: AdaptiveText(
           widget.label,
           maxLines: 1,
-          style: GetSemiBoldStyle(
-            fontSize: OnboardingTokens.buttonLabelSize,
-            color: labelColor,
-          ),
+          style: GetSemiBoldStyle(fontSize: 17, color: labelColor),
         ),
       ),
     );
