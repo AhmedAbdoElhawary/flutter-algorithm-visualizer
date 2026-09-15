@@ -70,6 +70,19 @@ class LoggingAuthRemoteDataSource implements AuthRemoteDataSource {
     return FirebaseLogger.trace(_scope, 'signOut', () => _source.signOut());
   }
 
+  @override
+  Future<void> deleteAccount({
+    required String password,
+    required Future<void> Function() onReauthenticated,
+  }) {
+    return FirebaseLogger.trace(
+      _scope,
+      'deleteAccount',
+      () => _source.deleteAccount(password: password, onReauthenticated: onReauthenticated),
+      args: {'password': FirebaseLogger.secret},
+    );
+  }
+
   String _describeUser(AuthUserDTO user) {
     return 'uid=${FirebaseLogger.id(user.id)}, ${FirebaseLogger.token(user.token)}';
   }
