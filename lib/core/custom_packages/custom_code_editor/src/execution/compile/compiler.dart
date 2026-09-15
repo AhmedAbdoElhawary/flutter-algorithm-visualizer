@@ -88,6 +88,43 @@ class Compiler {
     return FunctionValue(name: '<script>', arity: 0, chunk: proto);
   }
 
+  /// Binds one name of an [IrDestructure], consuming the value on top of the
+  /// stack. Reuses an existing binding when there is one, so Python's
+  /// `a, b = b, a` swaps the variables the learner already has rather than
+  /// shadowing them with fresh slots (which would strand any closure that had
+  /// already captured the originals).
+  void _bindDestructured(_FunctionCompiler fc, String name, IrNode at) {
+    final existing = _resolveLocal(fc, name) ?? (_resolveUpvalue(fc, name) != null ? -1 : null);
+    if (existing != null || fc.scopeDepth == 0) {
+      _storeVariable(fc, name, at.line, synthetic: at.synthetic);
+      fc.builder.emitOp(OpCode.pop, line: at.line, synthetic: at.synthetic);
+      return;
+    }
+    final slot = fc.declareLocal(name);
+    fc.builder.emitOp(OpCode.setLocal, line: at.line, synthetic: at.synthetic);
+    fc.builder.emitU16(slot, line: at.line, synthetic: at.synthetic);
+    fc.builder.emitOp(OpCode.pop, line: at.line, synthetic: at.synthetic);
+  }
+
+  /// Builds one [ListValue] out of [items] where at least one item is an
+  /// [IrSpread], leaving it on the stack. Plain items are appended one at a
+  /// time; a spread has all of its elements poured in. Used for both
+  /// spread-bearing collection literals and spread-bearing argument lists,
+  /// whose lengths are only known at runtime.
+  void _compilePacked(_FunctionCompiler fc, List<IrExpr> items, IrNode at) {
+    fc.builder.emitOp(OpCode.buildList, line: at.line, synthetic: at.synthetic);
+    fc.builder.emitU16(0, line: at.line, synthetic: at.synthetic);
+    for (final item in items) {
+      if (item is IrSpread) {
+        _compileExpr(fc, item.value);
+        fc.builder.emitOp(OpCode.extendAll, line: at.line, synthetic: at.synthetic);
+      } else {
+        _compileExpr(fc, item);
+        fc.builder.emitOp(OpCode.appendOne, line: at.line, synthetic: at.synthetic);
+      }
+    }
+  }
+
   // -------------------------------------------------------------------
   // Variable resolution
   // -------------------------------------------------------------------
@@ -193,10 +230,31 @@ class Compiler {
           fc.builder.emitU16(slot, line: stmt.line, synthetic: stmt.synthetic);
           fc.builder.emitOp(OpCode.pop, line: stmt.line, synthetic: stmt.synthetic);
         }
-      case IrDestructure(:final names, :final value):
-        // Python/JS only (Phase 7/8) — the Dart frontend never emits this.
-        throw CompilerUnsupported(
-            'destructuring is not supported by this frontend (names: $names, value: $value)');
+      case IrDestructure(:final names, :final value, :final byProperty):
+        // Evaluate the right-hand side exactly once into a hidden local, then
+        // pull each name out of it. The temp name starts with a character no
+        // lexer can produce, so it can never collide with a learner's own
+        // variable.
+        _compileExpr(fc, value);
+        final tmp = fc.declareLocal('#destructure${fc.nextSlot}');
+        fc.builder.emitOp(OpCode.setLocal, line: stmt.line, synthetic: stmt.synthetic);
+        fc.builder.emitU16(tmp, line: stmt.line, synthetic: stmt.synthetic);
+        fc.builder.emitOp(OpCode.pop, line: stmt.line, synthetic: stmt.synthetic);
+        for (var i = 0; i < names.length; i++) {
+          fc.builder.emitOp(OpCode.getLocal, line: stmt.line, synthetic: stmt.synthetic);
+          fc.builder.emitU16(tmp, line: stmt.line, synthetic: stmt.synthetic);
+          if (byProperty) {
+            final nameIdx = fc.builder.addConstant(StrValue(names[i]));
+            fc.builder.emitOp(OpCode.getProperty, line: stmt.line, synthetic: stmt.synthetic);
+            fc.builder.emitU16(nameIdx, line: stmt.line, synthetic: stmt.synthetic);
+          } else {
+            final idxConst = fc.builder.addConstant(IntValue(i));
+            fc.builder.emitOp(OpCode.constant, line: stmt.line, synthetic: stmt.synthetic);
+            fc.builder.emitU16(idxConst, line: stmt.line, synthetic: stmt.synthetic);
+            fc.builder.emitOp(OpCode.getIndex, line: stmt.line, synthetic: stmt.synthetic);
+          }
+          _bindDestructured(fc, names[i], stmt);
+        }
       case IrIf(:final condition, :final thenBranch, :final elseBranch):
         _compileExpr(fc, condition);
         final elseJump = fc.builder.emitJump(OpCode.jumpIfFalse, line: stmt.line, synthetic: stmt.synthetic);
@@ -562,8 +620,25 @@ class Compiler {
         _compileExpr(fc, index);
         _compileExpr(fc, value);
         fc.builder.emitOp(OpCode.setIndex, line: expr.line, synthetic: expr.synthetic);
-      case IrSlice():
-        throw CompilerUnsupported('slicing is not supported by this frontend');
+      case IrSlice(:final receiver, :final start, :final end, :final step):
+        // Receiver, then whichever bounds are present, then a flag byte the
+        // VM reads to know how many to pop back off.
+        _compileExpr(fc, receiver);
+        var flags = 0;
+        if (start != null) {
+          _compileExpr(fc, start);
+          flags |= 1;
+        }
+        if (end != null) {
+          _compileExpr(fc, end);
+          flags |= 2;
+        }
+        if (step != null) {
+          _compileExpr(fc, step);
+          flags |= 4;
+        }
+        fc.builder.emitOp(OpCode.slice, line: expr.line, synthetic: expr.synthetic);
+        fc.builder.emitByte(flags, line: expr.line, synthetic: expr.synthetic);
       case IrPropertyGet(:final receiver, :final name):
         _compileExpr(fc, receiver);
         final idx = fc.builder.addConstant(StrValue(name));
@@ -577,18 +652,22 @@ class Compiler {
         fc.builder.emitU16(idx, line: expr.line, synthetic: expr.synthetic);
       case IrCall(:final callee, :final args):
         _compileExpr(fc, callee);
-        for (final a in args) {
-          if (a is IrSpread) {
-            throw CompilerUnsupported('spread call arguments are not supported by this frontend');
+        if (args.any((a) => a is IrSpread)) {
+          // The argument count is not known until runtime, so pack the
+          // arguments into one list and let CALL_SPREAD unpack it.
+          _compilePacked(fc, args, expr);
+          fc.builder.emitOp(OpCode.callSpread, line: expr.line, synthetic: expr.synthetic);
+        } else {
+          for (final a in args) {
+            _compileExpr(fc, a);
           }
-          _compileExpr(fc, a);
+          fc.builder.emitOp(OpCode.call, line: expr.line, synthetic: expr.synthetic);
+          fc.builder.emitByte(args.length, line: expr.line, synthetic: expr.synthetic);
         }
-        fc.builder.emitOp(OpCode.call, line: expr.line, synthetic: expr.synthetic);
-        fc.builder.emitByte(args.length, line: expr.line, synthetic: expr.synthetic);
       case IrSuperCall(:final name, :final args):
         for (final a in args) {
           if (a is IrSpread) {
-            throw CompilerUnsupported('spread call arguments are not supported by this frontend');
+            throw CompilerUnsupported('spread arguments are not supported in a super call');
           }
           _compileExpr(fc, a);
         }
@@ -597,16 +676,22 @@ class Compiler {
         fc.builder.emitU16(idx, line: expr.line, synthetic: expr.synthetic);
         fc.builder.emitByte(args.length, line: expr.line, synthetic: expr.synthetic);
       case IrListLiteral(:final items):
-        for (final i in items) {
-          if (i is IrSpread) {
-            throw CompilerUnsupported('spread in list literals is not supported by this frontend');
+        if (items.any((i) => i is IrSpread)) {
+          _compilePacked(fc, items, expr);
+        } else {
+          for (final i in items) {
+            _compileExpr(fc, i);
           }
+          fc.builder.emitOp(OpCode.buildList, line: expr.line, synthetic: expr.synthetic);
+          fc.builder.emitU16(items.length, line: expr.line, synthetic: expr.synthetic);
+        }
+      case IrTupleLiteral(:final items):
+        for (final i in items) {
+          if (i is IrSpread) throw CompilerUnsupported('spread in tuple literals is not supported');
           _compileExpr(fc, i);
         }
-        fc.builder.emitOp(OpCode.buildList, line: expr.line, synthetic: expr.synthetic);
+        fc.builder.emitOp(OpCode.buildTuple, line: expr.line, synthetic: expr.synthetic);
         fc.builder.emitU16(items.length, line: expr.line, synthetic: expr.synthetic);
-      case IrTupleLiteral():
-        throw CompilerUnsupported('tuples are not supported by this frontend');
       case IrMapLiteral(:final keys, :final values):
         for (var i = 0; i < keys.length; i++) {
           _compileExpr(fc, keys[i]);
@@ -615,14 +700,20 @@ class Compiler {
         fc.builder.emitOp(OpCode.buildMap, line: expr.line, synthetic: expr.synthetic);
         fc.builder.emitU16(keys.length, line: expr.line, synthetic: expr.synthetic);
       case IrSetLiteral(:final items):
-        for (final i in items) {
-          if (i is IrSpread) {
-            throw CompilerUnsupported('spread in set literals is not supported by this frontend');
+        if (items.any((i) => i is IrSpread)) {
+          // Open an empty set, flatten the items into a list beside it, then
+          // pour that list in — the set does the deduping.
+          fc.builder.emitOp(OpCode.buildSet, line: expr.line, synthetic: expr.synthetic);
+          fc.builder.emitU16(0, line: expr.line, synthetic: expr.synthetic);
+          _compilePacked(fc, items, expr);
+          fc.builder.emitOp(OpCode.extendAll, line: expr.line, synthetic: expr.synthetic);
+        } else {
+          for (final i in items) {
+            _compileExpr(fc, i);
           }
-          _compileExpr(fc, i);
+          fc.builder.emitOp(OpCode.buildSet, line: expr.line, synthetic: expr.synthetic);
+          fc.builder.emitU16(items.length, line: expr.line, synthetic: expr.synthetic);
         }
-        fc.builder.emitOp(OpCode.buildSet, line: expr.line, synthetic: expr.synthetic);
-        fc.builder.emitU16(items.length, line: expr.line, synthetic: expr.synthetic);
       case IrSpread():
         throw CompilerUnsupported('spread is only meaningful inside a call or collection literal');
       case IrCascade(:final receiver, :final operations):
