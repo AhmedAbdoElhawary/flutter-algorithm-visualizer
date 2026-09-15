@@ -34,10 +34,11 @@ class OnboardingPage extends ConsumerStatefulWidget {
 class _OnboardingPageState extends ConsumerState<OnboardingPage> {
   final PageController _pageController = PageController();
 
-  int _page = 0;
-
-  /// Screen 4 holds its buttons back until the heatmap has finished filling.
-  bool _ctaReady = false;
+  /// Live scroll position, not the settled page index. Everything outside the
+  /// PageView — dots, controls, which visual is running — reads this, so the
+  /// whole screen moves with your finger instead of snapping when the page
+  /// change fires.
+  double _offset = 0;
 
   /// White, white, white, then sand — the accent progression the flow tells.
   static const List<ThemeEnum> _accents = [
@@ -48,17 +49,36 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
   ];
 
   @override
+  void initState() {
+    super.initState();
+    _pageController.addListener(_onScroll);
+  }
+
+  @override
   void dispose() {
+    _pageController.removeListener(_onScroll);
     _pageController.dispose();
     super.dispose();
   }
 
+  void _onScroll() {
+    if (!_pageController.hasClients) return;
+    if (!_pageController.position.hasContentDimensions) return;
+    final page = _pageController.page ?? 0;
+    if ((page - _offset).abs() < 0.001) return;
+    setState(() => _offset = page);
+  }
+
   void _next() {
     _pageController.nextPage(
-      duration: const Duration(milliseconds: 280),
-      curve: Curves.elasticInOut,
+      duration: const Duration(milliseconds: 360),
+      curve: Curves.easeInOutCubic,
     );
   }
+
+  /// A visual starts a little before its page is fully on screen, so it is
+  /// already running when it slides in rather than sitting frozen.
+  bool _isActive(int page) => (_offset - page).abs() < 0.6;
 
   Future<void> _finish({required bool toLogin}) async {
     await ref.read(onboardingStoreProvider).markSeen();
@@ -68,6 +88,9 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
 
   @override
   Widget build(BuildContext context) {
+    // 0 on page 3, 1 on page 4, and every value in between while swiping.
+    final reveal = (_offset - (OnboardingPage.pageCount - 2)).clamp(0.0, 1.0);
+
     return Scaffold(
       backgroundColor: context.getColor(OnboardingTokens.bgBase),
       body: SafeArea(
@@ -79,32 +102,24 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
               Expanded(
                 child: PageView(
                   controller: _pageController,
-                  onPageChanged: (page) => setState(() => _page = page),
                   children: [
                     OnboardingSlide(
-                      visual: SortingVisual(isActive: _page == 0),
+                      visual: SortingVisual(isActive: _isActive(0)),
                       headline: StringsManager.onboardingSeeItHeadline,
                       body: StringsManager.onboardingSeeItBody,
                     ),
                     OnboardingSlide(
-                      visual: PathfindingVisual(isActive: _page == 1),
+                      visual: PathfindingVisual(isActive: _isActive(1)),
                       headline: StringsManager.onboardingExploreHeadline,
                       body: StringsManager.onboardingExploreBody,
                     ),
                     OnboardingSlide(
-                      visual: EditorVisual(isActive: _page == 2),
+                      visual: EditorVisual(isActive: _isActive(2)),
                       headline: StringsManager.onboardingWriteHeadline,
                       body: StringsManager.onboardingWriteBody,
                     ),
                     OnboardingSlide(
-                      visual: HeatmapVisual(
-                        isActive: _page == 3,
-                        onFinished: () {
-                          if (mounted && !_ctaReady) {
-                            setState(() => _ctaReady = true);
-                          }
-                        },
-                      ),
+                      visual: HeatmapVisual(isActive: _isActive(3)),
                       headline: StringsManager.onboardingTrackHeadline,
                       body: StringsManager.onboardingTrackBody,
                     ),
@@ -112,22 +127,14 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
                 ),
               ),
               SizedBox(height: 20.h),
-              OnboardingDots(
-                count: OnboardingPage.pageCount,
-                currentPage: _page,
-                activeColor: _accents[_page],
-              ),
+              OnboardingDots(offset: _offset, accents: _accents),
               SizedBox(height: 20.h),
-              _page == OnboardingPage.pageCount - 1
-                  ? _FinalControls(
-                      visible: _ctaReady,
-                      onGetStarted: () => _finish(toLogin: true),
-                      onGuest: () => _finish(toLogin: false),
-                    )
-                  : OnboardingButton(
-                      label: StringsManager.onboardingNext,
-                      onPressed: _next,
-                    ),
+              _Controls(
+                reveal: reveal,
+                onNext: _next,
+                onGetStarted: () => _finish(toLogin: true),
+                onGuest: () => _finish(toLogin: false),
+              ),
               SizedBox(height: 12.h),
             ],
           ),
@@ -137,53 +144,108 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
   }
 }
 
-/// Screen 4's pair. Same height, same radius, same label size — only the fill
-/// tells them apart. They rise 8 px and fade in together once the grid lands.
-class _FinalControls extends StatelessWidget {
-  const _FinalControls({
-    required this.visible,
+/// The controls strip.
+///
+/// One box that grows from a single `Next` to the two final buttons as
+/// [reveal] goes 0 -> 1. Both layouts are bottom-anchored inside it and
+/// cross-fade, so nothing is ever inserted or removed mid-swipe — which is
+/// what used to make the page jump when the last page settled.
+class _Controls extends StatelessWidget {
+  const _Controls({
+    required this.reveal,
+    required this.onNext,
     required this.onGetStarted,
     required this.onGuest,
   });
 
-  final bool visible;
+  /// 0 while `Next` owns the strip, 1 once the final pair does.
+  final double reveal;
+
+  final VoidCallback onNext;
   final VoidCallback onGetStarted;
   final VoidCallback onGuest;
 
   @override
   Widget build(BuildContext context) {
-    return AnimatedSlide(
-      offset: visible ? Offset.zero : const Offset(0, 0.15),
-      duration: const Duration(milliseconds: 260),
-      curve: Curves.easeOut,
-      child: AnimatedOpacity(
-        opacity: visible ? 1 : 0,
-        duration: const Duration(milliseconds: 260),
-        // A fully transparent button would still take taps.
-        child: IgnorePointer(
-          ignoring: !visible,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              OnboardingButton(
-                label: StringsManager.onboardingGetStarted,
-                style: OnboardingButtonStyle.filled,
-                onPressed: onGetStarted,
+    const single = OnboardingTokens.footerSingle;
+    const dual = OnboardingTokens.footerDual;
+
+    return SizedBox(
+      height: (single + (dual - single) * reveal).h,
+      child: Stack(
+        children: [
+          if (reveal < 1)
+            PositionedDirectional(
+              start: 0,
+              end: 0,
+              bottom: 0,
+              child: Opacity(
+                opacity: 1 - reveal,
+                child: IgnorePointer(
+                  ignoring: reveal > 0.5,
+                  child: OnboardingButton(
+                    label: StringsManager.onboardingNext,
+                    onPressed: onNext,
+                  ),
+                ),
               ),
-              SizedBox(height: 10.h),
-              OnboardingButton(
-                label: StringsManager.onboardingContinueAsGuest,
-                onPressed: onGuest,
+            ),
+          if (reveal > 0)
+            PositionedDirectional(
+              start: 0,
+              end: 0,
+              bottom: 0,
+              child: Opacity(
+                opacity: reveal,
+                child: IgnorePointer(
+                  ignoring: reveal < 0.5,
+                  // The 8 px rise the spec asks for, now driven by the swipe
+                  // instead of waiting on the heatmap.
+                  child: Transform.translate(
+                    offset: Offset(0, 8.h * (1 - reveal)),
+                    child: _FinalControls(
+                      onGetStarted: onGetStarted,
+                      onGuest: onGuest,
+                    ),
+                  ),
+                ),
               ),
-              SizedBox(height: 10.h),
-              const MonoText(
-                StringsManager.onboardingGuestNote,
-                textAlign: TextAlign.center,
-              ),
-            ],
-          ),
-        ),
+            ),
+        ],
       ),
+    );
+  }
+}
+
+/// Screen 4's pair. Same height, same radius, same label size — only the fill
+/// tells them apart. Fading and rising are [_Controls]' job, not theirs.
+class _FinalControls extends StatelessWidget {
+  const _FinalControls({required this.onGetStarted, required this.onGuest});
+
+  final VoidCallback onGetStarted;
+  final VoidCallback onGuest;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        OnboardingButton(
+          label: StringsManager.onboardingGetStarted,
+          style: OnboardingButtonStyle.filled,
+          onPressed: onGetStarted,
+        ),
+        SizedBox(height: 10.h),
+        OnboardingButton(
+          label: StringsManager.onboardingContinueAsGuest,
+          onPressed: onGuest,
+        ),
+        SizedBox(height: 10.h),
+        const MonoText(
+          StringsManager.onboardingGuestNote,
+          textAlign: TextAlign.center,
+        ),
+      ],
     );
   }
 }
