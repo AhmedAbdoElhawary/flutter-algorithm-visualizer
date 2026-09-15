@@ -94,7 +94,17 @@ app.*.map.json
 !.env.example
 
 /specs/
-/docs/
+# `docs/` is local scratch (design exports, notes) apart from the public pages
+# below, which GitHub Pages serves and the Play Console listing links to. A
+# directory cannot be re-included once excluded, so the contents are excluded
+# with `/docs/*` and the published files named back in.
+/docs/*
+!/docs/.nojekyll
+!/docs/index.html
+!/docs/privacy-policy.html
+!/docs/delete-account.html
+!/docs/terms.html
+!/docs/style.css
 /.specify/
 /assets/onboarding/
 /assets/screenshots/
