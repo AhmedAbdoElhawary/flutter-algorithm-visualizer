@@ -13,11 +13,11 @@ class ChallengesErrorState extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          RegularText('ⓘ', fontSize: 40, color: ThemeEnum.accentRedRc),
+          RegularText('ⓘ', fontSize: 40, color: ThemeEnum.dataHard),
           RSizedBox(height: 12),
-          SemiBoldText(StringsManager.notAbleToLoadAnyChallenge, color: ThemeEnum.textSecond, fontSize: 15),
+          SemiBoldText(StringsManager.notAbleToLoadAnyChallenge, color: ThemeEnum.inkBody, fontSize: 15),
           RSizedBox(height: 4),
-          RegularText(StringsManager.tryInDifferentTime, color: ThemeEnum.hover, fontSize: 13),
+          RegularText(StringsManager.tryInDifferentTime, color: ThemeEnum.track, fontSize: 13),
         ],
       ),
     );
