@@ -18,6 +18,7 @@ import 'dart:collection';
 
 import '../../errors/failure.dart';
 import '../../values/value.dart';
+import 'python_collections.dart';
 import 'python_dialect.dart';
 
 /// Python methods the engine spells as a **property**: `d.keys()` is a call
@@ -56,6 +57,13 @@ const Map<String, String> pythonMethodHelpers = <String, String>{
   'items': '__items',
   'update': '__update',
   'setdefault': '__setdefault',
+  // collections.deque
+  'popleft': '__popleft',
+  'appendleft': '__appendleft',
+  'extendleft': '__extendleft',
+  'rotate': '__rotate',
+  // collections.Counter
+  'most_common': '__most_common',
   // set
   'discard': '__discard',
   'union': '__union',
@@ -113,6 +121,15 @@ Map<String, Value> pythonGlobals() => <String, Value>{
       'chr': const NativeFunctionValue('chr', 1, _chr),
       'divmod': const NativeFunctionValue('divmod', 2, _divmod),
 
+      // `collections` and `heapq`. Bound unconditionally rather than by the
+      // import statement, which only validates the module name — see
+      // `python_parser.dart`'s `_importStatement`.
+      'deque': const NativeFunctionValue('deque', 1, pyDeque),
+      'Counter': const NativeFunctionValue('Counter', 1, pyCounter),
+      'defaultdict': const NativeFunctionValue('defaultdict', 1, pyDefaultDict),
+      'heapq': pyHeapqNamespace(),
+      'collections': pyCollectionsNamespace(),
+
       // Everything below is reached only from lowered syntax, never written
       // by a learner. Each one exists because the choice it makes — is this
       // a list or a dict? one separator or whitespace? — can only be made
@@ -139,6 +156,11 @@ Map<String, Value> pythonGlobals() => <String, Value>{
       '__ljust': _method('__ljust', 'ljust', 3, (a, i) => _pad(a, left: false)),
       '__pop': _method('__pop', 'pop', 3, _pop),
       '__remove': _method('__remove', 'remove', 2, _remove),
+      '__popleft': _method('__popleft', 'popleft', 1, pyPopLeft),
+      '__appendleft': _method('__appendleft', 'appendleft', 2, pyAppendLeft),
+      '__extendleft': _method('__extendleft', 'extendleft', 2, pyExtendLeft),
+      '__rotate': _method('__rotate', 'rotate', 2, pyRotate),
+      '__most_common': _method('__most_common', 'most_common', 2, pyMostCommon),
       '__discard': _method('__discard', 'discard', 2, _discard),
       '__count': _method('__count', 'count', 2, _count),
       '__index_of': _method('__index_of', 'index', 2, _indexOf),
