@@ -2,126 +2,28 @@ import 'package:algorithm_visualizer/core/resources/color_manager.dart';
 import 'package:flutter/material.dart';
 
 enum ThemeEnum {
-  primary,
-  focus,
-  card,
-  mainCard,
-  outputHeader,
-  accent,
-  borderAccent,
-  accentBg,
-  accentGreen,
-  accentGreenRc,
-  accentYellow,
-  accentYellowRc,
-  accentRed,
-  accentRedRc,
-  accentBlue,
-  textSecond,
-  textPrimary,
-  hover,
-  hoverSecond,
-  border,
-
-  /// ---- CoreDive semantic tokens ----
-  /// Surfaces
-  bgRaised,
-  bgBase,
-  surfaceAlt,
-  surfaceRaised,
-  borderSubtle,
-  borderStrong,
-
-  /// Text
-  textBody,
-  textDisabled,
-  textBright,
-
-  /// Interactive (brass — the only interactive colour)
-  primaryHover,
-  primaryTint,
-  primaryRing,
-  onPrimary,
-
-  /// Quiet: generic progress-bar track + solid chip fills
+  ground,
+  surface,
+  raised,
+  hairline,
   track,
-  chipEasyFill,
-  chipMediumFill,
-  chipHardFill,
-  chipNeutralFill,
+  inkPrimary,
+  inkTitle,
+  inkBody,
+  inkMuted,
+  dataEasy,
+  dataMedium,
+  dataHard,
+  dataTarget,
+  dataActive,
 
-  /// Feedback
-  onError,
-  errorRing,
-
-  /// Progress (brass — only ever streak / XP / level)
-  accentXp,
-  accentXpText,
-  onAccentXp,
-
-  /// Difficulty (three fixed hues — only ever difficulty)
-  difficultyEasy,
-  difficultyMedium,
-  difficultyHard,
-
-  /// Visualizer bar states
-  barIdle,
-  barExcluded,
-  barCompare,
-  barSwap,
-  barDone,
-  barAnchor,
-  barTarget,
-
-  /// "currently comparing" — cyan, the same mark everywhere (bars, live dot)
-  comparing,
-
-  /// Code syntax
-  codeBg,
-  codeGutter,
-  codeLine,
-  codeKeyword,
-  codeType,
-  codePlain,
-  codePunct,
-  codeNumber,
-  codeComment,
-
-  /// Editor screen's **Reset** button border — `borderStrong` carries a
-  /// different hex on other screens (color_manager.dart cdBorderStrongDk),
-  /// so this stays a separate role rather than repointing it (research R2).
-  editorResetBorder,
-
-  /// Activity heat ramp (low → high) — five steps
   heat0,
   heat1,
   heat2,
   heat3,
   heat4,
 
-  /// Bottom-nav inactive item
-  navInactive,
-
-  /// static colors
-  solidWhite,
-  purple,
-  pink,
-  lightPink,
-  howItWorksColor,
-  columnColor,
-  backgroundForSortingColor,
-  white2DarkColor,
-  textDarkColor,
-  text2DarkColor,
-  borderPurpleColor,
-  lightPurpleColor,
-  codeEditorNumberColor,
-  whiteD4Color,
-  whiteD5Color,
-  whiteColor,
   transparentColor,
-
-  //
 }
 
 extension ThemeExtension on BuildContext {
@@ -131,118 +33,26 @@ extension ThemeExtension on BuildContext {
 
   Map<ThemeEnum, Color> get _colors {
     return {
-      ThemeEnum.primary: Theme.of(this).primaryColor,
-      ThemeEnum.focus: Theme.of(this).focusColor,
-      ThemeEnum.card: Theme.of(this).hintColor,
-      ThemeEnum.mainCard: _pick(ColorManager.cdSurfaceDk, ColorManager.cdSurfaceLt),
-      ThemeEnum.outputHeader: _pick(ColorManager.outputHeaderDk, ColorManager.outputHeaderLt),
-      ThemeEnum.accent: _pick(ColorManager.accentDk, ColorManager.accentLt),
-      ThemeEnum.borderAccent: _pick(
-        ColorManager.accentDk.withValues(alpha: 0.22),
-        ColorManager.accentLt.withValues(alpha: 0.25),
-      ),
-      ThemeEnum.accentBg: _pick(
-        ColorManager.accentDk.withValues(alpha: 0.12),
-        ColorManager.accentLt.withValues(alpha: 0.08),
-      ),
-      ThemeEnum.accentGreenRc: ColorManager.accentGreenBgDk,
-      ThemeEnum.accentGreen: _pick(ColorManager.accentGreenDk, ColorManager.accentGreenLt),
-      ThemeEnum.accentYellow: _pick(ColorManager.accentYellowDk, ColorManager.accentYellowLt),
-      ThemeEnum.accentYellowRc: _pick(ColorManager.accentYellowDk, ColorManager.accentYellowLt),
-      ThemeEnum.accentRed: _pick(ColorManager.accentRedDk, ColorManager.accentRedLt),
-      ThemeEnum.accentRedRc: ColorManager.accentRedBgDk,
-      ThemeEnum.accentBlue: _pick(ColorManager.accentBlueDk, ColorManager.accentBlueLt),
-      ThemeEnum.textSecond: _pick(ColorManager.textSecondDk, ColorManager.textSecondLt),
-      ThemeEnum.textPrimary: _pick(ColorManager.textPrimaryDk, ColorManager.textPrimaryLt),
-      ThemeEnum.hover: _pick(ColorManager.hoverDk, ColorManager.hoverLt),
-      ThemeEnum.hoverSecond: _pick(ColorManager.hoverSecondDk, ColorManager.hoverSecondLt),
-      ThemeEnum.border: _pick(ColorManager.borderDk, ColorManager.borderLt),
-
-      /// ---- CoreDive semantic tokens ---->
-      ThemeEnum.bgRaised: _pick(ColorManager.cdBgRaisedDk, ColorManager.cdBgRaisedLt),
-      ThemeEnum.bgBase: _pick(ColorManager.cdBgBaseDk, ColorManager.cdBgBaseLt),
-      ThemeEnum.surfaceAlt: _pick(ColorManager.cdSurfaceAltDk, ColorManager.cdSurfaceAltLt),
-      ThemeEnum.surfaceRaised: _pick(ColorManager.cdSurfaceRaisedDk, ColorManager.cdBgRaisedLt),
-      ThemeEnum.borderSubtle: _pick(ColorManager.cdBorderSubtleDk, ColorManager.cdBorderSubtleLt),
-      ThemeEnum.borderStrong: _pick(ColorManager.cdBorderStrongDk, ColorManager.cdBorderStrongLt),
-
-      ThemeEnum.textBody: _pick(ColorManager.cdTextBodyDk, ColorManager.cdTextBodyLt),
-      ThemeEnum.textDisabled: _pick(ColorManager.cdTextDisabledDk, ColorManager.cdTextDisabledLt),
-      ThemeEnum.textBright: _pick(ColorManager.cdTextBrightDk, ColorManager.cdTextBrightLt),
-
-      ThemeEnum.primaryHover: _pick(ColorManager.cdPrimaryHoverDk, ColorManager.cdPrimaryHoverLt),
-      ThemeEnum.primaryTint: _pick(ColorManager.cdPrimaryTintDk, ColorManager.cdPrimaryTintLt),
-      ThemeEnum.primaryRing: _pick(ColorManager.cdPrimaryRingDk, ColorManager.cdPrimaryRingLt),
-      ThemeEnum.onPrimary: _pick(ColorManager.cdOnPrimaryDk, ColorManager.cdOnPrimaryLt),
-
-      ThemeEnum.track: _pick(ColorManager.cdTrackDk, ColorManager.cdTrackLt),
-      ThemeEnum.chipEasyFill: _pick(ColorManager.cdChipEasyFillDk, ColorManager.cdChipEasyFillLt),
-      ThemeEnum.chipMediumFill: _pick(ColorManager.cdChipMediumFillDk, ColorManager.cdChipMediumFillLt),
-      ThemeEnum.chipHardFill: _pick(ColorManager.cdChipHardFillDk, ColorManager.cdChipHardFillLt),
-      ThemeEnum.chipNeutralFill: _pick(ColorManager.cdChipNeutralFillDk, ColorManager.cdChipNeutralFillLt),
-
-      ThemeEnum.onError: _pick(ColorManager.cdOnErrorDk, ColorManager.cdOnErrorLt),
-      ThemeEnum.errorRing: _pick(ColorManager.cdErrorRingDk, ColorManager.cdErrorRingLt),
-
-      ThemeEnum.accentXp: _pick(ColorManager.cdAccentXpDk, ColorManager.cdAccentXpLt),
-      ThemeEnum.accentXpText: _pick(ColorManager.cdAccentXpTextDk, ColorManager.cdAccentXpTextLt),
-      ThemeEnum.onAccentXp: _pick(ColorManager.cdOnAccentXpDk, ColorManager.cdOnAccentXpLt),
-
-      ThemeEnum.difficultyEasy: _pick(ColorManager.cdSuccessDk, ColorManager.cdSuccessLt),
-      ThemeEnum.difficultyMedium: _pick(ColorManager.cdWarningDk, ColorManager.cdWarningLt),
-      ThemeEnum.difficultyHard: _pick(ColorManager.cdErrorDk, ColorManager.cdErrorLt),
-
-      ThemeEnum.barIdle: _pick(ColorManager.cdBarIdleDk, ColorManager.cdBarIdleLt),
-      ThemeEnum.barExcluded: _pick(ColorManager.cdBarExcludedDk, ColorManager.cdBarExcludedLt),
-      ThemeEnum.barCompare: _pick(ColorManager.cdBarCompareDk, ColorManager.cdBarCompareLt),
-      ThemeEnum.barSwap: _pick(ColorManager.cdBarSwapDk, ColorManager.cdBarSwapLt),
-      ThemeEnum.barDone: _pick(ColorManager.cdBarDoneDk, ColorManager.cdBarDoneLt),
-      ThemeEnum.barAnchor: _pick(ColorManager.cdBarAnchorDk, ColorManager.cdBarAnchorLt),
-      ThemeEnum.barTarget: _pick(ColorManager.cdBarTargetDk, ColorManager.cdBarTargetLt),
-      ThemeEnum.comparing: _pick(ColorManager.cdComparingDk, ColorManager.cdComparingLt),
-
-      ThemeEnum.codeBg: _pick(ColorManager.cdEditorCodeBgDk, ColorManager.cdEditorCodeBgLt),
-      ThemeEnum.codeGutter: _pick(ColorManager.cdEditorCodeMutedDk, ColorManager.cdEditorCodeMutedLt),
-      ThemeEnum.codeLine: _pick(ColorManager.cdEditorCodeLineDk, ColorManager.cdEditorCodeLineLt),
-      ThemeEnum.codeKeyword: _pick(ColorManager.cdCodeKeywordDk, ColorManager.cdCodeKeywordLt),
-      ThemeEnum.codeType: _pick(ColorManager.cdCodeTypeDk, ColorManager.cdCodeTypeLt),
-      ThemeEnum.codePlain: _pick(ColorManager.cdTextBodyDk, ColorManager.cdTextBodyLt),
-      ThemeEnum.codePunct: _pick(ColorManager.cdCodePunctDk, ColorManager.cdCodePunctLt),
-      ThemeEnum.codeNumber: _pick(ColorManager.cdCodeNumberDk, ColorManager.cdCodeNumberLt),
-      ThemeEnum.codeComment: _pick(ColorManager.cdEditorCodeMutedDk, ColorManager.cdEditorCodeMutedLt),
-      ThemeEnum.editorResetBorder:
-          _pick(ColorManager.cdEditorResetBorderDk, ColorManager.cdEditorResetBorderLt),
-
-      ThemeEnum.heat0: _pick(ColorManager.cdHeatDk[0], ColorManager.cdHeatLt[0]),
-      ThemeEnum.heat1: _pick(ColorManager.cdHeatDk[1], ColorManager.cdHeatLt[1]),
-      ThemeEnum.heat2: _pick(ColorManager.cdHeatDk[2], ColorManager.cdHeatLt[2]),
-      ThemeEnum.heat3: _pick(ColorManager.cdHeatDk[3], ColorManager.cdHeatLt[3]),
-      ThemeEnum.heat4: _pick(ColorManager.cdHeatDk[4], ColorManager.cdHeatLt[4]),
-
-      ThemeEnum.navInactive: _pick(ColorManager.cdNavInactiveDk, ColorManager.cdNavInactiveLt),
-
-      ///-------------------->
-      ThemeEnum.solidWhite: ColorManager.white,
-      ThemeEnum.purple: ColorManager.targetSearchingPoint,
-      ThemeEnum.pink: ColorManager.pinkColor,
-      ThemeEnum.lightPink: ColorManager.lightPinkColor,
-      ThemeEnum.howItWorksColor: ColorManager.howItWorksColor,
-      ThemeEnum.white2DarkColor: ColorManager.white2DarkColor,
-      // Visualizer canvas + idle bar rail — CoreDive screen 02.
-      ThemeEnum.columnColor: _pick(ColorManager.cdBarIdleDk, ColorManager.cdBarIdleLt),
-      ThemeEnum.backgroundForSortingColor: _pick(ColorManager.cdBgRaisedDk, ColorManager.cdBgRaisedLt),
-      ThemeEnum.textDarkColor: ColorManager.textDarkColor,
-      ThemeEnum.text2DarkColor: ColorManager.text2DarkColor,
-      ThemeEnum.lightPurpleColor: ColorManager.lightPurpleColor,
-      ThemeEnum.borderPurpleColor: ColorManager.borderPurpleColor,
-
-      /// what ever dark or light. Maybe if we have multiple themes, it will save a lot of time.
-      ThemeEnum.whiteD4Color: ColorManager.grey,
-
-      ThemeEnum.whiteD5Color: ColorManager.whiteD5,
       ThemeEnum.transparentColor: ColorManager.transparent,
-      ThemeEnum.whiteColor: ColorManager.white,
-      ThemeEnum.codeEditorNumberColor: ColorManager.codeEditorNumberColor,
+      ThemeEnum.ground: _pick(ColorManager.groundDk, ColorManager.groundLt),
+      ThemeEnum.surface: _pick(ColorManager.surfaceDk, ColorManager.surfaceLt),
+      ThemeEnum.raised: _pick(ColorManager.raisedDk, ColorManager.raisedLt),
+      ThemeEnum.hairline: _pick(ColorManager.hairlineDk, ColorManager.hairlineLt),
+      ThemeEnum.track: _pick(ColorManager.trackDk, ColorManager.trackLt),
+      ThemeEnum.inkPrimary: _pick(ColorManager.inkPrimaryDk, ColorManager.inkPrimaryLt),
+      ThemeEnum.inkTitle: _pick(ColorManager.inkTitleDk, ColorManager.inkTitleLt),
+      ThemeEnum.inkBody: _pick(ColorManager.inkBodyDk, ColorManager.inkBodyLt),
+      ThemeEnum.inkMuted: _pick(ColorManager.inkMutedDk, ColorManager.inkMutedLt),
+      ThemeEnum.dataEasy: _pick(ColorManager.dataEasyDk, ColorManager.dataEasyLt),
+      ThemeEnum.dataMedium: _pick(ColorManager.dataMediumDk, ColorManager.dataMediumLt),
+      ThemeEnum.dataHard: _pick(ColorManager.dataHardDk, ColorManager.dataHardLt),
+      ThemeEnum.dataTarget: _pick(ColorManager.dataTargetDk, ColorManager.dataTargetLt),
+      ThemeEnum.dataActive: _pick(ColorManager.dataActiveDk, ColorManager.dataActiveLt),
+      ThemeEnum.heat0: _pick(ColorManager.heatDk[0], ColorManager.heatLt[0]),
+      ThemeEnum.heat1: _pick(ColorManager.heatDk[1], ColorManager.heatLt[1]),
+      ThemeEnum.heat2: _pick(ColorManager.heatDk[2], ColorManager.heatLt[2]),
+      ThemeEnum.heat3: _pick(ColorManager.heatDk[3], ColorManager.heatLt[3]),
+      ThemeEnum.heat4: _pick(ColorManager.heatDk[4], ColorManager.heatLt[4]),
     };
   }
 
