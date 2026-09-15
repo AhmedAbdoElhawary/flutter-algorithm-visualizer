@@ -155,7 +155,8 @@ class CNode extends CanonicalValue {
   }
 
   @override
-  int get hashCode => Object.hash(shape, Object.hashAllUnordered(fields.entries.map((e) => Object.hash(e.key, e.value))));
+  int get hashCode =>
+      Object.hash(shape, Object.hashAllUnordered(fields.entries.map((e) => Object.hash(e.key, e.value))));
   @override
   String toString() => 'CNode($shape, $fields)';
 }
@@ -194,7 +195,8 @@ CanonicalValue normalize(Value value) {
       // Rule 3.
       return CList(items.map(normalize).toList(growable: false));
     case MapValue(:final entries):
-      return CMap(entries.entries.map((e) => MapEntry(normalize(e.key), normalize(e.value))).toList(growable: false));
+      return CMap(
+          entries.entries.map((e) => MapEntry(normalize(e.key), normalize(e.value))).toList(growable: false));
     case SetValue(:final items):
       return CSet(items.map(normalize).toList(growable: false));
     case InstanceValue(:final klass, :final fields):
