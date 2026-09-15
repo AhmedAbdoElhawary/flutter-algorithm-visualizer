@@ -45,11 +45,11 @@ class TimeComplexityData extends StatelessWidget {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          const CustomIcon(Icons.access_time_rounded, size: 14, color: ThemeEnum.hover),
+          const CustomIcon(Icons.access_time_rounded, size: 14, color: ThemeEnum.inkMuted),
           const RSizedBox(width: 4),
-          const RegularText(StringsManager.time, color: ThemeEnum.hover, fontSize: 14),
+          const RegularText(StringsManager.time, color: ThemeEnum.inkMuted, fontSize: 14),
           const RSizedBox(width: 2),
-          SemiBoldText(complexity.worstTimeComplexity.getText, color: ThemeEnum.accent, fontSize: 14),
+          SemiBoldText(complexity.worstTimeComplexity.getText, color: ThemeEnum.inkPrimary, fontSize: 14),
         ],
       ),
     );
@@ -70,11 +70,11 @@ class SpaceComplexityData extends StatelessWidget {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          const CustomIcon(Icons.storage_rounded, size: 14, color: ThemeEnum.hover),
+          const CustomIcon(Icons.storage_rounded, size: 14, color: ThemeEnum.inkMuted),
           const RSizedBox(width: 4),
-          const RegularText(StringsManager.space, color: ThemeEnum.hover, fontSize: 14),
+          const RegularText(StringsManager.space, color: ThemeEnum.inkMuted, fontSize: 14),
           const RSizedBox(width: 2),
-          SemiBoldText(complexity.spaceComplexity.getText, color: ThemeEnum.accent, fontSize: 14),
+          SemiBoldText(complexity.spaceComplexity.getText, color: ThemeEnum.inkPrimary, fontSize: 14),
         ],
       ),
     );
@@ -95,11 +95,11 @@ class StabilityData extends StatelessWidget {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          const CustomIcon(Icons.balance_rounded, size: 14, color: ThemeEnum.hover),
+          const CustomIcon(Icons.balance_rounded, size: 14, color: ThemeEnum.inkMuted),
           const RSizedBox(width: 4),
-          const RegularText(StringsManager.stable, color: ThemeEnum.hover, fontSize: 14),
+          const RegularText(StringsManager.stable, color: ThemeEnum.inkMuted, fontSize: 14),
           const RSizedBox(width: 2),
-          SemiBoldText(complexity.getStabilityText, color: ThemeEnum.accentGreen, fontSize: 14),
+          SemiBoldText(complexity.getStabilityText, color: ThemeEnum.dataEasy, fontSize: 14),
         ],
       ),
     );
