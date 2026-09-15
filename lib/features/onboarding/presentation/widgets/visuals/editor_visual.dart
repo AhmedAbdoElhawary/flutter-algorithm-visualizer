@@ -289,11 +289,11 @@ class _CodeLine extends StatelessWidget {
             fontFamily: FontConstants.fontJetBrainsMono,
           ),
         // if (showCaret)
-          Container(
-            width: 2.w,
-            height: (fontSize * _CodeBlock._lineHeight).sp,
-            color: Colors.transparent,
-          ),
+        Container(
+          width: 2.w,
+          height: (fontSize * _CodeBlock._lineHeight).sp,
+          color: Colors.transparent,
+        ),
       ],
     );
   }

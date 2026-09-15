@@ -14,14 +14,10 @@ typedef _Day = ({int week, int row, double level});
 
 /// Screen 4 · Track it — the activity grid fills week by week while the streak
 /// counts up on the same clock.
-///
-/// Calls [onFinished] the first time the grid lands, so the page can raise its
-/// two buttons at that moment.
 class HeatmapVisual extends StatefulWidget {
-  const HeatmapVisual({required this.isActive, required this.onFinished, super.key});
+  const HeatmapVisual({required this.isActive, super.key});
 
   final bool isActive;
-  final VoidCallback onFinished;
 
   @override
   State<HeatmapVisual> createState() => _HeatmapVisualState();
@@ -63,27 +59,6 @@ class _HeatmapVisualState extends State<HeatmapVisual> with SingleTickerProvider
     duration: const Duration(milliseconds: _fillMs + _ringMs),
   );
 
-  bool _announced = false;
-
-  @override
-  void initState() {
-    super.initState();
-    _controller.addListener(_announceWhenFilled);
-  }
-
-  void _announceWhenFilled() {
-    if (_announced) return;
-    if (_controller.value * _controller.duration!.inMilliseconds < _fillMs) {
-      return;
-    }
-    _announced = true;
-    // Deferred: with animations disabled this runs while the widget is still
-    // building, and the callback calls setState on the page above.
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (mounted) widget.onFinished();
-    });
-  }
-
   @override
   void didUpdateWidget(HeatmapVisual oldWidget) {
     super.didUpdateWidget(oldWidget);
@@ -101,7 +76,6 @@ class _HeatmapVisualState extends State<HeatmapVisual> with SingleTickerProvider
       _controller
         ..stop()
         ..value = 1;
-      _announceWhenFilled();
       return;
     }
     // The grid fills once and stays filled — it is a result, not a loop.
@@ -112,7 +86,6 @@ class _HeatmapVisualState extends State<HeatmapVisual> with SingleTickerProvider
 
   @override
   void dispose() {
-    _controller.removeListener(_announceWhenFilled);
     _controller.dispose();
     super.dispose();
   }
