@@ -56,7 +56,7 @@ class _ActivityTile extends StatelessWidget {
     final quietDifficulty = item.difficulty;
 
     return GestureDetector(
-      onTap: () => context.pushTo(Routes.problem, queryParameters: '${item.problemId}'),
+      onTap: () => context.pushRoute(Routes.problem, queryParameters: '${item.problemId}'),
       child: CardContainer(
         surface: CdSurface.main,
         padding: REdgeInsets.symmetric(horizontal: 14, vertical: 10),

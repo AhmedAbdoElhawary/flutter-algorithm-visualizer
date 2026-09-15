@@ -33,10 +33,12 @@ ProblemSolutionStatusDTO _$ProblemSolutionStatusDTOFromJson(Map<String, dynamic>
       code: json['code'] as String?,
       isCorrect: json['is_correct'] as bool?,
       submittedAt: json['submitted_at'] == null ? null : DateTime.parse(json['submitted_at'] as String),
+      language: json['language'] as String?,
     );
 
 Map<String, dynamic> _$ProblemSolutionStatusDTOToJson(ProblemSolutionStatusDTO instance) => <String, dynamic>{
       'code': instance.code,
       'is_correct': instance.isCorrect,
       'submitted_at': instance.submittedAt?.toIso8601String(),
+      'language': instance.language,
     };

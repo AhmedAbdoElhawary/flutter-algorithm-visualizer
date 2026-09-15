@@ -44,7 +44,7 @@ class _HistoryRowState extends State<HistoryRow> {
 
     return SecondaryProblemCard(
       onTap: () => _expanded.value = !_expanded.value,
-      onLongTap: () => context.pushTo(Routes.problem, queryParameters: widget.entry.problemId.toString()),
+      onLongTap: () => context.pushRoute(Routes.problem, queryParameters: widget.entry.problemId.toString()),
       isSolved: entry.isSolved,
       problemName: entry.problemName,
       problemId: entry.problemId,

@@ -70,7 +70,7 @@ class _EditorPageState extends ConsumerState<EditorPage> {
     await notifier.runCode((result) async {
       if (result == null) return;
       finalResult = result;
-      if (!(!result.allPassed && problem.isThereAnyCorrectCodeSaved)) {
+      if (!problem.isThereAnyCorrectCodeSaved) {
         await ref.read(challengesProvider.notifier).updateProblemSubmission(problem, result);
       }
     });
@@ -159,6 +159,7 @@ class _EditorContent extends ConsumerWidget {
                   builder: (context, ref, child) {
                     final isRunning = ref.watch(provider.select((s) => s.isRunning));
                     final highlightedLine = ref.watch(provider.select((s) => s.highlightedLine));
+                    final language = ref.watch(provider.select((s) => s.language));
 
                     return EditorCodeCard(
                       fileName: problem.getNameWithLanguageName,
@@ -166,6 +167,9 @@ class _EditorContent extends ConsumerWidget {
                       highlightedLine: highlightedLine,
                       running: isRunning,
                       onControllerAttached: notifier.attachCodeController,
+                      language: language,
+                      languages: notifier.languagesAvailable,
+                      onLanguageSelected: notifier.setLanguage,
                     );
                   },
                 ),

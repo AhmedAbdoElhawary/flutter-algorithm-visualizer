@@ -18,6 +18,11 @@ class DartFrontend implements LanguageFrontend {
   @override
   Dialect get dialect => dartDialect;
 
+  /// None: the engine's own prelude is already Dart-shaped, so Dart has
+  /// nothing to add on top of it.
+  @override
+  Map<String, Value> get globals => const <String, Value>{};
+
   @override
   IrProgram parse(String source) {
     final statements = DartParser().parseProgram(source);

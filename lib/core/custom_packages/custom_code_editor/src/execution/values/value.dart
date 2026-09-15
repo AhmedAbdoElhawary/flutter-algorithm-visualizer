@@ -393,11 +393,18 @@ String displayString(Value v, Dialect dialect) => _displayString(v, dialect);
 String _displayString(Value v, [Dialect? dialect]) {
   if (v is StrValue) return v.value;
   if (v is IntValue) return v.value.toString();
-  if (v is NumValue) return v.value.toString();
+  if (v is NumValue) {
+    if ((dialect?.wholeFloatsPrintAsIntegers ?? false) &&
+        v.value.isFinite &&
+        v.value == v.value.roundToDouble()) {
+      return v.value.toInt().toString();
+    }
+    return v.value.toString();
+  }
   if (v is BoolValue) {
     return v.value ? (dialect?.printsTrueAs ?? 'true') : (dialect?.printsFalseAs ?? 'false');
   }
-  if (v is NullValue) return 'null';
+  if (v is NullValue) return dialect?.printsNullAs ?? 'null';
   if (v is UndefinedValue) return 'undefined';
   if (v is ListValue) return '[${v.items.map((e) => _displayString(e, dialect)).join(', ')}]';
   if (v is TupleValue) return '(${v.items.map((e) => _displayString(e, dialect)).join(', ')})';

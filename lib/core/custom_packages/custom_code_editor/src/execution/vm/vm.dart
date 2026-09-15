@@ -4,6 +4,7 @@
 library;
 
 import 'dart:collection';
+import 'dart:math' as math;
 
 import '../errors/failure.dart';
 import '../stdlib/collections.dart' as collections;
@@ -241,10 +242,13 @@ class Vm {
         final name = (frame.proto.chunk.constants[_u16(frame)] as StrValue).value;
         final value = frame.stack.removeLast();
         final receiver = frame.stack.removeLast();
-        if (receiver is! InstanceValue) {
+        if (receiver is InstanceValue) {
+          receiver.fields[name] = value;
+        } else if (receiver is MapValue && dialect.propertyAccessReadsMapKeys) {
+          receiver.entries[StrValue(name)] = value;
+        } else {
           throw const VmRuntimeError('typeMismatch', <String, Object?>{'expected': 'an object'});
         }
-        receiver.fields[name] = value;
         frame.stack.add(value);
       case OpCode.getIndex:
         final index = frame.stack.removeLast();
@@ -256,6 +260,10 @@ class Vm {
         final receiver = frame.stack.removeLast();
         _setIndex(receiver, index, value);
         frame.stack.add(value);
+      case OpCode.iterElement:
+        final at = frame.stack.removeLast();
+        final over = frame.stack.removeLast();
+        frame.stack.add(_iterElement(over, at));
       case OpCode.slice:
         final flags = _u8(frame);
         // Pushed by the compiler in receiver, start, end, step order, so they
@@ -296,7 +304,7 @@ class Vm {
       case OpCode.subtract:
         _binaryArith(frame, (a, b) => a - b);
       case OpCode.multiply:
-        _binaryArith(frame, (a, b) => a * b);
+        _binaryMultiply(frame);
       case OpCode.divide:
         _binaryDivide(frame);
       case OpCode.floorDivide:
@@ -314,6 +322,8 @@ class Vm {
           if (b == 0) throw const VmRuntimeError('divisionByZero');
           return a % b;
         });
+      case OpCode.power:
+        _binaryPower(frame);
       case OpCode.negate:
         final v = frame.stack.removeLast();
         if (v is IntValue) {
@@ -326,6 +336,9 @@ class Vm {
       case OpCode.not:
         final v = frame.stack.removeLast();
         frame.stack.add(BoolValue(!isTruthy(v, dialect)));
+      case OpCode.isNullish:
+        final v = frame.stack.removeLast();
+        frame.stack.add(BoolValue(v is NullValue || v is UndefinedValue));
       case OpCode.stringify:
         final v = frame.stack.removeLast();
         frame.stack.add(StrValue(displayString(v, dialect)));
@@ -447,6 +460,33 @@ class Vm {
     throw const VmRuntimeError('typeMismatch', <String, Object?>{'expected': 'matching operand types for +'});
   }
 
+  /// `*`, which in Python also repeats a sequence — `[0] * n` is how a zeroed
+  /// list gets built, and it is far too common to leave out.
+  void _binaryMultiply(_Frame frame) {
+    if (dialect.sequenceRepetition) {
+      final b = frame.stack.last;
+      final a = frame.stack[frame.stack.length - 2];
+      final (Value sequence, Value count) = switch ((a, b)) {
+        (IntValue(), ListValue() || StrValue()) => (b, a),
+        (ListValue() || StrValue(), IntValue()) => (a, b),
+        _ => (NullValue.instance, NullValue.instance),
+      };
+      if (count is IntValue) {
+        frame.stack.removeLast();
+        frame.stack.removeLast();
+        final times = count.value < 0 ? 0 : count.value;
+        if (sequence is StrValue) {
+          frame.stack.add(StrValue(sequence.value * times));
+        } else {
+          final items = (sequence as ListValue).items;
+          frame.stack.add(ListValue(<Value>[for (var i = 0; i < times; i++) ...items]));
+        }
+        return;
+      }
+    }
+    _binaryArith(frame, (a, b) => a * b);
+  }
+
   void _binaryArith(_Frame frame, double Function(double, double) op) {
     final b = frame.stack.removeLast();
     final a = frame.stack.removeLast();
@@ -467,6 +507,28 @@ class Vm {
     throw const VmRuntimeError('typeMismatch', <String, Object?>{'expected': 'two integers'});
   }
 
+  /// `a ** b`. Two whole numbers and a non-negative exponent stay whole — so
+  /// Python's `2 ** 10` is `1024`, not `1024.0` — via repeated squaring,
+  /// which keeps even a huge exponent to about 60 iterations. Anything else
+  /// falls back to floating point.
+  void _binaryPower(_Frame frame) {
+    final b = frame.stack.removeLast();
+    final a = frame.stack.removeLast();
+    if (a is IntValue && b is IntValue && b.value >= 0) {
+      var result = 1;
+      var base = a.value;
+      var exp = b.value;
+      while (exp > 0) {
+        if (exp & 1 == 1) result *= base;
+        base *= base;
+        exp >>= 1;
+      }
+      frame.stack.add(IntValue(result));
+      return;
+    }
+    frame.stack.add(NumValue(math.pow(_asDouble(a), _asDouble(b)).toDouble()));
+  }
+
   void _binaryDivide(_Frame frame) {
     final b = frame.stack.removeLast();
     final a = frame.stack.removeLast();
@@ -483,12 +545,12 @@ class Vm {
 
   Value _getIndex(Value receiver, Value index) {
     if (receiver is ListValue) {
-      final i = _resolveIndex(index, receiver.items.length);
-      return receiver.items[i];
+      final i = _resolveIndex(index, receiver.items.length, readOnly: true);
+      return i == null ? UndefinedValue.instance : receiver.items[i];
     }
     if (receiver is TupleValue) {
-      final i = _resolveIndex(index, receiver.items.length);
-      return receiver.items[i];
+      final i = _resolveIndex(index, receiver.items.length, readOnly: true);
+      return i == null ? UndefinedValue.instance : receiver.items[i];
     }
     if (receiver is SetValue) {
       // Real Dart iterates a `Set` via its `Iterator`, not `[]` (which
@@ -497,11 +559,12 @@ class Vm {
       // `_compileForIn`),
       // so `[]` needs to work for a `LinkedHashSet` too. Insertion order
       // makes `elementAt` well-defined.
-      final i = _resolveIndex(index, receiver.items.length);
+      final i = _requireIndex(index, receiver.items.length);
       return receiver.items.elementAt(i);
     }
     if (receiver is StrValue) {
-      final i = _resolveIndex(index, receiver.value.length);
+      final i = _resolveIndex(index, receiver.value.length, readOnly: true);
+      if (i == null) return UndefinedValue.instance;
       return dialect.stringIndexYields == StringIndexResult.codeUnit
           ? IntValue(receiver.value.codeUnitAt(i))
           : StrValue(receiver.value[i]);
@@ -517,7 +580,17 @@ class Vm {
 
   void _setIndex(Value receiver, Value index, Value value) {
     if (receiver is ListValue) {
-      final i = _resolveIndex(index, receiver.items.length);
+      // Writing past the end grows the array in a language where reading
+      // past it is not an error either — `xs[xs.length] = v` is a normal way
+      // to append in JavaScript.
+      if (dialect.outOfRangeIndexIsUndefined && index is IntValue && index.value >= receiver.items.length) {
+        while (receiver.items.length < index.value) {
+          receiver.items.add(UndefinedValue.instance);
+        }
+        receiver.items.add(value);
+        return;
+      }
+      final i = _requireIndex(index, receiver.items.length);
       receiver.items[i] = value;
       return;
     }
@@ -526,6 +599,16 @@ class Vm {
       return;
     }
     throw const VmRuntimeError('typeMismatch', <String, Object?>{'expected': 'a mutable indexable value'});
+  }
+
+  /// The element at [position] in iteration order, which for a map means its
+  /// *keys* — `for k in d` walks keys, even though `d[k]` looks values up.
+  Value _iterElement(Value over, Value position) {
+    if (over is MapValue) {
+      final i = _requireIndex(position, over.entries.length);
+      return over.entries.keys.elementAt(i);
+    }
+    return _getIndex(over, position);
   }
 
   /// Every element of a value that can be spread or iterated over.
@@ -590,17 +673,29 @@ class Vm {
     throw const VmRuntimeError('typeMismatch', <String, Object?>{'expected': 'an integer slice bound'});
   }
 
-  int _resolveIndex(Value index, int length) {
+  /// Resolves an index, or returns null when it is out of range and the
+  /// language says that is not an error — JavaScript's `[1, 2][9]` is
+  /// `undefined`, which is why a JavaScript off-by-one surfaces as a strange
+  /// answer rather than as a crash. [readOnly] is false for writes, which
+  /// still bounds-check everywhere.
+  int? _resolveIndex(Value index, int length, {bool readOnly = false}) {
     if (index is! IntValue) {
+      if (readOnly && dialect.outOfRangeIndexIsUndefined) return null;
       throw const VmRuntimeError('typeMismatch', <String, Object?>{'expected': 'an integer index'});
     }
     var i = index.value;
     if (i < 0 && dialect.negativeIndexing) i += length;
     if (i < 0 || i >= length) {
+      if (readOnly && dialect.outOfRangeIndexIsUndefined) return null;
+
       throw VmRuntimeError('indexOutOfRange', <String, Object?>{'index': index.value, 'length': length});
     }
     return i;
   }
+
+  /// The bounds-checking form, for the callers that must always fail on a bad
+  /// index (writes, and every indexable that is not a list).
+  int _requireIndex(Value index, int length) => _resolveIndex(index, length)!;
 
   Value _getProperty(Value receiver, String name) {
     if (receiver is InstanceValue) {
@@ -626,7 +721,18 @@ class Vm {
     if (receiver is StrValue) {
       return strings.getStringProperty(receiver.value, name, dialect) ?? IntrinsicMethod(receiver, name);
     }
-    if (receiver is MapValue) return maps.getMapProperty(receiver, name) ?? IntrinsicMethod(receiver, name);
+    if (receiver is MapValue) {
+      // In a language whose objects are maps, `o.b` and `o["b"]` are the same
+      // lookup — but only after the real map members, so `o.length` still
+      // means the size rather than an entry that happens to be called that.
+      final member = maps.getMapProperty(receiver, name);
+      if (member != null) return member;
+      if (dialect.propertyAccessReadsMapKeys) {
+        final entry = receiver.entries[StrValue(name)];
+        if (entry != null) return entry;
+      }
+      return IntrinsicMethod(receiver, name);
+    }
     if (receiver is SetValue) return maps.getSetProperty(receiver, name) ?? IntrinsicMethod(receiver, name);
     if (receiver is IntValue || receiver is NumValue) {
       return numbers.getNumberProperty(receiver, name) ?? IntrinsicMethod(receiver, name);

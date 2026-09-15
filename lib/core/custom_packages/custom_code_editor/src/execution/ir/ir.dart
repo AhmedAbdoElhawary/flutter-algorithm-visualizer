@@ -61,7 +61,27 @@ class IrIdentifier extends IrExpr {
 
 /// `floorDiv` is Python's `//` (mathematical floor); `truncDiv` is Dart's
 /// `~/` (truncation toward zero) — genuinely different for negative operands.
-enum IrBinaryOp { add, sub, mul, div, floorDiv, truncDiv, mod, eq, notEq, lt, lte, gt, gte, and, or, ifNull }
+enum IrBinaryOp {
+  add,
+  sub,
+  mul,
+  div,
+  floorDiv,
+  truncDiv,
+  mod,
+
+  /// Python's and JavaScript's `**`. Dart has no operator for it.
+  pow,
+  eq,
+  notEq,
+  lt,
+  lte,
+  gt,
+  gte,
+  and,
+  or,
+  ifNull,
+}
 
 class IrBinary extends IrExpr {
   const IrBinary(
@@ -301,7 +321,11 @@ class IrVarDecl extends IrStmt {
 /// `a, b = 1, 2` / `[a, b] = xs` / `{x, y} = point`.
 class IrDestructure extends IrStmt {
   const IrDestructure(
-      {required super.line, super.synthetic, required this.names, required this.value, this.byProperty = false});
+      {required super.line,
+      super.synthetic,
+      required this.names,
+      required this.value,
+      this.byProperty = false});
   final List<String> names;
   final IrExpr value;
 

@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:algorithm_visualizer/core/custom_packages/custom_code_editor/code_editor.dart'
+    show EditorLanguage, languageFromKey;
 import 'package:algorithm_visualizer/core/custom_packages/custom_code_editor/src/editor/code_controller.dart';
 import 'package:algorithm_visualizer/features/challenge/domain/entities/coding_problem.dart';
 import 'package:algorithm_visualizer/features/challenge/domain/usecases/grade_code_usecase.dart';
@@ -15,7 +17,16 @@ class CodeEditorController extends Notifier<CodeEditorState> {
 
   CodingProblem? get codingProblem => ref.read(getProblemProvider(problemId)).value;
 
-  late final String initialCode = codingProblem?.getCode ?? "";
+  /// The language the editor opens in: whichever the learner last used here,
+  /// falling back to the first this problem offers.
+  late final EditorLanguage initialLanguage = _openingLanguage();
+
+  late final String initialCode = codingProblem?.getCodeFor(initialLanguage) ?? "";
+
+  /// One draft per language, so switching away and back never loses work.
+  /// Seeded from whatever was saved, and kept up to date as the learner
+  /// types (see [_captureCurrentDraft]).
+  final Map<EditorLanguage, String> _drafts = <EditorLanguage, String>{};
 
   CodeController? _codeController;
   Timer? _highlightTimer;
@@ -25,7 +36,49 @@ class CodeEditorController extends Notifier<CodeEditorState> {
   @override
   CodeEditorState build() {
     ref.onDispose(() => _highlightTimer?.cancel());
-    return CodeEditorState.initial();
+    return CodeEditorState.initial(language: initialLanguage);
+  }
+
+  EditorLanguage _openingLanguage() {
+    final problem = codingProblem;
+    if (problem == null) return EditorLanguage.dart;
+    final available = problem.languagesAvailable;
+    // The most recently saved draft wins, so reopening a problem puts the
+    // learner back where they left off (FR-026).
+    final mostRecent = problem.getSolutionsStatus.where((s) => s.submittedAt != null).toList()
+      ..sort((a, b) => b.submittedAt!.compareTo(a.submittedAt!));
+    for (final saved in mostRecent) {
+      final language = languageFromKey(saved.languageKey);
+      if (language != null && available.contains(language)) return language;
+    }
+    return available.isEmpty ? EditorLanguage.dart : available.first;
+  }
+
+  /// The languages the picker should offer for this problem.
+  List<EditorLanguage> get languagesAvailable =>
+      codingProblem?.languagesAvailable ?? const <EditorLanguage>[EditorLanguage.dart];
+
+  /// Switches the editor to [language], keeping the draft of the one being
+  /// left behind. No prompt and no confirmation: nothing is lost, so there is
+  /// nothing to warn about (SC-018).
+  void setLanguage(EditorLanguage language) {
+    if (language == state.language || state.isRunning) return;
+    if (!languagesAvailable.contains(language)) return;
+
+    _captureCurrentDraft();
+    state = state.copyWith(language: language, grade: null, highlightedLine: null);
+
+    final controller = _codeController;
+    if (controller != null) controller.text = draftFor(language);
+  }
+
+  /// The text to show for [language]: the in-memory draft if this session has
+  /// one, then whatever was saved, then the starter code.
+  String draftFor(EditorLanguage language) => _drafts[language] ?? codingProblem?.getCodeFor(language) ?? '';
+
+  void _captureCurrentDraft() {
+    final text = _codeController?.text;
+    if (text != null) _drafts[state.language] = text;
   }
 
   void attachCodeController(CodeController controller) {
@@ -48,7 +101,9 @@ class CodeEditorController extends Notifier<CodeEditorState> {
   void resetCode() {
     final controller = _codeController;
     if (controller == null) return;
-    controller.text = codingProblem?.getDefaultCode ?? "";
+    // Resets the language on screen, not every language's draft.
+    _drafts.remove(state.language);
+    controller.text = codingProblem?.getDefaultCodeFor(state.language) ?? "";
     state = state.copyWith(grade: null, highlightedLine: null);
   }
 
@@ -68,9 +123,11 @@ class CodeEditorController extends Notifier<CodeEditorState> {
     state = state.copyWith(isRunning: true, grade: null);
 
     final controller = _getCodeController;
+    _captureCurrentDraft();
     final resultGrade = _gradeCodeUseCase.grade(
       problem: codingProblem,
       userCode: controller.text,
+      language: state.language,
     );
 
     result.call(resultGrade);

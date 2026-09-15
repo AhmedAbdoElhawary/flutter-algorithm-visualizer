@@ -5,7 +5,6 @@ import 'package:algorithm_visualizer/features/challenge/data/data_sources/remote
 import 'package:algorithm_visualizer/features/challenge/data/data_sources/remote/logging_challenge_remote_data_source.dart';
 import 'package:algorithm_visualizer/features/challenge/data/repositories/problem_repository_impl.dart';
 import 'package:algorithm_visualizer/features/challenge/domain/entities/coding_problem.dart';
-import 'package:algorithm_visualizer/features/challenge/domain/enums/problem.dart';
 import 'package:algorithm_visualizer/features/challenge/domain/repositories/problem_repository.dart';
 import 'package:algorithm_visualizer/features/challenge/presentation/view_model/challenges/problems_notifier.dart';
 import 'package:collection/collection.dart';
@@ -68,16 +67,3 @@ final similarProblemIdsProvider = Provider.family<List<int>, CodingProblem>((ref
       .cast<int>()
       .toList(growable: false);
 });
-
-final specificDifficultyCountProvider = Provider.family<AsyncValue<int>, ProblemDifficulty?>(
-  (ref, filter) {
-    return ref.watch(
-      problemsProvider.select(
-        (async) => async.whenData((problems) {
-          if (filter == null || filter == ProblemDifficulty.none) return problems.length;
-          return problems.where((problem) => problem.difficulty == filter).length;
-        }),
-      ),
-    );
-  },
-);

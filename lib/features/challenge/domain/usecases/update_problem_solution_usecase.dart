@@ -1,3 +1,5 @@
+import 'package:algorithm_visualizer/core/custom_packages/custom_code_editor/code_editor.dart'
+    show EditorLanguageX;
 import 'package:algorithm_visualizer/features/challenge/data/models/problem_storage.dart';
 import 'package:algorithm_visualizer/features/challenge/domain/entities/coding_problem.dart';
 import 'package:algorithm_visualizer/features/challenge/domain/enums/problem.dart';
@@ -16,6 +18,7 @@ class UpdateProblemSolutionUseCase {
       code: result.code,
       isCorrect: result.allPassed,
       submittedAt: DateTime.now(),
+      language: result.language.datasetKey,
     );
 
     final solution = dto.solutionsStatus ?? [];

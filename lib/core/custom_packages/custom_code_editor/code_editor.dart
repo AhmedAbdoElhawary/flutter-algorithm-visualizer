@@ -13,6 +13,8 @@ export 'src/editor/code_controller.dart';
 export 'src/editor/code_document.dart';
 export 'src/editor/code_editor.dart';
 // Execution ("run this code" support)
+// The languages the editor offers, and the frontend behind each one.
+export 'src/execution/frontend/language_registry.dart';
 // TODO(007): legacy/ is the pre-rewrite tree-walking interpreter, kept only
 // until the new bytecode engine (see plan.md) reaches grading parity; it is
 // deleted in T113.
@@ -29,6 +31,7 @@ export 'src/models/code_editor_config.dart';
 export 'src/models/code_editor_theme.dart';
 // Syntax
 export 'src/syntax/dart/dart_highlighter.dart';
+export 'src/syntax/javascript/javascript_highlighter.dart';
 export 'src/syntax/python/python_highlighter.dart';
 export 'src/syntax/syntax_highlighter.dart';
 export 'src/syntax/token.dart';

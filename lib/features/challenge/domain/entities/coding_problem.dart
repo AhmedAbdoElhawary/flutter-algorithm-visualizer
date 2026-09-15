@@ -1,3 +1,5 @@
+import 'package:algorithm_visualizer/core/custom_packages/custom_code_editor/code_editor.dart'
+    show EditorLanguage, EditorLanguageX, supportedLanguages;
 import 'package:algorithm_visualizer/core/extensions/string.dart';
 import 'package:algorithm_visualizer/features/challenge/data/models/custom_object.dart';
 import 'package:algorithm_visualizer/features/challenge/data/models/example.dart';
@@ -208,13 +210,46 @@ extension CodingProblemX on CodingProblem {
     return "$sign{\n\n}";
   }
 
-  String get getDefaultCode {
-    final code = defaultCode?['dart'];
-    if (code == null || code.trim().isEmpty) return getFunctionInDart;
-    return code;
+  String get getDefaultCode => getDefaultCodeFor(EditorLanguage.dart);
+
+  /// The starter code for [language]. Dart falls back to a stub built from
+  /// the function signature; the other languages have no such fallback, which
+  /// is exactly why [languagesAvailable] only offers a language that has
+  /// starter code of its own.
+  String getDefaultCodeFor(EditorLanguage language) {
+    final code = defaultCode?[language.datasetKey];
+    if (code != null && code.trim().isNotEmpty) return code;
+    return language == EditorLanguage.dart ? getFunctionInDart : '';
   }
 
-  String get getCode => solutionsStatus?.firstOrNull?.code ?? getDefaultCode;
+  /// Exactly the languages this problem can be solved in: Dart always, plus
+  /// any language the dataset gives starter code for (FR-027a).
+  ///
+  /// Derived rather than stored, so adding a language to a problem is a
+  /// content change and nothing else (FR-027b).
+  List<EditorLanguage> get languagesAvailable => <EditorLanguage>[
+        for (final language in supportedLanguages)
+          if (language == EditorLanguage.dart ||
+              (defaultCode?[language.datasetKey]?.trim().isNotEmpty ?? false))
+            language,
+      ];
+
+  bool supportsLanguage(EditorLanguage language) => languagesAvailable.contains(language);
+
+  /// The most recently saved draft for [language], if there is one.
+  ProblemSolutionStatusDTO? solutionFor(EditorLanguage language) =>
+      getSolutionsStatus.firstWhereOrNull((s) => s.languageKey == language.datasetKey);
+
+  String get getCode => getCodeFor(EditorLanguage.dart);
+
+  /// What the editor should open with for [language]: the learner's own
+  /// draft when they have one, otherwise the starter code.
+  String getCodeFor(EditorLanguage language) {
+    final saved = solutionFor(language)?.code;
+    if (saved != null && saved.isNotEmpty) return saved;
+    return getDefaultCodeFor(language);
+  }
+
   List<CustomObject> get getCustomObjects => customObjects?['dart'] ?? [];
   List<Example> get getExamples => examples ?? [];
   List<String> get getEdgeCases => edgeCases ?? [];
