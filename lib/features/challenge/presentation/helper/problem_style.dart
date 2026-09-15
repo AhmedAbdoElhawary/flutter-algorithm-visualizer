@@ -8,37 +8,37 @@ class ProblemStyle {
   static ThemeEnum difficultyCodeDescriptionColor(ProblemDifficulty difficulty) {
     switch (difficulty) {
       case ProblemDifficulty.easy:
-        return ThemeEnum.accentGreen;
+        return ThemeEnum.dataEasy;
       case ProblemDifficulty.medium:
-        return ThemeEnum.accentYellow;
+        return ThemeEnum.dataMedium;
       case ProblemDifficulty.hard:
-        return ThemeEnum.accentRed;
+        return ThemeEnum.dataHard;
       case ProblemDifficulty.none:
-        return ThemeEnum.accentBlue;
+        return ThemeEnum.dataTarget;
     }
   }
 
   static ThemeEnum difficultyColor(ProblemDifficulty difficulty) {
     switch (difficulty) {
       case ProblemDifficulty.easy:
-        return ThemeEnum.accentGreenRc;
+        return ThemeEnum.dataEasy;
       case ProblemDifficulty.medium:
-        return ThemeEnum.accentYellowRc;
+        return ThemeEnum.dataMedium;
       case ProblemDifficulty.hard:
-        return ThemeEnum.accentRedRc;
+        return ThemeEnum.dataHard;
       default:
-        return ThemeEnum.hover;
+        return ThemeEnum.track;
     }
   }
 
   static (ThemeEnum color, IconData icon) getStatus(ProblemStatus? status) {
     switch (status) {
       case ProblemStatus.solved:
-        return (ThemeEnum.accentGreenRc, Icons.check_circle_outline_rounded);
+        return (ThemeEnum.dataEasy, Icons.check_circle_outline_rounded);
       case ProblemStatus.attempted:
-        return (ThemeEnum.accentYellowRc, Icons.error_outline_rounded);
+        return (ThemeEnum.dataMedium, Icons.error_outline_rounded);
       default:
-        return (ThemeEnum.accentBg, Icons.radio_button_unchecked_rounded);
+        return (ThemeEnum.track, Icons.radio_button_unchecked_rounded);
     }
   }
 }
