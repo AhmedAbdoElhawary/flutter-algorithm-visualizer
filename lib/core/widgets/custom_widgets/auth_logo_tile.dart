@@ -1,4 +1,6 @@
+import 'package:algorithm_visualizer/core/helpers/svg_picture.dart';
 import 'package:algorithm_visualizer/core/resources/dimensions_manager.dart';
+import 'package:algorithm_visualizer/core/resources/logo_assets.dart';
 import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/card_container.dart';
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/custom_icon.dart';
@@ -20,10 +22,11 @@ class AuthLogoTile extends StatelessWidget {
       child: SizedBox(
         width: side,
         height: side,
-        child: Center(
-          child: CustomPaint(
-            size: Size(32.r, 32.r),
-            painter: _CoreDiveLogoMark(color: context.getColor(ThemeEnum.inkTitle)),
+        child: const Center(
+          child: CustomAssetsSvg(
+            LogoAssets.markSilhouetteBlack,
+            size: 32,
+            color: ThemeEnum.inkTitle,
           ),
         ),
       ),
@@ -49,28 +52,4 @@ class AuthRecoveryTile extends StatelessWidget {
       child: CustomIcon(icon, size: 26, color: ThemeEnum.inkTitle),
     );
   }
-}
-
-class _CoreDiveLogoMark extends CustomPainter {
-  const _CoreDiveLogoMark({required this.color});
-
-  final Color color;
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    final unit = size.width / 24;
-    final paint = Paint()
-      ..color = color
-      ..strokeWidth = 2.2 * unit
-      ..strokeCap = StrokeCap.round
-      ..style = PaintingStyle.stroke;
-
-    // Three horizontal strata: y 6.5 / 12 / 17.5, widths 16 / 11 / 6.
-    canvas.drawLine(Offset(4 * unit, 6.5 * unit), Offset(20 * unit, 6.5 * unit), paint);
-    canvas.drawLine(Offset(6.5 * unit, 12 * unit), Offset(17.5 * unit, 12 * unit), paint);
-    canvas.drawLine(Offset(9 * unit, 17.5 * unit), Offset(15 * unit, 17.5 * unit), paint);
-  }
-
-  @override
-  bool shouldRepaint(_CoreDiveLogoMark oldDelegate) => oldDelegate.color != color;
 }
