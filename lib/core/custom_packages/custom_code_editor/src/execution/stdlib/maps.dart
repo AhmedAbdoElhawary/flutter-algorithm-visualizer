@@ -32,7 +32,8 @@ Value? getMapProperty(MapValue receiver, String name) {
   }
 }
 
-Value callMapMethod(MapValue receiver, String name, List<Value> args, InvokeCallback invoke, Dialect dialect) {
+Value callMapMethod(
+    MapValue receiver, String name, List<Value> args, InvokeCallback invoke, Dialect dialect) {
   final entries = receiver.entries;
   switch (name) {
     case 'containsKey':
@@ -84,7 +85,8 @@ Value? getSetProperty(SetValue receiver, String name) {
   }
 }
 
-Value callSetMethod(SetValue receiver, String name, List<Value> args, InvokeCallback invoke, Dialect dialect) {
+Value callSetMethod(
+    SetValue receiver, String name, List<Value> args, InvokeCallback invoke, Dialect dialect) {
   final items = receiver.items;
   switch (name) {
     case 'add':

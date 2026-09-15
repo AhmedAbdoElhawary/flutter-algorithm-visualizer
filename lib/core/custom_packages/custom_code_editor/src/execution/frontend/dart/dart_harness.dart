@@ -25,7 +25,14 @@ class DartFrontend implements LanguageFrontend {
     if (!hasMain) return IrProgram(statements);
     return IrProgram(<IrStmt>[
       ...statements,
-      const IrExprStmt(line: 0, synthetic: true, expr: IrCall(line: 0, synthetic: true, callee: IrIdentifier(line: 0, synthetic: true, name: 'main'), args: <IrExpr>[])),
+      const IrExprStmt(
+          line: 0,
+          synthetic: true,
+          expr: IrCall(
+              line: 0,
+              synthetic: true,
+              callee: IrIdentifier(line: 0, synthetic: true, name: 'main'),
+              args: <IrExpr>[])),
     ]);
   }
 
@@ -43,7 +50,11 @@ class DartFrontend implements LanguageFrontend {
     final targetCall = IrReturn(
       line: 0,
       synthetic: true,
-      value: IrCall(line: 0, synthetic: true, callee: IrIdentifier(line: 0, synthetic: true, name: functionName), args: args),
+      value: IrCall(
+          line: 0,
+          synthetic: true,
+          callee: IrIdentifier(line: 0, synthetic: true, name: functionName),
+          args: args),
     );
     return IrProgram(<IrStmt>[...preludeStatements, ...userProgram.statements, targetCall]);
   }

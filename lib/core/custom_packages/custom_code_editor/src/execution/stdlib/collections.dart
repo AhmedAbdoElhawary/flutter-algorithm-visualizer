@@ -21,10 +21,14 @@ Value? getListProperty(List<Value> items, String name) {
     case 'isNotEmpty':
       return BoolValue(items.isNotEmpty);
     case 'first':
-      if (items.isEmpty) throw const VmRuntimeError('indexOutOfRange', <String, Object?>{'index': 0, 'length': 0});
+      if (items.isEmpty) {
+        throw const VmRuntimeError('indexOutOfRange', <String, Object?>{'index': 0, 'length': 0});
+      }
       return items.first;
     case 'last':
-      if (items.isEmpty) throw const VmRuntimeError('indexOutOfRange', <String, Object?>{'index': -1, 'length': 0});
+      if (items.isEmpty) {
+        throw const VmRuntimeError('indexOutOfRange', <String, Object?>{'index': -1, 'length': 0});
+      }
       return items.last;
     case 'reversed':
       return ListValue(items.reversed.toList());
@@ -33,7 +37,8 @@ Value? getListProperty(List<Value> items, String name) {
   }
 }
 
-Value callListMethod(ListValue receiver, String name, List<Value> args, InvokeCallback invoke, Dialect dialect) {
+Value callListMethod(
+    ListValue receiver, String name, List<Value> args, InvokeCallback invoke, Dialect dialect) {
   final items = receiver.items;
   switch (name) {
     case 'map':
@@ -60,7 +65,9 @@ Value callListMethod(ListValue receiver, String name, List<Value> args, InvokeCa
       return receiver;
     case 'reduce':
       final f = _fn(args, 0);
-      if (items.isEmpty) throw const VmRuntimeError('runtime', <String, Object?>{'message': 'reduce on an empty collection'});
+      if (items.isEmpty) {
+        throw const VmRuntimeError('runtime', <String, Object?>{'message': 'reduce on an empty collection'});
+      }
       var acc = items.first;
       for (var i = 1; i < items.length; i++) {
         acc = invoke(f, <Value>[acc, items[i]]);
@@ -85,7 +92,8 @@ Value callListMethod(ListValue receiver, String name, List<Value> args, InvokeCa
       for (final e in items) {
         if (isTruthy(invoke(f, <Value>[e]), dialect)) return e;
       }
-      throw const VmRuntimeError('runtime', <String, Object?>{'message': 'no element satisfies the predicate'});
+      throw const VmRuntimeError(
+          'runtime', <String, Object?>{'message': 'no element satisfies the predicate'});
     case 'indexWhere':
       final f = _fn(args, 0);
       for (var i = 0; i < items.length; i++) {
@@ -112,7 +120,7 @@ Value callListMethod(ListValue receiver, String name, List<Value> args, InvokeCa
         throw VmRuntimeError('indexOutOfRange', <String, Object?>{'index': start, 'length': items.length});
       }
       return ListValue(items.sublist(start, end));
-      case 'toList':
+    case 'toList':
       return ListValue(List<Value>.of(items));
     case 'toSet':
       return SetValue(LinkedHashSet<Value>.of(items));
@@ -126,10 +134,14 @@ Value callListMethod(ListValue receiver, String name, List<Value> args, InvokeCa
       return BoolValue(items.remove(args[0]));
     case 'removeAt':
       final idx = (args[0] as IntValue).value;
-      if (idx < 0 || idx >= items.length) throw VmRuntimeError('indexOutOfRange', <String, Object?>{'index': idx, 'length': items.length});
+      if (idx < 0 || idx >= items.length) {
+        throw VmRuntimeError('indexOutOfRange', <String, Object?>{'index': idx, 'length': items.length});
+      }
       return items.removeAt(idx);
     case 'removeLast':
-      if (items.isEmpty) throw const VmRuntimeError('indexOutOfRange', <String, Object?>{'index': -1, 'length': 0});
+      if (items.isEmpty) {
+        throw const VmRuntimeError('indexOutOfRange', <String, Object?>{'index': -1, 'length': 0});
+      }
       return items.removeLast();
     case 'insert':
       final idx = (args[0] as IntValue).value;

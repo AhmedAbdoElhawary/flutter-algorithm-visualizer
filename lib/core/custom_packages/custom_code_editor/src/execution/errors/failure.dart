@@ -77,8 +77,10 @@ class VmRuntimeError implements Exception {
 
 /// Thrown by `LanguageFrontend.parse` — never a raw Dart error (O3).
 class FrontendFailure implements Exception {
-  const FrontendFailure({required this.kind, required this.code, this.data = const <String, Object?>{}, required this.line})
-      : assert(kind == FailureKind.syntax || kind == FailureKind.unsupported, 'a frontend can only report syntax or unsupported');
+  const FrontendFailure(
+      {required this.kind, required this.code, this.data = const <String, Object?>{}, required this.line})
+      : assert(kind == FailureKind.syntax || kind == FailureKind.unsupported,
+            'a frontend can only report syntax or unsupported');
 
   final FailureKind kind;
   final String code;
