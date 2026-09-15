@@ -477,7 +477,9 @@ void main() {
   });
 
   _solutions.forEach((id, code) {
-    test('problem $id: an idiomatic Dart solution (.map/.where/.fold/sort/Set/closures) passes every stored test case', () {
+    test(
+        'problem $id: an idiomatic Dart solution (.map/.where/.fold/sort/Set/closures) passes every stored test case',
+        () {
       final dto = problems[id]!;
       final result = const ProblemRunner().runAll(problem: dataFor(dto), userCode: code);
 
