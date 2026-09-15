@@ -38,13 +38,13 @@ class _AuthErrorBanner extends StatelessWidget {
   ThemeEnum get getColor {
     switch (type) {
       case CustomSnackBarType.error:
-        return ThemeEnum.difficultyHard;
+        return ThemeEnum.dataHard;
       case CustomSnackBarType.success:
-        return ThemeEnum.difficultyEasy;
+        return ThemeEnum.dataEasy;
       case CustomSnackBarType.warning:
-        return ThemeEnum.difficultyMedium;
+        return ThemeEnum.dataMedium;
       case CustomSnackBarType.info:
-        return ThemeEnum.textBody;
+        return ThemeEnum.inkBody;
     }
   }
 
