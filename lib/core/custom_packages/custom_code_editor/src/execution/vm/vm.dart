@@ -17,7 +17,12 @@ import 'budget.dart';
 import 'chunk.dart';
 
 class VmResult {
-  const VmResult({this.returned, this.stdout = const <String>[], this.rawOutput = const <Value>[], this.truncated = false, this.failure});
+  const VmResult(
+      {this.returned,
+      this.stdout = const <String>[],
+      this.rawOutput = const <Value>[],
+      this.truncated = false,
+      this.failure});
   final Value? returned;
   final List<String> stdout;
 
@@ -43,7 +48,9 @@ class _EngineHalt implements Exception {
 class _Frame {
   _Frame(this.closure)
       : proto = closure.chunk as FunctionProto,
-        locals = List<Cell>.generate((closure.chunk as FunctionProto).maxLocals, (_) => Cell(NullValue.instance), growable: false);
+        locals = List<Cell>.generate(
+            (closure.chunk as FunctionProto).maxLocals, (_) => Cell(NullValue.instance),
+            growable: false);
   final FunctionValue closure;
   final FunctionProto proto;
   final List<Cell> locals;
@@ -52,7 +59,8 @@ class _Frame {
 }
 
 class Vm {
-  Vm({required this.dialect, required this.budget, bool Function()? isCancelled}) : _isCancelled = isCancelled ?? (() => false) {
+  Vm({required this.dialect, required this.budget, bool Function()? isCancelled})
+      : _isCancelled = isCancelled ?? (() => false) {
     _globals.addAll(numbers.buildPreludeGlobals());
   }
 
@@ -81,26 +89,43 @@ class Vm {
     _frames.add(_Frame(script));
     try {
       final result = _dispatchLoop(0);
-      return VmResult(returned: result, stdout: List<String>.of(_stdout), rawOutput: List<Value>.of(_rawOutput), truncated: _truncated);
+      return VmResult(
+          returned: result,
+          stdout: List<String>.of(_stdout),
+          rawOutput: List<Value>.of(_rawOutput),
+          truncated: _truncated);
     } on _EngineHalt catch (h) {
       return VmResult(
         stdout: List<String>.of(_stdout),
         truncated: _truncated,
-        failure: Failure(kind: h.kind, code: h.code, line: _currentLine(), partialOutput: List<String>.of(_stdout)),
+        failure: Failure(
+            kind: h.kind, code: h.code, line: _currentLine(), partialOutput: List<String>.of(_stdout)),
       );
     } on _Uncaught catch (u) {
       final v = u.value;
-      final (code, data) = v is ErrorValue ? (v.code, v.data) : ('uncaughtThrow', <String, Object?>{'message': displayString(v, dialect)});
+      final (code, data) = v is ErrorValue
+          ? (v.code, v.data)
+          : ('uncaughtThrow', <String, Object?>{'message': displayString(v, dialect)});
       return VmResult(
         stdout: List<String>.of(_stdout),
         truncated: _truncated,
-        failure: Failure(kind: FailureKind.runtime, code: code, data: data, line: u.line, partialOutput: List<String>.of(_stdout)),
+        failure: Failure(
+            kind: FailureKind.runtime,
+            code: code,
+            data: data,
+            line: u.line,
+            partialOutput: List<String>.of(_stdout)),
       );
     } on VmRuntimeError catch (e) {
       return VmResult(
         stdout: List<String>.of(_stdout),
         truncated: _truncated,
-        failure: Failure(kind: FailureKind.runtime, code: e.code, data: e.data, line: _currentLine(), partialOutput: List<String>.of(_stdout)),
+        failure: Failure(
+            kind: FailureKind.runtime,
+            code: e.code,
+            data: e.data,
+            line: _currentLine(),
+            partialOutput: List<String>.of(_stdout)),
       );
     }
   }
@@ -216,7 +241,9 @@ class Vm {
         final name = (frame.proto.chunk.constants[_u16(frame)] as StrValue).value;
         final value = frame.stack.removeLast();
         final receiver = frame.stack.removeLast();
-        if (receiver is! InstanceValue) throw const VmRuntimeError('typeMismatch', <String, Object?>{'expected': 'an object'});
+        if (receiver is! InstanceValue) {
+          throw const VmRuntimeError('typeMismatch', <String, Object?>{'expected': 'an object'});
+        }
         receiver.fields[name] = value;
         frame.stack.add(value);
       case OpCode.getIndex:
@@ -481,10 +508,14 @@ class Vm {
   }
 
   int _resolveIndex(Value index, int length) {
-    if (index is! IntValue) throw const VmRuntimeError('typeMismatch', <String, Object?>{'expected': 'an integer index'});
+    if (index is! IntValue) {
+      throw const VmRuntimeError('typeMismatch', <String, Object?>{'expected': 'an integer index'});
+    }
     var i = index.value;
     if (i < 0 && dialect.negativeIndexing) i += length;
-    if (i < 0 || i >= length) throw VmRuntimeError('indexOutOfRange', <String, Object?>{'index': index.value, 'length': length});
+    if (i < 0 || i >= length) {
+      throw VmRuntimeError('indexOutOfRange', <String, Object?>{'index': index.value, 'length': length});
+    }
     return i;
   }
 
@@ -498,15 +529,25 @@ class Vm {
     }
     if (receiver is NamespaceValue) {
       final m = receiver.members[name];
-      if (m == null) throw VmRuntimeError('undefinedVariable', <String, Object?>{'name': '${receiver.name}.$name'});
+      if (m == null) {
+        throw VmRuntimeError('undefinedVariable', <String, Object?>{'name': '${receiver.name}.$name'});
+      }
       return m;
     }
-    if (receiver is ListValue) return collections.getListProperty(receiver.items, name) ?? IntrinsicMethod(receiver, name);
-    if (receiver is TupleValue) return collections.getListProperty(receiver.items, name) ?? IntrinsicMethod(receiver, name);
-    if (receiver is StrValue) return strings.getStringProperty(receiver.value, name, dialect) ?? IntrinsicMethod(receiver, name);
+    if (receiver is ListValue) {
+      return collections.getListProperty(receiver.items, name) ?? IntrinsicMethod(receiver, name);
+    }
+    if (receiver is TupleValue) {
+      return collections.getListProperty(receiver.items, name) ?? IntrinsicMethod(receiver, name);
+    }
+    if (receiver is StrValue) {
+      return strings.getStringProperty(receiver.value, name, dialect) ?? IntrinsicMethod(receiver, name);
+    }
     if (receiver is MapValue) return maps.getMapProperty(receiver, name) ?? IntrinsicMethod(receiver, name);
     if (receiver is SetValue) return maps.getSetProperty(receiver, name) ?? IntrinsicMethod(receiver, name);
-    if (receiver is IntValue || receiver is NumValue) return numbers.getNumberProperty(receiver, name) ?? IntrinsicMethod(receiver, name);
+    if (receiver is IntValue || receiver is NumValue) {
+      return numbers.getNumberProperty(receiver, name) ?? IntrinsicMethod(receiver, name);
+    }
     throw VmRuntimeError('undefinedVariable', <String, Object?>{'name': name});
   }
 
@@ -515,11 +556,15 @@ class Vm {
     final name = method.name;
     Value invoke(FunctionValue fn, List<Value> callArgs) => _callSync(fn, callArgs);
     if (receiver is ListValue) return collections.callListMethod(receiver, name, args, invoke, dialect);
-    if (receiver is TupleValue) return collections.callListMethod(ListValue(receiver.items), name, args, invoke, dialect);
+    if (receiver is TupleValue) {
+      return collections.callListMethod(ListValue(receiver.items), name, args, invoke, dialect);
+    }
     if (receiver is StrValue) return strings.callStringMethod(receiver.value, name, args, invoke, dialect);
     if (receiver is MapValue) return maps.callMapMethod(receiver, name, args, invoke, dialect);
     if (receiver is SetValue) return maps.callSetMethod(receiver, name, args, invoke, dialect);
-    if (receiver is IntValue || receiver is NumValue) return numbers.callNumberMethod(receiver, name, args, invoke, dialect);
+    if (receiver is IntValue || receiver is NumValue) {
+      return numbers.callNumberMethod(receiver, name, args, invoke, dialect);
+    }
     throw VmRuntimeError('undefinedFunction', <String, Object?>{'name': name});
   }
 
@@ -533,7 +578,8 @@ class Vm {
   }
 
   void _call(int argCount) {
-    final args = List<Value>.generate(argCount, (i) => _frames.last.stack[_frames.last.stack.length - argCount + i]);
+    final args =
+        List<Value>.generate(argCount, (i) => _frames.last.stack[_frames.last.stack.length - argCount + i]);
     _frames.last.stack.removeRange(_frames.last.stack.length - argCount, _frames.last.stack.length);
     final callee = _frames.last.stack.removeLast();
 
@@ -567,7 +613,8 @@ class Vm {
     }
     final proto = fn.chunk as FunctionProto;
     if (args.length < proto.minArity || args.length > proto.arity) {
-      throw VmRuntimeError('wrongArgumentCount', <String, Object?>{'expected': proto.arity, 'actual': args.length});
+      throw VmRuntimeError(
+          'wrongArgumentCount', <String, Object?>{'expected': proto.arity, 'actual': args.length});
     }
     final frame = _Frame(fn);
     var slot = 0;
@@ -602,7 +649,9 @@ class Vm {
     ClassValue? superclass;
     if (hasSuperclass) {
       final sc = frame.stack.removeLast();
-      if (sc is! ClassValue) throw const VmRuntimeError('typeMismatch', <String, Object?>{'expected': 'a class'});
+      if (sc is! ClassValue) {
+        throw const VmRuntimeError('typeMismatch', <String, Object?>{'expected': 'a class'});
+      }
       superclass = sc;
     }
     frame.stack.add(ClassValue(name: name, superclass: superclass));
@@ -626,7 +675,9 @@ class Vm {
 
     final homeClass = frame.closure.homeClass;
     final superclass = homeClass?.superclass;
-    if (superclass == null) throw const VmRuntimeError('typeMismatch', <String, Object?>{'expected': 'a superclass'});
+    if (superclass == null) {
+      throw const VmRuntimeError('typeMismatch', <String, Object?>{'expected': 'a superclass'});
+    }
     final method = superclass.findMethod(name);
     final thisValue = frame.locals[0].value;
     if (method == null || thisValue is! InstanceValue) {
