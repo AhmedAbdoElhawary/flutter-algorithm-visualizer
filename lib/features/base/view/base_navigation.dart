@@ -14,7 +14,7 @@ class MainNavigationShell extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Material(
-      color: context.getColor(ThemeEnum.primary),
+      color: context.getColor(ThemeEnum.ground),
       child: Column(
         children: [
           Expanded(child: SafeArea(bottom: false, child: navigationShell)),
@@ -49,11 +49,11 @@ class _BottomNavBar extends StatelessWidget {
       top: false,
       child: Container(
         width: double.infinity,
-        color: context.getColor(ThemeEnum.primary),
+        color: context.getColor(ThemeEnum.ground),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Container(height: 1, color: context.getColor(ThemeEnum.borderSubtle)),
+            Container(height: 1, color: context.getColor(ThemeEnum.hairline)),
             SizedBox(
               height: 63.h,
               child: Padding(
@@ -96,7 +96,7 @@ class _NavItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final color = active ? ThemeEnum.textBright : ThemeEnum.textSecond;
+    final color = active ? ThemeEnum.inkPrimary : ThemeEnum.inkBody;
     return GestureDetector(
       onTap: onTap,
       behavior: HitTestBehavior.opaque,
