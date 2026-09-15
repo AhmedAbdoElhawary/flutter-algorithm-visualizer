@@ -53,7 +53,7 @@ class _LogoutCard extends StatelessWidget {
       child: const _AccountCardBody(
         icon: Icons.logout_rounded,
         title: StringsManager.logout,
-        accentColor: ThemeEnum.accentRed,
+        accentColor: ThemeEnum.dataHard,
       ),
     );
   }
@@ -70,7 +70,7 @@ class _GuestSignInCard extends StatelessWidget {
         icon: Icons.login_rounded,
         title: StringsManager.guestAccountTitle,
         subtitle: StringsManager.guestAccountDesc,
-        accentColor: ThemeEnum.accent,
+        accentColor: ThemeEnum.inkPrimary,
       ),
     );
   }
@@ -108,7 +108,7 @@ class _AccountCardBody extends StatelessWidget {
           const CustomIcon(
             Icons.chevron_right_rounded,
             size: 18,
-            color: ThemeEnum.hover,
+            color: ThemeEnum.track,
           ),
         ],
       ),
@@ -149,7 +149,7 @@ class _AccountCardLabels extends ConsumerWidget {
           const RSizedBox(height: 2),
           RegularText(
             caption,
-            color: ThemeEnum.textSecond,
+            color: ThemeEnum.inkBody,
             fontSize: 11,
           ),
         ],
