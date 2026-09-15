@@ -22,11 +22,15 @@ body {
 }
 .wrap { max-width: 760px; margin: 0 auto; padding: 48px 20px 96px; }
 header.brand { display: flex; align-items: center; gap: 12px; margin-bottom: 40px; }
+/* The real app icon, so the page and the launcher agree on what AlgoDive
+   looks like. The PNG carries its own rounded corners and near-black ground;
+   the hairline keeps its edge from dissolving into the page, which is almost
+   the same colour. `width`/`height` are also set as HTML attributes so the
+   header does not reflow while the image loads. */
 header.brand .mark {
   width: 40px; height: 40px; border-radius: 10px; flex: 0 0 auto;
-  background: var(--raised); border: 1px solid var(--hairline);
-  display: grid; place-items: center; color: var(--ink-primary);
-  font-weight: 800; font-size: 18px; letter-spacing: -0.5px;
+  border: 1px solid var(--hairline);
+  display: block;
 }
 header.brand b { color: var(--ink-title); font-size: 18px; letter-spacing: -0.3px; }
 h1 { color: var(--ink-title); font-size: 30px; line-height: 1.25; letter-spacing: -0.6px; margin: 0 0 8px; }
