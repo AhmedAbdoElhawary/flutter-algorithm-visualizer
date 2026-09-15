@@ -13,12 +13,15 @@ export 'src/editor/code_controller.dart';
 export 'src/editor/code_document.dart';
 export 'src/editor/code_editor.dart';
 // Execution ("run this code" support)
-export 'src/execution/ast.dart';
-export 'src/execution/interpreter.dart';
-export 'src/execution/lexer.dart';
-export 'src/execution/object_instance.dart';
-export 'src/execution/parser.dart';
-export 'src/execution/runner.dart';
+// TODO(007): legacy/ is the pre-rewrite tree-walking interpreter, kept only
+// until the new bytecode engine (see plan.md) reaches grading parity; it is
+// deleted in T113.
+export 'src/execution/legacy/ast.dart';
+export 'src/execution/legacy/interpreter.dart';
+export 'src/execution/legacy/lexer.dart';
+export 'src/execution/legacy/object_instance.dart';
+export 'src/execution/legacy/parser.dart';
+export 'src/execution/legacy/runner.dart';
 // Formatting
 export 'src/formatting/formatter.dart';
 // Models

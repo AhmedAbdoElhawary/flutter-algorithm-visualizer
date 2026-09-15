@@ -387,8 +387,26 @@ class Compiler {
     final fc = _FunctionCompiler(enclosing: enclosing, name: name, arity: params.length);
     fc.scopeDepth = 1;
     if (isMethod) fc.declareLocal('this');
+    var minArity = params.length;
+    for (var i = 0; i < params.length; i++) {
+      fc.declareLocal(params[i].name);
+      if (params[i].defaultValue != null && i < minArity) minArity = i;
+    }
+    // A trailing optional parameter the caller didn't supply keeps its
+    // Cell's initial NullValue — which for `[this.next]`-style params with
+    // no explicit default *is* the correct default, so only parameters with
+    // an explicit default need this prologue.
     for (final p in params) {
-      fc.declareLocal(p.name);
+      if (p.defaultValue == null) continue;
+      _compileStmt(
+        fc,
+        IrIf(
+          line: p.defaultValue!.line,
+          synthetic: true,
+          condition: IrBinary(line: p.defaultValue!.line, synthetic: true, op: IrBinaryOp.eq, left: IrIdentifier(line: p.defaultValue!.line, name: p.name), right: IrLiteral(line: p.defaultValue!.line, synthetic: true, kind: IrLiteralKind.nullLit, value: null)),
+          thenBranch: IrExprStmt(line: p.defaultValue!.line, synthetic: true, expr: IrAssign(line: p.defaultValue!.line, synthetic: true, name: p.name, value: p.defaultValue!)),
+        ),
+      );
     }
     for (final stmt in body) {
       _compileStmt(fc, stmt);
@@ -399,6 +417,7 @@ class Compiler {
     final proto = FunctionProto(
       name: name,
       arity: fc.arity,
+      minArity: minArity,
       chunk: fc.builder.build(),
       upvalues: fc.upvalues,
       exceptionTable: fc.exceptionTable,
@@ -491,6 +510,10 @@ class Compiler {
         _compileLiteral(fc, expr.line, expr.synthetic, kind, value);
       case IrIdentifier(:final name):
         _loadVariable(fc, name, expr.line, synthetic: expr.synthetic);
+      case IrRawValue(:final value):
+        final idx = fc.builder.addConstant(value);
+        fc.builder.emitOp(OpCode.constant, line: expr.line, synthetic: expr.synthetic);
+        fc.builder.emitU16(idx, line: expr.line, synthetic: expr.synthetic);
       case IrClosureRef(:final name):
         _loadVariable(fc, name, expr.line, synthetic: expr.synthetic);
       case IrBinary(:final op, :final left, :final right):
@@ -638,6 +661,17 @@ class Compiler {
       fc.builder.patchU16At(shortCircuit, fc.builder.offset);
       return;
     }
+    if (op == IrBinaryOp.ifNull) {
+      _compileExpr(fc, left);
+      fc.builder.emitOp(OpCode.dup, line: line, synthetic: synthetic);
+      fc.builder.emitOp(OpCode.nullLit, line: line, synthetic: synthetic);
+      fc.builder.emitOp(OpCode.notEqual, line: line, synthetic: synthetic);
+      final keepLeft = fc.builder.emitJump(OpCode.jumpIfTrue, line: line, synthetic: synthetic);
+      fc.builder.emitOp(OpCode.pop, line: line, synthetic: synthetic);
+      _compileExpr(fc, right);
+      fc.builder.patchU16At(keepLeft, fc.builder.offset);
+      return;
+    }
     _compileExpr(fc, left);
     _compileExpr(fc, right);
     final opcode = switch (op) {
@@ -654,7 +688,7 @@ class Compiler {
       IrBinaryOp.lte => OpCode.lessEqual,
       IrBinaryOp.gt => OpCode.greater,
       IrBinaryOp.gte => OpCode.greaterEqual,
-      IrBinaryOp.and || IrBinaryOp.or => throw StateError('handled above'),
+      IrBinaryOp.and || IrBinaryOp.or || IrBinaryOp.ifNull => throw StateError('handled above'),
     };
     fc.builder.emitOp(opcode, line: line, synthetic: synthetic);
   }

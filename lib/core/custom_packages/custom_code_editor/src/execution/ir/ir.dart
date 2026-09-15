@@ -9,6 +9,8 @@
 /// See `specs/007-multi-language-interpreter/data-model.md` §5.
 library;
 
+import '../values/value.dart';
+
 sealed class IrNode {
   const IrNode({required this.line, this.synthetic = false});
   final int line;
@@ -42,6 +44,16 @@ class IrLiteral extends IrExpr {
   final Object? value;
 }
 
+/// Embeds an already-constructed runtime [Value] directly, bypassing
+/// [IrLiteral]'s primitive-only kinds. Not produced by any parser — only by
+/// `LanguageFrontend.buildHarness` implementations, which receive their
+/// arguments as real `Value`s (already parsed from the test case), not
+/// source text.
+class IrRawValue extends IrExpr {
+  const IrRawValue({required super.line, super.synthetic, required this.value});
+  final Value value;
+}
+
 class IrIdentifier extends IrExpr {
   const IrIdentifier({required super.line, super.synthetic, required this.name});
   final String name;
@@ -49,7 +61,7 @@ class IrIdentifier extends IrExpr {
 
 /// `floorDiv` is Python's `//` (mathematical floor); `truncDiv` is Dart's
 /// `~/` (truncation toward zero) — genuinely different for negative operands.
-enum IrBinaryOp { add, sub, mul, div, floorDiv, truncDiv, mod, eq, notEq, lt, lte, gt, gte, and, or }
+enum IrBinaryOp { add, sub, mul, div, floorDiv, truncDiv, mod, eq, notEq, lt, lte, gt, gte, and, or, ifNull }
 
 class IrBinary extends IrExpr {
   const IrBinary({required super.line, super.synthetic, required this.op, required this.left, required this.right});
