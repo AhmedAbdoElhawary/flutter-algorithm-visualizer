@@ -64,7 +64,9 @@ class _ProblemPageState extends ConsumerState<ProblemPage> with SingleTickerProv
 
     // Scaffold/Metrial written in base_navigation, why?
     // to control all main pages with the structure of them
-    if (problem == null) return const Center(child: MediumText(StringsManager.noChallengeSelected));
+    if (problem == null) {
+      return const Center(child: MediumText(StringsManager.noChallengeSelected));
+    }
 
     return DefaultTabController(
       length: 3,
@@ -77,7 +79,7 @@ class _ProblemPageState extends ConsumerState<ProblemPage> with SingleTickerProv
               SliverAppBar(
                 floating: true,
                 snap: true,
-                backgroundColor: context.getColor(ThemeEnum.primary),
+                backgroundColor: context.getColor(ThemeEnum.ground),
                 surfaceTintColor: Colors.transparent,
                 shadowColor: Colors.transparent,
                 leading: const SizedBox.shrink(),
@@ -137,10 +139,10 @@ class _CollapsingHeaderTags extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
               children: [
-                BoldText(problem.getName, color: ThemeEnum.textPrimary, fontSize: 17, maxLines: 1),
+                BoldText(problem.getName, color: ThemeEnum.inkTitle, fontSize: 17, maxLines: 1),
                 if (tags.isNotEmpty) ...[
                   const RSizedBox(height: 2),
-                  RegularText(tags.join(', '), color: ThemeEnum.textSecond, fontSize: 10, maxLines: 1),
+                  RegularText(tags.join(', '), color: ThemeEnum.inkBody, fontSize: 10, maxLines: 1),
                 ],
               ],
             ),
@@ -163,17 +165,17 @@ class _ProblemTabBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: context.getColor(ThemeEnum.primary),
+      color: context.getColor(ThemeEnum.ground),
       child: TabBar(
         controller: controller,
         isScrollable: true,
         tabAlignment: TabAlignment.start,
-        dividerColor: context.getColor(ThemeEnum.hover),
+        dividerColor: context.getColor(ThemeEnum.track),
         indicatorSize: TabBarIndicatorSize.label,
-        indicatorColor: context.getColor(ThemeEnum.solidWhite),
-        labelColor: context.getColor(ThemeEnum.textPrimary),
-        unselectedLabelColor: context.getColor(ThemeEnum.textSecond),
-        overlayColor: WidgetStatePropertyAll(context.getColor(ThemeEnum.hover).withValues(alpha: 0.05)),
+        indicatorColor: context.getColor(ThemeEnum.ground),
+        labelColor: context.getColor(ThemeEnum.inkTitle),
+        unselectedLabelColor: context.getColor(ThemeEnum.inkBody),
+        overlayColor: WidgetStatePropertyAll(context.getColor(ThemeEnum.track).withValues(alpha: 0.05)),
         labelStyle: GetSemiBoldStyle(fontSize: 12.sp),
         unselectedLabelStyle: GetMediumStyle(fontSize: 12.sp),
         tabs: const [
@@ -214,7 +216,7 @@ class _ProblemTabViewState extends State<_ProblemTabView> {
         if (problem.getDescription.trim().isNotEmpty)
           RegularText(
             problem.getDescription.trim(),
-            color: ThemeEnum.textBody,
+            color: ThemeEnum.inkBody,
             fontSize: 12.5,
             height: 1.75,
             maxLines: 40,
@@ -251,7 +253,7 @@ class _HintsTabView extends StatelessWidget {
     return _MeasuredTabScrollView(
       pageStorageKey: PageStorageKey('problem-${problem.getProblemId}-hints'),
       children: hints.isEmpty
-          ? const [MediumText(StringsManager.noHintsYet, color: ThemeEnum.textSecond)]
+          ? const [MediumText(StringsManager.noHintsYet, color: ThemeEnum.inkBody)]
           : [
               for (var i = 0; i < hints.length; i++)
                 Padding(
@@ -259,7 +261,7 @@ class _HintsTabView extends StatelessWidget {
                   child: CardContainer(
                     surface: CdSurface.secondary,
                     child: RegularText('${i + 1}.  ${hints[i]}',
-                        color: ThemeEnum.textBody, fontSize: 12, height: 1.6, maxLines: 20),
+                        color: ThemeEnum.inkBody, fontSize: 12, height: 1.6, maxLines: 20),
                   ),
                 ),
             ],
@@ -289,7 +291,7 @@ class _SimilarTabViewState extends ConsumerState<_SimilarTabView> {
     return _MeasuredTabScrollView(
       pageStorageKey: PageStorageKey('problem-${problem.getProblemId}-similar'),
       children: similarIds.isEmpty
-          ? const [MediumText(StringsManager.noSimilarQuestionsYet, color: ThemeEnum.textSecond)]
+          ? const [MediumText(StringsManager.noSimilarQuestionsYet, color: ThemeEnum.inkBody)]
           : [
               for (final similarId in similarIds)
                 ProblemTile(
@@ -357,10 +359,9 @@ class _ConstraintsCard extends StatelessWidget {
           Row(
             children: [
               const Expanded(
-                child: SemiBoldText(StringsManager.constraints, color: ThemeEnum.textBright, fontSize: 12),
+                child: SemiBoldText(StringsManager.constraints, color: ThemeEnum.inkPrimary, fontSize: 12),
               ),
-              CustomIcon(open ? Icons.remove_rounded : Icons.add_rounded,
-                  size: 16, color: ThemeEnum.textSecond),
+              CustomIcon(open ? Icons.remove_rounded : Icons.add_rounded, size: 16, color: ThemeEnum.inkBody),
             ],
           ),
           AnimatedSize(
@@ -376,7 +377,7 @@ class _ConstraintsCard extends StatelessWidget {
                           Padding(
                             padding: REdgeInsets.only(bottom: 4),
                             child: RegularText('•  $c',
-                                color: ThemeEnum.textBody, fontSize: 11.5, height: 1.5, maxLines: 10),
+                                color: ThemeEnum.inkBody, fontSize: 11.5, height: 1.5, maxLines: 10),
                           ),
                       ],
                     ),
@@ -403,7 +404,7 @@ class _ExampleBlock extends StatelessWidget {
       children: [
         SemiBoldText(
           '${StringsManager.example} ${index + 1}'.toUpperCase(),
-          color: ThemeEnum.textSecond,
+          color: ThemeEnum.inkBody,
           fontSize: 10,
           letterSpacing: 1,
         ),
@@ -422,12 +423,12 @@ class _ExampleBlock extends StatelessWidget {
               ],
               if (explanation != null && explanation.isNotEmpty) ...[
                 const RSizedBox(height: 7),
-                Container(height: 1, color: context.getColor(ThemeEnum.borderSubtle)),
+                Container(height: 1, color: context.getColor(ThemeEnum.hairline)),
                 Padding(
                   padding: REdgeInsets.only(top: 7),
                   child: RegularText(
                     explanation,
-                    color: ThemeEnum.textSecond,
+                    color: ThemeEnum.inkBody,
                     fontFamily: FontConstants.fontJetBrainsMono,
                     fontSize: 11,
                     height: 1.6,
@@ -456,14 +457,11 @@ class _MonoRow extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         RegularText('$label: ',
-            color: ThemeEnum.textBody,
-            fontFamily: FontConstants.fontJetBrainsMono,
-            fontSize: 11,
-            maxLines: 1),
+            color: ThemeEnum.inkBody, fontFamily: FontConstants.fontJetBrainsMono, fontSize: 11, maxLines: 1),
         Expanded(
           child: RegularText(
             value,
-            color: strong ? ThemeEnum.textPrimary : ThemeEnum.textBright,
+            color: strong ? ThemeEnum.inkTitle : ThemeEnum.inkPrimary,
             fontFamily: FontConstants.fontJetBrainsMono,
             fontSize: 11,
             height: 1.5,
