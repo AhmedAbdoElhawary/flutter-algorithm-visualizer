@@ -22,9 +22,10 @@ class _SplashGateState extends State<SplashGate> {
   @override
   Widget build(BuildContext context) {
     if (_showSplash) {
-      final dark = MediaQuery.platformBrightnessOf(context) == Brightness.dark;
+      // final dark = MediaQuery.platformBrightnessOf(context) == Brightness.dark;
       return AlgoDiveSplash(
-        dark: dark,
+        /// TODO: After MVP
+        dark: true,
         onFinished: () => setState(() => _showSplash = false),
       );
     }

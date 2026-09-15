@@ -3,14 +3,13 @@ import 'package:algorithm_visualizer/core/resources/font_manager.dart';
 import 'package:algorithm_visualizer/core/resources/styles_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 class AppTheme {
-  /// IBM Plex Sans Arabic, loaded at runtime by google_fonts. One family for
-  /// both scripts; mono is opt-in per style and never the default.
+  /// IBM Plex Sans Arabic, bundled as an asset font (see pubspec.yaml). One
+  /// family for both scripts; mono is opt-in per style and never the default.
   static TextTheme _uiTextTheme(Brightness brightness) {
     final base = brightness == Brightness.dark ? ThemeData.dark().textTheme : ThemeData.light().textTheme;
-    return GoogleFonts.ibmPlexSansArabicTextTheme(base);
+    return base.apply(fontFamily: FontConstants.fontFamily);
   }
 
   static ThemeData get light {

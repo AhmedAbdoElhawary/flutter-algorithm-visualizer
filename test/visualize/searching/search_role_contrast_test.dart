@@ -6,7 +6,6 @@ import 'package:algorithm_visualizer/features/visualize/sub_view/searching/helpe
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 /// WCAG contrast ratio — `(L1 + 0.05) / (L2 + 0.05)`, `L1` the lighter
 /// relative luminance. This is a *lightness* measure, so it is the right tool
@@ -64,8 +63,6 @@ double _deltaE(Color a, Color b) {
 const _minDeltaE = 20.0;
 
 void main() {
-  GoogleFonts.config.allowRuntimeFetching = false;
-
   for (final brightness in [Brightness.dark, Brightness.light]) {
     testWidgets('every role is distinct from every other in $brightness (FR-024, SC-008)', (tester) async {
       final resolved = <SearchRole, Color>{};

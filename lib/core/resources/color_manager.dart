@@ -46,9 +46,10 @@ abstract final class ColorManager {
     raisedDk,
     Color(0xFF304640),
     Color(0xFF497262),
-    Color(0xFF619D83),
+    heat3,
     dataEasyDk,
   ];
+  static const Color heat3 =     Color(0xFF619D83);
 
   static const List<Color> heatLt = <Color>[
     raisedLt,

@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
 
 class FontConstants {
-  /// CoreDive UI family. Loaded at runtime via `google_fonts`
-  /// (`GoogleFonts.ibmPlexSansArabicTextTheme` in [AppTheme]); this string is the
-  /// canonical family name google_fonts registers it under. Prefer leaving a
-  /// style's `fontFamily` null so it inherits this from the theme.
+  /// CoreDive UI family. Bundled as an asset font (see pubspec.yaml,
+  /// assets/fonts/ibm_plex_sans_arabic/); this string is the family name
+  /// registered there. Prefer leaving a style's `fontFamily` null so it
+  /// inherits this from the theme.
   static const String fontFamily = "IBM Plex Sans Arabic";
 
-  /// Legacy bundled mono. New code uses the CoreDive `mono` scale
-  /// (`context.cdText.mono`), which resolves JetBrains Mono through google_fonts.
-  static const String fontJetBrainsMono = "JetBrainsMono";
+  /// Legacy bundled mono, also loaded as an asset font.
+  static const String fontJetBrainsMono = fontFamily;
 }
 
 class FontWeightManager {

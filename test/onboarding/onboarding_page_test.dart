@@ -11,7 +11,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 /// The smallest screen the spec calls out (§6.1).
 const Size _smallSurface = Size(360, 640);
@@ -109,7 +108,6 @@ Future<void> _swipe(WidgetTester tester) async {
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
-  GoogleFonts.config.allowRuntimeFetching = false;
 
   for (final theme in _Theme.values) {
     testWidgets('renders all four pages at 360x640 with no overflow — ${theme.name} theme', (tester) async {
