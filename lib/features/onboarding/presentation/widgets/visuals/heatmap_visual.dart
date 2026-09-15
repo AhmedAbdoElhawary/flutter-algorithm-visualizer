@@ -5,7 +5,6 @@ import 'package:algorithm_visualizer/core/widgets/adaptive/padding/adaptive_padd
 import 'package:algorithm_visualizer/core/widgets/adaptive/text/adaptive_text.dart';
 import 'package:algorithm_visualizer/features/onboarding/presentation/widgets/onboarding_card.dart';
 import 'package:algorithm_visualizer/features/onboarding/presentation/widgets/onboarding_text.dart';
-import 'package:algorithm_visualizer/features/onboarding/presentation/widgets/onboarding_tokens.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -109,9 +108,9 @@ class _HeatmapVisualState extends State<HeatmapVisual> with SingleTickerProvider
               mainAxisSize: MainAxisSize.min,
               children: [
                 _StatsRow(streak: streak, solved: _solved),
-                SizedBox(height: 18.h),
+                const RSizedBox(height: 15),
                 _HeatGrid(filledWeeks: filledWeeks, ring: ring),
-                SizedBox(height: 18.h),
+                const RSizedBox(height: 15),
                 const _HeatLegend(),
               ],
             );
@@ -140,7 +139,7 @@ class _StatsRow extends StatelessWidget {
           child: _StatBlock(
             value: streak,
             label: StringsManager.onboardingDayStreak,
-            color: OnboardingTokens.sand,
+            color: ThemeEnum.dataMedium,
             alignment: CrossAxisAlignment.start,
           ),
         ),
@@ -148,7 +147,7 @@ class _StatsRow extends StatelessWidget {
           child: _StatBlock(
             value: solved,
             label: StringsManager.onboardingSolved,
-            color: OnboardingTokens.textHi,
+            color: ThemeEnum.inkTitle,
             alignment: CrossAxisAlignment.end,
           ),
         ),
@@ -180,12 +179,12 @@ class _StatBlock extends StatelessWidget {
           value.toString(),
           maxLines: 1,
           style: GetSemiBoldStyle(
-            fontSize: 46,
+            fontSize: 40,
             height: 1,
             color: context.getColor(color),
           ),
         ),
-        SizedBox(height: 4.h),
+        const RSizedBox(height: 4),
         MonoText(label),
       ],
     );
@@ -221,7 +220,7 @@ class _HeatGrid extends StatelessWidget {
               ring: ring,
               gap: gap,
               cell: cell,
-              color: context.getColor(OnboardingTokens.sand),
+              color: context.getColor(ThemeEnum.dataMedium),
               radius: 3.r,
             ),
           ),
@@ -301,7 +300,7 @@ class _HeatLegend extends StatelessWidget {
               width: 10.r,
               height: 10.r,
               decoration: BoxDecoration(
-                color: context.getColor(OnboardingTokens.sand).withValues(alpha: level),
+                color: context.getColor(ThemeEnum.dataMedium).withValues(alpha: level),
                 borderRadius: BorderRadius.circular(2.r),
               ),
             ),
