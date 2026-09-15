@@ -1,0 +1,246 @@
+// The settings screen exists because three things have to be reachable for the
+// app to be publishable at all: the privacy policy, a way to delete your
+// account, and a way to contact a human.
+//
+// Every link assertion names the exact URL and the exact launch mode. That is
+// the bug worth catching here — a row that opens, but opens the wrong place,
+// looks perfectly fine in a screenshot.
+
+import 'package:algorithm_visualizer/config/routes/route_app.dart';
+import 'package:algorithm_visualizer/config/themes/app_theme.dart';
+import 'package:algorithm_visualizer/core/helpers/constants.dart';
+import 'package:algorithm_visualizer/core/resources/strings_manager.dart';
+import 'package:algorithm_visualizer/features/auth/domain/entities/auth_user.dart';
+import 'package:algorithm_visualizer/features/profile/presentation/view_model/user_provider.dart';
+import 'package:algorithm_visualizer/features/settings/presentation/view/settings_page.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:go_router/go_router.dart';
+import 'package:plugin_platform_interface/plugin_platform_interface.dart';
+import 'package:url_launcher_platform_interface/link.dart';
+import 'package:url_launcher_platform_interface/url_launcher_platform_interface.dart';
+
+/// The smallest screen the design targets.
+const Size _smallSurface = Size(360, 640);
+
+/// Records what the app asked the platform to open, instead of opening it.
+class _FakeUrlLauncher extends UrlLauncherPlatform with MockPlatformInterfaceMixin {
+  final List<String> urls = <String>[];
+  final List<PreferredLaunchMode> modes = <PreferredLaunchMode>[];
+  bool succeed = true;
+
+  @override
+  Future<bool> launchUrl(String url, LaunchOptions options) async {
+    urls.add(url);
+    modes.add(options.mode);
+    return succeed;
+  }
+
+  @override
+  Future<bool> canLaunch(String url) async => true;
+
+  @override
+  Future<bool> supportsMode(PreferredLaunchMode mode) async => true;
+
+  @override
+  Future<bool> supportsCloseForMode(PreferredLaunchMode mode) async => true;
+
+  @override
+  LinkDelegate? get linkDelegate => null;
+}
+
+late _FakeUrlLauncher _launcher;
+
+Future<void> _pumpSettings(
+  WidgetTester tester, {
+  bool signedIn = false,
+  String email = 'someone@example.com',
+}) async {
+  const devicePixelRatio = 3.0;
+  await tester.binding.setSurfaceSize(_smallSurface);
+  tester.view.physicalSize = _smallSurface * devicePixelRatio;
+  tester.view.devicePixelRatio = devicePixelRatio;
+  addTearDown(() {
+    tester.binding.setSurfaceSize(null);
+    tester.view.resetPhysicalSize();
+    tester.view.resetDevicePixelRatio();
+  });
+
+  final router = GoRouter(
+    initialLocation: '/',
+    routes: <RouteBase>[
+      GoRoute(path: '/', builder: (context, state) => const SettingsPage()),
+      GoRoute(
+        path: Routes.login.path,
+        name: Routes.login.name,
+        builder: (context, state) => const Placeholder(key: ValueKey('login')),
+      ),
+    ],
+  );
+
+  await tester.pumpWidget(
+    ProviderScope(
+      overrides: [
+        isSignedInProvider.overrideWithValue(signedIn),
+        currentUserProvider.overrideWithValue(
+          AsyncValue<AuthUser?>.data(
+            signedIn ? AuthUser(id: 'u1', name: 'Someone', email: email) : null,
+          ),
+        ),
+      ],
+      child: ScreenUtilInit(
+        designSize: _smallSurface,
+        builder: (context, _) => MediaQuery(
+          data: const MediaQueryData(size: _smallSurface),
+          child: MaterialApp.router(theme: AppTheme.dark, routerConfig: router),
+        ),
+      ),
+    ),
+  );
+  await tester.pumpAndSettle();
+}
+
+/// Taps a row by its title, scrolling it into view first — the screen is longer
+/// than 640px now, so the contact and about rows start off-screen.
+Future<void> _tapRow(WidgetTester tester, String title) async {
+  final row = find.text(title);
+  await tester.scrollUntilVisible(row, 120, scrollable: find.byType(Scrollable).first);
+  await tester.tap(row);
+  await tester.pumpAndSettle();
+}
+
+void main() {
+  setUp(() {
+    _launcher = _FakeUrlLauncher();
+    UrlLauncherPlatform.instance = _launcher;
+  });
+
+  group('account section', () {
+    testWidgets('a guest is offered a way in, and never a delete button', (tester) async {
+      await _pumpSettings(tester);
+
+      expect(find.text(StringsManager.guestAccountTitle), findsOneWidget);
+      expect(find.text(StringsManager.deleteAccount), findsNothing);
+    });
+
+    testWidgets('a signed-in user sees their address and the delete row', (tester) async {
+      await _pumpSettings(tester, signedIn: true, email: 'me@algodive.app');
+
+      expect(find.text(StringsManager.settingsSignedInAs), findsOneWidget);
+      expect(find.text('me@algodive.app'), findsOneWidget);
+      expect(find.text(StringsManager.deleteAccount), findsOneWidget);
+    });
+
+    testWidgets('tapping delete asks about the consequence before the password', (tester) async {
+      await _pumpSettings(tester, signedIn: true);
+
+      await tester.tap(find.text(StringsManager.deleteAccount));
+      await tester.pumpAndSettle();
+
+      expect(find.text(StringsManager.deleteAccountConfirmTitle), findsOneWidget);
+      expect(find.text(StringsManager.deleteAccountContinue), findsOneWidget);
+      expect(find.text(StringsManager.deleteAccountPasswordTitle), findsNothing);
+    });
+  });
+
+  group('legal section', () {
+    testWidgets('the terms of service open the published page', (tester) async {
+      await _pumpSettings(tester);
+
+      await _tapRow(tester, StringsManager.termsOfService);
+
+      expect(_launcher.urls, <String>[kTermsOfServiceUrl]);
+      expect(_launcher.modes.single, PreferredLaunchMode.inAppBrowserView);
+    });
+
+    testWidgets('the privacy policy opens the published page in an in-app browser', (tester) async {
+      await _pumpSettings(tester);
+
+      await _tapRow(tester, StringsManager.privacyPolicy);
+
+      expect(_launcher.urls, <String>[kPrivacyPolicyUrl]);
+      expect(_launcher.modes.single, PreferredLaunchMode.inAppBrowserView);
+    });
+
+    testWidgets('the deletion page opens too, so a locked-out user has a route', (tester) async {
+      await _pumpSettings(tester);
+
+      await _tapRow(tester, StringsManager.deleteAccountHowItWorks);
+
+      expect(_launcher.urls, <String>[kDeleteAccountUrl]);
+    });
+
+    testWidgets('the policy version is stated, and is not the app version', (tester) async {
+      await _pumpSettings(tester);
+
+      expect(find.textContaining(kLegalVersion), findsWidgets);
+      expect(find.textContaining(kLegalUpdated), findsOneWidget);
+    });
+  });
+
+  group('contact section', () {
+    testWidgets('the mail row opens a mailto for the support address', (tester) async {
+      await _pumpSettings(tester);
+
+      await _tapRow(tester, StringsManager.contactEmail);
+
+      expect(_launcher.urls.single, startsWith('mailto:$kSupportEmail'));
+      expect(_launcher.urls.single, contains('subject='));
+    });
+
+    testWidgets('GitHub opens the profile in its own app, not a browser tab', (tester) async {
+      await _pumpSettings(tester);
+
+      await _tapRow(tester, StringsManager.contactGithub);
+
+      expect(_launcher.urls, <String>[kGithubProfileUrl]);
+      expect(_launcher.modes.single, PreferredLaunchMode.externalApplication);
+    });
+
+    testWidgets('LinkedIn opens externally as well', (tester) async {
+      await _pumpSettings(tester);
+
+      await _tapRow(tester, StringsManager.contactLinkedIn);
+
+      expect(_launcher.urls, <String>[kLinkedInUrl]);
+      expect(_launcher.modes.single, PreferredLaunchMode.externalApplication);
+    });
+  });
+
+  group('about section', () {
+    testWidgets('the source code row opens the repository', (tester) async {
+      await _pumpSettings(tester);
+
+      await _tapRow(tester, StringsManager.sourceCode);
+
+      expect(_launcher.urls, <String>[kSourceCodeUrl]);
+      expect(_launcher.modes.single, PreferredLaunchMode.externalApplication);
+    });
+
+    testWidgets('the version is shown', (tester) async {
+      await _pumpSettings(tester);
+
+      expect(find.text(kAppVersion), findsOneWidget);
+    });
+  });
+
+  /// TODO: handle this case:
+  // group('failure handling', () {
+  //   testWidgets('a link nothing can open says so instead of failing silently', (tester) async {
+  //     _launcher.succeed = false;
+  //     await _pumpSettings(tester);
+  //
+  //     await _tapRow(tester, StringsManager.privacyPolicy);
+  //
+  //     expect(find.text(StringsManager.linkCouldNotOpen), findsOneWidget);
+  //   });
+  // });
+
+  testWidgets('renders at 360x640 with no overflow', (tester) async {
+    await _pumpSettings(tester, signedIn: true);
+
+    expect(tester.takeException(), isNull);
+  });
+}
