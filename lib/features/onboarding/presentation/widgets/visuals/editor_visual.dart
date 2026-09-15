@@ -5,7 +5,6 @@ import 'package:algorithm_visualizer/core/widgets/adaptive/padding/adaptive_padd
 import 'package:algorithm_visualizer/core/widgets/adaptive/text/adaptive_text.dart';
 import 'package:algorithm_visualizer/features/onboarding/presentation/widgets/onboarding_card.dart';
 import 'package:algorithm_visualizer/features/onboarding/presentation/widgets/onboarding_text.dart';
-import 'package:algorithm_visualizer/features/onboarding/presentation/widgets/onboarding_tokens.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -134,7 +133,7 @@ class _EditorFileRow extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
         border: Border(
-          bottom: BorderSide(color: context.getColor(OnboardingTokens.hairline)),
+          bottom: BorderSide(color: context.getColor(ThemeEnum.hairline)),
         ),
       ),
       child: const SymmetricPadding(
@@ -259,18 +258,17 @@ class _CodeLine extends StatelessWidget {
     var cursor = 0;
     for (final match in _pattern.allMatches(text)) {
       if (match.start > cursor) {
-        tokens.add((text: text.substring(cursor, match.start), color: OnboardingTokens.codePlain));
+        tokens.add((text: text.substring(cursor, match.start), color: ThemeEnum.inkBody));
       }
       tokens.add((
         text: match[0]!,
-        color: match[0] == StringsManager.onboardingCodeFunction
-            ? OnboardingTokens.blue
-            : OnboardingTokens.codeKeyword,
+        color:
+            match[0] == StringsManager.onboardingCodeFunction ? ThemeEnum.dataTarget : ThemeEnum.dataMedium,
       ));
       cursor = match.end;
     }
     if (cursor < text.length) {
-      tokens.add((text: text.substring(cursor), color: OnboardingTokens.codePlain));
+      tokens.add((text: text.substring(cursor), color: ThemeEnum.inkBody));
     }
     return tokens;
   }
@@ -316,7 +314,7 @@ class _TestResults extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
         border: Border(
-          top: BorderSide(color: context.getColor(OnboardingTokens.hairline)),
+          top: BorderSide(color: context.getColor(ThemeEnum.hairline)),
         ),
       ),
       child: SymmetricPadding(
@@ -335,13 +333,13 @@ class _TestResults extends StatelessWidget {
                   children: [
                     MonoBoldText(
                       StringsManager.onboardingTestCount(passed, total),
-                      color: OnboardingTokens.green,
+                      color: ThemeEnum.dataEasy,
                     ),
                     Opacity(
                       opacity: verdictOpacity,
                       child: const MonoBoldText(
                         StringsManager.onboardingPassedWord,
-                        color: OnboardingTokens.green,
+                        color: ThemeEnum.dataEasy,
                       ),
                     ),
                   ],
@@ -358,7 +356,7 @@ class _TestResults extends StatelessWidget {
                       height: 3.h,
                       decoration: BoxDecoration(
                         color: context.getColor(
-                          index < passed ? OnboardingTokens.green : OnboardingTokens.track,
+                          index < passed ? ThemeEnum.dataEasy : ThemeEnum.track,
                         ),
                         borderRadius: BorderRadius.circular(2.r),
                       ),
