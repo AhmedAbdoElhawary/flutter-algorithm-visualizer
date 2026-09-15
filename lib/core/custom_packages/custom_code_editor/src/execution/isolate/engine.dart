@@ -36,7 +36,12 @@ class RunRequest {
 }
 
 class RunOutcome {
-  const RunOutcome({this.returned, this.stdout = const <String>[], this.truncated = false, this.failure, required this.elapsed});
+  const RunOutcome(
+      {this.returned,
+      this.stdout = const <String>[],
+      this.truncated = false,
+      this.failure,
+      required this.elapsed});
 
   /// The function's value, or null.
   final Value? returned;
