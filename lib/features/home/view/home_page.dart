@@ -3,7 +3,7 @@ import 'package:algorithm_visualizer/features/home/view/widgets/home_continue_ca
 import 'package:algorithm_visualizer/features/home/view/widgets/home_difficulty_progress.dart';
 import 'package:algorithm_visualizer/features/home/view/widgets/home_header.dart';
 import 'package:algorithm_visualizer/features/home/view/widgets/home_recent_activity.dart';
-import 'package:algorithm_visualizer/features/home/view/widgets/home_stats_strip.dart';
+import 'package:algorithm_visualizer/core/widgets/custom_widgets/small_stats_strip.dart';
 import 'package:algorithm_visualizer/features/profile/presentation/widgets/profile_weekly_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -21,7 +21,7 @@ class HomePage extends ConsumerWidget {
         SliverList.list(
           children: const [
             HomeHeader(),
-            HomeStatsStrip(),
+            SmallStatsStrip(),
             ProfileWeeklyChart(),
             HomeDifficultyProgress(),
             HomeContinueCard(),
