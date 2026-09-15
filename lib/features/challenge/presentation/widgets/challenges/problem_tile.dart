@@ -74,7 +74,7 @@ class ProblemTile extends ConsumerWidget {
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(CdRadius.medium.r),
                   border: Border.all(
-                    color: context.getColor(expanded ? ThemeEnum.borderAccent : ThemeEnum.borderSubtle),
+                    color: context.getColor(expanded ? ThemeEnum.inkPrimary : ThemeEnum.hairline),
                   ),
                 ),
               ),
@@ -115,16 +115,16 @@ class _MainRow extends StatelessWidget {
           children: [
             CustomIcon(statusIcon, size: 16, color: statusColor),
             const RSizedBox(width: 6),
-            BoldText('${problem.number}.', color: ThemeEnum.textBody, fontSize: 11),
+            BoldText('${problem.number}.', color: ThemeEnum.inkBody, fontSize: 11),
             const RSizedBox(width: 6),
-            Expanded(child: BoldText(problem.getName, color: ThemeEnum.textBody, fontSize: 13)),
+            Expanded(child: BoldText(problem.getName, color: ThemeEnum.inkBody, fontSize: 13)),
             const RSizedBox(width: 4),
             BoldText(problem.getDifficulty.difficultyString, color: diffColor, fontSize: 11),
             const RSizedBox(width: 4),
             AnimatedRotation(
               turns: expanded ? 0.25 : 0,
               duration: const Duration(milliseconds: 200),
-              child: const CustomIcon(Icons.chevron_right_rounded, size: 16, color: ThemeEnum.hover),
+              child: const CustomIcon(Icons.chevron_right_rounded, size: 16, color: ThemeEnum.track),
             ),
           ],
         ),
@@ -146,8 +146,7 @@ class _DetailsPanel extends ConsumerWidget {
 
     return Container(
       width: double.infinity,
-      decoration:
-          BoxDecoration(border: Border(top: BorderSide(color: context.getColor(ThemeEnum.borderSubtle)))),
+      decoration: BoxDecoration(border: Border(top: BorderSide(color: context.getColor(ThemeEnum.hairline)))),
       padding: REdgeInsets.fromLTRB(14, 10, 14, 12),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -174,7 +173,7 @@ class _DetailsPanel extends ConsumerWidget {
                         const OnlyPadding(
                           startPadding: 3,
                           child:
-                              MediumText(StringsManager.bookmarked, color: ThemeEnum.textBody, fontSize: 10),
+                              MediumText(StringsManager.bookmarked, color: ThemeEnum.inkBody, fontSize: 10),
                         ),
                         const RSizedBox(height: 2),
                         BookmarkButton(isBookmarked: isBookmarked, problem: problem),
@@ -188,11 +187,12 @@ class _DetailsPanel extends ConsumerWidget {
                 child: Container(
                   padding: REdgeInsets.symmetric(horizontal: 14, vertical: 7),
                   decoration: BoxDecoration(
-                    color: context.getColor(ThemeEnum.accentBg),
+                    color: context.getColor(ThemeEnum.track),
                     borderRadius: BorderRadius.circular(9),
-                    border: Border.all(color: context.getColor(ThemeEnum.borderAccent)),
+                    border: Border.all(color: context.getColor(ThemeEnum.inkBody)),
                   ),
-                  child: const BoldText(StringsManager.solveWithArrow, color: ThemeEnum.accent, fontSize: 12),
+                  child: const BoldText(StringsManager.solveWithArrow,
+                      color: ThemeEnum.inkPrimary, fontSize: 12),
                 ),
               ),
             ],
@@ -215,7 +215,7 @@ class _StatColumn extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        MediumText(label, color: ThemeEnum.textBody, fontSize: 10),
+        MediumText(label, color: ThemeEnum.inkBody, fontSize: 10),
         const RSizedBox(height: 2),
         SemiBoldText(value, color: color, fontSize: 13),
       ],

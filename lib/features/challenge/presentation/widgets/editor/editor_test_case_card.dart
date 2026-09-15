@@ -17,8 +17,8 @@ class EditorTestCaseCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CardContainer(
-      fillColor: ThemeEnum.mainCard,
-      borderColorOverride: ThemeEnum.border,
+      fillColor: ThemeEnum.surface,
+      borderColorOverride: ThemeEnum.hairline,
       radius: CdRadius.md,
       padding: REdgeInsets.symmetric(vertical: 13, horizontal: 14),
       child: Column(
@@ -34,7 +34,7 @@ class EditorTestCaseCard extends StatelessWidget {
             ],
           ] else ...[
             const RSizedBox(height: 11),
-            RegularText(grade.error!, fontSize: 11, color: ThemeEnum.difficultyHard, maxLines: 4),
+            RegularText(grade.error!, fontSize: 11, color: ThemeEnum.dataHard, maxLines: 4),
           ],
         ],
       ),
@@ -56,7 +56,7 @@ class _Header extends StatelessWidget {
             StringsManager.testCases,
             fontSize: 11,
             letterSpacing: 0.88,
-            color: ThemeEnum.codeComment,
+            color: ThemeEnum.inkMuted,
             maxLines: 1,
           ),
         ),
@@ -64,7 +64,7 @@ class _Header extends StatelessWidget {
           SemiBoldText(
             StringsManager.passedOfTotal(grade.passedCount, grade.totalCount),
             fontSize: 10.5,
-            color: ThemeEnum.difficultyEasy,
+            color: ThemeEnum.dataEasy,
             maxLines: 1,
           ),
       ],
@@ -92,7 +92,7 @@ class _ResultRow extends StatelessWidget {
                 result.input ?? '',
                 fontFamily: FontConstants.fontJetBrainsMono,
                 fontSize: 11,
-                color: ThemeEnum.textBody,
+                color: ThemeEnum.inkBody,
                 maxLines: 2,
               ),
               if (!result.passed) ...[
@@ -101,7 +101,7 @@ class _ResultRow extends StatelessWidget {
                   '${StringsManager.gotPrefix}${result.actualOutput}',
                   fontFamily: FontConstants.fontJetBrainsMono,
                   fontSize: 11,
-                  color: ThemeEnum.difficultyHard,
+                  color: ThemeEnum.dataHard,
                   maxLines: 2,
                 ),
               ],
@@ -120,8 +120,8 @@ class _Marker extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final fill = passed ? ThemeEnum.chipEasyFill : ThemeEnum.chipHardFill;
-    final glyphColor = passed ? ThemeEnum.difficultyEasy : ThemeEnum.difficultyHard;
+    final fill = passed ? ThemeEnum.raised : ThemeEnum.raised;
+    final glyphColor = passed ? ThemeEnum.dataEasy : ThemeEnum.dataHard;
 
     return Container(
       width: 16.r,

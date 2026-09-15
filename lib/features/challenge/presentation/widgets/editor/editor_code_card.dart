@@ -31,8 +31,8 @@ class EditorCodeCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CardContainer(
-      fillColor: ThemeEnum.codeBg,
-      borderColorOverride: ThemeEnum.border,
+      fillColor: ThemeEnum.surface,
+      borderColorOverride: ThemeEnum.hairline,
       radius: CdRadius.md,
       padding: EdgeInsets.zero,
       child: Column(
@@ -61,21 +61,21 @@ class _CodeCardHeader extends StatelessWidget {
     return Container(
       padding: REdgeInsets.symmetric(vertical: 9, horizontal: 12),
       decoration: BoxDecoration(
-        border: Border(bottom: BorderSide(color: context.getColor(ThemeEnum.borderSubtle))),
+        border: Border(bottom: BorderSide(color: context.getColor(ThemeEnum.hairline))),
       ),
       child: Row(
         children: [
-          const _Dot(ThemeEnum.difficultyHard),
+          const _Dot(ThemeEnum.dataHard),
           const RSizedBox(width: 5),
-          const _Dot(ThemeEnum.difficultyMedium),
+          const _Dot(ThemeEnum.dataMedium),
           const RSizedBox(width: 5),
-          const _Dot(ThemeEnum.difficultyEasy),
+          const _Dot(ThemeEnum.dataEasy),
           const Spacer(),
           RegularText(
             fileName,
             fontFamily: FontConstants.fontJetBrainsMono,
             fontSize: 10,
-            color: ThemeEnum.codeComment,
+            color: ThemeEnum.inkMuted,
             maxLines: 1,
           ),
         ],
@@ -145,7 +145,7 @@ class _CodeAreaState extends State<_CodeArea> {
     _controller.clearHighlights();
     final line = widget.highlightedLine;
     if (line == null || line < 1) return;
-    _controller.highlightLine(line, context.getColor(ThemeEnum.textPrimary));
+    _controller.highlightLine(line, context.getColor(ThemeEnum.inkTitle));
   }
 
   @override

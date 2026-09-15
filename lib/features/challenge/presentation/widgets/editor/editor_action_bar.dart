@@ -28,7 +28,7 @@ class EditorActionBar extends StatelessWidget {
             label: StringsManager.reset,
             onPressed: onReset,
             expand: false,
-            borderColor: ThemeEnum.editorResetBorder,
+            borderColor: ThemeEnum.track,
             horizontalInnerPadding: 24,
           ),
           const RSizedBox(width: 16),
