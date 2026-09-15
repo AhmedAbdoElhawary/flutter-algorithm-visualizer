@@ -3,7 +3,6 @@ import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
 import 'package:algorithm_visualizer/core/widgets/adaptive/padding/adaptive_padding.dart';
 import 'package:algorithm_visualizer/features/onboarding/presentation/widgets/onboarding_card.dart';
 import 'package:algorithm_visualizer/features/onboarding/presentation/widgets/onboarding_text.dart';
-import 'package:algorithm_visualizer/features/onboarding/presentation/widgets/onboarding_tokens.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -160,12 +159,12 @@ class _PathfindingVisualState extends State<PathfindingVisual> with SingleTicker
 
   @override
   Widget build(BuildContext context) {
-    final lines = context.getColor(ThemeEnum.borderSubtle);
-    final wallColor = context.getColor(OnboardingTokens.border);
-    final frontier = context.getColor(OnboardingTokens.accent);
-    final visited = context.getColor(OnboardingTokens.blue);
-    final pathColor = context.getColor(OnboardingTokens.green);
-    final marker = context.getColor(OnboardingTokens.rose);
+    final lines = context.getColor(ThemeEnum.hairline);
+    final wallColor = context.getColor(ThemeEnum.track);
+    final frontier = context.getColor(ThemeEnum.inkPrimary);
+    final visited = context.getColor(ThemeEnum.dataTarget);
+    final pathColor = context.getColor(ThemeEnum.dataEasy);
+    final marker = context.getColor(ThemeEnum.dataHard);
 
     return OnboardingCard(
       child: AllPadding(
@@ -201,15 +200,15 @@ class _PathfindingVisualState extends State<PathfindingVisual> with SingleTicker
                 const OnboardingLegend(
                   items: [
                     LegendItem(
-                      color: OnboardingTokens.blue,
+                      color: ThemeEnum.dataTarget,
                       label: StringsManager.onboardingLegendVisited,
                     ),
                     LegendItem(
-                      color: OnboardingTokens.accent,
+                      color: ThemeEnum.inkPrimary,
                       label: StringsManager.onboardingLegendFrontier,
                     ),
                     LegendItem(
-                      color: OnboardingTokens.green,
+                      color: ThemeEnum.dataEasy,
                       label: StringsManager.onboardingLegendPath,
                     ),
                   ],
@@ -224,7 +223,7 @@ class _PathfindingVisualState extends State<PathfindingVisual> with SingleTicker
                       Flexible(
                         child: MonoText(
                           StringsManager.onboardingQueueCaption(frame.waiting),
-                          color: OnboardingTokens.textHi,
+                          color: ThemeEnum.inkTitle,
                         ),
                       ),
                       Flexible(
