@@ -177,7 +177,7 @@ class _PFGridState extends ConsumerState<PFGrid> with SingleTickerProviderStateM
                         pathColor: context.getColor(searchRoleColor(SearchRole.path)),
                         searcherColor: context.getColor(searchRoleColor(SearchRole.frontier)),
                         searcherFinishedColor: context.getColor(searchRoleColor(SearchRole.visited)),
-                        gridLineColor: context.getColor(ThemeEnum.borderSubtle),
+                        gridLineColor: context.getColor(ThemeEnum.hairline),
                         wallAnimations: _wallAnimations,
                         frontierAnimations: _frontierAnimations,
                         visitedAnimations: _visitedAnimations,
@@ -203,7 +203,7 @@ class _PFGridState extends ConsumerState<PFGrid> with SingleTickerProviderStateM
                       child: PFEndPointWidget(
                         size: cellSize,
                         outerColor: context.getColor(searchRoleColor(SearchRole.end)),
-                        midColor: context.getColor(ThemeEnum.textBright),
+                        midColor: context.getColor(ThemeEnum.inkPrimary),
                         innerColor: context.getColor(searchRoleColor(SearchRole.end)),
                       ),
                     ),
