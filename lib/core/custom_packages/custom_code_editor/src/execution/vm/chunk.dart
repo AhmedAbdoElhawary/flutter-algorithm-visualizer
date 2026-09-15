@@ -130,7 +130,7 @@ class FunctionProto {
   /// parameters (`ListNode([this.val = 0, this.next])`) fall in
   /// `[minArity, arity)`. Their default-value expressions are compiled as a
   /// prologue inside the function body itself (`if (param == null) param =
-  /// <default>`), so the VM's call protocol only needs this range check —
+  /// `), so the VM's call protocol only needs this range check —
   /// see `compile/compiler.dart`'s `_compileFunction`.
   final int minArity;
 
@@ -182,7 +182,8 @@ class ChunkBuilder {
     emitByte(value & 0xFF, line: line, synthetic: synthetic);
   }
 
-  int emitOp(int op, {required int line, bool synthetic = false}) => emitByte(op, line: line, synthetic: synthetic);
+  int emitOp(int op, {required int line, bool synthetic = false}) =>
+      emitByte(op, line: line, synthetic: synthetic);
 
   /// Emits [op] followed by a placeholder u16 target, returning the byte
   /// offset of the placeholder's first byte for later [patchU16At].
