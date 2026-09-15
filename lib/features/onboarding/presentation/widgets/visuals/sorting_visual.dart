@@ -3,7 +3,6 @@ import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
 import 'package:algorithm_visualizer/core/widgets/adaptive/padding/adaptive_padding.dart';
 import 'package:algorithm_visualizer/features/onboarding/presentation/widgets/onboarding_card.dart';
 import 'package:algorithm_visualizer/features/onboarding/presentation/widgets/onboarding_text.dart';
-import 'package:algorithm_visualizer/features/onboarding/presentation/widgets/onboarding_tokens.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -115,10 +114,10 @@ class _SortingVisualState extends State<SortingVisual> with SingleTickerProvider
 
   @override
   Widget build(BuildContext context) {
-    final idle = context.getColor(OnboardingTokens.idle);
-    final compare = context.getColor(OnboardingTokens.accent);
-    final swap = context.getColor(OnboardingTokens.rose);
-    final done = context.getColor(OnboardingTokens.green);
+    final idle = context.getColor(ThemeEnum.track);
+    final compare = context.getColor(ThemeEnum.inkPrimary);
+    final swap = context.getColor(ThemeEnum.dataHard);
+    final done = context.getColor(ThemeEnum.dataEasy);
 
     return OnboardingCard(
       child: OnlyPadding(
@@ -179,15 +178,15 @@ class _SortingVisualState extends State<SortingVisual> with SingleTickerProvider
                 const OnboardingLegend(
                   items: [
                     LegendItem(
-                      color: OnboardingTokens.accent,
+                      color: ThemeEnum.inkPrimary,
                       label: StringsManager.onboardingLegendCompare,
                     ),
                     LegendItem(
-                      color: OnboardingTokens.rose,
+                      color: ThemeEnum.dataHard,
                       label: StringsManager.onboardingLegendSwap,
                     ),
                     LegendItem(
-                      color: OnboardingTokens.green,
+                      color: ThemeEnum.dataEasy,
                       label: StringsManager.onboardingLegendSorted,
                     ),
                   ],
@@ -203,7 +202,7 @@ class _SortingVisualState extends State<SortingVisual> with SingleTickerProvider
                         opacity: (phase / 0.12).clamp(0.0, 1.0),
                         child: MonoText(
                           StringsManager.onboardingCompareCaption(step.i, left, step.j, right),
-                          color: OnboardingTokens.textHi,
+                          color: ThemeEnum.inkTitle,
                         ),
                       ),
                       SizedBox(height: 9.h),
@@ -223,7 +222,9 @@ class _SortingVisualState extends State<SortingVisual> with SingleTickerProvider
   /// Clamped on both ends: at the very last frame `phase` lands a hair over 1
   /// and [Curve.transform] asserts on anything outside [0, 1].
   double _liftCurve(double phase) {
-    if (phase < 0.25) return Curves.easeOut.transform((phase / 0.25).clamp(0.0, 1.0));
+    if (phase < 0.25) {
+      return Curves.easeOut.transform((phase / 0.25).clamp(0.0, 1.0));
+    }
     if (phase > 0.85) {
       return 1 - Curves.easeIn.transform(((phase - 0.85) / 0.15).clamp(0.0, 1.0));
     }
@@ -303,7 +304,7 @@ class _ProgressTrack extends StatelessWidget {
     return Container(
       height: 3.h,
       decoration: BoxDecoration(
-        color: context.getColor(OnboardingTokens.track),
+        color: context.getColor(ThemeEnum.track),
         borderRadius: BorderRadius.circular(2.r),
       ),
       child: FractionallySizedBox(
@@ -311,7 +312,7 @@ class _ProgressTrack extends StatelessWidget {
         widthFactor: progress.clamp(0.0, 1.0),
         child: Container(
           decoration: BoxDecoration(
-            color: context.getColor(OnboardingTokens.accent),
+            color: context.getColor(ThemeEnum.inkPrimary),
             borderRadius: BorderRadius.circular(2.r),
           ),
         ),
