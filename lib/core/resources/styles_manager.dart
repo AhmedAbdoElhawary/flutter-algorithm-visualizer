@@ -22,7 +22,7 @@ class GetLightStyle extends GetTextStyle {
   const GetLightStyle({
     super.fontSize = 16,
     super.height,
-    super.color = ColorManager.black,
+    super.color = ColorManager.groundDk,
     super.fontStyle = FontStyle.normal,
     super.decoration = TextDecoration.none,
     super.decorationThickness,
@@ -35,7 +35,7 @@ class GetRegularStyle extends GetTextStyle {
   const GetRegularStyle({
     super.fontSize = 16,
     super.height,
-    super.color = ColorManager.black,
+    super.color = ColorManager.groundDk,
     super.fontStyle = FontStyle.normal,
     super.decoration = TextDecoration.none,
     super.decorationThickness,
@@ -48,7 +48,7 @@ class GetMediumStyle extends GetTextStyle {
   const GetMediumStyle({
     super.fontSize = 16,
     super.height,
-    super.color = ColorManager.black,
+    super.color = ColorManager.groundDk,
     super.fontStyle = FontStyle.normal,
     super.decoration = TextDecoration.none,
     super.decorationThickness,
@@ -61,7 +61,7 @@ class GetSemiBoldStyle extends GetTextStyle {
   const GetSemiBoldStyle({
     super.fontSize = 16,
     super.height,
-    super.color = ColorManager.black,
+    super.color = ColorManager.groundDk,
     super.fontStyle = FontStyle.normal,
     super.decoration = TextDecoration.none,
     super.decorationThickness,
@@ -74,7 +74,7 @@ class GetBoldStyle extends GetTextStyle {
   const GetBoldStyle({
     super.fontSize = 16,
     super.height,
-    super.color = ColorManager.black,
+    super.color = ColorManager.groundDk,
     super.fontStyle = FontStyle.normal,
     super.decoration = TextDecoration.none,
     super.decorationThickness,
