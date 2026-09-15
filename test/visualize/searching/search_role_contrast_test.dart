@@ -131,7 +131,7 @@ void main() {
                 for (final role in SearchRole.values) {
                   resolved[role] = context.getColor(searchRoleColor(role));
                 }
-                ground = context.getColor(ThemeEnum.mainCard);
+                ground = context.getColor(ThemeEnum.surface);
                 return const SizedBox.shrink();
               },
             ),
