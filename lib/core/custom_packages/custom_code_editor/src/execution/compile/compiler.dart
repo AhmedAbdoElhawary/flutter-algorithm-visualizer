@@ -195,7 +195,8 @@ class Compiler {
         }
       case IrDestructure(:final names, :final value):
         // Python/JS only (Phase 7/8) — the Dart frontend never emits this.
-        throw CompilerUnsupported('destructuring is not supported by this frontend (names: $names, value: $value)');
+        throw CompilerUnsupported(
+            'destructuring is not supported by this frontend (names: $names, value: $value)');
       case IrIf(:final condition, :final thenBranch, :final elseBranch):
         _compileExpr(fc, condition);
         final elseJump = fc.builder.emitJump(OpCode.jumpIfFalse, line: stmt.line, synthetic: stmt.synthetic);
@@ -366,7 +367,9 @@ class Compiler {
     fc.endScope();
   }
 
-  void _compileNamedFunction(_FunctionCompiler fc, int line, String name, List<IrParam> params, List<IrStmt> body, {required bool isMethod}) {
+  void _compileNamedFunction(
+      _FunctionCompiler fc, int line, String name, List<IrParam> params, List<IrStmt> body,
+      {required bool isMethod}) {
     final reserveLocal = !isMethod && fc.scopeDepth != 0;
     int? reservedSlot;
     if (reserveLocal) {
@@ -387,7 +390,9 @@ class Compiler {
     }
   }
 
-  FunctionValue _compileFunction(_FunctionCompiler? enclosing, String name, List<IrParam> params, List<IrStmt> body, {required bool isMethod}) {
+  FunctionValue _compileFunction(
+      _FunctionCompiler? enclosing, String name, List<IrParam> params, List<IrStmt> body,
+      {required bool isMethod}) {
     final fc = _FunctionCompiler(enclosing: enclosing, name: name, arity: params.length);
     fc.scopeDepth = 1;
     if (isMethod) fc.declareLocal('this');
@@ -407,8 +412,18 @@ class Compiler {
         IrIf(
           line: p.defaultValue!.line,
           synthetic: true,
-          condition: IrBinary(line: p.defaultValue!.line, synthetic: true, op: IrBinaryOp.eq, left: IrIdentifier(line: p.defaultValue!.line, name: p.name), right: IrLiteral(line: p.defaultValue!.line, synthetic: true, kind: IrLiteralKind.nullLit, value: null)),
-          thenBranch: IrExprStmt(line: p.defaultValue!.line, synthetic: true, expr: IrAssign(line: p.defaultValue!.line, synthetic: true, name: p.name, value: p.defaultValue!)),
+          condition: IrBinary(
+              line: p.defaultValue!.line,
+              synthetic: true,
+              op: IrBinaryOp.eq,
+              left: IrIdentifier(line: p.defaultValue!.line, name: p.name),
+              right: IrLiteral(
+                  line: p.defaultValue!.line, synthetic: true, kind: IrLiteralKind.nullLit, value: null)),
+          thenBranch: IrExprStmt(
+              line: p.defaultValue!.line,
+              synthetic: true,
+              expr: IrAssign(
+                  line: p.defaultValue!.line, synthetic: true, name: p.name, value: p.defaultValue!)),
         ),
       );
     }
@@ -430,7 +445,8 @@ class Compiler {
     return FunctionValue(name: name, arity: fc.arity, chunk: proto);
   }
 
-  void _compileClass(_FunctionCompiler fc, int line, String name, String? superclass, List<IrFunctionDecl> methods) {
+  void _compileClass(
+      _FunctionCompiler fc, int line, String name, String? superclass, List<IrFunctionDecl> methods) {
     if (superclass != null) {
       _loadVariable(fc, superclass, line, synthetic: true);
     }
@@ -524,7 +540,8 @@ class Compiler {
         _compileBinary(fc, expr.line, expr.synthetic, op, left, right);
       case IrUnary(:final op, :final operand):
         _compileExpr(fc, operand);
-        fc.builder.emitOp(op == IrUnaryOp.negate ? OpCode.negate : OpCode.not, line: expr.line, synthetic: expr.synthetic);
+        fc.builder.emitOp(op == IrUnaryOp.negate ? OpCode.negate : OpCode.not,
+            line: expr.line, synthetic: expr.synthetic);
       case IrConditional(:final condition, :final thenExpr, :final elseExpr):
         _compileExpr(fc, condition);
         final elseJump = fc.builder.emitJump(OpCode.jumpIfFalse, line: expr.line, synthetic: expr.synthetic);
@@ -561,14 +578,18 @@ class Compiler {
       case IrCall(:final callee, :final args):
         _compileExpr(fc, callee);
         for (final a in args) {
-          if (a is IrSpread) throw CompilerUnsupported('spread call arguments are not supported by this frontend');
+          if (a is IrSpread) {
+            throw CompilerUnsupported('spread call arguments are not supported by this frontend');
+          }
           _compileExpr(fc, a);
         }
         fc.builder.emitOp(OpCode.call, line: expr.line, synthetic: expr.synthetic);
         fc.builder.emitByte(args.length, line: expr.line, synthetic: expr.synthetic);
       case IrSuperCall(:final name, :final args):
         for (final a in args) {
-          if (a is IrSpread) throw CompilerUnsupported('spread call arguments are not supported by this frontend');
+          if (a is IrSpread) {
+            throw CompilerUnsupported('spread call arguments are not supported by this frontend');
+          }
           _compileExpr(fc, a);
         }
         final idx = fc.builder.addConstant(StrValue(name));
@@ -577,7 +598,9 @@ class Compiler {
         fc.builder.emitByte(args.length, line: expr.line, synthetic: expr.synthetic);
       case IrListLiteral(:final items):
         for (final i in items) {
-          if (i is IrSpread) throw CompilerUnsupported('spread in list literals is not supported by this frontend');
+          if (i is IrSpread) {
+            throw CompilerUnsupported('spread in list literals is not supported by this frontend');
+          }
           _compileExpr(fc, i);
         }
         fc.builder.emitOp(OpCode.buildList, line: expr.line, synthetic: expr.synthetic);
@@ -593,7 +616,9 @@ class Compiler {
         fc.builder.emitU16(keys.length, line: expr.line, synthetic: expr.synthetic);
       case IrSetLiteral(:final items):
         for (final i in items) {
-          if (i is IrSpread) throw CompilerUnsupported('spread in set literals is not supported by this frontend');
+          if (i is IrSpread) {
+            throw CompilerUnsupported('spread in set literals is not supported by this frontend');
+          }
           _compileExpr(fc, i);
         }
         fc.builder.emitOp(OpCode.buildSet, line: expr.line, synthetic: expr.synthetic);
@@ -661,13 +686,15 @@ class Compiler {
         fc.builder.emitOp(OpCode.constant, line: line, synthetic: synthetic);
         fc.builder.emitU16(idx, line: line, synthetic: synthetic);
       case IrLiteralKind.boolLit:
-        fc.builder.emitOp((value as bool) ? OpCode.trueLit : OpCode.falseLit, line: line, synthetic: synthetic);
+        fc.builder
+            .emitOp((value as bool) ? OpCode.trueLit : OpCode.falseLit, line: line, synthetic: synthetic);
       case IrLiteralKind.nullLit:
         fc.builder.emitOp(OpCode.nullLit, line: line, synthetic: synthetic);
     }
   }
 
-  void _compileBinary(_FunctionCompiler fc, int line, bool synthetic, IrBinaryOp op, IrExpr left, IrExpr right) {
+  void _compileBinary(
+      _FunctionCompiler fc, int line, bool synthetic, IrBinaryOp op, IrExpr left, IrExpr right) {
     if (op == IrBinaryOp.and) {
       _compileExpr(fc, left);
       fc.builder.emitOp(OpCode.dup, line: line, synthetic: synthetic);
