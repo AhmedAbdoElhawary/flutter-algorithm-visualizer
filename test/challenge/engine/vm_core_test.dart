@@ -43,7 +43,8 @@ void main() {
       // var f = (n) => n + x;
       // return f(5);
       final result = runProgram([
-        const IrVarDecl(line: 1, name: 'x', initializer: IrLiteral(line: 1, kind: IrLiteralKind.intLit, value: 10)),
+        const IrVarDecl(
+            line: 1, name: 'x', initializer: IrLiteral(line: 1, kind: IrLiteralKind.intLit, value: 10)),
         IrVarDecl(
           line: 2,
           name: 'f',
@@ -66,7 +67,10 @@ void main() {
       // var doubled = nums.map((x) => x * 2).toList();
       // return doubled;
       final result = runProgram([
-        IrVarDecl(line: 1, name: 'nums', initializer: IrListLiteral(line: 1, items: [intLit(3), intLit(1), intLit(2)])),
+        IrVarDecl(
+            line: 1,
+            name: 'nums',
+            initializer: IrListLiteral(line: 1, items: [intLit(3), intLit(1), intLit(2)])),
         IrVarDecl(
           line: 2,
           name: 'doubled',
@@ -78,8 +82,12 @@ void main() {
                 line: 2,
                 callee: IrPropertyGet(line: 2, receiver: id('nums'), name: 'map'),
                 args: [
-                  IrLambda(line: 2, params: const [IrParam('x')], body: [
-                    IrReturn(line: 2, value: IrBinary(line: 2, op: IrBinaryOp.mul, left: id('x'), right: intLit(2))),
+                  IrLambda(line: 2, params: const [
+                    IrParam('x')
+                  ], body: [
+                    IrReturn(
+                        line: 2,
+                        value: IrBinary(line: 2, op: IrBinaryOp.mul, left: id('x'), right: intLit(2))),
                   ]),
                 ],
               ),
@@ -96,15 +104,22 @@ void main() {
 
     test('sort(cmp) with a closure comparator', () {
       final result = runProgram([
-        IrVarDecl(line: 1, name: 'nums', initializer: IrListLiteral(line: 1, items: [intLit(3), intLit(1), intLit(2)])),
+        IrVarDecl(
+            line: 1,
+            name: 'nums',
+            initializer: IrListLiteral(line: 1, items: [intLit(3), intLit(1), intLit(2)])),
         IrExprStmt(
           line: 2,
           expr: IrCall(
             line: 2,
             callee: IrPropertyGet(line: 2, receiver: id('nums'), name: 'sort'),
             args: [
-              IrLambda(line: 2, params: const [IrParam('a'), IrParam('b')], body: [
-                IrReturn(line: 2, value: IrBinary(line: 2, op: IrBinaryOp.sub, left: id('b'), right: id('a'))),
+              IrLambda(line: 2, params: const [
+                IrParam('a'),
+                IrParam('b')
+              ], body: [
+                IrReturn(
+                    line: 2, value: IrBinary(line: 2, op: IrBinaryOp.sub, left: id('b'), right: id('a'))),
               ]),
             ],
           ),
@@ -123,18 +138,21 @@ void main() {
       // var d = Dog();
       // return d.bark();
       final result = runProgram([
-        IrClassDecl(line: 1, name: 'Animal', methods: [
-          IrFunctionDecl(line: 1, name: 'speak', params: const [], body: [
-            const IrReturn(line: 1, value: IrLiteral(line: 1, kind: IrLiteralKind.strLit, value: '...')),
+        const IrClassDecl(line: 1, name: 'Animal', methods: [
+          IrFunctionDecl(line: 1, name: 'speak', params: [], body: [
+            IrReturn(line: 1, value: IrLiteral(line: 1, kind: IrLiteralKind.strLit, value: '...')),
           ]),
         ]),
-        IrClassDecl(line: 2, name: 'Dog', superclass: 'Animal', methods: [
-          IrFunctionDecl(line: 2, name: 'bark', params: const [], body: [
-            const IrReturn(line: 2, value: IrLiteral(line: 2, kind: IrLiteralKind.strLit, value: 'woof')),
+        const IrClassDecl(line: 2, name: 'Dog', superclass: 'Animal', methods: [
+          IrFunctionDecl(line: 2, name: 'bark', params: [], body: [
+            IrReturn(line: 2, value: IrLiteral(line: 2, kind: IrLiteralKind.strLit, value: 'woof')),
           ]),
         ]),
         IrVarDecl(line: 3, name: 'd', initializer: IrCall(line: 3, callee: id('Dog'), args: const [])),
-        IrReturn(line: 4, value: IrCall(line: 4, callee: IrPropertyGet(line: 4, receiver: id('d'), name: 'bark'), args: const [])),
+        IrReturn(
+            line: 4,
+            value: IrCall(
+                line: 4, callee: IrPropertyGet(line: 4, receiver: id('d'), name: 'bark'), args: const [])),
       ]);
       expect(result.failure, isNull);
       expect(result.returned, const StrValue('woof'));
@@ -142,26 +160,29 @@ void main() {
 
     test('super.method() calls the overridden superclass implementation', () {
       final result = runProgram([
-        IrClassDecl(line: 1, name: 'Animal', methods: [
-          IrFunctionDecl(line: 1, name: 'speak', params: const [], body: [
-            const IrReturn(line: 1, value: IrLiteral(line: 1, kind: IrLiteralKind.strLit, value: 'base')),
+        const IrClassDecl(line: 1, name: 'Animal', methods: [
+          IrFunctionDecl(line: 1, name: 'speak', params: [], body: [
+            IrReturn(line: 1, value: IrLiteral(line: 1, kind: IrLiteralKind.strLit, value: 'base')),
           ]),
         ]),
-        IrClassDecl(line: 2, name: 'Dog', superclass: 'Animal', methods: [
-          IrFunctionDecl(line: 2, name: 'speak', params: const [], body: [
+        const IrClassDecl(line: 2, name: 'Dog', superclass: 'Animal', methods: [
+          IrFunctionDecl(line: 2, name: 'speak', params: [], body: [
             IrReturn(
               line: 2,
               value: IrBinary(
                 line: 2,
                 op: IrBinaryOp.add,
-                left: IrSuperCall(line: 2, name: 'speak', args: const []),
-                right: const IrLiteral(line: 2, kind: IrLiteralKind.strLit, value: '+dog'),
+                left: IrSuperCall(line: 2, name: 'speak', args: []),
+                right: IrLiteral(line: 2, kind: IrLiteralKind.strLit, value: '+dog'),
               ),
             ),
           ]),
         ]),
         IrVarDecl(line: 3, name: 'd', initializer: IrCall(line: 3, callee: id('Dog'), args: const [])),
-        IrReturn(line: 4, value: IrCall(line: 4, callee: IrPropertyGet(line: 4, receiver: id('d'), name: 'speak'), args: const [])),
+        IrReturn(
+            line: 4,
+            value: IrCall(
+                line: 4, callee: IrPropertyGet(line: 4, receiver: id('d'), name: 'speak'), args: const [])),
       ]);
       expect(result.failure, isNull);
       expect(result.returned, const StrValue('base+dog'));
@@ -170,8 +191,11 @@ void main() {
     test('a constructor (<init>) sets fields via this', () {
       final result = runProgram([
         IrClassDecl(line: 1, name: 'Box', methods: [
-          IrFunctionDecl(line: 1, name: '<init>', params: const [IrParam('v')], body: [
-            IrExprStmt(line: 1, expr: IrPropertySet(line: 1, receiver: id('this'), name: 'value', value: id('v'))),
+          IrFunctionDecl(line: 1, name: '<init>', params: const [
+            IrParam('v')
+          ], body: [
+            IrExprStmt(
+                line: 1, expr: IrPropertySet(line: 1, receiver: id('this'), name: 'value', value: id('v'))),
           ]),
         ]),
         IrVarDecl(line: 2, name: 'b', initializer: IrCall(line: 2, callee: id('Box'), args: [intLit(42)])),
@@ -251,7 +275,8 @@ void main() {
             IrIf(
               line: 1,
               condition: IrBinary(line: 1, op: IrBinaryOp.lte, left: id('n'), right: intLit(0)),
-              thenBranch: const IrReturn(line: 1, value: IrLiteral(line: 1, kind: IrLiteralKind.intLit, value: 0)),
+              thenBranch:
+                  const IrReturn(line: 1, value: IrLiteral(line: 1, kind: IrLiteralKind.intLit, value: 0)),
             ),
             IrReturn(
               line: 1,
@@ -288,8 +313,11 @@ void main() {
 
   group('cancellation and time limits (G2, G3)', () {
     test('an infinite loop is stopped by the time budget', () {
-      final program = IrProgram([
-        IrWhile(line: 1, condition: const IrLiteral(line: 1, kind: IrLiteralKind.boolLit, value: true), body: const IrBlock(line: 1, statements: [])),
+      const program = IrProgram([
+        IrWhile(
+            line: 1,
+            condition: IrLiteral(line: 1, kind: IrLiteralKind.boolLit, value: true),
+            body: IrBlock(line: 1, statements: [])),
       ]);
       final script = Compiler().compileProgram(program);
       final vm = Vm(dialect: dartDialect, budget: const ExecutionBudget(instructionsPerBudgetCheck: 10));
@@ -300,8 +328,11 @@ void main() {
 
     test('cancellation is observed between instructions', () {
       var cancelled = false;
-      final program = IrProgram([
-        IrWhile(line: 1, condition: const IrLiteral(line: 1, kind: IrLiteralKind.boolLit, value: true), body: const IrBlock(line: 1, statements: [])),
+      const program = IrProgram([
+        IrWhile(
+            line: 1,
+            condition: IrLiteral(line: 1, kind: IrLiteralKind.boolLit, value: true),
+            body: IrBlock(line: 1, statements: [])),
       ]);
       final script = Compiler().compileProgram(program);
       final vm = Vm(

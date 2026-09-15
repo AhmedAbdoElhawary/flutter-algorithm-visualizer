@@ -32,7 +32,8 @@ void main() {
             language: EditorLanguage.dart,
             source: stubInfiniteLoopSource,
             functionName: 'main',
-            budget: ExecutionBudget(perTestCaseTimeout: Duration(milliseconds: 200), instructionsPerBudgetCheck: 10),
+            budget: ExecutionBudget(
+                perTestCaseTimeout: Duration(milliseconds: 200), instructionsPerBudgetCheck: 10),
           ),
         );
         stopwatch.stop();
@@ -44,28 +45,45 @@ void main() {
       test('a run that completes well within budget is not penalized', () async {
         final engine = driver.value();
         final outcome = await engine.run(
-          const RunRequest(language: EditorLanguage.dart, source: stubReturnConstantSource, functionName: 'main'),
+          const RunRequest(
+              language: EditorLanguage.dart, source: stubReturnConstantSource, functionName: 'main'),
         );
         expect(outcome.failure, isNull);
       });
 
-      test('one timed-out case does not stop the caller from running the next one, and its result is a clean timeLimit — not a wrong-answer-looking crash', () async {
+      test(
+          'one timed-out case does not stop the caller from running the next one, and its result is a clean timeLimit — not a wrong-answer-looking crash',
+          () async {
         final engine = driver.value();
         const fastBudget = ExecutionBudget();
-        const tightBudget = ExecutionBudget(perTestCaseTimeout: Duration(milliseconds: 100), instructionsPerBudgetCheck: 10);
+        const tightBudget =
+            ExecutionBudget(perTestCaseTimeout: Duration(milliseconds: 100), instructionsPerBudgetCheck: 10);
 
         final case1 = await engine.run(
-          const RunRequest(language: EditorLanguage.dart, source: stubReturnConstantSource, functionName: 'main', budget: fastBudget),
+          const RunRequest(
+              language: EditorLanguage.dart,
+              source: stubReturnConstantSource,
+              functionName: 'main',
+              budget: fastBudget),
         );
         final case2 = await engine.run(
-          const RunRequest(language: EditorLanguage.dart, source: stubInfiniteLoopSource, functionName: 'main', budget: tightBudget),
+          const RunRequest(
+              language: EditorLanguage.dart,
+              source: stubInfiniteLoopSource,
+              functionName: 'main',
+              budget: tightBudget),
         );
         final case3 = await engine.run(
-          const RunRequest(language: EditorLanguage.dart, source: stubReturnConstantSource, functionName: 'main', budget: fastBudget),
+          const RunRequest(
+              language: EditorLanguage.dart,
+              source: stubReturnConstantSource,
+              functionName: 'main',
+              budget: fastBudget),
         );
 
         expect(case1.failure, isNull, reason: 'case1 completed before the timed-out case ever ran');
-        expect(case2.failure?.kind, FailureKind.timeLimit, reason: 'case2 is a runner limitation, not a wrong answer');
+        expect(case2.failure?.kind, FailureKind.timeLimit,
+            reason: 'case2 is a runner limitation, not a wrong answer');
         expect(case3.failure, isNull, reason: 'the engine is still healthy for case3 after case2 timed out');
       });
     });

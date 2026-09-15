@@ -21,7 +21,8 @@ void main() {
         final token = CancellationToken()..cancel();
         final stopwatch = Stopwatch()..start();
         final outcome = await engine.run(
-          const RunRequest(language: EditorLanguage.dart, source: stubInfiniteLoopSource, functionName: 'main'),
+          const RunRequest(
+              language: EditorLanguage.dart, source: stubInfiniteLoopSource, functionName: 'main'),
           token: token,
         );
         stopwatch.stop();
@@ -41,7 +42,8 @@ void main() {
           final engine = driver.value();
           final token = CancellationToken();
           final future = engine.run(
-            const RunRequest(language: EditorLanguage.dart, source: stubInfiniteLoopSource, functionName: 'main'),
+            const RunRequest(
+                language: EditorLanguage.dart, source: stubInfiniteLoopSource, functionName: 'main'),
             token: token,
           );
           // Give the run a moment to actually start before cancelling.
@@ -58,13 +60,15 @@ void main() {
       test('the engine is immediately usable for a normal run after a cancel', () async {
         final engine = driver.value();
         final cancelled = await engine.run(
-          const RunRequest(language: EditorLanguage.dart, source: stubInfiniteLoopSource, functionName: 'main'),
+          const RunRequest(
+              language: EditorLanguage.dart, source: stubInfiniteLoopSource, functionName: 'main'),
           token: CancellationToken()..cancel(),
         );
         expect(cancelled.failure?.kind, FailureKind.cancelled);
 
         final outcome = await engine.run(
-          const RunRequest(language: EditorLanguage.dart, source: stubReturnConstantSource, functionName: 'main'),
+          const RunRequest(
+              language: EditorLanguage.dart, source: stubReturnConstantSource, functionName: 'main'),
         );
         expect(outcome.failure, isNull);
       });
