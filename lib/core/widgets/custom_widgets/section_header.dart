@@ -16,7 +16,12 @@ class SectionHeader extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        SemiBoldText(title, fontSize: 15, color: ThemeEnum.inkTitle),
+        // Flexible, not bare: a title long enough to fill the row — a wordy
+        // section name, or the Arabic translation of a short one — otherwise
+        // overflows the Row instead of wrapping.
+        Flexible(
+          child: SemiBoldText(title, fontSize: 15, color: ThemeEnum.inkTitle, maxLines: 2),
+        ),
         if (trailing != null) RegularText(trailing!, fontSize: 11, color: ThemeEnum.inkBody),
       ],
     );
