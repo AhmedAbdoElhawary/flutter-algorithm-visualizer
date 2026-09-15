@@ -428,4 +428,65 @@ class StringsManager {
   static const String testCases = "TEST CASES";
   static const String gotPrefix = "→ got ";
   static String passedOfTotal(int passed, int total) => '$passed / $total passed';
+
+  // Onboarding (4 screens) — copy is fixed by the design spec, see
+  // assets/onboarding/ONBOARDING_SPEC.md §3. Do not rewrite these strings.
+  static const String onboardingSkip = "Skip";
+  static const String onboardingNext = "Next";
+  static const String onboardingGetStarted = "Get started";
+  static const String onboardingContinueAsGuest = "Continue as guest";
+  static const String onboardingGuestNote = "Guest progress moves to your account later";
+
+  // 1 · See it
+  static const String onboardingSeeItHeadline = "Algorithms, one step at a time.";
+  static const String onboardingSeeItBody = "Every comparison and swap, shown as it happens.";
+  static const String onboardingLegendCompare = "Compare";
+  static const String onboardingLegendSwap = "Swap";
+  static const String onboardingLegendSorted = "Sorted";
+  static String onboardingCompareCaption(int i, int a, int j, int b) => 'Compare arr[$i]=$a ↔ arr[$j]=$b';
+
+  // 2 · Explore it
+  static const String onboardingExploreHeadline = "Draw a maze. Watch it get solved.";
+  static const String onboardingExploreBody = "Drag walls, then watch the search find its way through.";
+  static const String onboardingLegendVisited = "Visited";
+  static const String onboardingLegendFrontier = "Frontier";
+  static const String onboardingLegendPath = "Path";
+  static String onboardingQueueCaption(int waiting) => 'Oldest first · $waiting waiting';
+  static String onboardingStepCaption(int step) => 'Step $step';
+
+  // 3 · Write it
+  static const String onboardingWriteHeadline = "100 challenges. Graded offline.";
+  static const String onboardingWriteBody = "Your code runs on your device. Nothing leaves it.";
+  static const String onboardingEditorFile = "two_sum.dart";
+  static const String onboardingEditorLanguage = "Dart";
+  static const String onboardingGradedOnDevice = "Graded on this device · no network";
+
+  /// The count and the word are separate because the count rolls 0 -> 12 while
+  /// "passed" only fades in once the run is finished.
+  static String onboardingTestCount(int passed, int total) => '$passed / $total';
+  static const String onboardingPassedWord = " passed";
+
+  /// The sample shown in the onboarding editor card. Highlighted by matching
+  /// whole words against [onboardingCodeKeywords] / [onboardingCodeFunction].
+  static const String onboardingCodeSample = '''
+class Solution {
+  List<int> twoSum(List<int> nums, int target) {
+    final seen = {};
+    for (int i = 0; i < nums.length; i++) {
+      if (seen.containsKey(target - nums[i]))
+        return [seen[target - nums[i]], i];
+      seen[nums[i]] = i;
+    }
+  }
+}''';
+  static const List<String> onboardingCodeKeywords = ["class", "final", "for", "if", "return"];
+  static const String onboardingCodeFunction = "twoSum";
+
+  // 4 · Track it
+  static const String onboardingTrackHeadline = "See your streak grow.";
+  static const String onboardingTrackBody = "Every solved problem lands on the grid the same day.";
+  static const String onboardingDayStreak = "day streak";
+  static const String onboardingSolved = "solved";
+  static const String onboardingHeatLess = "Less";
+  static const String onboardingHeatMore = "More";
 }

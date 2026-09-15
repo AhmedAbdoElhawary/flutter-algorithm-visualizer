@@ -43,10 +43,8 @@ dev_dependencies:
   json_serializable: ^6.7.0
   # Flavor tooling (build-time only, never shipped):
   # - flutter_launcher_icons: regenerates mipmap-*/AppIcon.appiconset per flavor
-  # - image: used by tool/flavor_icons/generate_ribbon_icons.dart to overlay the
-  #   DEV/STAGING ribbon on the base icon before flutter_launcher_icons runs
+  #   from assets/logo/png/ (production) or tool/flavor_icons/custom/ (dev/staging)
   flutter_launcher_icons: ^0.14.4
-  image: ^4.5.4
   integration_test:
     sdk: flutter
 

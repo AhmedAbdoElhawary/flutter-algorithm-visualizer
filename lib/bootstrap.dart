@@ -1,7 +1,7 @@
 import 'package:algorithm_visualizer/core/flavor/flavor_config.dart';
 import 'package:algorithm_visualizer/core/logging/firebase_log_config.dart';
 import 'package:algorithm_visualizer/core/logging/firebase_logger.dart';
-import 'package:algorithm_visualizer/core/material_app/my_app.dart';
+import 'package:algorithm_visualizer/core/material_app/splash_gate.dart';
 import 'package:algorithm_visualizer/core/monitoring/crash_reporter.dart';
 import 'package:algorithm_visualizer/core/monitoring/monitoring.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -55,5 +55,5 @@ Future<void> _boot(FlavorConfig config) async {
   /// SDK's own verbose wire logging.
   await FirebaseLogConfig.apply(specificLogs: true, payloads: true);
 
-  runApp(const ProviderScope(child: MyApp()));
+  runApp(const ProviderScope(child: SplashGate()));
 }

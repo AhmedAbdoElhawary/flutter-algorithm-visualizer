@@ -1,0 +1,106 @@
+name: 🐛 Bug report
+description: Something in the app is broken or behaves unexpectedly
+title: "[Bug]: "
+labels: ["bug", "needs triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to report this.
+
+        **Found a security vulnerability?** Please don't file it here — use the
+        [security policy](https://github.com/AhmedAbdoElhawary/flutter-algorithm-visualizer/security/advisories/new) instead.
+
+  - type: checkboxes
+    id: preflight
+    attributes:
+      label: Before you start
+      options:
+        - label: I searched existing issues and this hasn't been reported yet
+          required: true
+
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened?
+      description: Describe the bug in a sentence or two.
+      placeholder: The path animation stops one cell short of the end node.
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: What did you expect to happen?
+      placeholder: The path should reach the end node.
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      description: Be as specific as you can — this is the part that gets it fixed fastest.
+      value: |
+        1. Open the Visual tab
+        2. Select A*
+        3. Draw a wall across the middle
+        4. Press play
+        5. See the error
+    validations:
+      required: true
+
+  - type: dropdown
+    id: area
+    attributes:
+      label: Which part of the app?
+      options:
+        - Sorting visualizer
+        - Pathfinding visualizer
+        - Code editor / Practice
+        - Profile / statistics
+        - Sign in / account
+        - Home
+        - Something else / not sure
+    validations:
+      required: true
+
+  - type: input
+    id: device
+    attributes:
+      label: Device
+      placeholder: Pixel 7 · Android 15   /   iPhone 14 · iOS 18.2
+    validations:
+      required: true
+
+  - type: dropdown
+    id: flavor
+    attributes:
+      label: Which build?
+      options:
+        - I built it myself from source (dev)
+        - I built it myself from source (staging)
+        - I built it myself from source (production)
+        - Installed from a store / distribution link
+    validations:
+      required: true
+
+  - type: input
+    id: version
+    attributes:
+      label: App version
+      description: Found in Profile → About. If you built from source, paste the output of `git rev-parse --short HEAD` instead.
+      placeholder: 1.0.0+1  or  84d195a8
+
+  - type: textarea
+    id: media
+    attributes:
+      label: Screenshot or screen recording
+      description: Optional, but for a visual bug this is worth a thousand words. Drag the file in here.
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs
+      description: Any error output from `flutter run`. This is automatically formatted as code.
+      render: shell

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<animated-vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:drawable="@drawable/splash_icon">
+    <target android:name="cell"  android:animation="@animator/splash_cell" />
+    <target android:name="ring1" android:animation="@animator/splash_ring1" />
+    <target android:name="ring2" android:animation="@animator/splash_ring2" />
+    <target android:name="route" android:animation="@animator/splash_route" />
+</animated-vector>
