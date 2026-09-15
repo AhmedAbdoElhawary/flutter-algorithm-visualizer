@@ -31,14 +31,15 @@ class FilteredProblemIds {
   int get hashCode => const ListEquality<int>().hash(ids);
 }
 
+bool _matchesSearch(CodingProblem problem, String search) {
+  return search.isEmpty || problem.getName.toLowerCase().contains(search.toLowerCase());
+}
+
 bool _matchesFilter(CodingProblem problem, ChallengesState state) {
   if (state.filter != null && state.filter != ProblemDifficulty.none && problem.difficulty != state.filter) {
     return false;
   }
-  if (state.search.isNotEmpty && !problem.getName.toLowerCase().contains(state.search.toLowerCase())) {
-    return false;
-  }
-  return true;
+  return _matchesSearch(problem, state.search);
 }
 
 final filteredProblemIdsProvider = Provider<AsyncValue<FilteredProblemIds>>((ref) {
@@ -57,3 +58,23 @@ final filteredProblemIdsProvider = Provider<AsyncValue<FilteredProblemIds>>((ref
     ),
   );
 });
+
+/// Count of problems matching [filter] under the currently active search —
+/// this is what keeps the difficulty tab counts live while the user types.
+final specificDifficultyCountProvider = Provider.family<AsyncValue<int>, ProblemDifficulty?>(
+  (ref, filter) {
+    final search = ref.watch(challengesProvider.select((s) => s.search));
+    return ref.watch(
+      problemsProvider.select(
+        (async) => async.whenData((problems) {
+          return problems.where((problem) {
+            if (filter != null && filter != ProblemDifficulty.none && problem.difficulty != filter) {
+              return false;
+            }
+            return _matchesSearch(problem, search);
+          }).length;
+        }),
+      ),
+    );
+  },
+);
