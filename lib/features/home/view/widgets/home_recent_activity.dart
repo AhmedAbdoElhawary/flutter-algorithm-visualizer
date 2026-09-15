@@ -26,14 +26,16 @@ class HomeRecentActivity extends ConsumerWidget {
     return OnlyPadding(
       startPadding: 16,
       endPadding: 16,
-      topPadding: 4,
       bottomPadding: 24,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const SectionHeader(title: StringsManager.recentActivity),
           SizedBox(height: 10.h),
-          ...recent.take(5).map((item) => _ActivityTile(item: item)),
+          ...recent.take(5).map((item) => OnlyPadding(
+                bottomPadding: 7,
+                child: _ActivityTile(item: item),
+              )),
         ],
       ),
     );
@@ -63,15 +65,15 @@ class _ActivityTile extends StatelessWidget {
             Icon(
               Icons.circle,
               size: 8.r,
-              color: context.getColor(item.isCorrect ? ThemeEnum.difficultyEasy : ThemeEnum.difficultyMedium),
+              color: context.getColor(item.isCorrect ? ThemeEnum.dataEasy : ThemeEnum.dataMedium),
             ),
             SizedBox(width: 10.w),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  MediumText(item.problemName, fontSize: 13, color: ThemeEnum.textPrimary, maxLines: 1),
-                  RegularText(timeAgo, fontSize: 11, color: ThemeEnum.textSecond),
+                  MediumText(item.problemName, fontSize: 13, color: ThemeEnum.inkTitle, maxLines: 1),
+                  RegularText(timeAgo, fontSize: 11, color: ThemeEnum.inkBody),
                 ],
               ),
             ),
