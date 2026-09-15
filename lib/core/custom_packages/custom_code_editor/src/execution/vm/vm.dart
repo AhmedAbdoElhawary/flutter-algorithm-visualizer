@@ -449,9 +449,10 @@ class Vm {
           : StrValue(receiver.value[i]);
     }
     if (receiver is MapValue) {
-      final v = receiver.entries[index];
-      if (v == null) throw VmRuntimeError('keyNotFound', <String, Object?>{'key': displayString(index, dialect)});
-      return v;
+      // Dart's `Map[]` never throws for a missing key — it returns `null`
+      // (unlike `List[]`, which does bounds-check). `m[k] ?? 0` is the
+      // idiomatic default-value pattern this depends on.
+      return receiver.entries[index] ?? NullValue.instance;
     }
     throw const VmRuntimeError('typeMismatch', <String, Object?>{'expected': 'an indexable value'});
   }

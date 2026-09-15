@@ -681,6 +681,14 @@ class DartParser {
   IrExpr _postfix(IrExpr expr) {
     while (true) {
       final line = _peek.line;
+      if (_match(DartTokenType.bang)) {
+        // Null-assertion (`expr!`). The engine has no compile-time
+        // null-safety to assert against, so this is a no-op at runtime — a
+        // deliberate simplification (a genuinely-null value just flows
+        // through to whatever uses it next, rather than throwing "Null
+        // check operator used on a null value").
+        continue;
+      }
       if (_match(DartTokenType.dot)) {
         final name = _expect(DartTokenType.identifier, 'expectedPropertyName').lexeme;
         expr = _check(DartTokenType.leftParen) ? IrCall(line: line, callee: IrPropertyGet(line: line, receiver: expr, name: name), args: _argumentList()) : IrPropertyGet(line: line, receiver: expr, name: name);

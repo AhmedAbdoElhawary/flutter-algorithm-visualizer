@@ -11,7 +11,12 @@ const Dialect dartDialect = Dialect(
   hasUndefined: false,
   printsTrueAs: 'true',
   printsFalseAs: 'false',
-  stringIndexYields: StringIndexResult.codeUnit,
+  // data-model.md's table says `codeUnit` (real Dart has no `String.[]`
+  // operator at all). This repo's 100-problem bank was written against the
+  // legacy interpreter's convenience `s[i]` -> one-character-string
+  // behavior, and T038's grading-parity gate is the tiebreaker: matching
+  // established, working solutions beats matching the aspirational table.
+  stringIndexYields: StringIndexResult.oneCharString,
   arbitraryPrecisionInts: false,
   negativeIndexing: false,
 );
