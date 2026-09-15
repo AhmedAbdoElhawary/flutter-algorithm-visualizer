@@ -15,6 +15,7 @@ import 'package:algorithm_visualizer/features/home/view/home_page.dart';
 import 'package:algorithm_visualizer/features/onboarding/data/onboarding_store.dart';
 import 'package:algorithm_visualizer/features/onboarding/presentation/view/onboarding_page.dart';
 import 'package:algorithm_visualizer/features/profile/presentation/view/profile_page.dart';
+import 'package:algorithm_visualizer/features/settings/presentation/view/settings_page.dart';
 import 'package:algorithm_visualizer/features/profile/presentation/view/sub_views/bookmarked_problems_page.dart';
 import 'package:algorithm_visualizer/features/profile/presentation/view/sub_views/practice_history_page.dart';
 import 'package:algorithm_visualizer/features/visualize/view/visualize_page.dart';
@@ -103,6 +104,10 @@ class Routes {
   static const RouteConfig bookmarkedProblems = RouteConfig(
     name: 'bookmarkedProblems',
     path: 'bookmarked',
+  );
+  static const RouteConfig settings = RouteConfig(
+    name: 'settings',
+    path: 'settings',
   );
 }
 
@@ -272,6 +277,11 @@ class AppRoutes {
                     path: Routes.bookmarkedProblems.path,
                     name: Routes.bookmarkedProblems.name,
                     builder: (context, state) => const BookmarkedProblemsPage(),
+                  ),
+                  GoRoute(
+                    path: Routes.settings.path,
+                    name: Routes.settings.name,
+                    builder: (context, state) => const SettingsPage(),
                   ),
                 ],
               ),
