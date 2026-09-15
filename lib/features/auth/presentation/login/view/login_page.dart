@@ -4,14 +4,14 @@ import 'package:algorithm_visualizer/core/resources/strings_manager.dart';
 import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
 import 'package:algorithm_visualizer/core/widgets/adaptive/text/adaptive_text.dart';
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/animated_popup.dart';
+import 'package:algorithm_visualizer/core/widgets/custom_widgets/auth_logo_tile.dart';
+import 'package:algorithm_visualizer/core/widgets/custom_widgets/auth_text_field.dart';
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/confirmation_dialog_card.dart';
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/custom_snack_bar.dart';
-import 'package:algorithm_visualizer/features/auth/presentation/common/view_model/auth_providers.dart';
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/primary_button_quiet.dart';
+import 'package:algorithm_visualizer/features/auth/presentation/common/view_model/auth_providers.dart';
 import 'package:algorithm_visualizer/features/auth/presentation/common/widget/auth_common_bits.dart';
-import 'package:algorithm_visualizer/core/widgets/custom_widgets/auth_logo_tile.dart';
 import 'package:algorithm_visualizer/features/auth/presentation/common/widget/auth_scaffold.dart';
-import 'package:algorithm_visualizer/core/widgets/custom_widgets/auth_text_field.dart';
 import 'package:algorithm_visualizer/features/auth/presentation/login/view_model/login_auth_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -49,16 +49,7 @@ class LoginPage extends ConsumerWidget {
         const _PasswordField(),
         SizedBox(height: CdSpace.x8.h),
         const _SignInButton(),
-        // SizedBox(height: CdSpace.x4.h),
-        // const AuthDivider(),
-        // SizedBox(height: CdSpace.x4.h),
-        // AuthSecondaryButton(
-        //   title: StringsManager.continueWithGoogle,
-        //   onPressed: () => context.showSnackBar(
-        //     message: StringsManager.socialAuthUnavailable,
-        //     type: CustomSnackBarType.info,
-        //   ),
-        // ),
+        // const LegalConsent(),
         SizedBox(height: CdSpace.x6.h),
         AuthFooterPrompt(
           prompt: StringsManager.noAccountYet,
