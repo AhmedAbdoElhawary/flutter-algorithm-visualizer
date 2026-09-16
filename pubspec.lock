@@ -25,6 +25,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "10.2.0"
+  animations:
+    dependency: "direct main"
+    description:
+      name: animations
+      sha256: "9cb469212ea51be27097f23b519d594c01171721347b55df9334fff653659e7f"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.2.0"
   archive:
     dependency: transitive
     description:
@@ -209,14 +217,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.9"
-  cupertino_ui:
-    dependency: transitive
-    description:
-      name: cupertino_ui
-      sha256: c6747018d37d32feeeb858a1d7043831cb541460ebe1a890a995cdb8df8ea5a5
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.1.0"
   dart_style:
     dependency: transitive
     description:
@@ -225,6 +225,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.1.7"
+  equatable:
+    dependency: transitive
+    description:
+      name: equatable
+      sha256: "3bce007a596ff8b3119c45d68aaef631272537c03d30e5d4534dd24bf4c5eaa2"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.1.0"
   fake_async:
     dependency: transitive
     description:
@@ -329,6 +337,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.1.1"
+  fl_chart:
+    dependency: "direct main"
+    description:
+      name: fl_chart
+      sha256: b938f77d042cbcd822936a7a359a7235bad8bd72070de1f827efc2cc297ac888
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.2.0"
   flutter:
     dependency: "direct main"
     description: flutter
@@ -415,6 +431,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "4.6.6"
+  get_it:
+    dependency: "direct main"
+    description:
+      name: get_it
+      sha256: "568d62f0e68666fb5d95519743b3c24a34c7f19d834b0658c46e26d778461f66"
+      url: "https://pub.dev"
+    source: hosted
+    version: "9.2.1"
   get_storage:
     dependency: "direct main"
     description:
@@ -435,10 +459,10 @@ packages:
     dependency: "direct main"
     description:
       name: go_router
-      sha256: "008ab21d89d0de8ccd79586838f7533f126c2d894f50bf25f2947888d3c225b5"
+      sha256: d7a3576cb312649eaa51f2356450aed686085fb58fcdebda5b359aa951eef7ea
       url: "https://pub.dev"
     source: hosted
-    version: "18.0.1"
+    version: "17.5.0"
   graphs:
     dependency: transitive
     description:
@@ -588,14 +612,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.13.0"
-  material_ui:
-    dependency: transitive
-    description:
-      name: material_ui
-      sha256: "6d056d60ce745335fcf1c726a4fc46a481a62229f202b65dbc2db5edbbabc7e2"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.3.0"
   meta:
     dependency: transitive
     description:
