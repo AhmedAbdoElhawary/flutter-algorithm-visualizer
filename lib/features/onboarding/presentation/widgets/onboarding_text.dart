@@ -30,7 +30,7 @@ class MonoText extends StatelessWidget {
       maxLines: 1,
       textAlign: textAlign,
       letterSpacing: letterSpacing,
-      fontFamily: FontConstants.fontJetBrainsMono,
+      fontFamily: FontConstants.fontFamily,
     );
   }
 }
@@ -49,7 +49,7 @@ class MonoBoldText extends StatelessWidget {
       fontSize: fontSize,
       color: color,
       maxLines: 1,
-      fontFamily: FontConstants.fontJetBrainsMono,
+      fontFamily: FontConstants.fontFamily,
     );
   }
 }
