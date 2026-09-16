@@ -114,6 +114,7 @@ class _AccountCardBody extends StatelessWidget {
             Icons.chevron_right_rounded,
             size: 18,
             color: ThemeEnum.track,
+            flipsWithDirection: true,
           ),
         ],
       ),
