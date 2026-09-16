@@ -6,7 +6,7 @@ import 'package:algorithm_visualizer/features/visualize/helper/o_notation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-enum CdSurface { main, secondary, unColoredFill, simpleColored, outlined }
+enum CdSurface { main, secondary, unColoredFill, fill, simpleColored, outlined }
 
 class CardContainer extends StatelessWidget {
   final Widget child;
@@ -39,6 +39,7 @@ class CardContainer extends StatelessWidget {
         CdSurface.unColoredFill => ThemeEnum.ground,
         CdSurface.simpleColored => ThemeEnum.raised,
         CdSurface.outlined => null,
+        CdSurface.fill => ThemeEnum.inkPrimary,
       };
 
   ThemeEnum get _borderColor =>
@@ -49,6 +50,7 @@ class CardContainer extends StatelessWidget {
         CdSurface.unColoredFill => ThemeEnum.hairline,
         CdSurface.simpleColored => ThemeEnum.hairline,
         CdSurface.outlined => ThemeEnum.hairline,
+        CdSurface.fill => ThemeEnum.hairline,
       };
 
   @override
