@@ -104,7 +104,7 @@ class _VisualizePageState extends ConsumerState<VisualizePage> {
         SliverAppBar(
           snap: true,
           floating: true,
-          toolbarHeight: 140.r,
+          toolbarHeight: 160.r,
           title: Container(
             color: context.getColor(ThemeEnum.ground),
             child: Column(
@@ -129,6 +129,7 @@ class _VisualizePageState extends ConsumerState<VisualizePage> {
                             label: StringsManager.sorting,
                             verticalPadding: 2,
                             icon: Icons.filter_list_rounded,
+                            constrainLabelWidth: true,
                           ),
                         ),
                       ),
@@ -148,6 +149,7 @@ class _VisualizePageState extends ConsumerState<VisualizePage> {
                             label: StringsManager.searching,
                             verticalPadding: 2,
                             icon: Icons.map_rounded,
+                            constrainLabelWidth: true,
                           ),
                         ),
                       ),
@@ -193,6 +195,7 @@ class _VisualizePageState extends ConsumerState<VisualizePage> {
                                   isSelected: cardValue == searchingCard,
                                   addEndPadding: false,
                                   label: searchingCardValues.card.algoComplexity.name,
+                                  constrainLabelWidth: true,
                                 ),
                               ),
                             ),
