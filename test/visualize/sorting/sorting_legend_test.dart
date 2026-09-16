@@ -93,7 +93,7 @@ void main() {
 
     final expectedRoles = kRolePriority.where((r) => r != SortRole.idle && _kMergeRoles.contains(r)).toList();
     final context = tester.element(find.byType(SortingLegend));
-    final expectedColours = expectedRoles.map((r) => context.getColor(roleColor(r))).toList();
+    final expectedColours = expectedRoles.map((r) => context.getColor(sortingRoleColor(r))).toList();
 
     expect(_swatchColours(tester), expectedColours);
   });
