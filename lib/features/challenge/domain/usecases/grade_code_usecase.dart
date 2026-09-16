@@ -1,5 +1,12 @@
 import 'package:algorithm_visualizer/core/custom_packages/custom_code_editor/code_editor.dart'
-    show CustomObjectShape, EditorLanguage, OutputComparison, ProblemData, ProblemRunner, ProblemTestCase;
+    show
+        CustomObjectShape,
+        EditorLanguage,
+        ExecutionFailureInfo,
+        OutputComparison,
+        ProblemData,
+        ProblemRunner,
+        ProblemTestCase;
 import 'package:algorithm_visualizer/features/challenge/data/models/custom_object.dart';
 import 'package:algorithm_visualizer/features/challenge/data/models/test_case.dart';
 import 'package:algorithm_visualizer/features/challenge/domain/entities/coding_problem.dart';
@@ -13,6 +20,7 @@ class CodeGradeResult {
     required this.code,
     this.language = EditorLanguage.dart,
     this.error,
+    this.failure,
   });
   final List<TestCaseResult> allTestCaseResults;
   final int totalCount;
@@ -24,7 +32,14 @@ class CodeGradeResult {
 
   /// A whole-program failure (e.g. the user code never compiles), which
   /// invalidates every test case at once. Null when each test ran.
+  ///
+  /// This is the **English** rendering. Presentation prefers [failure], which
+  /// still has its `code` and `data` and can therefore be said in Arabic.
   final String? error;
+
+  /// The same failure, unrendered. Null when the error had no engine `code`
+  /// behind it — a malformed function signature, for instance.
+  final ExecutionFailureInfo? failure;
 
   int get passedCount => allTestCaseResults.where((r) => r.passed).length;
 
@@ -98,6 +113,7 @@ class GradeCodeUseCase {
       ],
       totalCount: result.totalCount,
       error: result.error,
+      failure: result.failure,
     );
   }
 
