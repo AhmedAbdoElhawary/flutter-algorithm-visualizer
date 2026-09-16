@@ -77,14 +77,12 @@ class _CodeCardHeader extends StatelessWidget {
           const RSizedBox(width: 5),
           const _Dot(ThemeEnum.dataEasy),
           const Spacer(),
-          Flexible(
-            child: RegularText(
-              fileName,
-              fontFamily: FontConstants.fontJetBrainsMono,
-              fontSize: 10,
-              color: ThemeEnum.inkMuted,
-              maxLines: 1,
-            ),
+          RegularText(
+            fileName,
+            fontFamily: FontConstants.fontJetBrainsMono,
+            fontSize: 10,
+            color: ThemeEnum.inkMuted,
+            maxLines: 1,
           ),
         ],
       ),

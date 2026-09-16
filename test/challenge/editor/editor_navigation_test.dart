@@ -30,7 +30,7 @@ void main() {
     await tapSolveInEditor(tester);
 
     expect(router.routerDelegate.currentConfiguration.matches.length, 2);
-    expect(find.byType(EditorPage), findsOneWidget);
+    expect(find.byType(CodeEditorPage), findsOneWidget);
     expect(find.text('Two Sum'), findsWidgets);
 
     router.pop();
@@ -38,7 +38,7 @@ void main() {
 
     expect(router.routerDelegate.currentConfiguration.matches.length, 1);
     expect(find.byType(ProblemPage), findsOneWidget);
-    expect(find.byType(EditorPage), findsNothing);
+    expect(find.byType(CodeEditorPage), findsNothing);
   });
 
   testWidgets('the Similar-list path returns to the similar problem, not the original (US1 scenario 5)',
@@ -64,13 +64,13 @@ void main() {
     await tapSolveInEditor(tester);
 
     expect(router.routerDelegate.currentConfiguration.matches.length, 3);
-    expect(find.byType(EditorPage), findsOneWidget);
+    expect(find.byType(CodeEditorPage), findsOneWidget);
 
     router.pop();
     await tester.pumpAndSettle();
 
     expect(router.routerDelegate.currentConfiguration.matches.length, 2);
     expect(find.text('Problem B'), findsOneWidget);
-    expect(find.byType(EditorPage), findsNothing);
+    expect(find.byType(CodeEditorPage), findsNothing);
   });
 }

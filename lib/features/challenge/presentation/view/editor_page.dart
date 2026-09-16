@@ -1,4 +1,6 @@
 import 'package:algorithm_visualizer/config/routes/route_app.dart';
+import 'package:algorithm_visualizer/core/custom_packages/custom_code_editor/code_editor.dart'
+    show CodeController;
 import 'package:algorithm_visualizer/core/helpers/constants.dart';
 import 'package:algorithm_visualizer/core/helpers/current_device.dart';
 import 'package:algorithm_visualizer/core/resources/dimensions_manager.dart';
@@ -12,8 +14,6 @@ import 'package:algorithm_visualizer/features/challenge/presentation/view_model/
 import 'package:algorithm_visualizer/features/challenge/presentation/view_model/challenges/problems_providers.dart';
 import 'package:algorithm_visualizer/features/challenge/presentation/view_model/code_editor/code_editor_providers.dart';
 import 'package:algorithm_visualizer/features/challenge/presentation/widgets/challenges/error_state.dart';
-import 'package:algorithm_visualizer/core/custom_packages/custom_code_editor/code_editor.dart'
-    show CodeController;
 import 'package:algorithm_visualizer/features/challenge/presentation/widgets/editor/editor_action_bar.dart';
 import 'package:algorithm_visualizer/features/challenge/presentation/widgets/editor/editor_code_card.dart';
 import 'package:algorithm_visualizer/features/challenge/presentation/widgets/editor/editor_keyboard_toolbar.dart';
@@ -29,16 +29,16 @@ import 'package:go_router/go_router.dart';
 /// The `04 · EDITOR` screen. A single page-level scroll (title row, code
 /// card, test case card) plus a pinned action bar above the main nav bar
 /// (`contracts/ui-contract.md` §1).
-class EditorPage extends ConsumerStatefulWidget {
-  const EditorPage({super.key, required this.problemId});
+class CodeEditorPage extends ConsumerStatefulWidget {
+  const CodeEditorPage({super.key, required this.problemId});
 
   final int problemId;
 
   @override
-  ConsumerState<EditorPage> createState() => _EditorPageState();
+  ConsumerState<CodeEditorPage> createState() => _EditorPageState();
 }
 
-class _EditorPageState extends ConsumerState<EditorPage> {
+class _EditorPageState extends ConsumerState<CodeEditorPage> {
   final ScrollController _scrollController = ScrollController();
   final GlobalKey _resultKey = GlobalKey();
 
@@ -103,22 +103,24 @@ class _EditorPageState extends ConsumerState<EditorPage> {
       }
     });
 
-    return ref.watch(getProblemProvider(problemId)).when(
-          loading: () => const ChallengesLoadingState(),
-          error: (error, stackTrace) => const ChallengesErrorState(),
-          data: (problem) {
-            if (problem == null) {
-              return const EmptyStateQuiet(title: StringsManager.noChallengeSelected);
-            }
-            return _EditorContent(
-              problem: problem,
-              problemId: problemId,
-              scrollController: _scrollController,
-              resultKey: _resultKey,
-              onRun: () => _handleRun(problem, problemId),
-            );
-          },
-        );
+    return Material(
+      child: ref.watch(getProblemProvider(problemId)).when(
+            loading: () => const ChallengesLoadingState(),
+            error: (error, stackTrace) => const ChallengesErrorState(),
+            data: (problem) {
+              if (problem == null) {
+                return const EmptyStateQuiet(title: StringsManager.noChallengeSelected);
+              }
+              return _EditorContent(
+                problem: problem,
+                problemId: problemId,
+                scrollController: _scrollController,
+                resultKey: _resultKey,
+                onRun: () => _handleRun(problem, problemId),
+              );
+            },
+          ),
+    );
   }
 }
 

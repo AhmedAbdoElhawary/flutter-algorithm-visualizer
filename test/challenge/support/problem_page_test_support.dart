@@ -252,7 +252,7 @@ Future<GoRouter> pumpProblemPageChain(
   return router;
 }
 
-/// Pumps [EditorPage] directly behind a minimal [GoRouter], for tests that
+/// Pumps [CodeEditorPage] directly behind a minimal [GoRouter], for tests that
 /// only care about the editor's own behaviour (states, running, actions).
 ///
 /// Pass [problemsAsync] directly to drive `getProblemProvider`'s four
@@ -280,7 +280,7 @@ Future<void> pumpEditorPage(
     routes: [
       GoRoute(
         path: '/',
-        builder: (context, state) => EditorPage(problemId: problemId ?? problem?.getProblemId ?? -1),
+        builder: (context, state) => CodeEditorPage(problemId: problemId ?? problem?.getProblemId ?? -1),
       ),
       GoRoute(
         path: Routes.celebration.path,
@@ -356,21 +356,21 @@ Future<GoRouter> pumpProblemToEditorChain(
             },
             routes: [
               GoRoute(
-                path: Routes.subEditor.path,
-                name: Routes.subEditor.name,
+                path: Routes.subCodeEditor.path,
+                name: Routes.subCodeEditor.name,
                 builder: (context, state) {
                   final id = int.tryParse(state.uri.queryParameters['problem_id'] ?? '') ?? -1;
-                  return EditorPage(problemId: id);
+                  return CodeEditorPage(problemId: id);
                 },
               ),
             ],
           ),
           GoRoute(
-            path: Routes.editor.path,
-            name: Routes.editor.name,
+            path: Routes.codeEditor.path,
+            name: Routes.codeEditor.name,
             builder: (context, state) {
               final id = int.tryParse(state.uri.queryParameters['problem_id'] ?? '') ?? -1;
-              return EditorPage(problemId: id);
+              return CodeEditorPage(problemId: id);
             },
           ),
         ],
