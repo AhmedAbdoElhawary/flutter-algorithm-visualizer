@@ -1,7 +1,7 @@
 import 'package:algorithm_visualizer/core/resources/logo_assets.dart';
 import 'package:algorithm_visualizer/core/resources/strings_manager.dart';
 import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
-import 'package:algorithm_visualizer/features/onboarding/presentation/widgets/onboarding_text.dart';
+import 'package:algorithm_visualizer/core/widgets/adaptive/text/adaptive_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -26,12 +26,11 @@ class OnboardingHeader extends StatelessWidget {
           InkResponse(
             onTap: onSkip,
             radius: 44.r / 2,
-            child: SizedBox(
-              width: 44.w,
-              height: 44.h,
-              child: const Center(
-                child: MonoText(StringsManager.onboardingSkip, fontSize: 15),
-              ),
+            child: const RSizedBox(
+              width: 44,
+              height: 44,
+              child: Center(
+                  child: MediumText(StringsManager.onboardingSkip, fontSize: 15, color: ThemeEnum.inkBody)),
             ),
           ),
         ],
@@ -40,18 +39,16 @@ class OnboardingHeader extends StatelessWidget {
   }
 }
 
-/// The AlgoDive mark at header size — the two-tone brand SVG (ink + green
-/// destination cell), swapped by theme brightness since it isn't tinted.
 class AlgoDiveMark extends StatelessWidget {
   const AlgoDiveMark({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: 26.r,
-      height: 26.r,
+    return RSizedBox(
+      width: 26,
+      height: 26,
       child: SvgPicture.asset(
-        context.isThemeDark ? LogoAssets.markSmallWhite : LogoAssets.markSmallBlack,
+        context.isThemeDark ? LogoAssets.markGreenLogoWhite : LogoAssets.markGreenLogoBlack,
       ),
     );
   }
