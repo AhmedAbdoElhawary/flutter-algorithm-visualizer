@@ -1,17 +1,52 @@
-/* AlgoDive public pages — mirrors the in-app dark palette
-   (lib/core/resources/color_manager.dart). */
+/* AlgoDive public pages — mirrors the in-app palette
+   (lib/core/resources/color_manager.dart).
+
+   The page follows the reader's system setting, exactly like the app's
+   ThemeMode.system default. Light is the base (`:root`) and dark is layered on
+   top inside a `prefers-color-scheme` block, so a browser that reports no
+   preference — or one that ignores the query entirely — still renders a fully
+   coloured page instead of unstyled defaults.
+
+   Only the tokens are redefined for dark. Every rule below the palette reads
+   through a var, so there is exactly one place to change a colour. */
 :root {
-  --ground: #0B0B0D;
-  --surface: #121317;
-  --raised: #181A1F;
-  --hairline: #24262C;
-  --ink-primary: #FFFFFF;
-  --ink-title: #F2F3F5;
-  --ink-body: #9A9FAB;
-  --ink-muted: #63687A;
-  --accent: #79C9A4;
-  --warn: #DE8189;
+  color-scheme: light dark;
+
+  --ground: #F4F5F7;
+  --surface: #FFFFFF;
+  --raised: #EEF0F6;
+  --hairline: #E2E4E9;
+  --ink-primary: #0B0B0D;
+  --ink-title: #101114;
+  --ink-body: #4A4F5A;
+  --ink-muted: #667080;
+  /* Light accent/warn are the *Lt* data colours, not the dark ones. The dark
+     mint (#79C9A4) sits at ~1.8:1 on a white card — unreadable as link text. */
+  --accent: #11704E;
+  --warn: #A83F49;
+  --warn-border: rgba(168, 63, 73, 0.35);
+  /* The icon PNG carries a near-black ground, so on a light page it needs a
+     shadow rather than a hairline to separate from the background. */
+  --mark-edge: rgba(11, 11, 13, 0.14);
 }
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --ground: #0B0B0D;
+    --surface: #121317;
+    --raised: #181A1F;
+    --hairline: #24262C;
+    --ink-primary: #FFFFFF;
+    --ink-title: #F2F3F5;
+    --ink-body: #9A9FAB;
+    --ink-muted: #63687A;
+    --accent: #79C9A4;
+    --warn: #DE8189;
+    --warn-border: rgba(222, 129, 137, 0.35);
+    --mark-edge: #24262C;
+  }
+}
+
 * { box-sizing: border-box; }
 body {
   margin: 0;
@@ -24,12 +59,12 @@ body {
 header.brand { display: flex; align-items: center; gap: 12px; margin-bottom: 40px; }
 /* The real app icon, so the page and the launcher agree on what AlgoDive
    looks like. The PNG carries its own rounded corners and near-black ground;
-   the hairline keeps its edge from dissolving into the page, which is almost
-   the same colour. `width`/`height` are also set as HTML attributes so the
-   header does not reflow while the image loads. */
+   the edge keeps it from dissolving into a near-identical dark page, and gives
+   it a soft lift on a light one. `width`/`height` are also set as HTML
+   attributes so the header does not reflow while the image loads. */
 header.brand .mark {
   width: 40px; height: 40px; border-radius: 10px; flex: 0 0 auto;
-  border: 1px solid var(--hairline);
+  border: 1px solid var(--mark-edge);
   display: block;
 }
 header.brand b { color: var(--ink-title); font-size: 18px; letter-spacing: -0.3px; }
@@ -44,7 +79,7 @@ code { background: var(--raised); border: 1px solid var(--hairline); border-radi
        padding: 1px 5px; font-size: 13px; color: var(--ink-title); }
 .card { background: var(--surface); border: 1px solid var(--hairline);
         border-radius: 14px; padding: 20px 22px; margin: 20px 0; }
-.card.warn { border-color: rgba(222,129,137,0.35); }
+.card.warn { border-color: var(--warn-border); }
 .card h3 { margin-top: 0; }
 table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 14px; display: block; overflow-x: auto; }
 th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--hairline); vertical-align: top; }
