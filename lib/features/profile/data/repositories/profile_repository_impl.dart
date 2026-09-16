@@ -48,15 +48,15 @@ class ProfileRepositoryImpl implements ProfileRepository {
     }
   }
 
+  /// Only *requests* the change: `verifyBeforeUpdateEmail` sends a link and the
+  /// account keeps its old address until that link is opened.
+  ///
+  /// So the cached user is deliberately left alone. Writing [newEmail] here
+  /// would show an address the account does not actually have yet, and the one
+  /// the user would then try — and fail — to sign in with.
   @override
   Future<void> updateEmail({required String newEmail, required String currentPassword}) async {
     await remoteDataSource.updateEmail(newEmail: newEmail, currentPassword: currentPassword);
-
-    final currentDto = localDataSource.getUser();
-    if (currentDto != null) {
-      final updatedDto = currentDto.copyWith(email: newEmail.trim());
-      await localDataSource.saveUser(updatedDto);
-    }
   }
 
   @override
