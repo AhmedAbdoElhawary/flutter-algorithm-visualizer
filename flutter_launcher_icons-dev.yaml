@@ -2,10 +2,9 @@
 # (legacy, adaptive, Android 13+ monochrome/themed) and every iOS appearance
 # (light, dark, tinted).
 #
-# Source art: assets/logo/algodive-icon-dev.png. It's currently just a
-# copy of the production icon (see tool/flavor_icons/custom/README.md) — drop
-# a custom dev design in at that same path, no config changes needed, then:
-#   dart run flutter_launcher_icons -f flutter_launcher_icons-dev.yaml
+# Source art: assets/logo/algodive-icon-dev.png (DEV badge, rose #DE8189).
+# Regenerate with:
+#   flutter pub run flutter_launcher_icons -f flutter_launcher_icons-dev.yaml
 #
 # The `-dev` filename suffix makes flutter_launcher_icons write Android output to
 # android/app/src/dev/res/** and an `AppIcon-dev` set into the iOS asset catalog.
