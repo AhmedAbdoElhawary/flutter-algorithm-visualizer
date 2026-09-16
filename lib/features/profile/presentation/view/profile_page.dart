@@ -29,7 +29,6 @@ class ProfileScreen extends ConsumerWidget {
             ProfileDifficultyProgress(),
             RSizedBox(height: 14),
             ProfileWeeklyChart(),
-            RSizedBox(height: 14),
             ProfileHeatmap(),
             RSizedBox(height: 14),
             ProfileCategoryChart(),
