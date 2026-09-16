@@ -87,15 +87,26 @@ void main() {
     Finder chip(String label) =>
         find.descendant(of: find.byType(EditorLanguagePicker), matching: find.text(label));
 
-    testWidgets('is absent when there is nothing to choose between', (tester) async {
+    testWidgets('shows every language even when the problem offers only one', (tester) async {
+      // A Dart-only problem still shows all three, so the choice looks the
+      // same everywhere. The other two are dimmed rather than missing.
       await pumpEditorPage(tester, problem: buildGradableTestProblem());
 
-      expect(find.byType(EditorLanguagePicker), findsOneWidget);
-      // Rendered, but deliberately empty: one language is not a choice.
-      expect(chip('Dart'), findsNothing);
+      expect(chip('Dart'), findsOneWidget);
+      expect(chip('Python'), findsOneWidget);
+      expect(chip('JavaScript'), findsOneWidget);
     });
 
-    testWidgets('lists exactly the languages the problem offers', (tester) async {
+    testWidgets('a language the problem does not offer cannot be selected', (tester) async {
+      await pumpEditorPage(tester, problem: buildGradableTestProblem());
+
+      await tester.tap(chip('Python'));
+      await tester.pumpAndSettle();
+
+      expect(tester.widget<EditorCodeCard>(find.byType(EditorCodeCard)).language, EditorLanguage.dart);
+    });
+
+    testWidgets('a language the problem does offer is the one that can be picked', (tester) async {
       await pumpEditorPage(
         tester,
         problem: buildGradableTestProblem().copyWith(
@@ -103,9 +114,10 @@ void main() {
         ),
       );
 
-      expect(chip('Dart'), findsOneWidget);
-      expect(chip('Python'), findsOneWidget);
-      expect(chip('JavaScript'), findsNothing);
+      expect(
+        tester.widget<EditorCodeCard>(find.byType(EditorCodeCard)).languages,
+        <EditorLanguage>[EditorLanguage.dart, EditorLanguage.python],
+      );
     });
 
     testWidgets('switching language changes the editor language with no prompt', (tester) async {

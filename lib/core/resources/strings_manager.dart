@@ -172,6 +172,7 @@ class StringsManager {
   static const String tryToPracticeAChallenge = "Try to practice a challenge";
 
   static const String dart = "Dart";
+  static const String onlyAvailableInDart = "This problem can only be solved in Dart for now";
   static const String run = "Run";
   static const String running = "Running...";
 

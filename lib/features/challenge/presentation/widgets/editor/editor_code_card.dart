@@ -100,11 +100,19 @@ class _CodeCardHeader extends StatelessWidget {
           const RSizedBox(width: 5),
           const _Dot(ThemeEnum.dataEasy),
           const Spacer(),
-          EditorLanguagePicker(
-            languages: languages,
-            selected: language,
-            enabled: !running,
-            onSelected: onLanguageSelected ?? (_) {},
+          // Three chips plus a file name do not fit a 320pt screen, and the
+          // chips are the part the learner acts on — so they get the room and
+          // the file name gives way.
+          Flexible(
+            child: SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: EditorLanguagePicker(
+                languages: languages,
+                selected: language,
+                enabled: !running,
+                onSelected: onLanguageSelected ?? (_) {},
+              ),
+            ),
           ),
           Flexible(
             child: RegularText(
