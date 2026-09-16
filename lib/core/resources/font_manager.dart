@@ -1,14 +1,7 @@
 import 'package:flutter/material.dart';
 
 class FontConstants {
-  /// CoreDive UI family. Bundled as an asset font (see pubspec.yaml,
-  /// assets/fonts/ibm_plex_sans_arabic/); this string is the family name
-  /// registered there. Prefer leaving a style's `fontFamily` null so it
-  /// inherits this from the theme.
   static const String fontFamily = "IBM Plex Sans Arabic";
-
-  /// Legacy bundled mono, also loaded as an asset font.
-  static const String fontJetBrainsMono = fontFamily;
 }
 
 class FontWeightManager {
