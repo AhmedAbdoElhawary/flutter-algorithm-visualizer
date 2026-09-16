@@ -9,7 +9,9 @@ import 'package:algorithm_visualizer/core/widgets/custom_widgets/card_container.
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/custom_back_button.dart';
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/section_header.dart';
 import 'package:algorithm_visualizer/features/settings/presentation/widgets/settings_account_section.dart';
+import 'package:algorithm_visualizer/features/settings/presentation/widgets/settings_appearance_section.dart';
 import 'package:algorithm_visualizer/features/settings/presentation/widgets/settings_contact_section.dart';
+import 'package:algorithm_visualizer/features/settings/presentation/widgets/settings_session_card.dart';
 import 'package:algorithm_visualizer/features/settings/presentation/widgets/settings_row.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -35,6 +37,10 @@ class SettingsPage extends StatelessWidget {
                   RSizedBox(height: 10),
                   SettingsAccountSection(),
                   RSizedBox(height: 22),
+                  SectionHeader(title: StringsManager.settingsAppearanceSection),
+                  RSizedBox(height: 10),
+                  SettingsAppearanceSection(),
+                  RSizedBox(height: 22),
                   SectionHeader(title: StringsManager.settingsLegalSection),
                   RSizedBox(height: 10),
                   _LegalSection(),
@@ -46,6 +52,8 @@ class SettingsPage extends StatelessWidget {
                   SectionHeader(title: StringsManager.settingsAboutSection),
                   RSizedBox(height: 10),
                   _AboutSection(),
+                  RSizedBox(height: 22),
+                  SettingsSessionCard(),
                   // RSizedBox(height: 18),
                   // _MadeByLine(),
                 ],
