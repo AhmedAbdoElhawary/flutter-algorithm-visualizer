@@ -178,8 +178,8 @@ class _CodeEditorState extends State<CodeEditor> {
                     : borderRadius.topEnd != Radius.zero
                         ? BorderRadiusDirectional.only(topEnd: borderRadius.topEnd)
                         : null,
-        color: theme.background,
       ),
+      constraints: BoxConstraints(minWidth: ScreenUtil().screenWidth - 80.w),
       child: Stack(
         children: [
           ..._buildLineHighlightBars(theme, lineHeight),
