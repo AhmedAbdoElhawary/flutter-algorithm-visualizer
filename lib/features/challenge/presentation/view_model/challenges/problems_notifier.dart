@@ -1,3 +1,5 @@
+import 'package:algorithm_visualizer/core/enums/app_settings_enum.dart';
+import 'package:algorithm_visualizer/core/helpers/storage/app_settings/app_settings_cubit.dart';
 import 'package:algorithm_visualizer/features/auth/presentation/common/view_model/auth_providers.dart';
 import 'package:algorithm_visualizer/features/challenge/domain/entities/coding_problem.dart';
 import 'package:algorithm_visualizer/features/challenge/domain/repositories/problem_repository.dart';
@@ -13,13 +15,18 @@ class ProblemsNotifier extends Notifier<AsyncValue<List<CodingProblem>>> {
 
   @override
   AsyncValue<List<CodingProblem>> build() {
-    _load();
+    /// Watched, not read: switching language has to re-read the dataset,
+    /// because the problem statements themselves come from the asset rather
+    /// than from a lookup table a text widget could redo on rebuild.
+    final language = ref.watch(appSettingsProvider.select((state) => state.language));
+
+    _load(arabic: language == LanguagesEnum.arabic);
     return const AsyncLoading();
   }
 
-  Future<void> _load() async {
+  Future<void> _load({required bool arabic}) async {
     await _retryPendingMigration();
-    state = await AsyncValue.guard(() => _repository.getAllProblems());
+    state = await AsyncValue.guard(() => _repository.getAllProblems(arabic: arabic));
   }
 
   /// Finishes a hand over that was interrupted, typically by signing up while
