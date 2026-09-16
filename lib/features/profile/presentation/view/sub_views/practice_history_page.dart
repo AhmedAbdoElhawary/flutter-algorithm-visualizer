@@ -16,9 +16,8 @@ class RecentSubmissionsPage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final all = ref.watch(profileStatisticsProvider.select((value) => value.practiceHistory));
 
-    return Scaffold(
-      backgroundColor: context.getColor(ThemeEnum.ground),
-      body: SafeArea(
+    return Material(
+      child: SafeArea(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [

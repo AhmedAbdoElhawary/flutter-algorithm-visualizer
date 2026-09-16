@@ -10,6 +10,13 @@ String canonicalString(dynamic value, {CustomObjectShape? shape}) {
   if (value == null) return 'null';
   if (value is ObjectInstance) return _instanceToString(value, shape);
   if (value is List) return '[${value.map((e) => canonicalString(e)).join(',')}]';
+  // One number, one canonical rendering. JavaScript has a single number type,
+  // so a correct median of `2` must match a stored `2.0`; Dart and Python spell
+  // the same value `2.0`. Grading compares answers, not how a language happens
+  // to print them.
+  if (value is double && value.isFinite && value == value.roundToDouble()) {
+    return value.toInt().toString();
+  }
   if (value is Map) {
     final parts = value.entries.map((e) => '${canonicalString(e.key)}:${canonicalString(e.value)}').join(',');
     return '{$parts}';

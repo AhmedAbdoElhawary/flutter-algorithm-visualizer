@@ -15,9 +15,9 @@ import 'package:algorithm_visualizer/features/home/view/home_page.dart';
 import 'package:algorithm_visualizer/features/onboarding/data/onboarding_store.dart';
 import 'package:algorithm_visualizer/features/onboarding/presentation/view/onboarding_page.dart';
 import 'package:algorithm_visualizer/features/profile/presentation/view/profile_page.dart';
-import 'package:algorithm_visualizer/features/settings/presentation/view/settings_page.dart';
 import 'package:algorithm_visualizer/features/profile/presentation/view/sub_views/bookmarked_problems_page.dart';
 import 'package:algorithm_visualizer/features/profile/presentation/view/sub_views/practice_history_page.dart';
+import 'package:algorithm_visualizer/features/settings/presentation/view/settings_page.dart';
 import 'package:algorithm_visualizer/features/visualize/view/visualize_page.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
@@ -79,12 +79,12 @@ class Routes {
     path: 'sub',
     queryParamsName: "problem_id",
   );
-  static const RouteConfig editor = RouteConfig(
+  static const RouteConfig codeEditor = RouteConfig(
     name: 'editor',
     path: 'editor',
     queryParamsName: 'problem_id',
   );
-  static const RouteConfig subEditor = RouteConfig(
+  static const RouteConfig subCodeEditor = RouteConfig(
     name: 'subEditor',
     path: 'editor',
     queryParamsName: 'problem_id',
@@ -229,21 +229,21 @@ class AppRoutes {
                     },
                     routes: [
                       GoRoute(
-                        path: Routes.subEditor.path,
-                        name: Routes.subEditor.name,
+                        path: Routes.subCodeEditor.path,
+                        name: Routes.subCodeEditor.name,
                         builder: (context, state) {
                           final id = int.tryParse(state.uri.queryParameters["problem_id"] ?? "") ?? -1;
-                          return EditorPage(problemId: id);
+                          return CodeEditorPage(problemId: id);
                         },
                       ),
                     ],
                   ),
                   GoRoute(
-                    path: Routes.editor.path,
-                    name: Routes.editor.name,
+                    path: Routes.codeEditor.path,
+                    name: Routes.codeEditor.name,
                     builder: (context, state) {
                       final id = int.tryParse(state.uri.queryParameters["problem_id"] ?? "") ?? -1;
-                      return EditorPage(problemId: id);
+                      return CodeEditorPage(problemId: id);
                     },
                   ),
                 ],

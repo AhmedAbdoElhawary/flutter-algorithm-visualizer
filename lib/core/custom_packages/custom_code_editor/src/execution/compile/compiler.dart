@@ -410,7 +410,10 @@ class Compiler {
     final loop = _LoopContext(finallyDepth: fc.pendingFinally.length);
     fc.loopStack.add(loop);
     final loopStart = fc.builder.offset;
-    loop.continueTarget = loopStart;
+    // `continueTarget` deliberately stays null: a `continue` must reach the
+    // cursor increment below, not the condition, or the loop never advances.
+    // The increment's offset isn't known until the body is compiled, so the
+    // jumps are collected and patched at the end like the C-style `for`.
 
     // condition: cursor < len(iterable)
     fc.builder.emitOp(OpCode.getLocal, line: stmt.line, synthetic: true);
@@ -438,6 +441,7 @@ class Compiler {
     fc.endScope();
 
     // cursor = cursor + 1
+    final incrementStart = fc.builder.offset;
     fc.builder.emitOp(OpCode.getLocal, line: stmt.line, synthetic: true);
     fc.builder.emitU16(cursorSlot, line: stmt.line, synthetic: true);
     fc.builder.emitOp(OpCode.constant, line: stmt.line, synthetic: true);
@@ -454,7 +458,7 @@ class Compiler {
       fc.builder.patchU16At(b, fc.builder.offset);
     }
     for (final c in loop.continueJumps) {
-      fc.builder.patchU16At(c, loopStart);
+      fc.builder.patchU16At(c, incrementStart);
     }
     fc.loopStack.removeLast();
     fc.endScope();

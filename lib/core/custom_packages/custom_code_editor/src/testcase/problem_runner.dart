@@ -9,6 +9,7 @@ import '../execution/vm/budget.dart';
 import '../execution/vm/vm.dart';
 import 'custom_object_shape.dart';
 import 'function_signature.dart';
+import 'language_object_sources.dart';
 import 'object_builder.dart';
 import 'object_serializer.dart';
 import 'output_comparison.dart';
@@ -102,21 +103,6 @@ class ProblemRunner {
       );
     }
 
-    if (problem.language != EditorLanguage.dart && problem.customObjects.isNotEmpty) {
-      // Linked lists and trees are still built as Dart source text
-      // (`object_builder.dart`), so a problem that needs them can only be
-      // graded in Dart for now. Say so rather than failing every test case
-      // with something that reads like the learner's fault.
-      return ProblemRunResult(
-        testCaseResults: const <SingleTestCaseResult>[],
-        allPassed: false,
-        passedCount: 0,
-        totalCount: all.length,
-        error:
-            StringsManager.executionFailureMessage('customObjectsInThisLanguage', const <String, Object?>{}),
-      );
-    }
-
     final frontend = frontendFor(problem.language);
     final results = <SingleTestCaseResult>[];
     String? firstError;
@@ -135,7 +121,10 @@ class ProblemRunner {
       // for a `void` signature.
       final engineArgs = problem.language == EditorLanguage.dart
           ? const <engine.Value>[]
-          : <engine.Value>[for (final param in sig.params) _toEngineValue(argValues[param.name])];
+          : <engine.Value>[
+              for (final param in sig.params)
+                _argEngineValue(problem, param.type, argValues[param.name]),
+            ];
 
       Failure? failure;
       VmResult? run;
@@ -152,7 +141,7 @@ class ProblemRunner {
                 userProgram: userProgram,
                 functionName: sig.name,
                 arguments: engineArgs,
-                preludeSources: const <String>[],
+                preludeSources: _languagePreludes(problem, built.program),
               );
         final script = Compiler().compileProgram(program);
         final vm =
@@ -279,6 +268,125 @@ class ProblemRunner {
     final idx = program.indexOf(code);
     final linesBeforeCode = '\n'.allMatches(program.substring(0, idx)).length;
     return strippedLines - linesBeforeCode;
+  }
+
+  /// The node classes a non-Dart run needs in front of the learner's code, so
+  /// `ListNode(1)` means something there too. Skipped for any class the
+  /// learner has defined themselves, exactly as the Dart path does.
+  List<String> _languagePreludes(ProblemData problem, String code) {
+    if (problem.language == EditorLanguage.dart) return const <String>[];
+    final sources = <String>[];
+    problem.customObjects.forEach((className, shape) {
+      if (_definesClass(code, className)) return;
+      final source = customObjectSource(problem.language, className, shape);
+      if (source != null) sources.add(source);
+    });
+    return sources;
+  }
+
+  /// A parsed argument as the runtime value the learner's function should
+  /// receive. Mirrors [_argSource], which does the same job for Dart by
+  /// generating source text: a custom-object parameter becomes a real node
+  /// graph, and everything else becomes the plain value it looks like.
+  engine.Value _argEngineValue(ProblemData problem, String paramType, TestValue? value) {
+    final effective = value ?? const NullTestValue();
+    if (effective is NullTestValue) return engine.NullValue.instance;
+
+    final shape = _shapeForType(problem, paramType);
+    if (shape != null) {
+      if (effective is ListTestValue) {
+        return _buildObjectValue(effective, _baseTypeName(paramType), shape);
+      }
+      // A custom-object parameter given a plain value — `p=2` on Lowest
+      // Common Ancestor, where the dataset names the node by its value.
+      return _toEngineValue(effective);
+    }
+
+    // `List<CustomType>` params, e.g. `mergeKLists(List<ListNode?> lists)`.
+    final elementShape = _elementShapeForListType(problem, paramType);
+    if (elementShape != null && effective is ListTestValue) {
+      final elementName = _elementTypeName(paramType);
+      return engine.ListValue(<engine.Value>[
+        for (final item in effective.items)
+          item is ListTestValue
+              ? _buildObjectValue(item, elementName, elementShape)
+              : engine.NullValue.instance,
+      ]);
+    }
+
+    return _toEngineValue(effective);
+  }
+
+  /// Builds the node graph itself. The instances carry a [engine.ClassValue]
+  /// of the right name but no methods: the learner's own class (from the
+  /// prelude, or their own definition) is what they construct *new* nodes
+  /// with, while these are only ever read through their fields.
+  engine.Value _buildObjectValue(ListTestValue value, String className, CustomObjectShape shape) {
+    final klass = engine.ClassValue(name: className);
+    return switch (shape) {
+      CustomObjectShape.linkedList => _buildLinkedListValue(value.items, klass, shape),
+      CustomObjectShape.binaryTree => _buildBinaryTreeValue(value.items, klass, shape),
+      // Only Clone Graph uses this, and it stores no test cases, so the
+      // value field is all there is to build.
+      CustomObjectShape.plainFields => engine.InstanceValue(klass, <String, engine.Value>{
+          if (value.items.isNotEmpty) shape.valueField: _toEngineValue(value.items.first),
+        }),
+    };
+  }
+
+  engine.Value _buildLinkedListValue(
+      List<TestValue> items, engine.ClassValue klass, CustomObjectShape shape) {
+    engine.Value head = engine.NullValue.instance;
+    for (var i = items.length - 1; i >= 0; i--) {
+      head = engine.InstanceValue(klass, <String, engine.Value>{
+        shape.valueField: _toEngineValue(items[i]),
+        shape.nextField: head,
+      });
+    }
+    return head;
+  }
+
+  engine.Value _buildBinaryTreeValue(
+      List<TestValue> items, engine.ClassValue klass, CustomObjectShape shape) {
+    if (items.isEmpty || items.first is NullTestValue) return engine.NullValue.instance;
+
+    // LeetCode level-order, the exact inverse of the serializer: a `null`
+    // marks one missing child and claims no child slots of its own, so
+    // children come off a queue of real nodes rather than from fixed
+    // 2i+1 / 2i+2 offsets.
+    final left = List<int>.filled(items.length, -1);
+    final right = List<int>.filled(items.length, -1);
+    final queue = <int>[0];
+    var head = 0;
+    var next = 1;
+    while (head < queue.length && next < items.length) {
+      final node = queue[head++];
+      if (next < items.length) {
+        if (items[next] is! NullTestValue) {
+          left[node] = next;
+          queue.add(next);
+        }
+        next++;
+      }
+      if (next < items.length) {
+        if (items[next] is! NullTestValue) {
+          right[node] = next;
+          queue.add(next);
+        }
+        next++;
+      }
+    }
+
+    engine.Value build(int i) {
+      if (i == -1) return engine.NullValue.instance;
+      return engine.InstanceValue(klass, <String, engine.Value>{
+        shape.valueField: _toEngineValue(items[i]),
+        shape.leftField: build(left[i]),
+        shape.rightField: build(right[i]),
+      });
+    }
+
+    return build(0);
   }
 
   /// Custom-object class sources that the user code doesn't already define.

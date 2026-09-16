@@ -22,33 +22,35 @@ class ChallengePage extends ConsumerWidget {
 
     // Scaffold/Metrial written in base_navigation, why?
     // to control all main pages with the structure of them
-    return NestedScrollView(
-      headerSliverBuilder: (context, innerBoxIsScrolled) => [
-        const _SliverAppBar(),
-      ],
-      body: problems.when(
-        loading: () => const ChallengesLoadingState(),
-        error: (_, __) => const ChallengesErrorState(),
-        data: (data) {
-          if (data.ids.isEmpty) return const ChallengesEmptyState();
-          return Padding(
-            padding: REdgeInsets.fromLTRB(16, 0, 16, 0),
-            child: ListView.builder(
-              itemCount: data.ids.length,
-              itemBuilder: (ctx, i) {
-                final problemId = data.ids[i];
-                return ProblemTile(
-                  problemId: problemId,
-                  expanded: ref.watch(challengesProvider.select((s) => s.expandedId == problemId)),
-                  onToggle: () => ref.read(challengesProvider.notifier).toggleExpanded(problemId),
-                  onSolveTap: () {
-                    context.pushRoute(Routes.problem, queryParameters: "$problemId");
-                  },
-                );
-              },
-            ),
-          );
-        },
+    return Material(
+      child: NestedScrollView(
+        headerSliverBuilder: (context, innerBoxIsScrolled) => [
+          const _SliverAppBar(),
+        ],
+        body: problems.when(
+          loading: () => const ChallengesLoadingState(),
+          error: (_, __) => const ChallengesErrorState(),
+          data: (data) {
+            if (data.ids.isEmpty) return const ChallengesEmptyState();
+            return Padding(
+              padding: REdgeInsets.fromLTRB(16, 0, 16, 0),
+              child: ListView.builder(
+                itemCount: data.ids.length,
+                itemBuilder: (ctx, i) {
+                  final problemId = data.ids[i];
+                  return ProblemTile(
+                    problemId: problemId,
+                    expanded: ref.watch(challengesProvider.select((s) => s.expandedId == problemId)),
+                    onToggle: () => ref.read(challengesProvider.notifier).toggleExpanded(problemId),
+                    onSolveTap: () {
+                      context.pushRoute(Routes.problem, queryParameters: "$problemId");
+                    },
+                  );
+                },
+              ),
+            );
+          },
+        ),
       ),
     );
   }

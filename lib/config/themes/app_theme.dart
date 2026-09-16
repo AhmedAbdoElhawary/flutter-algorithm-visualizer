@@ -27,7 +27,7 @@ class AppTheme {
       shadowColor: ColorManager.hairlineLt,
       appBarTheme: _appBarTheme(Brightness.light),
       highlightColor: ColorManager.transparent,
-      canvasColor: ColorManager.transparent,
+      canvasColor: ColorManager.groundLt,
       splashColor: ColorManager.groundLt,
       colorScheme: const ColorScheme.light(
         primary: ColorManager.inkPrimaryLt,
@@ -56,7 +56,7 @@ class AppTheme {
       cardColor: ColorManager.surfaceDk,
       shadowColor: ColorManager.hairlineDk,
       highlightColor: ColorManager.transparent,
-      canvasColor: ColorManager.transparent,
+      canvasColor: ColorManager.groundDk,
       splashColor: ColorManager.groundDk,
       appBarTheme: _appBarTheme(Brightness.dark),
       colorScheme: const ColorScheme.dark(

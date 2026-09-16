@@ -44,6 +44,9 @@ const javascriptDialect = Dialect(
   /// One number type, so a whole result prints whole.
   wholeFloatsPrintAsIntegers: true,
 
+  /// One number type, so `xs[total / 2]` is an ordinary index.
+  singleNumberType: true,
+
   /// An object literal is a map, and `o.b` is `o["b"]`.
   propertyAccessReadsMapKeys: true,
 

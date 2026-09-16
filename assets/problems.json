@@ -344,7 +344,9 @@
         }
       ],
       "default_code": {
-        "dart": "/**\n * Definition for singly-linked list.\n * class ListNode {\n *   int val;\n *   ListNode? next;\n *   ListNode([this.val = 0, this.next]);\n * }\n */\nclass Solution {\n  ListNode? addTwoNumbers(ListNode? l1, ListNode? l2) {\n\n\n  }\n}"
+        "dart": "/**\n * Definition for singly-linked list.\n * class ListNode {\n *   int val;\n *   ListNode? next;\n *   ListNode([this.val = 0, this.next]);\n * }\n */\nclass Solution {\n  ListNode? addTwoNumbers(ListNode? l1, ListNode? l2) {\n\n\n  }\n}",
+        "python": "# ListNode is already defined for you.\ndef addTwoNumbers(l1, l2):\n    # Write your solution here\n    pass\n",
+        "javascript": "// ListNode is already defined for you.\nfunction addTwoNumbers(l1, l2) {\n  // Write your solution here\n}\n"
       },
       "custom_objects": {
         "dart": [
@@ -517,7 +519,9 @@
         }
       ],
       "default_code": {
-        "dart": "class Solution {\n  int lengthOfLongestSubstring(String s) {\n\n\n  }\n}"
+        "dart": "class Solution {\n  int lengthOfLongestSubstring(String s) {\n\n\n  }\n}",
+        "python": "def lengthOfLongestSubstring(s):\n    # Write your solution here\n    pass\n",
+        "javascript": "function lengthOfLongestSubstring(s) {\n  // Write your solution here\n}\n"
       },
       "custom_objects": {
         "dart": []
@@ -682,7 +686,9 @@
         }
       ],
       "default_code": {
-        "dart": "class Solution {\n  double findMedianSortedArrays(List<int> nums1, List<int> nums2) {\n\n\n  }\n}"
+        "dart": "class Solution {\n  double findMedianSortedArrays(List<int> nums1, List<int> nums2) {\n\n\n  }\n}",
+        "python": "def findMedianSortedArrays(nums1, nums2):\n    # Write your solution here\n    pass\n",
+        "javascript": "function findMedianSortedArrays(nums1, nums2) {\n  // Write your solution here\n}\n"
       },
       "custom_objects": {
         "dart": []
@@ -838,7 +844,9 @@
         }
       ],
       "default_code": {
-        "dart": "class Solution {\n  int maxArea(List<int> height) {\n\n\n  }\n}"
+        "dart": "class Solution {\n  int maxArea(List<int> height) {\n\n\n  }\n}",
+        "python": "def maxArea(height):\n    # Write your solution here\n    pass\n",
+        "javascript": "function maxArea(height) {\n  // Write your solution here\n}\n"
       },
       "custom_objects": {
         "dart": []
@@ -1011,7 +1019,9 @@
         }
       ],
       "default_code": {
-        "dart": "class Solution {\n  List<List<int>> threeSum(List<int> nums) {\n\n\n  }\n}"
+        "dart": "class Solution {\n  List<List<int>> threeSum(List<int> nums) {\n\n\n  }\n}",
+        "python": "def threeSum(nums):\n    # Write your solution here\n    pass\n",
+        "javascript": "function threeSum(nums) {\n  // Write your solution here\n}\n"
       },
       "custom_objects": {
         "dart": []
@@ -1169,7 +1179,9 @@
         }
       ],
       "default_code": {
-        "dart": "class Solution {\n  List<String> letterCombinations(String digits) {\n\n\n  }\n}"
+        "dart": "class Solution {\n  List<String> letterCombinations(String digits) {\n\n\n  }\n}",
+        "python": "def letterCombinations(digits):\n    # Write your solution here\n    pass\n",
+        "javascript": "function letterCombinations(digits) {\n  // Write your solution here\n}\n"
       },
       "custom_objects": {
         "dart": []
@@ -1327,7 +1339,9 @@
         }
       ],
       "default_code": {
-        "dart": "/**\n * Definition for singly-linked list.\n * class ListNode {\n *   int val;\n *   ListNode? next;\n *   ListNode([this.val = 0, this.next]);\n * }\n */\nclass Solution {\n  ListNode? removeNthFromEnd(ListNode? head, int n) {\n\n\n  }\n}"
+        "dart": "/**\n * Definition for singly-linked list.\n * class ListNode {\n *   int val;\n *   ListNode? next;\n *   ListNode([this.val = 0, this.next]);\n * }\n */\nclass Solution {\n  ListNode? removeNthFromEnd(ListNode? head, int n) {\n\n\n  }\n}",
+        "python": "# ListNode is already defined for you.\ndef removeNthFromEnd(head, n):\n    # Write your solution here\n    pass\n",
+        "javascript": "// ListNode is already defined for you.\nfunction removeNthFromEnd(head, n) {\n  // Write your solution here\n}\n"
       },
       "custom_objects": {
         "dart": [
@@ -1537,7 +1551,9 @@
         "dart": "ListNode? mergeTwoLists(ListNode? list1, ListNode? list2)"
       },
       "default_code": {
-        "dart": "/**\n * Definition for singly-linked list.\n * class ListNode {\n *   int val;\n *   ListNode? next;\n *   ListNode([this.val = 0, this.next]);\n * }\n */\nclass Solution {\n  ListNode? mergeTwoLists(ListNode? list1, ListNode? list2) {\n\n\n  }\n}"
+        "dart": "/**\n * Definition for singly-linked list.\n * class ListNode {\n *   int val;\n *   ListNode? next;\n *   ListNode([this.val = 0, this.next]);\n * }\n */\nclass Solution {\n  ListNode? mergeTwoLists(ListNode? list1, ListNode? list2) {\n\n\n  }\n}",
+        "python": "# ListNode is already defined for you.\ndef mergeTwoLists(list1, list2):\n    # Write your solution here\n    pass\n",
+        "javascript": "// ListNode is already defined for you.\nfunction mergeTwoLists(list1, list2) {\n  // Write your solution here\n}\n"
       },
       "custom_objects": {
         "dart": [
@@ -1801,7 +1817,9 @@
         }
       ],
       "default_code": {
-        "dart": "class Solution {\n  List<String> generateParenthesis(int n) {\n\n\n  }\n}"
+        "dart": "class Solution {\n  List<String> generateParenthesis(int n) {\n\n\n  }\n}",
+        "python": "def generateParenthesis(n):\n    # Write your solution here\n    pass\n",
+        "javascript": "function generateParenthesis(n) {\n  // Write your solution here\n}\n"
       },
       "custom_objects": {
         "dart": []
@@ -1963,7 +1981,9 @@
         }
       ],
       "default_code": {
-        "dart": "/**\n * Definition for singly-linked list.\n * class ListNode {\n *   int val;\n *   ListNode? next;\n *   ListNode([this.val = 0, this.next]);\n * }\n */\nclass Solution {\n  ListNode? mergeKLists(List<ListNode?> lists) {\n\n\n  }\n}"
+        "dart": "/**\n * Definition for singly-linked list.\n * class ListNode {\n *   int val;\n *   ListNode? next;\n *   ListNode([this.val = 0, this.next]);\n * }\n */\nclass Solution {\n  ListNode? mergeKLists(List<ListNode?> lists) {\n\n\n  }\n}",
+        "python": "# ListNode is already defined for you.\ndef mergeKLists(lists):\n    # Write your solution here\n    pass\n",
+        "javascript": "// ListNode is already defined for you.\nfunction mergeKLists(lists) {\n  // Write your solution here\n}\n"
       },
       "custom_objects": {
         "dart": [
@@ -2135,7 +2155,9 @@
         }
       ],
       "default_code": {
-        "dart": "class Solution {\n  int search(List<int> nums, int target) {\n\n\n  }\n}"
+        "dart": "class Solution {\n  int search(List<int> nums, int target) {\n\n\n  }\n}",
+        "python": "def search(nums, target):\n    # Write your solution here\n    pass\n",
+        "javascript": "function search(nums, target) {\n  // Write your solution here\n}\n"
       },
       "custom_objects": {
         "dart": []
@@ -2294,7 +2316,9 @@
         }
       ],
       "default_code": {
-        "dart": "class Solution {\n  List<List<int>> combinationSum(List<int> candidates, int target) {\n\n\n  }\n}"
+        "dart": "class Solution {\n  List<List<int>> combinationSum(List<int> candidates, int target) {\n\n\n  }\n}",
+        "python": "def combinationSum(candidates, target):\n    # Write your solution here\n    pass\n",
+        "javascript": "function combinationSum(candidates, target) {\n  // Write your solution here\n}\n"
       },
       "custom_objects": {
         "dart": []
@@ -2459,7 +2483,9 @@
         }
       ],
       "default_code": {
-        "dart": "class Solution {\n  int trap(List<int> height) {\n\n\n  }\n}"
+        "dart": "class Solution {\n  int trap(List<int> height) {\n\n\n  }\n}",
+        "python": "def trap(height):\n    # Write your solution here\n    pass\n",
+        "javascript": "function trap(height) {\n  // Write your solution here\n}\n"
       },
       "custom_objects": {
         "dart": []
@@ -2602,7 +2628,9 @@
         }
       ],
       "default_code": {
-        "dart": "class Solution {\n  List<List<int>> permute(List<int> nums) {\n\n\n  }\n}"
+        "dart": "class Solution {\n  List<List<int>> permute(List<int> nums) {\n\n\n  }\n}",
+        "python": "def permute(nums):\n    # Write your solution here\n    pass\n",
+        "javascript": "function permute(nums) {\n  // Write your solution here\n}\n"
       },
       "custom_objects": {
         "dart": []
@@ -2900,7 +2928,9 @@
         }
       ],
       "default_code": {
-        "dart": "class Solution {\n  List<List<String>> solveNQueens(int n) {\n\n\n  }\n}"
+        "dart": "class Solution {\n  List<List<String>> solveNQueens(int n) {\n\n\n  }\n}",
+        "python": "def solveNQueens(n):\n    # Write your solution here\n    pass\n",
+        "javascript": "function solveNQueens(n) {\n  // Write your solution here\n}\n"
       },
       "custom_objects": {
         "dart": []
@@ -3221,7 +3251,9 @@
         }
       ],
       "default_code": {
-        "dart": "class Solution {\n  bool canJump(List<int> nums) {\n\n\n  }\n}"
+        "dart": "class Solution {\n  bool canJump(List<int> nums) {\n\n\n  }\n}",
+        "python": "def canJump(nums):\n    # Write your solution here\n    pass\n",
+        "javascript": "function canJump(nums) {\n  // Write your solution here\n}\n"
       },
       "custom_objects": {
         "dart": []
@@ -3536,7 +3568,9 @@
         }
       ],
       "default_code": {
-        "dart": "class Solution {\n  List<List<int>> insert(List<List<int>> intervals, List<int> newInterval) {\n\n\n  }\n}"
+        "dart": "class Solution {\n  List<List<int>> insert(List<List<int>> intervals, List<int> newInterval) {\n\n\n  }\n}",
+        "python": "def insert(intervals, newInterval):\n    # Write your solution here\n    pass\n",
+        "javascript": "function insert(intervals, newInterval) {\n  // Write your solution here\n}\n"
       },
       "custom_objects": {
         "dart": []
@@ -3681,7 +3715,9 @@
         }
       ],
       "default_code": {
-        "dart": "class Solution {\n  int uniquePaths(int m, int n) {\n\n\n  }\n}"
+        "dart": "class Solution {\n  int uniquePaths(int m, int n) {\n\n\n  }\n}",
+        "python": "def uniquePaths(m, n):\n    # Write your solution here\n    pass\n",
+        "javascript": "function uniquePaths(m, n) {\n  // Write your solution here\n}\n"
       },
       "custom_objects": {
         "dart": []
@@ -3972,7 +4008,9 @@
         }
       ],
       "default_code": {
-        "dart": "class Solution {\n  int minDistance(String word1, String word2) {\n\n\n  }\n}"
+        "dart": "class Solution {\n  int minDistance(String word1, String word2) {\n\n\n  }\n}",
+        "python": "def minDistance(word1, word2):\n    # Write your solution here\n    pass\n",
+        "javascript": "function minDistance(word1, word2) {\n  // Write your solution here\n}\n"
       },
       "custom_objects": {
         "dart": []
@@ -4131,7 +4169,9 @@
         }
       ],
       "default_code": {
-        "dart": "class Solution {\n  bool searchMatrix(List<List<int>> matrix, int target) {\n\n\n  }\n}"
+        "dart": "class Solution {\n  bool searchMatrix(List<List<int>> matrix, int target) {\n\n\n  }\n}",
+        "python": "def searchMatrix(matrix, target):\n    # Write your solution here\n    pass\n",
+        "javascript": "function searchMatrix(matrix, target) {\n  // Write your solution here\n}\n"
       },
       "custom_objects": {
         "dart": []
@@ -4289,7 +4329,9 @@
         }
       ],
       "default_code": {
-        "dart": "class Solution {\n  void sortColors(List<int> nums) {\n\n\n  }\n}"
+        "dart": "class Solution {\n  void sortColors(List<int> nums) {\n\n\n  }\n}",
+        "python": "def sortColors(nums):\n    # Write your solution here\n    pass\n",
+        "javascript": "function sortColors(nums) {\n  // Write your solution here\n}\n"
       },
       "custom_objects": {
         "dart": []
@@ -4446,7 +4488,9 @@
         }
       ],
       "default_code": {
-        "dart": "class Solution {\n  String minWindow(String s, String t) {\n\n\n  }\n}"
+        "dart": "class Solution {\n  String minWindow(String s, String t) {\n\n\n  }\n}",
+        "python": "def minWindow(s, t):\n    # Write your solution here\n    pass\n",
+        "javascript": "function minWindow(s, t) {\n  // Write your solution here\n}\n"
       },
       "custom_objects": {
         "dart": []
@@ -4589,7 +4633,9 @@
         }
       ],
       "default_code": {
-        "dart": "class Solution {\n  List<List<int>> subsets(List<int> nums) {\n\n\n  }\n}"
+        "dart": "class Solution {\n  List<List<int>> subsets(List<int> nums) {\n\n\n  }\n}",
+        "python": "def subsets(nums):\n    # Write your solution here\n    pass\n",
+        "javascript": "function subsets(nums) {\n  // Write your solution here\n}\n"
       },
       "custom_objects": {
         "dart": []
@@ -4751,7 +4797,9 @@
         }
       ],
       "default_code": {
-        "dart": "class Solution {\n  bool exist(List<List<String>> board, String word) {\n\n\n  }\n}"
+        "dart": "class Solution {\n  bool exist(List<List<String>> board, String word) {\n\n\n  }\n}",
+        "python": "def exist(board, word):\n    # Write your solution here\n    pass\n",
+        "javascript": "function exist(board, word) {\n  // Write your solution here\n}\n"
       },
       "custom_objects": {
         "dart": []
@@ -4907,7 +4955,9 @@
         }
       ],
       "default_code": {
-        "dart": "class Solution {\n  int largestRectangleArea(List<int> heights) {\n\n\n  }\n}"
+        "dart": "class Solution {\n  int largestRectangleArea(List<int> heights) {\n\n\n  }\n}",
+        "python": "def largestRectangleArea(heights):\n    # Write your solution here\n    pass\n",
+        "javascript": "function largestRectangleArea(heights) {\n  // Write your solution here\n}\n"
       },
       "custom_objects": {
         "dart": []
@@ -5067,7 +5117,9 @@
         }
       ],
       "default_code": {
-        "dart": "class Solution {\n  void merge(List<int> nums1, int m, List<int> nums2, int n) {\n\n\n  }\n}"
+        "dart": "class Solution {\n  void merge(List<int> nums1, int m, List<int> nums2, int n) {\n\n\n  }\n}",
+        "python": "def merge(nums1, m, nums2, n):\n    # Write your solution here\n    pass\n",
+        "javascript": "function merge(nums1, m, nums2, n) {\n  // Write your solution here\n}\n"
       },
       "custom_objects": {
         "dart": []
@@ -5238,7 +5290,9 @@
         }
       ],
       "default_code": {
-        "dart": "class Solution {\n  int numDecodings(String s) {\n\n\n  }\n}"
+        "dart": "class Solution {\n  int numDecodings(String s) {\n\n\n  }\n}",
+        "python": "def numDecodings(s):\n    # Write your solution here\n    pass\n",
+        "javascript": "function numDecodings(s) {\n  // Write your solution here\n}\n"
       },
       "custom_objects": {
         "dart": []
@@ -5397,7 +5451,9 @@
         }
       ],
       "default_code": {
-        "dart": "/**\n * Definition for a binary tree node.\n * class TreeNode {\n *   int val;\n *   TreeNode? left;\n *   TreeNode? right;\n *   TreeNode([this.val = 0, this.left, this.right]);\n * }\n */\nclass Solution {\n  bool isValidBST(TreeNode? root) {\n\n\n  }\n}"
+        "dart": "/**\n * Definition for a binary tree node.\n * class TreeNode {\n *   int val;\n *   TreeNode? left;\n *   TreeNode? right;\n *   TreeNode([this.val = 0, this.left, this.right]);\n * }\n */\nclass Solution {\n  bool isValidBST(TreeNode? root) {\n\n\n  }\n}",
+        "python": "# TreeNode is already defined for you.\ndef isValidBST(root):\n    # Write your solution here\n    pass\n",
+        "javascript": "// TreeNode is already defined for you.\nfunction isValidBST(root) {\n  // Write your solution here\n}\n"
       },
       "custom_objects": {
         "dart": [
@@ -5560,7 +5616,9 @@
         }
       ],
       "default_code": {
-        "dart": "/**\n * Definition for a binary tree node.\n * class TreeNode {\n *   int val;\n *   TreeNode? left;\n *   TreeNode? right;\n *   TreeNode([this.val = 0, this.left, this.right]);\n * }\n */\nclass Solution {\n  bool isSameTree(TreeNode? p, TreeNode? q) {\n\n\n  }\n}"
+        "dart": "/**\n * Definition for a binary tree node.\n * class TreeNode {\n *   int val;\n *   TreeNode? left;\n *   TreeNode? right;\n *   TreeNode([this.val = 0, this.left, this.right]);\n * }\n */\nclass Solution {\n  bool isSameTree(TreeNode? p, TreeNode? q) {\n\n\n  }\n}",
+        "python": "# TreeNode is already defined for you.\ndef isSameTree(p, q):\n    # Write your solution here\n    pass\n",
+        "javascript": "// TreeNode is already defined for you.\nfunction isSameTree(p, q) {\n  // Write your solution here\n}\n"
       },
       "custom_objects": {
         "dart": [
@@ -5714,7 +5772,9 @@
         }
       ],
       "default_code": {
-        "dart": "/**\n * Definition for a binary tree node.\n * class TreeNode {\n *   int val;\n *   TreeNode? left;\n *   TreeNode? right;\n *   TreeNode([this.val = 0, this.left, this.right]);\n * }\n */\nclass Solution {\n  bool isSymmetric(TreeNode? root) {\n\n\n  }\n}"
+        "dart": "/**\n * Definition for a binary tree node.\n * class TreeNode {\n *   int val;\n *   TreeNode? left;\n *   TreeNode? right;\n *   TreeNode([this.val = 0, this.left, this.right]);\n * }\n */\nclass Solution {\n  bool isSymmetric(TreeNode? root) {\n\n\n  }\n}",
+        "python": "# TreeNode is already defined for you.\ndef isSymmetric(root):\n    # Write your solution here\n    pass\n",
+        "javascript": "// TreeNode is already defined for you.\nfunction isSymmetric(root) {\n  // Write your solution here\n}\n"
       },
       "custom_objects": {
         "dart": [
@@ -5872,7 +5932,9 @@
         }
       ],
       "default_code": {
-        "dart": "/**\n * Definition for a binary tree node.\n * class TreeNode {\n *   int val;\n *   TreeNode? left;\n *   TreeNode? right;\n *   TreeNode([this.val = 0, this.left, this.right]);\n * }\n */\nclass Solution {\n  List<List<int>> levelOrder(TreeNode? root) {\n\n\n  }\n}"
+        "dart": "/**\n * Definition for a binary tree node.\n * class TreeNode {\n *   int val;\n *   TreeNode? left;\n *   TreeNode? right;\n *   TreeNode([this.val = 0, this.left, this.right]);\n * }\n */\nclass Solution {\n  List<List<int>> levelOrder(TreeNode? root) {\n\n\n  }\n}",
+        "python": "# TreeNode is already defined for you.\ndef levelOrder(root):\n    # Write your solution here\n    pass\n",
+        "javascript": "// TreeNode is already defined for you.\nfunction levelOrder(root) {\n  // Write your solution here\n}\n"
       },
       "custom_objects": {
         "dart": [
@@ -6024,7 +6086,9 @@
         }
       ],
       "default_code": {
-        "dart": "/**\n * Definition for a binary tree node.\n * class TreeNode {\n *   int val;\n *   TreeNode? left;\n *   TreeNode? right;\n *   TreeNode([this.val = 0, this.left, this.right]);\n * }\n */\nclass Solution {\n  List<List<int>> zigzagLevelOrder(TreeNode? root) {\n\n\n  }\n}"
+        "dart": "/**\n * Definition for a binary tree node.\n * class TreeNode {\n *   int val;\n *   TreeNode? left;\n *   TreeNode? right;\n *   TreeNode([this.val = 0, this.left, this.right]);\n * }\n */\nclass Solution {\n  List<List<int>> zigzagLevelOrder(TreeNode? root) {\n\n\n  }\n}",
+        "python": "# TreeNode is already defined for you.\ndef zigzagLevelOrder(root):\n    # Write your solution here\n    pass\n",
+        "javascript": "// TreeNode is already defined for you.\nfunction zigzagLevelOrder(root) {\n  // Write your solution here\n}\n"
       },
       "custom_objects": {
         "dart": [
@@ -6178,7 +6242,9 @@
         }
       ],
       "default_code": {
-        "dart": "/**\n * Definition for a binary tree node.\n * class TreeNode {\n *   int val;\n *   TreeNode? left;\n *   TreeNode? right;\n *   TreeNode([this.val = 0, this.left, this.right]);\n * }\n */\nclass Solution {\n  int maxDepth(TreeNode? root) {\n\n\n  }\n}"
+        "dart": "/**\n * Definition for a binary tree node.\n * class TreeNode {\n *   int val;\n *   TreeNode? left;\n *   TreeNode? right;\n *   TreeNode([this.val = 0, this.left, this.right]);\n * }\n */\nclass Solution {\n  int maxDepth(TreeNode? root) {\n\n\n  }\n}",
+        "python": "# TreeNode is already defined for you.\ndef maxDepth(root):\n    # Write your solution here\n    pass\n",
+        "javascript": "// TreeNode is already defined for you.\nfunction maxDepth(root) {\n  // Write your solution here\n}\n"
       },
       "custom_objects": {
         "dart": [
@@ -6335,7 +6401,9 @@
         }
       ],
       "default_code": {
-        "dart": "/**\n * Definition for a binary tree node.\n * class TreeNode {\n *   int val;\n *   TreeNode? left;\n *   TreeNode? right;\n *   TreeNode([this.val = 0, this.left, this.right]);\n * }\n */\nclass Solution {\n  TreeNode? buildTree(List<int> preorder, List<int> inorder) {\n\n\n  }\n}"
+        "dart": "/**\n * Definition for a binary tree node.\n * class TreeNode {\n *   int val;\n *   TreeNode? left;\n *   TreeNode? right;\n *   TreeNode([this.val = 0, this.left, this.right]);\n * }\n */\nclass Solution {\n  TreeNode? buildTree(List<int> preorder, List<int> inorder) {\n\n\n  }\n}",
+        "python": "# TreeNode is already defined for you.\ndef buildTree(preorder, inorder):\n    # Write your solution here\n    pass\n",
+        "javascript": "// TreeNode is already defined for you.\nfunction buildTree(preorder, inorder) {\n  // Write your solution here\n}\n"
       },
       "custom_objects": {
         "dart": [
@@ -6484,7 +6552,9 @@
         }
       ],
       "default_code": {
-        "dart": "/**\n * Definition for a binary tree node.\n * class TreeNode {\n *   int val;\n *   TreeNode? left;\n *   TreeNode? right;\n *   TreeNode([this.val = 0, this.left, this.right]);\n * }\n */\nclass Solution {\n  TreeNode? sortedArrayToBST(List<int> nums) {\n\n\n  }\n}"
+        "dart": "/**\n * Definition for a binary tree node.\n * class TreeNode {\n *   int val;\n *   TreeNode? left;\n *   TreeNode? right;\n *   TreeNode([this.val = 0, this.left, this.right]);\n * }\n */\nclass Solution {\n  TreeNode? sortedArrayToBST(List<int> nums) {\n\n\n  }\n}",
+        "python": "# TreeNode is already defined for you.\ndef sortedArrayToBST(nums):\n    # Write your solution here\n    pass\n",
+        "javascript": "// TreeNode is already defined for you.\nfunction sortedArrayToBST(nums) {\n  // Write your solution here\n}\n"
       },
       "custom_objects": {
         "dart": [
@@ -6642,7 +6712,9 @@
         }
       ],
       "default_code": {
-        "dart": "/**\n * Definition for a binary tree node.\n * class TreeNode {\n *   int val;\n *   TreeNode? left;\n *   TreeNode? right;\n *   TreeNode([this.val = 0, this.left, this.right]);\n * }\n */\nclass Solution {\n  bool isBalanced(TreeNode? root) {\n\n\n  }\n}"
+        "dart": "/**\n * Definition for a binary tree node.\n * class TreeNode {\n *   int val;\n *   TreeNode? left;\n *   TreeNode? right;\n *   TreeNode([this.val = 0, this.left, this.right]);\n * }\n */\nclass Solution {\n  bool isBalanced(TreeNode? root) {\n\n\n  }\n}",
+        "python": "# TreeNode is already defined for you.\ndef isBalanced(root):\n    # Write your solution here\n    pass\n",
+        "javascript": "// TreeNode is already defined for you.\nfunction isBalanced(root) {\n  // Write your solution here\n}\n"
       },
       "custom_objects": {
         "dart": [
@@ -6810,7 +6882,9 @@
         }
       ],
       "default_code": {
-        "dart": "/**\n * Definition for a binary tree node.\n * class TreeNode {\n *   int val;\n *   TreeNode? left;\n *   TreeNode? right;\n *   TreeNode([this.val = 0, this.left, this.right]);\n * }\n */\nclass Solution {\n  bool hasPathSum(TreeNode? root, int targetSum) {\n\n\n  }\n}"
+        "dart": "/**\n * Definition for a binary tree node.\n * class TreeNode {\n *   int val;\n *   TreeNode? left;\n *   TreeNode? right;\n *   TreeNode([this.val = 0, this.left, this.right]);\n * }\n */\nclass Solution {\n  bool hasPathSum(TreeNode? root, int targetSum) {\n\n\n  }\n}",
+        "python": "# TreeNode is already defined for you.\ndef hasPathSum(root, targetSum):\n    # Write your solution here\n    pass\n",
+        "javascript": "// TreeNode is already defined for you.\nfunction hasPathSum(root, targetSum) {\n  // Write your solution here\n}\n"
       },
       "custom_objects": {
         "dart": [
@@ -7125,7 +7199,9 @@
         }
       ],
       "default_code": {
-        "dart": "/**\n * Definition for a binary tree node.\n * class TreeNode {\n *   int val;\n *   TreeNode? left;\n *   TreeNode? right;\n *   TreeNode([this.val = 0, this.left, this.right]);\n * }\n */\nclass Solution {\n  int maxPathSum(TreeNode? root) {\n\n\n  }\n}"
+        "dart": "/**\n * Definition for a binary tree node.\n * class TreeNode {\n *   int val;\n *   TreeNode? left;\n *   TreeNode? right;\n *   TreeNode([this.val = 0, this.left, this.right]);\n * }\n */\nclass Solution {\n  int maxPathSum(TreeNode? root) {\n\n\n  }\n}",
+        "python": "# TreeNode is already defined for you.\ndef maxPathSum(root):\n    # Write your solution here\n    pass\n",
+        "javascript": "// TreeNode is already defined for you.\nfunction maxPathSum(root) {\n  // Write your solution here\n}\n"
       },
       "custom_objects": {
         "dart": [
@@ -7445,7 +7521,9 @@
         }
       ],
       "default_code": {
-        "dart": "class Solution {\n  int ladderLength(String beginWord, String endWord, List<String> wordList) {\n\n\n  }\n}"
+        "dart": "class Solution {\n  int ladderLength(String beginWord, String endWord, List<String> wordList) {\n\n\n  }\n}",
+        "python": "def ladderLength(beginWord, endWord, wordList):\n    # Write your solution here\n    pass\n",
+        "javascript": "function ladderLength(beginWord, endWord, wordList) {\n  // Write your solution here\n}\n"
       },
       "custom_objects": {
         "dart": []
@@ -7595,7 +7673,9 @@
         }
       ],
       "default_code": {
-        "dart": "class Solution {\n  int longestConsecutive(List<int> nums) {\n\n\n  }\n}"
+        "dart": "class Solution {\n  int longestConsecutive(List<int> nums) {\n\n\n  }\n}",
+        "python": "def longestConsecutive(nums):\n    # Write your solution here\n    pass\n",
+        "javascript": "function longestConsecutive(nums) {\n  // Write your solution here\n}\n"
       },
       "custom_objects": {
         "dart": []
@@ -7742,7 +7822,9 @@
         }
       ],
       "default_code": {
-        "dart": "class Solution {\n  List<List<String>> partition(String s) {\n\n\n  }\n}"
+        "dart": "class Solution {\n  List<List<String>> partition(String s) {\n\n\n  }\n}",
+        "python": "def partition(s):\n    # Write your solution here\n    pass\n",
+        "javascript": "function partition(s) {\n  // Write your solution here\n}\n"
       },
       "custom_objects": {
         "dart": []
@@ -7846,7 +7928,9 @@
         }
       ],
       "default_code": {
-        "dart": "/**\n * Definition for a Node.\n * class Node {\n *   int val;\n *   List<Node> neighbors;\n *   Node(this.val, [this.neighbors]);\n * }\n */\nclass Solution {\n  Node? cloneGraph(Node? node) {\n\n\n  }\n}"
+        "dart": "/**\n * Definition for a Node.\n * class Node {\n *   int val;\n *   List<Node> neighbors;\n *   Node(this.val, [this.neighbors]);\n * }\n */\nclass Solution {\n  Node? cloneGraph(Node? node) {\n\n\n  }\n}",
+        "python": "# Node is already defined for you.\ndef cloneGraph(node):\n    # Write your solution here\n    pass\n",
+        "javascript": "// Node is already defined for you.\nfunction cloneGraph(node) {\n  // Write your solution here\n}\n"
       },
       "custom_objects": {
         "dart": [
@@ -8003,7 +8087,9 @@
         }
       ],
       "default_code": {
-        "dart": "class Solution {\n  int canCompleteCircuit(List<int> gas, List<int> cost) {\n\n\n  }\n}"
+        "dart": "class Solution {\n  int canCompleteCircuit(List<int> gas, List<int> cost) {\n\n\n  }\n}",
+        "python": "def canCompleteCircuit(gas, cost):\n    # Write your solution here\n    pass\n",
+        "javascript": "function canCompleteCircuit(gas, cost) {\n  // Write your solution here\n}\n"
       },
       "custom_objects": {
         "dart": []
@@ -8154,7 +8240,9 @@
         }
       ],
       "default_code": {
-        "dart": "class Solution {\n  int singleNumber(List<int> nums) {\n\n\n  }\n}"
+        "dart": "class Solution {\n  int singleNumber(List<int> nums) {\n\n\n  }\n}",
+        "python": "def singleNumber(nums):\n    # Write your solution here\n    pass\n",
+        "javascript": "function singleNumber(nums) {\n  // Write your solution here\n}\n"
       },
       "custom_objects": {
         "dart": []
@@ -8314,7 +8402,9 @@
         }
       ],
       "default_code": {
-        "dart": "class Solution {\n  bool wordBreak(String s, List<String> wordDict) {\n\n\n  }\n}"
+        "dart": "class Solution {\n  bool wordBreak(String s, List<String> wordDict) {\n\n\n  }\n}",
+        "python": "def wordBreak(s, wordDict):\n    # Write your solution here\n    pass\n",
+        "javascript": "function wordBreak(s, wordDict) {\n  // Write your solution here\n}\n"
       },
       "custom_objects": {
         "dart": []
@@ -8478,7 +8568,9 @@
         }
       ],
       "default_code": {
-        "dart": "class Solution {\n  bool hasCycle(List<int> next) {\n\n\n  }\n}"
+        "dart": "class Solution {\n  bool hasCycle(List<int> next) {\n\n\n  }\n}",
+        "python": "def hasCycle(next):\n    # Write your solution here\n    pass\n",
+        "javascript": "function hasCycle(next) {\n  // Write your solution here\n}\n"
       },
       "custom_objects": {
         "dart": []
@@ -8627,7 +8719,9 @@
         }
       ],
       "default_code": {
-        "dart": "/**\n * Definition for singly-linked list.\n * class ListNode {\n *   int val;\n *   ListNode? next;\n *   ListNode([this.val = 0, this.next]);\n * }\n */\nclass Solution {\n  void reorderList(ListNode? head) {\n\n\n  }\n}"
+        "dart": "/**\n * Definition for singly-linked list.\n * class ListNode {\n *   int val;\n *   ListNode? next;\n *   ListNode([this.val = 0, this.next]);\n * }\n */\nclass Solution {\n  void reorderList(ListNode? head) {\n\n\n  }\n}",
+        "python": "# ListNode is already defined for you.\ndef reorderList(head):\n    # Write your solution here\n    pass\n",
+        "javascript": "// ListNode is already defined for you.\nfunction reorderList(head) {\n  // Write your solution here\n}\n"
       },
       "custom_objects": {
         "dart": [
@@ -8730,7 +8824,9 @@
         }
       ],
       "default_code": {
-        "dart": "class LRUCache {\n  LRUCache(int capacity) {\n\n\n  }\n  int get(int key) {\n\n\n  }\n  void put(int key, int value) {\n\n\n  }\n}"
+        "dart": "class LRUCache {\n  LRUCache(int capacity) {\n\n\n  }\n  int get(int key) {\n\n\n  }\n  void put(int key, int value) {\n\n\n  }\n}",
+        "python": "class LRUCache:\n    def __init__(self, capacity):\n        # Write your solution here\n        pass\n\n    def get(self, key):\n        # Write your solution here\n        pass\n\n    def put(self, key, value):\n        # Write your solution here\n        pass\n",
+        "javascript": "class LRUCache {\n  constructor(capacity) {\n    // Write your solution here\n  }\n\n  get(key) {\n    // Write your solution here\n  }\n\n  put(key, value) {\n    // Write your solution here\n  }\n}\n"
       },
       "custom_objects": {
         "dart": []
@@ -8892,7 +8988,9 @@
         }
       ],
       "default_code": {
-        "dart": "class Solution {\n  int evalRPN(List<String> tokens) {\n\n\n  }\n}"
+        "dart": "class Solution {\n  int evalRPN(List<String> tokens) {\n\n\n  }\n}",
+        "python": "def evalRPN(tokens):\n    # Write your solution here\n    pass\n",
+        "javascript": "function evalRPN(tokens) {\n  // Write your solution here\n}\n"
       },
       "custom_objects": {
         "dart": []
@@ -9057,7 +9155,9 @@
         }
       ],
       "default_code": {
-        "dart": "class Solution {\n  int maxProduct(List<int> nums) {\n\n\n  }\n}"
+        "dart": "class Solution {\n  int maxProduct(List<int> nums) {\n\n\n  }\n}",
+        "python": "def maxProduct(nums):\n    # Write your solution here\n    pass\n",
+        "javascript": "function maxProduct(nums) {\n  // Write your solution here\n}\n"
       },
       "custom_objects": {
         "dart": []
@@ -9219,7 +9319,9 @@
         }
       ],
       "default_code": {
-        "dart": "class Solution {\n  int findMin(List<int> nums) {\n\n\n  }\n}"
+        "dart": "class Solution {\n  int findMin(List<int> nums) {\n\n\n  }\n}",
+        "python": "def findMin(nums):\n    # Write your solution here\n    pass\n",
+        "javascript": "function findMin(nums) {\n  // Write your solution here\n}\n"
       },
       "custom_objects": {
         "dart": []
@@ -9312,7 +9414,9 @@
         }
       ],
       "default_code": {
-        "dart": "class MinStack {\n  void push(int val) {\n\n\n  }\n  void pop() {\n\n\n  }\n  int top() {\n\n\n  }\n  int getMin() {\n\n\n  }\n}"
+        "dart": "class MinStack {\n  void push(int val) {\n\n\n  }\n  void pop() {\n\n\n  }\n  int top() {\n\n\n  }\n  int getMin() {\n\n\n  }\n}",
+        "python": "class MinStack:\n    def __init__(self):\n        # Write your solution here\n        pass\n\n    def push(self, val):\n        # Write your solution here\n        pass\n\n    def pop(self):\n        # Write your solution here\n        pass\n\n    def top(self):\n        # Write your solution here\n        pass\n\n    def getMin(self):\n        # Write your solution here\n        pass\n",
+        "javascript": "class MinStack {\n  constructor() {\n    // Write your solution here\n  }\n\n  push(val) {\n    // Write your solution here\n  }\n\n  pop() {\n    // Write your solution here\n  }\n\n  top() {\n    // Write your solution here\n  }\n\n  getMin() {\n    // Write your solution here\n  }\n}\n"
       },
       "custom_objects": {
         "dart": []
@@ -9464,7 +9568,9 @@
         }
       ],
       "default_code": {
-        "dart": "class Solution {\n  int majorityElement(List<int> nums) {\n\n\n  }\n}"
+        "dart": "class Solution {\n  int majorityElement(List<int> nums) {\n\n\n  }\n}",
+        "python": "def majorityElement(nums):\n    # Write your solution here\n    pass\n",
+        "javascript": "function majorityElement(nums) {\n  // Write your solution here\n}\n"
       },
       "custom_objects": {
         "dart": []
@@ -9617,7 +9723,9 @@
         }
       ],
       "default_code": {
-        "dart": "class Solution {\n  int hammingWeight(int n) {\n\n\n  }\n}"
+        "dart": "class Solution {\n  int hammingWeight(int n) {\n\n\n  }\n}",
+        "python": "def hammingWeight(n):\n    # Write your solution here\n    pass\n",
+        "javascript": "function hammingWeight(n) {\n  // Write your solution here\n}\n"
       },
       "custom_objects": {
         "dart": []
@@ -9772,7 +9880,9 @@
         }
       ],
       "default_code": {
-        "dart": "class Solution {\n  int rob(List<int> nums) {\n\n\n  }\n}"
+        "dart": "class Solution {\n  int rob(List<int> nums) {\n\n\n  }\n}",
+        "python": "def rob(nums):\n    # Write your solution here\n    pass\n",
+        "javascript": "function rob(nums) {\n  // Write your solution here\n}\n"
       },
       "custom_objects": {
         "dart": []
@@ -9925,7 +10035,9 @@
         }
       ],
       "default_code": {
-        "dart": "/**\n * Definition for a binary tree node.\n * class TreeNode {\n *   int val;\n *   TreeNode? left;\n *   TreeNode? right;\n *   TreeNode([this.val = 0, this.left, this.right]);\n * }\n */\nclass Solution {\n  List<int> rightSideView(TreeNode? root) {\n\n\n  }\n}"
+        "dart": "/**\n * Definition for a binary tree node.\n * class TreeNode {\n *   int val;\n *   TreeNode? left;\n *   TreeNode? right;\n *   TreeNode([this.val = 0, this.left, this.right]);\n * }\n */\nclass Solution {\n  List<int> rightSideView(TreeNode? root) {\n\n\n  }\n}",
+        "python": "# TreeNode is already defined for you.\ndef rightSideView(root):\n    # Write your solution here\n    pass\n",
+        "javascript": "// TreeNode is already defined for you.\nfunction rightSideView(root) {\n  // Write your solution here\n}\n"
       },
       "custom_objects": {
         "dart": [
@@ -10088,7 +10200,9 @@
         }
       ],
       "default_code": {
-        "dart": "class Solution {\n  int numIslands(List<List<String>> grid) {\n\n\n  }\n}"
+        "dart": "class Solution {\n  int numIslands(List<List<String>> grid) {\n\n\n  }\n}",
+        "python": "def numIslands(grid):\n    # Write your solution here\n    pass\n",
+        "javascript": "function numIslands(grid) {\n  // Write your solution here\n}\n"
       },
       "custom_objects": {
         "dart": []
@@ -10243,7 +10357,9 @@
         }
       ],
       "default_code": {
-        "dart": "class Solution {\n  bool canFinish(int numCourses, List<List<int>> prerequisites) {\n\n\n  }\n}"
+        "dart": "class Solution {\n  bool canFinish(int numCourses, List<List<int>> prerequisites) {\n\n\n  }\n}",
+        "python": "def canFinish(numCourses, prerequisites):\n    # Write your solution here\n    pass\n",
+        "javascript": "function canFinish(numCourses, prerequisites) {\n  // Write your solution here\n}\n"
       },
       "custom_objects": {
         "dart": []
@@ -10407,7 +10523,9 @@
         }
       ],
       "default_code": {
-        "dart": "class Solution {\n  int minSubArrayLen(int target, List<int> nums) {\n\n\n  }\n}"
+        "dart": "class Solution {\n  int minSubArrayLen(int target, List<int> nums) {\n\n\n  }\n}",
+        "python": "def minSubArrayLen(target, nums):\n    # Write your solution here\n    pass\n",
+        "javascript": "function minSubArrayLen(target, nums) {\n  // Write your solution here\n}\n"
       },
       "custom_objects": {
         "dart": []
@@ -10559,7 +10677,9 @@
         }
       ],
       "default_code": {
-        "dart": "class Solution {\n  List<int> findOrder(int numCourses, List<List<int>> prerequisites) {\n\n\n  }\n}"
+        "dart": "class Solution {\n  List<int> findOrder(int numCourses, List<List<int>> prerequisites) {\n\n\n  }\n}",
+        "python": "def findOrder(numCourses, prerequisites):\n    # Write your solution here\n    pass\n",
+        "javascript": "function findOrder(numCourses, prerequisites) {\n  // Write your solution here\n}\n"
       },
       "custom_objects": {
         "dart": []
@@ -10718,7 +10838,9 @@
         }
       ],
       "default_code": {
-        "dart": "class Solution {\n  int rob(List<int> nums) {\n\n\n  }\n}"
+        "dart": "class Solution {\n  int rob(List<int> nums) {\n\n\n  }\n}",
+        "python": "def rob(nums):\n    # Write your solution here\n    pass\n",
+        "javascript": "function rob(nums) {\n  // Write your solution here\n}\n"
       },
       "custom_objects": {
         "dart": []
@@ -10872,7 +10994,9 @@
         }
       ],
       "default_code": {
-        "dart": "class Solution {\n  int findKthLargest(List<int> nums, int k) {\n\n\n  }\n}"
+        "dart": "class Solution {\n  int findKthLargest(List<int> nums, int k) {\n\n\n  }\n}",
+        "python": "def findKthLargest(nums, k):\n    # Write your solution here\n    pass\n",
+        "javascript": "function findKthLargest(nums, k) {\n  // Write your solution here\n}\n"
       },
       "custom_objects": {
         "dart": []
@@ -11177,7 +11301,9 @@
         }
       ],
       "default_code": {
-        "dart": "/**\n * Definition for a binary tree node.\n * class TreeNode {\n *   int val;\n *   TreeNode? left;\n *   TreeNode? right;\n *   TreeNode([this.val = 0, this.left, this.right]);\n * }\n */\nclass Solution {\n  TreeNode? invertTree(TreeNode? root) {\n\n\n  }\n}"
+        "dart": "/**\n * Definition for a binary tree node.\n * class TreeNode {\n *   int val;\n *   TreeNode? left;\n *   TreeNode? right;\n *   TreeNode([this.val = 0, this.left, this.right]);\n * }\n */\nclass Solution {\n  TreeNode? invertTree(TreeNode? root) {\n\n\n  }\n}",
+        "python": "# TreeNode is already defined for you.\ndef invertTree(root):\n    # Write your solution here\n    pass\n",
+        "javascript": "// TreeNode is already defined for you.\nfunction invertTree(root) {\n  // Write your solution here\n}\n"
       },
       "custom_objects": {
         "dart": [
@@ -11336,7 +11462,9 @@
         }
       ],
       "default_code": {
-        "dart": "/**\n * Definition for a binary tree node.\n * class TreeNode {\n *   int val;\n *   TreeNode? left;\n *   TreeNode? right;\n *   TreeNode([this.val = 0, this.left, this.right]);\n * }\n */\nclass Solution {\n  int kthSmallest(TreeNode? root, int k) {\n\n\n  }\n}"
+        "dart": "/**\n * Definition for a binary tree node.\n * class TreeNode {\n *   int val;\n *   TreeNode? left;\n *   TreeNode? right;\n *   TreeNode([this.val = 0, this.left, this.right]);\n * }\n */\nclass Solution {\n  int kthSmallest(TreeNode? root, int k) {\n\n\n  }\n}",
+        "python": "# TreeNode is already defined for you.\ndef kthSmallest(root, k):\n    # Write your solution here\n    pass\n",
+        "javascript": "// TreeNode is already defined for you.\nfunction kthSmallest(root, k) {\n  // Write your solution here\n}\n"
       },
       "custom_objects": {
         "dart": [
@@ -11435,7 +11563,9 @@
         }
       ],
       "default_code": {
-        "dart": "class MyQueue {\n  void push(int x) {\n\n\n  }\n  int pop() {\n\n\n  }\n  int peek() {\n\n\n  }\n  bool empty() {\n\n\n  }\n}"
+        "dart": "class MyQueue {\n  void push(int x) {\n\n\n  }\n  int pop() {\n\n\n  }\n  int peek() {\n\n\n  }\n  bool empty() {\n\n\n  }\n}",
+        "python": "class MyQueue:\n    def __init__(self):\n        # Write your solution here\n        pass\n\n    def push(self, x):\n        # Write your solution here\n        pass\n\n    def pop(self):\n        # Write your solution here\n        pass\n\n    def peek(self):\n        # Write your solution here\n        pass\n\n    def empty(self):\n        # Write your solution here\n        pass\n",
+        "javascript": "class MyQueue {\n  constructor() {\n    // Write your solution here\n  }\n\n  push(x) {\n    // Write your solution here\n  }\n\n  pop() {\n    // Write your solution here\n  }\n\n  peek() {\n    // Write your solution here\n  }\n\n  empty() {\n    // Write your solution here\n  }\n}\n"
       },
       "custom_objects": {
         "dart": []
@@ -11585,7 +11715,9 @@
         }
       ],
       "default_code": {
-        "dart": "/**\n * Definition for a binary tree node.\n * class TreeNode {\n *   int val;\n *   TreeNode? left;\n *   TreeNode? right;\n *   TreeNode([this.val = 0, this.left, this.right]);\n * }\n */\nclass Solution {\n  TreeNode? lowestCommonAncestor(TreeNode? root, TreeNode? p, TreeNode? q) {\n\n\n  }\n}"
+        "dart": "/**\n * Definition for a binary tree node.\n * class TreeNode {\n *   int val;\n *   TreeNode? left;\n *   TreeNode? right;\n *   TreeNode([this.val = 0, this.left, this.right]);\n * }\n */\nclass Solution {\n  TreeNode? lowestCommonAncestor(TreeNode? root, TreeNode? p, TreeNode? q) {\n\n\n  }\n}",
+        "python": "# TreeNode is already defined for you.\ndef lowestCommonAncestor(root, p, q):\n    # Write your solution here\n    pass\n",
+        "javascript": "// TreeNode is already defined for you.\nfunction lowestCommonAncestor(root, p, q) {\n  // Write your solution here\n}\n"
       },
       "custom_objects": {
         "dart": [
@@ -11908,7 +12040,9 @@
         }
       ],
       "default_code": {
-        "dart": "class Solution {\n  List<int> maxSlidingWindow(List<int> nums, int k) {\n\n\n  }\n}"
+        "dart": "class Solution {\n  List<int> maxSlidingWindow(List<int> nums, int k) {\n\n\n  }\n}",
+        "python": "def maxSlidingWindow(nums, k):\n    # Write your solution here\n    pass\n",
+        "javascript": "function maxSlidingWindow(nums, k) {\n  // Write your solution here\n}\n"
       },
       "custom_objects": {
         "dart": []
@@ -12210,7 +12344,9 @@
         }
       ],
       "default_code": {
-        "dart": "class Solution {\n  int missingNumber(List<int> nums) {\n\n\n  }\n}"
+        "dart": "class Solution {\n  int missingNumber(List<int> nums) {\n\n\n  }\n}",
+        "python": "def missingNumber(nums):\n    # Write your solution here\n    pass\n",
+        "javascript": "function missingNumber(nums) {\n  // Write your solution here\n}\n"
       },
       "custom_objects": {
         "dart": []
@@ -12360,7 +12496,9 @@
         }
       ],
       "default_code": {
-        "dart": "class Solution {\n  int firstBadVersion(List<bool> versions) {\n\n\n  }\n}"
+        "dart": "class Solution {\n  int firstBadVersion(List<bool> versions) {\n\n\n  }\n}",
+        "python": "def firstBadVersion(versions):\n    # Write your solution here\n    pass\n",
+        "javascript": "function firstBadVersion(versions) {\n  // Write your solution here\n}\n"
       },
       "custom_objects": {
         "dart": []
@@ -12615,7 +12753,9 @@
         }
       ],
       "default_code": {
-        "dart": "/**\n * Definition for a binary tree node.\n * class TreeNode {\n *   int val;\n *   TreeNode? left;\n *   TreeNode? right;\n *   TreeNode([this.val = 0, this.left, this.right]);\n * }\n */\nclass Codec {\n  String serialize(TreeNode? root) {\n\n\n  }\n  TreeNode? deserialize(String data) {\n\n\n  }\n}"
+        "dart": "/**\n * Definition for a binary tree node.\n * class TreeNode {\n *   int val;\n *   TreeNode? left;\n *   TreeNode? right;\n *   TreeNode([this.val = 0, this.left, this.right]);\n * }\n */\nclass Codec {\n  String serialize(TreeNode? root) {\n\n\n  }\n  TreeNode? deserialize(String data) {\n\n\n  }\n}",
+        "python": "class Codec:\n    def serialize(self, root):\n        # Write your solution here\n        pass\n\n    def deserialize(self, data):\n        # Write your solution here\n        pass\n",
+        "javascript": "class Codec {\n  serialize(root) {\n    // Write your solution here\n  }\n\n  deserialize(data) {\n    // Write your solution here\n  }\n}\n"
       },
       "custom_objects": {
         "dart": [
@@ -12784,7 +12924,9 @@
         }
       ],
       "default_code": {
-        "dart": "class Solution {\n  int lengthOfLIS(List<int> nums) {\n\n\n  }\n}"
+        "dart": "class Solution {\n  int lengthOfLIS(List<int> nums) {\n\n\n  }\n}",
+        "python": "def lengthOfLIS(nums):\n    # Write your solution here\n    pass\n",
+        "javascript": "function lengthOfLIS(nums) {\n  // Write your solution here\n}\n"
       },
       "custom_objects": {
         "dart": []
@@ -12947,7 +13089,9 @@
         }
       ],
       "default_code": {
-        "dart": "class Solution {\n  int coinChange(List<int> coins, int amount) {\n\n\n  }\n}"
+        "dart": "class Solution {\n  int coinChange(List<int> coins, int amount) {\n\n\n  }\n}",
+        "python": "def coinChange(coins, amount):\n    # Write your solution here\n    pass\n",
+        "javascript": "function coinChange(coins, amount) {\n  // Write your solution here\n}\n"
       },
       "custom_objects": {
         "dart": []
@@ -13089,7 +13233,9 @@
         }
       ],
       "default_code": {
-        "dart": "class Solution {\n  void reverseString(List<String> s) {\n\n\n  }\n}"
+        "dart": "class Solution {\n  void reverseString(List<String> s) {\n\n\n  }\n}",
+        "python": "def reverseString(s):\n    # Write your solution here\n    pass\n",
+        "javascript": "function reverseString(s) {\n  // Write your solution here\n}\n"
       },
       "custom_objects": {
         "dart": []
@@ -13240,7 +13386,9 @@
         }
       ],
       "default_code": {
-        "dart": "class Solution {\n  List<int> topKFrequent(List<int> nums, int k) {\n\n\n  }\n}"
+        "dart": "class Solution {\n  List<int> topKFrequent(List<int> nums, int k) {\n\n\n  }\n}",
+        "python": "def topKFrequent(nums, k):\n    # Write your solution here\n    pass\n",
+        "javascript": "function topKFrequent(nums, k) {\n  // Write your solution here\n}\n"
       },
       "custom_objects": {
         "dart": []
@@ -13397,7 +13545,9 @@
         }
       ],
       "default_code": {
-        "dart": "class Solution {\n  bool canPartition(List<int> nums) {\n\n\n  }\n}"
+        "dart": "class Solution {\n  bool canPartition(List<int> nums) {\n\n\n  }\n}",
+        "python": "def canPartition(nums):\n    # Write your solution here\n    pass\n",
+        "javascript": "function canPartition(nums) {\n  // Write your solution here\n}\n"
       },
       "custom_objects": {
         "dart": []
@@ -13548,7 +13698,9 @@
         }
       ],
       "default_code": {
-        "dart": "class Solution {\n  List<List<int>> pacificAtlantic(List<List<int>> heights) {\n\n\n  }\n}"
+        "dart": "class Solution {\n  List<List<int>> pacificAtlantic(List<List<int>> heights) {\n\n\n  }\n}",
+        "python": "def pacificAtlantic(heights):\n    # Write your solution here\n    pass\n",
+        "javascript": "function pacificAtlantic(heights) {\n  // Write your solution here\n}\n"
       },
       "custom_objects": {
         "dart": []
@@ -13706,7 +13858,9 @@
         }
       ],
       "default_code": {
-        "dart": "class Solution {\n  int characterReplacement(String s, int k) {\n\n\n  }\n}"
+        "dart": "class Solution {\n  int characterReplacement(String s, int k) {\n\n\n  }\n}",
+        "python": "def characterReplacement(s, k):\n    # Write your solution here\n    pass\n",
+        "javascript": "function characterReplacement(s, k) {\n  // Write your solution here\n}\n"
       },
       "custom_objects": {
         "dart": []
@@ -13848,7 +14002,9 @@
         }
       ],
       "default_code": {
-        "dart": "/**\n * Definition for a binary tree node.\n * class TreeNode {\n *   int val;\n *   TreeNode? left;\n *   TreeNode? right;\n *   TreeNode([this.val = 0, this.left, this.right]);\n * }\n */\nclass Solution {\n  int diameterOfBinaryTree(TreeNode? root) {\n\n\n  }\n}"
+        "dart": "/**\n * Definition for a binary tree node.\n * class TreeNode {\n *   int val;\n *   TreeNode? left;\n *   TreeNode? right;\n *   TreeNode([this.val = 0, this.left, this.right]);\n * }\n */\nclass Solution {\n  int diameterOfBinaryTree(TreeNode? root) {\n\n\n  }\n}",
+        "python": "# TreeNode is already defined for you.\ndef diameterOfBinaryTree(root):\n    # Write your solution here\n    pass\n",
+        "javascript": "// TreeNode is already defined for you.\nfunction diameterOfBinaryTree(root) {\n  // Write your solution here\n}\n"
       },
       "custom_objects": {
         "dart": [
@@ -14004,7 +14160,9 @@
         }
       ],
       "default_code": {
-        "dart": "class Solution {\n  int findCircleNum(List<List<int>> isConnected) {\n\n\n  }\n}"
+        "dart": "class Solution {\n  int findCircleNum(List<List<int>> isConnected) {\n\n\n  }\n}",
+        "python": "def findCircleNum(isConnected):\n    # Write your solution here\n    pass\n",
+        "javascript": "function findCircleNum(isConnected) {\n  // Write your solution here\n}\n"
       },
       "custom_objects": {
         "dart": []
@@ -14155,7 +14313,9 @@
         }
       ],
       "default_code": {
-        "dart": "class Solution {\n  bool checkInclusion(String s1, String s2) {\n\n\n  }\n}"
+        "dart": "class Solution {\n  bool checkInclusion(String s1, String s2) {\n\n\n  }\n}",
+        "python": "def checkInclusion(s1, s2):\n    # Write your solution here\n    pass\n",
+        "javascript": "function checkInclusion(s1, s2) {\n  // Write your solution here\n}\n"
       },
       "custom_objects": {
         "dart": []
@@ -14314,7 +14474,9 @@
         }
       ],
       "default_code": {
-        "dart": "class Solution {\n  int leastInterval(List<String> tasks, int n) {\n\n\n  }\n}"
+        "dart": "class Solution {\n  int leastInterval(List<String> tasks, int n) {\n\n\n  }\n}",
+        "python": "def leastInterval(tasks, n):\n    # Write your solution here\n    pass\n",
+        "javascript": "function leastInterval(tasks, n) {\n  // Write your solution here\n}\n"
       },
       "custom_objects": {
         "dart": []
@@ -14459,7 +14621,9 @@
         }
       ],
       "default_code": {
-        "dart": "class Solution {\n  List<int> findRedundantConnection(List<List<int>> edges) {\n\n\n  }\n}"
+        "dart": "class Solution {\n  List<int> findRedundantConnection(List<List<int>> edges) {\n\n\n  }\n}",
+        "python": "def findRedundantConnection(edges):\n    # Write your solution here\n    pass\n",
+        "javascript": "function findRedundantConnection(edges) {\n  // Write your solution here\n}\n"
       },
       "custom_objects": {
         "dart": []
@@ -14616,7 +14780,9 @@
         }
       ],
       "default_code": {
-        "dart": "class Solution {\n  int search(List<int> nums, int target) {\n\n\n  }\n}"
+        "dart": "class Solution {\n  int search(List<int> nums, int target) {\n\n\n  }\n}",
+        "python": "def search(nums, target):\n    # Write your solution here\n    pass\n",
+        "javascript": "function search(nums, target) {\n  // Write your solution here\n}\n"
       },
       "custom_objects": {
         "dart": []
@@ -14772,7 +14938,9 @@
         }
       ],
       "default_code": {
-        "dart": "class Solution {\n  List<int> dailyTemperatures(List<int> temperatures) {\n\n\n  }\n}"
+        "dart": "class Solution {\n  List<int> dailyTemperatures(List<int> temperatures) {\n\n\n  }\n}",
+        "python": "def dailyTemperatures(temperatures):\n    # Write your solution here\n    pass\n",
+        "javascript": "function dailyTemperatures(temperatures) {\n  // Write your solution here\n}\n"
       },
       "custom_objects": {
         "dart": []
@@ -14936,7 +15104,9 @@
         }
       ],
       "default_code": {
-        "dart": "class Solution {\n  int networkDelayTime(List<List<int>> times, int n, int k) {\n\n\n  }\n}"
+        "dart": "class Solution {\n  int networkDelayTime(List<List<int>> times, int n, int k) {\n\n\n  }\n}",
+        "python": "def networkDelayTime(times, n, k):\n    # Write your solution here\n    pass\n",
+        "javascript": "function networkDelayTime(times, n, k) {\n  // Write your solution here\n}\n"
       },
       "custom_objects": {
         "dart": []
@@ -15092,7 +15262,9 @@
         }
       ],
       "default_code": {
-        "dart": "class Solution {\n  int minEatingSpeed(List<int> piles, int h) {\n\n\n  }\n}"
+        "dart": "class Solution {\n  int minEatingSpeed(List<int> piles, int h) {\n\n\n  }\n}",
+        "python": "def minEatingSpeed(piles, h):\n    # Write your solution here\n    pass\n",
+        "javascript": "function minEatingSpeed(piles, h) {\n  // Write your solution here\n}\n"
       },
       "custom_objects": {
         "dart": []
@@ -15256,7 +15428,9 @@
         }
       ],
       "default_code": {
-        "dart": "class Solution {\n  int orangesRotting(List<List<int>> grid) {\n\n\n  }\n}"
+        "dart": "class Solution {\n  int orangesRotting(List<List<int>> grid) {\n\n\n  }\n}",
+        "python": "def orangesRotting(grid):\n    # Write your solution here\n    pass\n",
+        "javascript": "function orangesRotting(grid) {\n  // Write your solution here\n}\n"
       },
       "custom_objects": {
         "dart": []
@@ -15412,7 +15586,9 @@
         }
       ],
       "default_code": {
-        "dart": "class Solution {\n  int longestCommonSubsequence(String text1, String text2) {\n\n\n  }\n}"
+        "dart": "class Solution {\n  int longestCommonSubsequence(String text1, String text2) {\n\n\n  }\n}",
+        "python": "def longestCommonSubsequence(text1, text2):\n    # Write your solution here\n    pass\n",
+        "javascript": "function longestCommonSubsequence(text1, text2) {\n  // Write your solution here\n}\n"
       },
       "custom_objects": {
         "dart": []

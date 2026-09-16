@@ -11,8 +11,8 @@ import 'package:algorithm_visualizer/core/widgets/custom_widgets/section_header.
 import 'package:algorithm_visualizer/features/settings/presentation/widgets/settings_account_section.dart';
 import 'package:algorithm_visualizer/features/settings/presentation/widgets/settings_appearance_section.dart';
 import 'package:algorithm_visualizer/features/settings/presentation/widgets/settings_contact_section.dart';
-import 'package:algorithm_visualizer/features/settings/presentation/widgets/settings_session_card.dart';
 import 'package:algorithm_visualizer/features/settings/presentation/widgets/settings_row.dart';
+import 'package:algorithm_visualizer/features/settings/presentation/widgets/settings_session_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -22,7 +22,6 @@ class SettingsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Material(
-      color: context.getColor(ThemeEnum.ground),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
