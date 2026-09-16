@@ -166,7 +166,6 @@ class _SortingVisualState extends State<SortingVisual> with SingleTickerProvider
             final right = _values[order[step.j]];
 
             return Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
               children: [
                 SizedBox(
