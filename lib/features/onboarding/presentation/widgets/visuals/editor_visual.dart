@@ -1,6 +1,7 @@
 import 'package:algorithm_visualizer/core/resources/font_manager.dart';
 import 'package:algorithm_visualizer/core/resources/strings_manager.dart';
 import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
+import 'package:algorithm_visualizer/core/widgets/adaptive/ltr_content.dart';
 import 'package:algorithm_visualizer/core/widgets/adaptive/padding/adaptive_padding.dart';
 import 'package:algorithm_visualizer/core/widgets/adaptive/text/adaptive_text.dart';
 import 'package:algorithm_visualizer/features/onboarding/presentation/widgets/onboarding_card.dart';
@@ -142,8 +143,8 @@ class _EditorFileRow extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            MonoText(StringsManager.onboardingEditorFile),
-            MonoText(StringsManager.onboardingEditorLanguage),
+            MonoText(StringsManager.onboardingEditorFile, translate: false),
+            MonoText(StringsManager.onboardingEditorLanguage, translate: false),
           ],
         ),
       ),
@@ -180,7 +181,7 @@ class _CodeBlock extends StatelessWidget {
       text: TextSpan(
         text: longest,
         style: TextStyle(
-          fontFamily: FontConstants.fontJetBrainsMono,
+          fontFamily: FontConstants.fontFamily,
           fontSize: _baseFontSize.sp,
         ),
       ),
@@ -198,43 +199,48 @@ class _CodeBlock extends StatelessWidget {
   Widget build(BuildContext context) {
     final firstTypedLine = lines.length - typedLines;
 
-    return AllPadding(
-      padding: 16,
-      child: LayoutBuilder(
-        builder: (context, constraints) {
-          final fontSize = _fitFontSize(constraints.maxWidth);
-          // Characters already typed are consumed line by line, so a line only
-          // starts appearing once the one above it is finished.
-          var remaining = typedChars;
+    /// The sample is Dart source, so it does not mirror. `_fitFontSize`
+    /// already measures it with an explicit `TextDirection.ltr`; this makes
+    /// what is painted agree with what was measured.
+    return LtrContent(
+      child: AllPadding(
+        padding: 16,
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            final fontSize = _fitFontSize(constraints.maxWidth);
+            // Characters already typed are consumed line by line, so a line only
+            // starts appearing once the one above it is finished.
+            var remaining = typedChars;
 
-          return Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
-            children: List<Widget>.generate(lines.length, (index) {
-              final line = lines[index];
-              String visible;
-              var caretHere = false;
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: List<Widget>.generate(lines.length, (index) {
+                final line = lines[index];
+                String visible;
+                var caretHere = false;
 
-              if (index < firstTypedLine) {
-                visible = line;
-              } else {
-                final take = remaining.clamp(0, line.length);
-                visible = line.substring(0, take);
-                caretHere = showCaret && index == lines.length - 1;
-                remaining -= take;
-              }
+                if (index < firstTypedLine) {
+                  visible = line;
+                } else {
+                  final take = remaining.clamp(0, line.length);
+                  visible = line.substring(0, take);
+                  caretHere = showCaret && index == lines.length - 1;
+                  remaining -= take;
+                }
 
-              return BottomPadding(
-                padding: index == lines.length - 1 ? 0 : 4,
-                child: _CodeLine(
-                  text: visible,
-                  fontSize: fontSize,
-                  showCaret: caretHere,
-                ),
-              );
-            }),
-          );
-        },
+                return BottomPadding(
+                  padding: index == lines.length - 1 ? 0 : 4,
+                  child: _CodeLine(
+                    text: visible,
+                    fontSize: fontSize,
+                    showCaret: caretHere,
+                  ),
+                );
+              }),
+            );
+          },
+        ),
       ),
     );
   }
@@ -284,7 +290,7 @@ class _CodeLine extends StatelessWidget {
             height: _CodeBlock._lineHeight,
             color: token.color,
             maxLines: 1,
-            fontFamily: FontConstants.fontJetBrainsMono,
+            fontFamily: FontConstants.fontFamily,
           ),
         // if (showCaret)
         Container(
