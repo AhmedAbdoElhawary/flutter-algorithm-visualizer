@@ -19,7 +19,7 @@ enum SortRole {
 }
 
 /// C1: total, single-valued, exhaustive — no `default`, no fallback.
-ThemeEnum roleColor(SortRole role) {
+ThemeEnum sortingRoleColor(SortRole role) {
   switch (role) {
     case SortRole.idle:
       return ThemeEnum.track;
