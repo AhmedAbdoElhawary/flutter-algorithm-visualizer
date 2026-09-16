@@ -42,7 +42,7 @@ class IconButtonQuiet extends StatelessWidget {
         decoration: BoxDecoration(
           color: filled ? context.getColor(ThemeEnum.inkPrimary) : null,
           borderRadius: BorderRadius.circular((size >= 44 ? 14 : 10).r),
-          border: filled ? null : Border.all(color: context.getColor(borderColor??ThemeEnum.track)),
+          border: filled ? null : Border.all(color: context.getColor(borderColor ?? ThemeEnum.track)),
         ),
         child: CustomIcon(
           icon,
