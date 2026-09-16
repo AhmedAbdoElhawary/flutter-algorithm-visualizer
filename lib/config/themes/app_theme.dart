@@ -75,12 +75,13 @@ class AppTheme {
   static AppBarTheme _appBarTheme(Brightness brightness) {
     final bg = brightness == Brightness.dark ? ColorManager.groundDk : ColorManager.groundLt;
     final fg = brightness == Brightness.dark ? ColorManager.inkTitleDk : ColorManager.inkTitleLt;
+    final shadow = brightness == Brightness.dark ? ColorManager.hairlineDk : ColorManager.hairlineLt;
     return AppBarTheme(
       elevation: 0,
       titleSpacing: 5.w,
       surfaceTintColor: bg,
       backgroundColor: bg,
-      shadowColor: ColorManager.hairlineDk,
+      shadowColor: shadow,
       scrolledUnderElevation: 1.5.r,
       iconTheme: IconThemeData(color: fg),
       titleTextStyle: GetRegularStyle(fontSize: 16, color: fg),
