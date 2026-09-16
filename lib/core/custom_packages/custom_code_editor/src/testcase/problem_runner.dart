@@ -106,6 +106,7 @@ class ProblemRunner {
     final frontend = frontendFor(problem.language);
     final results = <SingleTestCaseResult>[];
     String? firstError;
+    ExecutionFailureInfo? firstFailure;
 
     for (final testCase in all) {
       final input = testCase.input.trim();
@@ -122,8 +123,7 @@ class ProblemRunner {
       final engineArgs = problem.language == EditorLanguage.dart
           ? const <engine.Value>[]
           : <engine.Value>[
-              for (final param in sig.params)
-                _argEngineValue(problem, param.type, argValues[param.name]),
+              for (final param in sig.params) _argEngineValue(problem, param.type, argValues[param.name]),
             ];
 
       Failure? failure;
@@ -160,15 +160,31 @@ class ProblemRunner {
         // (e.g. the function's signature inside `class Solution { ... }`)
         // instead of the generated program.
         final line = failure.line + built.lineOffset;
-        final message =
-            '${failure.kind.name} error (line $line): ${StringsManager.executionFailureMessage(failure.code, failure.data)}';
+        final info = ExecutionFailureInfo(
+          kind: failure.kind.name,
+          code: failure.code,
+          data: failure.data,
+          line: line,
+        );
+
+        /// Rendered here in English only so logs and the grading tests have
+        /// something to print. What the learner reads is built from [info]
+        /// by the widget, in the app's current language.
+        final message = StringsManager.executionFailureHeadline(
+          kind: info.kind,
+          line: info.line,
+          code: info.code,
+          data: info.data,
+        );
         results.add(SingleTestCaseResult(
           testCase: testCase,
           passed: false,
           actualOutput: (run?.stdout ?? const <String>[]).isEmpty ? '' : run!.stdout.join('\n'),
           errorMessage: message,
+          failure: info,
         ));
         firstError ??= message;
+        firstFailure ??= info;
         continue;
       }
 
@@ -201,6 +217,7 @@ class ProblemRunner {
       passedCount: results.where((r) => r.passed).length,
       totalCount: all.length,
       error: firstError,
+      failure: firstFailure,
     );
   }
 
