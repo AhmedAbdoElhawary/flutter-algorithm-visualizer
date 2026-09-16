@@ -200,7 +200,7 @@ class _SortingVisualState extends State<SortingVisual> with SingleTickerProvider
                         // Cross-fade in at the start of every comparison.
                         opacity: (phase / 0.12).clamp(0.0, 1.0),
                         child: MonoText(
-                          StringsManager.onboardingCompareCaption(step.i, left, step.j, right),
+                          StringsManager.onboardingCompareCaption(context, step.i, left, step.j, right),
                           color: ThemeEnum.inkTitle,
                         ),
                       ),
