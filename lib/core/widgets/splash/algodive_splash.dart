@@ -57,14 +57,25 @@ class _AlgoDiveSplashState extends State<AlgoDiveSplash> with SingleTickerProvid
 
   @override
   Widget build(BuildContext context) {
-    final ink = context.getColor(ThemeEnum.inkPrimary);
-    final ground = context.getColor(ThemeEnum.ground);
+    /// Read from [AlgoDiveSplash.dark], never from `Theme.of`.
+    ///
+    /// Nothing above this widget is a `MaterialApp` — it is what `runApp`
+    /// shows first — so `Theme.of` hands back Flutter's *light fallback* on
+    /// every device, whatever the phone is set to. Resolving colours that way
+    /// painted one fixed splash for everyone, and inverted at that: the page
+    /// took `inkPrimary` and the mark took `ground`.
+    ///
+    /// These four values are the same ones the native launch screen uses
+    /// (`android/app/src/main/res/values{,-night}/colors.xml`), so the handoff
+    /// from the native screen to this one shows no colour flip.
+    final background = widget.dark ? ColorManager.groundDk : ColorManager.groundLt;
+    final mark = widget.dark ? ColorManager.inkPrimaryDk : ColorManager.inkPrimaryLt;
     final barOpacity = widget.dark ? 0.20 : 0.14;
 
     return Directionality(
       textDirection: TextDirection.ltr,
       child: ColoredBox(
-        color: ink,
+        color: background,
         child: AnimatedBuilder(
           animation: _c,
           builder: (context, _) {
@@ -86,7 +97,7 @@ class _AlgoDiveSplashState extends State<AlgoDiveSplash> with SingleTickerProvid
                     child: CustomPaint(
                       painter: _BarsPainter(
                         progress: bars,
-                        color: ground.withValues(alpha: barOpacity),
+                        color: mark.withValues(alpha: barOpacity),
                         heights: _heights,
                       ),
                     ),
@@ -101,7 +112,7 @@ class _AlgoDiveSplashState extends State<AlgoDiveSplash> with SingleTickerProvid
                         height: 156,
                         child: CustomPaint(
                           painter: _MarkPainter(
-                            ink: ground,
+                            ink: mark,
                             cell: cell,
                             ring1: ring1,
                             ring2: ring2,
@@ -118,7 +129,7 @@ class _AlgoDiveSplashState extends State<AlgoDiveSplash> with SingleTickerProvid
                             StringsManager.algoDive,
                             style: TextStyle(
                               fontFamily: FontConstants.fontFamily,
-                              color: ground,
+                              color: mark,
                               fontSize: 54,
                               fontWeight: FontWeight.w600,
                               letterSpacing: -1.9,
