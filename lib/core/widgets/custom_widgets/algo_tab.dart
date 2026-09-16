@@ -24,24 +24,24 @@ class AlgoTab extends ConsumerWidget {
   final double verticalPadding;
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final color = isSelected ? ThemeEnum.ground : ThemeEnum.inkBody;
+    final style = isSelected ? CdSurface.fill : CdSurface.secondary;
+
     return CardContainer(
       padding: REdgeInsets.symmetric(vertical: 8),
       radius: CdRadius.sm,
-      surface: isSelected ? CdSurface.secondary : CdSurface.unColoredFill,
+      surface: style,
       child: Padding(
         padding: REdgeInsets.symmetric(horizontal: 10, vertical: verticalPadding),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            if (icon != null) ...[
-              CustomIcon(icon!, color: isSelected ? ThemeEnum.inkPrimary : ThemeEnum.track, size: 20),
-              const RSizedBox(width: 5)
-            ],
+            if (icon != null) ...[CustomIcon(icon!, color: color, size: 20), const RSizedBox(width: 5)],
             BoldText(
               label,
               textAlign: TextAlign.center,
               fontFamily: FontConstants.fontJetBrainsMono,
-              color: isSelected ? ThemeEnum.inkPrimary : ThemeEnum.track,
+              color: color,
               fontSize: 13,
             ),
           ],
