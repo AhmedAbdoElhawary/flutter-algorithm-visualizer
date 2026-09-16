@@ -1,7 +1,13 @@
 import 'package:algorithm_visualizer/core/resources/font_manager.dart';
 import 'package:flutter/material.dart';
-import 'package:algorithm_visualizer/core/resources/color_manager.dart';
 
+/// Every style here leaves `color` **null** on purpose.
+///
+/// A null colour inherits from the nearest `DefaultTextStyle`, which is the
+/// active `ThemeData` — so the same style reads correctly in both themes.
+/// These used to default to `ColorManager.groundDk`, a near-black that is
+/// invisible on a dark page; it only went unnoticed because almost every call
+/// site passes a colour explicitly.
 class GetTextStyle extends TextStyle {
   const GetTextStyle({
     required double fontSize,
@@ -22,7 +28,7 @@ class GetLightStyle extends GetTextStyle {
   const GetLightStyle({
     super.fontSize = 16,
     super.height,
-    super.color = ColorManager.groundDk,
+    super.color,
     super.fontStyle = FontStyle.normal,
     super.decoration = TextDecoration.none,
     super.decorationThickness,
@@ -35,7 +41,7 @@ class GetRegularStyle extends GetTextStyle {
   const GetRegularStyle({
     super.fontSize = 16,
     super.height,
-    super.color = ColorManager.groundDk,
+    super.color,
     super.fontStyle = FontStyle.normal,
     super.decoration = TextDecoration.none,
     super.decorationThickness,
@@ -48,7 +54,7 @@ class GetMediumStyle extends GetTextStyle {
   const GetMediumStyle({
     super.fontSize = 16,
     super.height,
-    super.color = ColorManager.groundDk,
+    super.color,
     super.fontStyle = FontStyle.normal,
     super.decoration = TextDecoration.none,
     super.decorationThickness,
@@ -61,7 +67,7 @@ class GetSemiBoldStyle extends GetTextStyle {
   const GetSemiBoldStyle({
     super.fontSize = 16,
     super.height,
-    super.color = ColorManager.groundDk,
+    super.color,
     super.fontStyle = FontStyle.normal,
     super.decoration = TextDecoration.none,
     super.decorationThickness,
@@ -74,7 +80,7 @@ class GetBoldStyle extends GetTextStyle {
   const GetBoldStyle({
     super.fontSize = 16,
     super.height,
-    super.color = ColorManager.groundDk,
+    super.color,
     super.fontStyle = FontStyle.normal,
     super.decoration = TextDecoration.none,
     super.decorationThickness,
