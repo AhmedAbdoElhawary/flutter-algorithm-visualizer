@@ -8,9 +8,12 @@ const String kAppVersion = '1.0.0';
 
 /// Public pages served from `docs/` (GitHub Pages). The Play Console listing
 /// points at the same two URLs, so they must not drift.
-const String kPrivacyPolicyUrl = 'https://ahmedabdoelhawary.github.io/flutter-algorithm-visualizer/privacy-policy.html';
-const String kDeleteAccountUrl = 'https://ahmedabdoelhawary.github.io/flutter-algorithm-visualizer/delete-account.html';
-const String kTermsOfServiceUrl = 'https://ahmedabdoelhawary.github.io/flutter-algorithm-visualizer/terms.html';
+const String kPrivacyPolicyUrl =
+    'https://ahmedabdoelhawary.github.io/flutter-algorithm-visualizer/privacy-policy.html';
+const String kDeleteAccountUrl =
+    'https://ahmedabdoelhawary.github.io/flutter-algorithm-visualizer/delete-account.html';
+const String kTermsOfServiceUrl =
+    'https://ahmedabdoelhawary.github.io/flutter-algorithm-visualizer/terms.html';
 const String kSourceCodeUrl = 'https://github.com/AhmedAbdoElhawary/flutter-algorithm-visualizer';
 
 /// The legal documents carry their **own** version, deliberately separate from
@@ -37,7 +40,6 @@ const String kLegalUpdated = 'September 2026';
 /// the Play Console listing must carry, so all three stay in step.
 const String kSupportEmail = 'elhawarydev@gmail.com';
 const String kGithubProfileUrl = 'https://github.com/AhmedAbdoElhawary';
-
 
 const String kLinkedInUrl = 'https://www.linkedin.com/in/AhmedAbdoElhawary';
 
