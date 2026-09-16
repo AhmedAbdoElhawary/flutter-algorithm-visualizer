@@ -13,6 +13,7 @@ class RegularText extends _AdaptiveText {
     super.textAlign,
     super.letterSpacing,
     super.height,
+    super.translate,
     super.key,
   }) : super(fontWeight: FontWeightManager.regular);
 }

@@ -10,6 +10,7 @@ class LightText extends _AdaptiveText {
     super.maxLines = 2,
     super.textAlign,
     super.shadows,
+    super.translate,
     super.key,
   }) : super(fontWeight: FontWeightManager.light);
 }
