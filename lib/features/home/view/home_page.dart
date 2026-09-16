@@ -1,9 +1,9 @@
+import 'package:algorithm_visualizer/core/widgets/custom_widgets/small_stats_strip.dart';
 import 'package:algorithm_visualizer/features/home/view/widgets/home_category_grid.dart';
 import 'package:algorithm_visualizer/features/home/view/widgets/home_continue_card.dart';
 import 'package:algorithm_visualizer/features/home/view/widgets/home_difficulty_progress.dart';
 import 'package:algorithm_visualizer/features/home/view/widgets/home_header.dart';
 import 'package:algorithm_visualizer/features/home/view/widgets/home_recent_activity.dart';
-import 'package:algorithm_visualizer/core/widgets/custom_widgets/small_stats_strip.dart';
 import 'package:algorithm_visualizer/features/profile/presentation/widgets/profile_weekly_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -15,21 +15,23 @@ class HomePage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     // Scaffold/Metrial written in base_navigation, why?
     // to control all main pages with the structure of them
-    return CustomScrollView(
-      physics: const BouncingScrollPhysics(),
-      slivers: [
-        SliverList.list(
-          children: const [
-            HomeHeader(),
-            SmallStatsStrip(),
-            ProfileWeeklyChart(),
-            HomeDifficultyProgress(),
-            HomeContinueCard(),
-            HomeCategoryGrid(),
-            HomeRecentActivity(),
-          ],
-        ),
-      ],
+    return Material(
+      child: CustomScrollView(
+        physics: const BouncingScrollPhysics(),
+        slivers: [
+          SliverList.list(
+            children: const [
+              HomeHeader(),
+              SmallStatsStrip(),
+              ProfileWeeklyChart(),
+              HomeDifficultyProgress(),
+              HomeContinueCard(),
+              HomeCategoryGrid(),
+              HomeRecentActivity(),
+            ],
+          ),
+        ],
+      ),
     );
   }
 }

@@ -17,26 +17,28 @@ class ProfileScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     // Scaffold/Metrial written in base_navigation, why?
     // to control all main pages with the structure of them
-    return const SingleChildScrollView(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          ProfileHeader(),
-          RSizedBox(height: 14),
-          ProfileStatsGrid(),
-          RSizedBox(height: 14),
-          ProfileDifficultyProgress(),
-          RSizedBox(height: 14),
-          ProfileWeeklyChart(),
-          RSizedBox(height: 14),
-          ProfileHeatmap(),
-          RSizedBox(height: 14),
-          ProfileCategoryChart(),
-          // height inside
-          ProfilePracticeHistory(),
-          RSizedBox(height: 14),
-          RSizedBox(height: kBottomPageSpacing),
-        ],
+    return const Material(
+      child: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            ProfileHeader(),
+            RSizedBox(height: 14),
+            ProfileStatsGrid(),
+            RSizedBox(height: 14),
+            ProfileDifficultyProgress(),
+            RSizedBox(height: 14),
+            ProfileWeeklyChart(),
+            RSizedBox(height: 14),
+            ProfileHeatmap(),
+            RSizedBox(height: 14),
+            ProfileCategoryChart(),
+            // height inside
+            ProfilePracticeHistory(),
+            RSizedBox(height: 14),
+            RSizedBox(height: kBottomPageSpacing),
+          ],
+        ),
       ),
     );
   }

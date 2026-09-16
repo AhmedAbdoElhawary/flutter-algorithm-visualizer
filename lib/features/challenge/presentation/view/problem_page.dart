@@ -65,55 +65,57 @@ class _ProblemPageState extends ConsumerState<ProblemPage> with SingleTickerProv
     // Scaffold/Metrial written in base_navigation, why?
     // to control all main pages with the structure of them
     if (problem == null) {
-      return const Center(child: MediumText(StringsManager.noChallengeSelected));
+      return const Material(child: Center(child: MediumText(StringsManager.noChallengeSelected)));
     }
 
-    return DefaultTabController(
-      length: 3,
-      initialIndex: 0,
-      child: Stack(
-        children: [
-          NestedScrollView(
-            headerSliverBuilder: (context, innerBoxIsScrolled) => [
-              SliverToBoxAdapter(child: _CollapsingHeaderTags(problem: problem)),
-              SliverAppBar(
-                floating: true,
-                snap: true,
-                backgroundColor: context.getColor(ThemeEnum.ground),
-                surfaceTintColor: Colors.transparent,
-                shadowColor: Colors.transparent,
-                leading: const SizedBox.shrink(),
-                flexibleSpace: _ProblemTabBar(controller: _tabController),
-              ),
-            ],
-            body: TabBarView(
-              controller: _tabController,
-              children: [
-                _ProblemTabView(
-                  problem: problem,
-                  onScrollableChanged: (scrollable) => _setTabScrollable(0),
-                ),
-                _HintsTabView(
-                  problem: problem,
-                  onScrollableChanged: (scrollable) => _setTabScrollable(1),
-                ),
-                _SimilarTabView(
-                  problem: problem,
-                  onScrollableChanged: (scrollable) => _setTabScrollable(2),
+    return Material(
+      child: DefaultTabController(
+        length: 3,
+        initialIndex: 0,
+        child: Stack(
+          children: [
+            NestedScrollView(
+              headerSliverBuilder: (context, innerBoxIsScrolled) => [
+                SliverToBoxAdapter(child: _CollapsingHeaderTags(problem: problem)),
+                SliverAppBar(
+                  floating: true,
+                  snap: true,
+                  backgroundColor: context.getColor(ThemeEnum.ground),
+                  surfaceTintColor: Colors.transparent,
+                  shadowColor: Colors.transparent,
+                  leading: const SizedBox.shrink(),
+                  flexibleSpace: _ProblemTabBar(controller: _tabController),
                 ),
               ],
+              body: TabBarView(
+                controller: _tabController,
+                children: [
+                  _ProblemTabView(
+                    problem: problem,
+                    onScrollableChanged: (scrollable) => _setTabScrollable(0),
+                  ),
+                  _HintsTabView(
+                    problem: problem,
+                    onScrollableChanged: (scrollable) => _setTabScrollable(1),
+                  ),
+                  _SimilarTabView(
+                    problem: problem,
+                    onScrollableChanged: (scrollable) => _setTabScrollable(2),
+                  ),
+                ],
+              ),
             ),
-          ),
-          _PinnedCta(
-            onSolve: () {
-              final isSubProblem = GoRouterState.of(context).name == Routes.subProblem.name;
-              context.pushRoute(
-                isSubProblem ? Routes.subEditor : Routes.editor,
-                queryParameters: "${problem.getProblemId}",
-              );
-            },
-          ),
-        ],
+            _PinnedCta(
+              onSolve: () {
+                final isSubProblem = GoRouterState.of(context).name == Routes.subProblem.name;
+                context.pushRoute(
+                  isSubProblem ? Routes.subCodeEditor : Routes.codeEditor,
+                  queryParameters: "${problem.getProblemId}",
+                );
+              },
+            ),
+          ],
+        ),
       ),
     );
   }
