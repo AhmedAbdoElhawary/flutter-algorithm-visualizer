@@ -141,7 +141,7 @@ class StringsManager {
   static const String searchStepsSuffix = "steps";
   static const String searchNotShortest = "(not the shortest)";
   static const String searchNoPath = "No path — every reachable cell explored";
-  static const String searchPreRunHint = "Drag cells to draw walls, then press ▶ Run";
+  static const String searchPreRunHint = "Drag cells to draw walls, then press Run";
 
   /// Playback counter — `{current}` and `{total}` are substituted at render time.
   static const String searchStepCounterTemplate = "Step {current} of {total}";
@@ -379,6 +379,35 @@ class StringsManager {
   static const String newEmailRequired = "Please enter a new email";
   static const String newPasswordRequired = "Please enter a new password";
 
+  // Change password / change email (Settings -> Account)
+  static const String changePassword = "Change password";
+  static const String changePasswordDesc = "Update the password you sign in with.";
+  static const String changePasswordTitle = "Change your password";
+  static const String changePasswordDialogDesc = "Confirm your current password, then choose a new one.";
+  static const String currentPassword = "Current password";
+  static const String currentPasswordHint = "Your password today";
+  static const String samePasswordAsCurrent = "Pick a password different from your current one";
+
+  static const String displayName = "Display name";
+  static const String displayNameDesc = "The name shown on your profile.";
+  static const String changeDisplayNameTitle = "Change your name";
+  static const String changeDisplayNameDialogDesc =
+      "This is the name shown on your profile. It changes nothing about how you sign in.";
+  static const String newDisplayName = "Name";
+  static const String newDisplayNameHint = "How you want to be called";
+  static const String sameDisplayNameAsCurrent = "This is already your name";
+
+  static const String changeEmail = "Change email";
+  static const String changeEmailDesc = "Move your account to a different inbox.";
+  static const String changeEmailTitle = "Change your email";
+  static const String changeEmailDialogDesc =
+      "We send a confirmation link to the new address. Your email changes only after you open that link.";
+  static const String newEmail = "New email";
+  static const String sameEmailAsCurrent = "This is already your email";
+  static const String changeEmailLinkSent =
+      "Confirmation link sent. Open it from your new inbox, then sign in again with the new email.";
+  static const String saveChanges = "Save";
+
   // Logout
   static const String logout = "Log Out";
   static const String logoutConfirmTitle = "Log out of your account?";
@@ -390,6 +419,13 @@ class StringsManager {
   // Settings screen
   static const String settings = "Settings";
   static const String settingsAccountSection = "Account";
+  static const String settingsAppearanceSection = "Appearance";
+  static const String themeSystem = "System";
+  static const String themeSystemDesc = "Match your phone's setting";
+  static const String themeLight = "Light";
+  static const String themeLightDesc = "Always light";
+  static const String themeDark = "Dark";
+  static const String themeDarkDesc = "Always dark";
   static const String settingsLegalSection = "Legal";
   static const String settingsAboutSection = "About";
   static const String settingsSignedInAs = "Signed in as";
@@ -411,8 +447,7 @@ class StringsManager {
       "Your solved problems, streak and statistics will be erased for everyone and forever. This cannot be undone.";
   static const String deleteAccountContinue = "Continue";
   static const String deleteAccountPasswordTitle = "Confirm it's you";
-  static const String deleteAccountPasswordDesc =
-      "Enter your password to permanently delete this account.";
+  static const String deleteAccountPasswordDesc = "Enter your password to permanently delete this account.";
   static const String deleteAccountConfirmButton = "Delete Forever";
   static const String deleteAccountDeleting = "Deleting your account…";
   static const String deleteAccountSuccess = "Your account has been deleted.";
@@ -540,7 +575,8 @@ class Solution {
   static const String runnerLimitationLabel = "Runner limitation";
   static const String wrongAnswerLabel = "Wrong answer";
   static const String notRunLabel = "Not run";
-/// TODO: refactor this
+
+  /// TODO: refactor this
   static String executionFailureMessage(String code, Map<String, Object?> data) {
     switch (code) {
       case 'undefinedVariable':
