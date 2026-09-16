@@ -1,25 +1,32 @@
 import 'package:algorithm_visualizer/core/resources/strings_manager.dart';
 import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
 
-/// The six meanings a grid cell can carry, drawn from the same shared palette
-/// the sorting bars use.
+/// The six meanings a grid cell can carry.
+///
+/// These used to borrow the `data*` roles the sorting bars use, which put
+/// `frontier` on [ThemeEnum.dataActive] — an alias for [ThemeEnum.inkPrimary],
+/// so the advancing edge was pure white in dark mode and near-black in light,
+/// indistinguishable from a wall. They now have their own `search*` roles,
+/// separated by hue and lightness so all six read apart at cell size.
 enum SearchRole { wall, frontier, visited, path, start, end }
 
 /// Total, single-valued, exhaustive — no `default`, no fallback.
 ThemeEnum searchRoleColor(SearchRole role) {
   switch (role) {
     case SearchRole.start:
-      return ThemeEnum.dataMedium;
+      return ThemeEnum.searchStart;
     case SearchRole.end:
-      return ThemeEnum.dataHard;
+      return ThemeEnum.searchEnd;
     case SearchRole.frontier:
-      return ThemeEnum.dataActive;
+      return ThemeEnum.searchFrontier;
     case SearchRole.visited:
-      return ThemeEnum.dataTarget;
+      return ThemeEnum.searchVisited;
+    // Amber, not green: the path is always drawn on top of the blue visited
+    // cells that found it, and a warm hue is what survives that overlap.
     case SearchRole.path:
-      return ThemeEnum.dataEasy;
+      return ThemeEnum.searchPath;
     case SearchRole.wall:
-      return ThemeEnum.track;
+      return ThemeEnum.searchWall;
   }
 }
 
