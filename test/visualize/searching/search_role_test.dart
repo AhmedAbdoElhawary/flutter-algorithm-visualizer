@@ -39,7 +39,7 @@ void main() {
     // });
 
     test('green means the same thing here as in sorting — finished and correct (C3)', () {
-      expect(searchRoleColor(SearchRole.path), roleColor(SortRole.sorted));
+      expect(searchRoleColor(SearchRole.path), sortingRoleColor(SortRole.sorted));
     });
   });
 
