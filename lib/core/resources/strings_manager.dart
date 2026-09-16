@@ -172,7 +172,8 @@ class StringsManager {
   static const String tryToPracticeAChallenge = "Try to practice a challenge";
 
   static const String dart = "Dart";
-  static const String onlyAvailableInDart = "This problem can only be solved in Dart for now";
+  static const String language = "Language";
+  static const String dartOnlyProblem = "Dart only for now";
   static const String run = "Run";
   static const String running = "Running...";
 
@@ -606,8 +607,6 @@ class Solution {
           'unexpectedIndent' => "This line's indentation doesn't line up with any block above it",
           _ => "Inconsistent indentation",
         };
-      case 'customObjectsInThisLanguage':
-        return "This problem uses a linked list or tree, which the editor can only build in Dart so far";
       case 'missingEntryPoint':
         return "Couldn't find a function named '${data['name']}' to run";
       case 'timeLimitExceeded':

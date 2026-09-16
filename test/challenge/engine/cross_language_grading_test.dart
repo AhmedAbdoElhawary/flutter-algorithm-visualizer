@@ -336,20 +336,41 @@ function maxSubArray(nums) {
     }
   });
 
-  test('a problem needing a linked list says so rather than blaming the learner', () {
-    // Linked lists and trees are still built as Dart source text, so offering
-    // them in another language would fail every test case with something that
-    // reads like the learner's mistake. The runner refuses up front instead.
-    final result = const ProblemRunner().runAll(
-      problem: const ProblemData(
-        functionSignature: 'ListNode reverse(ListNode head)',
-        language: EditorLanguage.python,
-        testCases: <ProblemTestCase>[ProblemTestCase(input: 'head=[1,2]', expectedOutput: '[2,1]')],
-        customObjects: <String, CustomObjectShape>{'ListNode': CustomObjectShape.linkedList},
-      ),
+  test('a problem needing a linked list runs in Python too', () {
+    // The node graph is built as runtime values and the node class is
+    // supplied in the learner's own language, so nothing about a linked list
+    // is Dart-only any more.
+    const problem = ProblemData(
+      functionSignature: 'ListNode reverse(ListNode head)',
+      language: EditorLanguage.python,
+      testCases: <ProblemTestCase>[
+        ProblemTestCase(input: 'head=[1,2,3]', expectedOutput: '[3,2,1]'),
+        ProblemTestCase(input: 'head=[]', expectedOutput: '[]'),
+      ],
+      customObjects: <String, CustomObjectShape>{'ListNode': CustomObjectShape.linkedList},
+    );
+
+    final correct = const ProblemRunner().runAll(
+      problem: problem,
+      userCode: '''
+def reverse(head):
+    previous = None
+    while head is not None:
+        after = head.next
+        head.next = previous
+        previous = head
+        head = after
+    return previous
+''',
+    );
+    expect(correct.error, isNull);
+    expect(correct.allPassed, isTrue, reason: correct.testCaseResults.map((r) => r.actualOutput).join());
+
+    // And a wrong answer still fails, in the same language.
+    final wrong = const ProblemRunner().runAll(
+      problem: problem,
       userCode: 'def reverse(head):\n    return head\n',
     );
-    expect(result.error, isNotNull);
-    expect(result.error, contains('Dart'));
+    expect(wrong.allPassed, isFalse);
   });
 }
