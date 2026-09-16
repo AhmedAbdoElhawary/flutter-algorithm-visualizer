@@ -26,13 +26,13 @@ CodeEditorTheme buildEditorCodeTheme(BuildContext context) {
     editorPadding: REdgeInsets.symmetric(vertical: 12),
     gutterPadding: REdgeInsets.only(right: 12),
     textStyle: TextStyle(
-      fontFamily: FontConstants.fontJetBrainsMono,
+      fontFamily: FontConstants.fontFamily,
       fontSize: 13.sp,
       height: 1.85,
       color: plain,
     ),
     lineNumberStyle: TextStyle(
-      fontFamily: FontConstants.fontJetBrainsMono,
+      fontFamily: FontConstants.fontFamily,
       fontSize: 13.sp,
       height: 1.85,
       color: context.getColor(ThemeEnum.inkMuted),
