@@ -73,8 +73,14 @@ class CodeEditorTheme {
   /// Padding around the editable text area.
   final EdgeInsets editorPadding;
 
-  /// TODO: handle the colors after MVP
   /// A dark theme reminiscent of common editor "dark" presets.
+  ///
+  /// This and [CodeEditorTheme.light] are the *package's* defaults, kept so
+  /// the editor stands alone. AlgoDive itself uses neither: it builds a theme
+  /// from `ThemeEnum` roles in `editor_code_theme.dart`, which is what lets
+  /// the editor follow the app's light/dark setting. Do not reach for these
+  /// from app code — a hard-coded palette here is how the code card ends up
+  /// dark on a light page.
   factory CodeEditorTheme.dark() {
     const Color fg = Color(0xFFD4D4D4);
     return const CodeEditorTheme(
