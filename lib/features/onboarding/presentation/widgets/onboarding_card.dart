@@ -68,8 +68,9 @@ class OnboardingLegend extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Wrap(
-      spacing: 14.w,
-      runSpacing: 6.h,
+      spacing: 14.r,
+      runSpacing: 6.r,
+      alignment: WrapAlignment.center,
       children: items,
     );
   }
@@ -84,7 +85,8 @@ class OnboardingCaptionBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.only(top: 4.h),
+      padding: REdgeInsets.only(top: 4),
+      width: double.infinity,
       decoration: BoxDecoration(
         border: Border(
           top: BorderSide(color: context.getColor(ThemeEnum.hairline)),

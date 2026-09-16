@@ -1,88 +1,75 @@
 import 'package:algorithm_visualizer/core/enums/app_settings_enum.dart';
 import 'package:algorithm_visualizer/core/extensions/language.dart';
+import 'package:algorithm_visualizer/core/storage/storage.dart';
+import 'package:algorithm_visualizer/core/storage/storage_providers.dart';
 import 'package:flutter/material.dart';
-import 'package:get_storage/get_storage.dart';
-import 'package:riverpod/riverpod.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 part 'app_settings_state.dart';
 
 final appSettingsProvider =
     NotifierProvider<AppSettingsNotifier, AppSettingsState>(() => AppSettingsNotifier());
 
+/// Device-level preferences: which language, and which theme.
+///
+/// Both are read back **in [build]**, not defaulted there. An earlier version
+/// returned a hard-coded initial state and only ever consulted disk from
+/// separate getters nothing watched, so a preference the user had saved was
+/// silently ignored on the next launch.
 class AppSettingsNotifier extends Notifier<AppSettingsState> {
+  late final LocalStorage _storage;
+
+  static const String languageKey = 'lang';
+  static const String themeModeKey = 'mode';
+
   @override
-  AppSettingsState build() => AppSettingsState.initial();
+  AppSettingsState build() {
+    _storage = ref.watch(appSettingsStorageProvider);
 
-  static String getStorageKey = "AppSettings";
-  final String _langSveKey = "lang";
-  final String _modeSveKey = "mode";
-  String? _languageSelectedChar;
-  ThemeMode? _selectedMode;
-
-  // Use GetStorage instance
-  final GetStorage _storage = GetStorage(getStorageKey);
-
-  LanguagesEnum get languageSelected => languageSelectedChar.language;
-
-  String get languageSelectedChar => _languageSelectedChar ?? _getLanguageSelectedChar;
-  String get _getLanguageSelectedChar => _storage.read(_langSveKey) ?? "en";
-
-  bool get isLangEnglish => languageSelected == LanguagesEnum.english;
-
-  Future<void> _saveLanguageToDisk(String lang) async {
-    await _storage.write(_langSveKey, lang);
-    if (_getLanguageSelectedChar != lang) throw "unable to change language";
+    return AppSettingsState(
+      language: _readLanguage(),
+      themeMode: _readThemeMode(),
+    );
   }
 
-  Future<bool> changeLanguage(LanguagesEnum lang) async {
-    if (lang == languageSelected) return false;
+  // ---------------------------------------------------------------- language
 
-    try {
-      await Future.wait([
-        _saveLanguageToDisk(lang.shortKey),
-        // initializeDateFormatting(lang.shortKey, null),
-      ]);
+  LanguagesEnum _readLanguage() => (_storage.read<String>(languageKey) ?? 'en').language;
 
-      state = state.copyWith(language: lang);
+  LanguagesEnum get languageSelected => state.language;
 
-      _languageSelectedChar = lang.shortKey;
+  bool get isLangEnglish => state.language == LanguagesEnum.english;
 
-      return true;
-    } catch (e) {
-      _languageSelectedChar = null;
+  /// Returns whether anything actually changed, so a caller can skip work when
+  /// the user re-picks what was already selected.
+  Future<bool> changeLanguage(LanguagesEnum language) async {
+    if (language == state.language) return false;
 
-      rethrow;
-    }
+    await _storage.write(languageKey, language.shortKey);
+    state = state.copyWith(language: language);
+    return true;
   }
 
-  Future<void> _saveModeToDisk(String mode) async {
-    await _storage.write(_modeSveKey, mode);
-    if (_getModeSelected.name != mode) throw "unable to change the mode";
-    _selectedMode = _getModeSelected;
+  // ------------------------------------------------------------------- theme
+
+  /// Unrecognised or absent values fall back to [ThemeMode.system] — a fresh
+  /// install should look like the rest of the phone before it looks like
+  /// anyone's preference.
+  ThemeMode _readThemeMode() {
+    final stored = _storage.read<String>(themeModeKey);
+    return ThemeMode.values.firstWhere(
+      (mode) => mode.name == stored,
+      orElse: () => ThemeMode.system,
+    );
   }
 
-  Future<void> changeTheme(ThemeMode mode) async {
-    if (mode == modeSelected) return;
-    try {
-      await _saveModeToDisk(mode.name);
-      // final isLight = mode.name == 'light';
-      //
-      // if (isLight) {
-      //   Get.changeThemeMode(ThemeMode.light);
-      // } else {
-      //   Get.changeThemeMode(ThemeMode.dark);
-      // }
-      state = state.copyWith(themeMode: mode);
-    } catch (e) {
-      _selectedMode = null;
-      rethrow;
-    }
+  ThemeMode get modeSelected => state.themeMode;
+
+  Future<bool> changeTheme(ThemeMode mode) async {
+    if (mode == state.themeMode) return false;
+
+    await _storage.write(themeModeKey, mode.name);
+    state = state.copyWith(themeMode: mode);
+    return true;
   }
-
-  ThemeMode get modeSelected => _selectedMode ?? _getModeSelected;
-
-  ThemeMode get _getModeSelected =>
-      (_storage.read(_modeSveKey) ?? "light") == "light" ? ThemeMode.light : ThemeMode.dark;
-
-  bool get isThemeLight => modeSelected == ThemeMode.light;
 }

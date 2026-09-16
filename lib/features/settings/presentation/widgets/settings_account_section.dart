@@ -1,19 +1,24 @@
-import 'package:algorithm_visualizer/config/routes/route_app.dart';
 import 'package:algorithm_visualizer/core/resources/strings_manager.dart';
 import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/animated_popup.dart';
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/card_container.dart';
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/confirmation_dialog_card.dart';
 import 'package:algorithm_visualizer/features/profile/presentation/view_model/user_provider.dart';
+import 'package:algorithm_visualizer/features/settings/presentation/widgets/change_display_name_dialog.dart';
+import 'package:algorithm_visualizer/features/settings/presentation/widgets/change_email_dialog.dart';
+import 'package:algorithm_visualizer/features/settings/presentation/widgets/change_password_dialog.dart';
 import 'package:algorithm_visualizer/features/settings/presentation/widgets/delete_account_dialog.dart';
 import 'package:algorithm_visualizer/features/settings/presentation/widgets/settings_row.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:go_router/go_router.dart';
 
-/// The Account card. A guest is offered a way in; a signed-in user is shown
-/// which account they are on and the way out of it for good.
+/// The Account card.
+///
+/// A signed-in user sees which account they are on, then the three things they
+/// can change about it, then the way out of it for good. A guest owns only a
+/// display name, so that is the whole card for them — the way *in* lives in
+/// [SettingsSessionCard] at the foot of the page, with log out.
 class SettingsAccountSection extends ConsumerWidget {
   const SettingsAccountSection({super.key});
 
@@ -24,21 +29,34 @@ class SettingsAccountSection extends ConsumerWidget {
     return CardContainer(
       surface: CdSurface.main,
       padding: REdgeInsets.symmetric(horizontal: 14, vertical: 4),
-      child: isSignedIn ? const _SignedInRows() : const _GuestRow(),
+      child: isSignedIn ? const _SignedInRows() : const _DisplayNameRow(),
     );
   }
 }
 
-class _GuestRow extends StatelessWidget {
-  const _GuestRow();
+/// Shows the current name as its caption and opens the rename dialog, exactly
+/// like the two rows below it. The profile header used to edit this inline
+/// behind a pencil icon; one editable field hidden on another page is one more
+/// place for the name to be changed from than there needs to be.
+class _DisplayNameRow extends ConsumerWidget {
+  const _DisplayNameRow();
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final name = ref.watch(
+      currentUserNameProvider.select(
+        (value) => value.maybeWhen(data: (data) => data, orElse: () => StringsManager.anonymous),
+      ),
+    );
+
     return SettingsRow(
-      icon: Icons.login_rounded,
-      title: StringsManager.guestAccountTitle,
-      subtitle: StringsManager.settingsGuestModeDesc,
-      onTap: () => context.push(Routes.login.path),
+      icon: Icons.badge_outlined,
+      title: StringsManager.displayName,
+      subtitle: name,
+      onTap: () => AnimatedPopup.show(
+        context,
+        builder: (removeOverlay) => ChangeDisplayNameDialog(onClose: removeOverlay),
+      ),
     );
   }
 }
@@ -52,6 +70,12 @@ class _SignedInRows extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       children: [
         _EmailRow(),
+        SettingsRowDivider(),
+        _DisplayNameRow(),
+        SettingsRowDivider(),
+        _ChangeEmailRow(),
+        SettingsRowDivider(),
+        _ChangePasswordRow(),
         SettingsRowDivider(),
         _DeleteAccountRow(),
       ],
@@ -75,6 +99,40 @@ class _EmailRow extends ConsumerWidget {
       title: StringsManager.settingsSignedInAs,
       subtitle: email,
       showChevron: false,
+    );
+  }
+}
+
+class _ChangeEmailRow extends StatelessWidget {
+  const _ChangeEmailRow();
+
+  @override
+  Widget build(BuildContext context) {
+    return SettingsRow(
+      icon: Icons.mark_email_read_outlined,
+      title: StringsManager.changeEmail,
+      subtitle: StringsManager.changeEmailDesc,
+      onTap: () => AnimatedPopup.show(
+        context,
+        builder: (removeOverlay) => ChangeEmailDialog(onClose: removeOverlay),
+      ),
+    );
+  }
+}
+
+class _ChangePasswordRow extends StatelessWidget {
+  const _ChangePasswordRow();
+
+  @override
+  Widget build(BuildContext context) {
+    return SettingsRow(
+      icon: Icons.lock_reset_rounded,
+      title: StringsManager.changePassword,
+      subtitle: StringsManager.changePasswordDesc,
+      onTap: () => AnimatedPopup.show(
+        context,
+        builder: (removeOverlay) => ChangePasswordDialog(onClose: removeOverlay),
+      ),
     );
   }
 }

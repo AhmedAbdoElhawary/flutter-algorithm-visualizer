@@ -5,7 +5,7 @@ import 'package:algorithm_visualizer/features/profile/presentation/view_model/us
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class ProfileNotifier extends Notifier<AsyncValue<AuthUser?>> {
-  late final ProfileRepository _profileRepository;
+  late ProfileRepository _profileRepository;
 
   @override
   AsyncValue<AuthUser?> build() {

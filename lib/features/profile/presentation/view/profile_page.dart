@@ -3,7 +3,6 @@ import 'package:algorithm_visualizer/features/profile/presentation/widgets/profi
 import 'package:algorithm_visualizer/features/profile/presentation/widgets/profile_difficulty_progress.dart';
 import 'package:algorithm_visualizer/features/profile/presentation/widgets/profile_header.dart';
 import 'package:algorithm_visualizer/features/profile/presentation/widgets/profile_heatmap.dart';
-import 'package:algorithm_visualizer/features/profile/presentation/widgets/profile_logout_card.dart';
 import 'package:algorithm_visualizer/features/profile/presentation/widgets/profile_practice_history.dart';
 import 'package:algorithm_visualizer/features/profile/presentation/widgets/profile_stats_grid.dart';
 import 'package:algorithm_visualizer/features/profile/presentation/widgets/profile_weekly_chart.dart';
@@ -36,7 +35,6 @@ class ProfileScreen extends ConsumerWidget {
           // height inside
           ProfilePracticeHistory(),
           RSizedBox(height: 14),
-          ProfileLogoutCard(),
           RSizedBox(height: kBottomPageSpacing),
         ],
       ),

@@ -46,7 +46,7 @@ class _LegendChip extends StatelessWidget {
           width: 10.w,
           height: 10.w,
           decoration: BoxDecoration(
-            color: context.getColor(roleColor(role)),
+            color: context.getColor(sortingRoleColor(role)),
             shape: BoxShape.circle,
           ),
         ),

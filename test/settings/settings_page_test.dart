@@ -9,10 +9,14 @@
 import 'package:algorithm_visualizer/config/routes/route_app.dart';
 import 'package:algorithm_visualizer/config/themes/app_theme.dart';
 import 'package:algorithm_visualizer/core/helpers/constants.dart';
+import 'package:algorithm_visualizer/core/helpers/storage/app_settings/app_settings_cubit.dart';
+import 'package:algorithm_visualizer/core/storage/storage.dart';
+import 'package:algorithm_visualizer/core/storage/storage_providers.dart';
 import 'package:algorithm_visualizer/core/resources/strings_manager.dart';
 import 'package:algorithm_visualizer/features/auth/domain/entities/auth_user.dart';
 import 'package:algorithm_visualizer/features/profile/presentation/view_model/user_provider.dart';
 import 'package:algorithm_visualizer/features/settings/presentation/view/settings_page.dart';
+import 'package:algorithm_visualizer/features/settings/presentation/widgets/settings_row.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -57,6 +61,8 @@ Future<void> _pumpSettings(
   WidgetTester tester, {
   bool signedIn = false,
   String email = 'someone@example.com',
+  Brightness brightness = Brightness.dark,
+  LocalStorage? settingsStorage,
 }) async {
   const devicePixelRatio = 3.0;
   await tester.binding.setSurfaceSize(_smallSurface);
@@ -83,6 +89,7 @@ Future<void> _pumpSettings(
   await tester.pumpWidget(
     ProviderScope(
       overrides: [
+        appSettingsStorageProvider.overrideWithValue(settingsStorage ?? _InMemorySettings()),
         isSignedInProvider.overrideWithValue(signedIn),
         currentUserProvider.overrideWithValue(
           AsyncValue<AuthUser?>.data(
@@ -94,12 +101,34 @@ Future<void> _pumpSettings(
         designSize: _smallSurface,
         builder: (context, _) => MediaQuery(
           data: const MediaQueryData(size: _smallSurface),
-          child: MaterialApp.router(theme: AppTheme.dark, routerConfig: router),
+          child: MaterialApp.router(
+            theme: brightness == Brightness.dark ? AppTheme.dark : AppTheme.light,
+            routerConfig: router,
+          ),
         ),
       ),
     ),
   );
   await tester.pumpAndSettle();
+}
+
+class _InMemorySettings implements LocalStorage {
+  final Map<String, Object?> _values = <String, Object?>{};
+
+  @override
+  Future<void> write<T>(String key, T value) async => _values[key] = value;
+
+  @override
+  T? read<T>(String key) => _values[key] as T?;
+
+  @override
+  Future<void> remove(String key) async => _values.remove(key);
+
+  @override
+  Future<void> clear() async => _values.clear();
+
+  @override
+  bool has(String key) => _values.containsKey(key);
 }
 
 /// Taps a row by its title, scrolling it into view first — the screen is longer
@@ -238,9 +267,77 @@ void main() {
   //   });
   // });
 
-  testWidgets('renders at 360x640 with no overflow', (tester) async {
-    await _pumpSettings(tester, signedIn: true);
+  group('appearance', () {
+    testWidgets('offers system, light and dark', (tester) async {
+      await _pumpSettings(tester);
 
-    expect(tester.takeException(), isNull);
+      expect(find.text(StringsManager.themeSystem), findsOneWidget);
+      expect(find.text(StringsManager.themeLight), findsOneWidget);
+      expect(find.text(StringsManager.themeDark), findsOneWidget);
+    });
+
+    testWidgets('exactly one row is checked, and it is the active mode', (tester) async {
+      final storage = _InMemorySettings();
+      await storage.write(AppSettingsNotifier.themeModeKey, 'light');
+
+      await _pumpSettings(tester, settingsStorage: storage);
+
+      final checks = find.byIcon(Icons.check_rounded);
+      expect(checks, findsOneWidget);
+
+      // The check sits in the Light row, not merely somewhere on screen.
+      final lightRow = find.ancestor(
+        of: find.text(StringsManager.themeLight),
+        matching: find.byType(SettingsRow),
+      );
+      expect(find.descendant(of: lightRow, matching: checks), findsOneWidget);
+    });
+
+    testWidgets('picking a mode writes it where the next launch will look', (tester) async {
+      final storage = _InMemorySettings();
+      await _pumpSettings(tester, settingsStorage: storage);
+
+      await _tapRow(tester, StringsManager.themeDark);
+
+      expect(storage.read<String>(AppSettingsNotifier.themeModeKey), 'dark');
+    });
+
+    testWidgets('the check moves to whichever row was tapped', (tester) async {
+      await _pumpSettings(tester);
+
+      await _tapRow(tester, StringsManager.themeLight);
+
+      final lightRow = find.ancestor(
+        of: find.text(StringsManager.themeLight),
+        matching: find.byType(SettingsRow),
+      );
+      expect(
+        find.descendant(of: lightRow, matching: find.byIcon(Icons.check_rounded)),
+        findsOneWidget,
+      );
+      expect(find.byIcon(Icons.check_rounded), findsOneWidget);
+    });
   });
+
+  for (final brightness in <Brightness>[Brightness.dark, Brightness.light]) {
+    final name = brightness == Brightness.dark ? 'dark' : 'light';
+
+    group('in $name theme', () {
+      testWidgets('renders at 360x640 with no overflow', (tester) async {
+        await _pumpSettings(tester, signedIn: true, brightness: brightness);
+
+        expect(tester.takeException(), isNull);
+      });
+
+      testWidgets('every section is present and legible', (tester) async {
+        await _pumpSettings(tester, signedIn: true, brightness: brightness);
+
+        expect(find.text(StringsManager.settingsAccountSection), findsOneWidget);
+        expect(find.text(StringsManager.settingsAppearanceSection), findsOneWidget);
+        expect(find.text(StringsManager.settingsLegalSection), findsOneWidget);
+        expect(find.text(StringsManager.settingsContactSection), findsOneWidget);
+        expect(find.text(StringsManager.settingsAboutSection), findsOneWidget);
+      });
+    });
+  }
 }

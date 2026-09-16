@@ -4,6 +4,7 @@ import 'package:algorithm_visualizer/core/logging/firebase_logger.dart';
 import 'package:algorithm_visualizer/core/material_app/splash_gate.dart';
 import 'package:algorithm_visualizer/core/monitoring/crash_reporter.dart';
 import 'package:algorithm_visualizer/core/monitoring/monitoring.dart';
+import 'package:algorithm_visualizer/core/storage/storage_providers.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -38,6 +39,12 @@ Future<void> _boot(FlavorConfig config) async {
   try {
     await Future.wait([
       GetStorage.init(),
+
+      /// The settings box is a *separate* container, and `GetStorage` does not
+      /// load one off disk until it is initialized by name. Without this line
+      /// the theme and language the user picked read back as `null` on every
+      /// launch, which looks exactly like the preference was never saved.
+      GetStorage.init(appSettingsContainer),
       Firebase.initializeApp(),
     ]);
     firebaseReady = true;

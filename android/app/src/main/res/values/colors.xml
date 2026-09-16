@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="ic_launcher_background">#0B0B0D</color>
-    <color name="splash_background">#FBFBFC</color>
+    <!-- ColorManager.groundLt. Must equal the Flutter splash and the app
+         page behind it, or the launch shows a step in brightness. -->
+    <color name="splash_background">#F4F5F7</color>
     <color name="splash_ink">#0B0B0D</color>
 </resources>

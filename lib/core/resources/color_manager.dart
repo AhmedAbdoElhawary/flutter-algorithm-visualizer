@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 /// SURFACES   ground → surface → raised → hairline → track
 /// INK        inkPrimary → inkTitle → inkBody → inkMuted
 /// DATA       dataEasy · dataMedium · dataHard · dataTarget · dataActive
+/// CODE       codeKeyword · codeString · codeNumber · codeBuiltin · codeComment · codePunct
+/// SEARCH     searchStart · searchEnd · searchWall · searchVisited · searchFrontier · searchPath
 
 abstract final class ColorManager {
   static const Color groundDk = Color(0xFF0B0B0D);
@@ -34,10 +36,10 @@ abstract final class ColorManager {
   static const Color inkBodyLt = Color(0xFF4A4F5A);
   static const Color inkMutedLt = Color(0xFF667080);
 
-  static const Color dataEasyLt = Color(0xFF11704E);
-  static const Color dataMediumLt = Color(0xFF8A5D12);
-  static const Color dataHardLt = Color(0xFFA83F49);
-  static const Color dataTargetLt = Color(0xFF12518A);
+  static const Color dataEasyLt = Color(0xFF228655);
+  static const Color dataMediumLt = Color(0xFF9E6B25);
+  static const Color dataHardLt = Color(0xFFD33F4C);
+  static const Color dataTargetLt = Color(0xFF2D79BC);
   static const Color dataActiveLt = inkTitleLt;
 
   /// low → high.
@@ -49,7 +51,7 @@ abstract final class ColorManager {
     heat3,
     dataEasyDk,
   ];
-  static const Color heat3 =     Color(0xFF619D83);
+  static const Color heat3 = Color(0xFF619D83);
 
   static const List<Color> heatLt = <Color>[
     raisedLt,
@@ -58,6 +60,53 @@ abstract final class ColorManager {
     Color(0xFF489078),
     dataEasyLt,
   ];
+
+  /// CODE — syntax highlighting for the challenge editor.
+  ///
+  /// The five `data*` roles above are spoken for (difficulty badges, charts,
+  /// the pathfinding grid), so tokens get their own scale. Without it
+  /// `string` and `number` had to share one hue and the light theme inherited
+  /// dark-theme pastels that wash out on a white card.
+  ///
+  /// Dark values sit on [surfaceDk]; light values are all >= 4.5:1 on
+  /// [surfaceLt] so code stays readable, not just colorful.
+  static const Color codeKeywordDk = Color(0xFFC79BE8);
+  static const Color codeStringDk = Color(0xFF9ED49B);
+  static const Color codeNumberDk = Color(0xFFE8A87C);
+  static const Color codeBuiltinDk = Color(0xFF7FB8E8);
+  static const Color codeCommentDk = Color(0xFF6B7180);
+  static const Color codePunctDk = Color(0xFF8A90A0);
+
+  static const Color codeKeywordLt = Color(0xFF8A3FA8);
+  static const Color codeStringLt = Color(0xFF1F7A4D);
+  static const Color codeNumberLt = Color(0xFFA85B1A);
+  static const Color codeBuiltinLt = Color(0xFF1B6BB5);
+  static const Color codeCommentLt = Color(0xFF6B7280);
+  static const Color codePunctLt = Color(0xFF4A4F5A);
+
+  /// SEARCH — the pathfinding grid's six cell meanings.
+  ///
+  /// Six roles are on screen at once and every one of them is a filled cell,
+  /// so they are separated by hue *and* lightness rather than by hue alone.
+  /// `frontier` used to be [dataActive], which is literally [inkPrimary] —
+  /// pure white in dark, near-black in light — so the advancing edge was the
+  /// same color as the body text above it and nearly the same as a wall.
+  ///
+  /// Path is amber, not green, so it still reads on top of the blue visited
+  /// cells it always crosses.
+  static const Color searchStartDk = Color(0xFF4ADE80);
+  static const Color searchEndDk = Color(0xFFF87171);
+  static const Color searchWallDk = Color(0xFF394050);
+  static const Color searchVisitedDk = Color(0xFF4C7EC0);
+  static const Color searchFrontierDk = Color(0xFF67E8F9);
+  static const Color searchPathDk = Color(0xFFFBBF24);
+
+  static const Color searchStartLt = Color(0xFF16A34A);
+  static const Color searchEndLt = Color(0xFFDC2626);
+  static const Color searchWallLt = Color(0xFF475569);
+  static const Color searchVisitedLt = Color(0xFF3B82F6);
+  static const Color searchFrontierLt = Color(0xFF06B6D4);
+  static const Color searchPathLt = Color(0xFFF59E0B);
 
   static const Color transparent = Colors.transparent;
 }

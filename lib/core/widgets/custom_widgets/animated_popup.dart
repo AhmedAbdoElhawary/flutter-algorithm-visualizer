@@ -83,33 +83,73 @@ class _AnimatedPopupOverlayState extends State<_AnimatedPopupOverlay> with Singl
     super.dispose();
   }
 
+  /// The height actually left for the dialog once the keyboard has taken its
+  /// share of the screen.
+  double _availableHeight(BuildContext context) {
+    final media = MediaQuery.of(context);
+    return media.size.height - media.viewInsets.bottom;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Stack(
       children: [
+        // The scrim, and nothing else. It is painted, never tapped — the
+        // layer above covers it completely and owns the dismiss gesture.
         Positioned.fill(
-          child: GestureDetector(
-            onTap: widget.onDismiss,
-            child: AnimatedBuilder(
-              animation: _controller,
-              builder: (_, child) {
-                final value = Curves.easeOut.transform(_controller.value);
-                return Container(color: Colors.black.withValues(alpha: value * 0.2));
-              },
-            ),
+          child: AnimatedBuilder(
+            animation: _controller,
+            builder: (_, child) {
+              final value = Curves.easeOut.transform(_controller.value);
+              return Container(color: Colors.black.withValues(alpha: value * 0.2));
+            },
           ),
         ),
-        Center(
-          child: FadeTransition(
-            opacity: _opacity,
-            child: SlideTransition(
-              position: _offset,
-              child: ScaleTransition(
-                scale: _scale,
-                alignment: Alignment.center,
-                child: Material(
-                  color: Colors.transparent,
-                  child: widget.builder(widget.onDismiss),
+        // The keyboard is an inset, not a resize: this overlay sits above the
+        // Scaffold, so nothing shrinks for it on its own and a centred dialog
+        // ends up half-covered the moment a field takes focus.
+        //
+        // Padding by `viewInsets.bottom` lifts the dialog clear; the scroll
+        // view underneath catches the case where the space left is shorter
+        // than the dialog itself, which lifting alone would answer by pushing
+        // the title off the top of the screen.
+        Positioned.fill(
+          child: GestureDetector(
+            behavior: HitTestBehavior.opaque,
+            onTap: widget.onDismiss,
+            child: AnimatedPadding(
+              duration: const Duration(milliseconds: 180),
+              curve: Curves.easeOut,
+              padding: EdgeInsets.only(bottom: MediaQuery.viewInsetsOf(context).bottom),
+              child: SingleChildScrollView(
+                keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+                child: ConstrainedBox(
+                  // Gives the [Center] something to centre *inside*. Without a
+                  // minimum height the scroll view shrink-wraps its child and
+                  // the dialog lands against the top edge.
+                  constraints: BoxConstraints(minHeight: _availableHeight(context)),
+                  child: Center(
+                    child: GestureDetector(
+                      // Swallows taps that land on the dialog's own padding so
+                      // they never reach the dismiss gesture above.
+                      behavior: HitTestBehavior.opaque,
+                      onTap: () {},
+                      child: FadeTransition(
+                        opacity: _opacity,
+                        child: SlideTransition(
+                          position: _offset,
+                          child: ScaleTransition(
+                            scale: _scale,
+                            alignment: Alignment.center,
+                            child: Material(
+                              color: Colors.transparent,
+                              child: widget.builder(widget.onDismiss),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
                 ),
               ),
             ),

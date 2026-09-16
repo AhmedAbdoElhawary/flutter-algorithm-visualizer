@@ -323,7 +323,7 @@ class _BuildItem extends ConsumerWidget {
     final (actualHeight, writtenHeight) =
         SortingNotifier.calculateItemHeight(item.value, size, selectedAlgorithmLength);
     final resolvedRole = role ?? SortRole.idle;
-    final fill = roleColor(resolvedRole);
+    final fill = sortingRoleColor(resolvedRole);
 
     final labelColor = context.getColor(switch (resolvedRole) {
       SortRole.compare => ThemeEnum.inkTitle,

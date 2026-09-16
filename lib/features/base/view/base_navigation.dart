@@ -54,8 +54,8 @@ class _BottomNavBar extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             Container(height: 1, color: context.getColor(ThemeEnum.hairline)),
-            SizedBox(
-              height: 63.h,
+            RSizedBox(
+              height: 63,
               child: Padding(
                 padding: REdgeInsetsDirectional.fromSTEB(0, 6, 0, 6),
                 child: Row(

@@ -1,6 +1,5 @@
 import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
 import 'package:algorithm_visualizer/features/visualize/sub_view/searching/helper/search_role.dart';
-import 'package:algorithm_visualizer/features/visualize/sub_view/sorting/view_model/sorting_notifier.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
@@ -18,28 +17,32 @@ void main() {
     });
 
     test('matches the normative role table (FR-023)', () {
-      expect(searchRoleColor(SearchRole.start), ThemeEnum.dataMedium);
-      expect(searchRoleColor(SearchRole.end), ThemeEnum.dataHard);
-      expect(searchRoleColor(SearchRole.frontier), ThemeEnum.dataActive);
-      expect(searchRoleColor(SearchRole.visited), ThemeEnum.dataTarget);
-      expect(searchRoleColor(SearchRole.path), ThemeEnum.dataEasy);
-      expect(searchRoleColor(SearchRole.wall), ThemeEnum.track);
+      expect(searchRoleColor(SearchRole.start), ThemeEnum.searchStart);
+      expect(searchRoleColor(SearchRole.end), ThemeEnum.searchEnd);
+      expect(searchRoleColor(SearchRole.frontier), ThemeEnum.searchFrontier);
+      expect(searchRoleColor(SearchRole.visited), ThemeEnum.searchVisited);
+      expect(searchRoleColor(SearchRole.path), ThemeEnum.searchPath);
+      expect(searchRoleColor(SearchRole.wall), ThemeEnum.searchWall);
     });
 
-    test('path is the only role carrying the success green (C3, C4, SC-014)', () {
-      final green = SearchRole.values.where((r) => searchRoleColor(r) == ThemeEnum.dataEasy).toSet();
+    test('path is the only role carrying its own dedicated amber (C3, C4, SC-014)', () {
+      final amber = SearchRole.values.where((r) => searchRoleColor(r) == ThemeEnum.searchPath).toSet();
 
-      expect(green, {SearchRole.path});
+      expect(amber, {SearchRole.path});
     });
-    // TODO: handle this case
-    // test('difficultyEasy is no longer used for any grid state (C4)', () {
-    //   for (final role in SearchRole.values) {
-    //     expect(searchRoleColor(role), isNot(ThemeEnum.dataEasy));
-    //   }
-    // });
-
-    test('green means the same thing here as in sorting — finished and correct (C3)', () {
-      expect(searchRoleColor(SearchRole.path), roleColor(SortRole.sorted));
+    // difficultyEasy (ThemeEnum.dataEasy) is no longer used for any grid state
+    // — search roles now have their own dedicated search* colors (C4).
+    test('none of the six roles borrow a data* role any more (C4)', () {
+      const dataRoles = {
+        ThemeEnum.dataEasy,
+        ThemeEnum.dataMedium,
+        ThemeEnum.dataHard,
+        ThemeEnum.dataTarget,
+        ThemeEnum.dataActive,
+      };
+      for (final role in SearchRole.values) {
+        expect(dataRoles.contains(searchRoleColor(role)), isFalse);
+      }
     });
   });
 

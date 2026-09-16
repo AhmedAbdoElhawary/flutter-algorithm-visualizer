@@ -8,8 +8,12 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 ///
 /// The package's own `CodeEditorTheme.dark()` / `.light()` factories carry
 /// hard-coded [Color] literals, so they are never used here (FR-007,
-/// research R4) — every value below traces back to a role in
-/// `contracts/ui-contract.md` §2.2.
+/// research R4) — every value below traces back to a `ThemeEnum` role.
+///
+/// Tokens use the dedicated `code*` roles rather than the `data*` ones. The
+/// five `data*` colors are already spoken for by difficulty badges and charts,
+/// which left strings and numbers sharing a single hue and gave the light
+/// theme a palette tuned for a dark card.
 CodeEditorTheme buildEditorCodeTheme(BuildContext context) {
   final plain = context.getColor(ThemeEnum.inkBody);
 
@@ -35,18 +39,15 @@ CodeEditorTheme buildEditorCodeTheme(BuildContext context) {
     ),
     lineNumberBackground: context.getColor(ThemeEnum.surface),
     tokenColors: <TokenType, Color>{
-      TokenType.keyword: context.getColor(ThemeEnum.dataMedium),
-      TokenType.builtin: context.getColor(ThemeEnum.inkTitle),
+      TokenType.keyword: context.getColor(ThemeEnum.codeKeyword),
+      TokenType.builtin: context.getColor(ThemeEnum.codeBuiltin),
       TokenType.identifier: plain,
       TokenType.plain: plain,
-      TokenType.operator: context.getColor(ThemeEnum.inkPrimary),
-      TokenType.punctuation: context.getColor(ThemeEnum.inkPrimary),
-      TokenType.number: context.getColor(ThemeEnum.dataTarget),
-      // No dedicated "string" role exists on ThemeEnum — only six code*
-      // roles cover the package's nine TokenTypes, so string literals share
-      // dataTarget's hue with numeric literals (both read as literal values).
-      TokenType.string: context.getColor(ThemeEnum.dataTarget),
-      TokenType.comment: context.getColor(ThemeEnum.inkMuted),
+      TokenType.operator: context.getColor(ThemeEnum.codePunct),
+      TokenType.punctuation: context.getColor(ThemeEnum.codePunct),
+      TokenType.number: context.getColor(ThemeEnum.codeNumber),
+      TokenType.string: context.getColor(ThemeEnum.codeString),
+      TokenType.comment: context.getColor(ThemeEnum.codeComment),
     },
   );
 }

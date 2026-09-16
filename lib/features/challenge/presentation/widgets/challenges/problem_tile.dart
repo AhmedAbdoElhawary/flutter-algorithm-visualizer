@@ -187,12 +187,11 @@ class _DetailsPanel extends ConsumerWidget {
                 child: Container(
                   padding: REdgeInsets.symmetric(horizontal: 14, vertical: 7),
                   decoration: BoxDecoration(
-                    color: context.getColor(ThemeEnum.track),
+                    color: context.getColor(ThemeEnum.inkPrimary),
                     borderRadius: BorderRadius.circular(9),
-                    border: Border.all(color: context.getColor(ThemeEnum.inkBody)),
+                    border: Border.all(color: context.getColor(ThemeEnum.inkPrimary)),
                   ),
-                  child: const BoldText(StringsManager.solveWithArrow,
-                      color: ThemeEnum.inkPrimary, fontSize: 12),
+                  child: const BoldText(StringsManager.solveWithArrow, color: ThemeEnum.ground, fontSize: 12),
                 ),
               ),
             ],

@@ -1,4 +1,3 @@
-import 'package:algorithm_visualizer/core/resources/color_manager.dart';
 import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -19,7 +18,11 @@ class CustomIcon extends StatelessWidget {
   Widget build(BuildContext context) {
     return Icon(
       icon,
-      color: color == null ? ColorManager.groundDk : context.getColor(color!),
+
+      /// Falls back to a *role*, never a literal: the previous default was
+      /// `ColorManager.groundDk`, which would have drawn a near-black icon on
+      /// a near-black page.
+      color: context.getColor(color ?? ThemeEnum.inkTitle),
       size: size.r,
       shadows: shadows,
     );

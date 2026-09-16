@@ -20,6 +20,7 @@ class HomeCategoryGrid extends ConsumerWidget {
     return OnlyPadding(
       startPadding: 16,
       endPadding: 16,
+      bottomPadding: 14,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -27,6 +28,7 @@ class HomeCategoryGrid extends ConsumerWidget {
           const RSizedBox(height: 12),
           GridView.builder(
             itemCount: 6,
+            padding: EdgeInsets.zero,
             physics: const NeverScrollableScrollPhysics(),
             shrinkWrap: true,
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(

@@ -4,12 +4,15 @@ class AppSettingsState {
   final LanguagesEnum language;
   final ThemeMode themeMode;
 
-  AppSettingsState({required this.language, required this.themeMode});
+  const AppSettingsState({required this.language, required this.themeMode});
 
+  /// Only for callers that have no storage to read — tests, and the default
+  /// any parse failure lands on. A real launch builds this from disk in
+  /// [AppSettingsNotifier.build].
   factory AppSettingsState.initial() {
-    return AppSettingsState(
+    return const AppSettingsState(
       language: LanguagesEnum.english,
-      themeMode: ThemeMode.dark,
+      themeMode: ThemeMode.system,
     );
   }
 
@@ -19,4 +22,15 @@ class AppSettingsState {
       themeMode: themeMode ?? this.themeMode,
     );
   }
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is AppSettingsState &&
+          runtimeType == other.runtimeType &&
+          language == other.language &&
+          themeMode == other.themeMode;
+
+  @override
+  int get hashCode => Object.hash(language, themeMode);
 }

@@ -173,7 +173,10 @@ class _CodeAreaState extends State<_CodeArea> {
     super.initState();
     _controller = CodeController(
       text: widget.initialCode,
-      theme: CodeEditorTheme.dark(),
+      // No theme here on purpose: `build` assigns `buildEditorCodeTheme` on
+      // every frame, before the first paint. Passing the package's hard-coded
+      // `CodeEditorTheme.dark()` only suggested the editor is dark-only, which
+      // it is not.
       tokenizer: _tokenizerFor(widget.language),
       runner: const DartInterpreterRunner(),
       config: CodeEditorConfig(tabSize: _tabSizeFor(widget.language), showLineNumbers: true),

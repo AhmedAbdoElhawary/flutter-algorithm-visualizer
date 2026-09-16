@@ -6,25 +6,25 @@ void main() {
   group('roleColor (C1)', () {
     test('is defined for every SortRole value', () {
       for (final role in SortRole.values) {
-        expect(roleColor(role), isA<ThemeEnum>());
+        expect(sortingRoleColor(role), isA<ThemeEnum>());
       }
     });
 
     test('barAnchor preimage is exactly {minimum, heldValue, pivot, rightRun} (C1.4)', () {
-      final preimage = SortRole.values.where((r) => roleColor(r) == ThemeEnum.dataMedium).toSet();
+      final preimage = SortRole.values.where((r) => sortingRoleColor(r) == ThemeEnum.dataMedium).toSet();
 
       expect(preimage, {SortRole.minimum, SortRole.heldValue, SortRole.pivot, SortRole.rightRun});
     });
 
     test('barTarget preimage is exactly {target, boundary, leftRun} (C1.4)', () {
-      final preimage = SortRole.values.where((r) => roleColor(r) == ThemeEnum.dataTarget).toSet();
+      final preimage = SortRole.values.where((r) => sortingRoleColor(r) == ThemeEnum.dataTarget).toSet();
 
       expect(preimage, {SortRole.target, SortRole.boundary, SortRole.leftRun});
     });
 
     test('swap and write share barSwap (C1.3)', () {
-      expect(roleColor(SortRole.swap), ThemeEnum.dataHard);
-      expect(roleColor(SortRole.write), ThemeEnum.dataHard);
+      expect(sortingRoleColor(SortRole.swap), ThemeEnum.dataHard);
+      expect(sortingRoleColor(SortRole.write), ThemeEnum.dataHard);
     });
   });
 
