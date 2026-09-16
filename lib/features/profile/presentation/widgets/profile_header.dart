@@ -4,7 +4,6 @@ import 'package:algorithm_visualizer/core/helpers/constants.dart';
 import 'package:algorithm_visualizer/core/helpers/current_device.dart';
 import 'package:algorithm_visualizer/core/resources/font_manager.dart';
 import 'package:algorithm_visualizer/core/resources/strings_manager.dart';
-import 'package:algorithm_visualizer/core/resources/styles_manager.dart';
 import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
 import 'package:algorithm_visualizer/core/widgets/adaptive/padding/adaptive_padding.dart';
 import 'package:algorithm_visualizer/core/widgets/adaptive/text/adaptive_text.dart';
@@ -24,40 +23,62 @@ class ProfileHeader extends StatelessWidget {
       startPadding: 16,
       endPadding: 16,
       topPadding: context.isAndroid ? kAndroidTopPageSpacing * 1.5 : kIOSTopPageSpacing,
-      child: Column(
+      child: const Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             children: [
-              Consumer(builder: (context, ref, child) {
-                final name = ref.watch(
-                  currentUserNameProvider.select(
-                    (value) => value.maybeWhen(data: (data) => data, orElse: () => StringsManager.anonymous),
-                  ),
-                );
-
-                return AvatarQuiet(
-                    initial: name.isNotEmpty ? name[0].toUpperCase() : StringsManager.anonymous);
-              }),
-              const RSizedBox(width: 14),
-              Expanded(
-                child: Consumer(
-                  builder: (context, ref, child) => _EditableName(
-                    name: ref.watch(
-                      currentUserNameProvider.select(
-                        (value) =>
-                            value.maybeWhen(data: (data) => data, orElse: () => StringsManager.anonymous),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-              const RSizedBox(width: 6),
-              const _SettingsButton(),
+              _Avatar(),
+              RSizedBox(width: 14),
+              Expanded(child: _Name()),
+              RSizedBox(width: 6),
+              _SettingsButton(),
             ],
           ),
         ],
       ),
+    );
+  }
+}
+
+class _Avatar extends ConsumerWidget {
+  const _Avatar();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final name = ref.watch(
+      currentUserNameProvider.select(
+        (value) => value.maybeWhen(data: (data) => data, orElse: () => StringsManager.anonymous),
+      ),
+    );
+
+    return AvatarQuiet(initial: name.isNotEmpty ? name[0].toUpperCase() : StringsManager.anonymous);
+  }
+}
+
+/// The name, read-only.
+///
+/// It used to be a tap-to-edit [TextField] behind a pencil icon. Renaming now
+/// lives in Settings -> Account beside change-email and change-password, so
+/// every account field is edited the same way, in one place, behind a dialog
+/// that can validate and report failure — none of which the inline field did.
+class _Name extends ConsumerWidget {
+  const _Name();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final name = ref.watch(
+      currentUserNameProvider.select(
+        (value) => value.maybeWhen(data: (data) => data, orElse: () => StringsManager.anonymous),
+      ),
+    );
+
+    return BoldText(
+      name,
+      maxLines: 1,
+      color: ThemeEnum.inkTitle,
+      fontSize: 22,
+      fontWeight: FontWeightManager.bold800,
     );
   }
 }
@@ -78,101 +99,6 @@ class _SettingsButton extends StatelessWidget {
         borderColor: ThemeEnum.inkBody,
         size: 36,
         iconSize: 18,
-      ),
-    );
-  }
-}
-
-class _EditableName extends ConsumerStatefulWidget {
-  const _EditableName({required this.name});
-
-  final String name;
-
-  @override
-  ConsumerState<_EditableName> createState() => _EditableNameState();
-}
-
-class _EditableNameState extends ConsumerState<_EditableName> {
-  late TextEditingController _controller;
-  bool _editing = false;
-
-  @override
-  void initState() {
-    super.initState();
-    _controller = TextEditingController(text: widget.name);
-  }
-
-  @override
-  void didUpdateWidget(covariant _EditableName oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    if (!_editing && oldWidget.name != widget.name) {
-      _controller.text = widget.name;
-    }
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    if (_editing) {
-      return TextField(
-        maxLines: 1,
-        maxLength: 20,
-        controller: _controller,
-        autofocus: true,
-        style: GetBoldStyle(
-          color: context.getColor(ThemeEnum.inkTitle),
-          fontSize: 22,
-          letterSpacing: -0.4,
-        ),
-        decoration: InputDecoration(
-          isDense: true,
-          contentPadding: REdgeInsets.symmetric(vertical: 4),
-          border: UnderlineInputBorder(
-            borderSide: BorderSide(color: context.getColor(ThemeEnum.inkPrimary)),
-          ),
-          focusedBorder: UnderlineInputBorder(
-            borderSide: BorderSide(color: context.getColor(ThemeEnum.inkPrimary), width: 2),
-          ),
-        ),
-        onSubmitted: (value) {
-          final text = value.trim();
-          if (text.isNotEmpty) {
-            ref.read(profileProvider.notifier).updateDisplayName(name: text);
-          }
-
-          setState(() => _editing = false);
-        },
-        onTapOutside: (event) {
-          final text = _controller.text.trim();
-          if (text.isNotEmpty) {
-            ref.read(profileProvider.notifier).updateDisplayName(name: text);
-          }
-
-          setState(() => _editing = false);
-        },
-      );
-    }
-
-    return GestureDetector(
-      onTap: () => setState(() => _editing = true),
-      child: Row(
-        children: [
-          Expanded(
-            child: BoldText(widget.name,
-                maxLines: 1, color: ThemeEnum.inkTitle, fontSize: 22, fontWeight: FontWeightManager.bold800),
-          ),
-          const RSizedBox(width: 6),
-          const IconButtonQuiet(
-            icon: Icons.edit_outlined,
-            size: 32,
-            iconSize: 16,
-          ),
-        ],
       ),
     );
   }
