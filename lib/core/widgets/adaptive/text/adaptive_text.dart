@@ -93,7 +93,7 @@ class AdaptiveText extends StatelessWidget {
     final style = this.style;
 
     final TextStyle newStyle = style == null
-        ? const GetRegularStyle()
+        ? GetRegularStyle(fontSize: 16.sp)
         : style.copyWith(
             fontSize: (style.fontSize ?? 16).sp,
           );
