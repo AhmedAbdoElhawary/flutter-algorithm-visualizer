@@ -26,11 +26,14 @@ class SystemOverlay extends StatelessWidget {
         systemNavigationBarIconBrightness: Brightness.light);
   }
 
+  /// The bars take `groundLt`, the light page background — not pure white.
+  /// They sit flush against the page, so anything else draws a seam along the
+  /// top and bottom of every screen.
   SystemUiOverlayStyle whiteTheme() {
     return const SystemUiOverlayStyle(
-        statusBarColor: ColorManager.inkPrimaryDk,
+        statusBarColor: ColorManager.groundLt,
         statusBarIconBrightness: Brightness.dark,
-        systemNavigationBarColor: ColorManager.inkPrimaryDk,
+        systemNavigationBarColor: ColorManager.groundLt,
         systemNavigationBarIconBrightness: Brightness.dark);
   }
 }
