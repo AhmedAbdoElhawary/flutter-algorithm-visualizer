@@ -36,10 +36,10 @@ abstract final class ColorManager {
   static const Color inkBodyLt = Color(0xFF4A4F5A);
   static const Color inkMutedLt = Color(0xFF667080);
 
-  static const Color dataEasyLt = Color(0xFF44CF8B);
-  static const Color dataMediumLt = Color(0xFFD39745);
-  static const Color dataHardLt = Color(0xFFD54653);
-  static const Color dataTargetLt = Color(0xFF4691D3);
+  static const Color dataEasyLt = Color(0xFF228655);
+  static const Color dataMediumLt = Color(0xFF9E6B25);
+  static const Color dataHardLt = Color(0xFFD33F4C);
+  static const Color dataTargetLt = Color(0xFF2D79BC);
   static const Color dataActiveLt = inkTitleLt;
 
   /// low → high.

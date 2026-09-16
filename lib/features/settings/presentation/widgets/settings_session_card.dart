@@ -121,7 +121,7 @@ class _AccountCardBody extends StatelessWidget {
   }
 }
 
-class _AccountCardLabels extends ConsumerWidget {
+class _AccountCardLabels extends StatelessWidget {
   final String title;
   final String? subtitle;
   final ThemeEnum accentColor;
@@ -133,14 +133,7 @@ class _AccountCardLabels extends ConsumerWidget {
   });
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final email = ref.watch(
-      currentUserProvider.select(
-        (value) => value.maybeWhen(data: (data) => data?.email ?? "", orElse: () => ""),
-      ),
-    );
-    final caption = email.isNotEmpty ? email : subtitle;
-
+  Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -150,10 +143,10 @@ class _AccountCardLabels extends ConsumerWidget {
           fontSize: 13,
           fontWeight: FontWeightManager.bold800,
         ),
-        if (caption != null && caption.isNotEmpty) ...[
+        if (subtitle != null && subtitle!.isNotEmpty) ...[
           const RSizedBox(height: 2),
           RegularText(
-            caption,
+            subtitle!,
             color: ThemeEnum.inkBody,
             fontSize: 11,
           ),
