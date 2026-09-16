@@ -46,6 +46,12 @@ class ProfileRemoteDataSourceImpl implements ProfileRemoteDataSource {
       final credential = EmailAuthProvider.credential(email: user.email!, password: currentPassword);
       await user.reauthenticateWithCredential(credential);
 
+      // TODO(ahmed): in Firebase Console -> Authentication -> Templates, fill in
+      // the "Verify and change email" template (sender name, subject, action
+      // URL). It is the mail this call sends, and the change never completes
+      // until the user opens its link. Also switch on Authentication ->
+      // Settings -> "Email enumeration protection", so a wrong password here
+      // cannot be used to probe which addresses have accounts.
       await user.verifyBeforeUpdateEmail(newEmail.trim());
       await user.reload();
     } on FirebaseAuthException catch (e) {
