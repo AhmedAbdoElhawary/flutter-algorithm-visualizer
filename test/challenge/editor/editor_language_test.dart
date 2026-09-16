@@ -132,10 +132,7 @@ void main() {
       // The reason is on the row for a screen reader, where there is room
       // for a sentence; on screen it is the dimmed dash.
       expect(
-        tester
-            .getSemantics(find.text('Python'))
-            .getSemanticsData()
-            .hint,
+        tester.getSemantics(find.text('Python')).getSemanticsData().hint,
         contains(StringsManager.dartOnlyProblem),
       );
 
