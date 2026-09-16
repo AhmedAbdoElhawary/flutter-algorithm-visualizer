@@ -13,14 +13,17 @@ dependencies:
     sdk: flutter
   flutter_localizations:
     sdk: flutter
-  go_router: ^18.0.1
+  go_router: ^17.5.0
+  get_it: ^9.2.1
   flutter_screenutil: ^5.9.3
   flutter_svg: ^2.3.0
   riverpod: ^3.4.2
   flutter_riverpod: ^3.4.2
   get_storage: ^2.1.1
+  animations: ^2.2.0
   collection: ^1.19.1
   async: ^2.13.1
+  fl_chart: ^1.2.0
 
   cupertino_icons: ^1.0.9
   json_annotation: ^4.9.0
@@ -77,5 +80,4 @@ flutter:
           style: italic
   assets:
     - assets/problems.json
-    - assets/problems.ar.json
     - assets/logo/svg/
