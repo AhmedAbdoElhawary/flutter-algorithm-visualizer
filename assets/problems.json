@@ -344,7 +344,9 @@
         }
       ],
       "default_code": {
-        "dart": "/**\n * Definition for singly-linked list.\n * class ListNode {\n *   int val;\n *   ListNode? next;\n *   ListNode([this.val = 0, this.next]);\n * }\n */\nclass Solution {\n  ListNode? addTwoNumbers(ListNode? l1, ListNode? l2) {\n\n\n  }\n}"
+        "dart": "/**\n * Definition for singly-linked list.\n * class ListNode {\n *   int val;\n *   ListNode? next;\n *   ListNode([this.val = 0, this.next]);\n * }\n */\nclass Solution {\n  ListNode? addTwoNumbers(ListNode? l1, ListNode? l2) {\n\n\n  }\n}",
+        "python": "# ListNode is already defined for you.\ndef addTwoNumbers(l1, l2):\n    # Write your solution here\n    pass\n",
+        "javascript": "// ListNode is already defined for you.\nfunction addTwoNumbers(l1, l2) {\n  // Write your solution here\n}\n"
       },
       "custom_objects": {
         "dart": [
@@ -1337,7 +1339,9 @@
         }
       ],
       "default_code": {
-        "dart": "/**\n * Definition for singly-linked list.\n * class ListNode {\n *   int val;\n *   ListNode? next;\n *   ListNode([this.val = 0, this.next]);\n * }\n */\nclass Solution {\n  ListNode? removeNthFromEnd(ListNode? head, int n) {\n\n\n  }\n}"
+        "dart": "/**\n * Definition for singly-linked list.\n * class ListNode {\n *   int val;\n *   ListNode? next;\n *   ListNode([this.val = 0, this.next]);\n * }\n */\nclass Solution {\n  ListNode? removeNthFromEnd(ListNode? head, int n) {\n\n\n  }\n}",
+        "python": "# ListNode is already defined for you.\ndef removeNthFromEnd(head, n):\n    # Write your solution here\n    pass\n",
+        "javascript": "// ListNode is already defined for you.\nfunction removeNthFromEnd(head, n) {\n  // Write your solution here\n}\n"
       },
       "custom_objects": {
         "dart": [
@@ -1547,7 +1551,9 @@
         "dart": "ListNode? mergeTwoLists(ListNode? list1, ListNode? list2)"
       },
       "default_code": {
-        "dart": "/**\n * Definition for singly-linked list.\n * class ListNode {\n *   int val;\n *   ListNode? next;\n *   ListNode([this.val = 0, this.next]);\n * }\n */\nclass Solution {\n  ListNode? mergeTwoLists(ListNode? list1, ListNode? list2) {\n\n\n  }\n}"
+        "dart": "/**\n * Definition for singly-linked list.\n * class ListNode {\n *   int val;\n *   ListNode? next;\n *   ListNode([this.val = 0, this.next]);\n * }\n */\nclass Solution {\n  ListNode? mergeTwoLists(ListNode? list1, ListNode? list2) {\n\n\n  }\n}",
+        "python": "# ListNode is already defined for you.\ndef mergeTwoLists(list1, list2):\n    # Write your solution here\n    pass\n",
+        "javascript": "// ListNode is already defined for you.\nfunction mergeTwoLists(list1, list2) {\n  // Write your solution here\n}\n"
       },
       "custom_objects": {
         "dart": [
@@ -1975,7 +1981,9 @@
         }
       ],
       "default_code": {
-        "dart": "/**\n * Definition for singly-linked list.\n * class ListNode {\n *   int val;\n *   ListNode? next;\n *   ListNode([this.val = 0, this.next]);\n * }\n */\nclass Solution {\n  ListNode? mergeKLists(List<ListNode?> lists) {\n\n\n  }\n}"
+        "dart": "/**\n * Definition for singly-linked list.\n * class ListNode {\n *   int val;\n *   ListNode? next;\n *   ListNode([this.val = 0, this.next]);\n * }\n */\nclass Solution {\n  ListNode? mergeKLists(List<ListNode?> lists) {\n\n\n  }\n}",
+        "python": "# ListNode is already defined for you.\ndef mergeKLists(lists):\n    # Write your solution here\n    pass\n",
+        "javascript": "// ListNode is already defined for you.\nfunction mergeKLists(lists) {\n  // Write your solution here\n}\n"
       },
       "custom_objects": {
         "dart": [
@@ -5443,7 +5451,9 @@
         }
       ],
       "default_code": {
-        "dart": "/**\n * Definition for a binary tree node.\n * class TreeNode {\n *   int val;\n *   TreeNode? left;\n *   TreeNode? right;\n *   TreeNode([this.val = 0, this.left, this.right]);\n * }\n */\nclass Solution {\n  bool isValidBST(TreeNode? root) {\n\n\n  }\n}"
+        "dart": "/**\n * Definition for a binary tree node.\n * class TreeNode {\n *   int val;\n *   TreeNode? left;\n *   TreeNode? right;\n *   TreeNode([this.val = 0, this.left, this.right]);\n * }\n */\nclass Solution {\n  bool isValidBST(TreeNode? root) {\n\n\n  }\n}",
+        "python": "# TreeNode is already defined for you.\ndef isValidBST(root):\n    # Write your solution here\n    pass\n",
+        "javascript": "// TreeNode is already defined for you.\nfunction isValidBST(root) {\n  // Write your solution here\n}\n"
       },
       "custom_objects": {
         "dart": [
@@ -5606,7 +5616,9 @@
         }
       ],
       "default_code": {
-        "dart": "/**\n * Definition for a binary tree node.\n * class TreeNode {\n *   int val;\n *   TreeNode? left;\n *   TreeNode? right;\n *   TreeNode([this.val = 0, this.left, this.right]);\n * }\n */\nclass Solution {\n  bool isSameTree(TreeNode? p, TreeNode? q) {\n\n\n  }\n}"
+        "dart": "/**\n * Definition for a binary tree node.\n * class TreeNode {\n *   int val;\n *   TreeNode? left;\n *   TreeNode? right;\n *   TreeNode([this.val = 0, this.left, this.right]);\n * }\n */\nclass Solution {\n  bool isSameTree(TreeNode? p, TreeNode? q) {\n\n\n  }\n}",
+        "python": "# TreeNode is already defined for you.\ndef isSameTree(p, q):\n    # Write your solution here\n    pass\n",
+        "javascript": "// TreeNode is already defined for you.\nfunction isSameTree(p, q) {\n  // Write your solution here\n}\n"
       },
       "custom_objects": {
         "dart": [
@@ -5760,7 +5772,9 @@
         }
       ],
       "default_code": {
-        "dart": "/**\n * Definition for a binary tree node.\n * class TreeNode {\n *   int val;\n *   TreeNode? left;\n *   TreeNode? right;\n *   TreeNode([this.val = 0, this.left, this.right]);\n * }\n */\nclass Solution {\n  bool isSymmetric(TreeNode? root) {\n\n\n  }\n}"
+        "dart": "/**\n * Definition for a binary tree node.\n * class TreeNode {\n *   int val;\n *   TreeNode? left;\n *   TreeNode? right;\n *   TreeNode([this.val = 0, this.left, this.right]);\n * }\n */\nclass Solution {\n  bool isSymmetric(TreeNode? root) {\n\n\n  }\n}",
+        "python": "# TreeNode is already defined for you.\ndef isSymmetric(root):\n    # Write your solution here\n    pass\n",
+        "javascript": "// TreeNode is already defined for you.\nfunction isSymmetric(root) {\n  // Write your solution here\n}\n"
       },
       "custom_objects": {
         "dart": [
@@ -5918,7 +5932,9 @@
         }
       ],
       "default_code": {
-        "dart": "/**\n * Definition for a binary tree node.\n * class TreeNode {\n *   int val;\n *   TreeNode? left;\n *   TreeNode? right;\n *   TreeNode([this.val = 0, this.left, this.right]);\n * }\n */\nclass Solution {\n  List<List<int>> levelOrder(TreeNode? root) {\n\n\n  }\n}"
+        "dart": "/**\n * Definition for a binary tree node.\n * class TreeNode {\n *   int val;\n *   TreeNode? left;\n *   TreeNode? right;\n *   TreeNode([this.val = 0, this.left, this.right]);\n * }\n */\nclass Solution {\n  List<List<int>> levelOrder(TreeNode? root) {\n\n\n  }\n}",
+        "python": "# TreeNode is already defined for you.\ndef levelOrder(root):\n    # Write your solution here\n    pass\n",
+        "javascript": "// TreeNode is already defined for you.\nfunction levelOrder(root) {\n  // Write your solution here\n}\n"
       },
       "custom_objects": {
         "dart": [
@@ -6070,7 +6086,9 @@
         }
       ],
       "default_code": {
-        "dart": "/**\n * Definition for a binary tree node.\n * class TreeNode {\n *   int val;\n *   TreeNode? left;\n *   TreeNode? right;\n *   TreeNode([this.val = 0, this.left, this.right]);\n * }\n */\nclass Solution {\n  List<List<int>> zigzagLevelOrder(TreeNode? root) {\n\n\n  }\n}"
+        "dart": "/**\n * Definition for a binary tree node.\n * class TreeNode {\n *   int val;\n *   TreeNode? left;\n *   TreeNode? right;\n *   TreeNode([this.val = 0, this.left, this.right]);\n * }\n */\nclass Solution {\n  List<List<int>> zigzagLevelOrder(TreeNode? root) {\n\n\n  }\n}",
+        "python": "# TreeNode is already defined for you.\ndef zigzagLevelOrder(root):\n    # Write your solution here\n    pass\n",
+        "javascript": "// TreeNode is already defined for you.\nfunction zigzagLevelOrder(root) {\n  // Write your solution here\n}\n"
       },
       "custom_objects": {
         "dart": [
@@ -6224,7 +6242,9 @@
         }
       ],
       "default_code": {
-        "dart": "/**\n * Definition for a binary tree node.\n * class TreeNode {\n *   int val;\n *   TreeNode? left;\n *   TreeNode? right;\n *   TreeNode([this.val = 0, this.left, this.right]);\n * }\n */\nclass Solution {\n  int maxDepth(TreeNode? root) {\n\n\n  }\n}"
+        "dart": "/**\n * Definition for a binary tree node.\n * class TreeNode {\n *   int val;\n *   TreeNode? left;\n *   TreeNode? right;\n *   TreeNode([this.val = 0, this.left, this.right]);\n * }\n */\nclass Solution {\n  int maxDepth(TreeNode? root) {\n\n\n  }\n}",
+        "python": "# TreeNode is already defined for you.\ndef maxDepth(root):\n    # Write your solution here\n    pass\n",
+        "javascript": "// TreeNode is already defined for you.\nfunction maxDepth(root) {\n  // Write your solution here\n}\n"
       },
       "custom_objects": {
         "dart": [
@@ -6381,7 +6401,9 @@
         }
       ],
       "default_code": {
-        "dart": "/**\n * Definition for a binary tree node.\n * class TreeNode {\n *   int val;\n *   TreeNode? left;\n *   TreeNode? right;\n *   TreeNode([this.val = 0, this.left, this.right]);\n * }\n */\nclass Solution {\n  TreeNode? buildTree(List<int> preorder, List<int> inorder) {\n\n\n  }\n}"
+        "dart": "/**\n * Definition for a binary tree node.\n * class TreeNode {\n *   int val;\n *   TreeNode? left;\n *   TreeNode? right;\n *   TreeNode([this.val = 0, this.left, this.right]);\n * }\n */\nclass Solution {\n  TreeNode? buildTree(List<int> preorder, List<int> inorder) {\n\n\n  }\n}",
+        "python": "# TreeNode is already defined for you.\ndef buildTree(preorder, inorder):\n    # Write your solution here\n    pass\n",
+        "javascript": "// TreeNode is already defined for you.\nfunction buildTree(preorder, inorder) {\n  // Write your solution here\n}\n"
       },
       "custom_objects": {
         "dart": [
@@ -6530,7 +6552,9 @@
         }
       ],
       "default_code": {
-        "dart": "/**\n * Definition for a binary tree node.\n * class TreeNode {\n *   int val;\n *   TreeNode? left;\n *   TreeNode? right;\n *   TreeNode([this.val = 0, this.left, this.right]);\n * }\n */\nclass Solution {\n  TreeNode? sortedArrayToBST(List<int> nums) {\n\n\n  }\n}"
+        "dart": "/**\n * Definition for a binary tree node.\n * class TreeNode {\n *   int val;\n *   TreeNode? left;\n *   TreeNode? right;\n *   TreeNode([this.val = 0, this.left, this.right]);\n * }\n */\nclass Solution {\n  TreeNode? sortedArrayToBST(List<int> nums) {\n\n\n  }\n}",
+        "python": "# TreeNode is already defined for you.\ndef sortedArrayToBST(nums):\n    # Write your solution here\n    pass\n",
+        "javascript": "// TreeNode is already defined for you.\nfunction sortedArrayToBST(nums) {\n  // Write your solution here\n}\n"
       },
       "custom_objects": {
         "dart": [
@@ -6688,7 +6712,9 @@
         }
       ],
       "default_code": {
-        "dart": "/**\n * Definition for a binary tree node.\n * class TreeNode {\n *   int val;\n *   TreeNode? left;\n *   TreeNode? right;\n *   TreeNode([this.val = 0, this.left, this.right]);\n * }\n */\nclass Solution {\n  bool isBalanced(TreeNode? root) {\n\n\n  }\n}"
+        "dart": "/**\n * Definition for a binary tree node.\n * class TreeNode {\n *   int val;\n *   TreeNode? left;\n *   TreeNode? right;\n *   TreeNode([this.val = 0, this.left, this.right]);\n * }\n */\nclass Solution {\n  bool isBalanced(TreeNode? root) {\n\n\n  }\n}",
+        "python": "# TreeNode is already defined for you.\ndef isBalanced(root):\n    # Write your solution here\n    pass\n",
+        "javascript": "// TreeNode is already defined for you.\nfunction isBalanced(root) {\n  // Write your solution here\n}\n"
       },
       "custom_objects": {
         "dart": [
@@ -6856,7 +6882,9 @@
         }
       ],
       "default_code": {
-        "dart": "/**\n * Definition for a binary tree node.\n * class TreeNode {\n *   int val;\n *   TreeNode? left;\n *   TreeNode? right;\n *   TreeNode([this.val = 0, this.left, this.right]);\n * }\n */\nclass Solution {\n  bool hasPathSum(TreeNode? root, int targetSum) {\n\n\n  }\n}"
+        "dart": "/**\n * Definition for a binary tree node.\n * class TreeNode {\n *   int val;\n *   TreeNode? left;\n *   TreeNode? right;\n *   TreeNode([this.val = 0, this.left, this.right]);\n * }\n */\nclass Solution {\n  bool hasPathSum(TreeNode? root, int targetSum) {\n\n\n  }\n}",
+        "python": "# TreeNode is already defined for you.\ndef hasPathSum(root, targetSum):\n    # Write your solution here\n    pass\n",
+        "javascript": "// TreeNode is already defined for you.\nfunction hasPathSum(root, targetSum) {\n  // Write your solution here\n}\n"
       },
       "custom_objects": {
         "dart": [
@@ -7171,7 +7199,9 @@
         }
       ],
       "default_code": {
-        "dart": "/**\n * Definition for a binary tree node.\n * class TreeNode {\n *   int val;\n *   TreeNode? left;\n *   TreeNode? right;\n *   TreeNode([this.val = 0, this.left, this.right]);\n * }\n */\nclass Solution {\n  int maxPathSum(TreeNode? root) {\n\n\n  }\n}"
+        "dart": "/**\n * Definition for a binary tree node.\n * class TreeNode {\n *   int val;\n *   TreeNode? left;\n *   TreeNode? right;\n *   TreeNode([this.val = 0, this.left, this.right]);\n * }\n */\nclass Solution {\n  int maxPathSum(TreeNode? root) {\n\n\n  }\n}",
+        "python": "# TreeNode is already defined for you.\ndef maxPathSum(root):\n    # Write your solution here\n    pass\n",
+        "javascript": "// TreeNode is already defined for you.\nfunction maxPathSum(root) {\n  // Write your solution here\n}\n"
       },
       "custom_objects": {
         "dart": [
@@ -7898,7 +7928,9 @@
         }
       ],
       "default_code": {
-        "dart": "/**\n * Definition for a Node.\n * class Node {\n *   int val;\n *   List<Node> neighbors;\n *   Node(this.val, [this.neighbors]);\n * }\n */\nclass Solution {\n  Node? cloneGraph(Node? node) {\n\n\n  }\n}"
+        "dart": "/**\n * Definition for a Node.\n * class Node {\n *   int val;\n *   List<Node> neighbors;\n *   Node(this.val, [this.neighbors]);\n * }\n */\nclass Solution {\n  Node? cloneGraph(Node? node) {\n\n\n  }\n}",
+        "python": "# Node is already defined for you.\ndef cloneGraph(node):\n    # Write your solution here\n    pass\n",
+        "javascript": "// Node is already defined for you.\nfunction cloneGraph(node) {\n  // Write your solution here\n}\n"
       },
       "custom_objects": {
         "dart": [
@@ -8687,7 +8719,9 @@
         }
       ],
       "default_code": {
-        "dart": "/**\n * Definition for singly-linked list.\n * class ListNode {\n *   int val;\n *   ListNode? next;\n *   ListNode([this.val = 0, this.next]);\n * }\n */\nclass Solution {\n  void reorderList(ListNode? head) {\n\n\n  }\n}"
+        "dart": "/**\n * Definition for singly-linked list.\n * class ListNode {\n *   int val;\n *   ListNode? next;\n *   ListNode([this.val = 0, this.next]);\n * }\n */\nclass Solution {\n  void reorderList(ListNode? head) {\n\n\n  }\n}",
+        "python": "# ListNode is already defined for you.\ndef reorderList(head):\n    # Write your solution here\n    pass\n",
+        "javascript": "// ListNode is already defined for you.\nfunction reorderList(head) {\n  // Write your solution here\n}\n"
       },
       "custom_objects": {
         "dart": [
@@ -10001,7 +10035,9 @@
         }
       ],
       "default_code": {
-        "dart": "/**\n * Definition for a binary tree node.\n * class TreeNode {\n *   int val;\n *   TreeNode? left;\n *   TreeNode? right;\n *   TreeNode([this.val = 0, this.left, this.right]);\n * }\n */\nclass Solution {\n  List<int> rightSideView(TreeNode? root) {\n\n\n  }\n}"
+        "dart": "/**\n * Definition for a binary tree node.\n * class TreeNode {\n *   int val;\n *   TreeNode? left;\n *   TreeNode? right;\n *   TreeNode([this.val = 0, this.left, this.right]);\n * }\n */\nclass Solution {\n  List<int> rightSideView(TreeNode? root) {\n\n\n  }\n}",
+        "python": "# TreeNode is already defined for you.\ndef rightSideView(root):\n    # Write your solution here\n    pass\n",
+        "javascript": "// TreeNode is already defined for you.\nfunction rightSideView(root) {\n  // Write your solution here\n}\n"
       },
       "custom_objects": {
         "dart": [
@@ -11265,7 +11301,9 @@
         }
       ],
       "default_code": {
-        "dart": "/**\n * Definition for a binary tree node.\n * class TreeNode {\n *   int val;\n *   TreeNode? left;\n *   TreeNode? right;\n *   TreeNode([this.val = 0, this.left, this.right]);\n * }\n */\nclass Solution {\n  TreeNode? invertTree(TreeNode? root) {\n\n\n  }\n}"
+        "dart": "/**\n * Definition for a binary tree node.\n * class TreeNode {\n *   int val;\n *   TreeNode? left;\n *   TreeNode? right;\n *   TreeNode([this.val = 0, this.left, this.right]);\n * }\n */\nclass Solution {\n  TreeNode? invertTree(TreeNode? root) {\n\n\n  }\n}",
+        "python": "# TreeNode is already defined for you.\ndef invertTree(root):\n    # Write your solution here\n    pass\n",
+        "javascript": "// TreeNode is already defined for you.\nfunction invertTree(root) {\n  // Write your solution here\n}\n"
       },
       "custom_objects": {
         "dart": [
@@ -11424,7 +11462,9 @@
         }
       ],
       "default_code": {
-        "dart": "/**\n * Definition for a binary tree node.\n * class TreeNode {\n *   int val;\n *   TreeNode? left;\n *   TreeNode? right;\n *   TreeNode([this.val = 0, this.left, this.right]);\n * }\n */\nclass Solution {\n  int kthSmallest(TreeNode? root, int k) {\n\n\n  }\n}"
+        "dart": "/**\n * Definition for a binary tree node.\n * class TreeNode {\n *   int val;\n *   TreeNode? left;\n *   TreeNode? right;\n *   TreeNode([this.val = 0, this.left, this.right]);\n * }\n */\nclass Solution {\n  int kthSmallest(TreeNode? root, int k) {\n\n\n  }\n}",
+        "python": "# TreeNode is already defined for you.\ndef kthSmallest(root, k):\n    # Write your solution here\n    pass\n",
+        "javascript": "// TreeNode is already defined for you.\nfunction kthSmallest(root, k) {\n  // Write your solution here\n}\n"
       },
       "custom_objects": {
         "dart": [
@@ -11675,7 +11715,9 @@
         }
       ],
       "default_code": {
-        "dart": "/**\n * Definition for a binary tree node.\n * class TreeNode {\n *   int val;\n *   TreeNode? left;\n *   TreeNode? right;\n *   TreeNode([this.val = 0, this.left, this.right]);\n * }\n */\nclass Solution {\n  TreeNode? lowestCommonAncestor(TreeNode? root, TreeNode? p, TreeNode? q) {\n\n\n  }\n}"
+        "dart": "/**\n * Definition for a binary tree node.\n * class TreeNode {\n *   int val;\n *   TreeNode? left;\n *   TreeNode? right;\n *   TreeNode([this.val = 0, this.left, this.right]);\n * }\n */\nclass Solution {\n  TreeNode? lowestCommonAncestor(TreeNode? root, TreeNode? p, TreeNode? q) {\n\n\n  }\n}",
+        "python": "# TreeNode is already defined for you.\ndef lowestCommonAncestor(root, p, q):\n    # Write your solution here\n    pass\n",
+        "javascript": "// TreeNode is already defined for you.\nfunction lowestCommonAncestor(root, p, q) {\n  // Write your solution here\n}\n"
       },
       "custom_objects": {
         "dart": [
@@ -12711,7 +12753,9 @@
         }
       ],
       "default_code": {
-        "dart": "/**\n * Definition for a binary tree node.\n * class TreeNode {\n *   int val;\n *   TreeNode? left;\n *   TreeNode? right;\n *   TreeNode([this.val = 0, this.left, this.right]);\n * }\n */\nclass Codec {\n  String serialize(TreeNode? root) {\n\n\n  }\n  TreeNode? deserialize(String data) {\n\n\n  }\n}"
+        "dart": "/**\n * Definition for a binary tree node.\n * class TreeNode {\n *   int val;\n *   TreeNode? left;\n *   TreeNode? right;\n *   TreeNode([this.val = 0, this.left, this.right]);\n * }\n */\nclass Codec {\n  String serialize(TreeNode? root) {\n\n\n  }\n  TreeNode? deserialize(String data) {\n\n\n  }\n}",
+        "python": "class Codec:\n    def serialize(self, root):\n        # Write your solution here\n        pass\n\n    def deserialize(self, data):\n        # Write your solution here\n        pass\n",
+        "javascript": "class Codec {\n  serialize(root) {\n    // Write your solution here\n  }\n\n  deserialize(data) {\n    // Write your solution here\n  }\n}\n"
       },
       "custom_objects": {
         "dart": [
@@ -13958,7 +14002,9 @@
         }
       ],
       "default_code": {
-        "dart": "/**\n * Definition for a binary tree node.\n * class TreeNode {\n *   int val;\n *   TreeNode? left;\n *   TreeNode? right;\n *   TreeNode([this.val = 0, this.left, this.right]);\n * }\n */\nclass Solution {\n  int diameterOfBinaryTree(TreeNode? root) {\n\n\n  }\n}"
+        "dart": "/**\n * Definition for a binary tree node.\n * class TreeNode {\n *   int val;\n *   TreeNode? left;\n *   TreeNode? right;\n *   TreeNode([this.val = 0, this.left, this.right]);\n * }\n */\nclass Solution {\n  int diameterOfBinaryTree(TreeNode? root) {\n\n\n  }\n}",
+        "python": "# TreeNode is already defined for you.\ndef diameterOfBinaryTree(root):\n    # Write your solution here\n    pass\n",
+        "javascript": "// TreeNode is already defined for you.\nfunction diameterOfBinaryTree(root) {\n  // Write your solution here\n}\n"
       },
       "custom_objects": {
         "dart": [
