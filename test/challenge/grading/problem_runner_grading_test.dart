@@ -169,4 +169,32 @@ List<List<int>> f(List<int> nums) {
           isTrue);
     });
   });
+
+  group('a number is graded as a number, not as the way a language prints it', () {
+    // JavaScript has one number type, so a correct median of 2 comes back as
+    // `2` where the stored answer says `2.0`. Failing that is a grader bug,
+    // not a learner's wrong answer.
+    ProblemData problem(String expected) => _problem(
+          signature: 'double half(int n)',
+          cases: [ProblemTestCase(input: 'n=4', expectedOutput: expected)],
+        );
+
+    test('a whole double matches the integer spelling of the same value', () {
+      const code = 'double half(int n) { return n / 2; }';
+      expect(const ProblemRunner().runAll(problem: problem('2.0'), userCode: code).allPassed, isTrue);
+      expect(const ProblemRunner().runAll(problem: problem('2'), userCode: code).allPassed, isTrue);
+    });
+
+    test('a genuinely different number still fails', () {
+      const code = 'double half(int n) { return n / 2; }';
+      expect(const ProblemRunner().runAll(problem: problem('2.5'), userCode: code).allPassed, isFalse);
+      expect(const ProblemRunner().runAll(problem: problem('3'), userCode: code).allPassed, isFalse);
+    });
+
+    test('a fraction is never rounded away', () {
+      const code = 'double half(int n) { return n / 8; }';
+      expect(const ProblemRunner().runAll(problem: problem('0.5'), userCode: code).allPassed, isTrue);
+      expect(const ProblemRunner().runAll(problem: problem('0'), userCode: code).allPassed, isFalse);
+    });
+  });
 }
