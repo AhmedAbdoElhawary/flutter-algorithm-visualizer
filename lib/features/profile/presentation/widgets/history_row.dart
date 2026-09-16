@@ -1,5 +1,6 @@
 import 'package:algorithm_visualizer/config/routes/route_app.dart';
 import 'package:algorithm_visualizer/core/extensions/navigators.dart';
+import 'package:algorithm_visualizer/core/localization/app_localizations.dart';
 import 'package:algorithm_visualizer/core/resources/dimensions_manager.dart';
 import 'package:algorithm_visualizer/core/resources/strings_manager.dart';
 import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
@@ -51,7 +52,8 @@ class _HistoryRowState extends State<HistoryRow> {
       difficulty: entry.difficulty,
       addCardDecoration: widget.addCardDecoration,
       subTitle: RegularText(
-        '$count ${unit.toLowerCase()} · ${StringsManager.lastLabel} ${_relative(entry.lastSubmittedAt)}',
+        '$count ${unit.tr(context).toLowerCase()} · ${StringsManager.lastLabel.tr(context)} '
+        '${_relative(context, entry.lastSubmittedAt)}',
         color: ThemeEnum.inkBody,
         fontSize: 10.5,
       ),
@@ -77,13 +79,15 @@ class _HistoryRowState extends State<HistoryRow> {
     );
   }
 
-  String _relative(DateTime dt) {
+  /// Each unit is translated on its own and the number placed beside it;
+  /// `'5m ago'` as a whole is not a key.
+  String _relative(BuildContext context, DateTime dt) {
     final d = DateTime.now().difference(dt);
-    if (d.inMinutes < 1) return StringsManager.justNow;
-    if (d.inMinutes < 60) return '${d.inMinutes}${StringsManager.mAgo}';
-    if (d.inHours < 24) return '${d.inHours}${StringsManager.hAgo}';
-    if (d.inDays == 1) return '1 ${StringsManager.dayAgo}';
-    return '${d.inDays} ${StringsManager.daysAgo}';
+    if (d.inMinutes < 1) return StringsManager.justNow.tr(context);
+    if (d.inMinutes < 60) return '${d.inMinutes}${StringsManager.mAgo.tr(context)}';
+    if (d.inHours < 24) return '${d.inHours}${StringsManager.hAgo.tr(context)}';
+    if (d.inDays == 1) return '1 ${StringsManager.dayAgo.tr(context)}';
+    return '${d.inDays} ${StringsManager.daysAgo.tr(context)}';
   }
 }
 
