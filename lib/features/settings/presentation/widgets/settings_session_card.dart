@@ -2,7 +2,6 @@ import 'package:algorithm_visualizer/config/routes/route_app.dart';
 import 'package:algorithm_visualizer/core/resources/font_manager.dart';
 import 'package:algorithm_visualizer/core/resources/strings_manager.dart';
 import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
-import 'package:algorithm_visualizer/core/widgets/adaptive/padding/adaptive_padding.dart';
 import 'package:algorithm_visualizer/core/widgets/adaptive/text/adaptive_text.dart';
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/animated_popup.dart';
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/card_container.dart';
@@ -16,17 +15,23 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 
-class ProfileLogoutCard extends ConsumerWidget {
-  const ProfileLogoutCard({super.key});
+/// The last card on the Settings page: the way out of the account, or the way
+/// into one.
+///
+/// It used to sit at the foot of the profile page. Signing in and signing out
+/// are settings, not statistics, and keeping them here means there is exactly
+/// one screen that changes who you are signed in as.
+///
+/// No section header above it on purpose — it is a single destructive-ish
+/// action, not a group of related rows.
+class SettingsSessionCard extends ConsumerWidget {
+  const SettingsSessionCard({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final isSignedIn = ref.watch(isSignedInProvider);
 
-    return HorizontalPadding(
-      padding: 16,
-      child: isSignedIn ? const _LogoutCard() : const _GuestSignInCard(),
-    );
+    return isSignedIn ? const _LogoutCard() : const _GuestSignInCard();
   }
 }
 
