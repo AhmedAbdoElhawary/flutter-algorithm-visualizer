@@ -172,7 +172,7 @@ class _ProblemTabBar extends StatelessWidget {
         tabAlignment: TabAlignment.start,
         dividerColor: context.getColor(ThemeEnum.track),
         indicatorSize: TabBarIndicatorSize.label,
-        indicatorColor: context.getColor(ThemeEnum.ground),
+        indicatorColor: context.getColor(ThemeEnum.inkPrimary),
         labelColor: context.getColor(ThemeEnum.inkTitle),
         unselectedLabelColor: context.getColor(ThemeEnum.inkBody),
         overlayColor: WidgetStatePropertyAll(context.getColor(ThemeEnum.track).withValues(alpha: 0.05)),
@@ -261,7 +261,7 @@ class _HintsTabView extends StatelessWidget {
                   child: CardContainer(
                     surface: CdSurface.secondary,
                     child: RegularText('${i + 1}.  ${hints[i]}',
-                        color: ThemeEnum.inkBody, fontSize: 12, height: 1.6, maxLines: 20),
+                        color: ThemeEnum.inkTitle, fontSize: 12, height: 1.6, maxLines: 20),
                   ),
                 ),
             ],
