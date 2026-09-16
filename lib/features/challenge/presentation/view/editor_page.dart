@@ -12,8 +12,11 @@ import 'package:algorithm_visualizer/features/challenge/presentation/view_model/
 import 'package:algorithm_visualizer/features/challenge/presentation/view_model/challenges/problems_providers.dart';
 import 'package:algorithm_visualizer/features/challenge/presentation/view_model/code_editor/code_editor_providers.dart';
 import 'package:algorithm_visualizer/features/challenge/presentation/widgets/challenges/error_state.dart';
+import 'package:algorithm_visualizer/core/custom_packages/custom_code_editor/code_editor.dart'
+    show CodeController;
 import 'package:algorithm_visualizer/features/challenge/presentation/widgets/editor/editor_action_bar.dart';
 import 'package:algorithm_visualizer/features/challenge/presentation/widgets/editor/editor_code_card.dart';
+import 'package:algorithm_visualizer/features/challenge/presentation/widgets/editor/editor_keyboard_toolbar.dart';
 import 'package:algorithm_visualizer/features/challenge/presentation/widgets/editor/editor_test_case_card.dart';
 import 'package:algorithm_visualizer/features/challenge/presentation/widgets/editor/editor_title_row.dart';
 import 'package:algorithm_visualizer/features/home/view_model/home_provider.dart';
@@ -119,7 +122,7 @@ class _EditorPageState extends ConsumerState<EditorPage> {
   }
 }
 
-class _EditorContent extends ConsumerWidget {
+class _EditorContent extends ConsumerStatefulWidget {
   const _EditorContent({
     required this.problem,
     required this.problemId,
@@ -135,14 +138,34 @@ class _EditorContent extends ConsumerWidget {
   final VoidCallback onRun;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<_EditorContent> createState() => _EditorContentState();
+}
+
+class _EditorContentState extends ConsumerState<_EditorContent> {
+  // Owned here, not in the notifier: this is a raw editing handle for the
+  // keyboard toolbar to write into, not app state anything else needs to
+  // react to. Set once by EditorCodeCard's onControllerAttached, alongside
+  // the notifier's own attachCodeController.
+  CodeController? _codeController;
+
+  @override
+  Widget build(BuildContext context) {
+    final problem = widget.problem;
+    final problemId = widget.problemId;
     final provider = codeEditorControllerProvider(problemId);
     final notifier = ref.read(provider.notifier);
+
+    // The keyboard toolbar only makes sense while the language it's showing
+    // symbols for is actually current, so read it here too rather than
+    // trusting whatever language _codeController was last attached under.
+    final language = ref.watch(provider.select((s) => s.language));
+    final keyboardVisible = MediaQuery.viewInsetsOf(context).bottom > 0;
+    final codeController = _codeController;
 
     return Stack(
       children: [
         CustomScrollView(
-          controller: scrollController,
+          controller: widget.scrollController,
           physics: const BouncingScrollPhysics(),
           slivers: [
             SliverPadding(
@@ -166,7 +189,15 @@ class _EditorContent extends ConsumerWidget {
                       initialCode: notifier.initialCode,
                       highlightedLine: highlightedLine,
                       running: isRunning,
-                      onControllerAttached: notifier.attachCodeController,
+                      onControllerAttached: (controller) {
+                        notifier.attachCodeController(controller);
+                        // Deferred a frame: this runs from EditorCodeCard's
+                        // initState/didUpdateWidget by way of _CodeArea, and
+                        // setState during a descendant's build phase throws.
+                        WidgetsBinding.instance.addPostFrameCallback((_) {
+                          if (mounted) setState(() => _codeController = controller);
+                        });
+                      },
                       language: language,
                       languages: notifier.languagesAvailable,
                       onLanguageSelected: notifier.setLanguage,
@@ -181,7 +212,7 @@ class _EditorContent extends ConsumerWidget {
                 if (grade == null) return const SliverToBoxAdapter(child: SizedBox.shrink());
 
                 return SliverPadding(
-                  key: resultKey,
+                  key: widget.resultKey,
                   padding: REdgeInsets.fromLTRB(16, 12, 16, 0),
                   sliver: SliverToBoxAdapter(child: EditorTestCaseCard(grade: grade)),
                 );
@@ -191,22 +222,34 @@ class _EditorContent extends ConsumerWidget {
                 child: RSizedBox(height: MediaQuery.of(context).viewInsets.bottom + CdSpace.ctaReserve)),
           ],
         ),
-        Positioned(
-          left: 0,
-          right: 0,
-          bottom: 0,
-          child: Consumer(
-            builder: (context, ref, child) {
-              final isRunning = ref.watch(provider.select((s) => s.isRunning));
+        // Above the OS keyboard, in place of the action bar (which sits at
+        // bottom: 0 and is covered by the keyboard anyway — Run/Reset make
+        // no sense mid-edit). Nothing else on this page takes text input, so
+        // "keyboard visible" and "editor focused" are the same condition.
+        if (keyboardVisible && codeController != null)
+          Positioned(
+            left: 0,
+            right: 0,
+            bottom: MediaQuery.viewInsetsOf(context).bottom,
+            child: EditorKeyboardToolbar(controller: codeController, language: language),
+          )
+        else
+          Positioned(
+            left: 0,
+            right: 0,
+            bottom: 0,
+            child: Consumer(
+              builder: (context, ref, child) {
+                final isRunning = ref.watch(provider.select((s) => s.isRunning));
 
-              return EditorActionBar(
-                running: isRunning,
-                onReset: notifier.resetCode,
-                onRun: onRun,
-              );
-            },
+                return EditorActionBar(
+                  running: isRunning,
+                  onReset: notifier.resetCode,
+                  onRun: widget.onRun,
+                );
+              },
+            ),
           ),
-        ),
       ],
     );
   }
