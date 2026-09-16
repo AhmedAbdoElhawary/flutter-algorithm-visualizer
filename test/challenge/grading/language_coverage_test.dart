@@ -1,15 +1,9 @@
-// Proves the pilot problems really are solvable in Python and JavaScript
-// against the **stored** test cases and expected outputs in
-// `assets/problems.json` — not against fixtures written to match.
+// The gate for offering Python and JavaScript on every problem that can take
+// them. Same rule as the pilot set (`pilot_languages_test.dart`): starter code
+// is only added to `assets/problems.json` for a problem proven solvable here,
+// against the **stored** test cases and expected outputs.
 //
-// This is the gate for offering a language on a problem: starter code is only
-// added to the dataset for a problem that appears here and passes. A language
-// offered on a problem nobody has solved in it is a promise the editor has not
-// checked (R10, and the standing rule that a wrong answer must never pass).
-//
-// The set is chosen for coverage, not ease: hash map, stack, dynamic
-// programming, sorting with a key, two pointers, sets, nested lists, string
-// work, and an in-place function that returns nothing.
+// Solutions live in `coverage_solutions.dart` so this file stays a runner.
 
 import 'dart:convert';
 import 'dart:io';
@@ -19,6 +13,7 @@ import 'package:algorithm_visualizer/features/challenge/data/models/problem_dto.
 import 'package:algorithm_visualizer/features/challenge/data/models/test_case.dart';
 import 'package:flutter_test/flutter_test.dart';
 
+import 'coverage_solutions.dart';
 import 'pilot_solutions.dart';
 
 void main() {
@@ -43,7 +38,7 @@ void main() {
         comparison: OutputComparison.fromKey(dto.comparison),
       );
 
-  pilotSolutions.forEach((id, byLanguage) {
+  coverageSolutions.forEach((id, byLanguage) {
     byLanguage.forEach((language, code) {
       test('problem $id in ${language.displayName}: passes every stored test case', () {
         final dto = problems[id];
@@ -67,18 +62,29 @@ void main() {
     });
   });
 
-  test('every pilot problem offers exactly the languages it has been proven in', () {
-    // The dataset and this file must not drift apart: starter code without a
-    // verified solution is an unchecked promise, and a verified solution with
-    // no starter code is a language the learner is never offered.
-    for (final id in pilotSolutions.keys) {
-      final dto = problems[id]!;
-      for (final language in pilotSolutions[id]!.keys) {
-        final starter = dto.defaultCode?[language.datasetKey];
-        expect(starter != null && starter.trim().isNotEmpty, isTrue,
-            reason: 'problem $id has a verified ${language.displayName} solution '
-                'but no ${language.datasetKey} starter code in assets/problems.json');
-      }
+  test('every problem offering a language has a verified solution in it', () {
+    // The dataset must never promise a language nobody has solved the problem
+    // in. Design problems (zero test cases) are the one exception: there is
+    // nothing to grade, so the starter template is the whole deliverable.
+    final verified = <int, Set<EditorLanguage>>{};
+    for (final source in <Map<int, Map<EditorLanguage, String>>>[pilotSolutions, coverageSolutions]) {
+      source.forEach((id, m) => verified.putIfAbsent(id, () => <EditorLanguage>{}).addAll(m.keys));
     }
+
+    final unproven = <String>[];
+    problems.forEach((id, dto) {
+      final gradable = (dto.testCases?.isNotEmpty ?? false) || (dto.hiddenTestCases?.isNotEmpty ?? false);
+      if (!gradable) return;
+      for (final language in supportedLanguages) {
+        if (language == EditorLanguage.dart) continue;
+        final starter = dto.defaultCode?[language.datasetKey];
+        final offered = starter != null && starter.trim().isNotEmpty;
+        if (offered && !(verified[id]?.contains(language) ?? false)) {
+          unproven.add('problem $id (${dto.name}) offers ${language.displayName} with no verified solution');
+        }
+      }
+    });
+
+    expect(unproven, isEmpty, reason: unproven.join('\n'));
   });
 }
