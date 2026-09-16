@@ -44,7 +44,7 @@ class EditorKeyboardToolbar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 44.h,
+      height: 44.r,
       decoration: BoxDecoration(
         color: context.getColor(ThemeEnum.raised),
         border: Border(top: BorderSide(color: context.getColor(ThemeEnum.hairline))),

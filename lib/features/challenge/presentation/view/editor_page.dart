@@ -230,7 +230,7 @@ class _EditorContentState extends ConsumerState<_EditorContent> {
           Positioned(
             left: 0,
             right: 0,
-            bottom: MediaQuery.viewInsetsOf(context).bottom,
+            bottom: MediaQuery.viewInsetsOf(context).bottom - 60.h,
             child: EditorKeyboardToolbar(controller: codeController, language: language),
           )
         else
