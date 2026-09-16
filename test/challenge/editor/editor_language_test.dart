@@ -10,7 +10,8 @@ import 'package:algorithm_visualizer/core/custom_packages/custom_code_editor/cod
 import 'package:algorithm_visualizer/features/challenge/data/models/problem_storage.dart';
 import 'package:algorithm_visualizer/features/challenge/domain/entities/coding_problem.dart';
 import 'package:algorithm_visualizer/features/challenge/presentation/widgets/editor/editor_code_card.dart';
-import 'package:algorithm_visualizer/features/challenge/presentation/widgets/editor/editor_language_picker.dart';
+import 'package:algorithm_visualizer/features/challenge/presentation/widgets/editor/editor_language_menu.dart';
+import 'package:algorithm_visualizer/features/challenge/presentation/widgets/editor/editor_title_row.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -81,42 +82,57 @@ void main() {
     });
   });
 
-  group('the picker in the editor', () {
-    /// Scoped to the picker, because the card header also prints the file
-    /// name — which ends in the language too.
-    Finder chip(String label) =>
-        find.descendant(of: find.byType(EditorLanguagePicker), matching: find.text(label));
-
-    testWidgets('shows every language even when the problem offers only one', (tester) async {
-      // A Dart-only problem still shows all three, so the choice looks the
-      // same everywhere. The other two are dimmed rather than missing.
-      await pumpEditorPage(tester, problem: buildGradableTestProblem());
-
-      expect(chip('Dart'), findsOneWidget);
-      expect(chip('Python'), findsOneWidget);
-      expect(chip('JavaScript'), findsOneWidget);
-    });
-
-    testWidgets('a language the problem does not offer cannot be selected', (tester) async {
-      await pumpEditorPage(tester, problem: buildGradableTestProblem());
-
-      await tester.tap(chip('Python'));
+  group('the language menu in the editor', () {
+    /// Opens the drop-down. Scoped to the menu, because the card header also
+    /// prints the file name — which ends in the language too.
+    Future<void> openMenu(WidgetTester tester) async {
+      await tester.tap(find.byType(EditorLanguageMenu));
       await tester.pumpAndSettle();
+    }
 
-      expect(tester.widget<EditorCodeCard>(find.byType(EditorCodeCard)).language, EditorLanguage.dart);
-    });
+    /// One row of the open menu.
+    Finder entry(String label) => find.widgetWithText(PopupMenuItem<EditorLanguage>, label);
 
-    testWidgets('a language the problem does offer is the one that can be picked', (tester) async {
-      await pumpEditorPage(
-        tester,
-        problem: buildGradableTestProblem().copyWith(
-          defaultCode: <String, String>{'dart': gradableCorrectCode, 'python': pythonAdd},
-        ),
-      );
+    Future<void> choose(WidgetTester tester, String label) async {
+      await openMenu(tester);
+      await tester.tap(entry(label));
+      await tester.pumpAndSettle();
+    }
+
+    testWidgets('sits in the title row, showing the current language', (tester) async {
+      await pumpEditorPage(tester, problem: buildGradableTestProblem());
 
       expect(
-        tester.widget<EditorCodeCard>(find.byType(EditorCodeCard)).languages,
-        <EditorLanguage>[EditorLanguage.dart, EditorLanguage.python],
+        find.descendant(of: find.byType(EditorTitleRow), matching: find.byType(EditorLanguageMenu)),
+        findsOneWidget,
+      );
+      expect(
+        find.descendant(of: find.byType(EditorLanguageMenu), matching: find.text('Dart')),
+        findsOneWidget,
+      );
+    });
+
+    testWidgets('lists every language even when the problem offers only one', (tester) async {
+      // A Dart-only problem still lists all three, so the choice looks the
+      // same everywhere. The other two are disabled rather than missing.
+      await pumpEditorPage(tester, problem: buildGradableTestProblem());
+      await openMenu(tester);
+
+      expect(entry('Dart'), findsOneWidget);
+      expect(find.textContaining('Python'), findsWidgets);
+      expect(find.textContaining('JavaScript'), findsWidgets);
+    });
+
+    testWidgets('a language the problem does not offer cannot be chosen', (tester) async {
+      await pumpEditorPage(tester, problem: buildGradableTestProblem());
+      await openMenu(tester);
+
+      final python = tester.widgetList<PopupMenuItem<EditorLanguage>>(
+        find.byType(PopupMenuItem<EditorLanguage>),
+      );
+      expect(
+        python.where((item) => item.value == EditorLanguage.python).single.enabled,
+        isFalse,
       );
     });
 
@@ -130,8 +146,7 @@ void main() {
 
       expect(tester.widget<EditorCodeCard>(find.byType(EditorCodeCard)).language, EditorLanguage.dart);
 
-      await tester.tap(chip('Python'));
-      await tester.pumpAndSettle();
+      await choose(tester, 'Python');
 
       expect(tester.widget<EditorCodeCard>(find.byType(EditorCodeCard)).language, EditorLanguage.python);
       // No confirmation of any kind stood between the two.
@@ -158,12 +173,10 @@ void main() {
           'int add(int a, int b) { return 99; }';
       await tester.pumpAndSettle();
 
-      await tester.tap(chip('Python'));
-      await tester.pumpAndSettle();
+      await choose(tester, 'Python');
       expect(editorText(), contains('def add'));
 
-      await tester.tap(chip('Dart'));
-      await tester.pumpAndSettle();
+      await choose(tester, 'Dart');
       expect(editorText(), contains('99'), reason: 'the Dart draft should have survived the round trip');
     });
 

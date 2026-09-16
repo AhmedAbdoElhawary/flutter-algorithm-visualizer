@@ -5,7 +5,6 @@ import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
 import 'package:algorithm_visualizer/core/widgets/adaptive/text/adaptive_text.dart';
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/card_container.dart';
 import 'package:algorithm_visualizer/features/challenge/presentation/widgets/editor/editor_code_theme.dart';
-import 'package:algorithm_visualizer/features/challenge/presentation/widgets/editor/editor_language_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -22,8 +21,6 @@ class EditorCodeCard extends StatelessWidget {
     required this.running,
     required this.onControllerAttached,
     this.language = EditorLanguage.dart,
-    this.languages = const <EditorLanguage>[EditorLanguage.dart],
-    this.onLanguageSelected,
   });
 
   final String fileName;
@@ -32,13 +29,9 @@ class EditorCodeCard extends StatelessWidget {
   final bool running;
   final void Function(CodeController controller) onControllerAttached;
 
-  /// The language the editor is showing, which decides the syntax colouring
-  /// and which chip in the header reads as selected.
+  /// The language the editor is showing, which decides the syntax colouring.
+  /// Choosing it belongs to the title row's drop-down, not to this card.
   final EditorLanguage language;
-
-  /// Exactly the languages this problem offers. One language means no picker.
-  final List<EditorLanguage> languages;
-  final ValueChanged<EditorLanguage>? onLanguageSelected;
 
   @override
   Widget build(BuildContext context) {
@@ -50,13 +43,7 @@ class EditorCodeCard extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          _CodeCardHeader(
-            fileName: fileName,
-            language: language,
-            languages: languages,
-            running: running,
-            onLanguageSelected: onLanguageSelected,
-          ),
+          _CodeCardHeader(fileName: fileName),
           _CodeArea(
             initialCode: initialCode,
             language: language,
@@ -71,19 +58,9 @@ class EditorCodeCard extends StatelessWidget {
 }
 
 class _CodeCardHeader extends StatelessWidget {
-  const _CodeCardHeader({
-    required this.fileName,
-    required this.language,
-    required this.languages,
-    required this.running,
-    required this.onLanguageSelected,
-  });
+  const _CodeCardHeader({required this.fileName});
 
   final String fileName;
-  final EditorLanguage language;
-  final List<EditorLanguage> languages;
-  final bool running;
-  final ValueChanged<EditorLanguage>? onLanguageSelected;
 
   @override
   Widget build(BuildContext context) {
@@ -100,20 +77,6 @@ class _CodeCardHeader extends StatelessWidget {
           const RSizedBox(width: 5),
           const _Dot(ThemeEnum.dataEasy),
           const Spacer(),
-          // Three chips plus a file name do not fit a 320pt screen, and the
-          // chips are the part the learner acts on — so they get the room and
-          // the file name gives way.
-          Flexible(
-            child: SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: EditorLanguagePicker(
-                languages: languages,
-                selected: language,
-                enabled: !running,
-                onSelected: onLanguageSelected ?? (_) {},
-              ),
-            ),
-          ),
           Flexible(
             child: RegularText(
               fileName,

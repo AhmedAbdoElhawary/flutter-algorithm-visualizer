@@ -199,8 +199,6 @@ class _EditorContentState extends ConsumerState<_EditorContent> {
                         });
                       },
                       language: language,
-                      languages: notifier.languagesAvailable,
-                      onLanguageSelected: notifier.setLanguage,
                     );
                   },
                 ),
