@@ -2,6 +2,7 @@ import 'package:algorithm_visualizer/config/routes/route_app.dart';
 import 'package:algorithm_visualizer/core/extensions/navigators.dart';
 import 'package:algorithm_visualizer/core/helpers/constants.dart';
 import 'package:algorithm_visualizer/core/helpers/current_device.dart';
+import 'package:algorithm_visualizer/core/localization/app_localizations.dart';
 import 'package:algorithm_visualizer/core/resources/strings_manager.dart';
 import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
 import 'package:algorithm_visualizer/core/widgets/adaptive/text/adaptive_text.dart';
@@ -86,7 +87,7 @@ class _Header extends StatelessWidget {
           const CustomBackButton(),
           BoldText(StringsManager.bookmarked.trim(), color: ThemeEnum.inkTitle, fontSize: 17),
           const Spacer(),
-          RegularText('$count ${unit.toLowerCase()}', color: ThemeEnum.inkBody, fontSize: 11),
+          RegularText('$count ${unit.tr(context).toLowerCase()}', color: ThemeEnum.inkBody, fontSize: 11),
         ],
       ),
     );
