@@ -41,6 +41,7 @@ class Dialect {
     required this.printsFalseAs,
     this.printsNullAs = 'null',
     this.wholeFloatsPrintAsIntegers = false,
+    this.singleNumberType = false,
     this.propertyAccessReadsMapKeys = false,
     this.outOfRangeIndexIsUndefined = false,
     this.sequenceRepetition = false,
@@ -65,6 +66,12 @@ class Dialect {
   /// JavaScript has one number type, so `4 / 2` is `2`, not `2.0`. Dart and
   /// Python both keep the distinction visible.
   final bool wholeFloatsPrintAsIntegers;
+
+  /// Whether the language has one number type rather than separate integers
+  /// and floats. True for JavaScript, where `total / 2` is simply a number and
+  /// `xs[total / 2]` is an ordinary index. Dart and Python both reject a
+  /// fractional value there, and so must this engine.
+  final bool singleNumberType;
 
   /// Whether `a.b` on a map reads the entry under `"b"`.
   ///

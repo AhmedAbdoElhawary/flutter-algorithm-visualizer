@@ -685,18 +685,31 @@ class Vm {
   /// answer rather than as a crash. [readOnly] is false for writes, which
   /// still bounds-check everywhere.
   int? _resolveIndex(Value index, int length, {bool readOnly = false}) {
-    if (index is! IntValue) {
+    final asInt = _indexValue(index);
+    if (asInt == null) {
       if (readOnly && dialect.outOfRangeIndexIsUndefined) return null;
       throw const VmRuntimeError('typeMismatch', <String, Object?>{'expected': 'an integer index'});
     }
-    var i = index.value;
+    var i = asInt;
     if (i < 0 && dialect.negativeIndexing) i += length;
     if (i < 0 || i >= length) {
       if (readOnly && dialect.outOfRangeIndexIsUndefined) return null;
 
-      throw VmRuntimeError('indexOutOfRange', <String, Object?>{'index': index.value, 'length': length});
+      throw VmRuntimeError('indexOutOfRange', <String, Object?>{'index': asInt, 'length': length});
     }
     return i;
+  }
+
+  /// [index] as a whole number, or null if it cannot be one. A language with a
+  /// single number type has no separate integer, so `4 / 2` must index just as
+  /// `2` does; `4.5` still cannot, in any language.
+  int? _indexValue(Value index) {
+    if (index is IntValue) return index.value;
+    if (index is NumValue && dialect.singleNumberType) {
+      final value = index.value;
+      if (value.isFinite && value == value.roundToDouble()) return value.toInt();
+    }
+    return null;
   }
 
   /// The bounds-checking form, for the callers that must always fail on a bad

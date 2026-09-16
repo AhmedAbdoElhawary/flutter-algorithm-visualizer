@@ -464,16 +464,46 @@ class PythonParser {
             line: line, expr: IrPropertySet(line: line, receiver: receiver, name: name, value: value));
       case IrTupleLiteral(:final items):
       case IrListLiteral(:final items):
-        final names = <String>[];
-        for (final item in items) {
-          if (item is! IrIdentifier) throw _unsupported('nestedUnpacking', line);
-          names.add(item.name);
-          _noteAssignment(item.name);
-        }
-        return IrDestructure(line: line, names: names, value: value);
+        return _unpackInto(line, items, value);
       default:
         throw _syntax('invalidAssignmentTarget');
     }
+  }
+
+  /// `a, b = ...`. When every target is a plain name this is one
+  /// [IrDestructure]. When a target is a subscript or an attribute — which is
+  /// the `nums[i], nums[j] = nums[j], nums[i]` swap at the heart of half the
+  /// Python solutions people write — the right-hand side is evaluated once
+  /// into a temporary and each target assigned from it in order. That is
+  /// Python's own rule: the whole right side is built before anything on the
+  /// left is touched, which is why the swap works at all.
+  IrStmt _unpackInto(int line, List<IrExpr> items, IrExpr value) {
+    if (items.every((item) => item is IrIdentifier)) {
+      final names = <String>[];
+      for (final item in items) {
+        final name = (item as IrIdentifier).name;
+        names.add(name);
+        _noteAssignment(name);
+      }
+      return IrDestructure(line: line, names: names, value: value);
+    }
+    final holder = _nextTemp();
+    final statements = <IrStmt>[
+      IrVarDecl(line: line, synthetic: true, name: holder, initializer: value),
+    ];
+    for (var i = 0; i < items.length; i++) {
+      statements.add(_assignTo(
+        line,
+        items[i],
+        IrIndexGet(
+          line: line,
+          synthetic: true,
+          receiver: IrIdentifier(line: line, synthetic: true, name: holder),
+          index: IrLiteral(line: line, synthetic: true, kind: IrLiteralKind.intLit, value: i),
+        ),
+      ));
+    }
+    return IrStmtGroup(line: line, synthetic: true, statements: statements);
   }
 
   IrStmt _augmentedAssign(int line, IrExpr target, String op, IrExpr value) {

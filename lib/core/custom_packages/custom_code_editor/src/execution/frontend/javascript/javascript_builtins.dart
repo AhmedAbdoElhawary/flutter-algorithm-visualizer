@@ -446,10 +446,24 @@ Value _newSet(List<Value> a, InvokeCallback i) => SetValue(LinkedHashSet<Value>.
 
 Value _newArray(List<Value> a, InvokeCallback i) {
   // `new Array(3)` is three empty slots; `new Array(1, 2)` is those elements.
-  if (a.length == 1 && (a[0] is IntValue)) {
-    return ListValue(List<Value>.filled(_int(a[0]), UndefinedValue.instance, growable: true));
+  // JavaScript has one number type, so `new Array(total / 2)` is a length like
+  // any other — the engine must not treat a whole `2.0` as "not a count".
+  if (a.length == 1) {
+    final length = _wholeNumber(a[0]);
+    if (length != null) {
+      return ListValue(List<Value>.filled(length, UndefinedValue.instance, growable: true));
+    }
   }
   return ListValue(List<Value>.of(a));
+}
+
+/// [v] as a whole number, or null if it is not one.
+int? _wholeNumber(Value v) {
+  if (v is IntValue) return v.value;
+  if (v is NumValue && v.value.isFinite && v.value == v.value.roundToDouble()) {
+    return v.value.toInt();
+  }
+  return null;
 }
 
 // --- Array methods ---------------------------------------------------------

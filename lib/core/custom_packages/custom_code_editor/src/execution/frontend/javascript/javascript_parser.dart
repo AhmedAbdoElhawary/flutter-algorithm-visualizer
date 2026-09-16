@@ -604,6 +604,13 @@ class JavascriptParser {
       if (!_checkOp(op)) continue;
       _advance();
       final value = _assignment();
+      // `[a, b] = [b, a]` is valid JavaScript the engine does not lower yet.
+      // It is a missing feature, not a typo, so it must not be reported as a
+      // syntax error — that would send the learner hunting for a mistake they
+      // did not make.
+      if (target is IrListLiteral || target is IrMapLiteral) {
+        throw _unsupported('destructuringAssignment', line);
+      }
       if (!_isAssignable(target)) throw _syntax('invalidAssignmentTarget');
       if (op == '=') return _assignBack(line, target, value);
       final binaryOp = switch (op) {
