@@ -21,9 +21,8 @@ class BookmarkedProblemsPage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final problems = ref.watch(problemsProvider);
 
-    return Scaffold(
-      backgroundColor: context.getColor(ThemeEnum.ground),
-      body: SafeArea(
+    return Material(
+      child: SafeArea(
         child: problems.when(
           data: (all) {
             final bookmarked = all.where((p) => p.getIsBookmarked).toList();
