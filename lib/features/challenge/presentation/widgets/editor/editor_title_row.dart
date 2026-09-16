@@ -1,6 +1,3 @@
-import 'package:algorithm_visualizer/core/resources/dimensions_manager.dart';
-import 'package:algorithm_visualizer/core/resources/font_manager.dart';
-import 'package:algorithm_visualizer/core/resources/strings_manager.dart';
 import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
 import 'package:algorithm_visualizer/core/widgets/adaptive/text/adaptive_text.dart';
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/custom_back_button.dart';
@@ -27,8 +24,6 @@ class EditorTitleRow extends StatelessWidget {
           child: SemiBoldText(problemName, color: ThemeEnum.inkTitle, maxLines: 1),
         ),
         const RSizedBox(width: 8),
-        const _LanguageChip(),
-        const RSizedBox(width: 8),
         EditorLanguageMenu(problemId: problemId),
         const RSizedBox(width: 7),
         Consumer(
@@ -46,28 +41,6 @@ class EditorTitleRow extends StatelessWidget {
           },
         ),
       ],
-    );
-  }
-}
-
-class _LanguageChip extends StatelessWidget {
-  const _LanguageChip();
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: REdgeInsets.symmetric(vertical: 8, horizontal: 11),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(CdRadius.sm.r),
-        border: Border.all(color: context.getColor(ThemeEnum.hairline)),
-      ),
-      child: const RegularText(
-        StringsManager.dart,
-        fontFamily: FontConstants.fontJetBrainsMono,
-        fontSize: 11,
-        color: ThemeEnum.inkBody,
-        maxLines: 1,
-      ),
     );
   }
 }
