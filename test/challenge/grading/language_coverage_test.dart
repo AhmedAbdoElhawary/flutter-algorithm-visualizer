@@ -9,12 +9,25 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:algorithm_visualizer/core/custom_packages/custom_code_editor/code_editor.dart';
+import 'package:algorithm_visualizer/features/challenge/data/models/custom_object.dart';
 import 'package:algorithm_visualizer/features/challenge/data/models/problem_dto.dart';
 import 'package:algorithm_visualizer/features/challenge/data/models/test_case.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'coverage_solutions.dart';
 import 'pilot_solutions.dart';
+
+/// The problem's custom-object classes, keyed by class name — the same thing
+/// `GradeCodeUseCase` builds from the dataset before handing it to the runner.
+Map<String, CustomObjectShape> _shapesOf(ProblemDTO dto) {
+  final shapes = <String, CustomObjectShape>{};
+  for (final object in dto.customObjects?['dart'] ?? const <CustomObject>[]) {
+    final shape = CustomObjectShape.fromKey(object.shape);
+    final name = RegExp(r'class\s+(\w+)').firstMatch(object.code?.trim() ?? '')?.group(1);
+    if (shape != null && name != null) shapes[name] = shape;
+  }
+  return shapes;
+}
 
 void main() {
   late Map<int, ProblemDTO> problems;
@@ -36,6 +49,8 @@ void main() {
             ProblemTestCase(input: t.input?.trim() ?? '', expectedOutput: t.expectedOutput?.trim() ?? ''),
         ],
         comparison: OutputComparison.fromKey(dto.comparison),
+        customObjects: _shapesOf(dto),
+        customObjectSources: <String>[for (final o in dto.customObjects?['dart'] ?? const []) o.code ?? ''],
       );
 
   coverageSolutions.forEach((id, byLanguage) {

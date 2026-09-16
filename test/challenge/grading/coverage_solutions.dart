@@ -2419,4 +2419,721 @@ function longestCommonSubsequence(text1, text2) {
 }
 ''',
   },
+
+  // --- Linked lists ---------------------------------------------------
+
+  // Add Two Numbers — digit-by-digit with a carry.
+  2: <EditorLanguage, String>{
+    EditorLanguage.python: '''
+def addTwoNumbers(l1, l2):
+    head = ListNode(0)
+    tail = head
+    carry = 0
+    while l1 is not None or l2 is not None or carry > 0:
+        total = carry
+        if l1 is not None:
+            total += l1.val
+            l1 = l1.next
+        if l2 is not None:
+            total += l2.val
+            l2 = l2.next
+        carry = total // 10
+        tail.next = ListNode(total % 10)
+        tail = tail.next
+    return head.next
+''',
+    EditorLanguage.javascript: '''
+function addTwoNumbers(l1, l2) {
+  const head = new ListNode(0)
+  let tail = head
+  let carry = 0
+  while (l1 !== null || l2 !== null || carry > 0) {
+    let total = carry
+    if (l1 !== null) {
+      total += l1.val
+      l1 = l1.next
+    }
+    if (l2 !== null) {
+      total += l2.val
+      l2 = l2.next
+    }
+    carry = Math.floor(total / 10)
+    tail.next = new ListNode(total % 10)
+    tail = tail.next
+  }
+  return head.next
+}
+''',
+  },
+
+  // Remove Nth Node From End of List — two pointers n apart.
+  8: <EditorLanguage, String>{
+    EditorLanguage.python: '''
+def removeNthFromEnd(head, n):
+    guard = ListNode(0)
+    guard.next = head
+    ahead = guard
+    behind = guard
+    for _ in range(n):
+        ahead = ahead.next
+    while ahead.next is not None:
+        ahead = ahead.next
+        behind = behind.next
+    behind.next = behind.next.next
+    return guard.next
+''',
+    EditorLanguage.javascript: '''
+function removeNthFromEnd(head, n) {
+  const guard = new ListNode(0)
+  guard.next = head
+  let ahead = guard
+  let behind = guard
+  for (let i = 0; i < n; i++) ahead = ahead.next
+  while (ahead.next !== null) {
+    ahead = ahead.next
+    behind = behind.next
+  }
+  behind.next = behind.next.next
+  return guard.next
+}
+''',
+  },
+
+  // Merge Two Sorted Lists — splice the smaller head each time.
+  10: <EditorLanguage, String>{
+    EditorLanguage.python: '''
+def mergeTwoLists(list1, list2):
+    head = ListNode(0)
+    tail = head
+    while list1 is not None and list2 is not None:
+        if list1.val <= list2.val:
+            tail.next = list1
+            list1 = list1.next
+        else:
+            tail.next = list2
+            list2 = list2.next
+        tail = tail.next
+    if list1 is not None:
+        tail.next = list1
+    else:
+        tail.next = list2
+    return head.next
+''',
+    EditorLanguage.javascript: '''
+function mergeTwoLists(list1, list2) {
+  const head = new ListNode(0)
+  let tail = head
+  while (list1 !== null && list2 !== null) {
+    if (list1.val <= list2.val) {
+      tail.next = list1
+      list1 = list1.next
+    } else {
+      tail.next = list2
+      list2 = list2.next
+    }
+    tail = tail.next
+  }
+  tail.next = list1 !== null ? list1 : list2
+  return head.next
+}
+''',
+  },
+
+  // Merge k Sorted Lists — merge them in one at a time.
+  12: <EditorLanguage, String>{
+    EditorLanguage.python: '''
+def mergeKLists(lists):
+    def merge(a, b):
+        head = ListNode(0)
+        tail = head
+        while a is not None and b is not None:
+            if a.val <= b.val:
+                tail.next = a
+                a = a.next
+            else:
+                tail.next = b
+                b = b.next
+            tail = tail.next
+        if a is not None:
+            tail.next = a
+        else:
+            tail.next = b
+        return head.next
+
+    merged = None
+    for one in lists:
+        merged = merge(merged, one)
+    return merged
+''',
+    EditorLanguage.javascript: '''
+function mergeKLists(lists) {
+  function merge(a, b) {
+    const head = new ListNode(0)
+    let tail = head
+    while (a !== null && b !== null) {
+      if (a.val <= b.val) {
+        tail.next = a
+        a = a.next
+      } else {
+        tail.next = b
+        b = b.next
+      }
+      tail = tail.next
+    }
+    tail.next = a !== null ? a : b
+    return head.next
+  }
+  let merged = null
+  for (const one of lists) merged = merge(merged, one)
+  return merged
+}
+''',
+  },
+
+  // Reorder List — split, reverse the back half, then weave. In place.
+  55: <EditorLanguage, String>{
+    EditorLanguage.python: '''
+def reorderList(head):
+    if head is None or head.next is None:
+        return
+    slow = head
+    fast = head
+    while fast.next is not None and fast.next.next is not None:
+        slow = slow.next
+        fast = fast.next.next
+    back = slow.next
+    slow.next = None
+    previous = None
+    while back is not None:
+        after = back.next
+        back.next = previous
+        previous = back
+        back = after
+    front = head
+    back = previous
+    while back is not None:
+        after_front = front.next
+        after_back = back.next
+        front.next = back
+        back.next = after_front
+        front = after_front
+        back = after_back
+''',
+    EditorLanguage.javascript: '''
+function reorderList(head) {
+  if (head === null || head.next === null) return
+  let slow = head
+  let fast = head
+  while (fast.next !== null && fast.next.next !== null) {
+    slow = slow.next
+    fast = fast.next.next
+  }
+  let back = slow.next
+  slow.next = null
+  let previous = null
+  while (back !== null) {
+    const after = back.next
+    back.next = previous
+    previous = back
+    back = after
+  }
+  let front = head
+  back = previous
+  while (back !== null) {
+    const afterFront = front.next
+    const afterBack = back.next
+    front.next = back
+    back.next = afterFront
+    front = afterFront
+    back = afterBack
+  }
+}
+''',
+  },
+
+  // --- Binary trees ---------------------------------------------------
+
+  // Validate Binary Search Tree — carry the allowed range down, since a
+  // node-vs-children check alone misses a violation further down.
+  34: <EditorLanguage, String>{
+    EditorLanguage.python: '''
+def isValidBST(root):
+    def check(node, low, high):
+        if node is None:
+            return True
+        if low is not None and node.val <= low:
+            return False
+        if high is not None and node.val >= high:
+            return False
+        return check(node.left, low, node.val) and check(node.right, node.val, high)
+
+    return check(root, None, None)
+''',
+    EditorLanguage.javascript: '''
+function isValidBST(root) {
+  function check(node, low, high) {
+    if (node === null) return true
+    if (low !== null && node.val <= low) return false
+    if (high !== null && node.val >= high) return false
+    return check(node.left, low, node.val) && check(node.right, node.val, high)
+  }
+  return check(root, null, null)
+}
+''',
+  },
+
+  // Same Tree — walk both at once.
+  35: <EditorLanguage, String>{
+    EditorLanguage.python: '''
+def isSameTree(p, q):
+    if p is None and q is None:
+        return True
+    if p is None or q is None:
+        return False
+    if p.val != q.val:
+        return False
+    return isSameTree(p.left, q.left) and isSameTree(p.right, q.right)
+''',
+    EditorLanguage.javascript: '''
+function isSameTree(p, q) {
+  if (p === null && q === null) return true
+  if (p === null || q === null) return false
+  if (p.val !== q.val) return false
+  return isSameTree(p.left, q.left) && isSameTree(p.right, q.right)
+}
+''',
+  },
+
+  // Symmetric Tree — compare the tree against its own mirror.
+  36: <EditorLanguage, String>{
+    EditorLanguage.python: '''
+def isSymmetric(root):
+    def mirror(a, b):
+        if a is None and b is None:
+            return True
+        if a is None or b is None:
+            return False
+        if a.val != b.val:
+            return False
+        return mirror(a.left, b.right) and mirror(a.right, b.left)
+
+    if root is None:
+        return True
+    return mirror(root.left, root.right)
+''',
+    EditorLanguage.javascript: '''
+function isSymmetric(root) {
+  function mirror(a, b) {
+    if (a === null && b === null) return true
+    if (a === null || b === null) return false
+    if (a.val !== b.val) return false
+    return mirror(a.left, b.right) && mirror(a.right, b.left)
+  }
+  if (root === null) return true
+  return mirror(root.left, root.right)
+}
+''',
+  },
+
+  // Binary Tree Level Order Traversal — one frontier per level.
+  37: <EditorLanguage, String>{
+    EditorLanguage.python: '''
+def levelOrder(root):
+    if root is None:
+        return []
+    out = []
+    frontier = [root]
+    while len(frontier) > 0:
+        values = []
+        nxt = []
+        for node in frontier:
+            values.append(node.val)
+            if node.left is not None:
+                nxt.append(node.left)
+            if node.right is not None:
+                nxt.append(node.right)
+        out.append(values)
+        frontier = nxt
+    return out
+''',
+    EditorLanguage.javascript: '''
+function levelOrder(root) {
+  if (root === null) return []
+  const out = []
+  let frontier = [root]
+  while (frontier.length > 0) {
+    const values = []
+    const next = []
+    for (const node of frontier) {
+      values.push(node.val)
+      if (node.left !== null) next.push(node.left)
+      if (node.right !== null) next.push(node.right)
+    }
+    out.push(values)
+    frontier = next
+  }
+  return out
+}
+''',
+  },
+
+  // Binary Tree Zigzag Level Order Traversal — the same sweep, reversing
+  // every other level.
+  38: <EditorLanguage, String>{
+    EditorLanguage.python: '''
+def zigzagLevelOrder(root):
+    if root is None:
+        return []
+    out = []
+    frontier = [root]
+    leftToRight = True
+    while len(frontier) > 0:
+        values = []
+        nxt = []
+        for node in frontier:
+            values.append(node.val)
+            if node.left is not None:
+                nxt.append(node.left)
+            if node.right is not None:
+                nxt.append(node.right)
+        if not leftToRight:
+            values = values[::-1]
+        out.append(values)
+        frontier = nxt
+        leftToRight = not leftToRight
+    return out
+''',
+    EditorLanguage.javascript: '''
+function zigzagLevelOrder(root) {
+  if (root === null) return []
+  const out = []
+  let frontier = [root]
+  let leftToRight = true
+  while (frontier.length > 0) {
+    const values = []
+    const next = []
+    for (const node of frontier) {
+      values.push(node.val)
+      if (node.left !== null) next.push(node.left)
+      if (node.right !== null) next.push(node.right)
+    }
+    out.push(leftToRight ? values : values.reverse())
+    frontier = next
+    leftToRight = !leftToRight
+  }
+  return out
+}
+''',
+  },
+
+  // Maximum Depth of Binary Tree.
+  39: <EditorLanguage, String>{
+    EditorLanguage.python: '''
+def maxDepth(root):
+    if root is None:
+        return 0
+    return 1 + max(maxDepth(root.left), maxDepth(root.right))
+''',
+    EditorLanguage.javascript: '''
+function maxDepth(root) {
+  if (root === null) return 0
+  return 1 + Math.max(maxDepth(root.left), maxDepth(root.right))
+}
+''',
+  },
+
+  // Construct Binary Tree from Preorder and Inorder Traversal — the first
+  // preorder value is the root, and inorder says how the rest splits.
+  40: <EditorLanguage, String>{
+    EditorLanguage.python: '''
+def buildTree(preorder, inorder):
+    if len(preorder) == 0:
+        return None
+    rootValue = preorder[0]
+    cut = inorder.index(rootValue)
+    node = TreeNode(rootValue)
+    node.left = buildTree(preorder[1:cut + 1], inorder[:cut])
+    node.right = buildTree(preorder[cut + 1:], inorder[cut + 1:])
+    return node
+''',
+    EditorLanguage.javascript: '''
+function buildTree(preorder, inorder) {
+  if (preorder.length === 0) return null
+  const rootValue = preorder[0]
+  const cut = inorder.indexOf(rootValue)
+  const node = new TreeNode(rootValue)
+  node.left = buildTree(preorder.slice(1, cut + 1), inorder.slice(0, cut))
+  node.right = buildTree(preorder.slice(cut + 1), inorder.slice(cut + 1))
+  return node
+}
+''',
+  },
+
+  // Convert Sorted Array to Binary Search Tree — the lower middle is the
+  // root, which is the shape the stored answers were generated from.
+  41: <EditorLanguage, String>{
+    EditorLanguage.python: '''
+def sortedArrayToBST(nums):
+    if len(nums) == 0:
+        return None
+    mid = (len(nums) - 1) // 2
+    node = TreeNode(nums[mid])
+    node.left = sortedArrayToBST(nums[:mid])
+    node.right = sortedArrayToBST(nums[mid + 1:])
+    return node
+''',
+    EditorLanguage.javascript: '''
+function sortedArrayToBST(nums) {
+  if (nums.length === 0) return null
+  const mid = Math.floor((nums.length - 1) / 2)
+  const node = new TreeNode(nums[mid])
+  node.left = sortedArrayToBST(nums.slice(0, mid))
+  node.right = sortedArrayToBST(nums.slice(mid + 1))
+  return node
+}
+''',
+  },
+
+  // Balanced Binary Tree — depth and balance in one pass, -1 meaning
+  // "already unbalanced below here".
+  42: <EditorLanguage, String>{
+    EditorLanguage.python: '''
+def isBalanced(root):
+    def depth(node):
+        if node is None:
+            return 0
+        left = depth(node.left)
+        if left == -1:
+            return -1
+        right = depth(node.right)
+        if right == -1:
+            return -1
+        if abs(left - right) > 1:
+            return -1
+        return 1 + max(left, right)
+
+    return depth(root) != -1
+''',
+    EditorLanguage.javascript: '''
+function isBalanced(root) {
+  function depth(node) {
+    if (node === null) return 0
+    const left = depth(node.left)
+    if (left === -1) return -1
+    const right = depth(node.right)
+    if (right === -1) return -1
+    if (Math.abs(left - right) > 1) return -1
+    return 1 + Math.max(left, right)
+  }
+  return depth(root) !== -1
+}
+''',
+  },
+
+  // Path Sum — root to *leaf*, so an empty child doesn't count as a path.
+  43: <EditorLanguage, String>{
+    EditorLanguage.python: '''
+def hasPathSum(root, targetSum):
+    if root is None:
+        return False
+    if root.left is None and root.right is None:
+        return root.val == targetSum
+    rest = targetSum - root.val
+    return hasPathSum(root.left, rest) or hasPathSum(root.right, rest)
+''',
+    EditorLanguage.javascript: '''
+function hasPathSum(root, targetSum) {
+  if (root === null) return false
+  if (root.left === null && root.right === null) return root.val === targetSum
+  const rest = targetSum - root.val
+  return hasPathSum(root.left, rest) || hasPathSum(root.right, rest)
+}
+''',
+  },
+
+  // Binary Tree Maximum Path Sum — each node reports the best downward arm,
+  // while the best bend through it is recorded on the side.
+  45: <EditorLanguage, String>{
+    EditorLanguage.python: '''
+def maxPathSum(root):
+    best = [root.val]
+
+    def arm(node):
+        if node is None:
+            return 0
+        left = max(arm(node.left), 0)
+        right = max(arm(node.right), 0)
+        if node.val + left + right > best[0]:
+            best[0] = node.val + left + right
+        return node.val + max(left, right)
+
+    arm(root)
+    return best[0]
+''',
+    EditorLanguage.javascript: '''
+function maxPathSum(root) {
+  let best = root.val
+  function arm(node) {
+    if (node === null) return 0
+    const left = Math.max(arm(node.left), 0)
+    const right = Math.max(arm(node.right), 0)
+    if (node.val + left + right > best) best = node.val + left + right
+    return node.val + Math.max(left, right)
+  }
+  arm(root)
+  return best
+}
+''',
+  },
+
+  // Binary Tree Right Side View — the last node of every level.
+  64: <EditorLanguage, String>{
+    EditorLanguage.python: '''
+def rightSideView(root):
+    if root is None:
+        return []
+    out = []
+    frontier = [root]
+    while len(frontier) > 0:
+        out.append(frontier[len(frontier) - 1].val)
+        nxt = []
+        for node in frontier:
+            if node.left is not None:
+                nxt.append(node.left)
+            if node.right is not None:
+                nxt.append(node.right)
+        frontier = nxt
+    return out
+''',
+    EditorLanguage.javascript: '''
+function rightSideView(root) {
+  if (root === null) return []
+  const out = []
+  let frontier = [root]
+  while (frontier.length > 0) {
+    out.push(frontier[frontier.length - 1].val)
+    const next = []
+    for (const node of frontier) {
+      if (node.left !== null) next.push(node.left)
+      if (node.right !== null) next.push(node.right)
+    }
+    frontier = next
+  }
+  return out
+}
+''',
+  },
+
+  // Invert Binary Tree — swap the children, all the way down.
+  72: <EditorLanguage, String>{
+    EditorLanguage.python: '''
+def invertTree(root):
+    if root is None:
+        return None
+    root.left, root.right = invertTree(root.right), invertTree(root.left)
+    return root
+''',
+    EditorLanguage.javascript: '''
+function invertTree(root) {
+  if (root === null) return null
+  const left = invertTree(root.left)
+  root.left = invertTree(root.right)
+  root.right = left
+  return root
+}
+''',
+  },
+
+  // Kth Smallest Element in a BST — in-order visits a BST in sorted order.
+  73: <EditorLanguage, String>{
+    EditorLanguage.python: '''
+def kthSmallest(root, k):
+    values = []
+
+    def walk(node):
+        if node is None:
+            return
+        walk(node.left)
+        values.append(node.val)
+        walk(node.right)
+
+    walk(root)
+    return values[k - 1]
+''',
+    EditorLanguage.javascript: '''
+function kthSmallest(root, k) {
+  const values = []
+  function walk(node) {
+    if (node === null) return
+    walk(node.left)
+    values.push(node.val)
+    walk(node.right)
+  }
+  walk(root)
+  return values[k - 1]
+}
+''',
+  },
+
+  // Lowest Common Ancestor of a BST — the dataset names the two nodes by
+  // their values, so the walk compares against those directly.
+  75: <EditorLanguage, String>{
+    EditorLanguage.python: '''
+def lowestCommonAncestor(root, p, q):
+    node = root
+    while node is not None:
+        if p < node.val and q < node.val:
+            node = node.left
+        elif p > node.val and q > node.val:
+            node = node.right
+        else:
+            return node
+    return None
+''',
+    EditorLanguage.javascript: '''
+function lowestCommonAncestor(root, p, q) {
+  let node = root
+  while (node !== null) {
+    if (p < node.val && q < node.val) node = node.left
+    else if (p > node.val && q > node.val) node = node.right
+    else return node
+  }
+  return null
+}
+''',
+  },
+
+  // Diameter of Binary Tree — the widest bend, counted in edges.
+  90: <EditorLanguage, String>{
+    EditorLanguage.python: '''
+def diameterOfBinaryTree(root):
+    best = [0]
+
+    def depth(node):
+        if node is None:
+            return 0
+        left = depth(node.left)
+        right = depth(node.right)
+        if left + right > best[0]:
+            best[0] = left + right
+        return 1 + max(left, right)
+
+    depth(root)
+    return best[0]
+''',
+    EditorLanguage.javascript: '''
+function diameterOfBinaryTree(root) {
+  let best = 0
+  function depth(node) {
+    if (node === null) return 0
+    const left = depth(node.left)
+    const right = depth(node.right)
+    if (left + right > best) best = left + right
+    return 1 + Math.max(left, right)
+  }
+  depth(root)
+  return best
+}
+''',
+  },
 };
