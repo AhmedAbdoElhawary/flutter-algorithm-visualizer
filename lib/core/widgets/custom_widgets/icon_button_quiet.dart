@@ -19,6 +19,10 @@ class IconButtonQuiet extends StatelessWidget {
   final ThemeEnum? iconColor;
   final ThemeEnum? borderColor;
 
+  /// Forwarded to [CustomIcon.flipsWithDirection] — set it for a back caret
+  /// or any other icon that points.
+  final bool flipsWithDirection;
+
   const IconButtonQuiet({
     super.key,
     required this.icon,
@@ -28,6 +32,7 @@ class IconButtonQuiet extends StatelessWidget {
     this.filled = false,
     this.iconColor,
     this.borderColor,
+    this.flipsWithDirection = false,
   });
 
   @override
@@ -48,6 +53,7 @@ class IconButtonQuiet extends StatelessWidget {
           icon,
           size: iconSize,
           color: filled ? ThemeEnum.ground : iconColor ?? (disabled ? ThemeEnum.track : ThemeEnum.inkBody),
+          flipsWithDirection: flipsWithDirection,
         ),
       ),
     );
