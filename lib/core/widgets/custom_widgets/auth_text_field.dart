@@ -1,6 +1,8 @@
+import 'package:algorithm_visualizer/core/localization/app_localizations.dart';
 import 'package:algorithm_visualizer/core/resources/dimensions_manager.dart';
 import 'package:algorithm_visualizer/core/resources/styles_manager.dart';
 import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
+import 'package:algorithm_visualizer/core/widgets/adaptive/ltr_content.dart';
 import 'package:algorithm_visualizer/core/widgets/adaptive/padding/adaptive_padding.dart';
 import 'package:algorithm_visualizer/core/widgets/adaptive/text/adaptive_text.dart';
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/custom_icon.dart';
@@ -118,30 +120,39 @@ class _AuthTextFieldState extends State<AuthTextField> {
                   CustomIcon(widget.prefixIcon!, size: 15, color: iconColor),
                   SizedBox(width: 10.w),
                 ],
+
+                /// An email address and a password are Latin by definition,
+                /// so the field they are typed into does not mirror. Left to
+                /// the page's direction, an Arabic user would get a caret on
+                /// the right, a right-aligned hint, and `@example.com`
+                /// reordered around the `@` as they typed.
                 Expanded(
-                  child: TextField(
-                    controller: widget.controller,
-                    focusNode: _node,
-                    keyboardType: widget.keyboardType,
-                    textInputAction: widget.textInputAction,
-                    obscureText: obscured,
-                    onChanged: widget.onChanged,
-                    onSubmitted: widget.onSubmitted,
-                    cursorColor: context.getColor(ThemeEnum.inkPrimary),
-                    style: const GetMediumStyle().copyWith(
-                      color: context.getColor(ThemeEnum.inkPrimary),
-                      fontSize: (obscured ? 13 : 12.5).sp,
-                      letterSpacing: obscured ? 1.8.sp : 0.2,
-                    ),
-                    decoration: InputDecoration(
-                      isDense: true,
-                      hintText: widget.hintText,
-                      hintStyle: const GetMediumStyle().copyWith(
-                        color: context.getColor(ThemeEnum.inkMuted),
-                        fontSize: 12.5.sp,
+                  child: _LatinInput(
+                    enabled: widget.isPassword || widget.keyboardType == TextInputType.emailAddress,
+                    child: TextField(
+                      controller: widget.controller,
+                      focusNode: _node,
+                      keyboardType: widget.keyboardType,
+                      textInputAction: widget.textInputAction,
+                      obscureText: obscured,
+                      onChanged: widget.onChanged,
+                      onSubmitted: widget.onSubmitted,
+                      cursorColor: context.getColor(ThemeEnum.inkPrimary),
+                      style: const GetMediumStyle().copyWith(
+                        color: context.getColor(ThemeEnum.inkPrimary),
+                        fontSize: (obscured ? 13 : 12.5).sp,
+                        letterSpacing: obscured ? 1.8.sp : 0.2,
                       ),
-                      border: InputBorder.none,
-                      contentPadding: EdgeInsets.zero,
+                      decoration: InputDecoration(
+                        isDense: true,
+                        hintText: widget.hintText.tr(context),
+                        hintStyle: const GetMediumStyle().copyWith(
+                          color: context.getColor(ThemeEnum.inkMuted),
+                          fontSize: 12.5.sp,
+                        ),
+                        border: InputBorder.none,
+                        contentPadding: EdgeInsets.zero,
+                      ),
                     ),
                   ),
                 ),
@@ -172,4 +183,16 @@ class _AuthTextFieldState extends State<AuthTextField> {
       ],
     );
   }
+}
+
+/// [LtrContent], but only when [enabled] — so one call site can say "this
+/// input is Latin" without an `if` around the whole field.
+class _LatinInput extends StatelessWidget {
+  const _LatinInput({required this.enabled, required this.child});
+
+  final bool enabled;
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) => enabled ? LtrContent(child: child) : child;
 }
