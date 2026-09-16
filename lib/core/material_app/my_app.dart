@@ -26,9 +26,17 @@ class MyApp extends StatelessWidget {
           builder: (context, ref, child) {
             final controller = ref.watch(appSettingsProvider);
             final router = AppRoutes.instance.routerProvider;
-            bool isDarkMode = controller.themeMode != ThemeMode.light;
-            final theme = isDarkMode ? AppTheme.dark : AppTheme.light;
-            final themeMode = isDarkMode ? ThemeMode.dark : ThemeMode.light;
+            final themeMode = controller.themeMode;
+
+            /// `MaterialApp` resolves [ThemeMode.system] for the widgets below
+            /// it, but the two things painted *outside* it — the system bars
+            /// and the wide-screen letterbox — have to resolve it themselves.
+            final isDarkMode = switch (themeMode) {
+              ThemeMode.system => MediaQuery.platformBrightnessOf(context) == Brightness.dark,
+              ThemeMode.dark => true,
+              ThemeMode.light => false,
+            };
+            final ground = isDarkMode ? ColorManager.groundDk : ColorManager.groundLt;
 
             return LayoutBuilder(
               builder: (context, constraints) {
@@ -38,7 +46,11 @@ class MyApp extends StatelessWidget {
                 return SystemOverlay(
                   isBlackTheme: isDarkMode,
                   child: Container(
-                    color: isDarkMode ? ColorManager.groundDk : ColorManager.inkPrimaryDk,
+                    /// The bars down either side on a tablet or a desktop
+                    /// window. This is page background, so it takes `ground` —
+                    /// the light value used to be `inkPrimaryDk`, pure white,
+                    /// which left a visible seam against the `#F4F5F7` page.
+                    color: ground,
                     child: Padding(
                       padding: EdgeInsets.symmetric(horizontal: padding),
                       child: MaterialApp.router(
@@ -51,7 +63,11 @@ class MyApp extends StatelessWidget {
                           GlobalCupertinoLocalizations.delegate,
                         ],
                         localeResolutionCallback: dynamicTranslate,
-                        theme: theme,
+
+                        /// Both themes are handed over and `themeMode` picks
+                        /// between them, so `ThemeMode.system` is a real
+                        /// option rather than being collapsed to dark here.
+                        theme: AppTheme.light,
                         darkTheme: AppTheme.dark,
                         themeMode: themeMode,
                         debugShowCheckedModeBanner: false,
