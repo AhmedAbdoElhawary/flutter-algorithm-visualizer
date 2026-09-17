@@ -39,54 +39,56 @@ class AccountDialogShell extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return CardContainer(
-      radius: CdRadius.dialog,
-      padding: REdgeInsets.all(20),
-      child: SizedBox(
-        width: 320.w,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            _DialogIcon(icon: icon),
-            const RSizedBox(height: 14),
-            BoldText(
-              title,
-              color: ThemeEnum.inkTitle,
-              fontSize: 16,
-              fontWeight: FontWeightManager.bold800,
-              textAlign: TextAlign.center,
-            ),
-            const RSizedBox(height: 6),
-            RegularText(
-              description,
-              color: ThemeEnum.inkBody,
-              fontSize: 12,
-              maxLines: 4,
-              textAlign: TextAlign.center,
-            ),
-            const RSizedBox(height: 18),
-            ...fields,
-            const RSizedBox(height: 18),
-            Row(
-              children: [
-                Expanded(
-                  child: SecondaryButtonQuiet(
-                    label: StringsManager.cancel,
-                    onPressed: loading ? null : onCancel,
+    return SafeArea(
+      child: CardContainer(
+        radius: CdRadius.dialog,
+        padding: REdgeInsets.all(16),
+        child: SizedBox(
+          width: ScreenUtil().screenWidth - 67.r,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              _DialogIcon(icon: icon),
+              const RSizedBox(height: 14),
+              BoldText(
+                title,
+                color: ThemeEnum.inkTitle,
+                fontSize: 16,
+                fontWeight: FontWeightManager.bold800,
+                textAlign: TextAlign.center,
+              ),
+              const RSizedBox(height: 6),
+              RegularText(
+                description,
+                color: ThemeEnum.inkBody,
+                fontSize: 12,
+                maxLines: 4,
+                textAlign: TextAlign.center,
+              ),
+              const RSizedBox(height: 18),
+              ...fields,
+              const RSizedBox(height: 18),
+              Row(
+                children: [
+                  Expanded(
+                    child: SecondaryButtonQuiet(
+                      label: StringsManager.cancel,
+                      onPressed: loading ? null : onCancel,
+                    ),
                   ),
-                ),
-                const RSizedBox(width: 10),
-                Expanded(
-                  child: PrimaryButtonQuiet(
-                    label: confirmLabel,
-                    loading: loading,
-                    onPressed: loading ? null : onConfirm,
+                  const RSizedBox(width: 10),
+                  Expanded(
+                    child: PrimaryButtonQuiet(
+                      label: confirmLabel,
+                      loading: loading,
+                      onPressed: loading ? null : onConfirm,
+                    ),
                   ),
-                ),
-              ],
-            ),
-          ],
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );
