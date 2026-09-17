@@ -9,10 +9,11 @@ import 'package:algorithm_visualizer/core/widgets/custom_widgets/bar_chart_quiet
 import 'package:algorithm_visualizer/features/base/view_model/base_view_model.dart';
 import 'package:algorithm_visualizer/features/visualize/helper/o_notation.dart';
 import 'package:algorithm_visualizer/features/visualize/helper/playback_speed.dart';
-import 'package:algorithm_visualizer/features/visualize/sub_view/sorting/view_model/sorting_notifier.dart';
-import 'package:algorithm_visualizer/features/visualize/sub_view/sorting/widgets/control_buttons.dart';
-import 'package:algorithm_visualizer/features/visualize/sub_view/sorting/widgets/sorting_legend.dart';
+import 'package:algorithm_visualizer/features/visualize/view/sub_view/sorting/view_model/sorting_notifier.dart';
+import 'package:algorithm_visualizer/features/visualize/view/sub_view/sorting/widgets/control_buttons.dart';
+import 'package:algorithm_visualizer/features/visualize/view/sub_view/sorting/widgets/sorting_legend.dart';
 import 'package:algorithm_visualizer/features/visualize/widgets/grid_squares_view.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -35,9 +36,34 @@ class _SortingPageState extends ConsumerState<SortingView> {
 
   late SortingAlgoCards card = widget.card;
 
+  ValueListenable<TickerModeData>? _tickerModeNotifier;
+
+  /// Held directly rather than read through `ref`, so pausing still works from
+  /// `dispose()`, where touching `ref` throws.
+  SortingNotifier? _notifier;
+
   Future<void> deleteInstance(NotifierProvider<SortingNotifier, SortingNotifierState> instance) async {
     await ref.read(instance.notifier).cancelSorting();
     ref.invalidate(instance);
+  }
+
+  /// Both callers run inside a widget life-cycle, where Riverpod forbids
+  /// writing to a provider, so the pause is queued for after the frame.
+  void _pauseIfPlaying() {
+    final notifier = _notifier;
+    if (notifier == null || notifier.isDisposed) return;
+
+    Future(() {
+      /// Re-checked inside the callback: the provider auto-disposes, and the
+      /// `dispose()` caller is exactly the moment that teardown happens, so the
+      /// notifier can die between scheduling this and running it.
+      if (notifier.isDisposed) return;
+      if (notifier.isPlaying) notifier.togglePlay();
+    });
+  }
+
+  void _handleTickerModeChange() {
+    if (_tickerModeNotifier?.value.enabled == false) _pauseIfPlaying();
   }
 
   @override
@@ -55,10 +81,29 @@ class _SortingPageState extends ConsumerState<SortingView> {
   }
 
   @override
+  void didChangeDependencies() {
+    final tickerModeNotifier = TickerMode.getValuesNotifier(context);
+    if (!identical(tickerModeNotifier, _tickerModeNotifier)) {
+      _tickerModeNotifier?.removeListener(_handleTickerModeChange);
+      _tickerModeNotifier = tickerModeNotifier..addListener(_handleTickerModeChange);
+    }
+
+    super.didChangeDependencies();
+  }
+
+  @override
   void didUpdateWidget(covariant SortingView oldWidget) {
     if (widget.card != card) _jump(card: widget.card);
 
     super.didUpdateWidget(oldWidget);
+  }
+
+  @override
+  void dispose() {
+    _tickerModeNotifier?.removeListener(_handleTickerModeChange);
+    _pauseIfPlaying();
+
+    super.dispose();
   }
 
   Future<void> _jump({required SortingAlgoCards card, bool cleanInstance = false}) async {
@@ -71,9 +116,10 @@ class _SortingPageState extends ConsumerState<SortingView> {
     this.card = card;
     instance = cardValue.instance;
 
-    final description = ref.read(cardValue.instance.notifier).algorithmDescription;
-    final complexity = ref.read(cardValue.instance.notifier).algoComplexity;
-    widget.onAlgoChanged(cardValue.title, description, complexity);
+    final notifier = ref.read(cardValue.instance.notifier);
+    _notifier = notifier;
+
+    widget.onAlgoChanged(cardValue.title, notifier.algorithmDescription, notifier.algoComplexity);
     setState(() {});
   }
 
