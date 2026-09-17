@@ -188,22 +188,47 @@ class _Stage extends StatelessWidget {
   }
 }
 
+/// Draws one expanding, fading ring straight onto the canvas.
+///
+/// The fade and the growth used to live in the widget tree, as an [Opacity]
+/// wrapping a `Transform.scale` wrapping this painter, rebuilt by an
+/// `AnimatedBuilder` on every frame. That cost an off-screen buffer
+/// (`saveLayer`) per ring per frame on an animation that `repeat()`s and never
+/// stops, with two rings on screen at once.
+///
+/// Both are geometry the painter can express directly: the fade is alpha on
+/// the stroke colour, and the growth is the radius. The widget above is now
+/// static and `repaint:` drives the canvas alone, so no widget rebuilds at all.
 class _RingPainter extends CustomPainter {
-  const _RingPainter({required this.color});
+  const _RingPainter({required this.animation, required this.color, required this.phase})
+      : super(repaint: animation);
 
+  final Animation<double> animation;
   final Color color;
+  final double phase;
 
   @override
   void paint(Canvas canvas, Size size) {
+    final t = (animation.value + phase) % 1.0;
+
+    /// What `Transform.scale` did to the whole box, applied to the two things
+    /// in it that had a size: the radius and the stroke.
+    final scale = 0.5 + t;
+
     final paint = Paint()
-      ..color = color
+      ..color = color.withValues(alpha: (1 - t).clamp(0.0, 1.0))
       ..style = PaintingStyle.stroke
-      ..strokeWidth = 2;
-    canvas.drawCircle(size.center(Offset.zero), size.shortestSide / 2, paint);
+      ..strokeWidth = 2 * scale;
+
+    canvas.drawCircle(size.center(Offset.zero), size.shortestSide / 2 * scale, paint);
   }
 
+  /// `false`, not `true`: [animation] is already wired to `repaint`, so the
+  /// canvas is redrawn every frame regardless. Returning `true` here would
+  /// only add a second, redundant reason to repaint.
   @override
-  bool shouldRepaint(_RingPainter oldDelegate) => oldDelegate.color != color;
+  bool shouldRepaint(_RingPainter oldDelegate) =>
+      oldDelegate.color != color || oldDelegate.phase != phase;
 }
 
 class _Ring extends StatelessWidget {
@@ -215,22 +240,17 @@ class _Ring extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return AnimatedBuilder(
-      animation: controller,
-      builder: (context, child) {
-        final t = (controller.value + phase) % 1.0;
-        return Opacity(
-          opacity: (1 - t).clamp(0.0, 1.0),
-          child: Transform.scale(
-            scale: 0.5 + t,
-            child: SizedBox(
-              width: 140.r,
-              height: 140.r,
-              child: CustomPaint(painter: _RingPainter(color: color)),
-            ),
-          ),
-        );
-      },
+    /// Keeps the two forever-animating rings off the celebration page's own
+    /// layer, so the headline, the stats strip and the buttons behind them
+    /// are not repainted sixty times a second along with the rings.
+    return RepaintBoundary(
+      child: SizedBox(
+        width: 140.r,
+        height: 140.r,
+        child: CustomPaint(
+          painter: _RingPainter(animation: controller, color: color, phase: phase),
+        ),
+      ),
     );
   }
 }
@@ -330,13 +350,22 @@ class _Rise extends StatelessWidget {
       parent: controller,
       curve: Interval(start, (start + 0.43).clamp(0.0, 1.0), curve: Curves.easeOut),
     );
-    return AnimatedBuilder(
-      animation: anim,
-      builder: (context, child) => Opacity(
-        opacity: anim.value,
-        child: Transform.translate(offset: Offset(0, (1 - anim.value) * 12), child: child),
+    /// [FadeTransition] rather than [Opacity]: it fades at the compositor,
+    /// on a layer it marks for the purpose, instead of forcing a `saveLayer`
+    /// during paint. The rise stays on an `AnimatedBuilder` because the offset
+    /// is 12 logical pixels, not a fraction of the child, which is the only
+    /// thing `SlideTransition` can express — but [child] is passed through
+    /// both, so the block itself is still built exactly once.
+    return FadeTransition(
+      opacity: anim,
+      child: AnimatedBuilder(
+        animation: anim,
+        builder: (context, child) => Transform.translate(
+          offset: Offset(0, (1 - anim.value) * 12),
+          child: child,
+        ),
+        child: child,
       ),
-      child: child,
     );
   }
 }
