@@ -4,18 +4,13 @@ import 'package:algorithm_visualizer/features/profile/domain/repositories/profil
 import 'package:algorithm_visualizer/features/profile/presentation/view_model/user_provider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class ProfileNotifier extends Notifier<AsyncValue<AuthUser?>> {
+class ProfileNotifier extends Notifier<AuthUser?> {
   late ProfileRepository _profileRepository;
 
   @override
-  AsyncValue<AuthUser?> build() {
+  AuthUser? build() {
     _profileRepository = ref.watch(profileRepositoryProvider);
-    _loadInitialUser();
-    return const AsyncLoading();
-  }
-
-  Future<void> _loadInitialUser() async {
-    state = await AsyncValue.guard(() => _profileRepository.getCurrentUser());
+    return _profileRepository.getCurrentUser();
   }
 
   // Profile Update Validations
@@ -42,9 +37,7 @@ class ProfileNotifier extends Notifier<AsyncValue<AuthUser?>> {
 
       /// Reflect the new name straight away: a guest has no Firebase profile to
       /// re-read, and `currentUserNameProvider` reads it off this state.
-      state = state.whenData(
-        (user) => (user ?? const AuthUser.guest()).copyWith(name: name.trim()),
-      );
+      state = (state ?? const AuthUser.guest()).copyWith(name: name.trim());
       return true;
     } catch (e) {
       // state = state.copyWith(
