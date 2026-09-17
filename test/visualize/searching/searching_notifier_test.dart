@@ -1,5 +1,5 @@
-import 'package:algorithm_visualizer/features/visualize/sub_view/searching/helper/pf_constants.dart';
-import 'package:algorithm_visualizer/features/visualize/sub_view/searching/view_model/searching_notifier.dart';
+import 'package:algorithm_visualizer/features/visualize/view/sub_view/searching/helper/pf_constants.dart';
+import 'package:algorithm_visualizer/features/visualize/view/sub_view/searching/view_model/searching_notifier.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 
