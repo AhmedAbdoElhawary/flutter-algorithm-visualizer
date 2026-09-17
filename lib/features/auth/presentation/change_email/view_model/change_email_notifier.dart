@@ -37,10 +37,7 @@ class ChangeEmailNotifier extends Notifier<ChangeEmailState> {
     String? newEmailError;
     String? currentPasswordError;
 
-    final currentEmail = ref.read(currentUserProvider).maybeWhen(
-          data: (user) => user?.email,
-          orElse: () => null,
-        );
+    final currentEmail = ref.read(currentUserProvider)?.email;
 
     if (state.newEmail.trim().isEmpty) {
       newEmailError = StringsManager.newEmailRequired;
