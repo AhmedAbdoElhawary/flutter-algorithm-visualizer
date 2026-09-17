@@ -51,7 +51,11 @@ class HomeHeader extends ConsumerWidget {
               final isSignedIn = ref.watch(isSignedInProvider);
               if (isSignedIn) return const SizedBox.shrink();
               return GestureDetector(
-                onTap: () => context.push(Routes.login.path),
+                // `go`, not `push`: leaving for the sign-in screen must clear the whole
+                // navigation stack, including every shell branch's saved page. A
+                // pushed login would sit on top of a live shell, and the next
+                // account would inherit the previous one's open tabs.
+                onTap: () => context.go(Routes.login.path),
                 child: const Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
