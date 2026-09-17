@@ -341,8 +341,8 @@ class _TestResults extends StatelessWidget {
                       StringsManager.onboardingTestCount(passed, total),
                       color: ThemeEnum.dataEasy,
                     ),
-                    Opacity(
-                      opacity: verdictOpacity,
+                    FadeTransition(
+                      opacity: AlwaysStoppedAnimation<double>(verdictOpacity),
                       child: const MonoBoldText(
                         StringsManager.onboardingPassedWord,
                         color: ThemeEnum.dataEasy,
@@ -352,7 +352,7 @@ class _TestResults extends StatelessWidget {
                 ),
               ],
             ),
-            SizedBox(height: 11.h),
+            RSizedBox(height: 11.h),
             Row(
               children: List<Widget>.generate(total, (index) {
                 return Expanded(
