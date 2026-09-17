@@ -13,9 +13,9 @@ class MainNavigationShell extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Material(
-      color: context.getColor(ThemeEnum.ground),
-      child: Column(
+    return Scaffold(
+      backgroundColor: context.getColor(ThemeEnum.ground),
+      body: Column(
         children: [
           Expanded(child: SafeArea(bottom: false, child: navigationShell)),
           _BottomNavBar(navigationShell: navigationShell),
