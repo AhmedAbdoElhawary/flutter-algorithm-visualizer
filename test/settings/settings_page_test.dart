@@ -92,9 +92,7 @@ Future<void> _pumpSettings(
         ),
         isSignedInProvider.overrideWithValue(signedIn),
         currentUserProvider.overrideWithValue(
-          AsyncValue<AuthUser?>.data(
-            signedIn ? AuthUser(id: 'u1', name: 'Someone', email: email) : null,
-          ),
+          signedIn ? AuthUser(id: 'u1', name: 'Someone', email: email) : null,
         ),
       ],
       child: ScreenUtilInit(
