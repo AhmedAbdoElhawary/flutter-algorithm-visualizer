@@ -1,10 +1,10 @@
 import 'package:algorithm_visualizer/core/resources/strings_manager.dart';
 import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
 import 'package:algorithm_visualizer/core/widgets/adaptive/padding/adaptive_padding.dart';
-import 'package:algorithm_visualizer/features/onboarding/presentation/widgets/onboarding_card.dart';
-import 'package:algorithm_visualizer/features/onboarding/presentation/widgets/onboarding_text.dart';
-import 'package:algorithm_visualizer/features/visualize/sub_view/searching/helper/search_role.dart';
-import 'package:algorithm_visualizer/features/visualize/sub_view/searching/widgets/pf_legend.dart';
+import 'package:algorithm_visualizer/features/onboarding/widgets/onboarding_card.dart';
+import 'package:algorithm_visualizer/features/onboarding/widgets/onboarding_text.dart';
+import 'package:algorithm_visualizer/features/visualize/view/sub_view/searching/helper/search_role.dart';
+import 'package:algorithm_visualizer/features/visualize/view/sub_view/searching/widgets/pf_legend.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
