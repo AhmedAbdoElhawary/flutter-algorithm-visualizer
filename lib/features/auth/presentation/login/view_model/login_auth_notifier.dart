@@ -74,8 +74,6 @@ class AuthLoginNotifier extends Notifier<AuthLoginState> {
     try {
       await _authRepository.login(email: state.email.trim(), password: state.password);
 
-      /// The account's own data replaces the guest session entirely, the user
-      /// has already confirmed losing it on the login page.
       await ref.read(guestDataServiceProvider).clearGuestData();
       _reloadUserScopedData();
 
@@ -95,16 +93,13 @@ class AuthLoginNotifier extends Notifier<AuthLoginState> {
   }
 
   Future<void> logout() async {
-    /// Signing out tears down the profile screen that keeps this auto-dispose
-    /// notifier alive, so pin it until the cleanup below finishes; otherwise
-    /// `ref` is disposed mid-flight and every use after the first await throws.
+
     final keepAlive = ref.keepAlive();
 
     try {
+      await ref.read(problemSyncServiceProvider).pushPendingChanges();
       await _authRepository.logout();
 
-      /// Start the next session as a clean guest rather than leaving anything of
-      /// the signed out account behind.
       await ref.read(guestDataServiceProvider).clearGuestData();
       _reloadUserScopedData();
     } finally {
@@ -112,10 +107,10 @@ class AuthLoginNotifier extends Notifier<AuthLoginState> {
     }
   }
 
-  /// Drops everything keyed to "who is signed in" so it is read again from
-  /// whichever store now owns it.
   void _reloadUserScopedData() {
     ref.invalidate(problemsProvider);
     ref.invalidate(profileProvider);
+
+    ref.invalidate(problemSyncProvider);
   }
 }
