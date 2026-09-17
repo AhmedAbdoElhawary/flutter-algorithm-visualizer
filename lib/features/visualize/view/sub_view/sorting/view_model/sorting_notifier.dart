@@ -39,8 +39,23 @@ abstract class SortingNotifier extends Notifier<SortingNotifierState>
   @override
   SortingNotifierState build() {
     _snapshots = [];
+
+    /// The provider is auto-disposing now (see [BaseViewModel.sortingCards]),
+    /// so it can be torn down mid-animation — leaving the visualize tab is
+    /// enough. The play loops below `await` between every frame, and writing
+    /// `state` after disposal throws, so they check this flag after each gap.
+    _disposed = false;
+    ref.onDispose(() => _disposed = true);
+
     return initState();
   }
+
+  bool _disposed = false;
+
+  /// Whether this notifier has been torn down. Callers holding a direct
+  /// reference (the views keep one so they can pause from `dispose()`) must
+  /// check this before touching the notifier.
+  bool get isDisposed => _disposed;
 
   Set<SortRole> get roles;
 
@@ -344,8 +359,11 @@ abstract class SortingNotifier extends Notifier<SortingNotifierState>
 
   @protected
   Future<void> greenSortedItemsAsDone() async {
+    if (_disposed) return;
+
     final rolePerIndex = List<SortRole>.filled(state.list.length, SortRole.idle);
     for (int i = 0; i < rolePerIndex.length; i++) {
+      if (_disposed) return;
       rolePerIndex[i] = SortRole.sorted;
       state = state.copyWith(isAllSorted: true, rolePerIndex: List.of(rolePerIndex));
       await Future.delayed(state.speed.stepSortingDuration);
@@ -356,7 +374,6 @@ abstract class SortingNotifier extends Notifier<SortingNotifierState>
     try {
       await updateVisualizeSorting();
     } catch (e) {
-      /// TODO: create cancel variable and cancel it when dispose
       debugPrint("something wrong with sorting: $e");
     }
   }
@@ -370,7 +387,7 @@ abstract class SortingNotifier extends Notifier<SortingNotifierState>
     final steps = state.sortedSteps;
 
     for (int i = state.currentStepIndex; i < steps.length; i++) {
-      if (_getOperation != SortingEnum.played) {
+      if (_disposed || _getOperation != SortingEnum.played) {
         _isPlayingFun = false;
         return;
       }
@@ -384,6 +401,11 @@ abstract class SortingNotifier extends Notifier<SortingNotifierState>
         currentStepIndex: i + 1,
       );
       await Future.delayed(speedDuration);
+    }
+
+    if (_disposed) {
+      _isPlayingFun = false;
+      return;
     }
 
     state = state.copyWith(clearCurrentStep: true);
