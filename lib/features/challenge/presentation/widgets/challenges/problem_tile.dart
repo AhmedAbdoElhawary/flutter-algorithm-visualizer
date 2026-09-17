@@ -121,10 +121,20 @@ class _MainRow extends StatelessWidget {
             const RSizedBox(width: 4),
             BoldText(problem.getDifficulty.difficultyString, color: diffColor, fontSize: 11),
             const RSizedBox(width: 4),
+
+            /// Collapsed, the caret points *into* the row, so it mirrors in
+            /// Arabic. Expanded, it must still point **down** — and since the
+            /// glyph is already mirrored, turning it the same way as in
+            /// English would land it pointing up. Hence the sign flip.
             AnimatedRotation(
-              turns: expanded ? 0.25 : 0,
+              turns: expanded ? (Directionality.of(context) == TextDirection.rtl ? -0.25 : 0.25) : 0,
               duration: const Duration(milliseconds: 200),
-              child: const CustomIcon(Icons.chevron_right_rounded, size: 16, color: ThemeEnum.track),
+              child: const CustomIcon(
+                Icons.chevron_right_rounded,
+                size: 16,
+                color: ThemeEnum.track,
+                flipsWithDirection: true,
+              ),
             ),
           ],
         ),

@@ -1,11 +1,13 @@
 import 'package:algorithm_visualizer/config/routes/route_app.dart';
 import 'package:algorithm_visualizer/core/extensions/navigators.dart';
 import 'package:algorithm_visualizer/core/helpers/constants.dart';
+import 'package:algorithm_visualizer/core/localization/app_localizations.dart';
 import 'package:algorithm_visualizer/core/resources/dimensions_manager.dart';
 import 'package:algorithm_visualizer/core/resources/font_manager.dart';
 import 'package:algorithm_visualizer/core/resources/strings_manager.dart';
 import 'package:algorithm_visualizer/core/resources/styles_manager.dart';
 import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
+import 'package:algorithm_visualizer/core/widgets/adaptive/ltr_content.dart';
 import 'package:algorithm_visualizer/core/widgets/adaptive/text/adaptive_text.dart';
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/bottom_cta_bar.dart';
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/card_container.dart';
@@ -141,10 +143,24 @@ class _CollapsingHeaderTags extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
               children: [
-                BoldText(problem.getName, color: ThemeEnum.inkTitle, fontSize: 17, maxLines: 1),
+                /// Dataset content, not chrome: the problem's own name and
+                /// tags come from `problems.json` and are never translated.
+                BoldText(
+                  problem.getName,
+                  color: ThemeEnum.inkTitle,
+                  fontSize: 17,
+                  maxLines: 1,
+                  translate: false,
+                ),
                 if (tags.isNotEmpty) ...[
                   const RSizedBox(height: 2),
-                  RegularText(tags.join(', '), color: ThemeEnum.inkBody, fontSize: 10, maxLines: 1),
+                  RegularText(
+                    tags.join(', '),
+                    color: ThemeEnum.inkBody,
+                    fontSize: 10,
+                    maxLines: 1,
+                    translate: false,
+                  ),
                 ],
               ],
             ),
@@ -222,6 +238,7 @@ class _ProblemTabViewState extends State<_ProblemTabView> {
             fontSize: 12.5,
             height: 1.75,
             maxLines: 40,
+            translate: false,
           ),
         if (problem.getConstraints.isNotEmpty) ...[
           const RSizedBox(height: 13),
@@ -263,7 +280,7 @@ class _HintsTabView extends StatelessWidget {
                   child: CardContainer(
                     surface: CdSurface.secondary,
                     child: RegularText('${i + 1}.  ${hints[i]}',
-                        color: ThemeEnum.inkTitle, fontSize: 12, height: 1.6, maxLines: 20),
+                        color: ThemeEnum.inkTitle, fontSize: 12, height: 1.6, maxLines: 20, translate: false),
                   ),
                 ),
             ],
@@ -375,11 +392,20 @@ class _ConstraintsCard extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
+                        /// Constraints are expressions (`2 <= nums.length
+                        /// <= 10^4`), so they keep their own direction even
+                        /// when the app is mirrored.
                         for (final c in constraints)
                           Padding(
                             padding: REdgeInsets.only(bottom: 4),
-                            child: RegularText('•  $c',
-                                color: ThemeEnum.inkBody, fontSize: 11.5, height: 1.5, maxLines: 10),
+                            child: LtrContent(
+                              child: RegularText('•  $c',
+                                  color: ThemeEnum.inkBody,
+                                  fontSize: 11.5,
+                                  height: 1.5,
+                                  maxLines: 10,
+                                  translate: false),
+                            ),
                           ),
                       ],
                     ),
@@ -405,7 +431,7 @@ class _ExampleBlock extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         SemiBoldText(
-          '${StringsManager.example} ${index + 1}'.toUpperCase(),
+          '${StringsManager.example.tr(context)} ${index + 1}'.toUpperCase(),
           color: ThemeEnum.inkBody,
           fontSize: 10,
           letterSpacing: 1,
@@ -431,10 +457,11 @@ class _ExampleBlock extends StatelessWidget {
                   child: RegularText(
                     explanation,
                     color: ThemeEnum.inkBody,
-                    fontFamily: FontConstants.fontJetBrainsMono,
+                    fontFamily: FontConstants.fontFamily,
                     fontSize: 11,
                     height: 1.6,
                     maxLines: 20,
+                    translate: false,
                   ),
                 ),
               ],
@@ -459,15 +486,20 @@ class _MonoRow extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         RegularText('$label: ',
-            color: ThemeEnum.inkBody, fontFamily: FontConstants.fontJetBrainsMono, fontSize: 11, maxLines: 1),
+            color: ThemeEnum.inkBody, fontFamily: FontConstants.fontFamily, fontSize: 11, maxLines: 1),
         Expanded(
-          child: RegularText(
-            value,
-            color: strong ? ThemeEnum.inkTitle : ThemeEnum.inkPrimary,
-            fontFamily: FontConstants.fontJetBrainsMono,
-            fontSize: 11,
-            height: 1.5,
-            maxLines: 10,
+          /// The value is a literal (`nums = [2,7,11,15]`), so it keeps its
+          /// own direction even when the page is mirrored.
+          child: LtrContent(
+            child: RegularText(
+              value,
+              color: strong ? ThemeEnum.inkTitle : ThemeEnum.inkPrimary,
+              fontFamily: FontConstants.fontFamily,
+              fontSize: 11,
+              height: 1.5,
+              maxLines: 10,
+              translate: false,
+            ),
           ),
         ),
       ],

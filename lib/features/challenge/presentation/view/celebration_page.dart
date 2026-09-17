@@ -1,4 +1,5 @@
 import 'package:algorithm_visualizer/config/routes/route_app.dart';
+import 'package:algorithm_visualizer/core/localization/app_localizations.dart';
 import 'package:algorithm_visualizer/core/resources/dimensions_manager.dart';
 import 'package:algorithm_visualizer/core/resources/font_manager.dart';
 import 'package:algorithm_visualizer/core/resources/strings_manager.dart';
@@ -101,11 +102,16 @@ class _CelebrationPageState extends State<CelebrationPage> with TickerProviderSt
                     child: Padding(
                       padding: REdgeInsets.only(top: 9),
                       child: RegularText(
-                        '${args.problemName} · ${StringsManager.allNTestsPassedPrefix}${args.passedCount}${StringsManager.allNTestsPassedSuffix}',
+                        '${args.problemName} · '
+                        '${StringsManager.allNTestsPassedPrefix.tr(context)}'
+                        '${args.passedCount}'
+                        '${StringsManager.allNTestsPassedSuffix.tr(context)}',
                         color: ThemeEnum.inkBody,
                         fontSize: 12.5,
                         textAlign: TextAlign.center,
                         maxLines: 2,
+                        // The problem's own name is inside this line.
+                        translate: false,
                       ),
                     ),
                   ),

@@ -1,6 +1,5 @@
 import 'package:algorithm_visualizer/config/routes/route_app.dart';
 import 'package:algorithm_visualizer/config/themes/app_theme.dart';
-import 'package:algorithm_visualizer/core/extensions/language.dart';
 import 'package:algorithm_visualizer/core/helpers/storage/app_settings/app_settings_cubit.dart';
 import 'package:algorithm_visualizer/core/helpers/system_overlay_style.dart';
 import 'package:algorithm_visualizer/core/resources/color_manager.dart';
@@ -27,6 +26,10 @@ class MyApp extends StatelessWidget {
             final controller = ref.watch(appSettingsProvider);
             final router = AppRoutes.instance.routerProvider;
             final themeMode = controller.themeMode;
+
+            /// TODO: After MVP will think about other languages
+            // final locale = Locale(controller.language.shortKey);
+            const locale = Locale("en");
 
             /// `MaterialApp` resolves [ThemeMode.system] for the widgets below
             /// it, but the two things painted *outside* it — the system bars
@@ -55,14 +58,24 @@ class MyApp extends StatelessWidget {
                       padding: EdgeInsets.symmetric(horizontal: padding),
                       child: MaterialApp.router(
                         title: StringsManager.appName,
-                        locale: Locale(controller.language.shortKey),
+                        locale: locale,
+                        // supportedLocales: AppLocalizations.supportedLocales,
                         supportedLocales: const [Locale('en'), Locale('ar')],
+
+                        /// `AppLocalizations` carries this app's own table;
+                        /// the three `Global*` delegates carry Flutter's —
+                        /// month names, the "Paste" on a text selection
+                        /// menu, and, the reason RTL needs no work here, the
+                        /// `Directionality` that `WidgetsApp` reads back out
+                        /// of `GlobalWidgetsLocalizations`. Choosing `ar`
+                        /// flips the whole tree by itself.
                         localizationsDelegates: const [
+                          // AppLocalizations.delegate,
                           GlobalMaterialLocalizations.delegate,
                           GlobalWidgetsLocalizations.delegate,
                           GlobalCupertinoLocalizations.delegate,
                         ],
-                        localeResolutionCallback: dynamicTranslate,
+                        // localeResolutionCallback: dynamicTranslate,
 
                         /// Both themes are handed over and `themeMode` picks
                         /// between them, so `ThemeMode.system` is a real
@@ -87,8 +100,18 @@ class MyApp extends StatelessWidget {
     );
   }
 
-  Locale? dynamicTranslate(Locale? locale, Iterable<Locale> supportedLocales) {
-    if (locale != null && supportedLocales.contains(locale)) return locale;
-    return supportedLocales.first;
-  }
+  // /// Matches on **language code only**.
+  // ///
+  // /// The old body compared whole `Locale` objects, so a device reporting
+  // /// `ar_EG` — or this app's own `ar_sa` short key, if it were ever passed
+  // /// here — did not equal `const Locale('ar')` and silently fell back to
+  // /// English. Arabic is Arabic whatever the country subtag says.
+  // Locale? dynamicTranslate(Locale? locale, Iterable<Locale> supportedLocales) {
+  //   if (locale == null) return supportedLocales.first;
+  //
+  //   for (final supported in supportedLocales) {
+  //     if (supported.languageCode == locale.languageCode) return supported;
+  //   }
+  //   return supportedLocales.first;
+  // }
 }

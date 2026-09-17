@@ -1,3 +1,4 @@
+import 'package:algorithm_visualizer/core/localization/app_localizations.dart';
 import 'package:algorithm_visualizer/core/resources/dimensions_manager.dart';
 import 'package:algorithm_visualizer/core/resources/font_manager.dart';
 import 'package:algorithm_visualizer/core/resources/strings_manager.dart';
@@ -49,7 +50,7 @@ class _ChallengesSearchFieldState extends ConsumerState<ChallengesSearchField> {
                     color: context.getColor(ThemeEnum.inkTitle), fontSize: 14, letterSpacing: 0.2),
                 decoration: InputDecoration(
                   isDense: true,
-                  hintText: StringsManager.searchProblem,
+                  hintText: StringsManager.searchProblem.tr(context),
                   hintStyle: TextStyle(
                       color: context.getColor(ThemeEnum.inkBody),
                       fontSize: 14.r,

@@ -159,7 +159,7 @@ class _MenuTrigger extends StatelessWidget {
                 const RSizedBox(width: 6),
                 SemiBoldText(
                   language.displayName,
-                  fontFamily: FontConstants.fontJetBrainsMono,
+                  fontFamily: FontConstants.fontFamily,
                   fontSize: 11,
                   color: ThemeEnum.inkTitle,
                   maxLines: 1,
@@ -341,7 +341,7 @@ class _LanguageOption extends StatelessWidget {
                 Expanded(
                   child: SemiBoldText(
                     language.displayName,
-                    fontFamily: FontConstants.fontJetBrainsMono,
+                    fontFamily: FontConstants.fontFamily,
                     fontSize: 11,
                     color: selected ? ThemeEnum.inkTitle : ThemeEnum.inkBody,
                     maxLines: 1,
@@ -350,7 +350,7 @@ class _LanguageOption extends StatelessWidget {
                 const RSizedBox(width: 6),
                 RegularText(
                   '.${language.fileExtension}',
-                  fontFamily: FontConstants.fontJetBrainsMono,
+                  fontFamily: FontConstants.fontFamily,
                   fontSize: 9,
                   color: ThemeEnum.inkMuted,
                   maxLines: 1,

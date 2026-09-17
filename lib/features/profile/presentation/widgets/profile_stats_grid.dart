@@ -1,5 +1,6 @@
 import 'package:algorithm_visualizer/config/routes/route_app.dart';
 import 'package:algorithm_visualizer/core/extensions/navigators.dart';
+import 'package:algorithm_visualizer/core/localization/app_localizations.dart';
 import 'package:algorithm_visualizer/core/resources/strings_manager.dart';
 import 'package:algorithm_visualizer/core/widgets/adaptive/padding/adaptive_padding.dart';
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/stat_tile.dart';
@@ -16,17 +17,18 @@ class ProfileStatsGrid extends ConsumerWidget {
     final stats = ref.watch(profileStatisticsProvider);
 
     final solvedSub = '${stats.easySolved}E · ${stats.mediumSolved}M · ${stats.hardSolved}H';
-    final streakSub = '${StringsManager.best} ${stats.bestStreak} ${StringsManager.days}';
+    final streakSub =
+        '${StringsManager.best.tr(context)} ${stats.bestStreak} ${StringsManager.days.tr(context)}';
     final accuracySub = '${(stats.accuracyRate * 100).toStringAsFixed(0)}%';
-    final bookmarkSub =
-        '${stats.bookmarkedCount} ${stats.bookmarkedCount > 1 ? StringsManager.problems : StringsManager.problem}';
+    final bookmarkSub = '${stats.bookmarkedCount} '
+        '${(stats.bookmarkedCount > 1 ? StringsManager.problems : StringsManager.problem).tr(context)}';
 
     final statsList = [
       (
         icon: Icons.check_circle_outline_rounded,
         value: '${stats.solvedCount}',
-        label:
-            "${stats.solvedCount > 1 ? StringsManager.problems : StringsManager.problem}\n${StringsManager.solved}",
+        label: "${(stats.solvedCount > 1 ? StringsManager.problems : StringsManager.problem).tr(context)}"
+            "\n${StringsManager.solved.tr(context)}",
         sub: solvedSub
       ),
       (
@@ -39,7 +41,7 @@ class ProfileStatsGrid extends ConsumerWidget {
       (
         icon: Icons.bookmark_outline_rounded,
         value: '${stats.bookmarkedCount}',
-        label: "${StringsManager.bookmarked}\n",
+        label: "${StringsManager.bookmarked.tr(context)}\n",
         sub: bookmarkSub
       ),
     ];

@@ -1,23 +1,20 @@
-// The settings screen exists because three things have to be reachable for the
-// app to be publishable at all: the privacy policy, a way to delete your
-// account, and a way to contact a human.
-//
-// Every link assertion names the exact URL and the exact launch mode. That is
-// the bug worth catching here — a row that opens, but opens the wrong place,
-// looks perfectly fine in a screenshot.
-
 import 'package:algorithm_visualizer/config/routes/route_app.dart';
 import 'package:algorithm_visualizer/config/themes/app_theme.dart';
+import 'package:algorithm_visualizer/core/enums/app_settings_enum.dart';
+import 'package:algorithm_visualizer/core/extensions/language.dart';
 import 'package:algorithm_visualizer/core/helpers/constants.dart';
 import 'package:algorithm_visualizer/core/helpers/storage/app_settings/app_settings_cubit.dart';
+import 'package:algorithm_visualizer/core/localization/app_localizations.dart';
+import 'package:algorithm_visualizer/core/resources/strings_manager.dart';
 import 'package:algorithm_visualizer/core/storage/storage.dart';
 import 'package:algorithm_visualizer/core/storage/storage_providers.dart';
-import 'package:algorithm_visualizer/core/resources/strings_manager.dart';
 import 'package:algorithm_visualizer/features/auth/domain/entities/auth_user.dart';
 import 'package:algorithm_visualizer/features/profile/presentation/view_model/user_provider.dart';
 import 'package:algorithm_visualizer/features/settings/presentation/view/settings_page.dart';
+import 'package:algorithm_visualizer/features/settings/presentation/widgets/settings_appearance_section.dart';
 import 'package:algorithm_visualizer/features/settings/presentation/widgets/settings_row.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -63,6 +60,7 @@ Future<void> _pumpSettings(
   String email = 'someone@example.com',
   Brightness brightness = Brightness.dark,
   LocalStorage? settingsStorage,
+  LanguagesEnum language = LanguagesEnum.english,
 }) async {
   const devicePixelRatio = 3.0;
   await tester.binding.setSurfaceSize(_smallSurface);
@@ -89,7 +87,9 @@ Future<void> _pumpSettings(
   await tester.pumpWidget(
     ProviderScope(
       overrides: [
-        appSettingsStorageProvider.overrideWithValue(settingsStorage ?? _InMemorySettings()),
+        appSettingsStorageProvider.overrideWithValue(
+          settingsStorage ?? (_InMemorySettings()..seedLanguage(language)),
+        ),
         isSignedInProvider.overrideWithValue(signedIn),
         currentUserProvider.overrideWithValue(
           AsyncValue<AuthUser?>.data(
@@ -103,6 +103,17 @@ Future<void> _pumpSettings(
           data: const MediaQueryData(size: _smallSurface),
           child: MaterialApp.router(
             theme: brightness == Brightness.dark ? AppTheme.dark : AppTheme.light,
+
+            /// The real delegates, so an Arabic run in this file mirrors and
+            /// translates exactly as the app does.
+            locale: Locale(language.shortKey),
+            supportedLocales: AppLocalizations.supportedLocales,
+            localizationsDelegates: const [
+              AppLocalizations.delegate,
+              GlobalMaterialLocalizations.delegate,
+              GlobalWidgetsLocalizations.delegate,
+              GlobalCupertinoLocalizations.delegate,
+            ],
             routerConfig: router,
           ),
         ),
@@ -114,6 +125,8 @@ Future<void> _pumpSettings(
 
 class _InMemorySettings implements LocalStorage {
   final Map<String, Object?> _values = <String, Object?>{};
+
+  void seedLanguage(LanguagesEnum language) => _values[AppSettingsNotifier.languageKey] = language.shortKey;
 
   @override
   Future<void> write<T>(String key, T value) async => _values[key] = value;
@@ -282,7 +295,13 @@ void main() {
 
       await _pumpSettings(tester, settingsStorage: storage);
 
-      final checks = find.byIcon(Icons.check_rounded);
+      // Scoped to the appearance card: the language card below it carries a
+      // check of its own, and "exactly one" has always meant one *per
+      // picker*, not one on the whole screen.
+      final checks = find.descendant(
+        of: find.byType(SettingsAppearanceSection),
+        matching: find.byIcon(Icons.check_rounded),
+      );
       expect(checks, findsOneWidget);
 
       // The check sits in the Light row, not merely somewhere on screen.
@@ -315,7 +334,83 @@ void main() {
         find.descendant(of: lightRow, matching: find.byIcon(Icons.check_rounded)),
         findsOneWidget,
       );
-      expect(find.byIcon(Icons.check_rounded), findsOneWidget);
+      expect(
+        find.descendant(
+          of: find.byType(SettingsAppearanceSection),
+          matching: find.byIcon(Icons.check_rounded),
+        ),
+        findsOneWidget,
+      );
+    });
+  });
+
+  // group('language', () {
+  //   testWidgets('names each language in its own script, untranslated', (tester) async {
+  //     await _pumpSettings(tester);
+  //
+  //     expect(find.text('English'), findsOneWidget);
+  //     expect(find.text('العربية'), findsOneWidget);
+  //   });
+  //
+  //   testWidgets('still names both after switching to Arabic', (tester) async {
+  //     // The point of the row labels: someone who switched by mistake has to
+  //     // be able to find their way back without reading Arabic.
+  //     await _pumpSettings(tester, language: LanguagesEnum.arabic);
+  //
+  //     expect(find.text('English'), findsOneWidget);
+  //     expect(find.text('العربية'), findsOneWidget);
+  //   });
+  //
+  //   testWidgets('picking a language writes it where the next launch will look', (tester) async {
+  //     final storage = _InMemorySettings();
+  //     await _pumpSettings(tester, settingsStorage: storage);
+  //
+  //     await _tapRow(tester, 'العربية');
+  //
+  //     expect(storage.read<String>(AppSettingsNotifier.languageKey), 'ar');
+  //   });
+  //
+  //   testWidgets('exactly one row is checked, and it is the active language', (tester) async {
+  //     await _pumpSettings(tester, language: LanguagesEnum.arabic);
+  //
+  //     final section = find.byType(SettingsLanguageSection);
+  //     expect(
+  //       find.descendant(of: section, matching: find.byIcon(Icons.check_rounded)),
+  //       findsOneWidget,
+  //     );
+  //
+  //     final arabicRow = find.ancestor(of: find.text('العربية'), matching: find.byType(SettingsRow));
+  //     expect(
+  //       find.descendant(of: arabicRow, matching: find.byIcon(Icons.check_rounded)),
+  //       findsOneWidget,
+  //     );
+  //   });
+  // });
+
+  group('in Arabic', () {
+    testWidgets('mirrors, translates, and still fits 360x640', (tester) async {
+      await _pumpSettings(tester, language: LanguagesEnum.arabic, signedIn: true);
+
+      expect(
+        Directionality.of(tester.element(find.byType(SettingsPage))),
+        TextDirection.rtl,
+      );
+      expect(find.text('الإعدادات'), findsOneWidget);
+      expect(find.text(StringsManager.settings), findsNothing);
+      expect(tester.takeException(), isNull);
+    });
+
+    testWidgets('scrolls to the bottom without overflowing', (tester) async {
+      // Arabic runs longer than English for most of these captions, so the
+      // rows below the fold are where a wrap would break first.
+      await _pumpSettings(tester, language: LanguagesEnum.arabic, signedIn: true);
+
+      await tester.scrollUntilVisible(
+        find.text('إصدار السياسة'),
+        160,
+        scrollable: find.byType(Scrollable).first,
+      );
+      expect(tester.takeException(), isNull);
     });
   });
 

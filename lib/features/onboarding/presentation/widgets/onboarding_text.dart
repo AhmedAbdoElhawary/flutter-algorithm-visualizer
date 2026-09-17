@@ -12,6 +12,7 @@ class MonoText extends StatelessWidget {
     this.fontSize = 12,
     this.letterSpacing = 0,
     this.textAlign,
+    this.translate = true,
     super.key,
   });
 
@@ -20,6 +21,9 @@ class MonoText extends StatelessWidget {
   final double fontSize;
   final double letterSpacing;
   final TextAlign? textAlign;
+
+  /// Off for the file name and language chips — those are identifiers.
+  final bool translate;
 
   @override
   Widget build(BuildContext context) {
@@ -31,6 +35,7 @@ class MonoText extends StatelessWidget {
       textAlign: textAlign,
       letterSpacing: letterSpacing,
       fontFamily: FontConstants.fontFamily,
+      translate: translate,
     );
   }
 }

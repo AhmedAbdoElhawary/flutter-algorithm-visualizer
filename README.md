@@ -37,19 +37,13 @@ code yourself, graded on-device, with no server and no internet.
 
 ## Why AlgoDive
 
-Most algorithm visualizers are web toys. This one is built differently.
-
-- **🧠 It runs your code — offline.** AlgoDive ships a hand-written interpreter
-  (lexer → parser → AST → tree-walking evaluator, ~2,300 lines of Dart). Your
+- **🧠 It runs your code — offline.** AlgoDive ships a handwritten interpreter
+  (lexer → parser → AST → tree-walking evaluator). Your
   solution is parsed, executed and graded against real test cases **on the
   device**. No backend, no network, no cost per run.
-- **👁️ Every frame explains itself.** Colors are *roles*, not decoration — and
-  the palette is verified by tests that implement the WCAG contrast formula
-  **and** CIE ΔE\*ab perceptual distance, so `visited` and `frontier` stay
-  distinguishable even at equal lightness.
+- **👁️ Every frame explains itself.** Colors are *roles*, not static decoration.
 - **🏗️ It is built like a shipping product, not a demo.** Three flavors, three
-  isolated Firebase projects, tag-driven releases with a human approval gate,
-  code push for hotfixes, and 347 tests.
+  isolated Firebase projects, tag-driven releases, and tests.
 
 ---
 
@@ -57,9 +51,8 @@ Most algorithm visualizers are web toys. This one is built differently.
 
 ### 📊 Sorting visualizer
 
-Five algorithms, step by step, with live complexity read-outs and five playback
-speeds. Every bar carries a **role** — comparing, swapping, target, done —
-instead of an arbitrary color.
+Five algorithms, step by step, with live complexity read-outs and playback
+speeds. Every bar carries a **role** — comparing, swapping, target, done.
 
 `Bubble` · `Selection` · `Insertion` · `Merge` · `Quick`
 
@@ -74,13 +67,9 @@ instead of an arbitrary color.
 ### 🗺️ Pathfinding visualizer
 
 A 30 × 24 grid you draw walls on with your finger. Watch the frontier expand
-one cell per step, then watch the path unwind in a 25 ms stagger.
+one cell per step, then watch the path get connected.
 
 `BFS` · `DFS` · `A*`
-
-Each algorithm narrates its own strategy in one line while it runs — BFS:
-*"Oldest first · 12 waiting"*, DFS: *"Newest first · depth 12"*, A\*:
-*"Cheapest first · cost 14 + 6 to go"*.
 
 <!-- ┌─────────────────────────────────────────────────────────────────┐
      │ SLOT 4 — PATHFINDING GIF   ⭐ your best-looking feature          │
@@ -92,10 +81,7 @@ Each algorithm narrates its own strategy in one line while it runs — BFS:
 
 ### ⌨️ Practice — 100 coding challenges
 
-A from-scratch code editor — custom painter, line numbers, bracket matching,
-auto-indent, Dart and Python syntax highlighting — plus a grading engine that
-builds real inputs for you, including linked-list and tree nodes, then runs
-your solution against every test case.
+A from-scratch code editor runs Dart, JavaScript, and Python syntaxes.
 
 <!-- ┌─────────────────────────────────────────────────────────────────┐
      │ SLOT 5 — EDITOR GIF                                             │
@@ -105,10 +91,10 @@ your solution against every test case.
      │        "All tests passed" and the celebration screen.           │
      └─────────────────────────────────────────────────────────────────┘ -->
 
-### 📈 Profile & progress
+### 📈 Profile & progress & settings
 
 A contribution-style heatmap, weekly activity chart, per-category breakdown,
-difficulty progress, bookmarks and full practice history.
+difficulty progress, bookmarks, full practice history and settings.
 
 <!-- ┌─────────────────────────────────────────────────────────────────┐
      │ SLOT 6 — PROFILE SHOTS (static PNGs are fine here)              │
@@ -120,9 +106,6 @@ difficulty progress, bookmarks and full practice history.
 ---
 
 ## Getting started
-
-> **Prerequisites** — Flutter **3.44.7** (the exact version pinned in CI) and an
-> Android or iOS device/emulator. Verify with `flutter --version`.
 
 ### 1. Clone and install
 
@@ -269,25 +252,23 @@ know which build you're holding.
 
 ```
 lib/
-├── config/            # routes (go_router), themes
+├── config/
 ├── core/
-│   ├── flavor/        # FlavorConfig — immutable, built from --dart-define
-│   ├── monitoring/    # guarded-zone runner, Sentry crash reporter, analytics
+│   ├── flavor/
+│   ├── monitoring/
 │   ├── widgets/
-│   │   └── adaptive/  # AdaptiveText + 10 padding widgets used project-wide
 │   ├── custom_packages/
-│   │   └── custom_code_editor/   # ← the interesting part
-│   ├── resources/     # ThemeEnum, StringsManager, typography, dimensions
-│   └── storage/       # get_storage behind an interface
+│   │   └── custom_code_editor/
+│   ├── resources/
+│   └── storage/
 └── features/
-    ├── visualize/     # sorting + pathfinding
-    ├── challenge/     # 100 problems, editor, grading (data/domain/presentation)
-    ├── auth/          # Firebase email auth + guest→account migration
-    ├── home/  profile/  base/
+    ├── visualize/
+    ├── challenge/
+    ├── auth/
+    ├── home/
 ```
 
-**292 Dart files, ~25,000 lines.** Feature-first, with full clean-architecture
-layering (`data` → `domain` → `presentation`) on the mature slices and a
+Feature-first, with full clean-architecture layering (`data` → `domain` → `presentation`) on the mature slices and a
 lighter MVVM shape on the simpler ones.
 
 </details>
@@ -329,7 +310,7 @@ The promotion ladder is `develop → staging → production`, enforced twice: by
 `merge-guard` CI job and by the release runbook. `production` never accepts a
 merge from `develop` directly.
 
-The deploy pipeline resolves the environment from the tag shape, proves with
+The deployment pipeline resolves the environment from the tag shape, proves with
 `git merge-base --is-ancestor` that the tag really sits on its branch, runs
 analyze + tests, **verifies the built APK is not debug-signed** via
 `apksigner --print-certs`, and scrubs injected secrets with `if: always()`.
@@ -362,23 +343,6 @@ A few worth opening:
 
 ---
 
-## Tech stack
-
-| Area | Choice |
-| --- | --- |
-| Framework | Flutter 3.44.7 · Dart 3.5+ |
-| State | [Riverpod 3](https://riverpod.dev) — `Notifier` + `.select()`-scoped watching |
-| Routing | [go_router 17](https://pub.dev/packages/go_router) — stateful 5-tab shell |
-| Responsive | [flutter_screenutil](https://pub.dev/packages/flutter_screenutil) |
-| Backend | Firebase Auth · Cloud Firestore · Analytics (3 isolated projects) |
-| Local storage | [get_storage](https://pub.dev/packages/get_storage), behind an interface |
-| Charts | [fl_chart](https://pub.dev/packages/fl_chart) |
-| Monitoring | [Sentry](https://sentry.io) — release builds only |
-| Code push | [Shorebird](https://shorebird.dev) — production only |
-| i18n | English + Arabic (RTL-aware layout) |
-
----
-
 ## Roadmap
 
 ### ✅ Live now
@@ -389,21 +353,16 @@ A few worth opening:
 | **Pathfinding** | BFS · DFS · A\* |
 | **Practice** | 100 coding challenges with on-device grading |
 
-### 🔨 Built, not yet wired into the UI
-
-Implemented and tested, waiting on UI work — **the easiest way to contribute**:
-
-`Heap Sort` · `Shell Sort` · `Radix Sort` · `Counting Sort` · `Bucket Sort`
-
 ### 🗓️ Planned
 
-| Category | Items |
-| --- | --- |
-| **Graphs** | Dijkstra · Bellman-Ford · Topological sort |
-| **Mazes** | Recursive division · Randomized Kruskal · Eller's · Aldous-Broder · Binary tree |
-| **Trees** | BST · AVL · Red-Black · Segment tree · B-Tree |
-| **Linked lists** | Singly · Doubly · Circular |
-| **Later** | Dynamic programming · String algorithms · side-by-side algorithm comparison |
+| Category         | Items                                                                          |
+|------------------|--------------------------------------------------------------------------------|
+| **Sorting**      | Heap Sort · Shell Sort · Radix Sort · Counting Sort · Bucket Sort              |
+| **Graphs**       | Dijkstra · Bellman-Ford · Topological sort                                     |
+| **Mazes**        | Recursive division · Randomized Kruskal · Eller's · Aldous-Broder · Binary tree|
+| **Trees**        | BST · AVL · Red-Black · Segment tree · B-Tree                                  |
+| **Linked lists** | Singly · Doubly · Circular                                                     |
+| **Later**        | Dynamic programming · String algorithms · side-by-side algorithm comparison    |
 
 ---
 
@@ -411,7 +370,7 @@ Implemented and tested, waiting on UI work — **the easiest way to contribute**
 
 Android and iOS are the shipping targets. Android is fully wired for release;
 iOS builds in CI as an unsigned smoke test while release signing is being set
-up. The web, macOS, Windows and Linux folders are untouched Flutter scaffolds.
+up. Later, will be looking to others.
 
 ---
 
@@ -438,10 +397,6 @@ algorithm.
 ## License
 
 Licensed under the **Apache License 2.0** — see [LICENSE](LICENSE).
-
-<sub>In short: use it, modify it, build on it, commercially or otherwise. Keep
-the license and attribution, and note any changes you made. It also includes an
-explicit patent grant from contributors.</sub>
 
 ---
 

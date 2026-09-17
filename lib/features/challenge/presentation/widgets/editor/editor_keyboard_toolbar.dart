@@ -44,7 +44,7 @@ class EditorKeyboardToolbar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 44.h,
+      height: 44.r,
       decoration: BoxDecoration(
         color: context.getColor(ThemeEnum.raised),
         border: Border(top: BorderSide(color: context.getColor(ThemeEnum.hairline))),
@@ -159,7 +159,7 @@ class _LabelKey extends StatelessWidget {
           child: RegularText(
             label,
             color: ThemeEnum.inkTitle,
-            fontFamily: FontConstants.fontJetBrainsMono,
+            fontFamily: FontConstants.fontFamily,
             fontSize: 13,
             maxLines: 1,
           ),

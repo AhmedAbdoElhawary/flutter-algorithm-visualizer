@@ -4,9 +4,10 @@ import 'package:algorithm_visualizer/core/resources/strings_manager.dart';
 import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
 import 'package:algorithm_visualizer/core/widgets/adaptive/padding/adaptive_padding.dart';
 import 'package:algorithm_visualizer/core/widgets/adaptive/text/adaptive_text.dart';
+import 'package:algorithm_visualizer/core/widgets/custom_widgets/card_container.dart';
+import 'package:algorithm_visualizer/core/widgets/custom_widgets/custom_icon.dart';
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/difficulty_chip.dart';
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/icon_button_quiet.dart';
-import 'package:algorithm_visualizer/core/widgets/custom_widgets/card_container.dart';
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/live_session_card.dart';
 import 'package:algorithm_visualizer/features/challenge/domain/entities/coding_problem.dart';
 import 'package:algorithm_visualizer/features/challenge/domain/enums/problem.dart';
@@ -70,7 +71,12 @@ class HomeContinueCard extends ConsumerWidget {
             ),
             if (quietDifficulty != ProblemDifficulty.none)
               DifficultyChip(difficulty: quietDifficulty, label: diffLabel),
-            Icon(Icons.chevron_right_rounded, color: context.getColor(ThemeEnum.inkBody), size: 20.r),
+            const CustomIcon(
+              Icons.chevron_right_rounded,
+              color: ThemeEnum.inkBody,
+              size: 20,
+              flipsWithDirection: true,
+            ),
           ],
         ),
       ),

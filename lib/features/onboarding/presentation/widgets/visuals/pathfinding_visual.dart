@@ -222,12 +222,12 @@ class _PathfindingVisualState extends State<PathfindingVisual> with SingleTicker
                       // instead of pushing the row past the card.
                       Flexible(
                         child: MonoText(
-                          StringsManager.onboardingQueueCaption(frame.waiting),
+                          StringsManager.onboardingQueueCaption(context, frame.waiting),
                           color: ThemeEnum.inkTitle,
                         ),
                       ),
                       Flexible(
-                        child: MonoText(StringsManager.onboardingStepCaption(frame.step)),
+                        child: MonoText(StringsManager.onboardingStepCaption(context, frame.step)),
                       ),
                     ],
                   ),

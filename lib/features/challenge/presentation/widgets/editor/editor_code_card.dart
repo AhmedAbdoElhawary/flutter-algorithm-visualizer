@@ -2,6 +2,7 @@ import 'package:algorithm_visualizer/core/custom_packages/custom_code_editor/cod
 import 'package:algorithm_visualizer/core/resources/dimensions_manager.dart';
 import 'package:algorithm_visualizer/core/resources/font_manager.dart';
 import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
+import 'package:algorithm_visualizer/core/widgets/adaptive/ltr_content.dart';
 import 'package:algorithm_visualizer/core/widgets/adaptive/text/adaptive_text.dart';
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/card_container.dart';
 import 'package:algorithm_visualizer/features/challenge/presentation/widgets/editor/editor_code_theme.dart';
@@ -35,23 +36,31 @@ class EditorCodeCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return CardContainer(
-      fillColor: ThemeEnum.surface,
-      borderColorOverride: ThemeEnum.hairline,
-      radius: CdRadius.md,
-      padding: EdgeInsets.zero,
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          _CodeCardHeader(fileName: fileName),
-          _CodeArea(
-            initialCode: initialCode,
-            language: language,
-            highlightedLine: highlightedLine,
-            running: running,
-            onControllerAttached: onControllerAttached,
-          ),
-        ],
+    /// The whole card is pinned left-to-right, header included.
+    ///
+    /// Mirroring it in Arabic would put the line-number gutter on the right
+    /// of the code, run the caret and selection backwards, and move the
+    /// window dots away from the corner every editor puts them in. Source is
+    /// read left to right in every language, so this card does not mirror.
+    return LtrContent(
+      child: CardContainer(
+        fillColor: ThemeEnum.surface,
+        borderColorOverride: ThemeEnum.hairline,
+        radius: CdRadius.md,
+        padding: EdgeInsets.zero,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            _CodeCardHeader(fileName: fileName),
+            _CodeArea(
+              initialCode: initialCode,
+              language: language,
+              highlightedLine: highlightedLine,
+              running: running,
+              onControllerAttached: onControllerAttached,
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -79,10 +88,11 @@ class _CodeCardHeader extends StatelessWidget {
           const Spacer(),
           RegularText(
             fileName,
-            fontFamily: FontConstants.fontJetBrainsMono,
+            fontFamily: FontConstants.fontFamily,
             fontSize: 10,
             color: ThemeEnum.inkMuted,
             maxLines: 1,
+            translate: false,
           ),
         ],
       ),

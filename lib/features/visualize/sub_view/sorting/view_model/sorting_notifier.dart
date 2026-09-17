@@ -1,3 +1,4 @@
+import 'package:algorithm_visualizer/core/localization/app_localizations.dart';
 import 'package:algorithm_visualizer/core/resources/strings_manager.dart';
 import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
 import 'package:algorithm_visualizer/features/base/view_model/algorithm_control_interface.dart';
@@ -46,7 +47,7 @@ abstract class SortingNotifier extends Notifier<SortingNotifierState>
   Map<SortRole, String> get pointerHints => const {};
 
   /// todo: add this feature that use dynamic size
-  static const int _defaultSize = 10;
+  static const int _defaultSize = 9;
   static const int _maxSize = 15;
   static const int _minSize = 5;
   static double itemsPadding = 8.w;
@@ -116,8 +117,14 @@ abstract class SortingNotifier extends Notifier<SortingNotifierState>
 
   String getWrittenHeight(int value) => calculateItemHeight(value, _size, selectedAlgorithmLength).$2;
 
-  String statusText({required SortStep? currentStep, required List<SortableItem> list}) {
-    return buildStatusText(step: currentStep, list: list, isDone: state.isAllSorted);
+  /// [tr] is supplied by the widget that has a `BuildContext`; the notifier
+  /// only passes it along, so nothing here depends on the widget tree.
+  String statusText({
+    required SortStep? currentStep,
+    required List<SortableItem> list,
+    Translator tr = noTranslation,
+  }) {
+    return buildStatusText(step: currentStep, list: list, isDone: state.isAllSorted, tr: tr);
   }
 
   @protected

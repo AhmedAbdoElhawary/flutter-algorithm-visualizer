@@ -1,3 +1,4 @@
+import 'package:algorithm_visualizer/core/resources/color_manager.dart';
 import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
 import 'package:algorithm_visualizer/core/widgets/adaptive/padding/adaptive_padding.dart';
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/card_container.dart';
@@ -203,7 +204,7 @@ class _PFGridState extends ConsumerState<PFGrid> with SingleTickerProviderStateM
                       child: PFEndPointWidget(
                         size: cellSize,
                         outerColor: context.getColor(searchRoleColor(SearchRole.end)),
-                        midColor: context.getColor(ThemeEnum.inkPrimary),
+                        midColor: ColorManager.inkPrimaryDk,
                         innerColor: context.getColor(searchRoleColor(SearchRole.end)),
                       ),
                     ),

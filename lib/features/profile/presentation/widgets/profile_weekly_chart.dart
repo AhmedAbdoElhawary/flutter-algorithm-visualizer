@@ -1,3 +1,4 @@
+import 'package:algorithm_visualizer/core/localization/app_localizations.dart';
 import 'package:algorithm_visualizer/core/resources/strings_manager.dart';
 import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
 import 'package:algorithm_visualizer/core/widgets/adaptive/padding/adaptive_padding.dart';
@@ -30,7 +31,10 @@ class ProfileWeeklyChart extends ConsumerWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            SectionHeader(title: StringsManager.thisWeek, trailing: '$total ${StringsManager.solvedLabel}'),
+            SectionHeader(
+              title: StringsManager.thisWeek,
+              trailing: '$total ${StringsManager.solvedLabel.tr(context)}',
+            ),
             const RSizedBox(height: 12),
             RSizedBox(
               height: 90,

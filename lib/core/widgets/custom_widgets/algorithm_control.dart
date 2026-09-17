@@ -42,6 +42,7 @@ class AlgorithmControls extends ConsumerWidget {
               CtrlButton(
                 icon: Icons.skip_previous_rounded,
                 size: iconSize,
+                flipsWithDirection: true,
                 onTap: backwardValidation ? interface.stepBackward : null,
               ),
               RSizedBox(width: width),
@@ -50,6 +51,7 @@ class AlgorithmControls extends ConsumerWidget {
               CtrlButton(
                 icon: Icons.skip_next_rounded,
                 size: iconSize,
+                flipsWithDirection: true,
                 onTap: forwardValidation ? interface.stepForward : null,
               ),
               RSizedBox(width: width),
@@ -91,11 +93,25 @@ class CtrlButton extends StatelessWidget {
   final VoidCallback? onTap;
   final String? messageTip;
   final double size;
-  const CtrlButton({super.key, required this.icon, required this.onTap, this.size = 22, this.messageTip});
+  final bool flipsWithDirection;
+
+  const CtrlButton(
+      {super.key,
+      this.flipsWithDirection = false,
+      required this.icon,
+      required this.onTap,
+      this.size = 22,
+      this.messageTip});
 
   @override
   Widget build(BuildContext context) {
-    final button = IconButtonQuiet(icon: icon, onTap: onTap, size: 36, iconSize: size);
+    final button = IconButtonQuiet(
+      icon: icon,
+      onTap: onTap,
+      iconSize: size,
+      size: 36,
+      flipsWithDirection: flipsWithDirection,
+    );
     return messageTip != null ? Tooltip(message: messageTip!, child: button) : button;
   }
 }

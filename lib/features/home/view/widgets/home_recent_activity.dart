@@ -1,11 +1,12 @@
 import 'package:algorithm_visualizer/config/routes/route_app.dart';
 import 'package:algorithm_visualizer/core/extensions/navigators.dart';
+import 'package:algorithm_visualizer/core/localization/app_localizations.dart';
 import 'package:algorithm_visualizer/core/resources/strings_manager.dart';
 import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
 import 'package:algorithm_visualizer/core/widgets/adaptive/padding/adaptive_padding.dart';
 import 'package:algorithm_visualizer/core/widgets/adaptive/text/adaptive_text.dart';
-import 'package:algorithm_visualizer/core/widgets/custom_widgets/difficulty_chip.dart';
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/card_container.dart';
+import 'package:algorithm_visualizer/core/widgets/custom_widgets/difficulty_chip.dart';
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/section_header.dart';
 import 'package:algorithm_visualizer/features/challenge/domain/enums/problem.dart';
 import 'package:algorithm_visualizer/features/profile/presentation/entities/recent_submission.dart';
@@ -51,7 +52,7 @@ class _ActivityTile extends StatelessWidget {
   Widget build(BuildContext context) {
     final diffLabel = item.difficulty.difficultyString;
 
-    final timeAgo = _formatTimeAgo(item.submittedAt);
+    final timeAgo = _formatTimeAgo(context, item.submittedAt);
 
     final quietDifficulty = item.difficulty;
 
@@ -85,12 +86,12 @@ class _ActivityTile extends StatelessWidget {
     );
   }
 
-  String _formatTimeAgo(DateTime dt) {
+  String _formatTimeAgo(BuildContext context, DateTime dt) {
     final diff = DateTime.now().difference(dt);
-    if (diff.inMinutes < 1) return StringsManager.justNow;
-    if (diff.inMinutes < 60) return '${diff.inMinutes}${StringsManager.mAgo}';
-    if (diff.inHours < 24) return '${diff.inHours}${StringsManager.hAgo}';
-    if (diff.inDays == 1) return StringsManager.yesterday;
-    return '${diff.inDays}${StringsManager.dAgo}';
+    if (diff.inMinutes < 1) return StringsManager.justNow.tr(context);
+    if (diff.inMinutes < 60) return '${diff.inMinutes}${StringsManager.mAgo.tr(context)}';
+    if (diff.inHours < 24) return '${diff.inHours}${StringsManager.hAgo.tr(context)}';
+    if (diff.inDays == 1) return StringsManager.yesterday.tr(context);
+    return '${diff.inDays}${StringsManager.dAgo.tr(context)}';
   }
 }

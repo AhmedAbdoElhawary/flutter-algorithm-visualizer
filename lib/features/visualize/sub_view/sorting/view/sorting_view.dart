@@ -1,3 +1,4 @@
+import 'package:algorithm_visualizer/core/localization/app_localizations.dart';
 import 'package:algorithm_visualizer/core/resources/dimensions_manager.dart';
 import 'package:algorithm_visualizer/core/resources/styles_manager.dart';
 import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
@@ -198,7 +199,11 @@ class _StatusText extends ConsumerWidget {
     return AlgorithmStatusText(
       progressLabel: label,
       progressValue: progress,
-      statusText: inst.statusText(currentStep: currentStep, list: list),
+      statusText: inst.statusText(
+        currentStep: currentStep,
+        list: list,
+        tr: AppLocalizations.of(context).tr,
+      ),
     );
   }
 }

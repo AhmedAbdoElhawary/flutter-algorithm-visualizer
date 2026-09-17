@@ -12,6 +12,7 @@ class SemiBoldText extends _AdaptiveText {
     super.shadows,
     super.textAlign,
     super.letterSpacing,
+    super.translate,
     super.key,
   }) : super(fontWeight: FontWeightManager.semiBold);
 }

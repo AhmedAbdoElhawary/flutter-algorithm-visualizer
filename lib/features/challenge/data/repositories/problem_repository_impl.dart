@@ -21,8 +21,8 @@ class ProblemRepositoryImpl implements ProblemRepository {
   final ProblemRemoteDataSource remoteDataSource;
 
   @override
-  Future<List<CodingProblem>> getAllProblems() async {
-    final assetsProblems = await localDataSource.loadProblemsAssets();
+  Future<List<CodingProblem>> getAllProblems({bool arabic = false}) async {
+    final assetsProblems = await localDataSource.loadProblemsAssets(arabic: arabic);
     final storageProblems = await _loadStorageProblems();
 
     final problems = assetsProblems.problems?.map((dto) {

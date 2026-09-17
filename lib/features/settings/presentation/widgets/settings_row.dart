@@ -23,6 +23,7 @@ class SettingsRow extends StatelessWidget {
     this.accentColor = ThemeEnum.inkTitle,
     this.trailing,
     this.showChevron = true,
+    this.translateLabels = true,
   });
 
   final IconData icon;
@@ -32,6 +33,10 @@ class SettingsRow extends StatelessWidget {
   final ThemeEnum accentColor;
   final Widget? trailing;
   final bool showChevron;
+
+  /// Off for a row whose text is a proper noun that must not be translated —
+  /// the language picker names each language in itself.
+  final bool translateLabels;
 
   @override
   Widget build(BuildContext context) {
@@ -53,10 +58,17 @@ class SettingsRow extends StatelessWidget {
                     color: accentColor,
                     fontSize: 13,
                     fontWeight: FontWeightManager.bold800,
+                    translate: translateLabels,
                   ),
                   if (subtitle != null && subtitle!.isNotEmpty) ...[
                     const RSizedBox(height: 2),
-                    RegularText(subtitle!, color: ThemeEnum.inkBody, fontSize: 11, maxLines: 3),
+                    RegularText(
+                      subtitle!,
+                      color: ThemeEnum.inkBody,
+                      fontSize: 11,
+                      maxLines: 3,
+                      translate: translateLabels,
+                    ),
                   ],
                 ],
               ),

@@ -5,9 +5,6 @@ import 'package:collection/collection.dart';
 
 class QuickSortNotifier extends SortingNotifier {
   @override
-  SortingNotifierState build() => SortingNotifier.initState();
-
-  @override
   Set<SortRole> get roles =>
       const {SortRole.sorted, SortRole.pivot, SortRole.boundary, SortRole.compare, SortRole.swap};
 

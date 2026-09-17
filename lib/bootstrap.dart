@@ -7,6 +7,7 @@ import 'package:algorithm_visualizer/core/monitoring/monitoring.dart';
 import 'package:algorithm_visualizer/core/storage/storage_providers.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get_storage/get_storage.dart';
 
@@ -31,6 +32,12 @@ Future<void> bootstrap(FlavorConfig config) {
 
 Future<void> _boot(FlavorConfig config) async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  /// TODO: change it after MVP
+  await SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+    DeviceOrientation.portraitDown,
+  ]);
 
   FlavorConfig.initialize(config);
   Monitoring.installErrorHandlers();
