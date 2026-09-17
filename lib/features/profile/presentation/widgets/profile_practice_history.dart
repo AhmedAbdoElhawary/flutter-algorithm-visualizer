@@ -29,7 +29,7 @@ class ProfilePracticeHistory extends ConsumerWidget {
     return OnlyPadding(
       startPadding: 16,
       endPadding: 16,
-      topPadding: 14,
+      bottomPadding: 14,
       child: CardContainer(
         surface: CdSurface.main,
         padding: EdgeInsets.zero,
