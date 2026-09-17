@@ -31,10 +31,7 @@ class _ChangeDisplayNameDialogState extends ConsumerState<ChangeDisplayNameDialo
   @override
   void initState() {
     super.initState();
-    _currentName = ref.read(currentUserNameProvider).maybeWhen(
-          data: (data) => data,
-          orElse: () => StringsManager.anonymous,
-        );
+    _currentName = ref.read(currentUserNameProvider);
     _controller = TextEditingController(text: _currentName);
   }
 
