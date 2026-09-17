@@ -1,6 +1,6 @@
 import 'package:algorithm_visualizer/core/localization/app_localizations.dart';
 import 'package:algorithm_visualizer/core/resources/strings_manager.dart';
-import 'package:algorithm_visualizer/features/visualize/sub_view/searching/helper/pf_step.dart';
+import 'package:algorithm_visualizer/features/visualize/view/sub_view/searching/helper/pf_step.dart';
 
 /// How an algorithm picks the next cell to expand. This — not the algorithm's
 /// name — is what the explanation line teaches.
