@@ -115,9 +115,9 @@ class _MainRow extends StatelessWidget {
           children: [
             CustomIcon(statusIcon, size: 16, color: statusColor),
             const RSizedBox(width: 6),
-            BoldText('${problem.number}.', color: ThemeEnum.inkBody, fontSize: 11),
+            BoldText('${problem.number}.', color: ThemeEnum.inkTitle, fontSize: 11),
             const RSizedBox(width: 6),
-            Expanded(child: BoldText(problem.getName, color: ThemeEnum.inkBody, fontSize: 13)),
+            Expanded(child: BoldText(problem.getName, color: ThemeEnum.inkTitle, fontSize: 13)),
             const RSizedBox(width: 4),
             BoldText(problem.getDifficulty.difficultyString, color: diffColor, fontSize: 11),
             const RSizedBox(width: 4),
