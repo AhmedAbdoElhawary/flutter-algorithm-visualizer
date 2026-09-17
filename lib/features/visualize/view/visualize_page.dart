@@ -6,9 +6,9 @@ import 'package:algorithm_visualizer/core/widgets/custom_widgets/algorithm_title
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/complexity_details.dart';
 import 'package:algorithm_visualizer/features/base/view_model/base_view_model.dart';
 import 'package:algorithm_visualizer/features/visualize/helper/o_notation.dart';
-import 'package:algorithm_visualizer/features/visualize/sub_view/searching/view/searching_view.dart';
-import 'package:algorithm_visualizer/features/visualize/sub_view/searching/view_model/grid_scroll_lock.dart';
-import 'package:algorithm_visualizer/features/visualize/sub_view/sorting/view/sorting_view.dart';
+import 'package:algorithm_visualizer/features/visualize/view/sub_view/searching/view/searching_view.dart';
+import 'package:algorithm_visualizer/features/visualize/view/sub_view/searching/view_model/grid_scroll_lock.dart';
+import 'package:algorithm_visualizer/features/visualize/view/sub_view/sorting/view/sorting_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
