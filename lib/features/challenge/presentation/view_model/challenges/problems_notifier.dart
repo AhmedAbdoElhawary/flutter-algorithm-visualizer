@@ -7,31 +7,29 @@ import 'package:algorithm_visualizer/features/challenge/presentation/view_model/
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class ProblemsNotifier extends Notifier<AsyncValue<List<CodingProblem>>> {
-  // Riverpod keeps the same Notifier instance across rebuilds and calls build()
-  // again on it, so this is read lazily rather than cached in a `late final`
-  // field that would throw on the second build (e.g. after a guest sign up
-  // invalidates this provider).
   ProblemRepository get _repository => ref.read(problemRepositoryProvider);
 
   @override
   AsyncValue<List<CodingProblem>> build() {
-    /// Watched, not read: switching language has to re-read the dataset,
-    /// because the problem statements themselves come from the asset rather
-    /// than from a lookup table a text widget could redo on rebuild.
     final language = ref.watch(appSettingsProvider.select((state) => state.language));
 
-    _load(arabic: language == LanguagesEnum.arabic);
+    _arabic = language == LanguagesEnum.arabic;
+
+    _load(arabic: _arabic);
     return const AsyncLoading();
   }
 
-  Future<void> _load({required bool arabic}) async {
+  bool _arabic = false;
+
+  Future<void> reload({bool forceRemote = false}) => _load(arabic: _arabic, forceRemote: forceRemote);
+
+  Future<void> _load({required bool arabic, bool forceRemote = false}) async {
     await _retryPendingMigration();
-    state = await AsyncValue.guard(() => _repository.getAllProblems(arabic: arabic));
+    state = await AsyncValue.guard(
+      () => _repository.getAllProblems(arabic: arabic, forceRemote: forceRemote),
+    );
   }
 
-  /// Finishes a hand over that was interrupted, typically by signing up while
-  /// offline. Runs before the load so the problems are read back from Firestore
-  /// once the local copy has been delivered.
   Future<void> _retryPendingMigration() async {
     final guestDataService = ref.read(guestDataServiceProvider);
 
