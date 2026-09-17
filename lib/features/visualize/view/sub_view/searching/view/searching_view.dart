@@ -1,6 +1,7 @@
 import 'package:algorithm_visualizer/features/base/view_model/base_view_model.dart';
 import 'package:algorithm_visualizer/features/visualize/helper/o_notation.dart';
-import 'package:algorithm_visualizer/features/visualize/sub_view/searching/view_model/searching_notifier.dart';
+import 'package:algorithm_visualizer/features/visualize/view/sub_view/searching/view_model/searching_notifier.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -25,9 +26,34 @@ class _VisualizerScreenState extends ConsumerState<SearchingView> {
 
   late SearchingAlgoCards card = widget.card;
 
+  ValueListenable<TickerModeData>? _tickerModeNotifier;
+
+  /// Held directly rather than read through `ref`, so pausing still works from
+  /// `dispose()`, where touching `ref` throws.
+  SearchingNotifier? _notifier;
+
   void deleteInstance(NotifierProvider<SearchingNotifier, SearchingState> instance) {
     ref.read(instance.notifier).reset();
     ref.invalidate(instance);
+  }
+
+  /// Both callers run inside a widget life-cycle, where Riverpod forbids
+  /// writing to a provider, so the pause is queued for after the frame.
+  void _pauseIfPlaying() {
+    final notifier = _notifier;
+    if (notifier == null || notifier.isDisposed) return;
+
+    Future(() {
+      /// Re-checked inside the callback: the provider auto-disposes, and the
+      /// `dispose()` caller is exactly the moment that teardown happens, so the
+      /// notifier can die between scheduling this and running it.
+      if (notifier.isDisposed) return;
+      if (notifier.isPlaying) notifier.togglePlay();
+    });
+  }
+
+  void _handleTickerModeChange() {
+    if (_tickerModeNotifier?.value.enabled == false) _pauseIfPlaying();
   }
 
   @override
@@ -44,10 +70,29 @@ class _VisualizerScreenState extends ConsumerState<SearchingView> {
   }
 
   @override
+  void didChangeDependencies() {
+    final tickerModeNotifier = TickerMode.getValuesNotifier(context);
+    if (!identical(tickerModeNotifier, _tickerModeNotifier)) {
+      _tickerModeNotifier?.removeListener(_handleTickerModeChange);
+      _tickerModeNotifier = tickerModeNotifier..addListener(_handleTickerModeChange);
+    }
+
+    super.didChangeDependencies();
+  }
+
+  @override
   void didUpdateWidget(covariant SearchingView oldWidget) {
     if (widget.card != card) _jump(card: widget.card);
 
     super.didUpdateWidget(oldWidget);
+  }
+
+  @override
+  void dispose() {
+    _tickerModeNotifier?.removeListener(_handleTickerModeChange);
+    _pauseIfPlaying();
+
+    super.dispose();
   }
 
   Future<void> _jump({required SearchingAlgoCards card, bool cleanInstance = false}) async {
@@ -56,16 +101,24 @@ class _VisualizerScreenState extends ConsumerState<SearchingView> {
       deleteInstance(prevInstance);
     }
 
-    setState(() {
-      instance = BaseViewModel.searchingCards(card).instance;
-      this.card = card;
-    });
-
-    final description = ref.read(instance.notifier).algorithmDescription;
-    final complexity = ref.read(instance.notifier).algoComplexity;
     final cardValue = BaseViewModel.searchingCards(card);
 
-    widget.onAlgoChanged(cardValue.title, description, complexity);
+    /// Assigned straight away rather than inside `setState` — which this State
+    /// defers to after the frame. The provider auto-disposes, so a provider the
+    /// widget tree is not watching yet is dropped at the end of the frame and
+    /// rebuilt with a *new* notifier on the next one. Deferring this left the
+    /// first `build()` watching the `late` initializer's provider while
+    /// [_notifier] held a notifier that had already been thrown away, so
+    /// pausing on a tab switch pointed at the wrong object and did nothing.
+    instance = cardValue.instance;
+    this.card = card;
+
+    final notifier = ref.read(cardValue.instance.notifier);
+    _notifier = notifier;
+
+    widget.onAlgoChanged(cardValue.title, notifier.algorithmDescription, notifier.algoComplexity);
+
+    setState(() {});
   }
 
   @override
