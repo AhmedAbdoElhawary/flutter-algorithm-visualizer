@@ -2,7 +2,7 @@ import 'package:algorithm_visualizer/core/resources/strings_manager.dart';
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/auth_text_field.dart';
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/custom_snack_bar.dart';
 import 'package:algorithm_visualizer/features/profile/presentation/view_model/user_provider.dart';
-import 'package:algorithm_visualizer/features/settings/presentation/widgets/account_dialog_shell.dart';
+import 'package:algorithm_visualizer/features/settings/widgets/account_dialog_shell.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
