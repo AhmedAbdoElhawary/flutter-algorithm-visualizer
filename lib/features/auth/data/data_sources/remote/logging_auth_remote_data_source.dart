@@ -37,7 +37,7 @@ class LoggingAuthRemoteDataSource implements AuthRemoteDataSource {
       'register',
       () => _source.register(name: name, email: email, password: password),
       args: {
-        'name': name,
+        'name': FirebaseLogger.name(name),
         'email': FirebaseLogger.email(email),
         'password': FirebaseLogger.secret,
       },
@@ -84,6 +84,6 @@ class LoggingAuthRemoteDataSource implements AuthRemoteDataSource {
   }
 
   String _describeUser(AuthUserDTO user) {
-    return 'uid=${FirebaseLogger.id(user.id)}, ${FirebaseLogger.token(user.token)}';
+    return 'uid=${FirebaseLogger.id(user.id)}';
   }
 }

@@ -29,10 +29,11 @@ dependencies:
   json_annotation: ^4.9.0
   firebase_core: ^4.14.0
   firebase_auth: ^6.6.1
-  cloud_firestore: ^6.9.0
+  cloud_firestore: ^6.10.0
   sentry_flutter: ^9.29.0
   firebase_analytics: ^12.5.0
   url_launcher: ^6.3.2
+  firebase_app_check: ^0.4.8
 
 dev_dependencies:
   flutter_test:
@@ -57,10 +58,15 @@ flutter:
     # lib/core/resources/font_manager.dart FontConstants.fontFamily.
     - family: IBM Plex Sans Arabic
       fonts:
-        - asset: assets/fonts/ibm_plex_sans_arabic/IBMPlexSansArabic-Thin.ttf
-          weight: 100
-        - asset: assets/fonts/ibm_plex_sans_arabic/IBMPlexSansArabic-ExtraLight.ttf
-          weight: 200
+        # Thin (100) and ExtraLight (200) are not declared: nothing references
+        # FontWeightManager.light100 or .light200, and each .ttf is ~235 KB, so
+        # they were ~470 KB of bundle that never rendered a glyph. The constants
+        # stay in font_manager.dart — re-add the assets here if a design ever
+        # calls for them.
+        #
+        # TODO(ahmed): Light (300) is kept only because the `LightText` widget
+        # and `GetLightStyle` still exist. Neither has a single call site — if
+        # you are happy to delete them, this asset saves another ~233 KB.
         - asset: assets/fonts/ibm_plex_sans_arabic/IBMPlexSansArabic-Light.ttf
           weight: 300
         - asset: assets/fonts/ibm_plex_sans_arabic/IBMPlexSansArabic-Regular.ttf
@@ -81,3 +87,12 @@ flutter:
   assets:
     - assets/problems.json
     - assets/logo/svg/
+# firebase_auth 6.7.0 calls FirebaseAuthPlatform.setSettings(migrateCurrentUser:
+# ...), but its own pubspec only requires firebase_auth_platform_interface
+# ^9.0.7 — that parameter was added in 9.1.0. Pub resolves to the lowest
+# version satisfying every constraint (9.0.7), which does not have it, so the
+# build fails at compile time. This is an upstream constraint bug in
+# firebase_auth 6.7.0, not a version in our control — remove this override
+# once a firebase_auth release tightens its own constraint to ^9.1.0.
+dependency_overrides:
+  firebase_auth_platform_interface: ^9.1.0

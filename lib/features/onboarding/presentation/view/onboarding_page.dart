@@ -178,8 +178,19 @@ class _Controls extends StatelessWidget {
               start: 0,
               end: 0,
               bottom: 0,
-              child: Opacity(
-                opacity: 1 - reveal,
+              /// [FadeTransition], not [Opacity], for both halves of this
+              /// cross-fade. [reveal] changes on every `PageController` tick,
+              /// so this repaints continuously for the length of a swipe, and
+              /// `Opacity` resolves that with a `saveLayer` — an off-screen
+              /// buffer — while `FadeTransition` marks the subtree for
+              /// compositing and fades it as a layer instead.
+              ///
+              /// [reveal] is a plain double rather than an `Animation` (it is
+              /// driven by the scroll offset, see `_onScroll`), hence the
+              /// [AlwaysStoppedAnimation] wrapper. It is already clamped to
+              /// 0..1 where it is computed.
+              child: FadeTransition(
+                opacity: AlwaysStoppedAnimation<double>(1 - reveal),
                 child: IgnorePointer(
                   ignoring: reveal > 0.5,
                   child: OnboardingButton(
@@ -194,8 +205,8 @@ class _Controls extends StatelessWidget {
               start: 0,
               end: 0,
               bottom: 0,
-              child: Opacity(
-                opacity: reveal,
+              child: FadeTransition(
+                opacity: AlwaysStoppedAnimation<double>(reveal),
                 child: IgnorePointer(
                   ignoring: reveal < 0.5,
                   // The 8 px rise the spec asks for, now driven by the swipe

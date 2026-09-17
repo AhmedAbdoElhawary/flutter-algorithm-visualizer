@@ -3,6 +3,7 @@ import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
 import 'package:algorithm_visualizer/core/widgets/adaptive/padding/adaptive_padding.dart';
 import 'package:algorithm_visualizer/features/onboarding/presentation/widgets/onboarding_card.dart';
 import 'package:algorithm_visualizer/features/onboarding/presentation/widgets/onboarding_text.dart';
+import 'package:algorithm_visualizer/features/visualize/sub_view/sorting/view_model/sorting_notifier.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -114,10 +115,15 @@ class _SortingVisualState extends State<SortingVisual> with SingleTickerProvider
 
   @override
   Widget build(BuildContext context) {
-    final idle = context.getColor(ThemeEnum.track);
-    final compare = context.getColor(ThemeEnum.inkPrimary);
-    final swap = context.getColor(ThemeEnum.dataHard);
-    final done = context.getColor(ThemeEnum.dataEasy);
+    final doneColor = sortingRoleColor(SortRole.sorted);
+    final compareColor = sortingRoleColor(SortRole.compare);
+    final swapColor = sortingRoleColor(SortRole.swap);
+    final idleColor = sortingRoleColor(SortRole.idle);
+
+    final idle = context.getColor(idleColor);
+    final compare = context.getColor(compareColor);
+    final swap = context.getColor(swapColor);
+    final done = context.getColor(doneColor);
 
     return OnboardingCard(
       child: OnlyPadding(
@@ -174,18 +180,18 @@ class _SortingVisualState extends State<SortingVisual> with SingleTickerProvider
                   child: CustomPaint(painter: _BarsPainter(bars)),
                 ),
                 SizedBox(height: 16.h),
-                const OnboardingLegend(
+                OnboardingLegend(
                   items: [
                     LegendItem(
-                      color: ThemeEnum.inkPrimary,
+                      color: compareColor,
                       label: StringsManager.onboardingLegendCompare,
                     ),
                     LegendItem(
-                      color: ThemeEnum.dataHard,
+                      color: swapColor,
                       label: StringsManager.onboardingLegendSwap,
                     ),
                     LegendItem(
-                      color: ThemeEnum.dataEasy,
+                      color: doneColor,
                       label: StringsManager.onboardingLegendSorted,
                     ),
                   ],
@@ -196,9 +202,12 @@ class _SortingVisualState extends State<SortingVisual> with SingleTickerProvider
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Opacity(
+                      FadeTransition(
                         // Cross-fade in at the start of every comparison.
-                        opacity: (phase / 0.12).clamp(0.0, 1.0),
+                        // `FadeTransition` rather than `Opacity`: this is
+                        // recomputed on every frame of the sorting loop, and
+                        // `Opacity` would `saveLayer` each time.
+                        opacity: AlwaysStoppedAnimation<double>((phase / 0.12).clamp(0.0, 1.0)),
                         child: MonoText(
                           StringsManager.onboardingCompareCaption(context, step.i, left, step.j, right),
                           color: ThemeEnum.inkTitle,

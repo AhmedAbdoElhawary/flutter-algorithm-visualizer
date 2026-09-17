@@ -94,18 +94,23 @@ class _ShimmerBoxState extends State<_ShimmerBox> with SingleTickerProviderState
 
   @override
   Widget build(BuildContext context) {
+    final reduceMotion = MediaQuery.disableAnimationsOf(context);
+
+    /// The reduce-motion dim is baked into the fill colour rather than layered
+    /// on with an [Opacity]. A skeleton screen builds twenty of these at once,
+    /// so that wrapper was twenty off-screen buffers for a flat grey box —
+    /// and unlike the [FadeTransition] below it never animated, it was just a
+    /// dimmer shade that had been written the expensive way.
     final box = Container(
       width: widget.width?.r,
       height: widget.height?.r,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(CdRadius.tiny.r),
-        color: context.getColor(ThemeEnum.hairline),
+        color: context.getColor(ThemeEnum.hairline).withValues(alpha: reduceMotion ? 0.65 : 1),
       ),
     );
 
-    if (MediaQuery.disableAnimationsOf(context)) {
-      return Opacity(opacity: 0.65, child: box);
-    }
+    if (reduceMotion) return box;
 
     return FadeTransition(opacity: _animation, child: box);
   }

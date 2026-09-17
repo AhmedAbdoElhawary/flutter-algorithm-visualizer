@@ -35,21 +35,31 @@ bool _matchesSearch(CodingProblem problem, String search) {
   return search.isEmpty || problem.getName.toLowerCase().contains(search.toLowerCase());
 }
 
-bool _matchesFilter(CodingProblem problem, ChallengesState state) {
-  if (state.filter != null && state.filter != ProblemDifficulty.none && problem.difficulty != state.filter) {
+bool _matchesFilter(CodingProblem problem, ProblemDifficulty? filter, String search) {
+  if (filter != null && filter != ProblemDifficulty.none && problem.difficulty != filter) {
     return false;
   }
-  return _matchesSearch(problem, state.search);
+  return _matchesSearch(problem, search);
 }
 
 final filteredProblemIdsProvider = Provider<AsyncValue<FilteredProblemIds>>((ref) {
-  final state = ref.watch(challengesProvider);
+  /// Only the two fields the filter actually reads, the same way
+  /// [specificDifficultyCountProvider] below already does it.
+  ///
+  /// Watching the whole [challengesProvider] here meant that opening a tile —
+  /// which only moves `expandedId` — re-ran this filter over all 100 problems
+  /// and then a `ListEquality` comparison over the result, to arrive at the
+  /// list it already had. Records compare by value, so a change to any other
+  /// field of the state no longer reaches this provider at all.
+  final (filter, search) = ref.watch(
+    challengesProvider.select((s) => (s.filter, s.search)),
+  );
   return ref.watch(
     problemsProvider.select(
       (async) => async.whenData(
         (problems) => FilteredProblemIds(
           problems
-              .where((problem) => _matchesFilter(problem, state))
+              .where((problem) => _matchesFilter(problem, filter, search))
               .map((problem) => problem.problemId)
               .whereType<int>()
               .toList(),

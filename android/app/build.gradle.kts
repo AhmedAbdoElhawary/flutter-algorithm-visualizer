@@ -92,12 +92,36 @@ android {
 
     buildTypes {
         release {
+            // R8: strips unused Java/Kotlin classes and obfuscates what is left,
+            // and shrinkResources drops the resources nothing references. Both
+            // were off, so every release shipped the full Firebase, Sentry and
+            // Play Services surface plus their unused resources.
+            //
+            // Anything reached by reflection has to be named in
+            // proguard-rules.pro — R8 cannot see those references, and it fails
+            // at runtime rather than at build time. Test a real release build,
+            // do not trust a green `flutter build`.
+            isMinifyEnabled = true
+            isShrinkResources = true
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro",
+            )
+
             // Release builds use the injected key when key.properties is present,
             // otherwise fall back to debug so `flutter build apk` still works in
             // environments without it (a fresh clone / PR CI).
             signingConfig = if (hasReleaseKeystore) {
                 signingConfigs.getByName("release")
             } else {
+                // TODO(ahmed): this is the one path that can produce a
+                // debug-signed "release" build. CI catches it with the
+                // apksigner check in deploy.yml; a local build only gets this
+                // warning, so read the log before uploading anything.
+                logger.warn(
+                    "AlgoDive: key.properties not found — signing the RELEASE build " +
+                        "with the DEBUG key. This artifact cannot be uploaded to Play."
+                )
                 signingConfigs.getByName("debug")
             }
         }

@@ -37,8 +37,22 @@ class PFGridPainter extends CustomPainter {
     required Listenable repaint,
   }) : super(repaint: repaint);
 
+  /// One fill paint, reused for every cell.
+  ///
+  /// `_drawSearcherCell` and `_drawElasticCell` used to allocate a fresh
+  /// `Paint` each — on a 24x30 grid that was up to 720 short-lived objects per
+  /// frame, and this painter runs at frame rate for the length of a search.
+  /// The colour is the only thing that varied, and a colour is a field.
+  final Paint _cellPaint = Paint();
+
   @override
   void paint(Canvas canvas, Size size) {
+    /// Wall-clock, not the ticker's value, because the animation stamps in the
+    /// four maps are wall-clock too. The ticker is now stopped between
+    /// animations, so its own value would stall while these timestamps keep
+    /// ageing — reading the clock keeps a repaint triggered by something else
+    /// (a theme change, a rebuild) drawing the settled state rather than a
+    /// frozen mid-animation one.
     final double now = DateTime.now().millisecondsSinceEpoch.toDouble();
     final cellW = size.width / kPFCols;
     final cellH = size.height / kPFRows;
@@ -149,7 +163,7 @@ class PFGridPainter extends CustomPainter {
     final radius = shape * (width / 2);
     final rrect = RRect.fromRectAndRadius(scaledRect.deflate(0.5), Radius.circular(radius));
 
-    canvas.drawRRect(rrect, Paint()..color = color);
+    canvas.drawRRect(rrect, _cellPaint..color = color);
   }
 
   void _drawElasticCell(Canvas canvas, Rect rect, double t, Color color) {
@@ -161,9 +175,18 @@ class PFGridPainter extends CustomPainter {
     final height = rect.height * scale;
     final scaledRect = Rect.fromCenter(center: center, width: width, height: height);
 
-    canvas.drawRect(scaledRect.deflate(0.5), Paint()..color = color);
+    canvas.drawRect(scaledRect.deflate(0.5), _cellPaint..color = color);
   }
 
+  /// Stays `true`, deliberately.
+  ///
+  /// The four animation maps are mutable and handed in by reference, so the
+  /// old delegate holds *the same* map objects as the new one — a field
+  /// comparison could never see a change in them and would wrongly skip
+  /// repaints. What made the old code wasteful was not this returning `true`,
+  /// it was the 365-day controller on the other end of `repaint` calling it
+  /// sixty times a second forever. That ticker now stops when the grid
+  /// settles, so this only runs when the widget actually rebuilds.
   @override
   bool shouldRepaint(covariant PFGridPainter oldDelegate) => true;
 }

@@ -139,44 +139,46 @@ class _MenuTrigger extends StatelessWidget {
       child: GestureDetector(
         onTap: onTap,
         behavior: HitTestBehavior.opaque,
-        child: Opacity(
-          opacity: enabled ? 1 : 0.4,
-          child: AnimatedContainer(
-            duration: const Duration(milliseconds: 160),
-            curve: Curves.easeOutCubic,
-            padding: REdgeInsets.symmetric(vertical: 7, horizontal: 10),
-            decoration: BoxDecoration(
-              color: context.getColor(open ? ThemeEnum.raised : ThemeEnum.transparentColor),
-              borderRadius: BorderRadius.circular(CdRadius.smAlt.r),
-              border: Border.all(
-                color: context.getColor(open ? ThemeEnum.inkMuted : ThemeEnum.hairline),
+        /// No [Opacity] wrapper. The disabled look is three colours, so it is
+        /// expressed as three colours — the same way `icon_button_quiet.dart`
+        /// dims to [ThemeEnum.track]. Wrapping instead cost an off-screen
+        /// buffer on every paint, and did so even at `opacity: 1`, because an
+        /// [Opacity] layer is allocated whatever the value.
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 160),
+          curve: Curves.easeOutCubic,
+          padding: REdgeInsets.symmetric(vertical: 7, horizontal: 10),
+          decoration: BoxDecoration(
+            color: context.getColor(open ? ThemeEnum.raised : ThemeEnum.transparentColor),
+            borderRadius: BorderRadius.circular(CdRadius.smAlt.r),
+            border: Border.all(
+              color: context.getColor(open ? ThemeEnum.inkMuted : ThemeEnum.hairline),
+            ),
+          ),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              _LanguageDot(language: language, dim: !enabled),
+              const RSizedBox(width: 6),
+              SemiBoldText(
+                language.displayName,
+                fontFamily: FontConstants.fontFamily,
+                fontSize: 11,
+                color: enabled ? ThemeEnum.inkTitle : ThemeEnum.inkMuted,
+                maxLines: 1,
               ),
-            ),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                _LanguageDot(language: language),
-                const RSizedBox(width: 6),
-                SemiBoldText(
-                  language.displayName,
-                  fontFamily: FontConstants.fontFamily,
-                  fontSize: 11,
-                  color: ThemeEnum.inkTitle,
-                  maxLines: 1,
+              const RSizedBox(width: 4),
+              AnimatedRotation(
+                turns: open ? 0.5 : 0,
+                duration: const Duration(milliseconds: 180),
+                curve: Curves.easeOutCubic,
+                child: CustomIcon(
+                  Icons.keyboard_arrow_down_rounded,
+                  size: 14,
+                  color: enabled ? ThemeEnum.inkMuted : ThemeEnum.track,
                 ),
-                const RSizedBox(width: 4),
-                AnimatedRotation(
-                  turns: open ? 0.5 : 0,
-                  duration: const Duration(milliseconds: 180),
-                  curve: Curves.easeOutCubic,
-                  child: const CustomIcon(
-                    Icons.keyboard_arrow_down_rounded,
-                    size: 14,
-                    color: ThemeEnum.inkMuted,
-                  ),
-                ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ),
@@ -326,48 +328,52 @@ class _LanguageOption extends StatelessWidget {
       child: GestureDetector(
         onTap: available ? onTap : null,
         behavior: HitTestBehavior.opaque,
-        child: Opacity(
-          opacity: available ? 1 : 0.4,
-          child: Container(
-            padding: REdgeInsets.symmetric(vertical: 8, horizontal: 8),
-            decoration: BoxDecoration(
-              color: context.getColor(selected ? ThemeEnum.raised : ThemeEnum.transparentColor),
-              borderRadius: BorderRadius.circular(CdRadius.xs.r),
-            ),
-            child: Row(
-              children: <Widget>[
-                _LanguageDot(language: language),
-                const RSizedBox(width: 8),
-                Expanded(
-                  child: SemiBoldText(
-                    language.displayName,
-                    fontFamily: FontConstants.fontFamily,
-                    fontSize: 11,
-                    color: selected ? ThemeEnum.inkTitle : ThemeEnum.inkBody,
-                    maxLines: 1,
-                  ),
-                ),
-                const RSizedBox(width: 6),
-                RegularText(
-                  '.${language.fileExtension}',
+        /// Dimmed by colour, not by [Opacity] — see `_MenuTrigger`. It matters
+        /// more here than there: the panel builds one of these per language,
+        /// so the wrapper meant one off-screen buffer per row.
+        child: Container(
+          padding: REdgeInsets.symmetric(vertical: 8, horizontal: 8),
+          decoration: BoxDecoration(
+            color: context.getColor(selected ? ThemeEnum.raised : ThemeEnum.transparentColor),
+            borderRadius: BorderRadius.circular(CdRadius.xs.r),
+          ),
+          child: Row(
+            children: <Widget>[
+              _LanguageDot(language: language, dim: !available),
+              const RSizedBox(width: 8),
+              Expanded(
+                child: SemiBoldText(
+                  language.displayName,
                   fontFamily: FontConstants.fontFamily,
-                  fontSize: 9,
-                  color: ThemeEnum.inkMuted,
+                  fontSize: 11,
+                  color: !available
+                      ? ThemeEnum.inkMuted
+                      : selected
+                          ? ThemeEnum.inkTitle
+                          : ThemeEnum.inkBody,
                   maxLines: 1,
                 ),
-                const RSizedBox(width: 6),
-                // One trailing slot, always the same width, so the rows line
-                // up whether or not any of them is the current one.
-                SizedBox(
-                  width: 12.r,
-                  child: selected
-                      ? const CustomIcon(Icons.check_rounded, size: 12, color: ThemeEnum.inkTitle)
-                      : available
-                          ? null
-                          : const CustomIcon(Icons.remove_rounded, size: 12, color: ThemeEnum.inkMuted),
-                ),
-              ],
-            ),
+              ),
+              const RSizedBox(width: 6),
+              RegularText(
+                '.${language.fileExtension}',
+                fontFamily: FontConstants.fontFamily,
+                fontSize: 9,
+                color: available ? ThemeEnum.inkMuted : ThemeEnum.track,
+                maxLines: 1,
+              ),
+              const RSizedBox(width: 6),
+              // One trailing slot, always the same width, so the rows line
+              // up whether or not any of them is the current one.
+              SizedBox(
+                width: 12.r,
+                child: selected
+                    ? const CustomIcon(Icons.check_rounded, size: 12, color: ThemeEnum.inkTitle)
+                    : available
+                        ? null
+                        : const CustomIcon(Icons.remove_rounded, size: 12, color: ThemeEnum.track),
+              ),
+            ],
           ),
         ),
       ),
@@ -378,9 +384,16 @@ class _LanguageOption extends StatelessWidget {
 /// The small colour mark that identifies a language, echoing the three dots
 /// in the code card's own header strip.
 class _LanguageDot extends StatelessWidget {
-  const _LanguageDot({required this.language});
+  const _LanguageDot({required this.language, this.dim = false});
 
   final EditorLanguage language;
+
+  /// Fades the accent for a row the learner cannot pick.
+  ///
+  /// Alpha on this one colour, rather than an [Opacity] over the whole row —
+  /// same idea as `primary_button_quiet.dart`, and it keeps the row out of an
+  /// off-screen buffer.
+  final bool dim;
 
   @override
   Widget build(BuildContext context) {
@@ -388,7 +401,7 @@ class _LanguageDot extends StatelessWidget {
       width: 6.r,
       height: 6.r,
       decoration: BoxDecoration(
-        color: context.getColor(language.accent),
+        color: context.getColor(language.accent).withValues(alpha: dim ? 0.4 : 1),
         shape: BoxShape.circle,
       ),
     );

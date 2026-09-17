@@ -23,12 +23,20 @@ class MyApp extends StatelessWidget {
       builder: (context, child) {
         return Consumer(
           builder: (context, ref, child) {
-            final controller = ref.watch(appSettingsProvider);
+            /// `.select`, not the whole provider. This `Consumer` sits above
+            /// `MaterialApp.router`, so an unscoped watch rebuilt the entire
+            /// navigator stack whenever *any* setting changed — including the
+            /// language, which this widget does not even use yet.
+            final themeMode = ref.watch(appSettingsProvider.select((s) => s.themeMode));
             final router = AppRoutes.instance.routerProvider;
-            final themeMode = controller.themeMode;
 
-            /// TODO: After MVP will think about other languages
-            // final locale = Locale(controller.language.shortKey);
+            /// TODO(ahmed): Arabic is wired up but not reachable — the locale
+            /// is pinned to English here, `AppLocalizations.delegate` and
+            /// `localeResolutionCallback` below are commented out, and
+            /// `assets/problems.ar.json` is not declared in `pubspec.yaml`, so
+            /// it never ships. Enabling it means turning all four back on
+            /// together; until then the Settings language row stays hidden.
+            // final locale = Locale(ref.watch(appSettingsProvider.select((s) => s.language)).shortKey);
             const locale = Locale("en");
 
             /// `MaterialApp` resolves [ThemeMode.system] for the widgets below

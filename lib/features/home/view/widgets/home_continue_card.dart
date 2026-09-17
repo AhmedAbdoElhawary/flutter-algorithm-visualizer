@@ -8,11 +8,9 @@ import 'package:algorithm_visualizer/core/widgets/custom_widgets/card_container.
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/custom_icon.dart';
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/difficulty_chip.dart';
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/icon_button_quiet.dart';
-import 'package:algorithm_visualizer/core/widgets/custom_widgets/live_session_card.dart';
 import 'package:algorithm_visualizer/features/challenge/domain/entities/coding_problem.dart';
 import 'package:algorithm_visualizer/features/challenge/domain/enums/problem.dart';
 import 'package:algorithm_visualizer/features/home/view_model/home_provider.dart';
-import 'package:algorithm_visualizer/features/visualize/view_model/live_session_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -22,16 +20,6 @@ class HomeContinueCard extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final isLive = ref.watch(liveSessionProvider.select((s) => s != null));
-    if (isLive) {
-      return const OnlyPadding(
-        startPadding: 16,
-        endPadding: 16,
-        bottomPadding: 14,
-        child: LiveSessionCard(),
-      );
-    }
-
     final problem = ref.watch(homeDataProvider.select((s) => s.continueProblem));
 
     if (problem == null) return const SizedBox.shrink();

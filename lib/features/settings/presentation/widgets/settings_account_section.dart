@@ -43,11 +43,7 @@ class _DisplayNameRow extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final name = ref.watch(
-      currentUserNameProvider.select(
-        (value) => value.maybeWhen(data: (data) => data, orElse: () => StringsManager.anonymous),
-      ),
-    );
+    final name = ref.watch(currentUserNameProvider.select((value) => value));
 
     return SettingsRow(
       icon: Icons.badge_outlined,
@@ -88,11 +84,7 @@ class _EmailRow extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final email = ref.watch(
-      currentUserProvider.select(
-        (value) => value.maybeWhen(data: (data) => data?.email ?? '', orElse: () => ''),
-      ),
-    );
+    final email = ref.watch(currentUserProvider.select((value) => value?.email));
 
     return SettingsRow(
       icon: Icons.alternate_email_rounded,

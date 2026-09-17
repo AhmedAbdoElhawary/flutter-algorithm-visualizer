@@ -38,13 +38,15 @@ class ChallengePage extends ConsumerWidget {
                 itemCount: data.ids.length,
                 itemBuilder: (ctx, i) {
                   final problemId = data.ids[i];
-                  return ProblemTile(
+
+                  /// The row watches its own expansion, see [_ExpandableTile].
+                  /// A `ValueKey` so that filtering or searching re-matches
+                  /// each element to its problem instead of to its position —
+                  /// without it, every tile's `getProblemProvider` watch is
+                  /// re-subscribed to a different id when the list changes.
+                  return _ExpandableTile(
+                    key: ValueKey<int>(problemId),
                     problemId: problemId,
-                    expanded: ref.watch(challengesProvider.select((s) => s.expandedId == problemId)),
-                    onToggle: () => ref.read(challengesProvider.notifier).toggleExpanded(problemId),
-                    onSolveTap: () {
-                      context.pushRoute(Routes.problem, queryParameters: "$problemId");
-                    },
                   );
                 },
               ),
@@ -52,6 +54,29 @@ class ChallengePage extends ConsumerWidget {
           },
         ),
       ),
+    );
+  }
+}
+
+/// One row of the challenges list, watching its own expanded state.
+///
+/// The watch used to live in the `itemBuilder`, which meant it ran on
+/// [ChallengePage]'s own `ref`. Expanding a single tile therefore invalidated
+/// the *page* — rebuilding the `NestedScrollView`, the `SliverAppBar`, the
+/// header, the search field, the filter tabs and every other row — to show one
+/// card open. Owning the subscription here keeps the rebuild to this row.
+class _ExpandableTile extends ConsumerWidget {
+  const _ExpandableTile({required this.problemId, super.key});
+
+  final int problemId;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return ProblemTile(
+      problemId: problemId,
+      expanded: ref.watch(challengesProvider.select((s) => s.expandedId == problemId)),
+      onToggle: () => ref.read(challengesProvider.notifier).toggleExpanded(problemId),
+      onSolveTap: () => context.pushRoute(Routes.problem, queryParameters: "$problemId"),
     );
   }
 }

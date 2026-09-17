@@ -115,17 +115,27 @@ abstract final class FirebaseLogger {
     return '${value[0]}$secret${value.substring(at)}';
   }
 
+  /// `Ahmed Abdo` → `A*** A***`.
+  ///
+  /// A display name identifies a person as squarely as an email does, so it
+  /// gets the same treatment. The initials are kept because that is enough to
+  /// tell two test accounts apart while reading a log.
+  static String name(String? value) {
+    if (value == null || value.isEmpty) return 'null';
+    if (FirebaseLogConfig.payloads) return value;
+
+    return value
+        .split(RegExp(r'\s+'))
+        .where((part) => part.isNotEmpty)
+        .map((part) => '${part[0]}$secret')
+        .join(' ');
+  }
+
   /// Shortens uids and document ids, they are noise at full length.
   static String id(String? value) {
     if (value == null || value.isEmpty) return 'null';
     if (FirebaseLogConfig.payloads || value.length <= 6) return value;
     return '${value.substring(0, 6)}…';
-  }
-
-  /// Never prints an id token, only whether one came back and how long it is.
-  static String token(String? value) {
-    if (value == null || value.isEmpty) return 'no token';
-    return 'token(len:${value.length})';
   }
 
   /// A document payload: its size only, unless [FirebaseLogConfig.payloads] is

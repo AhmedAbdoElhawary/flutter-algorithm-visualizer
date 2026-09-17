@@ -16,7 +16,7 @@ class ProfileRepositoryImpl implements ProfileRepository {
   });
 
   @override
-  Future<AuthUser?> getCurrentUser() async {
+  AuthUser? getCurrentUser() {
     final user = remoteDataSource.getCurrentUser();
 
     /// Nobody is signed in, so this is a guest session: report the name they
@@ -27,7 +27,6 @@ class ProfileRepositoryImpl implements ProfileRepository {
       id: user.uid,
       name: user.displayName,
       email: user.email,
-      token: await (user.getIdToken()),
     );
   }
 

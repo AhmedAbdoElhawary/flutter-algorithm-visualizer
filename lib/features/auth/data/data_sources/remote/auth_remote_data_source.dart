@@ -42,13 +42,10 @@ class FirebaseAuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       final user = credential.user;
       if (user == null) throw Exception('User not found after login');
 
-      final token = await user.getIdToken();
-
       return AuthUserDTO(
         id: user.uid,
         name: user.displayName ?? _formatNameFromEmail(user.email ?? email),
         email: user.email ?? email.trim(),
-        token: token,
       );
     } on FirebaseAuthException catch (e) {
       throw FirebaseExceptions.handleFirebaseAuthException(e);
@@ -76,13 +73,10 @@ class FirebaseAuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       await user.updateDisplayName(name.trim());
       await user.reload();
 
-      final token = await user.getIdToken();
-
       return AuthUserDTO(
         id: user.uid,
         name: name.trim(),
         email: user.email ?? email.trim(),
-        token: token,
       );
     } on FirebaseAuthException catch (e) {
       throw FirebaseExceptions.handleFirebaseAuthException(e);

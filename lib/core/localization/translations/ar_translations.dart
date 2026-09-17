@@ -216,7 +216,7 @@ const Map<String, String> kArTranslations = <String, String>{
   'Good evening': 'مساء الخير',
 
   // ------------------------------------------------------------------- auth
-  'Welcome back': 'أهلًا بعودتك',
+  'Welcome': 'أهلًا',
   'Sign in to keep your streak and pick up where you stopped.':
       'سجّل الدخول للحفاظ على تتابعك ومواصلة ما توقفت عنده.',
   'Email': 'البريد الإلكتروني',

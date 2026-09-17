@@ -40,7 +40,7 @@ class LoginPage extends ConsumerWidget {
           child: AuthLogoTile(),
         ),
         SizedBox(height: CdSpace.x6.h),
-        const AuthTitle(StringsManager.welcomeBack, large: true),
+        const AuthTitle(StringsManager.welcome, large: true),
         SizedBox(height: CdSpace.x2.h),
         const AuthSubtitle(StringsManager.signInSubtitle),
         SizedBox(height: CdSpace.x8.h),

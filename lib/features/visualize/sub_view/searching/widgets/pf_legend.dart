@@ -8,17 +8,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class PFLegend extends StatelessWidget {
-  const PFLegend({super.key});
-
+  const PFLegend({this.horizontalPadding=16, this.spacing=12,super.key});
+final double spacing;
+final double horizontalPadding;
   @override
   Widget build(BuildContext context) {
     return Center(
       child: OnlyPadding(
-        startPadding: 16,
-        endPadding: 16,
+        startPadding: horizontalPadding,
+        endPadding: horizontalPadding,
         topPadding: 8,
         child: Wrap(
-          spacing: 12.w,
+          spacing: spacing.w,
           runSpacing: 4.h,
           alignment: WrapAlignment.center,
           children: [

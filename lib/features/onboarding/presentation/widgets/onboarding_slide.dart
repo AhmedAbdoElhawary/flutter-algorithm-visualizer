@@ -30,9 +30,16 @@ class OnboardingSlide extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                Padding(
-                  padding: REdgeInsets.symmetric(horizontal: 5),
-                  child: visual,
+                /// Each of the four visuals is an `AnimatedBuilder` driving a
+                /// `CustomPaint` that runs for as long as its page is active.
+                /// Its own layer stops those repaints reaching the headline
+                /// and body text below, which never change while the animation
+                /// plays. One boundary here covers all four slides.
+                RepaintBoundary(
+                  child: Padding(
+                    padding: REdgeInsets.symmetric(horizontal: 5),
+                    child: visual,
+                  ),
                 ),
                 OnboardingCopy(headline: headline, body: body),
               ],

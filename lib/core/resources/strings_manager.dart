@@ -231,7 +231,7 @@ class StringsManager {
   static const String submission = "Submission";
 
   // Auth Strings — CoreDive screens 11 / 12 / 13
-  static const String welcomeBack = "Welcome back";
+  static const String welcome = "Welcome";
   static const String signInSubtitle = "Sign in to keep your streak and pick up where you stopped.";
   static const String emailAddress = "Email";
   static const String emailHint = "name@example.com";

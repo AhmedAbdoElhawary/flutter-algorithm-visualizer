@@ -227,11 +227,17 @@ jobs:
       # take the Shorebird path — including the first Play Store upload.
       # Dev and staging use plain `flutter build`: they are not patchable, and
       # do not need to be, because a new -dev.N / -stag.N tag ships in minutes.
-      - name: Build release APK (Shorebird — production)
+      # Production ships an Android App Bundle, not an APK: Google Play has
+      # required AAB for new apps since August 2021, so an APK cannot be
+      # uploaded at all. `--obfuscate --split-debug-info` strips the Dart
+      # symbols out of the shipped binary and writes them to build/symbols —
+      # without it the release carries its own symbol table, and the AAB is
+      # both bigger and trivially readable.
+      - name: Build release bundle (Shorebird — production)
         if: needs.resolve.outputs.is_production == 'true'
         run: |
           shorebird release android \
-            --artifact apk \
+            --artifact aab \
             --flavor "$FLAVOR" \
             -t "$TARGET" \
             --build-name "$VERSION" \
@@ -239,8 +245,14 @@ jobs:
             --no-confirm \
             -- \
             --dart-define-from-file="$DART_DEFINE" \
-            --dart-define-from-file="dart_define/${FLAVOR}.secret.json"
+            --dart-define-from-file="dart_define/${FLAVOR}.secret.json" \
+            --obfuscate \
+            --split-debug-info=build/symbols
+          echo "ARTIFACT=build/app/outputs/bundle/${FLAVOR}Release/app-${FLAVOR}-release.aab" >> "$GITHUB_ENV"
 
+      # Dev and staging stay on APK: they go to Firebase App Distribution,
+      # which installs a file directly onto a tester's device, and that has to
+      # be an APK.
       - name: Build release APK (dev / staging)
         if: needs.resolve.outputs.is_production != 'true'
         run: |
@@ -251,37 +263,76 @@ jobs:
             --dart-define-from-file="dart_define/${FLAVOR}.secret.json" \
             --build-name "$VERSION" \
             --build-number "${{ github.run_number }}"
+          echo "ARTIFACT=build/app/outputs/flutter-apk/app-${FLAVOR}-release.apk" >> "$GITHUB_ENV"
 
-      - name: Verify the APK is signed with the release key (not debug)
+      - name: Verify the artifact is signed with the release key (not debug)
         run: |
-          apk="build/app/outputs/flutter-apk/app-${FLAVOR}-release.apk"
-          test -f "$apk" || { echo "::error::expected APK not found at $apk"; exit 1; }
-          # Flutter/AGP signs v2/v3 only (no JAR signature), so use apksigner.
-          apksigner="$(ls "${ANDROID_HOME:-$ANDROID_SDK_ROOT}"/build-tools/*/apksigner 2>/dev/null | sort -V | tail -1)"
-          if [ -z "$apksigner" ]; then echo "::warning::apksigner not found — skipping signature check"; exit 0; fi
-          certs="$("$apksigner" verify --print-certs "$apk")"
+          test -f "$ARTIFACT" || { echo "::error::expected artifact not found at $ARTIFACT"; exit 1; }
+          case "$ARTIFACT" in
+            *.aab)
+              # An AAB carries a JAR signature, which apksigner does not read.
+              certs="$(jarsigner -verify -verbose:summary -certs "$ARTIFACT" 2>&1)"
+              ;;
+            *)
+              # Flutter/AGP signs APKs v2/v3 only (no JAR signature), so use apksigner.
+              apksigner="$(ls "${ANDROID_HOME:-$ANDROID_SDK_ROOT}"/build-tools/*/apksigner 2>/dev/null | sort -V | tail -1)"
+              if [ -z "$apksigner" ]; then echo "::warning::apksigner not found — skipping signature check"; exit 0; fi
+              certs="$("$apksigner" verify --print-certs "$ARTIFACT")"
+              ;;
+          esac
           echo "$certs"
           if echo "$certs" | grep -q "CN=Android Debug"; then
-            echo "::error::APK is debug-signed — check the ANDROID_KEYSTORE_* secrets for environment '${{ needs.resolve.outputs.environment }}'"; exit 1
+            echo "::error::artifact is debug-signed — check the ANDROID_KEYSTORE_* secrets for environment '${{ needs.resolve.outputs.environment }}'"; exit 1
           fi
 
+      # Sentry needs the symbol files that --split-debug-info just stripped
+      # out, or every production stack trace arrives as bare hex addresses.
+      - name: Upload debug symbols to Sentry
+        if: needs.resolve.outputs.is_production == 'true'
+        continue-on-error: true
+        env:
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+          SENTRY_ORG: ${{ vars.SENTRY_ORG }}
+          SENTRY_PROJECT: ${{ vars.SENTRY_PROJECT }}
+        run: |
+          # TODO(ahmed): add SENTRY_AUTH_TOKEN as a repo secret and SENTRY_ORG /
+          # SENTRY_PROJECT as repo variables, then drop `continue-on-error`
+          # above so a failed symbol upload fails the release.
+          if [ -z "$SENTRY_AUTH_TOKEN" ]; then
+            echo "::warning::SENTRY_AUTH_TOKEN not set — skipping symbol upload. Production stack traces will not be symbolicated."
+            exit 0
+          fi
+          curl -sL https://sentry.io/get-cli/ | bash
+          sentry-cli debug-files upload --include-sources build/symbols
+
+      # Dev and staging only. Production now builds an AAB, and App
+      # Distribution installs a file straight onto a tester's device, so it
+      # wants an APK. Production testers come through the Play internal
+      # testing track instead — which is where a release candidate should be
+      # tested anyway, because that is the artifact Play actually re-signs
+      # and serves.
+      #
+      # TODO(ahmed): if you want production builds on App Distribution too,
+      # add a bundletool step to extract a universal APK from the AAB and
+      # upload that — do not switch the Play artifact back to APK.
       - name: Upload to Firebase App Distribution
+        if: needs.resolve.outputs.is_production != 'true'
         uses: wzieba/Firebase-Distribution-Github-Action@v1
         with:
           appId: ${{ secrets.FIREBASE_ANDROID_APP_ID }}
           token: ${{ secrets.FIREBASE_TOKEN }}
           groups: ${{ vars.FIREBASE_TESTER_GROUPS || 'testers' }}
-          file: build/app/outputs/flutter-apk/app-${{ needs.resolve.outputs.flavor }}-release.apk
+          file: ${{ env.ARTIFACT }}
           releaseNotesFile: release-notes.txt
 
-      - name: Upload release notes + APK for the release job
+      - name: Upload release notes + bundle for the release job
         if: needs.resolve.outputs.is_production == 'true'
         uses: actions/upload-artifact@v4
         with:
           name: release-assets
           path: |
             release-notes.txt
-            build/app/outputs/flutter-apk/app-${{ needs.resolve.outputs.flavor }}-release.apk
+            ${{ env.ARTIFACT }}
           retention-days: 1
 
       - name: Scrub secrets from the runner
@@ -308,4 +359,8 @@ jobs:
           tag_name: ${{ github.ref_name }}
           name: ${{ github.ref_name }}
           body_path: release-notes.txt
-          files: "*-release.apk"
+          # Production builds an AAB now, so match both rather than only .apk —
+          # otherwise the release is created with no binary attached at all.
+          files: |
+            *-release.aab
+            *-release.apk
