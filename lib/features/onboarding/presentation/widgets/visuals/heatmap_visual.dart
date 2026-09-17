@@ -139,7 +139,7 @@ class _StatsRow extends StatelessWidget {
           child: _StatBlock(
             value: streak,
             label: StringsManager.onboardingDayStreak,
-            color: ThemeEnum.dataMedium,
+            color: ThemeEnum.dataEasy,
             alignment: CrossAxisAlignment.start,
           ),
         ),
@@ -220,7 +220,7 @@ class _HeatGrid extends StatelessWidget {
               ring: ring,
               gap: gap,
               cell: cell,
-              color: context.getColor(ThemeEnum.dataMedium),
+              color: context.getColor(ThemeEnum.dataEasy),
               radius: 3.r,
             ),
           ),
@@ -300,7 +300,7 @@ class _HeatLegend extends StatelessWidget {
               width: 10.r,
               height: 10.r,
               decoration: BoxDecoration(
-                color: context.getColor(ThemeEnum.dataMedium).withValues(alpha: level),
+                color: context.getColor(ThemeEnum.dataEasy).withValues(alpha: level),
                 borderRadius: BorderRadius.circular(2.r),
               ),
             ),
