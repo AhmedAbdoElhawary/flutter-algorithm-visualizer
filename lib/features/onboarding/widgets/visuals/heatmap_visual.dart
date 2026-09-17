@@ -3,8 +3,8 @@ import 'package:algorithm_visualizer/core/resources/styles_manager.dart';
 import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
 import 'package:algorithm_visualizer/core/widgets/adaptive/padding/adaptive_padding.dart';
 import 'package:algorithm_visualizer/core/widgets/adaptive/text/adaptive_text.dart';
-import 'package:algorithm_visualizer/features/onboarding/presentation/widgets/onboarding_card.dart';
-import 'package:algorithm_visualizer/features/onboarding/presentation/widgets/onboarding_text.dart';
+import 'package:algorithm_visualizer/features/onboarding/widgets/onboarding_card.dart';
+import 'package:algorithm_visualizer/features/onboarding/widgets/onboarding_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
