@@ -4,11 +4,11 @@ import 'package:algorithm_visualizer/core/widgets/custom_widgets/animated_popup.
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/card_container.dart';
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/confirmation_dialog_card.dart';
 import 'package:algorithm_visualizer/features/profile/presentation/view_model/user_provider.dart';
-import 'package:algorithm_visualizer/features/settings/presentation/widgets/change_display_name_dialog.dart';
-import 'package:algorithm_visualizer/features/settings/presentation/widgets/change_email_dialog.dart';
-import 'package:algorithm_visualizer/features/settings/presentation/widgets/change_password_dialog.dart';
-import 'package:algorithm_visualizer/features/settings/presentation/widgets/delete_account_dialog.dart';
-import 'package:algorithm_visualizer/features/settings/presentation/widgets/settings_row.dart';
+import 'package:algorithm_visualizer/features/settings/widgets/change_display_name_dialog.dart';
+import 'package:algorithm_visualizer/features/settings/widgets/change_email_dialog.dart';
+import 'package:algorithm_visualizer/features/settings/widgets/change_password_dialog.dart';
+import 'package:algorithm_visualizer/features/settings/widgets/delete_account_dialog.dart';
+import 'package:algorithm_visualizer/features/settings/widgets/settings_row.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
