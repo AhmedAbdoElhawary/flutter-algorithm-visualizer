@@ -3,6 +3,8 @@ import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
 import 'package:algorithm_visualizer/core/widgets/adaptive/padding/adaptive_padding.dart';
 import 'package:algorithm_visualizer/features/onboarding/presentation/widgets/onboarding_card.dart';
 import 'package:algorithm_visualizer/features/onboarding/presentation/widgets/onboarding_text.dart';
+import 'package:algorithm_visualizer/features/visualize/sub_view/searching/helper/search_role.dart';
+import 'package:algorithm_visualizer/features/visualize/sub_view/searching/widgets/pf_legend.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -110,14 +112,15 @@ class _PathfindingVisualState extends State<PathfindingVisual> with SingleTicker
     _endRing = _distance[_index(_end.x, _end.y)];
 
     // Route back from the end marker, skipping the end and start cells — the
-    // marker and the origin carry their own styling.
+    // marker and the origin carry their own styling. Reversed so the reveal
+    // in `_frameAt` draws start -> end, not end -> start.
     final path = <({int x, int y})>[];
     var cursor = _parent[_index(_end.x, _end.y)];
     while (cursor != -1 && cursor != _index(_start.x, _start.y)) {
       path.add((x: cursor % _columns, y: cursor ~/ _columns));
       cursor = _parent[cursor];
     }
-    _path = path;
+    _path = path.reversed.toList();
 
     _ringSizes = List<int>.filled(_endRing + 1, 0);
     for (final distance in _distance) {
@@ -159,12 +162,21 @@ class _PathfindingVisualState extends State<PathfindingVisual> with SingleTicker
 
   @override
   Widget build(BuildContext context) {
-    final lines = context.getColor(ThemeEnum.hairline);
-    final wallColor = context.getColor(ThemeEnum.track);
-    final frontier = context.getColor(ThemeEnum.inkPrimary);
-    final visited = context.getColor(ThemeEnum.dataTarget);
-    final pathColor = context.getColor(ThemeEnum.dataEasy);
-    final marker = context.getColor(ThemeEnum.dataHard);
+    const linesColor = ThemeEnum.hairline;
+    final wallColor = searchRoleColor(SearchRole.wall);
+    final frontierColor = searchRoleColor(SearchRole.frontier);
+    final visitedColor = searchRoleColor(SearchRole.visited);
+    final pathColor = searchRoleColor(SearchRole.path);
+    final markerColor = searchRoleColor(SearchRole.end);
+    final starterColor = searchRoleColor(SearchRole.start);
+
+    final lines = context.getColor(linesColor);
+    final wall = context.getColor(wallColor);
+    final frontier = context.getColor(frontierColor);
+    final visited = context.getColor(visitedColor);
+    final path = context.getColor(pathColor);
+    final marker = context.getColor(markerColor);
+    final starter = context.getColor(starterColor);
 
     return OnboardingCard(
       child: AllPadding(
@@ -173,7 +185,7 @@ class _PathfindingVisualState extends State<PathfindingVisual> with SingleTicker
           animation: _controller,
           builder: (context, _) {
             final elapsed = _controller.value * _controller.duration!.inMilliseconds;
-            final frame = _frameAt(elapsed, frontier: frontier, visited: visited, path: pathColor);
+            final frame = _frameAt(elapsed, frontier: frontier, visited: visited, path: path);
 
             return Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -186,34 +198,21 @@ class _PathfindingVisualState extends State<PathfindingVisual> with SingleTicker
                       columns: _columns,
                       rows: _rows,
                       lineColor: lines,
-                      wallColor: wallColor,
+                      wallColor: wall,
                       markerColor: marker,
+                      starterColor: starter,
                       cells: frame.cells,
                       walls: frame.walls,
+                      start: _start,
                       end: _end,
                       pulse: frame.pulse,
                       finger: frame.finger,
                     ),
                   ),
                 ),
-                SizedBox(height: 16.h),
-                const OnboardingLegend(
-                  items: [
-                    LegendItem(
-                      color: ThemeEnum.dataTarget,
-                      label: StringsManager.onboardingLegendVisited,
-                    ),
-                    LegendItem(
-                      color: ThemeEnum.inkPrimary,
-                      label: StringsManager.onboardingLegendFrontier,
-                    ),
-                    LegendItem(
-                      color: ThemeEnum.dataEasy,
-                      label: StringsManager.onboardingLegendPath,
-                    ),
-                  ],
-                ),
-                SizedBox(height: 16.h),
+                const RSizedBox(height: 16),
+                const PFLegend(horizontalPadding: 0,spacing: 6),
+                const RSizedBox(height: 16),
                 OnboardingCaptionBar(
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -337,8 +336,10 @@ class _GridPainter extends CustomPainter {
     required this.lineColor,
     required this.wallColor,
     required this.markerColor,
+    required this.starterColor,
     required this.cells,
     required this.walls,
+    required this.start,
     required this.end,
     required this.pulse,
     required this.finger,
@@ -349,8 +350,10 @@ class _GridPainter extends CustomPainter {
   final Color lineColor;
   final Color wallColor;
   final Color markerColor;
+  final Color starterColor;
   final List<Color?> cells;
   final Set<int> walls;
+  final ({int x, int y}) start;
   final ({int x, int y}) end;
   final double pulse;
   final ({double x, double y})? finger;
@@ -383,6 +386,13 @@ class _GridPainter extends CustomPainter {
       final y = row * cellHeight;
       canvas.drawLine(Offset(0, y), Offset(size.width, y), linePaint);
     }
+
+    final startCenter = rectFor(start.x.toDouble(), start.y.toDouble()).center;
+    canvas.drawCircle(
+      startCenter,
+      cellWidth * 0.26,
+      Paint()..color = starterColor,
+    );
 
     final endCenter = rectFor(end.x.toDouble(), end.y.toDouble()).center;
     final ringRadius = cellWidth * 0.26;
