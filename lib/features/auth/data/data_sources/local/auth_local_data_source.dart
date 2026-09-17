@@ -14,17 +14,16 @@ class AuthLocalDataSourceImpl implements AuthLocalDataSource {
   final LocalStorage storage;
 
   static const String _userKey = 'auth_current_user';
-  static const String _tokenKey = 'auth_access_token';
 
   AuthLocalDataSourceImpl(this.storage);
 
   @override
   Future<void> saveUser(AuthUserDTO user) async {
+    /// [AuthUserDTO] carries no token, so what lands on disk is the uid, name
+    /// and email the app actually reads back — nothing that is a credential.
+    /// This storage is not encrypted, so that distinction is the whole point.
     final jsonString = jsonEncode(user.toJson());
     await storage.write(_userKey, jsonString);
-    if (user.token != null) {
-      await storage.write(_tokenKey, user.token!);
-    }
   }
 
   @override
@@ -42,7 +41,6 @@ class AuthLocalDataSourceImpl implements AuthLocalDataSource {
   @override
   Future<void> clearUser() async {
     await storage.remove(_userKey);
-    await storage.remove(_tokenKey);
   }
 
   @override
