@@ -18,11 +18,11 @@ class ChallengesNotifier extends Notifier<ChallengesState> {
   UpdateProblemSolutionUseCase get _updateProblemSolutionUseCase =>
       UpdateProblemSolutionUseCase(_problemRepository);
 
-  void setFilter(ProblemDifficulty filter) => state = state.copyWith(filter: filter);
+  void setFilter(ProblemDifficulty filter) => state = state.copyWith(filter: filter, expandedId: 0);
 
-  void setSearch(String query) => state = state.copyWith(search: query);
+  void setSearch(String query) => state = state.copyWith(search: query, expandedId: 0);
 
-  void clearSearch() => state = state.copyWith(search: '');
+  void clearSearch() => state = state.copyWith(search: '', expandedId: 0);
 
   void toggleExpanded(int problemId) {
     if (state.expandedId == problemId) {
