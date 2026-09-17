@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Nothing this app writes locally leaves the device.
+
+    `android:allowBackup="false"` in the manifest covers cloud backup, but
+    only that. Since API 31 device-to-device transfer is a separate channel
+    with its own opt-out, and it is on by default — so without this file the
+    contents of local storage would ride along to a new phone even though
+    cloud backup is off.
+
+    What is being excluded: the GetStorage file, which holds the signed-in
+    user's uid, name and email, plus solved/bookmarked problem progress.
+    None of it is worth restoring — progress is already mirrored to Firestore
+    under the user's own uid and comes back on sign-in — so excluding it
+    costs the user nothing and keeps identifiers off the transfer channel.
+-->
+<data-extraction-rules>
+    <cloud-backup>
+        <exclude domain="root" />
+        <exclude domain="file" />
+        <exclude domain="database" />
+        <exclude domain="sharedpref" />
+        <exclude domain="external" />
+    </cloud-backup>
+    <device-transfer>
+        <exclude domain="root" />
+        <exclude domain="file" />
+        <exclude domain="database" />
+        <exclude domain="sharedpref" />
+        <exclude domain="external" />
+    </device-transfer>
+</data-extraction-rules>
