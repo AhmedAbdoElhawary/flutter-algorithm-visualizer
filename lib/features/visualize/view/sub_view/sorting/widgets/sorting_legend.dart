@@ -1,6 +1,6 @@
 import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
 import 'package:algorithm_visualizer/core/widgets/adaptive/text/adaptive_text.dart';
-import 'package:algorithm_visualizer/features/visualize/sub_view/sorting/view_model/sorting_notifier.dart';
+import 'package:algorithm_visualizer/features/visualize/view/sub_view/sorting/view_model/sorting_notifier.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -16,10 +16,10 @@ class SortingLegend extends StatelessWidget {
     final orderedRoles = kRolePriority.where((role) => role != SortRole.idle && roles.contains(role));
 
     return Padding(
-      padding: REdgeInsets.symmetric(horizontal: 16),
+      padding: REdgeInsets.symmetric(horizontal: 6),
       child: Wrap(
-        spacing: 12.w,
-        runSpacing: 8.h,
+        spacing: 6.r,
+        runSpacing: 8.r,
         alignment: WrapAlignment.center,
         children: [
           for (final role in orderedRoles) _LegendChip(role: role, pointerHint: pointerHints[role]),
