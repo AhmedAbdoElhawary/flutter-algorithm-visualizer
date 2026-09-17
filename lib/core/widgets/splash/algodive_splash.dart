@@ -121,19 +121,22 @@ class _AlgoDiveSplashState extends State<AlgoDiveSplash> with SingleTickerProvid
                         ),
                       ),
                       const SizedBox(height: 38),
-                      Opacity(
-                        opacity: word,
-                        child: Transform.translate(
-                          offset: Offset(0, 12 * (1 - word)),
-                          child: Text(
-                            StringsManager.algoDive,
-                            style: TextStyle(
-                              fontFamily: FontConstants.fontFamily,
-                              color: mark,
-                              fontSize: 54,
-                              fontWeight: FontWeight.w600,
-                              letterSpacing: -1.9,
-                            ),
+                      /// The fade rides on the text colour rather than on an
+                      /// `Opacity` wrapper. `Opacity` would `saveLayer` — an
+                      /// off-screen buffer and a GPU render-target switch —
+                      /// once per frame, on the very first frames of a cold
+                      /// start, competing with the shader warm-up. Alpha on
+                      /// the colour paints the glyphs faded directly.
+                      Transform.translate(
+                        offset: Offset(0, 12 * (1 - word)),
+                        child: Text(
+                          StringsManager.algoDive,
+                          style: TextStyle(
+                            fontFamily: FontConstants.fontFamily,
+                            color: mark.withValues(alpha: word),
+                            fontSize: 54,
+                            fontWeight: FontWeight.w600,
+                            letterSpacing: -1.9,
                           ),
                         ),
                       ),
