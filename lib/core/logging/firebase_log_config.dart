@@ -19,11 +19,19 @@ abstract final class FirebaseLogConfig {
   ///
   /// The output comes from the native SDK, not from Dart, so it shows up in
   /// `flutter run` / logcat on Android and in the Xcode console on iOS.
-  static bool specificLogs = true;
+  ///
+  /// Initialised to [kDebugMode], not to `true`: [apply] already ANDs every
+  /// flag with it, but a field that reads `true` unconditionally would leak
+  /// into a release build the moment somebody adds a code path that skips
+  /// [apply]. The default carries the guarantee instead of relying on a call.
+  static bool specificLogs = kDebugMode;
 
   /// Prints full document payloads and argument values instead of the redacted
   /// summaries. Secrets (passwords, reset codes, tokens) stay redacted anyway.
-  static bool payloads = true;
+  ///
+  /// [kDebugMode] for the same reason as [specificLogs]: this is the flag that
+  /// un-redacts emails and uids, so it is the one that must never default on.
+  static bool payloads = kDebugMode;
 
   /// Applies the configuration. Call it once after `Firebase.initializeApp`.
   ///
