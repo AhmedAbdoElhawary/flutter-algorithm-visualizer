@@ -196,15 +196,18 @@ void main() {
       await _swipe(tester);
     }
 
-    final opacity = tester.widget<Opacity>(
+    // `FadeTransition`, not `Opacity`: the cross-fade was moved off `Opacity`
+    // so the swipe does not force a `saveLayer` on every frame. What is being
+    // asserted is unchanged — the pair is fully opaque once the page lands.
+    final fade = tester.widget<FadeTransition>(
       find
           .ancestor(
             of: find.text(StringsManager.onboardingGetStarted),
-            matching: find.byType(Opacity),
+            matching: find.byType(FadeTransition),
           )
           .first,
     );
-    expect(opacity.opacity, 1.0);
+    expect(fade.opacity.value, 1.0);
   });
 
   testWidgets('page 4 buttons share height, radius and label size', (tester) async {
