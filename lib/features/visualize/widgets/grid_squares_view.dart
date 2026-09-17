@@ -41,7 +41,11 @@ class GridSquaresView extends StatelessWidget {
               squareSize: squareSize,
               height: perfectSize.height,
             ),
-            child: child,
+            /// The painter behind is a static grid; [child] is the sorting
+            /// bars, which move constantly. They share one `RenderCustomPaint`,
+            /// so without a boundary every bar animation frame re-ran the grid
+            /// paint underneath it too.
+            child: RepaintBoundary(child: child),
           ),
         );
       },
