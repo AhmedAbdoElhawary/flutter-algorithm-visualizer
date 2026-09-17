@@ -7,7 +7,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'challenges_notifier.dart';
 import 'challenges_state.dart';
 
-final challengesProvider = NotifierProvider<ChallengesNotifier, ChallengesState>(() {
+final challengesProvider = NotifierProvider.autoDispose<ChallengesNotifier, ChallengesState>(() {
   return ChallengesNotifier();
 });
 
@@ -42,7 +42,11 @@ bool _matchesFilter(CodingProblem problem, ProblemDifficulty? filter, String sea
   return _matchesSearch(problem, search);
 }
 
-final filteredProblemIdsProvider = Provider<AsyncValue<FilteredProblemIds>>((ref) {
+/// Auto-disposing: this is derived, per-screen state. Once the challenges
+/// list is gone — a different tab is fine, but a sign-out tears the whole
+/// shell down — the cached filter result should go with it rather than
+/// outlive the account that produced it.
+final filteredProblemIdsProvider = Provider.autoDispose<AsyncValue<FilteredProblemIds>>((ref) {
   /// Only the two fields the filter actually reads, the same way
   /// [specificDifficultyCountProvider] below already does it.
   ///
@@ -51,9 +55,7 @@ final filteredProblemIdsProvider = Provider<AsyncValue<FilteredProblemIds>>((ref
   /// and then a `ListEquality` comparison over the result, to arrive at the
   /// list it already had. Records compare by value, so a change to any other
   /// field of the state no longer reaches this provider at all.
-  final (filter, search) = ref.watch(
-    challengesProvider.select((s) => (s.filter, s.search)),
-  );
+  final (filter, search) = ref.watch(challengesProvider.select((s) => (s.filter, s.search)));
   return ref.watch(
     problemsProvider.select(
       (async) => async.whenData(
@@ -71,7 +73,10 @@ final filteredProblemIdsProvider = Provider<AsyncValue<FilteredProblemIds>>((ref
 
 /// Count of problems matching [filter] under the currently active search —
 /// this is what keeps the difficulty tab counts live while the user types.
-final specificDifficultyCountProvider = Provider.family<AsyncValue<int>, ProblemDifficulty?>(
+/// Auto-disposing for the same reason as [filteredProblemIdsProvider], and one
+/// more: a family keeps a separate provider per argument, so without this every
+/// difficulty tab ever opened stays in the container for the rest of the run.
+final specificDifficultyCountProvider = Provider.autoDispose.family<AsyncValue<int>, ProblemDifficulty?>(
   (ref, filter) {
     final search = ref.watch(challengesProvider.select((s) => s.search));
     return ref.watch(
