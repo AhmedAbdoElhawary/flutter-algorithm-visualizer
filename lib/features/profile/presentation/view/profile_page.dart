@@ -30,11 +30,8 @@ class ProfileScreen extends ConsumerWidget {
             RSizedBox(height: 14),
             ProfileWeeklyChart(),
             ProfileHeatmap(),
-            RSizedBox(height: 14),
-            ProfileCategoryChart(),
-            // height inside
+            ProfileSolvedTopics(),
             ProfilePracticeHistory(),
-            RSizedBox(height: 14),
             RSizedBox(height: kBottomPageSpacing),
           ],
         ),
