@@ -1,9 +1,6 @@
-part of 'package:algorithm_visualizer/features/visualize/sub_view/searching/view_model/searching_notifier.dart';
+part of 'package:algorithm_visualizer/features/visualize/view/sub_view/searching/view_model/searching_notifier.dart';
 
 class BFSSearchingNotifier extends SearchingNotifier {
-  @override
-  SearchingState build() => SearchingState.initial();
-
   @override
   PFRule get rule => PFRule.oldestFirst;
 
