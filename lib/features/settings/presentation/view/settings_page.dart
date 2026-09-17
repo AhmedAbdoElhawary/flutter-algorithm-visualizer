@@ -39,6 +39,14 @@ class SettingsPage extends StatelessWidget {
                   SectionHeader(title: StringsManager.settingsAppearanceSection),
                   RSizedBox(height: 10),
                   SettingsAppearanceSection(),
+                  // TODO(ahmed): Arabic ships as code but is not reachable, so
+                  // this row stays off — a language picker that cannot change
+                  // the language is worse than no picker. Turning it back on
+                  // means doing all four together: uncomment these lines, the
+                  // locale and the delegate in `my_app.dart`, and declare
+                  // `assets/problems.ar.json` under `assets:` in pubspec.yaml
+                  // (it is loaded at runtime today but never bundled, and the
+                  // failure is swallowed, so every problem reads in English).
                   // RSizedBox(height: 22),
                   // SectionHeader(title: StringsManager.language),
                   // RSizedBox(height: 10),
