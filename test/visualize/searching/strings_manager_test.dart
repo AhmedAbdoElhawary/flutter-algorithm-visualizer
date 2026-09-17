@@ -1,5 +1,5 @@
 import 'package:algorithm_visualizer/core/resources/strings_manager.dart';
-import 'package:algorithm_visualizer/features/visualize/sub_view/searching/helper/search_role.dart';
+import 'package:algorithm_visualizer/features/visualize/view/sub_view/searching/helper/search_role.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 /// Every searching constant this feature added, keyed by name so a failure
