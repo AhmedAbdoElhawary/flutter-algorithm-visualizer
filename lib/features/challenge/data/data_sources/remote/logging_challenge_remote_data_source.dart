@@ -2,8 +2,6 @@ import 'package:algorithm_visualizer/core/logging/firebase_logger.dart';
 import 'package:algorithm_visualizer/features/challenge/data/data_sources/remote/challenge_remote_data_source.dart';
 import 'package:algorithm_visualizer/features/challenge/data/models/problem_storage.dart';
 
-/// Traces every [ProblemRemoteDataSource] call to the console, then hands over
-/// to the real data source untouched.
 class LoggingProblemRemoteDataSource implements ProblemRemoteDataSource {
   const LoggingProblemRemoteDataSource(this._source);
 
@@ -22,20 +20,18 @@ class LoggingProblemRemoteDataSource implements ProblemRemoteDataSource {
   }
 
   @override
-  Future<List<ProblemStorageDTO>> getProblems() {
+  Future<List<ProblemStorageDTO>> getProblems({bool preferCache = false}) {
     return FirebaseLogger.trace(
       _scope,
       'getProblems',
-      _source.getProblems,
+      () => _source.getProblems(preferCache: preferCache),
+      args: {'preferCache': preferCache},
       describeResult: (problems) => 'docs=${problems.length}',
     );
   }
 
   @override
   Future<void> saveProblem(ProblemStorageDTO problem) {
-    /// The wrapped write is deliberately not awaited, it freezes while the
-    /// device is offline. Awaiting it here would reintroduce exactly that, so
-    /// the call is only announced.
     FirebaseLogger.traceDetached(_scope, 'saveProblem', args: _problemArgs(problem));
     return _source.saveProblem(problem);
   }
@@ -63,6 +59,16 @@ class LoggingProblemRemoteDataSource implements ProblemRemoteDataSource {
       'batchSaveProblems',
       () => _source.batchSaveProblems(problems),
       args: {'problems': problems.length},
+    );
+  }
+
+  @override
+  Future<void> batchDeleteProblems(List<int> problemIds) {
+    return FirebaseLogger.trace(
+      _scope,
+      'batchDeleteProblems',
+      () => _source.batchDeleteProblems(problemIds),
+      args: {'problems': problemIds.length},
     );
   }
 
