@@ -1,9 +1,9 @@
 import 'package:algorithm_visualizer/config/themes/app_theme.dart';
-import 'package:algorithm_visualizer/features/visualize/sub_view/searching/helper/pf_constants.dart';
-import 'package:algorithm_visualizer/features/visualize/sub_view/searching/view_model/grid_scroll_lock.dart';
-import 'package:algorithm_visualizer/features/visualize/sub_view/searching/view_model/searching_notifier.dart';
-import 'package:algorithm_visualizer/features/visualize/sub_view/searching/widgets/pf_grid.dart';
-import 'package:algorithm_visualizer/features/visualize/sub_view/searching/widgets/pf_grid_painter.dart';
+import 'package:algorithm_visualizer/features/visualize/view/sub_view/searching/helper/pf_constants.dart';
+import 'package:algorithm_visualizer/features/visualize/view/sub_view/searching/view_model/grid_scroll_lock.dart';
+import 'package:algorithm_visualizer/features/visualize/view/sub_view/searching/view_model/searching_notifier.dart';
+import 'package:algorithm_visualizer/features/visualize/view/sub_view/searching/widgets/pf_grid.dart';
+import 'package:algorithm_visualizer/features/visualize/view/sub_view/searching/widgets/pf_grid_painter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
