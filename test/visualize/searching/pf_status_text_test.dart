@@ -1,7 +1,7 @@
 import 'package:algorithm_visualizer/core/resources/strings_manager.dart';
-import 'package:algorithm_visualizer/features/visualize/sub_view/searching/helper/pf_status_text.dart';
-import 'package:algorithm_visualizer/features/visualize/sub_view/searching/helper/pf_step.dart';
-import 'package:algorithm_visualizer/features/visualize/sub_view/searching/view_model/searching_notifier.dart';
+import 'package:algorithm_visualizer/features/visualize/view/sub_view/searching/helper/pf_status_text.dart';
+import 'package:algorithm_visualizer/features/visualize/view/sub_view/searching/helper/pf_step.dart';
+import 'package:algorithm_visualizer/features/visualize/view/sub_view/searching/view_model/searching_notifier.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'support/search_contract.dart';
