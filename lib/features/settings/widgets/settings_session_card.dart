@@ -70,7 +70,10 @@ class _GuestSignInCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => context.push(Routes.login.path),
+      /// `go`, not `push` — see [MainNavigationShell]. Pushing login over the
+      /// live shell keeps Settings open behind it, so signing in as someone
+      /// else lands back on Settings when the profile tab is next tapped.
+      onTap: () => context.go(Routes.login.path),
       child: const _AccountCardBody(
         icon: Icons.login_rounded,
         title: StringsManager.guestAccountTitle,
