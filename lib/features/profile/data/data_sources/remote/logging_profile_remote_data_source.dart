@@ -27,7 +27,7 @@ class LoggingProfileRemoteDataSource implements ProfileRemoteDataSource {
       _scope,
       'updateDisplayName',
       () => _source.updateDisplayName(displayName: displayName),
-      args: {'displayName': displayName},
+      args: {'displayName': FirebaseLogger.name(displayName)},
     );
   }
 
