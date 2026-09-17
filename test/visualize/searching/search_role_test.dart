@@ -1,5 +1,5 @@
 import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
-import 'package:algorithm_visualizer/features/visualize/sub_view/searching/helper/search_role.dart';
+import 'package:algorithm_visualizer/features/visualize/view/sub_view/searching/helper/search_role.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
