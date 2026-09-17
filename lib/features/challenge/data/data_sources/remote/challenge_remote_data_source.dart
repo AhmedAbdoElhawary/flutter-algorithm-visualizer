@@ -2,21 +2,12 @@ import 'package:algorithm_visualizer/features/challenge/data/models/problem_stor
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-/// Persists the per-user problem progress ([ProblemStorageDTO]) in Firestore so
-/// it follows the signed-in account across devices.
-///
-/// Layout: `users/{uid}/problems/{problemId}` where each document is the JSON of
-/// a [ProblemStorageDTO]. Kept intentionally simple for now; edge cases (merge
-/// conflicts, offline queueing, etc.) are handled elsewhere later.
 abstract class ProblemRemoteDataSource {
   bool get isSignedIn;
 
   Future<List<ProblemStorageDTO>> getProblems();
-
   Future<void> saveProblem(ProblemStorageDTO problem);
-
   Future<void> updateProblem(ProblemStorageDTO problem);
-
   Future<void> deleteProblem(int problemId);
 
   /// Uploads a whole guest session in one go, used right after sign up.
@@ -25,11 +16,6 @@ abstract class ProblemRemoteDataSource {
   /// whether the hand over succeeded before it erases the local copy.
   Future<void> batchSaveProblems(List<ProblemStorageDTO> problems);
 
-  /// Erases every problem document owned by the signed in account.
-  ///
-  /// Deleting a Firebase user does **not** cascade into Firestore, so account
-  /// deletion has to clear this subtree itself or the progress is orphaned
-  /// under a uid nobody can sign in as again.
   Future<void> deleteAllProblems();
 }
 
