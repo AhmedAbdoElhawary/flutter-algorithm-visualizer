@@ -1,7 +1,7 @@
 import 'package:algorithm_visualizer/core/resources/strings_manager.dart';
 import 'package:algorithm_visualizer/features/visualize/helper/o_notation.dart';
-import 'package:algorithm_visualizer/features/visualize/sub_view/sorting/view_model/sorting_notifier.dart';
-import 'package:algorithm_visualizer/features/visualize/sub_view/sorting/view_model/sub_sorting/quick_sort_notifier.dart';
+import 'package:algorithm_visualizer/features/visualize/view/sub_view/sorting/view_model/sorting_notifier.dart';
+import 'package:algorithm_visualizer/features/visualize/view/sub_view/sorting/view_model/sub_sorting/quick_sort_notifier.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
