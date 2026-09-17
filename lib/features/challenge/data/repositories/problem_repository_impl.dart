@@ -1,4 +1,5 @@
 import 'package:algorithm_visualizer/features/challenge/data/data_sources/local/challenge_local_data_source.dart';
+import 'package:algorithm_visualizer/features/challenge/data/data_sources/local/problem_pending_local_data_source.dart';
 import 'package:algorithm_visualizer/features/challenge/data/data_sources/remote/challenge_remote_data_source.dart';
 import 'package:algorithm_visualizer/features/challenge/data/mappers/problem_mapper.dart';
 import 'package:algorithm_visualizer/features/challenge/data/models/problem_storage.dart';
@@ -7,23 +8,17 @@ import 'package:algorithm_visualizer/features/challenge/domain/repositories/prob
 import 'package:collection/collection.dart';
 import 'package:flutter/cupertino.dart';
 
-/// Routes the progress of a problem to whichever store owns it right now.
-///
-/// Signed out, everything lives in [localDataSource]: a guest is free to solve
-/// and bookmark, and the local `problems` key is the only copy of that work.
-/// Signed in, everything lives in [remoteDataSource] and Firestore's own cache
-/// covers being offline, so the local key is deliberately left untouched: a
-/// non-empty one always means "a guest session that has not been migrated yet".
 class ProblemRepositoryImpl implements ProblemRepository {
-  ProblemRepositoryImpl(this.localDataSource, this.remoteDataSource);
+  ProblemRepositoryImpl(this.localDataSource, this.remoteDataSource, this.pendingDataSource);
 
   final ProblemLocalDataSource localDataSource;
   final ProblemRemoteDataSource remoteDataSource;
+  final ProblemPendingLocalDataSource pendingDataSource;
 
   @override
-  Future<List<CodingProblem>> getAllProblems({bool arabic = false}) async {
+  Future<List<CodingProblem>> getAllProblems({bool arabic = false, bool forceRemote = false}) async {
     final assetsProblems = await localDataSource.loadProblemsAssets(arabic: arabic);
-    final storageProblems = await _loadStorageProblems();
+    final storageProblems = await _loadStorageProblems(forceRemote: forceRemote);
 
     final problems = assetsProblems.problems?.map((dto) {
       final localProblem = storageProblems.firstWhereOrNull((lp) => lp.problemId == dto.problemId);
@@ -39,7 +34,7 @@ class ProblemRepositoryImpl implements ProblemRepository {
 
     if (!remoteDataSource.isSignedIn) return await localDataSource.saveProblem(dto);
 
-    await _tryRemote(() => remoteDataSource.saveProblem(dto));
+    await pendingDataSource.upsert(dto);
   }
 
   @override
@@ -48,27 +43,50 @@ class ProblemRepositoryImpl implements ProblemRepository {
 
     if (!remoteDataSource.isSignedIn) return await localDataSource.updateProblem(dto);
 
-    await _tryRemote(() => remoteDataSource.updateProblem(dto));
+    await pendingDataSource.upsert(dto);
   }
 
   @override
   Future<void> deleteProblem(int problemId) async {
     if (!remoteDataSource.isSignedIn) return await localDataSource.deleteProblem(problemId);
 
-    await _tryRemote(() => remoteDataSource.deleteProblem(problemId));
+    await pendingDataSource.markDeleted(problemId);
   }
 
-  Future<List<ProblemStorageDTO>> _loadStorageProblems() async {
+  Future<List<ProblemStorageDTO>> _loadStorageProblems({required bool forceRemote}) async {
     if (!remoteDataSource.isSignedIn) return localDataSource.getProblems();
 
-    return await remoteDataSource.getProblems();
+    final synced = await _tryRemote(
+      () => remoteDataSource.getProblems(preferCache: !forceRemote),
+      fallback: const <ProblemStorageDTO>[],
+    );
+
+    return _withPendingOnTop(synced);
   }
 
-  Future<void> _tryRemote(Future<void> Function() action) async {
+  List<ProblemStorageDTO> _withPendingOnTop(List<ProblemStorageDTO> synced) {
+    final byId = <int, ProblemStorageDTO>{
+      for (final problem in synced)
+        if (problem.problemId != null) problem.problemId!: problem,
+    };
+
+    for (final problem in pendingDataSource.getPending()) {
+      if (problem.problemId != null) byId[problem.problemId!] = problem;
+    }
+
+    for (final problemId in pendingDataSource.getDeletedIds()) {
+      byId.remove(problemId);
+    }
+
+    return byId.values.toList();
+  }
+
+  Future<T> _tryRemote<T>(Future<T> Function() action, {required T fallback}) async {
     try {
-      await action();
+      return await action();
     } catch (e) {
       debugPrint("Something went wrong: $e");
+      return fallback;
     }
   }
 }
