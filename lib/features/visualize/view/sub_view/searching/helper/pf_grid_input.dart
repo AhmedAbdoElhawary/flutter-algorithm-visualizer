@@ -1,4 +1,4 @@
-import 'package:algorithm_visualizer/features/visualize/sub_view/searching/helper/pf_constants.dart';
+import 'package:algorithm_visualizer/features/visualize/view/sub_view/searching/helper/pf_constants.dart';
 
 /// The complete, immutable input to a search: the walls plus both of the
 /// learner's markers.
