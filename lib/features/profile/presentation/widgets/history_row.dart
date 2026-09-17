@@ -8,8 +8,8 @@ import 'package:algorithm_visualizer/core/widgets/adaptive/text/adaptive_text.da
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/bar_chart_quiet.dart';
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/custom_icon.dart';
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/secondary_problem_card.dart';
-import 'package:algorithm_visualizer/features/profile/presentation/entities/practice_history_entry.dart';
-import 'package:algorithm_visualizer/features/profile/presentation/entities/recent_submission.dart';
+import 'package:algorithm_visualizer/features/profile/domain/entities/practice_history_entry.dart';
+import 'package:algorithm_visualizer/features/profile/domain/entities/recent_submission.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
