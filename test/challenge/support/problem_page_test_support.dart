@@ -20,14 +20,11 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
 import 'package:riverpod/misc.dart' show Override;
 
-/// In-memory [ProblemRepository] so `updateProblemSubmission` (called from
-/// the editor's run chain, research R5) never touches real local storage or
-/// a remote data source during a widget test.
 class FakeProblemRepository implements ProblemRepository {
   final List<CodingProblem> updated = [];
 
   @override
-  Future<List<CodingProblem>> getAllProblems({bool arabic = false}) async => [];
+  Future<List<CodingProblem>> getAllProblems({bool arabic = false, bool forceRemote = false}) async => [];
 
   @override
   Future<void> saveProblem(CodingProblem problem) async {}
@@ -90,17 +87,10 @@ CodingProblem buildTestProblem({
   );
 }
 
-/// Correct solution for [buildGradableTestProblem]'s `int add(int a, int b)`.
 const String gradableCorrectCode = 'int add(int a, int b) {\n  return a + b;\n}\n';
 
-/// A wrong solution for the same problem (subtracts instead of adding).
 const String gradableWrongCode = 'int add(int a, int b) {\n  return a - b;\n}\n';
 
-/// A real, gradeable problem: `int add(int a, int b)` returning `a + b`,
-/// checked against one visible test case — enough to drive the editor's
-/// actual on-device interpreter in run/submission tests without a golden
-/// file. [code] becomes the pre-filled starting code (`getCode`); pass
-/// [gradableCorrectCode] or [gradableWrongCode].
 CodingProblem buildGradableTestProblem({
   int problemId = 1,
   String name = 'Add Two Numbers',
@@ -118,14 +108,9 @@ CodingProblem buildGradableTestProblem({
   );
 }
 
-/// A long description forces the Problem tab to overflow the viewport, so
-/// header-collapse tests have something to scroll past.
 String buildLongDescription() =>
     List.generate(60, (i) => 'Line $i of a very long problem description.').join('\n');
 
-/// Pumps [ProblemPage] behind a minimal [GoRouter] (`CustomBackButton` reads
-/// `context.canPop()`, which needs a real `GoRouter` ancestor) and a fixed
-/// [problemPageSurfaceSize] so ScreenUtil resolves deterministically.
 Future<void> pumpProblemPage(
   WidgetTester tester, {
   required CodingProblem problem,
@@ -182,11 +167,6 @@ Future<void> pumpProblemPage(
   await tester.pumpAndSettle();
 }
 
-/// Pumps [ProblemPage] behind a router that mirrors production's nested
-/// `Routes.problem` / `Routes.subProblem` shape (a child route on the same
-/// navigator), so `context.pushRoute(Routes.subProblem, ...)` stacks a real
-/// page and `context.back()` pops it, without needing the full bottom-nav
-/// shell.
 Future<GoRouter> pumpProblemPageChain(
   WidgetTester tester, {
   required List<CodingProblem> problems,
@@ -252,13 +232,6 @@ Future<GoRouter> pumpProblemPageChain(
   return router;
 }
 
-/// Pumps [CodeEditorPage] directly behind a minimal [GoRouter], for tests that
-/// only care about the editor's own behaviour (states, running, actions).
-///
-/// Pass [problemsAsync] directly to drive `getProblemProvider`'s four
-/// outcomes (`data-model.md` §1) — loading / error / `data(null)` /
-/// `data(problem)` — instead of wrapping a single [problem] in
-/// `AsyncValue.data`.
 Future<void> pumpEditorPage(
   WidgetTester tester, {
   CodingProblem? problem,
@@ -320,10 +293,6 @@ Future<void> pumpEditorPage(
   await tester.pump();
 }
 
-/// Pumps [ProblemPage] behind a router that mirrors production's real
-/// `Routes.problem` / `Routes.subProblem` / `Routes.editor` / `Routes.subEditor`
-/// nesting (`route-contract.md`), so tapping **Solve in editor** and popping
-/// back exercise the exact same navigation shape production uses.
 Future<GoRouter> pumpProblemToEditorChain(
   WidgetTester tester, {
   required List<CodingProblem> problems,
