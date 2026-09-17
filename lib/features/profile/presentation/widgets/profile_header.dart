@@ -46,11 +46,7 @@ class _Avatar extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final name = ref.watch(
-      currentUserNameProvider.select(
-        (value) => value.maybeWhen(data: (data) => data, orElse: () => StringsManager.anonymous),
-      ),
-    );
+    final name = ref.watch(currentUserNameProvider.select((value) => value));
 
     return AvatarQuiet(initial: name.isNotEmpty ? name[0].toUpperCase() : StringsManager.anonymous);
   }
@@ -67,11 +63,7 @@ class _Name extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final name = ref.watch(
-      currentUserNameProvider.select(
-        (value) => value.maybeWhen(data: (data) => data, orElse: () => StringsManager.anonymous),
-      ),
-    );
+    final name = ref.watch(currentUserNameProvider.select((value) => value));
 
     return BoldText(
       name,
