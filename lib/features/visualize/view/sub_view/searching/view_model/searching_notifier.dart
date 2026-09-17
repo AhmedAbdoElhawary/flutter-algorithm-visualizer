@@ -6,16 +6,16 @@ import 'package:algorithm_visualizer/features/base/view_model/algorithm_control_
 import 'package:algorithm_visualizer/features/base/view_model/algorithm_description_interface.dart';
 import 'package:algorithm_visualizer/features/visualize/helper/o_notation.dart';
 import 'package:algorithm_visualizer/features/visualize/helper/playback_speed.dart';
-import 'package:algorithm_visualizer/features/visualize/sub_view/searching/helper/pf_constants.dart';
-import 'package:algorithm_visualizer/features/visualize/sub_view/searching/helper/pf_grid_input.dart';
-import 'package:algorithm_visualizer/features/visualize/sub_view/searching/helper/pf_status_text.dart';
-import 'package:algorithm_visualizer/features/visualize/sub_view/searching/helper/pf_step.dart';
-import 'package:algorithm_visualizer/features/visualize/sub_view/sorting/view_model/sorting_notifier.dart';
+import 'package:algorithm_visualizer/features/visualize/view/sub_view/searching/helper/pf_constants.dart';
+import 'package:algorithm_visualizer/features/visualize/view/sub_view/searching/helper/pf_grid_input.dart';
+import 'package:algorithm_visualizer/features/visualize/view/sub_view/searching/helper/pf_status_text.dart';
+import 'package:algorithm_visualizer/features/visualize/view/sub_view/searching/helper/pf_step.dart';
+import 'package:algorithm_visualizer/features/visualize/view/sub_view/sorting/view_model/sorting_notifier.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-part 'package:algorithm_visualizer/features/visualize/sub_view/searching/view_model/sub_searching/a_star_searching_notifier.dart';
-part 'package:algorithm_visualizer/features/visualize/sub_view/searching/view_model/sub_searching/bfs_searching_notifier.dart';
-part 'package:algorithm_visualizer/features/visualize/sub_view/searching/view_model/sub_searching/dfs_searching_notifier.dart';
+part 'package:algorithm_visualizer/features/visualize/view/sub_view/searching/view_model/sub_searching/a_star_searching_notifier.dart';
+part 'package:algorithm_visualizer/features/visualize/view/sub_view/searching/view_model/sub_searching/bfs_searching_notifier.dart';
+part 'package:algorithm_visualizer/features/visualize/view/sub_view/searching/view_model/sub_searching/dfs_searching_notifier.dart';
 part 'searching_state.dart';
 
 const _kInfinity = 1 << 30;
@@ -32,9 +32,24 @@ abstract class SearchingNotifier extends Notifier<SearchingState>
 
   @override
   SearchingState build() {
-    ref.onDispose(_clearTimer);
+    /// The provider is auto-disposing now (see [BaseViewModel.searchingCards]),
+    /// so leaving the visualize tab tears this notifier down. The timer stops
+    /// with it, and [isDisposed] lets the view — which holds a direct reference
+    /// so it can pause from `dispose()` — know not to touch it any more.
+    _disposed = false;
+    ref.onDispose(() {
+
+      _disposed = true;
+      _clearTimer();
+    });
+
     return SearchingState.initial();
   }
+
+  bool _disposed = false;
+
+  /// Whether this notifier has been torn down.
+  bool get isDisposed => _disposed;
 
   @override
   bool get backwardValidation => state.hasSteps && !state.isAtStart;
