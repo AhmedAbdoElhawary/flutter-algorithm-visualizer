@@ -31,17 +31,14 @@ final profileRepositoryProvider = Provider<ProfileRepository>((ref) {
   );
 });
 
-final profileProvider = NotifierProvider.autoDispose<ProfileNotifier, AsyncValue<AuthUser?>>(() {
+final profileProvider = NotifierProvider.autoDispose<ProfileNotifier, AuthUser?>(() {
   return ProfileNotifier();
 });
 
-final currentUserProvider = Provider<AsyncValue<AuthUser?>>((ref) {
-  return ref.watch(profileProvider);
-});
+final currentUserProvider = Provider<AuthUser?>((ref) => ref.watch(profileProvider));
 
-final currentUserNameProvider = Provider<AsyncValue<String>>((ref) {
-  return ref.watch(profileProvider
-      .select((state) => (state.whenData((value) => value?.name ?? StringsManager.anonymous))));
+final currentUserNameProvider = Provider<String>((ref) {
+  return ref.watch(profileProvider.select((state) => (state?.name ?? StringsManager.anonymous)));
 });
 
 /// Whether the app is backed by a real account rather than a local guest session.
@@ -49,9 +46,5 @@ final currentUserNameProvider = Provider<AsyncValue<String>>((ref) {
 /// Stays `false` while the user is still loading, so the UI never flashes the
 /// signed-in state before it knows who the user is.
 final isSignedInProvider = Provider<bool>((ref) {
-  return ref.watch(
-    profileProvider.select(
-      (state) => state.maybeWhen(data: (user) => user?.isGuest == false, orElse: () => false),
-    ),
-  );
+  return ref.watch(profileProvider.select((state) => state?.isGuest == false));
 });
