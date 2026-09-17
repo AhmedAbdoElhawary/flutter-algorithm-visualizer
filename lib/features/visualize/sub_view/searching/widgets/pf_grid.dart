@@ -9,6 +9,7 @@ import 'package:algorithm_visualizer/features/visualize/sub_view/searching/widge
 import 'package:algorithm_visualizer/features/visualize/sub_view/searching/widgets/pf_grid_painter.dart';
 import 'package:algorithm_visualizer/features/visualize/sub_view/searching/widgets/start_point.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../view_model/searching_notifier.dart';
@@ -23,8 +24,36 @@ class PFGrid extends ConsumerStatefulWidget {
   ConsumerState<PFGrid> createState() => _PFGridState();
 }
 
+/// How long each kind of cell animation runs, in wall-clock milliseconds.
+///
+/// These mirror the divisors in `PFGridPainter.paint` — change one and the
+/// grid keeps ticking past the end of the motion, or stops before it finishes.
+const double _kWallAnimMs = 500;
+const double _kSearcherAnimMs = 1500;
+const double _kPathAnimMs = 500;
+
 class _PFGridState extends ConsumerState<PFGrid> with SingleTickerProviderStateMixin {
-  late AnimationController _controller;
+  /// Drives the painter, and only while there is motion to draw.
+  ///
+  /// This used to be an `AnimationController` with `duration: Duration(days:
+  /// 365)` started in `initState` and never stopped. Paired with the painter's
+  /// `shouldRepaint => true`, that repainted all 720 cells of the grid sixty
+  /// times a second for as long as the screen existed — while paused, while
+  /// idle, while scrolled out of sight. It was a battery drain, not just jank.
+  ///
+  /// A [Ticker] says what is actually wanted here: not an animation with a
+  /// value anyone reads, just a request to be called back each frame. It is
+  /// started when a cell animation begins and stopped once the last one lands.
+  late final Ticker _ticker;
+
+  /// Bumped once per frame; this is what the painter listens to.
+  final ValueNotifier<int> _frame = ValueNotifier<int>(0);
+
+  /// Wall-clock ms at which nothing on the canvas is moving any more.
+  ///
+  /// Every animation is a timestamp plus a fixed duration, so the instant the
+  /// last one finishes is known the moment it starts — no polling needed.
+  double _settleAt = 0;
 
   final Map<int, double> _wallAnimations = {};
   final Map<int, double> _frontierAnimations = {};
@@ -36,16 +65,30 @@ class _PFGridState extends ConsumerState<PFGrid> with SingleTickerProviderStateM
   @override
   void initState() {
     super.initState();
-    _controller = AnimationController(
-      vsync: this,
-      duration: const Duration(days: 365),
-    )..forward();
+    _ticker = createTicker((_) {
+      _frame.value++;
+      if (_nowMs() >= _settleAt) _ticker.stop();
+    });
   }
 
   @override
   void dispose() {
-    _controller.dispose();
+    _ticker.dispose();
+    _frame.dispose();
     super.dispose();
+  }
+
+  static double _nowMs() => DateTime.now().millisecondsSinceEpoch.toDouble();
+
+  /// Keeps the ticker alive until [until], starting it if it had settled.
+  ///
+  /// Stopping is safe to do mid-flight: a cell whose stamp has expired clamps
+  /// to `t = 1.0` in the painter, which is its finished state — exactly what
+  /// the last painted frame already showed. So a stopped grid and a grid still
+  /// ticking past the end of its animations look identical.
+  void _keepTickingUntil(double until) {
+    if (until > _settleAt) _settleAt = until;
+    if (!_ticker.isActive) _ticker.start();
   }
 
   (int row, int col) _cellAt(Offset localPosition, double cellSize) => (
@@ -82,11 +125,16 @@ class _PFGridState extends ConsumerState<PFGrid> with SingleTickerProviderStateM
   /// Stamps for cells that are no longer in a set are dropped, so stepping
   /// backward or resetting settles the display on the earlier state instead of
   /// leaving motion behind.
-  void _syncStamps(Map<int, double> stamps, Set<int> previous, Set<int> next, double now) {
+  ///
+  /// Returns how many stamps it added, so the caller knows whether a new
+  /// animation just started and the ticker has to be woken.
+  int _syncStamps(Map<int, double> stamps, Set<int> previous, Set<int> next, double now) {
     stamps.removeWhere((id, _) => !next.contains(id));
-    for (final id in next.difference(previous)) {
+    final added = next.difference(previous);
+    for (final id in added) {
       stamps[id] = now;
     }
+    return added.length;
   }
 
   @override
@@ -106,6 +154,7 @@ class _PFGridState extends ConsumerState<PFGrid> with SingleTickerProviderStateM
       _visitedAnimations.removeWhere((_, v) => now - v > 1500);
       _pathAnimations.removeWhere((_, v) => now - v > 500);
 
+      var wallsAdded = false;
       for (int r = 0; r < kPFRows; r++) {
         for (int c = 0; c < kPFCols; c++) {
           final pW = prev?.walls[r][c] ?? false;
@@ -113,30 +162,45 @@ class _PFGridState extends ConsumerState<PFGrid> with SingleTickerProviderStateM
           final encoded = pfEncode(r, c);
           if (!pW && nW) {
             _wallAnimations[encoded] = now;
+            wallsAdded = true;
           } else if (pW && !nW) {
             _wallAnimations.remove(encoded);
           }
         }
       }
+      if (wallsAdded) _keepTickingUntil(now + _kWallAnimMs);
 
-      _syncStamps(
+      final frontierAdded = _syncStamps(
         _frontierAnimations,
         prev?.currentStep?.frontier ?? {},
         next.currentStep?.frontier ?? {},
         now,
       );
-      _syncStamps(
+      final visitedAdded = _syncStamps(
         _visitedAnimations,
         prev?.currentStep?.visited ?? {},
         next.currentStep?.visited ?? {},
         now,
       );
-      _syncStamps(
+      if (frontierAdded > 0 || visitedAdded > 0) {
+        _keepTickingUntil(now + _kSearcherAnimMs);
+      }
+
+      final nextPath = next.currentStep?.path;
+      final pathAdded = _syncStamps(
         _pathAnimations,
         prev?.currentStep?.path?.toSet() ?? {},
-        next.currentStep?.path?.toSet() ?? {},
+        nextPath?.toSet() ?? {},
         now,
       );
+      if (pathAdded > 0) {
+        /// The path draws itself out one cell at a time, so the last cell only
+        /// *starts* after the whole stagger has run — the grid has to keep
+        /// ticking for the walk plus one cell's pop.
+        _keepTickingUntil(
+          now + (nextPath?.length ?? 0) * kPathStaggerMs + _kPathAnimMs,
+        );
+      }
     });
 
     return HorizontalPadding(
@@ -168,22 +232,29 @@ class _PFGridState extends ConsumerState<PFGrid> with SingleTickerProviderStateM
                 height: gridHeight,
                 child: Stack(
                   children: [
-                    CustomPaint(
-                      size: Size(constraints.maxWidth, gridHeight),
-                      painter: PFGridPainter(
-                        walls: walls,
-                        step: step,
-                        isDark: context.isThemeDark,
-                        wallColor: context.getColor(searchRoleColor(SearchRole.wall)),
-                        pathColor: context.getColor(searchRoleColor(SearchRole.path)),
-                        searcherColor: context.getColor(searchRoleColor(SearchRole.frontier)),
-                        searcherFinishedColor: context.getColor(searchRoleColor(SearchRole.visited)),
-                        gridLineColor: context.getColor(ThemeEnum.hairline),
-                        wallAnimations: _wallAnimations,
-                        frontierAnimations: _frontierAnimations,
-                        visitedAnimations: _visitedAnimations,
-                        pathAnimations: _pathAnimations,
-                        repaint: _controller,
+                    /// The grid is the one thing on this page that repaints
+                    /// per frame while an algorithm runs. Its own layer keeps
+                    /// the controls, the legend and the surrounding card from
+                    /// being dragged into every one of those repaints.
+                    RepaintBoundary(
+                      child: CustomPaint(
+                        size: Size(constraints.maxWidth, gridHeight),
+                        painter: PFGridPainter(
+                          walls: walls,
+                          step: step,
+                          isDark: context.isThemeDark,
+                          wallColor: context.getColor(searchRoleColor(SearchRole.wall)),
+                          pathColor: context.getColor(searchRoleColor(SearchRole.path)),
+                          searcherColor: context.getColor(searchRoleColor(SearchRole.frontier)),
+                          searcherFinishedColor:
+                              context.getColor(searchRoleColor(SearchRole.visited)),
+                          gridLineColor: context.getColor(ThemeEnum.hairline),
+                          wallAnimations: _wallAnimations,
+                          frontierAnimations: _frontierAnimations,
+                          visitedAnimations: _visitedAnimations,
+                          pathAnimations: _pathAnimations,
+                          repaint: _frame,
+                        ),
                       ),
                     ),
                     PositionedDirectional(
