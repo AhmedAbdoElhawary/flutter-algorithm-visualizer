@@ -1,9 +1,9 @@
 import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
 import 'package:algorithm_visualizer/core/widgets/adaptive/padding/adaptive_padding.dart';
 import 'package:algorithm_visualizer/core/widgets/adaptive/text/adaptive_text.dart';
-import 'package:algorithm_visualizer/features/visualize/sub_view/searching/helper/search_role.dart';
-import 'package:algorithm_visualizer/features/visualize/sub_view/searching/widgets/end_point.dart';
-import 'package:algorithm_visualizer/features/visualize/sub_view/searching/widgets/start_point.dart';
+import 'package:algorithm_visualizer/features/visualize/view/sub_view/searching/helper/search_role.dart';
+import 'package:algorithm_visualizer/features/visualize/view/sub_view/searching/widgets/end_point.dart';
+import 'package:algorithm_visualizer/features/visualize/view/sub_view/searching/widgets/start_point.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
