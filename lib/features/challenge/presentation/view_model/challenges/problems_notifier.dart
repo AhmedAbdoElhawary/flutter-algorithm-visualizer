@@ -1,6 +1,5 @@
 import 'package:algorithm_visualizer/core/enums/app_settings_enum.dart';
 import 'package:algorithm_visualizer/core/helpers/storage/app_settings/app_settings_cubit.dart';
-import 'package:algorithm_visualizer/features/auth/presentation/common/view_model/auth_providers.dart';
 import 'package:algorithm_visualizer/features/challenge/domain/entities/coding_problem.dart';
 import 'package:algorithm_visualizer/features/challenge/domain/repositories/problem_repository.dart';
 import 'package:algorithm_visualizer/features/challenge/presentation/view_model/challenges/problems_providers.dart';
@@ -21,22 +20,13 @@ class ProblemsNotifier extends Notifier<AsyncValue<List<CodingProblem>>> {
 
   bool _arabic = false;
 
-  Future<void> reload({bool forceRemote = false}) => _load(arabic: _arabic, forceRemote: forceRemote);
+  Future<void> reload() => _load(arabic: _arabic);
 
-  Future<void> _load({required bool arabic, bool forceRemote = false}) async {
-    await _retryPendingMigration();
-    state = await AsyncValue.guard(
-      () => _repository.getAllProblems(arabic: arabic, forceRemote: forceRemote),
-    );
-  }
+  Future<void> _load({required bool arabic}) async {
+    /// only does work on the first launch of an account on this device
+    await ref.read(problemSyncServiceProvider).downloadIfFirstRun();
 
-  Future<void> _retryPendingMigration() async {
-    final guestDataService = ref.read(guestDataServiceProvider);
-
-    if (!guestDataService.hasPendingMigration) return;
-    if (!ref.read(problemRemoteDataSourceProvider).isSignedIn) return;
-
-    await guestDataService.migrateToAccount();
+    state = await AsyncValue.guard(() => _repository.getAllProblems(arabic: arabic));
   }
 
   void updateProblem(CodingProblem updated) {
