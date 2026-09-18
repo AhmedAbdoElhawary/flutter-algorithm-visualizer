@@ -55,6 +55,29 @@ extension Navigators on BuildContext {
     );
   }
 
+  /// Opens a problem inside the problem branch's stack, whatever tab the tap
+  /// came from, so problems are never spread across several tab stacks.
+  Future<void> pushProblem(String problemId) async {
+    if (GoRouterState.of(this).uri.queryParameters[Routes.problem.queryParamsName] == problemId) {
+      return;
+    }
+
+    final shell = StatefulNavigationShell.maybeOf(this);
+    if (shell == null || shell.currentIndex == Routes.problemBranchIndex) {
+      return pushRoute(Routes.subProblem, queryParameters: problemId);
+    }
+
+    final origin = shell.currentIndex;
+    shell.goBranch(Routes.problemBranchIndex);
+    await pushRoute(Routes.subProblem, queryParameters: problemId);
+
+    // The problem opened from another tab was popped, so hand the user back to
+    // the tab they started from rather than leaving them on an empty branch.
+    if (shell.mounted && shell.currentIndex == Routes.problemBranchIndex) {
+      shell.goBranch(origin);
+    }
+  }
+
   Future pushRoute(
     RouteConfig path, {
     Object? arguments,

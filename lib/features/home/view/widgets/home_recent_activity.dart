@@ -1,4 +1,3 @@
-import 'package:algorithm_visualizer/config/routes/route_app.dart';
 import 'package:algorithm_visualizer/core/extensions/navigators.dart';
 import 'package:algorithm_visualizer/core/localization/app_localizations.dart';
 import 'package:algorithm_visualizer/core/resources/strings_manager.dart';
@@ -57,7 +56,7 @@ class _ActivityTile extends StatelessWidget {
     final quietDifficulty = item.difficulty;
 
     return GestureDetector(
-      onTap: () => context.pushRoute(Routes.problem, queryParameters: '${item.problemId}'),
+      onTap: () => context.pushProblem('${item.problemId}'),
       child: CardContainer(
         surface: CdSurface.main,
         padding: REdgeInsets.symmetric(horizontal: 14, vertical: 10),

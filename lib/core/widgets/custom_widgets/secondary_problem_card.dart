@@ -1,4 +1,3 @@
-import 'package:algorithm_visualizer/config/routes/route_app.dart';
 import 'package:algorithm_visualizer/core/extensions/navigators.dart';
 import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
 import 'package:algorithm_visualizer/core/widgets/adaptive/text/adaptive_text.dart';
@@ -64,7 +63,7 @@ class _SecondaryProblemCardState extends State<SecondaryProblemCard> {
                 children: [
                   GestureDetector(
                     onTap: () =>
-                        context.pushRoute(Routes.problem, queryParameters: widget.problemId.toString()),
+                        context.pushProblem(widget.problemId.toString()),
                     child: SemiBoldText(
                       widget.problemName,
                       color: ThemeEnum.inkPrimary,

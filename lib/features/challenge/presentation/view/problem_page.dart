@@ -316,7 +316,7 @@ class _SimilarTabViewState extends ConsumerState<_SimilarTabView> {
                   problemId: similarId,
                   expanded: _expandedId == similarId,
                   onToggle: () => setState(() => _expandedId = _expandedId == similarId ? 0 : similarId),
-                  onSolveTap: () => context.pushRoute(Routes.subProblem, queryParameters: "$similarId"),
+                  onSolveTap: () => context.pushProblem("$similarId"),
                 ),
             ],
     );

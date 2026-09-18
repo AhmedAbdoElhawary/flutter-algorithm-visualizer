@@ -13,12 +13,7 @@ import 'package:go_router/go_router.dart';
 
 import 'support/problem_page_test_support.dart';
 
-// A minimal `StatefulShellRoute.indexedStack` with the real production
-// branch shape for `Routes.problem`/`Routes.subProblem` plus a trivial
-// second branch, standing in for the full 5-tab `MainNavigationShell` (whose
-// other branches pull in Home/Visualize/Profile providers out of scope
-// here). This exercises the actual `IndexedStack`-backed branch-preservation
-// mechanism go_router uses in production, not a hand-rolled substitute.
+
 void main() {
   testWidgets(
       'the Similar-tab navigation chain and its position survive switching to another '
@@ -32,6 +27,7 @@ void main() {
 
     final problemBranchKey = GlobalKey<NavigatorState>();
     final otherBranchKey = GlobalKey<NavigatorState>();
+    final fillerBranchKey = GlobalKey<NavigatorState>();
 
     final router = GoRouter(
       initialLocation: '${Routes.problem.path}?problem_id=1',
@@ -41,12 +37,27 @@ void main() {
             body: shell,
             bottomNavigationBar: Row(
               children: [
-                TextButton(onPressed: () => shell.goBranch(0), child: const Text('Problem branch')),
-                TextButton(onPressed: () => shell.goBranch(1), child: const Text('Other branch')),
+                TextButton(
+                  onPressed: () => shell.goBranch(Routes.problemBranchIndex),
+                  child: const Text('Problem branch'),
+                ),
+                TextButton(onPressed: () => shell.goBranch(0), child: const Text('Other branch')),
               ],
             ),
           ),
           branches: [
+            StatefulShellBranch(
+              navigatorKey: otherBranchKey,
+              routes: [
+                GoRoute(path: '/other', builder: (context, state) => const Text('Other tab content')),
+              ],
+            ),
+            StatefulShellBranch(
+              navigatorKey: fillerBranchKey,
+              routes: [
+                GoRoute(path: '/filler', builder: (context, state) => const Text('Filler tab content')),
+              ],
+            ),
             StatefulShellBranch(
               navigatorKey: problemBranchKey,
               routes: [
@@ -68,12 +79,6 @@ void main() {
                     ),
                   ],
                 ),
-              ],
-            ),
-            StatefulShellBranch(
-              navigatorKey: otherBranchKey,
-              routes: [
-                GoRoute(path: '/other', builder: (context, state) => const Text('Other tab content')),
               ],
             ),
           ],

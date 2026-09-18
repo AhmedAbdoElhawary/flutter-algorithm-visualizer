@@ -1,4 +1,3 @@
-import 'package:algorithm_visualizer/config/routes/route_app.dart';
 import 'package:algorithm_visualizer/core/extensions/navigators.dart';
 import 'package:algorithm_visualizer/core/resources/strings_manager.dart';
 import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
@@ -35,7 +34,7 @@ class HomeContinueCard extends ConsumerWidget {
         surface: CdSurface.main,
         borderColorOverride: ThemeEnum.inkBody,
         padding: REdgeInsets.all(16),
-        onTap: () => context.pushRoute(Routes.problem, queryParameters: '${problem.getProblemId}'),
+        onTap: () => context.pushProblem('${problem.getProblemId}'),
         child: Row(
           children: [
             const IconButtonQuiet(icon: Icons.play_arrow_rounded, size: 48, iconSize: 24, filled: true),
