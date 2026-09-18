@@ -110,25 +110,35 @@ abstract class SearchingNotifier extends Notifier<SearchingState>
 
   // ── Start / End markers ────────────────────────────────────────────────
 
+  bool get markersMovable => !state.hasSteps;
+
+  List<List<bool>>? _wallsWithout(int row, int col) {
+    if (!state.walls[row][col]) return null;
+    final walls = [for (final r in state.walls) List<bool>.from(r)];
+    walls[row][col] = false;
+    return walls;
+  }
+
   void setStartPoint(int row, int col) {
+    if (!markersMovable) return;
     if (!state.gridInput.inBounds(row, col)) return;
     if (row == state.endRow && col == state.endCol) return;
-    if (state.walls[row][col]) return;
-    _clearResultBeforeEdit();
-    state = state.copyWith(startRow: row, startCol: col);
+    state = state.copyWith(startRow: row, startCol: col, walls: _wallsWithout(row, col));
   }
 
   void setEndPoint(int row, int col) {
+    if (!markersMovable) return;
     if (!state.gridInput.inBounds(row, col)) return;
     if (row == state.startRow && col == state.startCol) return;
-    if (state.walls[row][col]) return;
-    _clearResultBeforeEdit();
-    state = state.copyWith(endRow: row, endCol: col);
+    state = state.copyWith(endRow: row, endCol: col, walls: _wallsWithout(row, col));
   }
 
   // ── Walls ──────────────────────────────────────────────────────────────
 
+  bool get wallsEditable => !state.playing;
+
   void setWall(int row, int col, {required bool isGestureStart}) {
+    if (!wallsEditable) return;
     if (!state.gridInput.inBounds(row, col)) return;
 
     if (isGestureStart) {
@@ -161,9 +171,6 @@ abstract class SearchingNotifier extends Notifier<SearchingState>
     state = state.copyWith(walls: updatedWalls);
   }
 
-  /// The cells a stroke crosses moving from [from] to (`row`, `col`). A fast
-  /// drag reports distant points, so the segment between them is filled in
-  /// rather than left as a gap.
   List<int> _strokeCells(int? from, int row, int col) {
     if (from == null) return [pfEncode(row, col)];
 
