@@ -64,6 +64,13 @@ void main() {
     expect(emittedRoles.difference(notifier.roles), isEmpty);
   });
 
+  test('declares the expected visual roles', () {
+    expect(
+      notifier.roles,
+      equals(const {SortRole.sorted, SortRole.compare, SortRole.swap}),
+    );
+  });
+
   group('algorithm information', () {
     test('has the expected complexity metadata', () {
       final complexity = notifier.algoComplexity;

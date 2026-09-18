@@ -4,7 +4,11 @@ import 'package:algorithm_visualizer/features/visualize/view/sub_view/sorting/vi
 
 class BucketSortNotifier extends SortingNotifier {
   @override
-  Set<SortRole> get roles => const {SortRole.compare, SortRole.swap};
+  Set<SortRole> get roles => const {
+        SortRole.sorted,
+        SortRole.compare,
+        SortRole.swap,
+      };
 
   @override
   SortingResult buildSorting(List<int> values) {
