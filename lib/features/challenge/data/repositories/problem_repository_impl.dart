@@ -1,24 +1,25 @@
 import 'package:algorithm_visualizer/features/challenge/data/data_sources/local/challenge_local_data_source.dart';
-import 'package:algorithm_visualizer/features/challenge/data/data_sources/local/problem_pending_local_data_source.dart';
+import 'package:algorithm_visualizer/features/challenge/data/data_sources/local/unsynced_problems.dart';
 import 'package:algorithm_visualizer/features/challenge/data/data_sources/remote/challenge_remote_data_source.dart';
 import 'package:algorithm_visualizer/features/challenge/data/mappers/problem_mapper.dart';
 import 'package:algorithm_visualizer/features/challenge/data/models/problem_storage.dart';
 import 'package:algorithm_visualizer/features/challenge/domain/entities/coding_problem.dart';
 import 'package:algorithm_visualizer/features/challenge/domain/repositories/problem_repository.dart';
 import 'package:collection/collection.dart';
-import 'package:flutter/cupertino.dart';
 
+/// local first for everybody, being signed in only adds a note in
+/// [unsyncedProblems] that firestore has not got this one yet
 class ProblemRepositoryImpl implements ProblemRepository {
-  ProblemRepositoryImpl(this.localDataSource, this.remoteDataSource, this.pendingDataSource);
+  ProblemRepositoryImpl(this.localDataSource, this.remoteDataSource, this.unsyncedProblems);
 
   final ProblemLocalDataSource localDataSource;
   final ProblemRemoteDataSource remoteDataSource;
-  final ProblemPendingLocalDataSource pendingDataSource;
+  final UnsyncedProblems unsyncedProblems;
 
   @override
-  Future<List<CodingProblem>> getAllProblems({bool arabic = false, bool forceRemote = false}) async {
+  Future<List<CodingProblem>> getAllProblems({bool arabic = false}) async {
     final assetsProblems = await localDataSource.loadProblemsAssets(arabic: arabic);
-    final storageProblems = await _loadStorageProblems(forceRemote: forceRemote);
+    final storageProblems = localDataSource.getProblems();
 
     final problems = assetsProblems.problems?.map((dto) {
       final localProblem = storageProblems.firstWhereOrNull((lp) => lp.problemId == dto.problemId);
@@ -32,61 +33,31 @@ class ProblemRepositoryImpl implements ProblemRepository {
   Future<void> saveProblem(CodingProblem problem) async {
     final dto = ProblemStorageDTO.fromJson(problem.toJson());
 
-    if (!remoteDataSource.isSignedIn) return await localDataSource.saveProblem(dto);
-
-    await pendingDataSource.upsert(dto);
+    await localDataSource.saveProblem(dto);
+    await _needsToBeUploaded(dto.problemId);
   }
 
   @override
   Future<void> updateProblem(CodingProblem problem) async {
     final dto = ProblemStorageDTO.fromJson(problem.toJson());
 
-    if (!remoteDataSource.isSignedIn) return await localDataSource.updateProblem(dto);
-
-    await pendingDataSource.upsert(dto);
+    await localDataSource.updateProblem(dto);
+    await _needsToBeUploaded(dto.problemId);
   }
 
   @override
   Future<void> deleteProblem(int problemId) async {
-    if (!remoteDataSource.isSignedIn) return await localDataSource.deleteProblem(problemId);
+    await localDataSource.deleteProblem(problemId);
 
-    await pendingDataSource.markDeleted(problemId);
+    if (!remoteDataSource.isSignedIn) return;
+
+    await unsyncedProblems.needsToBeDeleted(problemId);
   }
 
-  Future<List<ProblemStorageDTO>> _loadStorageProblems({required bool forceRemote}) async {
-    if (!remoteDataSource.isSignedIn) return localDataSource.getProblems();
+  Future<void> _needsToBeUploaded(int? problemId) async {
+    if (problemId == null) return;
+    if (!remoteDataSource.isSignedIn) return;
 
-    final synced = await _tryRemote(
-      () => remoteDataSource.getProblems(preferCache: !forceRemote),
-      fallback: const <ProblemStorageDTO>[],
-    );
-
-    return _withPendingOnTop(synced);
-  }
-
-  List<ProblemStorageDTO> _withPendingOnTop(List<ProblemStorageDTO> synced) {
-    final byId = <int, ProblemStorageDTO>{
-      for (final problem in synced)
-        if (problem.problemId != null) problem.problemId!: problem,
-    };
-
-    for (final problem in pendingDataSource.getPending()) {
-      if (problem.problemId != null) byId[problem.problemId!] = problem;
-    }
-
-    for (final problemId in pendingDataSource.getDeletedIds()) {
-      byId.remove(problemId);
-    }
-
-    return byId.values.toList();
-  }
-
-  Future<T> _tryRemote<T>(Future<T> Function() action, {required T fallback}) async {
-    try {
-      return await action();
-    } catch (e) {
-      debugPrint("Something went wrong: $e");
-      return fallback;
-    }
+    await unsyncedProblems.needsToBeUploaded(problemId);
   }
 }
