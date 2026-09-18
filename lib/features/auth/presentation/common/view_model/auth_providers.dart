@@ -30,8 +30,9 @@ final guestDataServiceProvider = Provider<GuestDataService>((ref) {
   return GuestDataService(
     problemLocalDataSource: ref.watch(problemLocalDataSourceProvider),
     problemRemoteDataSource: ref.watch(problemRemoteDataSourceProvider),
+    unsyncedProblems: ref.watch(unsyncedProblemsProvider),
+    problemSyncService: ref.watch(problemSyncServiceProvider),
     profileLocalDataSource: ref.watch(profileLocalDataSourceProvider),
-    storage: ref.watch(localStorageProvider),
   );
 });
 

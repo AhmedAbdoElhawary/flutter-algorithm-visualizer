@@ -348,6 +348,23 @@ class StringsManager {
   static const String yesLogout = "Log Out";
   static const String notValidName = "Please enter a valid name";
 
+  // Sync
+  static const String syncNow = "Sync your progress";
+  static const String syncSuccess = "Your progress is up to date.";
+  static const String syncFailure = "Could not sync. Check your connection and try again.";
+  static const String syncCooldownTitle = "Just a moment";
+  static const String syncCooldownConfirm = "Got it";
+
+  /// Filled by [syncCooldownDesc]. Kept as its own constant so the Arabic table
+  /// can key off the template rather than off a sentence with a number already
+  /// baked into it.
+  static const String syncCooldownDescTemplate =
+      "Syncing is limited to once every 30 seconds. You can sync again in {seconds}s.";
+
+  static String syncCooldownDesc(int seconds, {Translator tr = noTranslation}) {
+    return _fill(tr(syncCooldownDescTemplate), <String, Object?>{'seconds': seconds});
+  }
+
   // Settings screen
   static const String settings = "Settings";
   static const String settingsAccountSection = "Account";

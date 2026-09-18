@@ -10,12 +10,9 @@ abstract class ProblemRemoteDataSource {
   Future<void> updateProblem(ProblemStorageDTO problem);
   Future<void> deleteProblem(int problemId);
 
-  /// Uploads a whole guest session in one go, used right after sign up.
-  ///
-  /// Unlike [saveProblem] this awaits the commit, because the caller has to know
-  /// whether the hand over succeeded before it erases the local copy.
   Future<void> batchSaveProblems(List<ProblemStorageDTO> problems);
 
+  Future<void> batchDeleteProblems(List<int> problemIds);
   Future<void> deleteAllProblems();
 }
 
@@ -25,12 +22,9 @@ class ProblemRemoteDataSourceImpl implements ProblemRemoteDataSource {
   late final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   late final FirebaseAuth _auth = FirebaseAuth.instance;
 
-  /// Firestore rejects a batch above 500 writes, a little head room is kept.
+  /// firestore not allow a batch above 500 writes
   static const int _batchSizeLimit = 450;
 
-  /// A commit never completes while the device is offline, it only resolves once
-  /// the server acknowledges it. Migration has to fail fast instead of hanging
-  /// the sign up flow, the queued writes still reach Firestore on reconnect.
   static const Duration _commitTimeout = Duration(seconds: 15);
 
   @override
@@ -38,8 +32,6 @@ class ProblemRemoteDataSourceImpl implements ProblemRemoteDataSource {
     try {
       return _auth.currentUser != null;
     } catch (_) {
-      /// Firebase never came up, `main` swallows that failure. Falling back to
-      /// a guest keeps the app usable on local storage alone.
       return false;
     }
   }
@@ -54,7 +46,11 @@ class ProblemRemoteDataSourceImpl implements ProblemRemoteDataSource {
     final ref = _problemsRef();
     if (ref == null) return [];
 
-    final snapshot = await ref.get();
+    /// plain get() serves the server when online, its own cache when not
+    return _toDTOs(await ref.get());
+  }
+
+  List<ProblemStorageDTO> _toDTOs(QuerySnapshot<Map<String, dynamic>> snapshot) {
     return snapshot.docs.map((doc) => ProblemStorageDTO.fromJson(doc.data())).toList();
   }
 
@@ -64,7 +60,7 @@ class ProblemRemoteDataSourceImpl implements ProblemRemoteDataSource {
     if (ref == null || problem.problemId == null) return;
 
     /// todo: look to this again:
-    /// it's freezed while the device offline when write await
+    /// it's freezed while the device offline when write await, as it's waiting the network/server
     ref.doc(problem.problemId.toString()).set(problem.toJson());
   }
 
@@ -100,14 +96,29 @@ class ProblemRemoteDataSourceImpl implements ProblemRemoteDataSource {
   }
 
   @override
+  Future<void> batchDeleteProblems(List<int> problemIds) async {
+    final ref = _problemsRef();
+    if (ref == null) throw StateError('Cannot delete problems without a signed in user');
+
+    if (problemIds.isEmpty) return;
+
+    for (var start = 0; start < problemIds.length; start += _batchSizeLimit) {
+      final end = (start + _batchSizeLimit).clamp(0, problemIds.length);
+      final batch = _firestore.batch();
+
+      for (final problemId in problemIds.sublist(start, end)) {
+        batch.delete(ref.doc(problemId.toString()));
+      }
+
+      await batch.commit().timeout(_commitTimeout);
+    }
+  }
+
+  @override
   Future<void> deleteAllProblems() async {
     final ref = _problemsRef();
     if (ref == null) return;
 
-    /// Read the ids first: Firestore has no "delete a collection" call, the
-    /// documents have to be named one by one. The await matters here — unlike
-    /// [saveProblem] the caller is about to destroy the credential that
-    /// authorises these writes, so they must land before that happens.
     final snapshot = await ref.get().timeout(_commitTimeout);
     if (snapshot.docs.isEmpty) return;
 

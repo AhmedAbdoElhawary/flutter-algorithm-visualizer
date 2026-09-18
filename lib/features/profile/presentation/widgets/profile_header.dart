@@ -10,6 +10,7 @@ import 'package:algorithm_visualizer/core/widgets/adaptive/text/adaptive_text.da
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/avatar_quiet.dart';
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/icon_button_quiet.dart';
 import 'package:algorithm_visualizer/features/profile/presentation/view_model/user_provider.dart';
+import 'package:algorithm_visualizer/features/profile/presentation/widgets/profile_sync_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -32,6 +33,7 @@ class ProfileHeader extends StatelessWidget {
               RSizedBox(width: 14),
               Expanded(child: _Name()),
               RSizedBox(width: 6),
+              ProfileSyncButton(),
               _SettingsButton(),
             ],
           ),
@@ -52,12 +54,6 @@ class _Avatar extends ConsumerWidget {
   }
 }
 
-/// The name, read-only.
-///
-/// It used to be a tap-to-edit [TextField] behind a pencil icon. Renaming now
-/// lives in Settings -> Account beside change-email and change-password, so
-/// every account field is edited the same way, in one place, behind a dialog
-/// that can validate and report failure — none of which the inline field did.
 class _Name extends ConsumerWidget {
   const _Name();
 
@@ -75,9 +71,6 @@ class _Name extends ConsumerWidget {
   }
 }
 
-/// The only way into [SettingsPage], and therefore the only way to the privacy
-/// policy and to account deletion — both of which the stores require to be
-/// reachable, so this button is not decoration.
 class _SettingsButton extends StatelessWidget {
   const _SettingsButton();
 

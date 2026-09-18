@@ -9,9 +9,11 @@ import 'package:algorithm_visualizer/features/auth/domain/repositories/auth_repo
 import 'package:algorithm_visualizer/features/auth/domain/services/account_deletion_service.dart';
 import 'package:algorithm_visualizer/features/auth/domain/services/guest_data_service.dart';
 import 'package:algorithm_visualizer/features/challenge/data/data_sources/local/challenge_local_data_source.dart';
+import 'package:algorithm_visualizer/features/challenge/data/data_sources/local/unsynced_problems.dart';
 import 'package:algorithm_visualizer/features/challenge/data/data_sources/remote/challenge_remote_data_source.dart';
 import 'package:algorithm_visualizer/features/challenge/data/models/problem_storage.dart';
 import 'package:algorithm_visualizer/features/challenge/domain/enums/problem.dart';
+import 'package:algorithm_visualizer/features/challenge/domain/services/problem_sync_service.dart';
 import 'package:algorithm_visualizer/features/profile/data/data_sources/local/profile_local_data_source.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -26,6 +28,7 @@ void main() {
   late _FakeProblemRemote problemRemote;
   late _FakeAuthRepository authRepository;
   late AccountDeletionService service;
+  late ProblemSyncService sync;
 
   setUp(() {
     log = <String>[];
@@ -34,15 +37,21 @@ void main() {
     profileLocal = ProfileLocalDataSourceImpl(storage);
     problemRemote = _FakeProblemRemote();
     authRepository = _FakeAuthRepository();
-
+    sync = ProblemSyncService(
+      localDataSource: problemLocal,
+      unsyncedProblems: UnsyncedProblems(storage),
+      remoteDataSource: problemRemote,
+      storage: storage,
+    );
     service = AccountDeletionService(
       authRepository: authRepository,
       problemRemoteDataSource: problemRemote,
       guestDataService: GuestDataService(
         problemLocalDataSource: problemLocal,
         problemRemoteDataSource: problemRemote,
+        unsyncedProblems: UnsyncedProblems(storage),
+        problemSyncService: sync,
         profileLocalDataSource: profileLocal,
-        storage: storage,
       ),
     );
   });
@@ -50,9 +59,6 @@ void main() {
   test('Firestore is cleared while the credential is still alive, then the user', () async {
     await service.deleteAccount(password: 'correct horse');
 
-    // `deleteAllProblems` must sit *inside* the re-authenticated window: the
-    // security rules only admit writes from the owning account, so a subtree
-    // cleared after `delete()` could never be cleared at all.
     expect(log, <String>[
       'reauthenticate',
       'deleteAllProblems',
@@ -84,12 +90,12 @@ void main() {
     expect(problemLocal.getProblems(), isEmpty);
   });
 
-  test('a pending guest migration flag does not survive the deletion', () async {
-    await storage.write(GuestDataService.pendingMigrationKey, true);
+  test('the first download flag does not survive the deletion', () async {
+    await sync.markFirstDownloadDone();
 
     await service.deleteAccount(password: 'correct horse');
 
-    expect(storage.has(GuestDataService.pendingMigrationKey), isFalse);
+    expect(sync.isFirstDownload, isFalse);
   });
 
   group('when the password is wrong', () {
@@ -133,8 +139,6 @@ void main() {
       throwsA(isA<Exception>()),
     );
 
-    // The account survives, so the user can retry rather than being left
-    // signed out of an account whose data is half gone.
     expect(log, <String>['reauthenticate', 'deleteAllProblems']);
     expect(profileLocal.getDisplayName(), 'Ahmed');
   });
@@ -203,6 +207,9 @@ class _FakeProblemRemote implements ProblemRemoteDataSource {
 
   @override
   Future<void> batchSaveProblems(List<ProblemStorageDTO> problems) async {}
+
+  @override
+  Future<void> batchDeleteProblems(List<int> problemIds) async {}
 }
 
 class _InMemoryStorage implements LocalStorage {

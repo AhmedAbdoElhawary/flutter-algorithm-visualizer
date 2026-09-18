@@ -121,10 +121,8 @@ class AuthSignUpNotifier extends Notifier<AuthSignUpState> {
         password: state.password,
       );
 
-      /// Carry the guest's work into the account that now owns it. A failure
-      /// here is not a sign up failure: the account exists and the user is
-      /// signed in, the local copy is kept and retried on the next launch.
-      await ref.read(guestDataServiceProvider).migrateToAccount();
+      /// merge guest data into the new account
+      await ref.read(guestDataServiceProvider).mergeGuestDataToTheAccount();
 
       ref.invalidate(problemsProvider);
       ref.invalidate(profileProvider);

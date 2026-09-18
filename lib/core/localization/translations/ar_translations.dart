@@ -323,6 +323,16 @@ const Map<String, String> kArTranslations = <String, String>{
   // Logout.
   'Log Out': 'تسجيل الخروج',
   'Log out of your account?': 'تسجيل الخروج من حسابك؟',
+
+  // ------------------------------------------------------------------- sync
+  'Sync your progress': 'مزامنة تقدّمك',
+  'Your progress is up to date.': 'تقدّمك محدّث الآن.',
+  'Could not sync. Check your connection and try again.':
+      'تعذّرت المزامنة. تحقّق من اتصالك وحاول مرة أخرى.',
+  'Just a moment': 'لحظة من فضلك',
+  'Got it': 'حسنًا',
+  'Syncing is limited to once every 30 seconds. You can sync again in {seconds}s.':
+      'المزامنة متاحة مرة كل ٣٠ ثانية. يمكنك المزامنة مرة أخرى بعد {seconds} ثانية.',
   'You can sign back in anytime to continue your algorithmic journey.':
       'يمكنك تسجيل الدخول في أي وقت لمواصلة رحلتك مع الخوارزميات.',
 

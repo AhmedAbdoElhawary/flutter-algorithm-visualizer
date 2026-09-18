@@ -1,12 +1,16 @@
 import 'package:algorithm_visualizer/core/logging/firebase_log_config.dart';
 import 'package:algorithm_visualizer/core/storage/storage_providers.dart';
 import 'package:algorithm_visualizer/features/challenge/data/data_sources/local/challenge_local_data_source.dart';
+import 'package:algorithm_visualizer/features/challenge/data/data_sources/local/unsynced_problems.dart';
 import 'package:algorithm_visualizer/features/challenge/data/data_sources/remote/challenge_remote_data_source.dart';
 import 'package:algorithm_visualizer/features/challenge/data/data_sources/remote/logging_challenge_remote_data_source.dart';
 import 'package:algorithm_visualizer/features/challenge/data/repositories/problem_repository_impl.dart';
 import 'package:algorithm_visualizer/features/challenge/domain/entities/coding_problem.dart';
 import 'package:algorithm_visualizer/features/challenge/domain/repositories/problem_repository.dart';
+import 'package:algorithm_visualizer/features/challenge/domain/services/problem_sync_service.dart';
 import 'package:algorithm_visualizer/features/challenge/presentation/view_model/challenges/problems_notifier.dart';
+import 'package:algorithm_visualizer/features/challenge/presentation/view_model/sync/problem_sync_notifier.dart';
+import 'package:algorithm_visualizer/features/challenge/presentation/view_model/sync/problem_sync_state.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -19,19 +23,35 @@ final problemRemoteDataSourceProvider = Provider<ProblemRemoteDataSource>((ref) 
   return FirebaseLogConfig.enabled ? LoggingProblemRemoteDataSource(source) : source;
 });
 
+final unsyncedProblemsProvider = Provider<UnsyncedProblems>((ref) {
+  return UnsyncedProblems(ref.watch(localStorageProvider));
+});
+
 final problemRepositoryProvider = Provider<ProblemRepository>((ref) {
   return ProblemRepositoryImpl(
     ref.watch(problemLocalDataSourceProvider),
     ref.watch(problemRemoteDataSourceProvider),
+    ref.watch(unsyncedProblemsProvider),
   );
+});
+
+final problemSyncServiceProvider = Provider<ProblemSyncService>((ref) {
+  return ProblemSyncService(
+    localDataSource: ref.watch(problemLocalDataSourceProvider),
+    unsyncedProblems: ref.watch(unsyncedProblemsProvider),
+    remoteDataSource: ref.watch(problemRemoteDataSourceProvider),
+    storage: ref.watch(localStorageProvider),
+  );
+});
+
+final problemSyncProvider = NotifierProvider<ProblemSyncNotifier, ProblemSyncState>(() {
+  return ProblemSyncNotifier();
 });
 
 final problemsProvider = NotifierProvider<ProblemsNotifier, AsyncValue<List<CodingProblem>>>(() {
   return ProblemsNotifier();
 });
 
-/// [getProblemProvider] it's register for problem id only not all problems
-/// so, will notify only if the problem id changed
 final getProblemProvider = Provider.family<AsyncValue<CodingProblem?>, int>((ref, problemId) {
   if (problemId <= 0) return const AsyncValue.data(null);
   return ref.watch(
@@ -43,9 +63,6 @@ final getProblemProvider = Provider.family<AsyncValue<CodingProblem?>, int>((ref
   );
 });
 
-/// The number of solved problems. Notifies only when the count actually
-/// changes (e.g. a failed attempt on an unsolved problem doesn't rebuild the
-/// header's solved counter).
 final solvedCountProvider = Provider<AsyncValue<int>>((ref) {
   return ref.watch(
     problemsProvider.select(
@@ -54,9 +71,6 @@ final solvedCountProvider = Provider<AsyncValue<int>>((ref) {
   );
 });
 
-/// Resolves [problem]'s similar questions against the local problem set,
-/// keeping only ids that resolve to a real [CodingProblem] and preserving
-/// source order (no sorting, no de-duplication).
 final similarProblemIdsProvider = Provider.family<List<int>, CodingProblem>((ref, problem) {
   final problems = ref.read(problemsProvider).value ?? const [];
   final knownIds = problems.map((p) => p.problemId).whereType<int>().toSet();
