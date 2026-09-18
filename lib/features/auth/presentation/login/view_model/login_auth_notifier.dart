@@ -97,7 +97,7 @@ class AuthLoginNotifier extends Notifier<AuthLoginState> {
     final keepAlive = ref.keepAlive();
 
     try {
-      await ref.read(problemSyncServiceProvider).pushPendingChanges();
+      await ref.read(problemSyncServiceProvider).uploadUnsyncedChanges();
       await _authRepository.logout();
 
       await ref.read(guestDataServiceProvider).clearGuestData();
