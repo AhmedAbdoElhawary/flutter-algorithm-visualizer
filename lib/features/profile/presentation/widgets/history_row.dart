@@ -1,4 +1,3 @@
-import 'package:algorithm_visualizer/config/routes/route_app.dart';
 import 'package:algorithm_visualizer/core/extensions/navigators.dart';
 import 'package:algorithm_visualizer/core/localization/app_localizations.dart';
 import 'package:algorithm_visualizer/core/resources/dimensions_manager.dart';
@@ -45,7 +44,7 @@ class _HistoryRowState extends State<HistoryRow> {
 
     return SecondaryProblemCard(
       onTap: () => _expanded.value = !_expanded.value,
-      onLongTap: () => context.pushRoute(Routes.problem, queryParameters: widget.entry.problemId.toString()),
+      onLongTap: () => context.pushProblem(widget.entry.problemId.toString()),
       isSolved: entry.isSolved,
       problemName: entry.problemName,
       problemId: entry.problemId,

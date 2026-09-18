@@ -70,7 +70,7 @@ class _PFLegendSwatch extends StatelessWidget {
           innerColor: color,
         );
       case SearchRole.path:
-      case SearchRole.frontier:
+      case SearchRole.searcher:
       case SearchRole.visited:
       case SearchRole.wall:
         return Container(

@@ -103,7 +103,7 @@ const Map<String, String> kArTranslations = <String, String>{
   // ----------------------------------------------- searching roles & status
   'Start': 'البداية',
   'End': 'النهاية',
-  'Frontier': 'الحدّ الأمامي',
+  'Searcher': 'الباحث',
   'Visited': 'مُستكشَف',
   'Path': 'المسار',
   'Wall': 'جدار',
@@ -331,6 +331,7 @@ const Map<String, String> kArTranslations = <String, String>{
       'تعذّرت المزامنة. تحقّق من اتصالك وحاول مرة أخرى.',
   'Just a moment': 'لحظة من فضلك',
   'Got it': 'حسنًا',
+  'Sync your data': 'زامن بياناتك',
   'Syncing is limited to once every 30 seconds. You can sync again in {seconds}s.':
       'المزامنة متاحة مرة كل ٣٠ ثانية. يمكنك المزامنة مرة أخرى بعد {seconds} ثانية.',
   'You can sign back in anytime to continue your algorithmic journey.':

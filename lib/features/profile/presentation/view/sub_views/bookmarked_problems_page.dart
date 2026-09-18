@@ -1,4 +1,3 @@
-import 'package:algorithm_visualizer/config/routes/route_app.dart';
 import 'package:algorithm_visualizer/core/extensions/navigators.dart';
 import 'package:algorithm_visualizer/core/helpers/constants.dart';
 import 'package:algorithm_visualizer/core/helpers/current_device.dart';
@@ -50,10 +49,7 @@ class BookmarkedProblemsPage extends ConsumerWidget {
                             final problem = bookmarked[i];
                             return BookmarkRow(
                               problem: problem,
-                              onTap: () => context.pushRoute(
-                                Routes.problem,
-                                queryParameters: "${problem.getProblemId}",
-                              ),
+                              onTap: () => context.pushProblem("${problem.getProblemId}"),
                             );
                           },
                         ),

@@ -4,6 +4,7 @@ import 'package:algorithm_visualizer/features/visualize/view/sub_view/searching/
 import 'package:algorithm_visualizer/features/visualize/view/sub_view/searching/view_model/searching_notifier.dart';
 import 'package:algorithm_visualizer/features/visualize/view/sub_view/searching/widgets/pf_grid.dart';
 import 'package:algorithm_visualizer/features/visualize/view/sub_view/searching/widgets/pf_grid_painter.dart';
+import 'package:algorithm_visualizer/features/visualize/view/sub_view/searching/widgets/start_point.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -22,7 +23,11 @@ class _Harness {
   bool get locked => container.read(gridScrollLockProvider);
 }
 
-Future<_Harness> _pump(WidgetTester tester, {Size surface = _surface}) async {
+Future<_Harness> _pump(
+  WidgetTester tester, {
+  Size surface = _surface,
+  TextDirection textDirection = TextDirection.ltr,
+}) async {
   final container = ProviderContainer();
   addTearDown(container.dispose);
 
@@ -36,8 +41,11 @@ Future<_Harness> _pump(WidgetTester tester, {Size surface = _surface}) async {
         designSize: _surface,
         builder: (context, _) => MaterialApp(
           theme: AppTheme.dark,
-          home: Scaffold(
-            body: SingleChildScrollView(child: PFGrid(instance: _provider)),
+          home: Directionality(
+            textDirection: textDirection,
+            child: Scaffold(
+              body: SingleChildScrollView(child: PFGrid(instance: _provider)),
+            ),
           ),
         ),
       ),
@@ -163,6 +171,109 @@ void main() {
     });
   });
 
+  group('dragging the markers', () {
+    Offset cellCentre(WidgetTester tester, int row, int col) {
+      final cellSize = tester.getSize(_gridCanvas).width / kPFCols;
+      return _gridOrigin(tester) + Offset((col + 0.5) * cellSize, (row + 0.5) * cellSize);
+    }
+
+    testWidgets('a marker pressed and dragged lands on the cell it was let go over',
+        (tester) async {
+      final harness = await _pump(tester);
+      final (row, col) = (harness.state.startRow, harness.state.startCol);
+
+      // Touch slop is wider than a cell, so the drag has to survive the finger
+      // leaving the pressed cell before the gesture is even recognised.
+      final gesture = await tester.startGesture(cellCentre(tester, row, col));
+      await tester.pump();
+      await gesture.moveTo(cellCentre(tester, row, col + 4));
+      await tester.pump();
+      await gesture.moveTo(cellCentre(tester, row + 3, col + 4));
+      await tester.pump();
+      await gesture.up();
+      await tester.pump();
+
+      expect((harness.state.startRow, harness.state.startCol), (row + 3, col + 4));
+      // Dragging a marker is not drawing: nothing may be left behind it.
+      expect(harness.state.walls.expand((r) => r).where((w) => w), isEmpty);
+    });
+
+    testWidgets('a marker rubs out a wall it is dropped on', (tester) async {
+      final harness = await _pump(tester);
+      final (row, col) = (harness.state.startRow, harness.state.startCol);
+
+      await tester.tapAt(cellCentre(tester, row + 2, col + 2));
+      await tester.pump();
+      expect(harness.state.walls[row + 2][col + 2], isTrue);
+
+      final gesture = await tester.startGesture(cellCentre(tester, row, col));
+      await tester.pump();
+      await gesture.moveTo(cellCentre(tester, row + 2, col + 2));
+      await tester.pump();
+      await gesture.up();
+      await tester.pump();
+
+      expect((harness.state.startRow, harness.state.startCol), (row + 2, col + 2));
+      expect(harness.state.walls[row + 2][col + 2], isFalse);
+    });
+
+    testWidgets('a marker is pinned once a run exists, and free again after reset',
+        (tester) async {
+      final harness = await _pump(tester);
+      harness.notifier.togglePlay();
+      harness.notifier.stepBackward();
+      await tester.pump();
+
+      final (row, col) = (harness.state.startRow, harness.state.startCol);
+
+      final gesture = await tester.startGesture(cellCentre(tester, row, col));
+      await tester.pump();
+      await gesture.moveTo(cellCentre(tester, row + 3, col));
+      await tester.pump();
+      await gesture.up();
+      await tester.pump();
+
+      expect((harness.state.startRow, harness.state.startCol), (row, col));
+      // Pressing a pinned marker must not fall through to drawing a wall.
+      expect(harness.state.walls[row][col], isFalse);
+
+      harness.notifier.reset();
+      await tester.pump();
+
+      final again = await tester.startGesture(cellCentre(tester, row, col));
+      await tester.pump();
+      await again.moveTo(cellCentre(tester, row + 3, col));
+      await tester.pump();
+      await again.up();
+      await tester.pump();
+
+      expect((harness.state.startRow, harness.state.startCol), (row + 3, col));
+    });
+
+    testWidgets('no wall is drawn while the search is playing', (tester) async {
+      final harness = await _pump(tester);
+      harness.notifier.togglePlay();
+      await tester.pump();
+      expect(harness.notifier.isPlaying, isTrue);
+
+      await tester.tapAt(cellCentre(tester, 2, 2));
+      await tester.pump();
+
+      expect(harness.state.walls[2][2], isFalse);
+
+      harness.notifier.reset(); // the playback timer must not outlive the test
+    });
+
+    testWidgets('markers sit on their own cell in Arabic, not mirrored across the grid',
+        (tester) async {
+      final harness = await _pump(tester, textDirection: TextDirection.rtl);
+      final cellSize = tester.getSize(_gridCanvas).width / kPFCols;
+      final left = tester.getTopLeft(find.byType(PFStartPointWidget).first).dx;
+
+      expect(left - _gridOrigin(tester).dx, closeTo(harness.state.startCol * cellSize, 0.01));
+    });
+  });
+
   group('animation rewind N5 (FR-041, FR-015)', () {
     testWidgets('stepping backward drops the stamps of cells no longer in the set', (tester) async {
       final harness = await _pump(tester);
@@ -191,7 +302,33 @@ void main() {
       // Nothing may be left stamped that the earlier step does not contain,
       // or the painter keeps animating cells that are no longer there.
       expect(rewound.visitedAnimations.keys, everyElement(isIn(rewoundStep.visited)));
-      expect(rewound.frontierAnimations.keys, everyElement(isIn(rewoundStep.frontier)));
+    });
+
+    testWidgets('the searcher is the cell this step expanded, and it is never stamped',
+        (tester) async {
+      final harness = await _pump(tester);
+
+      harness.notifier.togglePlay();
+      harness.notifier.stepBackward();
+      await tester.pump();
+
+      int? previous;
+      for (int i = 0; i < 6; i++) {
+        harness.notifier.stepForward();
+        await tester.pump();
+
+        final painter = _painter(tester);
+        final searcher = painter.searcherCell;
+        expect(searcher, isNotNull);
+        expect(searcher, isIn(harness.state.currentStep!.visited));
+
+        // The searcher draws as a static square, so a stamp on it would be a
+        // release animation running under a cell the search is still on.
+        expect(painter.visitedAnimations.containsKey(searcher), isFalse);
+        // ...and the cell it just left has to be the one that starts moving.
+        if (previous != null) expect(painter.visitedAnimations, contains(previous));
+        previous = searcher;
+      }
     });
 
     testWidgets('resetting clears every stamp', (tester) async {
@@ -210,7 +347,6 @@ void main() {
 
       final painter = _painter(tester);
       expect(painter.visitedAnimations, isEmpty);
-      expect(painter.frontierAnimations, isEmpty);
       expect(painter.pathAnimations, isEmpty);
     });
   });

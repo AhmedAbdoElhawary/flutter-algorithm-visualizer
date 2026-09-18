@@ -2,12 +2,10 @@ import 'package:algorithm_visualizer/core/resources/strings_manager.dart';
 import 'package:algorithm_visualizer/features/visualize/view/sub_view/searching/helper/search_role.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-/// Every searching constant this feature added, keyed by name so a failure
-/// says which one is at fault.
 const _roleLabels = <String, String>{
   'searchRoleStart': StringsManager.searchRoleStart,
   'searchRoleEnd': StringsManager.searchRoleEnd,
-  'searchRoleFrontier': StringsManager.searchRoleFrontier,
+  'searchRoleSearcher': StringsManager.searchRoleSearcher,
   'searchRoleVisited': StringsManager.searchRoleVisited,
   'searchRolePath': StringsManager.searchRolePath,
   'searchRoleWall': StringsManager.searchRoleWall,

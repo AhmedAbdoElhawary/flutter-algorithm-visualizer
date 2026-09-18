@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 /// INK        inkPrimary → inkTitle → inkBody → inkMuted
 /// DATA       dataEasy · dataMedium · dataHard · dataTarget · dataActive
 /// CODE       codeKeyword · codeString · codeNumber · codeBuiltin · codeComment · codePunct
-/// SEARCH     searchStart · searchEnd · searchWall · searchVisited · searchFrontier · searchPath
+/// SEARCH     searchStart · searchEnd · searchWall · searchVisited · searchSearcher · searchTrail0 · searchTrail1 · searchPath
 
 abstract final class ColorManager {
   static const Color groundDk = Color(0xFF0B0B0D);
@@ -61,15 +61,6 @@ abstract final class ColorManager {
     dataEasyLt,
   ];
 
-  /// CODE — syntax highlighting for the challenge editor.
-  ///
-  /// The five `data*` roles above are spoken for (difficulty badges, charts,
-  /// the pathfinding grid), so tokens get their own scale. Without it
-  /// `string` and `number` had to share one hue and the light theme inherited
-  /// dark-theme pastels that wash out on a white card.
-  ///
-  /// Dark values sit on [surfaceDk]; light values are all >= 4.5:1 on
-  /// [surfaceLt] so code stays readable, not just colorful.
   static const Color codeKeywordDk = Color(0xFFC79BE8);
   static const Color codeStringDk = Color(0xFF9ED49B);
   static const Color codeNumberDk = Color(0xFFE8A87C);
@@ -84,28 +75,22 @@ abstract final class ColorManager {
   static const Color codeCommentLt = Color(0xFF6B7280);
   static const Color codePunctLt = Color(0xFF4A4F5A);
 
-  /// SEARCH — the pathfinding grid's six cell meanings.
-  ///
-  /// Six roles are on screen at once and every one of them is a filled cell,
-  /// so they are separated by hue *and* lightness rather than by hue alone.
-  /// `frontier` used to be [dataActive], which is literally [inkPrimary] —
-  /// pure white in dark, near-black in light — so the advancing edge was the
-  /// same color as the body text above it and nearly the same as a wall.
-  ///
-  /// Path is amber, not green, so it still reads on top of the blue visited
-  /// cells it always crosses.
   static const Color searchStartDk = Color(0xFF4ADE80);
   static const Color searchEndDk = Color(0xFFF87171);
   static const Color searchWallDk = Color(0xFF394050);
-  static const Color searchVisitedDk = Color(0xFF4C7EC0);
-  static const Color searchFrontierDk = Color(0xFF67E8F9);
+  static const Color searchVisitedDk =Color(0xFF67E8F9);
+  static const Color searchSearcherDk = Color(0xFFF0ABFC);
+  static const Color searchTrail0Dk = Color(0xFF3A6AD1);
+  static const Color searchTrail1Dk = Color(0xFF3DDDB8);
   static const Color searchPathDk = Color(0xFFFBBF24);
 
   static const Color searchStartLt = Color(0xFF16A34A);
   static const Color searchEndLt = Color(0xFFDC2626);
   static const Color searchWallLt = Color(0xFF475569);
-  static const Color searchVisitedLt = Color(0xFF3B82F6);
-  static const Color searchFrontierLt = Color(0xFF06B6D4);
+  static const Color searchVisitedLt = Color(0xFF06B6D4);
+  static const Color searchSearcherLt = Color(0xFFC026D3);
+  static const Color searchTrail0Lt = Color(0xFF3974E3);
+  static const Color searchTrail1Lt = Color(0xFF42E8D5);
   static const Color searchPathLt = Color(0xFFF59E0B);
 
   static const Color transparent = Colors.transparent;

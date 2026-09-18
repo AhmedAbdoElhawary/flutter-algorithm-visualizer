@@ -19,7 +19,7 @@ void main() {
     test('matches the normative role table (FR-023)', () {
       expect(searchRoleColor(SearchRole.start), ThemeEnum.searchStart);
       expect(searchRoleColor(SearchRole.end), ThemeEnum.searchEnd);
-      expect(searchRoleColor(SearchRole.frontier), ThemeEnum.searchFrontier);
+      expect(searchRoleColor(SearchRole.searcher), ThemeEnum.searchSearcher);
       expect(searchRoleColor(SearchRole.visited), ThemeEnum.searchVisited);
       expect(searchRoleColor(SearchRole.path), ThemeEnum.searchPath);
       expect(searchRoleColor(SearchRole.wall), ThemeEnum.searchWall);
@@ -63,11 +63,11 @@ void main() {
       expect(kSearchRolePriority.length, SearchRole.values.length);
     });
 
-    test('is ordered start, visited, frontier, wall, path, end (legend display order)', () {
+    test('is ordered start, visited, searcher, wall, path, end (legend display order)', () {
       expect(kSearchRolePriority, [
         SearchRole.start,
         SearchRole.visited,
-        SearchRole.frontier,
+        SearchRole.searcher,
         SearchRole.wall,
         SearchRole.path,
         SearchRole.end,
