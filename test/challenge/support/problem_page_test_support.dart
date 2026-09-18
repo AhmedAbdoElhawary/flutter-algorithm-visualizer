@@ -24,7 +24,7 @@ class FakeProblemRepository implements ProblemRepository {
   final List<CodingProblem> updated = [];
 
   @override
-  Future<List<CodingProblem>> getAllProblems({bool arabic = false, bool forceRemote = false}) async => [];
+  Future<List<CodingProblem>> getAllProblems({bool arabic = false}) async => [];
 
   @override
   Future<void> saveProblem(CodingProblem problem) async {}
