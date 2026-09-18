@@ -1,16 +1,16 @@
 class ProblemSyncState {
-  const ProblemSyncState({required this.isSyncing, required this.hasPendingChanges});
+  const ProblemSyncState({required this.isSyncing, required this.hasUnsyncedChanges});
 
-  const ProblemSyncState.initial() : isSyncing = false, hasPendingChanges = false;
+  const ProblemSyncState.initial() : isSyncing = false, hasUnsyncedChanges = false;
 
   final bool isSyncing;
 
-  final bool hasPendingChanges;
+  final bool hasUnsyncedChanges;
 
-  ProblemSyncState copyWith({bool? isSyncing, bool? hasPendingChanges}) {
+  ProblemSyncState copyWith({bool? isSyncing, bool? hasUnsyncedChanges}) {
     return ProblemSyncState(
       isSyncing: isSyncing ?? this.isSyncing,
-      hasPendingChanges: hasPendingChanges ?? this.hasPendingChanges,
+      hasUnsyncedChanges: hasUnsyncedChanges ?? this.hasUnsyncedChanges,
     );
   }
 
@@ -19,8 +19,8 @@ class ProblemSyncState {
       identical(this, other) ||
       other is ProblemSyncState &&
           isSyncing == other.isSyncing &&
-          hasPendingChanges == other.hasPendingChanges;
+          hasUnsyncedChanges == other.hasUnsyncedChanges;
 
   @override
-  int get hashCode => Object.hash(isSyncing, hasPendingChanges);
+  int get hashCode => Object.hash(isSyncing, hasUnsyncedChanges);
 }
