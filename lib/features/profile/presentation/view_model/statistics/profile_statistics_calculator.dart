@@ -125,7 +125,8 @@ class ProfileStatisticsCalculator {
     var bestStreak = currentStreak;
     var streak = 0;
 
-    final allDays = daysWithSubmissions.toList()..sort();
+    final allDays = daysWithSubmissions.toList()
+      ..sort((a, b) => _parseDate(a).compareTo(_parseDate(b)));
 
     for (var i = 0; i < allDays.length; i++) {
       if (i == 0) {
