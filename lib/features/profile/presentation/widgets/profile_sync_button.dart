@@ -41,7 +41,7 @@ class _SyncAction extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final isSyncing = ref.watch(problemSyncProvider.select((state) => state.isSyncing));
-    final hasPendingChanges = ref.watch(problemSyncProvider.select((state) => state.hasPendingChanges));
+    final hasUnsyncedChanges = ref.watch(problemSyncProvider.select((state) => state.hasUnsyncedChanges));
 
     return Semantics(
       button: true,
@@ -61,7 +61,7 @@ class _SyncAction extends ConsumerWidget {
                     iconSize: 18,
                   ),
 
-            if (hasPendingChanges && !isSyncing) const _PendingDot(),
+            if (hasUnsyncedChanges && !isSyncing) const _UnsyncedDot(),
           ],
         ),
       ),
@@ -131,8 +131,8 @@ class _SyncSpinner extends StatelessWidget {
   }
 }
 
-class _PendingDot extends StatelessWidget {
-  const _PendingDot();
+class _UnsyncedDot extends StatelessWidget {
+  const _UnsyncedDot();
 
   @override
   Widget build(BuildContext context) {
