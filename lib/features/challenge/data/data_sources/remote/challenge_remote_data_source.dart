@@ -5,7 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 abstract class ProblemRemoteDataSource {
   bool get isSignedIn;
 
-  Future<List<ProblemStorageDTO>> getProblems({bool preferCache = false});
+  Future<List<ProblemStorageDTO>> getProblems();
   Future<void> saveProblem(ProblemStorageDTO problem);
   Future<void> updateProblem(ProblemStorageDTO problem);
   Future<void> deleteProblem(int problemId);
@@ -42,26 +42,12 @@ class ProblemRemoteDataSourceImpl implements ProblemRemoteDataSource {
   }
 
   @override
-  Future<List<ProblemStorageDTO>> getProblems({bool preferCache = false}) async {
+  Future<List<ProblemStorageDTO>> getProblems() async {
     final ref = _problemsRef();
     if (ref == null) return [];
 
-    if (!preferCache) return _toDTOs(await ref.get(const GetOptions(source: Source.server)));
-
-    try {
-      final cached = await ref.get(const GetOptions(source: Source.cache));
-      if (cached.docs.isNotEmpty) return _toDTOs(cached);
-    } catch (_) {
-      /// no cache, then get it from the server not throw error.
-    }
-
-    /// almost will be the first time after user signed in
-    try {
-      return _toDTOs(await ref.get(const GetOptions(source: Source.server)));
-    } catch (_) {
-      /// if user almost offline and no cache, this good to be returned
-      return [];
-    }
+    /// plain get() serves the server when online, its own cache when not
+    return _toDTOs(await ref.get());
   }
 
   List<ProblemStorageDTO> _toDTOs(QuerySnapshot<Map<String, dynamic>> snapshot) {
