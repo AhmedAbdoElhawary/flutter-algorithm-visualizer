@@ -2,6 +2,7 @@ import 'package:algorithm_visualizer/config/routes/route_app.dart';
 import 'package:algorithm_visualizer/core/extensions/navigators.dart';
 import 'package:algorithm_visualizer/core/localization/app_localizations.dart';
 import 'package:algorithm_visualizer/core/resources/strings_manager.dart';
+import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
 import 'package:algorithm_visualizer/core/widgets/adaptive/padding/adaptive_padding.dart';
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/stat_tile.dart';
 import 'package:algorithm_visualizer/features/profile/presentation/view_model/statistics/profile_statistics_provider.dart';
@@ -29,20 +30,29 @@ class ProfileStatsGrid extends ConsumerWidget {
         value: '${stats.solvedCount}',
         label: "${(stats.solvedCount > 1 ? StringsManager.problems : StringsManager.problem).tr(context)}"
             "\n${StringsManager.solved.tr(context)}",
-        sub: solvedSub
+        sub: solvedSub,
+        iconColor: ThemeEnum.dataEasy,
       ),
       (
         icon: Icons.local_fire_department_rounded,
         value: '${stats.currentStreak}',
         label: StringsManager.dayStreak,
-        sub: streakSub
+        sub: streakSub,
+        iconColor: ThemeEnum.dataHard,
       ),
-      (icon: Icons.gps_fixed_rounded, value: accuracySub, label: StringsManager.accuracyRate, sub: ''),
+      (
+        icon: Icons.gps_fixed_rounded,
+        value: accuracySub,
+        label: StringsManager.accuracyRate,
+        sub: '',
+        iconColor: ThemeEnum.inkPrimary,
+      ),
       (
         icon: Icons.bookmark_outline_rounded,
         value: '${stats.bookmarkedCount}',
         label: "${StringsManager.bookmarked.tr(context)}\n",
-        sub: bookmarkSub
+        sub: bookmarkSub,
+        iconColor: null,
       ),
     ];
 
@@ -57,7 +67,14 @@ class ProfileStatsGrid extends ConsumerWidget {
             final s = entry.value;
             final card = SizedBox(
               width: (ScreenUtil().screenWidth / 2) - 21.r,
-              child: StatTile(icon: s.icon, value: s.value, label: s.label, sub: s.sub, emphasized: i == 1),
+              child: StatTile(
+                icon: s.icon,
+                value: s.value,
+                label: s.label,
+                sub: s.sub,
+                emphasized: i == 1,
+                iconColor: s.iconColor,
+              ),
             );
             if (i == 3) {
               return GestureDetector(

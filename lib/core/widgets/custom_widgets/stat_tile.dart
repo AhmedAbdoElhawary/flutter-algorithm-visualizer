@@ -10,6 +10,7 @@ class StatTile extends StatelessWidget {
   final String value;
   final bool emphasized;
   final IconData? icon;
+  final ThemeEnum? iconColor;
   final String? sub;
   final bool centerTheContent;
   const StatTile({
@@ -18,6 +19,7 @@ class StatTile extends StatelessWidget {
     required this.value,
     this.emphasized = false,
     this.centerTheContent = false,
+    this.iconColor,
     this.icon,
     this.sub,
   });
@@ -35,13 +37,12 @@ class StatTile extends StatelessWidget {
         children: [
           if (hasHeaderRow) ...[
             Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                if (icon != null) Icon(icon, size: 18.r, color: context.getColor(ThemeEnum.inkBody)),
+                if (icon != null) Icon(icon, size: 18.r, color: context.getColor(iconColor??ThemeEnum.inkBody)),
                 const Spacer(),
                 if (sub != null && sub!.isNotEmpty)
-                  Flexible(
-                    child: RegularText(sub!, fontSize: 10, color: ThemeEnum.inkBody, maxLines: 1),
-                  ),
+                  Flexible(child: RegularText(sub!, fontSize: 10, color: ThemeEnum.inkBody, maxLines: 1)),
               ],
             ),
             const RSizedBox(height: 6),

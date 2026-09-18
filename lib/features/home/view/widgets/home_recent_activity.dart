@@ -9,7 +9,7 @@ import 'package:algorithm_visualizer/core/widgets/custom_widgets/card_container.
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/difficulty_chip.dart';
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/section_header.dart';
 import 'package:algorithm_visualizer/features/challenge/domain/enums/problem.dart';
-import 'package:algorithm_visualizer/features/profile/presentation/entities/recent_submission.dart';
+import 'package:algorithm_visualizer/features/profile/domain/entities/recent_submission.dart';
 import 'package:algorithm_visualizer/features/profile/presentation/view_model/statistics/profile_statistics_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';

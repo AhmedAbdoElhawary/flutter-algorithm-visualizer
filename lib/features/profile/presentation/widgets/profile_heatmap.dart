@@ -13,8 +13,10 @@ class ProfileHeatmap extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return HorizontalPadding(
-      padding: 16,
+    return OnlyPadding(
+      startPadding: 16,
+      endPadding: 16,
+      bottomPadding: 14,
       child: CardContainer(
         surface: CdSurface.main,
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [

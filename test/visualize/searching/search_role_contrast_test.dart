@@ -2,7 +2,7 @@ import 'dart:math' as math;
 
 import 'package:algorithm_visualizer/config/themes/app_theme.dart';
 import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
-import 'package:algorithm_visualizer/features/visualize/sub_view/searching/helper/search_role.dart';
+import 'package:algorithm_visualizer/features/visualize/view/sub_view/searching/helper/search_role.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_test/flutter_test.dart';

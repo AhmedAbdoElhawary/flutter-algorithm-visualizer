@@ -9,7 +9,7 @@ class ChallengesLoadingState extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: REdgeInsets.fromLTRB(16, 0, 16, 60),
+      padding: REdgeInsets.fromLTRB(16, 0, 16, 0),
       child: ListView.builder(itemCount: 20, itemBuilder: (ctx, i) => const ProblemTileShimmer()),
     );
   }

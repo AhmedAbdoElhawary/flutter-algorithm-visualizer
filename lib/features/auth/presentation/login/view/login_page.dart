@@ -1,4 +1,5 @@
 import 'package:algorithm_visualizer/config/routes/route_app.dart';
+import 'package:algorithm_visualizer/core/extensions/navigators.dart';
 import 'package:algorithm_visualizer/core/resources/dimensions_manager.dart';
 import 'package:algorithm_visualizer/core/resources/strings_manager.dart';
 import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
@@ -9,6 +10,7 @@ import 'package:algorithm_visualizer/core/widgets/custom_widgets/auth_text_field
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/confirmation_dialog_card.dart';
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/custom_snack_bar.dart';
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/primary_button_quiet.dart';
+import 'package:algorithm_visualizer/core/widgets/custom_widgets/skip_button.dart';
 import 'package:algorithm_visualizer/features/auth/presentation/common/view_model/auth_providers.dart';
 import 'package:algorithm_visualizer/features/auth/presentation/common/widget/auth_common_bits.dart';
 import 'package:algorithm_visualizer/features/auth/presentation/common/widget/auth_scaffold.dart';
@@ -33,7 +35,12 @@ class LoginPage extends ConsumerWidget {
     );
 
     return AuthScaffold(
-      topInset: CdSpace.x12,
+      topInset: CdSpace.x4,
+      header: SkipButton(
+        onSkip: () {
+          context.pushAndRemoveAll(Routes.home);
+        },
+      ),
       children: [
         const Align(
           alignment: AlignmentDirectional.centerStart,

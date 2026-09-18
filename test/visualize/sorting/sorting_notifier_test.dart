@@ -1,10 +1,10 @@
 import 'package:algorithm_visualizer/features/visualize/helper/playback_speed.dart';
-import 'package:algorithm_visualizer/features/visualize/sub_view/sorting/view_model/sorting_notifier.dart';
-import 'package:algorithm_visualizer/features/visualize/sub_view/sorting/view_model/sub_sorting/bubble_sort_notifier.dart';
-import 'package:algorithm_visualizer/features/visualize/sub_view/sorting/view_model/sub_sorting/insertion_sort_notifier.dart';
-import 'package:algorithm_visualizer/features/visualize/sub_view/sorting/view_model/sub_sorting/merge_sort_notifier.dart';
-import 'package:algorithm_visualizer/features/visualize/sub_view/sorting/view_model/sub_sorting/quick_sort_notifier.dart';
-import 'package:algorithm_visualizer/features/visualize/sub_view/sorting/view_model/sub_sorting/selection_sort_notifier.dart';
+import 'package:algorithm_visualizer/features/visualize/view/sub_view/sorting/view_model/sorting_notifier.dart';
+import 'package:algorithm_visualizer/features/visualize/view/sub_view/sorting/view_model/sub_sorting/bubble_sort_notifier.dart';
+import 'package:algorithm_visualizer/features/visualize/view/sub_view/sorting/view_model/sub_sorting/insertion_sort_notifier.dart';
+import 'package:algorithm_visualizer/features/visualize/view/sub_view/sorting/view_model/sub_sorting/merge_sort_notifier.dart';
+import 'package:algorithm_visualizer/features/visualize/view/sub_view/sorting/view_model/sub_sorting/quick_sort_notifier.dart';
+import 'package:algorithm_visualizer/features/visualize/view/sub_view/sorting/view_model/sub_sorting/selection_sort_notifier.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';

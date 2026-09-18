@@ -12,12 +12,12 @@ import 'package:algorithm_visualizer/features/challenge/presentation/view/challe
 import 'package:algorithm_visualizer/features/challenge/presentation/view/editor_page.dart';
 import 'package:algorithm_visualizer/features/challenge/presentation/view/problem_page.dart';
 import 'package:algorithm_visualizer/features/home/view/home_page.dart';
-import 'package:algorithm_visualizer/features/onboarding/data/onboarding_store.dart';
-import 'package:algorithm_visualizer/features/onboarding/presentation/view/onboarding_page.dart';
+import 'package:algorithm_visualizer/features/onboarding/view_model/onboarding_store.dart';
+import 'package:algorithm_visualizer/features/onboarding/view/onboarding_page.dart';
 import 'package:algorithm_visualizer/features/profile/presentation/view/profile_page.dart';
 import 'package:algorithm_visualizer/features/profile/presentation/view/sub_views/bookmarked_problems_page.dart';
 import 'package:algorithm_visualizer/features/profile/presentation/view/sub_views/practice_history_page.dart';
-import 'package:algorithm_visualizer/features/settings/presentation/view/settings_page.dart';
+import 'package:algorithm_visualizer/features/settings/view/settings_page.dart';
 import 'package:algorithm_visualizer/features/visualize/view/visualize_page.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';

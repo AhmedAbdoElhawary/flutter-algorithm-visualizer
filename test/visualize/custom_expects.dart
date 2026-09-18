@@ -1,5 +1,5 @@
 // it's better like that to compare the steps, and catch specific different step
-import 'package:algorithm_visualizer/features/visualize/sub_view/sorting/view_model/sorting_notifier.dart';
+import 'package:algorithm_visualizer/features/visualize/view/sub_view/sorting/view_model/sorting_notifier.dart';
 import 'package:flutter_test/flutter_test.dart' show expect, fail;
 
 String _describe(SortStep step) {

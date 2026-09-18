@@ -8,8 +8,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-class ProfileCategoryChart extends ConsumerWidget {
-  const ProfileCategoryChart({super.key});
+class ProfileSolvedTopics extends ConsumerWidget {
+  const ProfileSolvedTopics({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -20,8 +20,10 @@ class ProfileCategoryChart extends ConsumerWidget {
 
     if (entries.isEmpty) return const SizedBox.shrink();
 
-    return HorizontalPadding(
-      padding: 16,
+    return OnlyPadding(
+      startPadding: 16,
+      endPadding: 16,
+      bottomPadding: 14,
       child: CardContainer(
         surface: CdSurface.main,
         child: Column(

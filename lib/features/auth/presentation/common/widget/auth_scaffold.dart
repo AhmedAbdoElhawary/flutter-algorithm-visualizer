@@ -12,6 +12,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 class AuthScaffold extends StatelessWidget {
   const AuthScaffold({
     super.key,
+     this.header,
     required this.children,
     this.topInset = CdSpace.x12,
   });
@@ -21,7 +22,7 @@ class AuthScaffold extends StatelessWidget {
   /// Distance from the safe-area top to the first child. Screen 11 starts at
   /// 44px, screen 12 at 8px (its own eyebrow row), screen 13 at 20px.
   final double topInset;
-
+final Widget? header;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -34,6 +35,7 @@ class AuthScaffold extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
+                header??const SizedBox.shrink(),
                 SizedBox(height: topInset.h),
                 ...children,
                 SizedBox(height: CdSpace.x6.h),

@@ -1,8 +1,8 @@
 import 'dart:math' as math;
 
-import 'package:algorithm_visualizer/features/visualize/sub_view/searching/helper/pf_constants.dart';
-import 'package:algorithm_visualizer/features/visualize/sub_view/searching/helper/pf_grid_input.dart';
-import 'package:algorithm_visualizer/features/visualize/sub_view/searching/helper/pf_step.dart';
+import 'package:algorithm_visualizer/features/visualize/view/sub_view/searching/helper/pf_constants.dart';
+import 'package:algorithm_visualizer/features/visualize/view/sub_view/searching/helper/pf_grid_input.dart';
+import 'package:algorithm_visualizer/features/visualize/view/sub_view/searching/helper/pf_step.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 /// Builds a grid from ASCII art: `#` wall, `.` open, `S` start, `E` end.

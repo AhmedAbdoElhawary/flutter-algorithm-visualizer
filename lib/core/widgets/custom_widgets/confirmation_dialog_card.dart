@@ -34,52 +34,54 @@ class ConfirmationDialogCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return CardContainer(
-      radius: CdRadius.dialog,
-      padding: REdgeInsets.all(20),
-      child: SizedBox(
-        width: 320.w,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Container(
-              width: 48.r,
-              height: 48.r,
-              alignment: Alignment.center,
-              decoration: BoxDecoration(
-                color: context.getColor(ThemeEnum.raised),
-                shape: BoxShape.circle,
+    return SafeArea(
+      child: CardContainer(
+        radius: CdRadius.dialog,
+        padding: REdgeInsets.all(16),
+        child: SizedBox(
+          width: ScreenUtil().screenWidth - 67.r,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                width: 48.r,
+                height: 48.r,
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                  color: context.getColor(ThemeEnum.raised),
+                  shape: BoxShape.circle,
+                ),
+                child: CustomIcon(icon, size: 24, color: accentColor),
               ),
-              child: CustomIcon(icon, size: 24, color: accentColor),
-            ),
-            const RSizedBox(height: 14),
-            BoldText(
-              title,
-              color: ThemeEnum.inkTitle,
-              fontSize: 16,
-              fontWeight: FontWeightManager.bold800,
-              textAlign: TextAlign.center,
-            ),
-            const RSizedBox(height: 6),
-            RegularText(
-              description,
-              color: ThemeEnum.inkBody,
-              fontSize: 12,
-              textAlign: TextAlign.center,
-            ),
-            const RSizedBox(height: 20),
-            Row(
-              children: [
-                Expanded(
-                  child: SecondaryButtonQuiet(label: StringsManager.cancel, onPressed: onCancel),
-                ),
-                const RSizedBox(width: 10),
-                Expanded(
-                  child: PrimaryButtonQuiet(label: confirmLabel, onPressed: onConfirm),
-                ),
-              ],
-            ),
-          ],
+              const RSizedBox(height: 14),
+              BoldText(
+                title,
+                color: ThemeEnum.inkTitle,
+                fontSize: 16,
+                fontWeight: FontWeightManager.bold800,
+                textAlign: TextAlign.center,
+              ),
+              const RSizedBox(height: 6),
+              RegularText(
+                description,
+                color: ThemeEnum.inkBody,
+                fontSize: 12,
+                textAlign: TextAlign.center,
+              ),
+              const RSizedBox(height: 20),
+              Row(
+                children: [
+                  Expanded(
+                    child: SecondaryButtonQuiet(label: StringsManager.cancel, onPressed: onCancel),
+                  ),
+                  const RSizedBox(width: 10),
+                  Expanded(
+                    child: PrimaryButtonQuiet(label: confirmLabel, onPressed: onConfirm),
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );

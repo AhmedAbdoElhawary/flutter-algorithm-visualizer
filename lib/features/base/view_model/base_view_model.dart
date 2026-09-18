@@ -1,12 +1,12 @@
 import 'package:algorithm_visualizer/core/resources/strings_manager.dart';
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/card_container.dart';
-import 'package:algorithm_visualizer/features/visualize/sub_view/searching/view_model/searching_notifier.dart';
-import 'package:algorithm_visualizer/features/visualize/sub_view/sorting/view_model/sorting_notifier.dart';
-import 'package:algorithm_visualizer/features/visualize/sub_view/sorting/view_model/sub_sorting/bubble_sort_notifier.dart';
-import 'package:algorithm_visualizer/features/visualize/sub_view/sorting/view_model/sub_sorting/insertion_sort_notifier.dart';
-import 'package:algorithm_visualizer/features/visualize/sub_view/sorting/view_model/sub_sorting/merge_sort_notifier.dart';
-import 'package:algorithm_visualizer/features/visualize/sub_view/sorting/view_model/sub_sorting/quick_sort_notifier.dart';
-import 'package:algorithm_visualizer/features/visualize/sub_view/sorting/view_model/sub_sorting/selection_sort_notifier.dart';
+import 'package:algorithm_visualizer/features/visualize/view/sub_view/searching/view_model/searching_notifier.dart';
+import 'package:algorithm_visualizer/features/visualize/view/sub_view/sorting/view_model/sorting_notifier.dart';
+import 'package:algorithm_visualizer/features/visualize/view/sub_view/sorting/view_model/sub_sorting/bubble_sort_notifier.dart';
+import 'package:algorithm_visualizer/features/visualize/view/sub_view/sorting/view_model/sub_sorting/insertion_sort_notifier.dart';
+import 'package:algorithm_visualizer/features/visualize/view/sub_view/sorting/view_model/sub_sorting/merge_sort_notifier.dart';
+import 'package:algorithm_visualizer/features/visualize/view/sub_view/sorting/view_model/sub_sorting/quick_sort_notifier.dart';
+import 'package:algorithm_visualizer/features/visualize/view/sub_view/sorting/view_model/sub_sorting/selection_sort_notifier.dart';
 import 'package:flutter/material.dart';
 import 'package:riverpod/riverpod.dart';
 
@@ -55,6 +55,7 @@ class BaseViewModel {
           title: StringsManager.bubbleSort,
           instance: NotifierProvider<SortingNotifier, SortingNotifierState>(
             () => BubbleSortNotifier(),
+            isAutoDispose: true,
           ),
           card: AlgorithmGlassCard(
             algoComplexity: BubbleSortNotifier.algorithmComplexity,
@@ -67,6 +68,7 @@ class BaseViewModel {
           title: StringsManager.selectionSort,
           instance: NotifierProvider<SortingNotifier, SortingNotifierState>(
             () => SelectionSortNotifier(),
+            isAutoDispose: true,
           ),
           card: AlgorithmGlassCard(
             algoComplexity: SelectionSortNotifier.algorithmComplexity,
@@ -79,6 +81,7 @@ class BaseViewModel {
           title: StringsManager.insertionSort,
           instance: NotifierProvider<SortingNotifier, SortingNotifierState>(
             () => InsertionSortNotifier(),
+            isAutoDispose: true,
           ),
           card: AlgorithmGlassCard(
             algoComplexity: InsertionSortNotifier.algorithmComplexity,
@@ -91,6 +94,7 @@ class BaseViewModel {
           title: StringsManager.mergeSort,
           instance: NotifierProvider<SortingNotifier, SortingNotifierState>(
             () => MergeSortNotifier(),
+            isAutoDispose: true,
           ),
           card: AlgorithmGlassCard(
             algoComplexity: MergeSortNotifier.algorithmComplexity,
@@ -103,6 +107,7 @@ class BaseViewModel {
           title: StringsManager.quickSort,
           instance: NotifierProvider<SortingNotifier, SortingNotifierState>(
             () => QuickSortNotifier(),
+            isAutoDispose: true,
           ),
           card: AlgorithmGlassCard(
             algoComplexity: QuickSortNotifier.algorithmComplexity,
@@ -178,7 +183,10 @@ class BaseViewModel {
     return switch (cards) {
       SearchingAlgoCards.bfs => AlgoSearchingCard(
           page: SearchingAlgoCards.bfs,
-          instance: NotifierProvider<SearchingNotifier, SearchingState>(() => BFSSearchingNotifier()),
+          instance: NotifierProvider<SearchingNotifier, SearchingState>(
+            () => BFSSearchingNotifier(),
+            isAutoDispose: true,
+          ),
           title: StringsManager.bFS,
           card: AlgorithmGlassCard(
             algoComplexity: BFSSearchingNotifier.algorithmComplexity,
@@ -187,7 +195,10 @@ class BaseViewModel {
         ),
       SearchingAlgoCards.dfs => AlgoSearchingCard(
           page: SearchingAlgoCards.dfs,
-          instance: NotifierProvider<SearchingNotifier, SearchingState>(() => DFSSearchingNotifier()),
+          instance: NotifierProvider<SearchingNotifier, SearchingState>(
+            () => DFSSearchingNotifier(),
+            isAutoDispose: true,
+          ),
           title: StringsManager.dFS,
           card: AlgorithmGlassCard(
             algoComplexity: DFSSearchingNotifier.algorithmComplexity,
@@ -197,7 +208,10 @@ class BaseViewModel {
       SearchingAlgoCards.aStar => AlgoSearchingCard(
           page: SearchingAlgoCards.aStar,
           title: StringsManager.aStarSearch,
-          instance: NotifierProvider<SearchingNotifier, SearchingState>(() => AStarSearchingNotifier()),
+          instance: NotifierProvider<SearchingNotifier, SearchingState>(
+            () => AStarSearchingNotifier(),
+            isAutoDispose: true,
+          ),
           card: AlgorithmGlassCard(
             algoComplexity: AStarSearchingNotifier.algorithmComplexity,
             icon: Icons.find_replace_rounded,
