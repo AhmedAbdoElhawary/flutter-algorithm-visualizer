@@ -20,12 +20,11 @@ class LoggingProblemRemoteDataSource implements ProblemRemoteDataSource {
   }
 
   @override
-  Future<List<ProblemStorageDTO>> getProblems({bool preferCache = false}) {
+  Future<List<ProblemStorageDTO>> getProblems() {
     return FirebaseLogger.trace(
       _scope,
       'getProblems',
-      () => _source.getProblems(preferCache: preferCache),
-      args: {'preferCache': preferCache},
+      _source.getProblems,
       describeResult: (problems) => 'docs=${problems.length}',
     );
   }
