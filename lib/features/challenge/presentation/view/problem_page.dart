@@ -133,7 +133,7 @@ class _CollapsingHeaderTags extends StatelessWidget {
     final chipDifficulty = problem.getDifficulty;
     final tags = problem.getTags;
     return Padding(
-      padding: REdgeInsets.fromLTRB(16, 0, 16, 8),
+      padding: REdgeInsets.fromLTRB(16, 0, 16,0),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
@@ -153,7 +153,6 @@ class _CollapsingHeaderTags extends StatelessWidget {
                   translate: false,
                 ),
                 if (tags.isNotEmpty) ...[
-                  const RSizedBox(height: 2),
                   RegularText(
                     tags.join(', '),
                     color: ThemeEnum.inkBody,
