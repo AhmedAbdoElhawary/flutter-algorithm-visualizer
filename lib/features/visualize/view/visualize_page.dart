@@ -1,4 +1,5 @@
 import 'package:algorithm_visualizer/config/routes/route_app.dart';
+import 'package:algorithm_visualizer/core/resources/color_manager.dart';
 import 'package:algorithm_visualizer/core/resources/strings_manager.dart';
 import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/algo_tab.dart';
@@ -25,6 +26,8 @@ class VisualizePage extends ConsumerStatefulWidget {
 class _VisualizePageState extends ConsumerState<VisualizePage> {
   late var sortingCard = widget.sortingCard;
   late var searchingCard = widget.searchingCard;
+
+  final ScrollController controller = ScrollController();
 
   final ValueNotifier<String> title = ValueNotifier("");
   final ValueNotifier<String> description = ValueNotifier("");
@@ -55,14 +58,29 @@ class _VisualizePageState extends ConsumerState<VisualizePage> {
   }
 
   @override
+  void initState() {
+    _scrollSearchingToWatchableView();
+    super.initState();
+  }
+
+  @override
   void didUpdateWidget(covariant VisualizePage oldWidget) {
     if (oldWidget.sortingCard != widget.sortingCard || oldWidget.searchingCard != widget.searchingCard) {
       tabView = getTabView;
       sortingCard = widget.sortingCard;
       searchingCard = widget.searchingCard;
+      _scrollSearchingToWatchableView();
       setState(() {});
     }
     super.didUpdateWidget(oldWidget);
+  }
+
+  void _scrollSearchingToWatchableView() {
+    if (searchingCard != null && tabView == 1) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        controller.animateTo(50.r, duration: const Duration(milliseconds: 400), curve: Curves.easeInOut);
+      });
+    }
   }
 
   @override
@@ -70,7 +88,7 @@ class _VisualizePageState extends ConsumerState<VisualizePage> {
     title.dispose();
     description.dispose();
     complexity.dispose();
-
+    controller.dispose();
     super.dispose();
   }
 
@@ -85,12 +103,14 @@ class _VisualizePageState extends ConsumerState<VisualizePage> {
 
     return NestedScrollView(
       physics: gridLocked ? const NeverScrollableScrollPhysics() : const BouncingScrollPhysics(),
+      controller: controller,
       headerSliverBuilder: (context, innerBoxIsScrolled) => [
         SliverAppBar(
           pinned: true,
           centerTitle: false,
           titleSpacing: 0,
           leadingWidth: 16.r,
+          shadowColor: ColorManager.transparent,
           leading: const SizedBox(),
           title: ValueListenableBuilder(
             valueListenable: title,
@@ -104,118 +124,124 @@ class _VisualizePageState extends ConsumerState<VisualizePage> {
         SliverAppBar(
           snap: true,
           floating: true,
-          toolbarHeight: 160.r,
+          toolbarHeight: 45.r,
           title: Container(
             color: context.getColor(ThemeEnum.ground),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Padding(
-                  padding: REdgeInsets.only(left: 16, right: 16, bottom: 10),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: InkWell(
-                          onTap: () {
-                            setState(() {
-                              tabView = 0;
-                              this.sortingCard = SortingAlgoCards.bubble;
-                              this.searchingCard = null;
-                            });
-                          },
-                          child: AlgoTab(
-                            isSelected: tabView == 0,
-                            addEndPadding: false,
-                            label: StringsManager.sorting,
-                            verticalPadding: 2,
-                            icon: Icons.filter_list_rounded,
-                            constrainLabelWidth: true,
-                          ),
-                        ),
+            child: Padding(
+              padding: REdgeInsets.only(left: 16, right: 16),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: InkWell(
+                      onTap: () {
+                        setState(() {
+                          tabView = 0;
+                          this.sortingCard = SortingAlgoCards.bubble;
+                          this.searchingCard = null;
+                        });
+                      },
+                      child: AlgoTab(
+                        isSelected: tabView == 0,
+                        addEndPadding: false,
+                        label: StringsManager.sorting,
+                        verticalPadding: 2,
+                        icon: Icons.filter_list_rounded,
+                        constrainLabelWidth: true,
                       ),
-                      const RSizedBox(width: 10),
-                      Expanded(
-                        child: InkWell(
-                          onTap: () {
-                            setState(() {
-                              tabView = 1;
-                              this.sortingCard = null;
-                              this.searchingCard = SearchingAlgoCards.bfs;
-                            });
-                          },
-                          child: AlgoTab(
-                            isSelected: tabView == 1,
-                            addEndPadding: false,
-                            label: StringsManager.searching,
-                            verticalPadding: 2,
-                            icon: Icons.map_rounded,
-                            constrainLabelWidth: true,
-                          ),
-                        ),
-                      ),
-                    ],
+                    ),
                   ),
-                ),
-                if (tabView == 0 && sortingCard != null) ...[
-                  Padding(
-                    padding: REdgeInsetsDirectional.only(bottom: 10),
-                    child: SortingSelectionList(
-                        card: sortingCard,
-                        onChangedTab: (SortingAlgoCards cardValue) async {
-                          if (sortingCard == cardValue) return;
-
-                          this.sortingCard = cardValue;
-                          setState(() {});
-                        }),
-                  ),
-                ] else if (searchingCard != null) ...[
-                  Padding(
-                    padding: REdgeInsets.only(bottom: 10),
-                    child: Row(
-                      children: List.generate(
-                        SearchingAlgoCards.values.length,
-                        (index) {
-                          final cardValue = SearchingAlgoCards.values[index];
-                          final searchingCardValues =
-                              BaseViewModel.searchingCards(SearchingAlgoCards.values[index]);
-
-                          return Expanded(
-                            child: Padding(
-                              padding: REdgeInsetsDirectional.only(
-                                  start: index == 0 ? 16 : 8,
-                                  end: index < SearchingAlgoCards.values.length - 1 ? 0 : 16),
-                              child: InkWell(
-                                onTap: () async {
-                                  if (searchingCard == cardValue) return;
-
-                                  this.searchingCard = cardValue;
-                                  setState(() {});
-                                },
-                                child: AlgoTab(
-                                  isSelected: cardValue == searchingCard,
-                                  addEndPadding: false,
-                                  label: searchingCardValues.card.algoComplexity.name,
-                                  constrainLabelWidth: true,
-                                ),
-                              ),
-                            ),
-                          );
-                        },
+                  const RSizedBox(width: 10),
+                  Expanded(
+                    child: InkWell(
+                      onTap: () {
+                        setState(() {
+                          tabView = 1;
+                          this.sortingCard = null;
+                          this.searchingCard = SearchingAlgoCards.bfs;
+                          _scrollSearchingToWatchableView();
+                        });
+                      },
+                      child: AlgoTab(
+                        isSelected: tabView == 1,
+                        addEndPadding: false,
+                        label: StringsManager.searching,
+                        verticalPadding: 2,
+                        icon: Icons.map_rounded,
+                        constrainLabelWidth: true,
                       ),
                     ),
                   ),
                 ],
-                Padding(
-                  padding: REdgeInsets.only(bottom: 10),
-                  child: ValueListenableBuilder(
-                    valueListenable: complexity,
-                    builder: (context, value, child) =>
-                        value == null ? const SizedBox.shrink() : ComplexityDetails(complexity: value),
-                  ),
-                ),
-              ],
+              ),
             ),
           ),
+          bottom: PreferredSize(
+              preferredSize: Size.fromHeight(95.r),
+              child: Container(
+                color: context.getColor(ThemeEnum.ground),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    if (tabView == 0 && sortingCard != null) ...[
+                      Padding(
+                        padding: REdgeInsetsDirectional.only(bottom: 5),
+                        child: SortingSelectionList(
+                            card: sortingCard,
+                            onChangedTab: (SortingAlgoCards cardValue) async {
+                              if (sortingCard == cardValue) return;
+
+                              this.sortingCard = cardValue;
+                              setState(() {});
+                            }),
+                      ),
+                    ] else if (searchingCard != null) ...[
+                      Padding(
+                        padding: REdgeInsets.only(bottom: 5),
+                        child: Row(
+                          children: List.generate(
+                            SearchingAlgoCards.values.length,
+                            (index) {
+                              final cardValue = SearchingAlgoCards.values[index];
+                              final searchingCardValues =
+                                  BaseViewModel.searchingCards(SearchingAlgoCards.values[index]);
+
+                              return Expanded(
+                                child: Padding(
+                                  padding: REdgeInsetsDirectional.only(
+                                      start: index == 0 ? 16 : 8,
+                                      end: index < SearchingAlgoCards.values.length - 1 ? 0 : 16),
+                                  child: InkWell(
+                                    onTap: () async {
+                                      if (searchingCard == cardValue) return;
+
+                                      this.searchingCard = cardValue;
+                                      setState(() {});
+                                    },
+                                    child: AlgoTab(
+                                      isSelected: cardValue == searchingCard,
+                                      addEndPadding: false,
+                                      label: searchingCardValues.card.algoComplexity.name,
+                                      constrainLabelWidth: true,
+                                    ),
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
+                        ),
+                      ),
+                    ],
+                    Padding(
+                      padding: REdgeInsets.only(bottom: 8),
+                      child: ValueListenableBuilder(
+                        valueListenable: complexity,
+                        builder: (context, value, child) =>
+                            value == null ? const SizedBox.shrink() : ComplexityDetails(complexity: value),
+                      ),
+                    ),
+                  ],
+                ),
+              )),
         ),
       ],
       body: tabView == 0 && sortingCard != null
