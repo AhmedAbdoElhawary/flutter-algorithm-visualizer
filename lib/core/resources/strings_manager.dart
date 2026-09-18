@@ -90,7 +90,7 @@ class StringsManager {
   static const String no = "No";
   static const String start = "Start";
   static const String end = "End";
-  static const String frontier = "Frontier";
+  static const String searcher = "Searcher";
   static const String visited = "Visited";
   static const String path = "Path";
   static const String wall = "Wall";
@@ -100,7 +100,7 @@ class StringsManager {
   /// the existing generic constant above rather than duplicating its text.
   static const String searchRoleStart = start;
   static const String searchRoleEnd = end;
-  static const String searchRoleFrontier = frontier;
+  static const String searchRoleSearcher = searcher;
   static const String searchRoleVisited = visited;
   static const String searchRolePath = path;
   static const String searchRoleWall = wall;
@@ -354,6 +354,7 @@ class StringsManager {
   static const String syncFailure = "Could not sync. Check your connection and try again.";
   static const String syncCooldownTitle = "Just a moment";
   static const String syncCooldownConfirm = "Got it";
+  static const String syncHint = "Sync your data";
 
   /// Filled by [syncCooldownDesc]. Kept as its own constant so the Arabic table
   /// can key off the template rather than off a sentence with a number already
@@ -464,7 +465,7 @@ class StringsManager {
   static const String onboardingExploreHeadline = "Draw a maze. Watch it get solved.";
   static const String onboardingExploreBody = "Drag walls, then watch the search find its way through.";
   static const String onboardingLegendVisited = "Visited";
-  static const String onboardingLegendFrontier = "Frontier";
+  static const String onboardingLegendSearcher = searcher;
   static const String onboardingLegendPath = "Path";
   static String onboardingQueueCaption(BuildContext context, int waiting) =>
       '${searchRuleOldestFirst.tr(context)}$searchRuleSeparator$waiting ${searchWaiting.tr(context)}';
