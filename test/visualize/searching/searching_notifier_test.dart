@@ -232,13 +232,21 @@ void main() {
       expect(harness.state.walls[5][5], isTrue);
     });
 
-    test('E2: moving a marker while a result is displayed clears it and still applies the edit', () {
+    test('E2: a marker is pinned while a result is displayed, and moves again after reset', () {
       harness.run();
+      final (row, col) = (harness.state.startRow, harness.state.startCol);
+
       harness.notifier.setStartPoint(3, 3);
 
-      expect(harness.state.hasSteps, isFalse);
-      expect(harness.state.startRow, 3);
-      expect(harness.state.startCol, 3);
+      // The answer on screen belongs to the maze that produced it, so the
+      // start cannot be dragged out from under it.
+      expect(harness.state.hasSteps, isTrue);
+      expect((harness.state.startRow, harness.state.startCol), (row, col));
+
+      harness.notifier.reset();
+      harness.notifier.setStartPoint(3, 3);
+
+      expect((harness.state.startRow, harness.state.startCol), (3, 3));
     });
 
     test('E3: clearing and randomizing walls both clear a displayed result', () {
@@ -251,17 +259,36 @@ void main() {
       expect(harness.state.hasSteps, isFalse);
     });
 
-    test('E4: a marker is refused onto a wall or onto the other marker', () {
+    test('E4: a marker rubs out a wall it lands on, but is refused onto the other marker', () {
       harness.notifier.setWall(3, 3, isGestureStart: true);
+      expect(harness.state.walls[3][3], isTrue);
 
       harness.notifier.setStartPoint(3, 3);
-      expect(harness.state.startRow, isNot(3));
+      expect((harness.state.startRow, harness.state.startCol), (3, 3));
+      expect(harness.state.walls[3][3], isFalse);
 
       harness.notifier.setStartPoint(harness.state.endRow, harness.state.endCol);
       expect(
         (harness.state.startRow, harness.state.startCol),
         isNot((harness.state.endRow, harness.state.endCol)),
       );
+    });
+
+    test('E6: no wall may be drawn while the search is playing', () {
+      harness.notifier.togglePlay();
+      expect(harness.notifier.isPlaying, isTrue);
+
+      harness.notifier.setWall(5, 5, isGestureStart: true);
+
+      expect(harness.state.walls[5][5], isFalse);
+      expect(harness.state.hasSteps, isTrue);
+
+      // Pausing hands the grid back, and the edit clears the stale result.
+      harness.notifier.togglePlay();
+      harness.notifier.setWall(5, 5, isGestureStart: true);
+
+      expect(harness.state.walls[5][5], isTrue);
+      expect(harness.state.hasSteps, isFalse);
     });
 
     test('E5: dragging a marker draws no walls', () {
