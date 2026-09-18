@@ -3,6 +3,7 @@ import 'package:algorithm_visualizer/core/widgets/custom_widgets/card_container.
 import 'package:algorithm_visualizer/features/visualize/view/sub_view/searching/view_model/searching_notifier.dart';
 import 'package:algorithm_visualizer/features/visualize/view/sub_view/sorting/view_model/sorting_notifier.dart';
 import 'package:algorithm_visualizer/features/visualize/view/sub_view/sorting/view_model/sub_sorting/bubble_sort_notifier.dart';
+import 'package:algorithm_visualizer/features/visualize/view/sub_view/sorting/view_model/sub_sorting/bucket_sort_notifier.dart';
 import 'package:algorithm_visualizer/features/visualize/view/sub_view/sorting/view_model/sub_sorting/insertion_sort_notifier.dart';
 import 'package:algorithm_visualizer/features/visualize/view/sub_view/sorting/view_model/sub_sorting/merge_sort_notifier.dart';
 import 'package:algorithm_visualizer/features/visualize/view/sub_view/sorting/view_model/sub_sorting/quick_sort_notifier.dart';
@@ -16,10 +17,11 @@ enum SortingAlgoCards {
   insertion,
   merge,
   quick,
+  bucket,
 
   /// TODO: after MVP
 
-  // radix, heap, shell, counting, bucket
+  // radix, heap, shell, counting
 }
 
 enum SearchingAlgoCards { bfs, dfs, aStar }
@@ -114,6 +116,19 @@ class BaseViewModel {
             icon: Icons.waves,
           ),
         );
+      case SortingAlgoCards.bucket:
+        return AlgoSortingCard(
+          page: SortingAlgoCards.bucket,
+          title: StringsManager.bucketSort,
+          instance: NotifierProvider<SortingNotifier, SortingNotifierState>(
+            () => BucketSortNotifier(),
+            isAutoDispose: true,
+          ),
+          card: AlgorithmGlassCard(
+            algoComplexity: BucketSortNotifier.algorithmComplexity,
+            icon: Icons.inventory_2,
+          ),
+        );
 
       /// TODO: after MVP
       // case SortingAlgoCards.heap:
@@ -162,18 +177,6 @@ class BaseViewModel {
       //     card: AlgorithmGlassCard(
       //       algoComplexity: CountingSortNotifier.algorithmComplexity,
       //       icon: Icons.format_list_numbered,
-      //     ),
-      //   );
-      // case SortingAlgoCards.bucket:
-      //   return AlgoSortingCard(
-      //     page: SortingAlgoCards.bucket,
-      //     title: StringsManager.bucketSort,
-      //     instance: NotifierProvider<SortingNotifier, SortingNotifierState>(
-      //       () => BucketSortNotifier(),
-      //     ),
-      //     card: AlgorithmGlassCard(
-      //       algoComplexity: BucketSortNotifier.algorithmComplexity,
-      //       icon: Icons.inventory_2,
       //     ),
       //   );
     }

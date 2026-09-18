@@ -51,10 +51,10 @@ code yourself, graded on-device, with no server and no internet.
 
 ### 📊 Sorting visualizer
 
-Five algorithms, step by step, with live complexity read-outs and playback
+Six algorithms, step by step, with live complexity read-outs and playback
 speeds. Every bar carries a **role** — comparing, swapping, target, done.
 
-`Bubble` · `Selection` · `Insertion` · `Merge` · `Quick`
+`Bubble` · `Selection` · `Insertion` · `Merge` · `Quick` · `Bucket`
 
 <!-- ┌─────────────────────────────────────────────────────────────────┐
      │ SLOT 3 — SORTING GIF                                            │
@@ -349,7 +349,7 @@ A few worth opening:
 
 | Category | Algorithms |
 | --- | --- |
-| **Sorting** | Bubble · Selection · Insertion · Merge · Quick |
+| **Sorting** | Bubble · Selection · Insertion · Merge · Quick · Bucket |
 | **Pathfinding** | BFS · DFS · A\* |
 | **Practice** | 100 coding challenges with on-device grading |
 
@@ -357,7 +357,7 @@ A few worth opening:
 
 | Category         | Items                                                                          |
 |------------------|--------------------------------------------------------------------------------|
-| **Sorting**      | Heap Sort · Shell Sort · Radix Sort · Counting Sort · Bucket Sort              |
+| **Sorting**      | Heap Sort · Shell Sort · Radix Sort · Counting Sort                             |
 | **Graphs**       | Dijkstra · Bellman-Ford · Topological sort                                     |
 | **Mazes**        | Recursive division · Randomized Kruskal · Eller's · Aldous-Broder · Binary tree|
 | **Trees**        | BST · AVL · Red-Black · Segment tree · B-Tree                                  |
@@ -378,7 +378,7 @@ up. Later, will be looking to others.
 
 Contributions are genuinely welcome — especially **new algorithms**.
 
-The five sorts under *"Built, not yet wired into the UI"* are the easiest
+The four sorts under *"Built, not yet wired into the UI"* are the easiest
 possible entry point: the algorithm is already written and tested, and all
 that's missing is the card and the wiring.
 
