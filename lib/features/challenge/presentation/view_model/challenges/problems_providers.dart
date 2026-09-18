@@ -1,7 +1,7 @@
 import 'package:algorithm_visualizer/core/logging/firebase_log_config.dart';
 import 'package:algorithm_visualizer/core/storage/storage_providers.dart';
 import 'package:algorithm_visualizer/features/challenge/data/data_sources/local/challenge_local_data_source.dart';
-import 'package:algorithm_visualizer/features/challenge/data/data_sources/local/problem_pending_local_data_source.dart';
+import 'package:algorithm_visualizer/features/challenge/data/data_sources/local/unsynced_problems.dart';
 import 'package:algorithm_visualizer/features/challenge/data/data_sources/remote/challenge_remote_data_source.dart';
 import 'package:algorithm_visualizer/features/challenge/data/data_sources/remote/logging_challenge_remote_data_source.dart';
 import 'package:algorithm_visualizer/features/challenge/data/repositories/problem_repository_impl.dart';
@@ -23,21 +23,22 @@ final problemRemoteDataSourceProvider = Provider<ProblemRemoteDataSource>((ref) 
   return FirebaseLogConfig.enabled ? LoggingProblemRemoteDataSource(source) : source;
 });
 
-final problemPendingLocalDataSourceProvider = Provider<ProblemPendingLocalDataSource>((ref) {
-  return ProblemPendingLocalDataSource(ref.watch(localStorageProvider));
+final unsyncedProblemsProvider = Provider<UnsyncedProblems>((ref) {
+  return UnsyncedProblems(ref.watch(localStorageProvider));
 });
 
 final problemRepositoryProvider = Provider<ProblemRepository>((ref) {
   return ProblemRepositoryImpl(
     ref.watch(problemLocalDataSourceProvider),
     ref.watch(problemRemoteDataSourceProvider),
-    ref.watch(problemPendingLocalDataSourceProvider),
+    ref.watch(unsyncedProblemsProvider),
   );
 });
 
 final problemSyncServiceProvider = Provider<ProblemSyncService>((ref) {
   return ProblemSyncService(
-    pendingDataSource: ref.watch(problemPendingLocalDataSourceProvider),
+    localDataSource: ref.watch(problemLocalDataSourceProvider),
+    unsyncedProblems: ref.watch(unsyncedProblemsProvider),
     remoteDataSource: ref.watch(problemRemoteDataSourceProvider),
     storage: ref.watch(localStorageProvider),
   );
