@@ -35,7 +35,7 @@ class ChallengesNotifier extends Notifier<ChallengesState> {
   Future<void> updateProblemSubmission(CodingProblem problem, CodeGradeResult result) async {
     final updatedProblem = await _updateProblemSolutionUseCase.call(problem, result);
     ref.read(problemsProvider.notifier).updateProblem(updatedProblem);
-    _markPendingChanged();
+    _markUnsyncedChanged();
   }
 
   Future<void> toggleBookmark(CodingProblem problem) async {
@@ -43,14 +43,14 @@ class ChallengesNotifier extends Notifier<ChallengesState> {
     await _problemRepository.updateProblem(updated);
 
     ref.read(problemsProvider.notifier).updateProblem(updated);
-    _markPendingChanged();
+    _markUnsyncedChanged();
   }
 
   Future<void> deleteProblem(int problemId) async {
     await _problemRepository.deleteProblem(problemId);
     ref.read(problemsProvider.notifier).deleteProblem(problemId);
-    _markPendingChanged();
+    _markUnsyncedChanged();
   }
 
-  void _markPendingChanged() => ref.read(problemSyncProvider.notifier).refreshPendingFlag();
+  void _markUnsyncedChanged() => ref.read(problemSyncProvider.notifier).refreshUnsyncedFlag();
 }
