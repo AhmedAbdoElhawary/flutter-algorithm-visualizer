@@ -164,7 +164,7 @@ class _PathfindingVisualState extends State<PathfindingVisual> with SingleTicker
   Widget build(BuildContext context) {
     const linesColor = ThemeEnum.hairline;
     final wallColor = searchRoleColor(SearchRole.wall);
-    final frontierColor = searchRoleColor(SearchRole.frontier);
+    final searcherColor = searchRoleColor(SearchRole.searcher);
     final visitedColor = searchRoleColor(SearchRole.visited);
     final pathColor = searchRoleColor(SearchRole.path);
     final markerColor = searchRoleColor(SearchRole.end);
@@ -172,7 +172,7 @@ class _PathfindingVisualState extends State<PathfindingVisual> with SingleTicker
 
     final lines = context.getColor(linesColor);
     final wall = context.getColor(wallColor);
-    final frontier = context.getColor(frontierColor);
+    final searcher = context.getColor(searcherColor);
     final visited = context.getColor(visitedColor);
     final path = context.getColor(pathColor);
     final marker = context.getColor(markerColor);
@@ -185,7 +185,7 @@ class _PathfindingVisualState extends State<PathfindingVisual> with SingleTicker
           animation: _controller,
           builder: (context, _) {
             final elapsed = _controller.value * _controller.duration!.inMilliseconds;
-            final frame = _frameAt(elapsed, frontier: frontier, visited: visited, path: path);
+            final frame = _frameAt(elapsed, searcher: searcher, visited: visited, path: path);
 
             return Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -242,7 +242,7 @@ class _PathfindingVisualState extends State<PathfindingVisual> with SingleTicker
   /// Resolves the whole grid for one moment in the loop.
   _Frame _frameAt(
     double elapsed, {
-    required Color frontier,
+    required Color searcher,
     required Color visited,
     required Color path,
   }) {
@@ -275,15 +275,15 @@ class _PathfindingVisualState extends State<PathfindingVisual> with SingleTicker
         if (distance < 0 || distance > currentRing) continue;
         step++;
         if (distance == currentRing) {
-          cells[cell] = frontier;
+          cells[cell] = searcher;
           continue;
         }
-        // White leads, blue fills in behind it over 200 ms, then settles
+        // The searcher leads, visited fills in behind it over 200 ms, then settles
         // deeper as the wave moves on.
         final ageMs = (currentRing - distance) * _ringMs;
         final fade = (ageMs / _visitedFadeMs).clamp(0.0, 1.0);
         final alpha = 0.85 - 0.35 * ((ageMs / 800).clamp(0.0, 1.0));
-        cells[cell] = Color.lerp(frontier, visited.withValues(alpha: alpha), fade);
+        cells[cell] = Color.lerp(searcher, visited.withValues(alpha: alpha), fade);
       }
     }
 
