@@ -8,13 +8,13 @@ class ProblemSyncNotifier extends Notifier<ProblemSyncState> {
 
   @override
   ProblemSyncState build() {
-    return ProblemSyncState(isSyncing: false, hasPendingChanges: _service.hasPendingChanges);
+    return ProblemSyncState(isSyncing: false, hasUnsyncedChanges: _service.hasUnsyncedChanges);
   }
 
   Duration get remainingCooldown => _service.remainingCooldown;
 
-  void refreshPendingFlag() {
-    state = state.copyWith(hasPendingChanges: _service.hasPendingChanges);
+  void refreshUnsyncedFlag() {
+    state = state.copyWith(hasUnsyncedChanges: _service.hasUnsyncedChanges);
   }
 
   Future<ProblemSyncResult> sync() async {
@@ -26,12 +26,12 @@ class ProblemSyncNotifier extends Notifier<ProblemSyncState> {
       final result = await _service.sync();
 
       if (result == ProblemSyncResult.success) {
-        await ref.read(problemsProvider.notifier).reload(forceRemote: true);
+        await ref.read(problemsProvider.notifier).reload();
       }
 
       return result;
     } finally {
-      state = ProblemSyncState(isSyncing: false, hasPendingChanges: _service.hasPendingChanges);
+      state = ProblemSyncState(isSyncing: false, hasUnsyncedChanges: _service.hasUnsyncedChanges);
     }
   }
 }
