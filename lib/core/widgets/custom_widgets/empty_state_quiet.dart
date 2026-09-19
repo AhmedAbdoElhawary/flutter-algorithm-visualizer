@@ -22,13 +22,13 @@ class EmptyStateQuiet extends StatelessWidget {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              SemiBoldText(title, fontSize: 12.5, color: ThemeEnum.inkBody, textAlign: TextAlign.center),
+              SemiBoldText(title, fontSize: 12.5, color: ThemeEnum.inkSecondaryTitle, textAlign: TextAlign.center),
               if (caption != null) ...[
                 const RSizedBox(height: 6),
                 RegularText(
                   caption!,
                   fontSize: 11,
-                  color: ThemeEnum.inkBody,
+                  color: ThemeEnum.inkSecondaryTitle,
                   textAlign: TextAlign.center,
                   maxLines: 3,
                 ),
