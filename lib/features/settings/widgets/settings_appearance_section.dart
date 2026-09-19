@@ -80,7 +80,7 @@ class _ThemeOption extends ConsumerWidget {
       icon: icon,
       title: title,
       subtitle: subtitle,
-      accentColor: isSelected ? ThemeEnum.inkTitle : ThemeEnum.inkBody,
+      accentColor: isSelected ? ThemeEnum.inkTitle : ThemeEnum.inkSecondaryTitle,
       onTap: () => ref.read(appSettingsProvider.notifier).changeTheme(mode),
       // A check on the chosen row and nothing on the others — the absence is
       // the signal, so an unselected row needs no placeholder.
