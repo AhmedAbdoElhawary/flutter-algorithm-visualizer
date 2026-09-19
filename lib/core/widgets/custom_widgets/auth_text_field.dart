@@ -92,7 +92,7 @@ class _AuthTextFieldState extends State<AuthTextField> {
         ? ThemeEnum.dataHard
         : _focused
             ? ThemeEnum.inkTitle
-            : ThemeEnum.inkMuted;
+            : ThemeEnum.inkThirdTitle;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -100,7 +100,7 @@ class _AuthTextFieldState extends State<AuthTextField> {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            MediumText(widget.label, color: ThemeEnum.inkBody, fontSize: 11, maxLines: 1),
+            MediumText(widget.label, color: ThemeEnum.inkSecondaryTitle, fontSize: 11, maxLines: 1),
             if (widget.trailingLabelWidget != null) widget.trailingLabelWidget!,
           ],
         ),
@@ -147,7 +147,7 @@ class _AuthTextFieldState extends State<AuthTextField> {
                         isDense: true,
                         hintText: widget.hintText.tr(context),
                         hintStyle: const GetMediumStyle().copyWith(
-                          color: context.getColor(ThemeEnum.inkMuted),
+                          color: context.getColor(ThemeEnum.inkThirdTitle),
                           fontSize: 12.5.sp,
                         ),
                         border: InputBorder.none,
@@ -162,7 +162,7 @@ class _AuthTextFieldState extends State<AuthTextField> {
                     child: CustomIcon(
                       widget.isPasswordVisible ? Icons.visibility_off_outlined : Icons.visibility_outlined,
                       size: 15,
-                      color: ThemeEnum.inkMuted,
+                      color: ThemeEnum.inkThirdTitle,
                     ),
                   ),
               ],
