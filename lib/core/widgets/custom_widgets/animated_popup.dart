@@ -1,4 +1,9 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+
+import '../../resources/theme_manager.dart';
 
 typedef PopupBuilder = Widget Function(VoidCallback removeOverlay);
 
@@ -57,7 +62,7 @@ class _AnimatedPopupOverlay extends StatefulWidget {
 class _AnimatedPopupOverlayState extends State<_AnimatedPopupOverlay> with SingleTickerProviderStateMixin {
   late final AnimationController _controller = AnimationController(
     vsync: this,
-    duration: const Duration(milliseconds: 280),
+    duration: const Duration(milliseconds: 320),
   );
   late final Animation<double> _scale;
   late final Animation<double> _opacity;
@@ -71,9 +76,13 @@ class _AnimatedPopupOverlayState extends State<_AnimatedPopupOverlay> with Singl
       curve: Curves.easeOutCubic,
       reverseCurve: Curves.easeInCubic,
     );
-    _scale = Tween(begin: 0.8, end: 1.0).animate(curve);
-    _opacity = Tween(begin: 0.0, end: 1.0).animate(curve);
-    _offset = Tween(begin: const Offset(0.0, -0.06), end: Offset.zero).animate(curve);
+    _scale = Tween(begin: 0.94, end: 1.0).animate(
+      CurvedAnimation(parent: _controller, curve: Curves.easeOutBack, reverseCurve: Curves.easeInCubic),
+    );
+    _opacity = Tween(begin: 0.0, end: 1.0).animate(
+      CurvedAnimation(parent: _controller, curve: const Interval(0.1, 1.0, curve: Curves.easeOut)),
+    );
+    _offset = Tween(begin: const Offset(0.0, 0.04), end: Offset.zero).animate(curve);
     _controller.forward(from: 0);
   }
 
@@ -101,18 +110,28 @@ class _AnimatedPopupOverlayState extends State<_AnimatedPopupOverlay> with Singl
             animation: _controller,
             builder: (_, child) {
               final value = Curves.easeOut.transform(_controller.value);
-              return Container(color: Colors.black.withValues(alpha: value * 0.2));
+              // Blur, tint and grid all ride the same value, so the backdrop
+              // resolves into focus with the dialog instead of snapping.
+              return RepaintBoundary(
+                child: BackdropFilter(
+                  filter: ImageFilter.blur(sigmaX: value * 8, sigmaY: value * 8),
+                  child: ColoredBox(
+                    color: context.getColor(ThemeEnum.ground).withValues(alpha: value * 0.35),
+                    child: CustomPaint(
+                      painter: _PixelGridPainter(
+                        color: context.getColor(ThemeEnum.hairline).withValues(alpha: 0.1),
+                        cell: 8.r,
+                        opacity: value,
+                      ),
+                      child: const SizedBox.expand(),
+                    ),
+                  ),
+                ),
+              );
             },
           ),
         ),
-        // The keyboard is an inset, not a resize: this overlay sits above the
-        // Scaffold, so nothing shrinks for it on its own and a centred dialog
-        // ends up half-covered the moment a field takes focus.
-        //
-        // Padding by `viewInsets.bottom` lifts the dialog clear; the scroll
-        // view underneath catches the case where the space left is shorter
-        // than the dialog itself, which lifting alone would answer by pushing
-        // the title off the top of the screen.
+
         Positioned.fill(
           child: GestureDetector(
             behavior: HitTestBehavior.opaque,
@@ -124,14 +143,9 @@ class _AnimatedPopupOverlayState extends State<_AnimatedPopupOverlay> with Singl
               child: SingleChildScrollView(
                 keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
                 child: ConstrainedBox(
-                  // Gives the [Center] something to centre *inside*. Without a
-                  // minimum height the scroll view shrink-wraps its child and
-                  // the dialog lands against the top edge.
                   constraints: BoxConstraints(minHeight: _availableHeight(context)),
                   child: Center(
                     child: GestureDetector(
-                      // Swallows taps that land on the dialog's own padding so
-                      // they never reach the dismiss gesture above.
                       behavior: HitTestBehavior.opaque,
                       onTap: () {},
                       child: FadeTransition(
@@ -142,7 +156,7 @@ class _AnimatedPopupOverlayState extends State<_AnimatedPopupOverlay> with Singl
                             scale: _scale,
                             alignment: Alignment.center,
                             child: Material(
-                              color: Colors.transparent,
+                              color: context.getColor(ThemeEnum.transparentColor),
                               child: widget.builder(widget.onDismiss),
                             ),
                           ),
@@ -158,4 +172,31 @@ class _AnimatedPopupOverlayState extends State<_AnimatedPopupOverlay> with Singl
       ],
     );
   }
+}
+
+class _PixelGridPainter extends CustomPainter {
+  const _PixelGridPainter({required this.color, required this.cell, required this.opacity});
+
+  final Color color;
+  final double cell;
+  final double opacity;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    if (opacity <= 0) return;
+
+    final paint = Paint()
+      ..color = color.withValues(alpha: color.a * opacity * 0.5)
+      ..strokeWidth = 1;
+
+    for (double x = 0; x <= size.width; x += cell) {
+      canvas.drawLine(Offset(x, 0), Offset(x, size.height), paint);
+    }
+    for (double y = 0; y <= size.height; y += cell) {
+      canvas.drawLine(Offset(0, y), Offset(size.width, y), paint);
+    }
+  }
+
+  @override
+  bool shouldRepaint(_PixelGridPainter old) => old.opacity != opacity || old.color != color || old.cell != cell;
 }
