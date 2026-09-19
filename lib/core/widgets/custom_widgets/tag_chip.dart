@@ -20,7 +20,7 @@ class TagChip extends StatelessWidget {
         color: context.getColor(ThemeEnum.raised),
         borderRadius: BorderRadius.circular(radius.r),
       ),
-      child: SemiBoldText(label, color: ThemeEnum.inkBody, fontSize: fontSize),
+      child: SemiBoldText(label, color: ThemeEnum.inkSecondaryTitle, fontSize: fontSize),
     );
   }
 }
