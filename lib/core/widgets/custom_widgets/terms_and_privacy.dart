@@ -22,7 +22,7 @@ class LegalConsent extends StatelessWidget {
         children: [
           RegularText(
             StringsManager.signUpConsentPrefix,
-            color: ThemeEnum.inkMuted,
+            color: ThemeEnum.inkThirdTitle,
             fontSize: 11,
             maxLines: 2,
             textAlign: TextAlign.center,
@@ -30,7 +30,7 @@ class LegalConsent extends StatelessWidget {
           _ConsentLink(label: StringsManager.termsOfService, url: kTermsOfServiceUrl),
           RegularText(
             StringsManager.signUpConsentAnd,
-            color: ThemeEnum.inkMuted,
+            color: ThemeEnum.inkThirdTitle,
             fontSize: 11,
             maxLines: 1,
           ),
