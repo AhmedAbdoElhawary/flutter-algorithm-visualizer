@@ -12,26 +12,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-class ChallengesSearchField extends ConsumerStatefulWidget {
+class ChallengesSearchField extends ConsumerWidget {
   const ChallengesSearchField({super.key});
 
   @override
-  ConsumerState<ChallengesSearchField> createState() => _ChallengesSearchFieldState();
-}
-
-class _ChallengesSearchFieldState extends ConsumerState<ChallengesSearchField> {
-  final _controller = TextEditingController();
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final search = ref.watch(challengesProvider.select((s) => s.search));
-
+    final controller = ref.read(challengesProvider.notifier).textController;
     return Padding(
       padding: REdgeInsets.fromLTRB(16, 0, 16, 12),
       child: CardContainer(
@@ -44,7 +31,7 @@ class _ChallengesSearchFieldState extends ConsumerState<ChallengesSearchField> {
             const RSizedBox(width: 10),
             Expanded(
               child: TextField(
-                controller: _controller,
+                controller: controller,
                 onChanged: (v) => ref.read(challengesProvider.notifier).setSearch(v),
                 style: GetMediumStyle(
                     color: context.getColor(ThemeEnum.inkTitle), fontSize: 14, letterSpacing: 0.2),
@@ -63,7 +50,7 @@ class _ChallengesSearchFieldState extends ConsumerState<ChallengesSearchField> {
             if (search.isNotEmpty) ...[
               GestureDetector(
                 onTap: () {
-                  _controller.clear();
+                  controller.clear();
                   ref.read(challengesProvider.notifier).clearSearch();
                 },
                 child: const RegularText('×', color: ThemeEnum.track, fontSize: 18),
