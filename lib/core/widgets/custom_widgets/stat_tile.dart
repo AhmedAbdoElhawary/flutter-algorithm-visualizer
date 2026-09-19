@@ -10,7 +10,6 @@ class StatTile extends StatelessWidget {
   final String value;
   final bool emphasized;
   final IconData? icon;
-  final ThemeEnum? iconColor;
   final String? sub;
   final bool centerTheContent;
   const StatTile({
@@ -19,7 +18,6 @@ class StatTile extends StatelessWidget {
     required this.value,
     this.emphasized = false,
     this.centerTheContent = false,
-    this.iconColor,
     this.icon,
     this.sub,
   });
@@ -30,7 +28,7 @@ class StatTile extends StatelessWidget {
     Widget tile = CardContainer(
       surface: CdSurface.main,
       radius: CdRadius.md,
-      padding: REdgeInsets.symmetric(horizontal: 12, vertical: 12),
+      padding: REdgeInsets.symmetric(horizontal: 12, vertical: 8),
       child: Column(
         crossAxisAlignment: centerTheContent ? CrossAxisAlignment.center : CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
@@ -39,17 +37,17 @@ class StatTile extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                if (icon != null) Icon(icon, size: 18.r, color: context.getColor(iconColor??ThemeEnum.inkBody)),
+                if (icon != null) Icon(icon, size: 18.r, color: context.getColor(ThemeEnum.inkSecondaryTitle)),
                 const Spacer(),
                 if (sub != null && sub!.isNotEmpty)
-                  Flexible(child: RegularText(sub!, fontSize: 10, color: ThemeEnum.inkBody, maxLines: 1)),
+                  Flexible(child: RegularText(sub!, fontSize: 10, color: ThemeEnum.inkSecondaryTitle, maxLines: 1)),
               ],
             ),
             const RSizedBox(height: 6),
           ],
           SemiBoldText(value, fontSize: 19, color: emphasized ? ThemeEnum.inkPrimary : ThemeEnum.inkTitle),
           const RSizedBox(height: 4),
-          RegularText(label, fontSize: 10, color: ThemeEnum.inkBody),
+          RegularText(label, fontSize: 10, color: ThemeEnum.inkSecondaryTitle),
         ],
       ),
     );
