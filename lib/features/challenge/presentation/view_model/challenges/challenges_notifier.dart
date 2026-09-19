@@ -41,6 +41,7 @@ class ChallengesNotifier extends Notifier<ChallengesState> {
 
   Future<void> updateProblemSubmission(CodingProblem problem, CodeGradeResult result) async {
     final updatedProblem = await _updateProblemSolutionUseCase.call(problem, result);
+    if (!ref.mounted) return;
     ref.read(problemsProvider.notifier).updateProblem(updatedProblem);
     _markUnsyncedChanged();
   }
@@ -48,6 +49,7 @@ class ChallengesNotifier extends Notifier<ChallengesState> {
   Future<void> toggleBookmark(CodingProblem problem) async {
     final updated = problem.copyWith(isBookmarked: !problem.getIsBookmarked);
     await _problemRepository.updateProblem(updated);
+    if (!ref.mounted) return;
 
     ref.read(problemsProvider.notifier).updateProblem(updated);
     _markUnsyncedChanged();
@@ -55,6 +57,7 @@ class ChallengesNotifier extends Notifier<ChallengesState> {
 
   Future<void> deleteProblem(int problemId) async {
     await _problemRepository.deleteProblem(problemId);
+    if (!ref.mounted) return;
     ref.read(problemsProvider.notifier).deleteProblem(problemId);
     _markUnsyncedChanged();
   }
