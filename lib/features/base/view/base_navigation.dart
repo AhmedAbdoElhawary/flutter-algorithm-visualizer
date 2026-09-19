@@ -96,7 +96,7 @@ class _NavItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final color = active ? ThemeEnum.inkPrimary : ThemeEnum.inkBody;
+    final color = active ? ThemeEnum.inkPrimary : ThemeEnum.inkSecondaryTitle;
     return GestureDetector(
       onTap: onTap,
       behavior: HitTestBehavior.opaque,
