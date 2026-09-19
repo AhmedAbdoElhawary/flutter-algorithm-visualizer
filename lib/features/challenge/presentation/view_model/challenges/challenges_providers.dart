@@ -7,7 +7,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'challenges_notifier.dart';
 import 'challenges_state.dart';
 
-final challengesProvider = NotifierProvider<ChallengesNotifier, ChallengesState>(() {
+final challengesProvider = NotifierProvider.autoDispose<ChallengesNotifier, ChallengesState>(() {
   return ChallengesNotifier();
 });
 
