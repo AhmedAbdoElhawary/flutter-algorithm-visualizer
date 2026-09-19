@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -59,7 +60,7 @@ class CodeEditor extends StatefulWidget {
   State<CodeEditor> createState() => _CodeEditorState();
 }
 
-class _CodeEditorState extends State<CodeEditor> {
+class _CodeEditorState extends State<CodeEditor> implements TextSelectionGestureDetectorBuilderDelegate {
   final ScrollController _horizontalScrollController = ScrollController();
   late FocusNode _focusNode;
   final ScrollController _scrollController = ScrollController();
@@ -68,9 +69,24 @@ class _CodeEditorState extends State<CodeEditor> {
   int? _activeLine;
   int? _errorLine;
 
+  /// Gives the editor the same touch selection gestures a `TextField` has:
+  /// tap to place the caret, double-tap or long-press to grab a word, then
+  /// keep dragging to stretch the selection across lines.
+  late final TextSelectionGestureDetectorBuilder _selectionGestureDetectorBuilder;
+
+  @override
+  final GlobalKey<EditableTextState> editableTextKey = GlobalKey<EditableTextState>();
+
+  @override
+  bool get forcePressEnabled => defaultTargetPlatform == TargetPlatform.iOS;
+
+  @override
+  bool get selectionEnabled => true;
+
   @override
   void initState() {
     super.initState();
+    _selectionGestureDetectorBuilder = TextSelectionGestureDetectorBuilder(delegate: this);
     _focusNode = widget.focusNode ?? FocusNode();
     _applyOverrides();
     widget.controller.addListener(_onControllerChanged);
@@ -163,51 +179,63 @@ class _CodeEditorState extends State<CodeEditor> {
 
     final borderRadius = theme.borderRadius;
 
-    final Widget editableArea = Container(
-      padding: REdgeInsetsDirectional.only(
-          bottom: theme.editorPadding.bottom + _numbersPadding,
-          top: theme.editorPadding.top + 5,
-          end: theme.editorPadding.right),
-      decoration: BoxDecoration(
-        borderRadius: borderRadius == null
-            ? null
-            : borderRadius.bottomEnd != Radius.zero && borderRadius.topEnd != Radius.zero
-                ? BorderRadiusDirectional.only(bottomEnd: borderRadius.bottomEnd, topEnd: borderRadius.topEnd)
-                : borderRadius.bottomEnd != Radius.zero
-                    ? BorderRadiusDirectional.only(bottomEnd: borderRadius.bottomEnd)
-                    : borderRadius.topEnd != Radius.zero
-                        ? BorderRadiusDirectional.only(topEnd: borderRadius.topEnd)
-                        : null,
-      ),
-      constraints: BoxConstraints(minWidth: ScreenUtil().screenWidth - 80.w),
-      child: Stack(
-        children: [
-          ..._buildLineHighlightBars(theme, lineHeight),
-          Container(
-            padding: REdgeInsetsDirectional.only(start: theme.editorPadding.left),
-            child: EditableText(
-              controller: widget.controller,
-              focusNode: _focusNode,
-              style: theme.textStyle,
-              cursorColor: theme.caretColor,
-              backgroundCursorColor: theme.background,
-              selectionColor: theme.selectionColor,
-              autofocus: widget.autofocus,
-              readOnly: widget.readOnly,
-              maxLines: null,
-              minLines: null,
-              expands: false,
-              keyboardType: TextInputType.multiline,
-              textInputAction: widget.textInputAction,
-              autocorrect: false,
-              enableSuggestions: false,
-              cursorWidth: theme.caretWidth,
-              cursorHeight: theme.caretHeight,
-              cursorOffset: const Offset(0, 2),
-              cursorRadius: const Radius.circular(1),
+    final Widget editableArea = TextSelectionTheme(
+      data: TextSelectionThemeData(selectionHandleColor: theme.caretColor),
+      child: Container(
+        padding: REdgeInsetsDirectional.only(
+            bottom: theme.editorPadding.bottom + _numbersPadding,
+            top: theme.editorPadding.top + 5,
+            end: theme.editorPadding.right),
+        decoration: BoxDecoration(
+          borderRadius: borderRadius == null
+              ? null
+              : borderRadius.bottomEnd != Radius.zero && borderRadius.topEnd != Radius.zero
+                  ? BorderRadiusDirectional.only(bottomEnd: borderRadius.bottomEnd, topEnd: borderRadius.topEnd)
+                  : borderRadius.bottomEnd != Radius.zero
+                      ? BorderRadiusDirectional.only(bottomEnd: borderRadius.bottomEnd)
+                      : borderRadius.topEnd != Radius.zero
+                          ? BorderRadiusDirectional.only(topEnd: borderRadius.topEnd)
+                          : null,
+        ),
+        constraints: BoxConstraints(minWidth: ScreenUtil().screenWidth - 80.w),
+        child: Stack(
+          children: [
+            ..._buildLineHighlightBars(theme, lineHeight),
+            Container(
+              padding: REdgeInsetsDirectional.only(start: theme.editorPadding.left),
+              child: _selectionGestureDetectorBuilder.buildGestureDetector(
+                behavior: HitTestBehavior.translucent,
+                child: EditableText(
+                  key: editableTextKey,
+                  controller: widget.controller,
+                  focusNode: _focusNode,
+                  style: theme.textStyle,
+                  cursorColor: theme.caretColor,
+                  backgroundCursorColor: theme.background,
+                  selectionColor: theme.selectionColor,
+                  autofocus: widget.autofocus,
+                  readOnly: widget.readOnly,
+                  maxLines: null,
+                  minLines: null,
+                  expands: false,
+                  keyboardType: TextInputType.multiline,
+                  textInputAction: widget.textInputAction,
+                  autocorrect: false,
+                  enableSuggestions: false,
+                  cursorWidth: theme.caretWidth,
+                  cursorHeight: theme.caretHeight,
+                  cursorOffset: const Offset(0, 2),
+                  cursorRadius: const Radius.circular(1),
+                  rendererIgnoresPointer: true,
+                  selectionControls: materialTextSelectionHandleControls,
+                  magnifierConfiguration: TextMagnifier.adaptiveMagnifierConfiguration,
+                  contextMenuBuilder: (BuildContext context, EditableTextState state) =>
+                      AdaptiveTextSelectionToolbar.editableText(editableTextState: state),
+                ),
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
 
