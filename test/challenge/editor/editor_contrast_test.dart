@@ -43,22 +43,22 @@ const _largeMin = 3.0;
 
 const _pairs = [
   _Pair(ThemeEnum.inkTitle, ThemeEnum.surface, _bodyMin, 'textPrimary on surface'),
-  _Pair(ThemeEnum.inkBody, ThemeEnum.surface, _bodyMin, 'textBody on surface'),
+  _Pair(ThemeEnum.inkSecondaryTitle, ThemeEnum.surface, _bodyMin, 'textBody on surface'),
   // Line-number gutter text is supplementary UI, not read-for-meaning body
   // content — WCAG's UI-component tier (3:1) applies, not the 4.5:1 body
   // tier (constitution: "WCAG AA (4.5:1 body, 3:1 large text and glyphs)").
-  _Pair(ThemeEnum.inkMuted, ThemeEnum.surface, _largeMin, 'codeGutter on surface'),
+  _Pair(ThemeEnum.inkThirdTitle, ThemeEnum.surface, _largeMin, 'codeGutter on surface'),
   // Same tier as codeGutter above, and the same artboard hex — comments are
   // de-emphasized/skimmable by design, not primary reading content.
-  _Pair(ThemeEnum.inkMuted, ThemeEnum.surface, _largeMin, 'codeComment on surface'),
+  _Pair(ThemeEnum.inkThirdTitle, ThemeEnum.surface, _largeMin, 'codeComment on surface'),
   _Pair(ThemeEnum.dataMedium, ThemeEnum.surface, _bodyMin, 'codeKeyword on surface'),
   _Pair(ThemeEnum.inkTitle, ThemeEnum.surface, _bodyMin, 'codeType on surface'),
-  _Pair(ThemeEnum.inkBody, ThemeEnum.surface, _bodyMin, 'inkBody on surface'),
+  _Pair(ThemeEnum.inkSecondaryTitle, ThemeEnum.surface, _bodyMin, 'inkBody on surface'),
   _Pair(ThemeEnum.dataTarget, ThemeEnum.surface, _bodyMin, 'dataTarget on surface'),
   _Pair(ThemeEnum.inkTitle, ThemeEnum.raised, _bodyMin, 'textPrimary on codeLine (marked row)'),
-  _Pair(ThemeEnum.inkMuted, ThemeEnum.surface, _largeMin, 'section label on surface'),
+  _Pair(ThemeEnum.inkThirdTitle, ThemeEnum.surface, _largeMin, 'section label on surface'),
   _Pair(ThemeEnum.dataEasy, ThemeEnum.surface, _bodyMin, 'difficultyEasy summary on surface'),
-  _Pair(ThemeEnum.inkBody, ThemeEnum.surface, _bodyMin, 'textBody on surface'),
+  _Pair(ThemeEnum.inkSecondaryTitle, ThemeEnum.surface, _bodyMin, 'textBody on surface'),
   _Pair(ThemeEnum.dataHard, ThemeEnum.surface, _bodyMin, 'difficultyHard on surface'),
   _Pair(ThemeEnum.dataEasy, ThemeEnum.raised, _largeMin, 'difficultyEasy glyph on chipEasyFill'),
   _Pair(ThemeEnum.dataHard, ThemeEnum.raised, _largeMin, 'difficultyHard glyph on chipHardFill'),
