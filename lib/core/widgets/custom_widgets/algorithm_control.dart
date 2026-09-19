@@ -1,3 +1,4 @@
+import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/icon_button_quiet.dart';
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/segmented_control_quiet.dart';
 import 'package:algorithm_visualizer/features/base/view_model/algorithm_control_interface.dart';
@@ -110,6 +111,9 @@ class CtrlButton extends StatelessWidget {
       onTap: onTap,
       iconSize: size,
       size: 36,
+      filledColor: ThemeEnum.surface,
+      filled: true,
+      iconColor: ThemeEnum.inkSecondaryTitle,
       flipsWithDirection: flipsWithDirection,
     );
     return messageTip != null ? Tooltip(message: messageTip!, child: button) : button;
