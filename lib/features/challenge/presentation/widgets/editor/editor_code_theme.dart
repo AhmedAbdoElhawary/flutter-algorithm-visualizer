@@ -15,7 +15,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 /// which left strings and numbers sharing a single hue and gave the light
 /// theme a palette tuned for a dark card.
 CodeEditorTheme buildEditorCodeTheme(BuildContext context) {
-  final plain = context.getColor(ThemeEnum.inkBody);
+  final plain = context.getColor(ThemeEnum.inkSecondaryTitle);
 
   return CodeEditorTheme(
     background: context.getColor(ThemeEnum.surface),
@@ -35,7 +35,7 @@ CodeEditorTheme buildEditorCodeTheme(BuildContext context) {
       fontFamily: FontConstants.fontFamily,
       fontSize: 13.sp,
       height: 1.85,
-      color: context.getColor(ThemeEnum.inkMuted),
+      color: context.getColor(ThemeEnum.inkThirdTitle),
     ),
     lineNumberBackground: context.getColor(ThemeEnum.surface),
     tokenColors: <TokenType, Color>{
