@@ -151,7 +151,7 @@ class _AccountCardLabels extends StatelessWidget {
           const RSizedBox(height: 2),
           RegularText(
             subtitle!,
-            color: ThemeEnum.inkBody,
+            color: ThemeEnum.inkSecondaryTitle,
             fontSize: 11,
           ),
         ],
