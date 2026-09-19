@@ -110,9 +110,11 @@ void main() {
 
     await _pumpView(tester, SortingView(onAlgoChanged: (_, __, ___) {}), container);
 
-    final instance = tester.widget<SortingControlButtons>(
-      find.byType(SortingControlButtons),
-    ).notifier;
+    final instance = tester
+        .widget<SortingControlButtons>(
+          find.byType(SortingControlButtons),
+        )
+        .notifier;
     final notifier = container.read(instance.notifier);
 
     notifier.togglePlay();

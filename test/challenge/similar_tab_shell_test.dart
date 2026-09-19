@@ -13,7 +13,6 @@ import 'package:go_router/go_router.dart';
 
 import 'support/problem_page_test_support.dart';
 
-
 void main() {
   testWidgets(
       'the Similar-tab navigation chain and its position survive switching to another '

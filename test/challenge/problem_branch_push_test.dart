@@ -117,8 +117,7 @@ void main() {
     expect(find.text('branch ${Routes.problemBranchIndex}'), findsOneWidget);
   });
 
-  testWidgets('further problems stack in the problem branch, not in the tab they came from',
-      (tester) async {
+  testWidgets('further problems stack in the problem branch, not in the tab they came from', (tester) async {
     await pumpShell(tester, [
       buildTestProblem(
         problemId: 1,
