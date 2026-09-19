@@ -19,7 +19,7 @@ enum SearchRole { wall, searcher, visited, path, start, end }
 ThemeEnum searchRoleColor(SearchRole role) {
   switch (role) {
     case SearchRole.start:
-      return ThemeEnum.searchStart;
+      return ThemeEnum.inkTitle;
     case SearchRole.end:
       return ThemeEnum.searchEnd;
     case SearchRole.searcher:
