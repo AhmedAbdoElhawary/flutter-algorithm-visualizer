@@ -86,9 +86,7 @@ class _SliverAppBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SliverAppBar(
-      snap: true,
       floating: true,
-      stretch: true,
       centerTitle: false,
       titleSpacing: 0,
       leadingWidth: 16.r,

@@ -18,12 +18,10 @@ class CelebrationArgs {
   const CelebrationArgs({
     required this.problemName,
     required this.passedCount,
-    required this.dayStreak,
   });
 
   final String problemName;
   final int passedCount;
-  final int dayStreak;
 }
 
 /// Aurora screen 14 — the solved moment. Full-screen over the same ground, no

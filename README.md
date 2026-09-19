@@ -1,17 +1,17 @@
 <div align="center">
 
-<!-- Logo: assets/logo/app-icon-512.png (see assets/logo/README.md for
-     the full brand asset set — marks, lockups, favicons). It carries its
-     own dark ground so it reads on both GitHub's light and dark themes. -->
 <img src="assets/logo/app-icon-512.png" width="120" alt="AlgoDive"/>
 
 # AlgoDive — Algorithm Visualizer
 
 ### Watch algorithms think.
 
-An open-source Flutter app that turns sorting, pathfinding and 100 coding
-challenges into something you can actually **see** — then lets you write the
-code yourself, graded on-device, with no server and no internet.
+I kept reading algorithm explanations and still not really *seeing* the
+algorithm. So I built the thing I wanted.
+
+Sorting, pathfinding and 100 coding problems — watch them happen, then write
+the code yourself. It runs and gets graded **on your phone**. No account, no
+server, no internet.
 
 [![CI](https://github.com/AhmedAbdoElhawary/flutter-algorithm-visualizer/actions/workflows/ci.yml/badge.svg)](https://github.com/AhmedAbdoElhawary/flutter-algorithm-visualizer/actions/workflows/ci.yml)
 [![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](LICENSE)
@@ -35,92 +35,137 @@ code yourself, graded on-device, with no server and no internet.
 
 ---
 
-## Why AlgoDive
+## Why I built it
 
-- **🧠 It runs your code — offline.** AlgoDive ships a handwritten interpreter
-  (lexer → parser → AST → tree-walking evaluator). Your
-  solution is parsed, executed and graded against real test cases **on the
-  device**. No backend, no network, no cost per run.
-- **👁️ Every frame explains itself.** Colors are *roles*, not static decoration.
-- **🏗️ It is built like a shipping product, not a demo.** Three flavors, three
-  isolated Firebase projects, tag-driven releases, and tests.
+- **🔌 Nothing important needs a network.** Airplane mode, still fully usable.
+- **🧠 It actually runs your code.** Hand-written toolchain, grading on-device.
+- **🎨 Colors mean something.** A bar is blue because it's *being compared*.
+- **🏗️ Built like something I'd ship.** Three flavors, tag-driven releases, 856 tests.
 
 ---
 
-## Features
+## Local/offline first
 
-### 📊 Sorting visualizer
+Your device is the source of truth. The cloud is an optional backup you turn
+on if you want it — you never have to make an account.
 
-Five algorithms, step by step, with live complexity read-outs and playback
-speeds. Every bar carries a **role** — comparing, swapping, target, done.
-
-`Bubble` · `Selection` · `Insertion` · `Merge` · `Quick`
-
-<!-- ┌─────────────────────────────────────────────────────────────────┐
-     │ SLOT 3 — SORTING GIF                                            │
-     │ File : assets/screenshots/sorting.gif                           │
-     │ Size : ~380 px wide (phone portrait) · under 5 MB               │
-     │ Show : merge sort start to finish with the legend visible,      │
-     │        then bump the speed control up to 5x.                    │
-     └─────────────────────────────────────────────────────────────────┘ -->
-
-### 🗺️ Pathfinding visualizer
-
-A 30 × 24 grid you draw walls on with your finger. Watch the frontier expand
-one cell per step, then watch the path get connected.
-
-`BFS` · `DFS` · `A*`
-
-<!-- ┌─────────────────────────────────────────────────────────────────┐
-     │ SLOT 4 — PATHFINDING GIF   ⭐ your best-looking feature          │
-     │ File : assets/screenshots/pathfinding.gif                       │
-     │ Size : ~380 px wide · under 6 MB                                │
-     │ Show : draw a wall maze with your finger, hit play on A*,       │
-     │        let the path reveal all the way to the end.              │
-     └─────────────────────────────────────────────────────────────────┘ -->
-
-### ⌨️ Practice — 100 coding challenges
-
-A from-scratch code editor runs Dart, JavaScript, and Python syntaxes.
-
-<!-- ┌─────────────────────────────────────────────────────────────────┐
-     │ SLOT 5 — EDITOR GIF                                             │
-     │ File : assets/screenshots/editor.gif                            │
-     │ Size : ~380 px wide · under 6 MB                                │
-     │ Show : type (or paste) a solution, hit Run, land on             │
-     │        "All tests passed" and the celebration screen.           │
-     └─────────────────────────────────────────────────────────────────┘ -->
-
-### 📈 Profile & progress & settings
-
-A contribution-style heatmap, weekly activity chart, per-category breakdown,
-difficulty progress, bookmarks, full practice history and settings.
-
-<!-- ┌─────────────────────────────────────────────────────────────────┐
-     │ SLOT 6 — PROFILE SHOTS (static PNGs are fine here)              │
-     │ Files: assets/screenshots/profile-1.png, profile-2.png          │
-     │ Size : ~280 px wide each, side by side                          │
-     │ Show : the heatmap, then the weekly + category charts.          │
-     └─────────────────────────────────────────────────────────────────┘ -->
+| Works offline | Needs internet |
+| --- | --- |
+| Both visualizers | Signing in |
+| All 100 problems | Syncing across devices |
+| Writing, running and grading code | Crash reports and analytics |
+| Streaks, stats, history, bookmarks | |
 
 ---
+
+## See it in action
+
+### 🏗️ Three flavors
+
+<table> <tr> <td width="40%" align="center">
+
+<img src="assets/screenshots/flavor.png" width="250" alt="Dev, staging and production app icons side by side"/>
+
+</td> <td width="60%" valign="middle">
+
+`Development` · `Staging` · `Production` — dev and staging carry a ribbon on
+the launcher icon, so I always know which build I'm holding.
+
+
+</td> </tr> </table>
+
+### 🚀 First run
+
+`Onboarding`, `sign-in` (optional — you can skip it), and the `home screen`.
+
+<p align="center">
+<img src="assets/screenshots/onboarding.gif" width="250" alt="Onboarding walkthrough"/>
+<img src="assets/screenshots/login.gif" width="250" alt="Signing in — optional, you can skip it"/>
+<img src="assets/screenshots/home.gif" width="250" alt="Home screen"/>
+</p>
+
+### 📊 Sorting
+
+`Bubble` · `Selection` · `Insertion` · `Merge` · `Quick` — step by step, with
+live complexity read-outs and adjustable speed.
+
+<p align="center">
+<img src="assets/screenshots/bubble.gif" width="250" alt="Bubble sort running"/>
+<img src="assets/screenshots/merge.gif" width="250" alt="Merge sort running"/>
+<img src="assets/screenshots/quick.gif" width="250" alt="Quick sort running"/>
+</p>
+
+### 🗺️ Pathfinding
+
+`BFS` · `DFS` · `A*` on a grid you draw walls on with your finger.
+
+<p align="center">
+<img src="assets/screenshots/BFS.gif" width="250" alt="Breadth-first search exploring the grid"/>
+<img src="assets/screenshots/DFS.gif" width="250" alt="Depth-first search exploring the grid"/>
+<img src="assets/screenshots/astar.gif" width="250" alt="A* finding the shortest path"/>
+</p>
+
+### 🧩 100 problems
+
+`30 easy`, `59 medium`, `11 hard`. Search, filter by difficulty, bookmark what you
+want to come back to.
+
+<p align="center">
+<img src="assets/screenshots/challenges.png" width="250" alt="Problem list"/>
+<img src="assets/screenshots/challenges2.png" width="250" alt="Filtering problems by difficulty"/>
+<img src="assets/screenshots/challenges3.png" width="250" alt="Searching the problem list"/>
+</p>
+
+### ⌨️ Solve it, and the moment it passes
+
+Read the `problem`, write real code in an `editor` I wrote from scratch, and get
+graded on-device. No third-party editor package, and the `celebration` is
+hand-painted — no confetti library.
+
+<p align="center">
+<img src="assets/screenshots/problem.png" width="250" alt="Problem description with examples and hints"/>
+<img src="assets/screenshots/editor.png" width="250" alt="Code editor with syntax highlighting"/>
+<img src="assets/screenshots/celebration.gif" width="250" alt="All tests passed celebration"/>
+</p>
+
+### 📈 Progress
+
+Contribution-style heatmap, weekly activity, category breakdown and your full
+practice history.
+
+<p align="center">
+<img src="assets/screenshots/profile1.png" width="250" alt="Profile overview with streak and stats"/>
+<img src="assets/screenshots/profile2.png" width="250" alt="Activity heatmap"/>
+<img src="assets/screenshots/profile5.png" width="250" alt="Per-category progress breakdown"/>
+</p>
+
+### ⚙️ Settings & sync
+
+Theme, language, and the sync screen — the one place progress goes to the
+cloud, and only when you ask it to.
+
+<p align="center">
+<img src="assets/screenshots/profile3.png" width="250" alt="Settings screen"/>
+<img src="assets/screenshots/profile4.png" width="250" alt="Account settings"/>
+<img src="assets/screenshots/profile6.png" width="250" alt="Sync confirmation dialog"/>
+</p>
+
 
 ## Getting started
-
-### 1. Clone and install
 
 ```bash
 git clone https://github.com/AhmedAbdoElhawary/flutter-algorithm-visualizer.git
 cd flutter-algorithm-visualizer
 flutter pub get
+flutter run --flavor dev -t lib/main_dev.dart --dart-define-from-file=dart_define/dev.json
 ```
 
-### 2. Create your local config files
+One catch: this repo is **public**, so Firebase configs are git-ignored and you
+create your own. On Android `android/app/src/dev/google-services.json` is
+required or Gradle fails the build. Everything else is optional.
 
-This repo is **public**, so every credential and Firebase config file is
-git-ignored on purpose. A fresh clone is missing them, and you create your own.
-
-Only the **first row is required** to build — the rest are optional.
+<details>
+<summary><b>Config files — how to create each one</b></summary>
 
 | File to create | Required? | What it is |
 | --- | --- | --- |
@@ -128,9 +173,6 @@ Only the **first row is required** to build — the rest are optional.
 | `ios/Runner/Firebase/dev/GoogleService-Info.plist` | ✅ Required for iOS | Same, for iOS. A build phase copies it into place per flavor. |
 | `dart_define/dev.secret.json` | ➖ Optional | Sentry DSN. Without it, crash reporting is simply off. |
 | `android/key.properties` | ➖ Optional | Release signing. Without it, release builds fall back to the debug key. |
-
-<details>
-<summary><b>How to create each one</b> (click to expand)</summary>
 
 #### `google-services.json` — the only required file
 
@@ -141,22 +183,20 @@ Only the **first row is required** to build — the rest are optional.
 4. Download the generated `google-services.json`.
 5. Put it at `android/app/src/dev/google-services.json`.
 
-In the Firebase console, enable **Authentication → Email/Password** and create a
-**Cloud Firestore** database if you want sign-in and cloud sync to work.
+Enable **Authentication → Email/Password** and create a **Cloud Firestore**
+database if you want sign-in and cloud sync to work.
 
 > **Why isn't it committed?** It ties the build to *my* Firebase project. Yours
 > should point at your own, and a public repo is the wrong place for either.
 
 #### `GoogleService-Info.plist` — iOS only
 
-Same flow, but choose **Add app → iOS** with bundle id `com.elhawary.algodive.dev`,
-then save the file to `ios/Runner/Firebase/dev/GoogleService-Info.plist`.
+Same flow, but **Add app → iOS** with bundle id `com.elhawary.algodive.dev`,
+saved to `ios/Runner/Firebase/dev/GoogleService-Info.plist`.
 `ios/scripts/firebase_config.sh` runs as an Xcode build phase and copies the
 right flavor's plist into place automatically.
 
 #### `dart_define/dev.secret.json` — optional
-
-Create the file with this shape:
 
 ```json
 {
@@ -164,9 +204,9 @@ Create the file with this shape:
 }
 ```
 
-Leave it out entirely and the app runs fine — crash reporting is release-only
-anyway. See [`dart_define/README.md`](dart_define/README.md) for why config is
-split into committed selectors vs. git-ignored secrets, and why this project
+Leave it out and the app runs fine — crash reporting is release-only anyway.
+See [`dart_define/README.md`](dart_define/README.md) for why config is split
+into committed selectors vs. git-ignored secrets, and why this project
 deliberately does **not** use `flutter_dotenv`.
 
 #### `android/key.properties` — optional, release builds only
@@ -178,8 +218,6 @@ keyAlias=upload
 storeFile=/absolute/path/to/your/upload-keystore.jks
 ```
 
-Generate a keystore with:
-
 ```bash
 keytool -genkey -v -keystore ~/upload-keystore.jks \
   -keyalg RSA -keysize 2048 -validity 10000 -alias upload
@@ -188,28 +226,7 @@ keytool -genkey -v -keystore ~/upload-keystore.jks \
 Without this file, `flutter build apk --release` still works — it just falls
 back to the debug signing key. **Never commit the keystore or this file.**
 
-#### For the other flavors
-
-Repeat step 1 with the matching package name and folder:
-
-| Flavor | Package name | Config goes in |
-| --- | --- | --- |
-| `dev` | `com.elhawary.algodive.dev` | `android/app/src/dev/` |
-| `staging` | `com.elhawary.algodive.staging` | `android/app/src/staging/` |
-| `production` | `com.elhawary.algodive` | `android/app/src/production/` |
-
 </details>
-
-### 3. Run it
-
-```bash
-flutter run --flavor dev -t lib/main_dev.dart --dart-define-from-file=dart_define/dev.json
-```
-
-That's it. No `.env`, no backend to start, no seed data.
-
-VS Code and Android Studio run configurations are committed too, so you can
-also just press **F5** and pick `dev (debug)`.
 
 <details>
 <summary><b>All three flavors</b></summary>
@@ -226,7 +243,8 @@ flutter run --flavor production -t lib/main_prod.dart    --dart-define-from-file
 ```
 
 Dev and staging installs carry a **ribbon on the launcher icon**, so you always
-know which build you're holding.
+know which build you're holding. VS Code and Android Studio run configurations
+are committed too — press **F5** and pick `dev (debug)`.
 
 </details>
 
@@ -235,7 +253,7 @@ know which build you're holding.
 
 | Symptom | Cause | Fix |
 | --- | --- | --- |
-| `File google-services.json is missing` | Step 2 was skipped | Create `android/app/src/dev/google-services.json` |
+| `File google-services.json is missing` | Config step skipped | Create `android/app/src/dev/google-services.json` |
 | `No matching client found for package name` | Package name typo in Firebase | It must be exactly `com.elhawary.algodive.dev` |
 | `FlavorConfig has not been initialized` | Ran without `--dart-define-from-file` | Use the full run command above |
 | `Flavor 'dev' is not supported` | Missing `--flavor dev` | Flavor **and** entry point are both required |
@@ -253,6 +271,8 @@ know which build you're holding.
 ```
 lib/
 ├── config/
+│   └── routes/
+│   └── themes/
 ├── core/
 │   ├── flavor/
 │   ├── monitoring/
@@ -261,151 +281,77 @@ lib/
 │   │   └── custom_code_editor/
 │   ├── resources/
 │   └── storage/
+│   └── exceptions/
 └── features/
     ├── visualize/
     ├── challenge/
+    │   └── data/
+    │   └── domain/
+    │   └── presentation/
     ├── auth/
     ├── home/
+    │   └── view/
+    │   └── view_model/
 ```
 
-Feature-first, with full clean-architecture layering (`data` → `domain` → `presentation`) on the mature slices and a
+Feature-based, with full clean-architecture layering on the mature slices and a
 lighter MVVM shape on the simpler ones.
 
 </details>
 
-<details>
-<summary><b>The interpreter — how offline grading works</b></summary>
-
-`lib/core/custom_packages/custom_code_editor/src/execution/`
-
-```
-lexer.dart (271 L) → parser.dart (775 L) → ast.dart (256 L) → interpreter.dart (865 L)
-```
-
-A complete tree-walking interpreter with:
-
-- **Closures** — functions capture their declaring scope
-- **Non-local control flow** via internal return / break / continue signals
-- **Line-accurate errors** — `InterpreterError` points at the offending line
-- **Infinite-loop protection**, so a runaway `while (true)` can't freeze the app
-
-Paired with a grading engine in `src/testcase/` that parses arbitrary literal
-inputs and **constructs custom object shapes** — so a problem can hand your
-function a real linked-list head or binary-tree root.
-
-</details>
-
-<details>
-<summary><b>Release engineering</b></summary>
-
-**Tags ship. Merges don't.**
-
-| Tag | Environment | Flavor | Ships via |
-| --- | --- | --- | --- |
-| `v1.3.0-dev.2` | development | dev | `flutter build apk` → Firebase App Distribution |
-| `v1.3.0-stag.1` | staging | staging | `flutter build apk` → Firebase App Distribution |
-| `v1.3.0` | production | production | **Shorebird release** → App Distribution + GitHub Release |
-
-The promotion ladder is `develop → staging → production`, enforced twice: by a
-`merge-guard` CI job and by the release runbook. `production` never accepts a
-merge from `develop` directly.
-
-The deployment pipeline resolves the environment from the tag shape, proves with
-`git merge-base --is-ancestor` that the tag really sits on its branch, runs
-analyze + tests, **verifies the built APK is not debug-signed** via
-`apksigner --print-certs`, and scrubs injected secrets with `if: always()`.
-A production tag pauses for human approval before it builds.
-
-Shorebird code push is enabled for production only, so a Dart-only bug fix can
-reach users without waiting on a store review.
-
-</details>
-
-<details>
-<summary><b>Testing</b></summary>
-
-**40 test files · 347 tests · 81 groups** — unit, widget and contract tests.
+**76 test files · 856 tests · 179 groups.**
 
 ```bash
 flutter test --dart-define-from-file=dart_define/dev.json
 ```
 
-A few worth opening:
-
-| File | What it proves |
-| --- | --- |
-| `test/visualize/searching/search_role_contrast_test.dart` | Implements WCAG relative luminance **and** CIE ΔE\*ab from scratch to assert every grid role color is perceptually distinguishable |
-| `test/visualize/searching/support/search_contract.dart` | One shared playback contract, run against BFS, DFS and A\* alike |
-| `test/visualize/searching/search_role_test.dart` | Role mapping is a **total** function — no `default` case, no silent fallback |
-| `test/challenge/editor/` | 8 files covering editor actions, layout, scroll, run, submission and contrast |
-
-</details>
+> 📐 **Why it's built this way** — decisions, trade-offs, and what I'd do
+> differently — lives in [Engineering_Decision.md](Engineering_Decision.md).
 
 ---
 
 ## Roadmap
 
-### ✅ Live now
+**✅ Live** — Sorting (5) · Pathfinding (3) · 100 problems with on-device grading
 
-| Category | Algorithms |
-| --- | --- |
-| **Sorting** | Bubble · Selection · Insertion · Merge · Quick |
-| **Pathfinding** | BFS · DFS · A\* |
-| **Practice** | 100 coding challenges with on-device grading |
-
-### 🗓️ Planned
-
-| Category         | Items                                                                          |
-|------------------|--------------------------------------------------------------------------------|
-| **Sorting**      | Heap Sort · Shell Sort · Radix Sort · Counting Sort · Bucket Sort              |
-| **Graphs**       | Dijkstra · Bellman-Ford · Topological sort                                     |
-| **Mazes**        | Recursive division · Randomized Kruskal · Eller's · Aldous-Broder · Binary tree|
-| **Trees**        | BST · AVL · Red-Black · Segment tree · B-Tree                                  |
-| **Linked lists** | Singly · Doubly · Circular                                                     |
-| **Later**        | Dynamic programming · String algorithms · side-by-side algorithm comparison    |
+| Planned | |
+|---|---|
+| **Sorting** | Heap · Shell · Radix · Counting · Bucket |
+| **Graphs** | Dijkstra · Bellman-Ford · Topological sort |
+| **Mazes** | Recursive division · Kruskal · Eller's · Aldous-Broder · Binary tree |
+| **Trees** | BST · AVL · Red-Black · Segment tree · B-Tree |
+| **Linked lists** | Singly · Doubly · Circular |
+| **Later** | Dynamic programming · String algorithms · side-by-side comparison |
 
 ---
 
 ## Platform support
 
-Android and iOS are the shipping targets. Android is fully wired for release;
-iOS builds in CI as an unsigned smoke test while release signing is being set
-up. Later, will be looking to others.
+Android and iOS. Android is fully wired for release; iOS builds in CI as an
+unsigned smoke test while I finish setting up signing. Web and desktop aren't
+ruled out, just not a priority.
 
 ---
 
 ## Contributing
 
-Contributions are genuinely welcome — especially **new algorithms**.
+Welcome — especially **new algorithms**.
 
-The five sorts under *"Built, not yet wired into the UI"* are the easiest
-possible entry point: the algorithm is already written and tested, and all
-that's missing is the card and the wiring.
-
-**[CONTRIBUTING.md](CONTRIBUTING.md)** covers setup, the branch model, the
-project's coding conventions, and a step-by-step walkthrough for adding a new
-algorithm.
+Easiest first PR: **Heap, Shell, Radix, Counting and Bucket** sorts are already
+written and tested but not reachable in the UI. The hard part is done; what's
+missing is the card and the wiring. See
+**[CONTRIBUTING.md](CONTRIBUTING.md)** for the walkthrough.
 
 - 🐛 [Report a bug](https://github.com/AhmedAbdoElhawary/flutter-algorithm-visualizer/issues/new?template=bug_report.yml)
 - 💡 [Request a feature](https://github.com/AhmedAbdoElhawary/flutter-algorithm-visualizer/issues/new?template=feature_request.yml)
 - 🧮 [Request an algorithm](https://github.com/AhmedAbdoElhawary/flutter-algorithm-visualizer/issues/new?template=algorithm_request.yml)
-- 🔒 [Security policy](SECURITY.md)
-- 🤝 [Code of conduct](CODE_OF_CONDUCT.md)
+- 🔒 [Security policy](SECURITY.md) · 🤝 [Code of conduct](CODE_OF_CONDUCT.md)
 
 ---
 
-## License
+## Keep in touch
 
-Licensed under the **Apache License 2.0** — see [LICENSE](LICENSE).
-
----
-
-## Author
-
-**Ahmed Abdo Elhawary** — [@AhmedAbdoElhawary](https://github.com/AhmedAbdoElhawary)
-
-<div align="center">
-
-**If AlgoDive helped you understand an algorithm, a ⭐ helps someone else find it.**
-
-</div>
+💼 [LinkedIn](https://www.linkedin.com/in/ahmedabdoelhawary) ·
+📧 [elhawarydev@gmail.com](mailto:elhawarydev@gmail.com) ·
+🐙 [GitHub](https://github.com/AhmedAbdoElhawary) ·
+💬 [Discussions](https://github.com/AhmedAbdoElhawary/flutter-algorithm-visualizer/discussions)

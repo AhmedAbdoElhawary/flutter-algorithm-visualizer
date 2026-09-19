@@ -20,7 +20,6 @@ import 'package:algorithm_visualizer/features/challenge/presentation/widgets/edi
 import 'package:algorithm_visualizer/features/challenge/presentation/widgets/editor/editor_test_case_card.dart';
 import 'package:algorithm_visualizer/features/challenge/presentation/widgets/editor/editor_title_row.dart';
 import 'package:algorithm_visualizer/features/home/view_model/home_provider.dart';
-import 'package:algorithm_visualizer/features/profile/presentation/view_model/statistics/profile_statistics_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -86,7 +85,6 @@ class _EditorPageState extends ConsumerState<CodeEditorPage> {
         extra: CelebrationArgs(
           problemName: problem.getName,
           passedCount: passed.passedCount,
-          dayStreak: ref.read(profileStatisticsProvider).currentStreak,
         ),
       );
     }
