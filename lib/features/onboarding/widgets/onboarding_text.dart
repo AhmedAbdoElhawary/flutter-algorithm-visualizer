@@ -8,7 +8,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 class MonoText extends StatelessWidget {
   const MonoText(
     this.text, {
-    this.color = ThemeEnum.inkBody,
+    this.color = ThemeEnum.inkSecondaryTitle,
     this.fontSize = 12,
     this.letterSpacing = 0,
     this.textAlign,
@@ -91,7 +91,7 @@ class OnboardingCopy extends StatelessWidget {
           body,
           fontSize: 14,
           height: 1.5,
-          color: ThemeEnum.inkBody,
+          color: ThemeEnum.inkSecondaryTitle,
           maxLines: 3,
         ),
       ],
