@@ -19,6 +19,7 @@ import 'package:algorithm_visualizer/features/challenge/data/models/example.dart
 import 'package:algorithm_visualizer/features/challenge/domain/entities/coding_problem.dart';
 import 'package:algorithm_visualizer/features/challenge/domain/enums/problem.dart';
 import 'package:algorithm_visualizer/features/challenge/presentation/view_model/challenges/problems_providers.dart';
+import 'package:algorithm_visualizer/features/challenge/presentation/widgets/challenges/bookmark_button.dart';
 import 'package:algorithm_visualizer/features/challenge/presentation/widgets/challenges/problem_tile.dart';
 import 'package:algorithm_visualizer/features/home/view_model/home_provider.dart';
 import 'package:flutter/material.dart';
@@ -133,7 +134,7 @@ class _CollapsingHeaderTags extends StatelessWidget {
     final chipDifficulty = problem.getDifficulty;
     final tags = problem.getTags;
     return Padding(
-      padding: REdgeInsets.fromLTRB(16, 0, 16,0),
+      padding: REdgeInsets.fromLTRB(16, 0, 16, 0),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
@@ -155,7 +156,7 @@ class _CollapsingHeaderTags extends StatelessWidget {
                 if (tags.isNotEmpty) ...[
                   RegularText(
                     tags.join(', '),
-                    color: ThemeEnum.inkBody,
+                    color: ThemeEnum.inkSecondaryTitle,
                     fontSize: 10,
                     maxLines: 1,
                     translate: false,
@@ -164,8 +165,10 @@ class _CollapsingHeaderTags extends StatelessWidget {
               ],
             ),
           ),
+          const RSizedBox(width: 5),
+          BookmarkButton(isBookmarked: problem.getIsBookmarked, problem: problem),
           if (chipDifficulty != ProblemDifficulty.none) ...[
-            const RSizedBox(width: 8),
+            const RSizedBox(width: 5),
             DifficultyChip(difficulty: chipDifficulty, label: problem.getDifficulty.difficultyString),
           ],
         ],
@@ -191,7 +194,7 @@ class _ProblemTabBar extends StatelessWidget {
         indicatorSize: TabBarIndicatorSize.label,
         indicatorColor: context.getColor(ThemeEnum.inkPrimary),
         labelColor: context.getColor(ThemeEnum.inkTitle),
-        unselectedLabelColor: context.getColor(ThemeEnum.inkBody),
+        unselectedLabelColor: context.getColor(ThemeEnum.inkSecondaryTitle),
         overlayColor: WidgetStatePropertyAll(context.getColor(ThemeEnum.track).withValues(alpha: 0.05)),
         labelStyle: GetSemiBoldStyle(fontSize: 12.sp),
         unselectedLabelStyle: GetMediumStyle(fontSize: 12.sp),
@@ -233,7 +236,7 @@ class _ProblemTabViewState extends State<_ProblemTabView> {
         if (problem.getDescription.trim().isNotEmpty)
           RegularText(
             problem.getDescription.trim(),
-            color: ThemeEnum.inkBody,
+            color: ThemeEnum.inkSecondaryTitle,
             fontSize: 12.5,
             height: 1.75,
             maxLines: 40,
@@ -271,7 +274,7 @@ class _HintsTabView extends StatelessWidget {
     return _MeasuredTabScrollView(
       pageStorageKey: PageStorageKey('problem-${problem.getProblemId}-hints'),
       children: hints.isEmpty
-          ? const [MediumText(StringsManager.noHintsYet, color: ThemeEnum.inkBody)]
+          ? const [MediumText(StringsManager.noHintsYet, color: ThemeEnum.inkSecondaryTitle)]
           : [
               for (var i = 0; i < hints.length; i++)
                 Padding(
@@ -309,7 +312,7 @@ class _SimilarTabViewState extends ConsumerState<_SimilarTabView> {
     return _MeasuredTabScrollView(
       pageStorageKey: PageStorageKey('problem-${problem.getProblemId}-similar'),
       children: similarIds.isEmpty
-          ? const [MediumText(StringsManager.noSimilarQuestionsYet, color: ThemeEnum.inkBody)]
+          ? const [MediumText(StringsManager.noSimilarQuestionsYet, color: ThemeEnum.inkSecondaryTitle)]
           : [
               for (final similarId in similarIds)
                 ProblemTile(
@@ -379,7 +382,8 @@ class _ConstraintsCard extends StatelessWidget {
               const Expanded(
                 child: SemiBoldText(StringsManager.constraints, color: ThemeEnum.inkPrimary, fontSize: 12),
               ),
-              CustomIcon(open ? Icons.remove_rounded : Icons.add_rounded, size: 16, color: ThemeEnum.inkBody),
+              CustomIcon(open ? Icons.remove_rounded : Icons.add_rounded,
+                  size: 16, color: ThemeEnum.inkSecondaryTitle),
             ],
           ),
           AnimatedSize(
@@ -399,7 +403,7 @@ class _ConstraintsCard extends StatelessWidget {
                             padding: REdgeInsets.only(bottom: 4),
                             child: LtrContent(
                               child: RegularText('•  $c',
-                                  color: ThemeEnum.inkBody,
+                                  color: ThemeEnum.inkSecondaryTitle,
                                   fontSize: 11.5,
                                   height: 1.5,
                                   maxLines: 10,
@@ -431,7 +435,7 @@ class _ExampleBlock extends StatelessWidget {
       children: [
         SemiBoldText(
           '${StringsManager.example.tr(context)} ${index + 1}'.toUpperCase(),
-          color: ThemeEnum.inkBody,
+          color: ThemeEnum.inkSecondaryTitle,
           fontSize: 10,
           letterSpacing: 1,
         ),
@@ -455,7 +459,7 @@ class _ExampleBlock extends StatelessWidget {
                   padding: REdgeInsets.only(top: 7),
                   child: RegularText(
                     explanation,
-                    color: ThemeEnum.inkBody,
+                    color: ThemeEnum.inkSecondaryTitle,
                     fontFamily: FontConstants.fontFamily,
                     fontSize: 11,
                     height: 1.6,
@@ -485,7 +489,10 @@ class _MonoRow extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         RegularText('$label: ',
-            color: ThemeEnum.inkBody, fontFamily: FontConstants.fontFamily, fontSize: 11, maxLines: 1),
+            color: ThemeEnum.inkSecondaryTitle,
+            fontFamily: FontConstants.fontFamily,
+            fontSize: 11,
+            maxLines: 1),
         Expanded(
           /// The value is a literal (`nums = [2,7,11,15]`), so it keeps its
           /// own direction even when the page is mirrored.
