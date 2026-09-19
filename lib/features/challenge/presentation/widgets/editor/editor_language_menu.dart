@@ -152,7 +152,7 @@ class _MenuTrigger extends StatelessWidget {
             color: context.getColor(open ? ThemeEnum.raised : ThemeEnum.transparentColor),
             borderRadius: BorderRadius.circular(CdRadius.smAlt.r),
             border: Border.all(
-              color: context.getColor(open ? ThemeEnum.inkMuted : ThemeEnum.hairline),
+              color: context.getColor(open ? ThemeEnum.inkThirdTitle : ThemeEnum.hairline),
             ),
           ),
           child: Row(
@@ -164,7 +164,7 @@ class _MenuTrigger extends StatelessWidget {
                 language.displayName,
                 fontFamily: FontConstants.fontFamily,
                 fontSize: 11,
-                color: enabled ? ThemeEnum.inkTitle : ThemeEnum.inkMuted,
+                color: enabled ? ThemeEnum.inkTitle : ThemeEnum.inkThirdTitle,
                 maxLines: 1,
               ),
               const RSizedBox(width: 4),
@@ -175,7 +175,7 @@ class _MenuTrigger extends StatelessWidget {
                 child: CustomIcon(
                   Icons.keyboard_arrow_down_rounded,
                   size: 14,
-                  color: enabled ? ThemeEnum.inkMuted : ThemeEnum.track,
+                  color: enabled ? ThemeEnum.inkThirdTitle : ThemeEnum.track,
                 ),
               ),
             ],
@@ -347,10 +347,10 @@ class _LanguageOption extends StatelessWidget {
                   fontFamily: FontConstants.fontFamily,
                   fontSize: 11,
                   color: !available
-                      ? ThemeEnum.inkMuted
+                      ? ThemeEnum.inkThirdTitle
                       : selected
                           ? ThemeEnum.inkTitle
-                          : ThemeEnum.inkBody,
+                          : ThemeEnum.inkSecondaryTitle,
                   maxLines: 1,
                 ),
               ),
@@ -359,7 +359,7 @@ class _LanguageOption extends StatelessWidget {
                 '.${language.fileExtension}',
                 fontFamily: FontConstants.fontFamily,
                 fontSize: 9,
-                color: available ? ThemeEnum.inkMuted : ThemeEnum.track,
+                color: available ? ThemeEnum.inkThirdTitle : ThemeEnum.track,
                 maxLines: 1,
               ),
               const RSizedBox(width: 6),
