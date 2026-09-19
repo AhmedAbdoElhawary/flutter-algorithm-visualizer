@@ -11,7 +11,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class ProfileDifficultyProgress extends ConsumerWidget {
-  const ProfileDifficultyProgress({super.key, this.titleColor = ThemeEnum.inkBody});
+  const ProfileDifficultyProgress({super.key, this.titleColor = ThemeEnum.inkSecondaryTitle});
   final ThemeEnum titleColor;
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -67,14 +67,14 @@ class _DifficultyRow extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              SemiBoldText(b.label, color: b.color, fontSize: 12),
+              SemiBoldText(b.label, color: ThemeEnum.inkSecondaryTitle, fontSize: 12),
               RichText(
                 text: TextSpan(
                   style: GetMediumStyle(color: context.getColor(ThemeEnum.track), fontSize: 12),
                   children: [
                     TextSpan(
                         text: '${b.solved}',
-                        style: GetMediumStyle(color: context.getColor(ThemeEnum.inkBody), fontSize: 12)),
+                        style: GetMediumStyle(color: context.getColor(ThemeEnum.inkThirdTitle), fontSize: 12)),
                     TextSpan(text: ' / ${b.total}'),
                   ],
                 ),
