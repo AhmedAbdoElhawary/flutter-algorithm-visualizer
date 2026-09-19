@@ -1,5 +1,6 @@
 import 'package:algorithm_visualizer/config/routes/route_app.dart';
 import 'package:algorithm_visualizer/core/resources/color_manager.dart';
+import 'package:algorithm_visualizer/core/resources/dimensions_manager.dart';
 import 'package:algorithm_visualizer/core/resources/strings_manager.dart';
 import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/algo_tab.dart';
@@ -98,9 +99,6 @@ class _VisualizePageState extends ConsumerState<VisualizePage> {
 
     final gridLocked = tabView == 1 && ref.watch(gridScrollLockProvider);
 
-    // Scaffold/Metrial written in base_navigation, why?
-    // to control all main pages with the structure of the base
-
     return NestedScrollView(
       physics: gridLocked ? const NeverScrollableScrollPhysics() : const BouncingScrollPhysics(),
       controller: controller,
@@ -124,54 +122,56 @@ class _VisualizePageState extends ConsumerState<VisualizePage> {
         SliverAppBar(
           snap: true,
           floating: true,
-          toolbarHeight: 45.r,
-          title: Container(
-            color: context.getColor(ThemeEnum.ground),
-            child: Padding(
-              padding: REdgeInsets.only(left: 16, right: 16),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: InkWell(
-                      onTap: () {
-                        setState(() {
-                          tabView = 0;
-                          this.sortingCard = SortingAlgoCards.bubble;
-                          this.searchingCard = null;
-                        });
-                      },
-                      child: AlgoTab(
-                        isSelected: tabView == 0,
-                        addEndPadding: false,
-                        label: StringsManager.sorting,
-                        verticalPadding: 2,
-                        icon: Icons.filter_list_rounded,
-                        constrainLabelWidth: true,
+          toolbarHeight: 48.r,
+          title: Padding(
+            padding: REdgeInsets.only(left: 11, right: 11),
+            child: Container(
+              decoration: BoxDecoration(
+                color: context.getColor(ThemeEnum.surface),
+                borderRadius: BorderRadius.circular(CdRadius.md.r),
+              ),
+              child: Padding(
+                padding: REdgeInsets.all(5),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: InkWell(
+                        onTap: () {
+                          setState(() {
+                            tabView = 0;
+                            this.sortingCard = SortingAlgoCards.bubble;
+                            this.searchingCard = null;
+                          });
+                        },
+                        child: MainAlgoTab(
+                          isSelected: tabView == 0,
+                          addEndPadding: false,
+                          label: StringsManager.sorting,
+                          constrainLabelWidth: true,
+                        ),
                       ),
                     ),
-                  ),
-                  const RSizedBox(width: 10),
-                  Expanded(
-                    child: InkWell(
-                      onTap: () {
-                        setState(() {
-                          tabView = 1;
-                          this.sortingCard = null;
-                          this.searchingCard = SearchingAlgoCards.bfs;
-                          _scrollSearchingToWatchableView();
-                        });
-                      },
-                      child: AlgoTab(
-                        isSelected: tabView == 1,
-                        addEndPadding: false,
-                        label: StringsManager.searching,
-                        verticalPadding: 2,
-                        icon: Icons.map_rounded,
-                        constrainLabelWidth: true,
+                    const RSizedBox(width: 10),
+                    Expanded(
+                      child: InkWell(
+                        onTap: () {
+                          setState(() {
+                            tabView = 1;
+                            this.sortingCard = null;
+                            this.searchingCard = SearchingAlgoCards.bfs;
+                            _scrollSearchingToWatchableView();
+                          });
+                        },
+                        child: MainAlgoTab(
+                          isSelected: tabView == 1,
+                          addEndPadding: false,
+                          label: StringsManager.searching,
+                          constrainLabelWidth: true,
+                        ),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           ),
@@ -184,7 +184,7 @@ class _VisualizePageState extends ConsumerState<VisualizePage> {
                   children: [
                     if (tabView == 0 && sortingCard != null) ...[
                       Padding(
-                        padding: REdgeInsetsDirectional.only(bottom: 5),
+                        padding: REdgeInsetsDirectional.only(bottom: 8),
                         child: SortingSelectionList(
                             card: sortingCard,
                             onChangedTab: (SortingAlgoCards cardValue) async {
@@ -196,7 +196,7 @@ class _VisualizePageState extends ConsumerState<VisualizePage> {
                       ),
                     ] else if (searchingCard != null) ...[
                       Padding(
-                        padding: REdgeInsets.only(bottom: 5),
+                        padding: REdgeInsets.only(bottom: 8),
                         child: Row(
                           children: List.generate(
                             SearchingAlgoCards.values.length,
@@ -232,7 +232,7 @@ class _VisualizePageState extends ConsumerState<VisualizePage> {
                       ),
                     ],
                     Padding(
-                      padding: REdgeInsets.only(bottom: 8),
+                      padding: REdgeInsets.only(bottom: 10),
                       child: ValueListenableBuilder(
                         valueListenable: complexity,
                         builder: (context, value, child) =>
