@@ -20,7 +20,7 @@ class SkipButton extends StatelessWidget {
           width: 44,
           height: 44,
           child:
-              Center(child: MediumText(StringsManager.onboardingSkip, fontSize: 15, color: ThemeEnum.inkBody)),
+              Center(child: MediumText(StringsManager.onboardingSkip, fontSize: 15, color: ThemeEnum.inkSecondaryTitle)),
         ),
       ),
     );
