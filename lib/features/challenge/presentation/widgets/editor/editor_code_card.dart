@@ -90,7 +90,7 @@ class _CodeCardHeader extends StatelessWidget {
             fileName,
             fontFamily: FontConstants.fontFamily,
             fontSize: 10,
-            color: ThemeEnum.inkMuted,
+            color: ThemeEnum.inkThirdTitle,
             maxLines: 1,
             translate: false,
           ),
