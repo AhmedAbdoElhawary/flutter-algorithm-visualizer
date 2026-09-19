@@ -61,7 +61,7 @@ class AccountDialogShell extends StatelessWidget {
               const RSizedBox(height: 6),
               RegularText(
                 description,
-                color: ThemeEnum.inkBody,
+                color: ThemeEnum.inkSecondaryTitle,
                 fontSize: 12,
                 maxLines: 4,
                 textAlign: TextAlign.center,
