@@ -45,7 +45,7 @@ class _PFLegendChip extends StatelessWidget {
       children: [
         _PFLegendSwatch(role: role, color: color),
         const RSizedBox(width: 4),
-        RegularText(searchRoleLabel(role), color: ThemeEnum.inkBody, fontSize: 10),
+        RegularText(searchRoleLabel(role), color: ThemeEnum.inkSecondaryTitle, fontSize: 10),
       ],
     );
   }
