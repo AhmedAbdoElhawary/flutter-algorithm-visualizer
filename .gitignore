@@ -110,7 +110,7 @@ app.*.map.json
 !/docs/favicon-32.png
 /.specify/
 /assets/onboarding/
-/assets/screenshots/
 /assets/logo/png/
 /assets/logo/README.md
 /tool/flavor_icons/custom/README.md
+/assets/screenshots/README.md
