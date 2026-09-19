@@ -178,6 +178,7 @@ class _Controls extends StatelessWidget {
               start: 0,
               end: 0,
               bottom: 0,
+
               /// [FadeTransition], not [Opacity], for both halves of this
               /// cross-fade. [reveal] changes on every `PageController` tick,
               /// so this repaints continuously for the length of a swipe, and

@@ -56,7 +56,8 @@ class AuthCombineSubtitle extends StatelessWidget {
       maxLines: 5,
       TextSpan(
         text: text,
-        style: GetRegularStyle(color: context.getColor(ThemeEnum.inkSecondaryTitle), fontSize: fontSize, height: 1.65),
+        style: GetRegularStyle(
+            color: context.getColor(ThemeEnum.inkSecondaryTitle), fontSize: fontSize, height: 1.65),
         children: [
           const TextSpan(text: " "),
           TextSpan(
@@ -82,7 +83,8 @@ class AuthEyebrowRow extends StatelessWidget {
     return Row(
       children: [
         const CustomBackButton(),
-        SemiBoldText(label, color: ThemeEnum.inkSecondaryTitle, fontSize: 12, letterSpacing: 1.2, maxLines: 1),
+        SemiBoldText(label,
+            color: ThemeEnum.inkSecondaryTitle, fontSize: 12, letterSpacing: 1.2, maxLines: 1),
       ],
     );
   }

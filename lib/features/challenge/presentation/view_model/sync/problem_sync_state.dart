@@ -1,7 +1,9 @@
 class ProblemSyncState {
   const ProblemSyncState({required this.isSyncing, required this.hasUnsyncedChanges});
 
-  const ProblemSyncState.initial() : isSyncing = false, hasUnsyncedChanges = false;
+  const ProblemSyncState.initial()
+      : isSyncing = false,
+        hasUnsyncedChanges = false;
 
   final bool isSyncing;
 

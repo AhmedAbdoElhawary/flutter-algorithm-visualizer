@@ -182,8 +182,8 @@ class _DetailsPanel extends ConsumerWidget {
                       children: [
                         const OnlyPadding(
                           startPadding: 3,
-                          child:
-                              MediumText(StringsManager.bookmarked, color: ThemeEnum.inkSecondaryTitle, fontSize: 10),
+                          child: MediumText(StringsManager.bookmarked,
+                              color: ThemeEnum.inkSecondaryTitle, fontSize: 10),
                         ),
                         const RSizedBox(height: 2),
                         BookmarkButton(isBookmarked: isBookmarked, problem: problem),

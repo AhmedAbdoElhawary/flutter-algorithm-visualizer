@@ -49,7 +49,8 @@ class TimeComplexityData extends StatelessWidget {
           const RSizedBox(width: 4),
           const RegularText(StringsManager.time, color: ThemeEnum.inkThirdTitle, fontSize: 14),
           const RSizedBox(width: 2),
-          SemiBoldText(complexity.worstTimeComplexity.getText, color: ThemeEnum.inkSecondaryTitle, fontSize: 14),
+          SemiBoldText(complexity.worstTimeComplexity.getText,
+              color: ThemeEnum.inkSecondaryTitle, fontSize: 14),
         ],
       ),
     );

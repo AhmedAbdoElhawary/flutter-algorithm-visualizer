@@ -148,7 +148,8 @@ class _AttemptTable extends StatelessWidget {
         children: [
           const Row(
             children: [
-              Expanded(child: SemiBoldText(StringsManager.date, color: ThemeEnum.inkSecondaryTitle, fontSize: 11)),
+              Expanded(
+                  child: SemiBoldText(StringsManager.date, color: ThemeEnum.inkSecondaryTitle, fontSize: 11)),
               SemiBoldText(StringsManager.result, color: ThemeEnum.inkSecondaryTitle, fontSize: 11),
             ],
           ),
@@ -157,8 +158,8 @@ class _AttemptTable extends StatelessWidget {
             Row(
               children: [
                 Expanded(
-                  child:
-                      SemiBoldText(_formatDate(attempt.submittedAt), color: ThemeEnum.inkSecondaryTitle, fontSize: 12),
+                  child: SemiBoldText(_formatDate(attempt.submittedAt),
+                      color: ThemeEnum.inkSecondaryTitle, fontSize: 12),
                 ),
                 SemiBoldText(
                   attempt.isCorrect ? StringsManager.passed : StringsManager.failed,

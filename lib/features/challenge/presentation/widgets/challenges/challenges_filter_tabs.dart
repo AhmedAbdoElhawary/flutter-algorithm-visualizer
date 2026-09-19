@@ -34,7 +34,9 @@ class ChallengesFilterTabs extends ConsumerWidget {
                 margin: REdgeInsetsDirectional.only(end: 8),
                 padding: REdgeInsets.symmetric(horizontal: 10, vertical: 7),
                 decoration: BoxDecoration(
-                  color: active ? context.getColor(color).withValues(alpha: 0.10) : context.getColor(ThemeEnum.surface),
+                  color: active
+                      ? context.getColor(color).withValues(alpha: 0.10)
+                      : context.getColor(ThemeEnum.surface),
                   borderRadius: BorderRadius.circular(10),
                   border: Border.all(
                       color: active
@@ -44,7 +46,8 @@ class ChallengesFilterTabs extends ConsumerWidget {
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    MediumText(f.difficultyString, color: active ? color : ThemeEnum.inkSecondaryTitle, fontSize: 13),
+                    MediumText(f.difficultyString,
+                        color: active ? color : ThemeEnum.inkSecondaryTitle, fontSize: 13),
                     const SizedBox(width: 5),
                     MediumText(count, color: active ? color : ThemeEnum.inkSecondaryTitle, fontSize: 11),
                   ],

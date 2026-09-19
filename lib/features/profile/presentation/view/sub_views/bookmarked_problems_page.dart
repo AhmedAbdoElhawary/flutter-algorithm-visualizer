@@ -33,7 +33,8 @@ class BookmarkedProblemsPage extends ConsumerWidget {
                 Expanded(
                   child: bookmarked.isEmpty
                       ? const Center(
-                          child: MediumText(StringsManager.noProblemsFound, color: ThemeEnum.inkSecondaryTitle),
+                          child:
+                              MediumText(StringsManager.noProblemsFound, color: ThemeEnum.inkSecondaryTitle),
                         )
                       : ListView.separated(
                           padding: REdgeInsets.fromLTRB(16, 4, 16, 16),
@@ -83,7 +84,8 @@ class _Header extends StatelessWidget {
           const CustomBackButton(),
           BoldText(StringsManager.bookmarked.trim(), color: ThemeEnum.inkTitle, fontSize: 17),
           const Spacer(),
-          RegularText('$count ${unit.tr(context).toLowerCase()}', color: ThemeEnum.inkSecondaryTitle, fontSize: 11),
+          RegularText('$count ${unit.tr(context).toLowerCase()}',
+              color: ThemeEnum.inkSecondaryTitle, fontSize: 11),
         ],
       ),
     );

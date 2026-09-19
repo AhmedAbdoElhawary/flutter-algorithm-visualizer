@@ -139,6 +139,7 @@ class _MenuTrigger extends StatelessWidget {
       child: GestureDetector(
         onTap: onTap,
         behavior: HitTestBehavior.opaque,
+
         /// No [Opacity] wrapper. The disabled look is three colours, so it is
         /// expressed as three colours — the same way `icon_button_quiet.dart`
         /// dims to [ThemeEnum.track]. Wrapping instead cost an off-screen
@@ -328,6 +329,7 @@ class _LanguageOption extends StatelessWidget {
       child: GestureDetector(
         onTap: available ? onTap : null,
         behavior: HitTestBehavior.opaque,
+
         /// Dimmed by colour, not by [Opacity] — see `_MenuTrigger`. It matters
         /// more here than there: the panel builds one of these per language,
         /// so the wrapper meant one off-screen buffer per row.

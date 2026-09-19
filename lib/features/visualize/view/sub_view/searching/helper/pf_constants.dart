@@ -8,7 +8,6 @@ const int kPFStartCol = 5;
 const int kPFEndRow = 12;
 const int kPFEndCol = 25;
 
-
 /// A wall popping in under the finger that drew it.
 const double kWallPopMs = 500;
 
@@ -19,7 +18,6 @@ const double kWallPopMs = 500;
 /// At playback time the grid caps this to one step interval, so a fast run
 /// never asks the searcher to leave a cell it has not reached yet.
 const double kSearcherJumpMs = 30;
-
 
 /// How small the circle it snaps back to is, as a fraction of the cell.
 const double kReleaseStartScale = 0.25;

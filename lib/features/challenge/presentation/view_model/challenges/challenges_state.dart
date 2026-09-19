@@ -20,7 +20,7 @@ class ChallengesState {
     int? expandedId,
   }) {
     return ChallengesState(
-      filter:  filter ??(search == null && expandedId == null?null: this.filter),
+      filter: filter ?? (search == null && expandedId == null ? null : this.filter),
       search: search ?? this.search,
       expandedId: expandedId ?? this.expandedId,
     );

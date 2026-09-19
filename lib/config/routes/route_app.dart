@@ -13,7 +13,6 @@ import 'package:algorithm_visualizer/features/challenge/presentation/view/editor
 import 'package:algorithm_visualizer/features/challenge/presentation/view/problem_page.dart';
 import 'package:algorithm_visualizer/features/home/view/home_page.dart';
 import 'package:algorithm_visualizer/features/onboarding/view/onboarding_page.dart';
-import 'package:algorithm_visualizer/features/onboarding/view_model/onboarding_store.dart';
 import 'package:algorithm_visualizer/features/profile/presentation/view/profile_page.dart';
 import 'package:algorithm_visualizer/features/profile/presentation/view/sub_views/bookmarked_problems_page.dart';
 import 'package:algorithm_visualizer/features/profile/presentation/view/sub_views/practice_history_page.dart';
@@ -138,8 +137,8 @@ class AppRoutes {
     navigatorKey: _rootKey,
 
     initialLocation:
-    // OnboardingStore.standalone().isSeen ? Routes.home.path :
-    Routes.onboarding.path,
+        // OnboardingStore.standalone().isSeen ? Routes.home.path :
+        Routes.onboarding.path,
     errorBuilder: (context, state) => const _UnknownPage(),
     // Screen tracking with no per-page code: Firebase logs each route
     // change as a `screen_view`, Sentry times how long the screen took to

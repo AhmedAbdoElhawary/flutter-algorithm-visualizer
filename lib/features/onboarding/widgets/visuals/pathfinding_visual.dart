@@ -211,7 +211,7 @@ class _PathfindingVisualState extends State<PathfindingVisual> with SingleTicker
                   ),
                 ),
                 const RSizedBox(height: 16),
-                const PFLegend(horizontalPadding: 0,spacing: 6),
+                const PFLegend(horizontalPadding: 0, spacing: 6),
                 const RSizedBox(height: 16),
                 OnboardingCaptionBar(
                   child: Row(

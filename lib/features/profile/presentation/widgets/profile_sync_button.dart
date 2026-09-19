@@ -118,8 +118,7 @@ class _SyncActionState extends ConsumerState<_SyncAction> {
                         size: 36,
                         iconSize: 18,
                       ),
-                if (_hintActive && !isSyncing)
-                  const _ShimmerBorder(size: 36),
+                if (_hintActive && !isSyncing) const _ShimmerBorder(size: 36),
                 if (hasUnsyncedChanges && !isSyncing) const _UnsyncedDot(),
               ],
             ),

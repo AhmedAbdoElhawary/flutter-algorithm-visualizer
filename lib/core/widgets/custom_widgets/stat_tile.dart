@@ -37,10 +37,13 @@ class StatTile extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                if (icon != null) Icon(icon, size: 18.r, color: context.getColor(ThemeEnum.inkSecondaryTitle)),
+                if (icon != null)
+                  Icon(icon, size: 18.r, color: context.getColor(ThemeEnum.inkSecondaryTitle)),
                 const Spacer(),
                 if (sub != null && sub!.isNotEmpty)
-                  Flexible(child: RegularText(sub!, fontSize: 10, color: ThemeEnum.inkSecondaryTitle, maxLines: 1)),
+                  Flexible(
+                      child:
+                          RegularText(sub!, fontSize: 10, color: ThemeEnum.inkSecondaryTitle, maxLines: 1)),
               ],
             ),
             const RSizedBox(height: 6),

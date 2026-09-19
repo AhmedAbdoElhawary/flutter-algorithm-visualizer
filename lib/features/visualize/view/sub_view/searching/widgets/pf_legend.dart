@@ -8,9 +8,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class PFLegend extends StatelessWidget {
-  const PFLegend({this.horizontalPadding=16, this.spacing=12,super.key});
-final double spacing;
-final double horizontalPadding;
+  const PFLegend({this.horizontalPadding = 16, this.spacing = 12, super.key});
+  final double spacing;
+  final double horizontalPadding;
   @override
   Widget build(BuildContext context) {
     return Center(

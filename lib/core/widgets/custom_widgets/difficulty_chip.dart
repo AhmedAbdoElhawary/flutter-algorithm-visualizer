@@ -62,7 +62,8 @@ class DifficultySquareBadge extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final d = difficulty;
-    final (fill, labelRole) = d == null ? (ThemeEnum.raised, ThemeEnum.inkSecondaryTitle) : _difficultyRoles(d);
+    final (fill, labelRole) =
+        d == null ? (ThemeEnum.raised, ThemeEnum.inkSecondaryTitle) : _difficultyRoles(d);
     return Container(
       width: size.r,
       height: size.r,

@@ -74,7 +74,8 @@ class _DifficultyRow extends StatelessWidget {
                   children: [
                     TextSpan(
                         text: '${b.solved}',
-                        style: GetMediumStyle(color: context.getColor(ThemeEnum.inkThirdTitle), fontSize: 12)),
+                        style:
+                            GetMediumStyle(color: context.getColor(ThemeEnum.inkThirdTitle), fontSize: 12)),
                     TextSpan(text: ' / ${b.total}'),
                   ],
                 ),
