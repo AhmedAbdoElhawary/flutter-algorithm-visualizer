@@ -33,7 +33,7 @@ class BookmarkedProblemsPage extends ConsumerWidget {
                 Expanded(
                   child: bookmarked.isEmpty
                       ? const Center(
-                          child: MediumText(StringsManager.noProblemsFound, color: ThemeEnum.inkBody),
+                          child: MediumText(StringsManager.noProblemsFound, color: ThemeEnum.inkSecondaryTitle),
                         )
                       : ListView.separated(
                           padding: REdgeInsets.fromLTRB(16, 4, 16, 16),
@@ -59,7 +59,7 @@ class BookmarkedProblemsPage extends ConsumerWidget {
           },
           loading: () => Center(child: CircularProgressIndicator(strokeWidth: 2.r)),
           error: (_, __) => const Center(
-            child: MediumText(StringsManager.notAbleToLoadAnyChallenge, color: ThemeEnum.inkBody),
+            child: MediumText(StringsManager.notAbleToLoadAnyChallenge, color: ThemeEnum.inkSecondaryTitle),
           ),
         ),
       ),
@@ -83,7 +83,7 @@ class _Header extends StatelessWidget {
           const CustomBackButton(),
           BoldText(StringsManager.bookmarked.trim(), color: ThemeEnum.inkTitle, fontSize: 17),
           const Spacer(),
-          RegularText('$count ${unit.tr(context).toLowerCase()}', color: ThemeEnum.inkBody, fontSize: 11),
+          RegularText('$count ${unit.tr(context).toLowerCase()}', color: ThemeEnum.inkSecondaryTitle, fontSize: 11),
         ],
       ),
     );
