@@ -53,7 +53,7 @@ class _HistoryRowState extends State<HistoryRow> {
       subTitle: RegularText(
         '$count ${unit.tr(context).toLowerCase()} · ${StringsManager.lastLabel.tr(context)} '
         '${_relative(context, entry.lastSubmittedAt)}',
-        color: ThemeEnum.inkBody,
+        color: ThemeEnum.inkSecondaryTitle,
         fontSize: 10.5,
       ),
       leading: _AnimatedArrow(expanded: _expanded),
@@ -104,7 +104,7 @@ class _AnimatedArrow extends StatelessWidget {
         child: const CustomIcon(
           Icons.keyboard_arrow_down_rounded,
           size: 18,
-          color: ThemeEnum.inkBody,
+          color: ThemeEnum.inkSecondaryTitle,
         ),
       ),
     );
@@ -148,8 +148,8 @@ class _AttemptTable extends StatelessWidget {
         children: [
           const Row(
             children: [
-              Expanded(child: SemiBoldText(StringsManager.date, color: ThemeEnum.inkBody, fontSize: 11)),
-              SemiBoldText(StringsManager.result, color: ThemeEnum.inkBody, fontSize: 11),
+              Expanded(child: SemiBoldText(StringsManager.date, color: ThemeEnum.inkSecondaryTitle, fontSize: 11)),
+              SemiBoldText(StringsManager.result, color: ThemeEnum.inkSecondaryTitle, fontSize: 11),
             ],
           ),
           const RSizedBox(height: 6),
@@ -158,7 +158,7 @@ class _AttemptTable extends StatelessWidget {
               children: [
                 Expanded(
                   child:
-                      SemiBoldText(_formatDate(attempt.submittedAt), color: ThemeEnum.inkBody, fontSize: 12),
+                      SemiBoldText(_formatDate(attempt.submittedAt), color: ThemeEnum.inkSecondaryTitle, fontSize: 12),
                 ),
                 SemiBoldText(
                   attempt.isCorrect ? StringsManager.passed : StringsManager.failed,
