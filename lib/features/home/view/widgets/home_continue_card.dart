@@ -31,28 +31,34 @@ class HomeContinueCard extends ConsumerWidget {
       endPadding: 16,
       bottomPadding: 14,
       child: CardContainer(
-        surface: CdSurface.main,
-        borderColorOverride: ThemeEnum.inkBody,
+        surface: CdSurface.fill,
         padding: REdgeInsets.all(16),
         onTap: () => context.pushProblem('${problem.getProblemId}'),
         child: Row(
           children: [
-            const IconButtonQuiet(icon: Icons.play_arrow_rounded, size: 48, iconSize: 24, filled: true),
+            const IconButtonQuiet(
+              icon: Icons.play_arrow_rounded,
+              size: 48,
+              iconSize: 24,
+              filled: true,
+              iconColor: ThemeEnum.inkPrimary,
+              filledColor: ThemeEnum.ground,
+            ),
             SizedBox(width: 14.w),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const RegularText(StringsManager.continueLabel,
-                      fontSize: 11, maxLines: 1, color: ThemeEnum.inkBody),
+                  const MediumText(StringsManager.continueLabel,
+                      fontSize: 11, maxLines: 1, color: ThemeEnum.inkSecondaryTitle),
                   SizedBox(height: 2.h),
                   BoldText(
                     problem.getName,
                     fontSize: 14,
-                    color: ThemeEnum.inkTitle,
+                    color: ThemeEnum.surface,
                     maxLines: 1,
                   ),
-                  SizedBox(height: 4.h),
+                  const RSizedBox(height: 4),
                 ],
               ),
             ),
@@ -60,7 +66,7 @@ class HomeContinueCard extends ConsumerWidget {
               DifficultyChip(difficulty: quietDifficulty, label: diffLabel),
             const CustomIcon(
               Icons.chevron_right_rounded,
-              color: ThemeEnum.inkBody,
+              color: ThemeEnum.ground,
               size: 20,
               flipsWithDirection: true,
             ),
