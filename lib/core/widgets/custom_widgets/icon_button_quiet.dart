@@ -18,6 +18,7 @@ class IconButtonQuiet extends StatelessWidget {
   /// "log out" row) — a [ThemeEnum] role, never a raw `Color`.
   final ThemeEnum? iconColor;
   final ThemeEnum? borderColor;
+  final ThemeEnum? filledColor;
 
   /// Forwarded to [CustomIcon.flipsWithDirection] — set it for a back caret
   /// or any other icon that points.
@@ -32,6 +33,7 @@ class IconButtonQuiet extends StatelessWidget {
     this.filled = false,
     this.iconColor,
     this.borderColor,
+    this.filledColor,
     this.flipsWithDirection = false,
   });
 
@@ -45,14 +47,15 @@ class IconButtonQuiet extends StatelessWidget {
         height: size.r,
         alignment: Alignment.center,
         decoration: BoxDecoration(
-          color: filled ? context.getColor(ThemeEnum.inkPrimary) : null,
+          color: filled ? context.getColor(filledColor ?? ThemeEnum.inkPrimary) : null,
           borderRadius: BorderRadius.circular((size >= 44 ? 14 : 10).r),
           border: filled ? null : Border.all(color: context.getColor(borderColor ?? ThemeEnum.track)),
         ),
         child: CustomIcon(
           icon,
           size: iconSize,
-          color: filled ? ThemeEnum.ground : iconColor ?? (disabled ? ThemeEnum.track : ThemeEnum.inkBody),
+          color: iconColor ??
+              (filled ? ThemeEnum.ground : (disabled ? ThemeEnum.track : ThemeEnum.inkSecondaryTitle)),
           flipsWithDirection: flipsWithDirection,
         ),
       ),
