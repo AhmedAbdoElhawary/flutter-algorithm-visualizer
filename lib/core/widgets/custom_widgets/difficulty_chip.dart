@@ -32,7 +32,7 @@ class DifficultyChip extends StatelessWidget {
     return Container(
       padding: REdgeInsets.symmetric(horizontal: 10, vertical: 5),
       decoration: BoxDecoration(
-        color: context.getColor(fill),
+        color: context.getColor(labelRole).withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(radius.r),
       ),
       child: SemiBoldText(label, color: labelRole, fontSize: fontSize),
@@ -62,7 +62,7 @@ class DifficultySquareBadge extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final d = difficulty;
-    final (fill, labelRole) = d == null ? (ThemeEnum.raised, ThemeEnum.inkBody) : _difficultyRoles(d);
+    final (fill, labelRole) = d == null ? (ThemeEnum.raised, ThemeEnum.inkSecondaryTitle) : _difficultyRoles(d);
     return Container(
       width: size.r,
       height: size.r,
