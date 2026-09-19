@@ -106,7 +106,7 @@ class _CelebrationPageState extends State<CelebrationPage> with TickerProviderSt
                         '${StringsManager.allNTestsPassedPrefix.tr(context)}'
                         '${args.passedCount}'
                         '${StringsManager.allNTestsPassedSuffix.tr(context)}',
-                        color: ThemeEnum.inkBody,
+                        color: ThemeEnum.inkSecondaryTitle,
                         fontSize: 12.5,
                         textAlign: TextAlign.center,
                         maxLines: 2,
