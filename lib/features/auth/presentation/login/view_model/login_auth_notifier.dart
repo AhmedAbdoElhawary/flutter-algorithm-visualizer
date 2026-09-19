@@ -93,7 +93,6 @@ class AuthLoginNotifier extends Notifier<AuthLoginState> {
   }
 
   Future<void> logout() async {
-
     final keepAlive = ref.keepAlive();
 
     try {

@@ -74,7 +74,7 @@ class ProblemTile extends ConsumerWidget {
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(CdRadius.medium.r),
                   border: Border.all(
-                    color: context.getColor(expanded ? ThemeEnum.inkPrimary : ThemeEnum.hairline),
+                    color: context.getColor(expanded ? ThemeEnum.track : ThemeEnum.raised),
                   ),
                 ),
               ),
@@ -119,7 +119,7 @@ class _MainRow extends StatelessWidget {
             const RSizedBox(width: 6),
             Expanded(child: BoldText(problem.getName, color: ThemeEnum.inkTitle, fontSize: 13)),
             const RSizedBox(width: 4),
-            BoldText(problem.getDifficulty.difficultyString, color: diffColor, fontSize: 11),
+            SemiBoldText(problem.getDifficulty.difficultyString, color: diffColor, fontSize: 11),
             const RSizedBox(width: 4),
 
             /// Collapsed, the caret points *into* the row, so it mirrors in
@@ -182,8 +182,8 @@ class _DetailsPanel extends ConsumerWidget {
                       children: [
                         const OnlyPadding(
                           startPadding: 3,
-                          child:
-                              MediumText(StringsManager.bookmarked, color: ThemeEnum.inkBody, fontSize: 10),
+                          child: MediumText(StringsManager.bookmarked,
+                              color: ThemeEnum.inkSecondaryTitle, fontSize: 10),
                         ),
                         const RSizedBox(height: 2),
                         BookmarkButton(isBookmarked: isBookmarked, problem: problem),
@@ -224,7 +224,7 @@ class _StatColumn extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        MediumText(label, color: ThemeEnum.inkBody, fontSize: 10),
+        MediumText(label, color: ThemeEnum.inkSecondaryTitle, fontSize: 10),
         const RSizedBox(height: 2),
         SemiBoldText(value, color: color, fontSize: 13),
       ],

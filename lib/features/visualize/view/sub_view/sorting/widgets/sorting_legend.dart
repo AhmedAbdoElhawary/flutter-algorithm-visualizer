@@ -51,7 +51,7 @@ class _LegendChip extends StatelessWidget {
           ),
         ),
         const RSizedBox(width: 6),
-        RegularText(label, fontSize: 11, color: ThemeEnum.inkBody),
+        RegularText(label, fontSize: 11, color: ThemeEnum.inkSecondaryTitle),
       ],
     );
   }

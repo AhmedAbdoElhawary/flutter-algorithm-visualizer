@@ -81,7 +81,7 @@ class _DeleteAccountDialogState extends ConsumerState<DeleteAccountDialog> {
             const RSizedBox(height: 6),
             const RegularText(
               StringsManager.deleteAccountPasswordDesc,
-              color: ThemeEnum.inkBody,
+              color: ThemeEnum.inkSecondaryTitle,
               fontSize: 12,
               textAlign: TextAlign.center,
             ),
@@ -139,7 +139,7 @@ class _WebNoticeLink extends StatelessWidget {
       onTap: () => context.openLink(kDeleteAccountUrl),
       child: const MediumText(
         StringsManager.deleteAccountWebNotice,
-        color: ThemeEnum.inkBody,
+        color: ThemeEnum.inkSecondaryTitle,
         fontSize: 10.5,
         maxLines: 3,
         textAlign: TextAlign.center,

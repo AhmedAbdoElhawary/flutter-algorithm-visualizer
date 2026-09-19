@@ -35,7 +35,7 @@ class ProfileWeeklyChart extends ConsumerWidget {
               title: StringsManager.thisWeek,
               trailing: '$total ${StringsManager.solvedLabel.tr(context)}',
             ),
-            const RSizedBox(height: 12),
+            const RSizedBox(height: 6),
             RSizedBox(
               height: 90,
               child: Row(
@@ -55,7 +55,7 @@ class ProfileWeeklyChart extends ConsumerWidget {
                             MediumText(
                               '$val',
                               fontSize: 9,
-                              color: ThemeEnum.inkBody,
+                              color: ThemeEnum.inkSecondaryTitle,
                             ),
                           const RSizedBox(height: 4),
                           QuietBar(
@@ -67,7 +67,7 @@ class ProfileWeeklyChart extends ConsumerWidget {
                           RegularText(
                             _dayLabels[i],
                             fontSize: 10,
-                            color: isToday ? ThemeEnum.inkTitle : ThemeEnum.inkBody,
+                            color: isToday ? ThemeEnum.inkTitle : ThemeEnum.inkSecondaryTitle,
                           ),
                         ],
                       ),

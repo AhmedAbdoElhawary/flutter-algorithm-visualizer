@@ -17,7 +17,7 @@ void main() {
     });
 
     test('matches the normative role table (FR-023)', () {
-      expect(searchRoleColor(SearchRole.start), ThemeEnum.searchStart);
+      expect(searchRoleColor(SearchRole.start), ThemeEnum.inkTitle);
       expect(searchRoleColor(SearchRole.end), ThemeEnum.searchEnd);
       expect(searchRoleColor(SearchRole.searcher), ThemeEnum.searchSearcher);
       expect(searchRoleColor(SearchRole.visited), ThemeEnum.searchVisited);

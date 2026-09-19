@@ -106,7 +106,7 @@ class _CelebrationPageState extends State<CelebrationPage> with TickerProviderSt
                         '${StringsManager.allNTestsPassedPrefix.tr(context)}'
                         '${args.passedCount}'
                         '${StringsManager.allNTestsPassedSuffix.tr(context)}',
-                        color: ThemeEnum.inkBody,
+                        color: ThemeEnum.inkSecondaryTitle,
                         fontSize: 12.5,
                         textAlign: TextAlign.center,
                         maxLines: 2,
@@ -227,8 +227,7 @@ class _RingPainter extends CustomPainter {
   /// canvas is redrawn every frame regardless. Returning `true` here would
   /// only add a second, redundant reason to repaint.
   @override
-  bool shouldRepaint(_RingPainter oldDelegate) =>
-      oldDelegate.color != color || oldDelegate.phase != phase;
+  bool shouldRepaint(_RingPainter oldDelegate) => oldDelegate.color != color || oldDelegate.phase != phase;
 }
 
 class _Ring extends StatelessWidget {
@@ -350,6 +349,7 @@ class _Rise extends StatelessWidget {
       parent: controller,
       curve: Interval(start, (start + 0.43).clamp(0.0, 1.0), curve: Curves.easeOut),
     );
+
     /// [FadeTransition] rather than [Opacity]: it fades at the compositor,
     /// on a layer it marks for the purpose, instead of forcing a `saveLayer`
     /// during paint. The rise stays on an `AnimatedBuilder` because the offset

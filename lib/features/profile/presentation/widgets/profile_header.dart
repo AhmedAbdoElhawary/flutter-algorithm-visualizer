@@ -80,8 +80,8 @@ class _SettingsButton extends StatelessWidget {
       onTap: () => context.pushRoute(Routes.settings),
       child: const IconButtonQuiet(
         icon: Icons.settings_outlined,
-        iconColor: ThemeEnum.inkBody,
-        borderColor: ThemeEnum.inkBody,
+        iconColor: ThemeEnum.inkSecondaryTitle,
+        borderColor: ThemeEnum.inkSecondaryTitle,
         size: 36,
         iconSize: 18,
       ),

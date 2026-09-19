@@ -38,7 +38,6 @@ abstract class SearchingNotifier extends Notifier<SearchingState>
     /// so it can pause from `dispose()` — know not to touch it any more.
     _disposed = false;
     ref.onDispose(() {
-
       _disposed = true;
       _clearTimer();
     });

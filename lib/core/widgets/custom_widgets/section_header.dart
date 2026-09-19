@@ -22,7 +22,7 @@ class SectionHeader extends StatelessWidget {
         Flexible(
           child: SemiBoldText(title, fontSize: 15, color: ThemeEnum.inkTitle, maxLines: 2),
         ),
-        if (trailing != null) RegularText(trailing!, fontSize: 11, color: ThemeEnum.inkBody),
+        if (trailing != null) RegularText(trailing!, fontSize: 11, color: ThemeEnum.inkSecondaryTitle),
       ],
     );
   }

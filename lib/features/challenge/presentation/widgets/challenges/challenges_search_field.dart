@@ -36,7 +36,7 @@ class _ChallengesSearchFieldState extends ConsumerState<ChallengesSearchField> {
       padding: REdgeInsets.fromLTRB(16, 0, 16, 12),
       child: CardContainer(
         radius: CdRadius.medium,
-        surface: CdSurface.unColoredFill,
+        surface: CdSurface.main,
         padding: REdgeInsets.symmetric(horizontal: 14, vertical: 8),
         child: Row(
           children: [
@@ -46,13 +46,13 @@ class _ChallengesSearchFieldState extends ConsumerState<ChallengesSearchField> {
               child: TextField(
                 controller: _controller,
                 onChanged: (v) => ref.read(challengesProvider.notifier).setSearch(v),
-                style: GetSemiBoldStyle(
+                style: GetMediumStyle(
                     color: context.getColor(ThemeEnum.inkTitle), fontSize: 14, letterSpacing: 0.2),
                 decoration: InputDecoration(
                   isDense: true,
                   hintText: StringsManager.searchProblem.tr(context),
                   hintStyle: TextStyle(
-                      color: context.getColor(ThemeEnum.inkBody),
+                      color: context.getColor(ThemeEnum.inkSecondaryTitle),
                       fontSize: 14.r,
                       fontFamily: FontConstants.fontFamily),
                   border: InputBorder.none,

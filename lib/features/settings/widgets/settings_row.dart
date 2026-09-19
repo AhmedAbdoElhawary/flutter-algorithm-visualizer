@@ -64,7 +64,7 @@ class SettingsRow extends StatelessWidget {
                     const RSizedBox(height: 2),
                     RegularText(
                       subtitle!,
-                      color: ThemeEnum.inkBody,
+                      color: ThemeEnum.inkSecondaryTitle,
                       fontSize: 11,
                       maxLines: 3,
                       translate: translateLabels,

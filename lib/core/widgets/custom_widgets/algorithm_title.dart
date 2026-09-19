@@ -1,6 +1,5 @@
 import 'package:algorithm_visualizer/core/helpers/constants.dart';
 import 'package:algorithm_visualizer/core/helpers/current_device.dart';
-import 'package:algorithm_visualizer/core/resources/font_manager.dart';
 import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
 import 'package:algorithm_visualizer/core/widgets/adaptive/text/adaptive_text.dart';
 import 'package:flutter/material.dart';
@@ -25,11 +24,11 @@ class AlgorithmTitle extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          BoldText(title, fontSize: 20, fontWeight: FontWeightManager.bold900),
+          BoldText(title, fontSize: 20),
           RegularText(
             description,
             fontSize: 11,
-            color: ThemeEnum.inkMuted,
+            color: ThemeEnum.inkThirdTitle,
           )
         ],
       ),

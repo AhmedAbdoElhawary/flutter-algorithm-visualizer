@@ -84,7 +84,7 @@ class _ForgotPasswordPageState extends ConsumerState<ConfirmationPasswordPage> {
               child: Center(
                 child: MediumText(
                   StringsManager.resendEmailLink,
-                  color: canResend ? ThemeEnum.inkTitle : ThemeEnum.inkMuted,
+                  color: canResend ? ThemeEnum.inkTitle : ThemeEnum.inkThirdTitle,
                   fontSize: 14,
                   maxLines: 1,
                 ),

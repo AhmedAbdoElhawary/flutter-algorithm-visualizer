@@ -334,7 +334,7 @@ class _ShowUpSortingListState extends ConsumerState<ShowUpSortingList> {
                           return MediumText(
                             '$index',
                             fontSize: 10,
-                            color: role == SortRole.compare ? ThemeEnum.dataActive : ThemeEnum.inkMuted,
+                            color: role == SortRole.compare ? ThemeEnum.dataActive : ThemeEnum.inkThirdTitle,
                           );
                         },
                       ),
@@ -379,7 +379,7 @@ class _BuildItem extends ConsumerWidget {
     final labelColor = context.getColor(switch (resolvedRole) {
       SortRole.compare => ThemeEnum.inkTitle,
       SortRole.sorted => ThemeEnum.dataEasy,
-      _ => ThemeEnum.inkBody,
+      _ => ThemeEnum.inkSecondaryTitle,
     });
 
     return Column(

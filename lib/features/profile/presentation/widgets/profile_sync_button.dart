@@ -112,9 +112,9 @@ class _SyncActionState extends ConsumerState<_SyncAction> {
                 isSyncing
                     ? const _SyncSpinner()
                     : const IconButtonQuiet(
-                        icon: Icons.cloud_sync_outlined,
-                        iconColor: ThemeEnum.inkBody,
-                        borderColor: ThemeEnum.inkBody,
+                        icon: Icons.sync_rounded,
+                        iconColor: ThemeEnum.inkSecondaryTitle,
+                        borderColor: ThemeEnum.inkSecondaryTitle,
                         size: 36,
                         iconSize: 18,
                       ),
@@ -195,7 +195,7 @@ class _SyncSpinner extends StatelessWidget {
       alignment: Alignment.center,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(10.r),
-        border: Border.all(color: context.getColor(ThemeEnum.inkBody)),
+        border: Border.all(color: context.getColor(ThemeEnum.inkSecondaryTitle)),
       ),
       child: SizedBox(
         width: 16.r,
@@ -215,8 +215,8 @@ class _UnsyncedDot extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return PositionedDirectional(
-      top: -4.r,
-      end: -4.r,
+      top: -3.r,
+      end: -3.r,
       child: Container(
         width: 13.r,
         height: 13.r,
@@ -299,7 +299,7 @@ class _SyncCooldownCardState extends State<_SyncCooldownCard> {
               RegularText(
                 StringsManager.syncCooldownDesc(_seconds, tr: (source) => source.tr(context)),
                 translate: false,
-                color: ThemeEnum.inkBody,
+                color: ThemeEnum.inkSecondaryTitle,
                 fontSize: 12,
                 textAlign: TextAlign.center,
               ),
@@ -346,7 +346,7 @@ class _ShimmerBorderState extends State<_ShimmerBorder> with SingleTickerProvide
           size: Size(widget.size.r, widget.size.r),
           painter: _ShimmerBorderPainter(
             turns: _controller.value,
-            ring: context.getColor(ThemeEnum.track),
+            ring: context.getColor(ThemeEnum.dataMedium).withValues(alpha: 0.65),
             head: context.getColor(ThemeEnum.dataMedium),
             radius: 10.r,
             strokeWidth: 2.r,
@@ -411,16 +411,11 @@ class _ShimmerBorderPainter extends CustomPainter {
       oldDelegate.turns != turns || oldDelegate.head != head || oldDelegate.ring != ring;
 }
 
-/// The little "sync your data" bubble that pops under the button on the very
-/// first visit. Rendered inside the root overlay, so it never falls behind the
-/// cards below the header.
 class _SyncHintTag extends StatefulWidget {
   const _SyncHintTag({required this.visible, required this.onHidden});
 
   final bool visible;
 
-  /// Called once the fade-out has finished, so the overlay entry can go away
-  /// instead of lingering invisibly.
   final VoidCallback onHidden;
 
   @override
@@ -430,8 +425,6 @@ class _SyncHintTag extends StatefulWidget {
 class _SyncHintTagState extends State<_SyncHintTag> {
   static const Duration _duration = Duration(milliseconds: 260);
 
-  /// Starts false so the first frame is the collapsed state and the second one
-  /// animates into place — otherwise there is nothing to pop from.
   bool _entered = false;
 
   @override

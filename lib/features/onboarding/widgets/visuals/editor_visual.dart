@@ -264,7 +264,7 @@ class _CodeLine extends StatelessWidget {
     var cursor = 0;
     for (final match in _pattern.allMatches(text)) {
       if (match.start > cursor) {
-        tokens.add((text: text.substring(cursor, match.start), color: ThemeEnum.inkBody));
+        tokens.add((text: text.substring(cursor, match.start), color: ThemeEnum.inkSecondaryTitle));
       }
       tokens.add((
         text: match[0]!,
@@ -274,7 +274,7 @@ class _CodeLine extends StatelessWidget {
       cursor = match.end;
     }
     if (cursor < text.length) {
-      tokens.add((text: text.substring(cursor), color: ThemeEnum.inkBody));
+      tokens.add((text: text.substring(cursor), color: ThemeEnum.inkSecondaryTitle));
     }
     return tokens;
   }

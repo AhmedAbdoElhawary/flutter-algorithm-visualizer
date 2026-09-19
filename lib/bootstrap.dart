@@ -55,8 +55,7 @@ Future<void> _activateAppCheck() async {
       /// to attest a build that did not come from Play, so a debug build would
       /// fail every check. The debug token is printed to the console on first
       /// run and has to be pasted into the Firebase console once per machine.
-      providerAndroid:
-          kReleaseMode ? const AndroidPlayIntegrityProvider() : const AndroidDebugProvider(),
+      providerAndroid: kReleaseMode ? const AndroidPlayIntegrityProvider() : const AndroidDebugProvider(),
       providerApple: kReleaseMode ? const AppleDeviceCheckProvider() : const AppleDebugProvider(),
     );
   } catch (error, stackTrace) {

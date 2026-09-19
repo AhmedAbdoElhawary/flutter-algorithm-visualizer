@@ -18,10 +18,11 @@ class CardContainer extends StatelessWidget {
 
   final ThemeEnum? fillColor;
   final ThemeEnum? borderColorOverride;
-
+  final bool showBorder;
   const CardContainer({
     super.key,
     required this.child,
+    this.showBorder = true,
     this.surface = CdSurface.main,
     this.radius = CdRadius.lg,
     this.padding = const EdgeInsets.all(CdSpace.gapCard),
@@ -45,12 +46,12 @@ class CardContainer extends StatelessWidget {
   ThemeEnum get _borderColor =>
       borderColorOverride ??
       switch (surface) {
-        CdSurface.main => ThemeEnum.hairline,
-        CdSurface.secondary => ThemeEnum.hairline,
-        CdSurface.unColoredFill => ThemeEnum.hairline,
-        CdSurface.simpleColored => ThemeEnum.hairline,
-        CdSurface.outlined => ThemeEnum.hairline,
-        CdSurface.fill => ThemeEnum.hairline,
+        CdSurface.main => ThemeEnum.raised,
+        CdSurface.secondary => ThemeEnum.raised,
+        CdSurface.unColoredFill => ThemeEnum.raised,
+        CdSurface.simpleColored => ThemeEnum.raised,
+        CdSurface.outlined => ThemeEnum.raised,
+        CdSurface.fill => ThemeEnum.raised,
       };
 
   @override
@@ -60,7 +61,7 @@ class CardContainer extends StatelessWidget {
     final box = BoxDecoration(
       color: fill == null ? null : context.getColor(fill),
       borderRadius: borderRadius,
-      border: Border.all(color: context.getColor(_borderColor)),
+      border: showBorder ? Border.all(color: context.getColor(_borderColor)) : null,
     );
     Widget surfaceWidget = Container(
       padding: padding,
@@ -105,7 +106,7 @@ class AlgorithmGlassCard extends StatelessWidget {
             ),
             child: CustomIcon(
               icon,
-              color: ThemeEnum.inkBody,
+              color: ThemeEnum.inkSecondaryTitle,
               size: 20,
             ),
           ),
@@ -121,10 +122,11 @@ class AlgorithmGlassCard extends StatelessWidget {
                 SliverToBoxAdapter(
                   child: Row(
                     children: [
-                      const CustomIcon(Icons.access_time_rounded, size: 11, color: ThemeEnum.inkBody),
+                      const CustomIcon(Icons.access_time_rounded,
+                          size: 11, color: ThemeEnum.inkSecondaryTitle),
                       const RSizedBox(width: 2),
                       RegularText(algoComplexity.worstTimeComplexity.getText,
-                          color: ThemeEnum.inkBody, fontSize: 10),
+                          color: ThemeEnum.inkSecondaryTitle, fontSize: 10),
                     ],
                   ),
                 ),
@@ -133,10 +135,10 @@ class AlgorithmGlassCard extends StatelessWidget {
                   sliver: SliverToBoxAdapter(
                     child: Row(
                       children: [
-                        const CustomIcon(Icons.storage_rounded, size: 11, color: ThemeEnum.inkBody),
+                        const CustomIcon(Icons.storage_rounded, size: 11, color: ThemeEnum.inkSecondaryTitle),
                         const RSizedBox(width: 2),
                         RegularText(algoComplexity.spaceComplexity.getText,
-                            color: ThemeEnum.inkBody, fontSize: 10),
+                            color: ThemeEnum.inkSecondaryTitle, fontSize: 10),
                       ],
                     ),
                   ),

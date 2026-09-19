@@ -50,6 +50,7 @@ class ProblemSyncService {
   }
 
   bool get isFirstDownload => _storage.read<bool>(_firstDownloadKey) == true;
+
   /// for testing only
   bool? get isFirstDownloadNull => _storage.read<bool>(_firstDownloadKey);
 

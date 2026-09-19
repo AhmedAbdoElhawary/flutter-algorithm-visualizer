@@ -34,7 +34,7 @@ class HomeHeader extends ConsumerWidget {
                 MediumText(
                   '$greeting,',
                   fontSize: 13,
-                  color: ThemeEnum.inkBody,
+                  color: ThemeEnum.inkSecondaryTitle,
                 ),
                 SizedBox(height: 2.h),
                 BoldText(

@@ -64,7 +64,7 @@ class ConfirmationDialogCard extends StatelessWidget {
               const RSizedBox(height: 6),
               RegularText(
                 description,
-                color: ThemeEnum.inkBody,
+                color: ThemeEnum.inkSecondaryTitle,
                 fontSize: 12,
                 textAlign: TextAlign.center,
               ),

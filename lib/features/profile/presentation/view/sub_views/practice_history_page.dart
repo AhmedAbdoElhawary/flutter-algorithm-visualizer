@@ -33,7 +33,7 @@ class RecentSubmissionsPage extends ConsumerWidget {
             Expanded(
               child: all.isEmpty
                   ? const Center(
-                      child: MediumText(StringsManager.noProblemsFound, color: ThemeEnum.inkBody),
+                      child: MediumText(StringsManager.noProblemsFound, color: ThemeEnum.inkSecondaryTitle),
                     )
                   : ListView.separated(
                       padding: REdgeInsets.fromLTRB(16, 0, 16, 16),

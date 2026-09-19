@@ -39,7 +39,7 @@ class PasswordStrengthMeter extends StatelessWidget {
           ],
         ),
         SizedBox(height: 6.h),
-        RegularText(strength.caption, color: ThemeEnum.inkBody, fontSize: 10.5, maxLines: 1),
+        RegularText(strength.caption, color: ThemeEnum.inkSecondaryTitle, fontSize: 10.5, maxLines: 1),
       ],
     );
   }

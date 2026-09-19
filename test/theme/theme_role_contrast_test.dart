@@ -28,7 +28,7 @@ double _contrastRatio(Color a, Color b) {
 const _surfaces = <ThemeEnum>[ThemeEnum.ground, ThemeEnum.surface, ThemeEnum.raised];
 
 /// Roles that carry running text, so they owe the full AA 4.5:1.
-const _bodyInks = <ThemeEnum>[ThemeEnum.inkPrimary, ThemeEnum.inkTitle, ThemeEnum.inkBody];
+const _bodyInks = <ThemeEnum>[ThemeEnum.inkPrimary, ThemeEnum.inkTitle, ThemeEnum.inkSecondaryTitle];
 
 /// The difficulty and state colours. They appear as chips, bars and short
 /// labels rather than paragraphs, so the 3:1 UI-component tier is the honest
@@ -108,7 +108,7 @@ void main() {
         final c = await _resolve(tester, brightness);
 
         for (final surface in _surfaces) {
-          final ratio = _contrastRatio(c[ThemeEnum.inkMuted]!, c[surface]!);
+          final ratio = _contrastRatio(c[ThemeEnum.inkThirdTitle]!, c[surface]!);
           expect(
             ratio,
             greaterThanOrEqualTo(_aaLargeOrUi),

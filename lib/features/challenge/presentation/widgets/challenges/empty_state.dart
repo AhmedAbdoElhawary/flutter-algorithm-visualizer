@@ -26,7 +26,7 @@ class ChallengesEmptyState extends StatelessWidget {
               const RegularText('🔍', fontSize: 40),
               const RSizedBox(height: 12),
             ],
-            SemiBoldText(title, color: ThemeEnum.inkBody, fontSize: 15),
+            SemiBoldText(title, color: ThemeEnum.inkSecondaryTitle, fontSize: 15),
             const RSizedBox(height: 4),
             RegularText(subTitle, color: ThemeEnum.track, fontSize: 13),
           ],

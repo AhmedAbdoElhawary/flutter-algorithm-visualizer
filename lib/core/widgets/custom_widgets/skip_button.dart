@@ -19,8 +19,9 @@ class SkipButton extends StatelessWidget {
         child: const RSizedBox(
           width: 44,
           height: 44,
-          child:
-              Center(child: MediumText(StringsManager.onboardingSkip, fontSize: 15, color: ThemeEnum.inkBody)),
+          child: Center(
+              child: MediumText(StringsManager.onboardingSkip,
+                  fontSize: 15, color: ThemeEnum.inkSecondaryTitle)),
         ),
       ),
     );

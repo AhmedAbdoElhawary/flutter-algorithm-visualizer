@@ -121,6 +121,7 @@ class _AlgoDiveSplashState extends State<AlgoDiveSplash> with SingleTickerProvid
                         ),
                       ),
                       const SizedBox(height: 38),
+
                       /// The fade rides on the text colour rather than on an
                       /// `Opacity` wrapper. `Opacity` would `saveLayer` — an
                       /// off-screen buffer and a GPU render-target switch —

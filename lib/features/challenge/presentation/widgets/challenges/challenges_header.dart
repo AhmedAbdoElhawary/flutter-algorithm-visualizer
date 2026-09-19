@@ -1,4 +1,3 @@
-import 'package:algorithm_visualizer/core/resources/font_manager.dart';
 import 'package:algorithm_visualizer/core/resources/strings_manager.dart';
 import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
 import 'package:algorithm_visualizer/core/widgets/adaptive/text/adaptive_text.dart';
@@ -34,17 +33,16 @@ class ChallengesHeader extends ConsumerWidget {
                 color: ThemeEnum.inkTitle,
                 letterSpacing: -0.4,
                 fontSize: 20,
-                fontWeight: FontWeightManager.bold900,
               ),
               const Spacer(),
               if (isLoaded) ...[
                 const CustomIcon(Icons.local_fire_department_rounded, size: 14, color: ThemeEnum.dataHard),
                 const RSizedBox(width: 3),
                 BoldText(solvedText, color: ThemeEnum.dataHard, fontSize: 13),
-                const SemiBoldText(' / ', color: ThemeEnum.inkBody, fontSize: 13),
-                RegularText(totalText, color: ThemeEnum.inkBody, fontSize: 13),
+                const SemiBoldText(' / ', color: ThemeEnum.inkSecondaryTitle, fontSize: 13),
+                RegularText(totalText, color: ThemeEnum.inkSecondaryTitle, fontSize: 13),
                 const RSizedBox(width: 2),
-                const RegularText(StringsManager.solved, color: ThemeEnum.inkBody, fontSize: 13),
+                const RegularText(StringsManager.solved, color: ThemeEnum.inkSecondaryTitle, fontSize: 13),
               ],
             ],
           ),

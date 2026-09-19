@@ -33,7 +33,7 @@ class AuthSubtitle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return RegularText(text, color: ThemeEnum.inkBody, fontSize: 13, maxLines: 3, height: 1.65);
+    return RegularText(text, color: ThemeEnum.inkSecondaryTitle, fontSize: 13, maxLines: 3, height: 1.65);
   }
 }
 
@@ -56,7 +56,8 @@ class AuthCombineSubtitle extends StatelessWidget {
       maxLines: 5,
       TextSpan(
         text: text,
-        style: GetRegularStyle(color: context.getColor(ThemeEnum.inkBody), fontSize: fontSize, height: 1.65),
+        style: GetRegularStyle(
+            color: context.getColor(ThemeEnum.inkSecondaryTitle), fontSize: fontSize, height: 1.65),
         children: [
           const TextSpan(text: " "),
           TextSpan(
@@ -82,7 +83,8 @@ class AuthEyebrowRow extends StatelessWidget {
     return Row(
       children: [
         const CustomBackButton(),
-        SemiBoldText(label, color: ThemeEnum.inkBody, fontSize: 12, letterSpacing: 1.2, maxLines: 1),
+        SemiBoldText(label,
+            color: ThemeEnum.inkSecondaryTitle, fontSize: 12, letterSpacing: 1.2, maxLines: 1),
       ],
     );
   }
@@ -102,7 +104,7 @@ class AuthFooterPrompt extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          RegularText(prompt, color: ThemeEnum.inkBody, fontSize: 12, maxLines: 1),
+          RegularText(prompt, color: ThemeEnum.inkSecondaryTitle, fontSize: 12, maxLines: 1),
           SizedBox(width: 4.w),
           SemiBoldText(action, color: ThemeEnum.inkTitle, fontSize: 12, maxLines: 1),
         ],
@@ -112,7 +114,7 @@ class AuthFooterPrompt extends StatelessWidget {
 }
 
 class AuthReturnLink extends StatelessWidget {
-  const AuthReturnLink(this.text, {this.size = 12, this.color = ThemeEnum.inkBody, super.key});
+  const AuthReturnLink(this.text, {this.size = 12, this.color = ThemeEnum.inkSecondaryTitle, super.key});
 
   final String text;
   final double size;

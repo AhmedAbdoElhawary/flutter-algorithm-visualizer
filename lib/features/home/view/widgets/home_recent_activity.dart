@@ -73,7 +73,7 @@ class _ActivityTile extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   MediumText(item.problemName, fontSize: 13, color: ThemeEnum.inkTitle, maxLines: 1),
-                  RegularText(timeAgo, fontSize: 11, color: ThemeEnum.inkBody),
+                  RegularText(timeAgo, fontSize: 11, color: ThemeEnum.inkSecondaryTitle),
                 ],
               ),
             ),

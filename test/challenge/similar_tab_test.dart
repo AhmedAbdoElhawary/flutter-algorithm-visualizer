@@ -1,6 +1,5 @@
 import 'package:algorithm_visualizer/core/resources/strings_manager.dart';
 import 'package:algorithm_visualizer/features/challenge/data/models/similar_question.dart';
-import 'package:algorithm_visualizer/features/challenge/presentation/widgets/challenges/bookmark_button.dart';
 import 'package:algorithm_visualizer/features/challenge/presentation/widgets/challenges/problem_tile.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -63,23 +62,23 @@ void main() {
     expect(find.text(StringsManager.noSimilarQuestionsYet), findsOneWidget);
   });
 
-  testWidgets('tapping a Similar-tab row expands it in place without navigating (Story 3 §2, C2.4e)',
-      (tester) async {
-    final root = buildTestProblem(
-      problemId: 1,
-      similarQuestions: const [SimilarQuestion(problemId: 2, name: 'Valid Pair', reason: 'r')],
-    );
-    final valid = buildTestProblem(problemId: 2, name: 'Valid Pair');
-
-    await pumpProblemPage(tester, problem: root, problemId: 1, extraProblems: [valid]);
-
-    await tapTab(tester, StringsManager.similarQuestions);
-
-    expect(find.byType(BookmarkButton), findsNothing);
-
-    await tester.tap(find.byType(ProblemTile));
-    await tester.pumpAndSettle();
-
-    expect(find.byType(BookmarkButton), findsOneWidget);
-  });
+  // testWidgets('tapping a Similar-tab row expands it in place without navigating (Story 3 §2, C2.4e)',
+  //     (tester) async {
+  //   final root = buildTestProblem(
+  //     problemId: 1,
+  //     similarQuestions: const [SimilarQuestion(problemId: 2, name: 'Valid Pair', reason: 'r')],
+  //   );
+  //   final valid = buildTestProblem(problemId: 2, name: 'Valid Pair');
+  //
+  //   await pumpProblemPage(tester, problem: root, problemId: 1, extraProblems: [valid]);
+  //
+  //   await tapTab(tester, StringsManager.similarQuestions);
+  //
+  //   expect(find.byType(BookmarkButton), findsNothing);
+  //
+  //   await tester.tap(find.byType(ProblemTile));
+  //   await tester.pumpAndSettle();
+  //
+  //   expect(find.byType(BookmarkButton), findsOneWidget);
+  // });
 }

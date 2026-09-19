@@ -47,7 +47,7 @@ class _OnboardingButtonState extends State<OnboardingButton> {
     // the outlined one lifts fill + border one step and dims its label to 80%.
     final Color fill = isFilled
         ? context.getColor(_pressed ? ThemeEnum.inkTitle : ThemeEnum.inkPrimary)
-        : context.getColor(_pressed ? ThemeEnum.hairline : ThemeEnum.hairline);
+        : context.getColor(_pressed ? ThemeEnum.hairline : ThemeEnum.track);
 
     final labelColor = isFilled
         ? context.getColor(ThemeEnum.ground)
@@ -61,11 +61,7 @@ class _OnboardingButtonState extends State<OnboardingButton> {
       child: Container(
         height: 52.r,
         alignment: Alignment.center,
-        decoration: BoxDecoration(
-          color: fill,
-          borderRadius: BorderRadius.circular(12.r),
-          border: isFilled ? null : Border.all(color: context.getColor(ThemeEnum.inkMuted)),
-        ),
+        decoration: BoxDecoration(color: fill, borderRadius: BorderRadius.circular(12.r)),
         child: AdaptiveText(
           widget.label,
           maxLines: 1,

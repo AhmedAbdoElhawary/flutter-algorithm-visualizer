@@ -54,7 +54,7 @@ class _LanguageOption extends ConsumerWidget {
       title: language.nativeName,
       subtitle: language.endonymHint,
       translateLabels: false,
-      accentColor: isSelected ? ThemeEnum.inkTitle : ThemeEnum.inkBody,
+      accentColor: isSelected ? ThemeEnum.inkTitle : ThemeEnum.inkSecondaryTitle,
 
       /// Nothing here reloads, rebuilds a route or restarts the app. Writing
       /// the preference moves `AppSettingsState.language`, `MyApp` rebuilds

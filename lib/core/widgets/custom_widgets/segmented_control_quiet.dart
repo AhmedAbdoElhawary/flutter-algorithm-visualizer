@@ -21,9 +21,9 @@ class SegmentedControlQuiet extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: REdgeInsets.all(5),
+      padding: REdgeInsets.all(6),
       decoration: BoxDecoration(
-        border: Border.all(color: context.getColor(ThemeEnum.hairline)),
+        color: context.getColor(ThemeEnum.surface),
         borderRadius: BorderRadius.circular(CdRadius.smAlt.r),
       ),
       child: Row(
@@ -33,14 +33,14 @@ class SegmentedControlQuiet extends StatelessWidget {
           return GestureDetector(
             onTap: () => onChanged(i),
             child: Container(
-              padding: REdgeInsets.symmetric(horizontal: 11, vertical: 5),
+              padding: REdgeInsets.symmetric(horizontal: 10, vertical: 5),
               decoration: BoxDecoration(
-                color: selected ? context.getColor(ThemeEnum.inkPrimary) : null,
+                color: selected ? context.getColor(ThemeEnum.raised) : null,
                 borderRadius: BorderRadius.circular(CdRadius.segment.r),
               ),
               child: SemiBoldText(
                 labels[i],
-                color: selected ? ThemeEnum.ground : ThemeEnum.inkBody,
+                color: selected ? ThemeEnum.inkTitle : ThemeEnum.inkSecondaryTitle,
                 fontSize: 10,
               ),
             ),

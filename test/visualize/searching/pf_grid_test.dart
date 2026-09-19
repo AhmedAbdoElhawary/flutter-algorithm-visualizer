@@ -177,8 +177,7 @@ void main() {
       return _gridOrigin(tester) + Offset((col + 0.5) * cellSize, (row + 0.5) * cellSize);
     }
 
-    testWidgets('a marker pressed and dragged lands on the cell it was let go over',
-        (tester) async {
+    testWidgets('a marker pressed and dragged lands on the cell it was let go over', (tester) async {
       final harness = await _pump(tester);
       final (row, col) = (harness.state.startRow, harness.state.startCol);
 
@@ -217,8 +216,7 @@ void main() {
       expect(harness.state.walls[row + 2][col + 2], isFalse);
     });
 
-    testWidgets('a marker is pinned once a run exists, and free again after reset',
-        (tester) async {
+    testWidgets('a marker is pinned once a run exists, and free again after reset', (tester) async {
       final harness = await _pump(tester);
       harness.notifier.togglePlay();
       harness.notifier.stepBackward();
@@ -264,8 +262,7 @@ void main() {
       harness.notifier.reset(); // the playback timer must not outlive the test
     });
 
-    testWidgets('markers sit on their own cell in Arabic, not mirrored across the grid',
-        (tester) async {
+    testWidgets('markers sit on their own cell in Arabic, not mirrored across the grid', (tester) async {
       final harness = await _pump(tester, textDirection: TextDirection.rtl);
       final cellSize = tester.getSize(_gridCanvas).width / kPFCols;
       final left = tester.getTopLeft(find.byType(PFStartPointWidget).first).dx;
@@ -304,8 +301,7 @@ void main() {
       expect(rewound.visitedAnimations.keys, everyElement(isIn(rewoundStep.visited)));
     });
 
-    testWidgets('the searcher is the cell this step expanded, and it is never stamped',
-        (tester) async {
+    testWidgets('the searcher is the cell this step expanded, and it is never stamped', (tester) async {
       final harness = await _pump(tester);
 
       harness.notifier.togglePlay();

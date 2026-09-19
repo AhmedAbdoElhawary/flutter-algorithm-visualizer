@@ -36,10 +36,12 @@ class FilterChipQuiet extends StatelessWidget {
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            MediumText(label, color: selected ? ThemeEnum.inkTitle : ThemeEnum.inkBody, fontSize: 12),
+            MediumText(label,
+                color: selected ? ThemeEnum.inkTitle : ThemeEnum.inkSecondaryTitle, fontSize: 12),
             if (count != null && count!.isNotEmpty) ...[
               const RSizedBox(width: 5),
-              MediumText(count!, color: selected ? ThemeEnum.inkTitle : ThemeEnum.inkBody, fontSize: 11),
+              MediumText(count!,
+                  color: selected ? ThemeEnum.inkTitle : ThemeEnum.inkSecondaryTitle, fontSize: 11),
             ],
           ],
         ),

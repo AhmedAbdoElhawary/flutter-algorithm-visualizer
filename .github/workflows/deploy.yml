@@ -209,14 +209,18 @@ jobs:
 
       - name: Build release notes
         run: |
+          # The build number on the App Distribution card is github.run_number,
+          # which counts deploy runs, not tags — so name the tag here or a
+          # tester has no way to tell which one they installed.
+          printf '%s\n\n' "${{ github.ref_name }}" > release-notes.txt
           if [ "${{ needs.resolve.outputs.is_production }}" = "true" ]; then
             # Production: the hand-written CHANGELOG.md entry, approved by the
             # user in the /promote flow before this tag was ever pushed.
-            python3 tool/changelog_release_notes.py > release-notes.txt
+            python3 tool/changelog_release_notes.py >> release-notes.txt
           else
             # Dev/staging: auto-generated list of commits since the previous
             # tag in this same stage (same -dev./-stag. suffix family).
-            python3 tool/changelog_release_notes.py --auto-since-previous-tag "${{ github.ref_name }}" > release-notes.txt
+            python3 tool/changelog_release_notes.py --auto-since-previous-tag "${{ github.ref_name }}" >> release-notes.txt
           fi
           echo "----- release notes -----"; cat release-notes.txt
 

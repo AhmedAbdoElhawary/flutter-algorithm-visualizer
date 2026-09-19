@@ -327,8 +327,7 @@ const Map<String, String> kArTranslations = <String, String>{
   // ------------------------------------------------------------------- sync
   'Sync your progress': 'مزامنة تقدّمك',
   'Your progress is up to date.': 'تقدّمك محدّث الآن.',
-  'Could not sync. Check your connection and try again.':
-      'تعذّرت المزامنة. تحقّق من اتصالك وحاول مرة أخرى.',
+  'Could not sync. Check your connection and try again.': 'تعذّرت المزامنة. تحقّق من اتصالك وحاول مرة أخرى.',
   'Just a moment': 'لحظة من فضلك',
   'Got it': 'حسنًا',
   'Sync your data': 'زامن بياناتك',

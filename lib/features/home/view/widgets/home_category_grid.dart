@@ -35,7 +35,7 @@ class HomeCategoryGrid extends ConsumerWidget {
               crossAxisCount: 2,
               crossAxisSpacing: 16.r,
               mainAxisSpacing: 16.r,
-              childAspectRatio: 1.4,
+              childAspectRatio: 1.6,
             ),
             itemBuilder: (context, index) {
               final Widget child;

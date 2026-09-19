@@ -15,9 +15,9 @@ abstract final class ColorManager {
   static const Color trackDk = Color(0xFF2A2D35);
 
   static const Color inkPrimaryDk = Color(0xFFFFFFFF);
-  static const Color inkTitleDk = Color(0xFFF2F3F5);
-  static const Color inkBodyDk = Color(0xFF9A9FAB);
-  static const Color inkMutedDk = Color(0xFF63687A);
+  static const Color inkTitleDk = Color.fromRGBO(242, 243, 245, 1);
+  static const Color inkSecondaryTitleDk = Color(0xFF9A9FAB);
+  static const Color inkThirdTitleDk = Color(0xFF63687A);
 
   static const Color dataEasyDk = Color(0xFF79C9A4);
   static const Color dataMediumDk = Color(0xFFD9AE72);
@@ -33,8 +33,8 @@ abstract final class ColorManager {
 
   static const Color inkPrimaryLt = Color(0xFF0B0B0D);
   static const Color inkTitleLt = Color(0xFF101114);
-  static const Color inkBodyLt = Color(0xFF4A4F5A);
-  static const Color inkMutedLt = Color(0xFF667080);
+  static const Color inkSecondaryTitleLt = Color(0xFF4A4F5A);
+  static const Color inkThirdTitleLt = Color(0xFF667080);
 
   static const Color dataEasyLt = Color(0xFF228655);
   static const Color dataMediumLt = Color(0xFF9E6B25);
@@ -78,7 +78,7 @@ abstract final class ColorManager {
   static const Color searchStartDk = Color(0xFF4ADE80);
   static const Color searchEndDk = Color(0xFFF87171);
   static const Color searchWallDk = Color(0xFF394050);
-  static const Color searchVisitedDk =Color(0xFF67E8F9);
+  static const Color searchVisitedDk = Color(0xFF67E8F9);
   static const Color searchSearcherDk = Color(0xFFF0ABFC);
   static const Color searchTrail0Dk = Color(0xFF3A6AD1);
   static const Color searchTrail1Dk = Color(0xFF3DDDB8);
