@@ -44,7 +44,7 @@ class _AuthErrorBanner extends StatelessWidget {
       case CustomSnackBarType.warning:
         return ThemeEnum.dataMedium;
       case CustomSnackBarType.info:
-        return ThemeEnum.inkBody;
+        return ThemeEnum.inkSecondaryTitle;
     }
   }
 
