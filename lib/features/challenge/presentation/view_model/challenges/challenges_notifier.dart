@@ -4,15 +4,22 @@ import 'package:algorithm_visualizer/features/challenge/domain/repositories/prob
 import 'package:algorithm_visualizer/features/challenge/domain/usecases/grade_code_usecase.dart';
 import 'package:algorithm_visualizer/features/challenge/domain/usecases/update_problem_solution_usecase.dart';
 import 'package:algorithm_visualizer/features/challenge/presentation/view_model/challenges/problems_providers.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'challenges_state.dart';
 
 class ChallengesNotifier extends Notifier<ChallengesState> {
   static const filters = ProblemDifficulty.values;
+  final textController = TextEditingController();
 
   @override
-  ChallengesState build() => ChallengesState.initial();
+  ChallengesState build() {
+    ref.onDispose(() {
+      textController.dispose();
+    });
+    return ChallengesState.initial();
+  }
 
   ProblemRepository get _problemRepository => ref.read(problemRepositoryProvider);
   UpdateProblemSolutionUseCase get _updateProblemSolutionUseCase =>
