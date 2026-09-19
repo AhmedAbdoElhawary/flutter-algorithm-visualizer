@@ -137,7 +137,9 @@ class AppRoutes {
     debugLogDiagnostics: true,
     navigatorKey: _rootKey,
 
-    initialLocation: OnboardingStore.standalone().isSeen ? Routes.home.path : Routes.onboarding.path,
+    initialLocation:
+    // OnboardingStore.standalone().isSeen ? Routes.home.path :
+    Routes.onboarding.path,
     errorBuilder: (context, state) => const _UnknownPage(),
     // Screen tracking with no per-page code: Firebase logs each route
     // change as a `screen_view`, Sentry times how long the screen took to
