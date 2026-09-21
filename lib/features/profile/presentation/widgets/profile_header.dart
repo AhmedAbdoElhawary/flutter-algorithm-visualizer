@@ -77,7 +77,7 @@ class _SettingsButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => context.pushRoute(Routes.settings),
+      onTap: () => context.pushTo(Routes.settings),
       child: const IconButtonQuiet(
         icon: Icons.settings_outlined,
         iconColor: ThemeEnum.inkSecondaryTitle,
