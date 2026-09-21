@@ -9,7 +9,8 @@
       "args": [
         "--flavor",
         "dev",
-        "--dart-define-from-file=dart_define/dev.json"
+        "--dart-define-from-file=dart_define/dev.json",
+        "--dart-define-from-file=dart_define/dev.secret.json"
       ]
     },
     {
@@ -21,7 +22,8 @@
       "args": [
         "--flavor",
         "dev",
-        "--dart-define-from-file=dart_define/dev.json"
+        "--dart-define-from-file=dart_define/dev.json",
+        "--dart-define-from-file=dart_define/dev.secret.json"
       ]
     },
     {
@@ -32,7 +34,8 @@
       "args": [
         "--flavor",
         "staging",
-        "--dart-define-from-file=dart_define/staging.json"
+        "--dart-define-from-file=dart_define/staging.json",
+        "--dart-define-from-file=dart_define/staging.secret.json"
       ]
     },
     {
@@ -43,7 +46,8 @@
       "args": [
         "--flavor",
         "production",
-        "--dart-define-from-file=dart_define/prod.json"
+        "--dart-define-from-file=dart_define/prod.json",
+        "--dart-define-from-file=dart_define/prod.secret.json"
       ]
     },
     {
@@ -55,7 +59,8 @@
       "args": [
         "--flavor",
         "production",
-        "--dart-define-from-file=dart_define/prod.json"
+        "--dart-define-from-file=dart_define/prod.json",
+        "--dart-define-from-file=dart_define/prod.secret.json"
       ]
     }
   ]

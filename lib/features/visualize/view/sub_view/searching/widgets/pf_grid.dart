@@ -82,20 +82,29 @@ class _PFGridState extends ConsumerState<PFGrid> with SingleTickerProviderStateM
         (localPosition.dx / cellSize).floor().clamp(0, kPFCols - 1),
       );
 
+  /// How many cells away `row`/`col` is from `markerRow`/`markerCol`, using
+  /// the larger of the row/column gap so a diagonal touch counts the same as
+  /// a straight one.
+  int _cellDistance(int row, int col, int markerRow, int markerCol) =>
+      (row - markerRow).abs() > (col - markerCol).abs() ? (row - markerRow).abs() : (col - markerCol).abs();
+
   void _handleGestureStart(Offset localPosition, double cellSize) {
     final (row, col) = _cellAt(localPosition, cellSize);
     final notifier = ref.read(widget.instance.notifier);
     final state = ref.read(widget.instance);
 
-    final onStart = row == state.startRow && col == state.startCol;
-    final onEnd = row == state.endRow && col == state.endCol;
+    final startDistance = _cellDistance(row, col, state.startRow, state.startCol);
+    final endDistance = _cellDistance(row, col, state.endRow, state.endCol);
+    final nearStart = startDistance <= kMarkerGrabRadius;
+    final nearEnd = endDistance <= kMarkerGrabRadius;
 
-    if ((onStart || onEnd) && notifier.markersMovable) {
-      _dragMode = onStart ? _DragMode.start : _DragMode.end;
+    if ((nearStart || nearEnd) && notifier.markersMovable) {
+      // Both markers could claim an overlapping touch; give it to whichever is closer.
+      _dragMode = nearStart && (!nearEnd || startDistance <= endDistance) ? _DragMode.start : _DragMode.end;
       setState(() => _markerAt = localPosition);
       return;
     }
-    if (onStart || onEnd || !notifier.wallsEditable) {
+    if (nearStart || nearEnd || !notifier.wallsEditable) {
       _dragMode = _DragMode.none;
       return;
     }
@@ -178,7 +187,8 @@ class _PFGridState extends ConsumerState<PFGrid> with SingleTickerProviderStateM
       // A stamp is only worth keeping while its animation is still running.
       _wallAnimations.removeWhere((_, v) => now - v > kWallPopMs);
       _visitedAnimations.removeWhere((_, v) => now - v > kReleaseTotalMs);
-      _pathAnimations.removeWhere((_, v) => now - v > kPathTintMs);
+      final prevPathLength = prev?.currentStep?.path?.length ?? 0;
+      _pathAnimations.removeWhere((_, v) => now - v > prevPathLength * kPathCellMs);
 
       var wallsAdded = false;
       for (int r = 0; r < kPFRows; r++) {
@@ -222,9 +232,7 @@ class _PFGridState extends ConsumerState<PFGrid> with SingleTickerProviderStateM
         now,
       );
       if (pathAdded > 0) {
-        _keepTickingUntil(
-          now + (nextPath?.length ?? 0) * kPathStaggerMs + kPathTintMs,
-        );
+        _keepTickingUntil(now + (nextPath?.length ?? 0) * kPathCellMs);
       }
     });
 

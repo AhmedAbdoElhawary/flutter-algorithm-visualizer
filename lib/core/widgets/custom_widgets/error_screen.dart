@@ -1,7 +1,7 @@
+import 'package:algorithm_visualizer/core/resources/constants.dart';
 import 'package:algorithm_visualizer/core/resources/strings_manager.dart';
 import 'package:algorithm_visualizer/core/widgets/adaptive/padding/adaptive_padding.dart';
 import 'package:algorithm_visualizer/core/widgets/adaptive/text/adaptive_text.dart';
-import 'package:flutter/foundation.dart' as foundation;
 import 'package:flutter/material.dart';
 
 class ErrorScreen extends StatelessWidget {
@@ -12,7 +12,7 @@ class ErrorScreen extends StatelessWidget {
     return Material(
       child: AllPadding(
         padding: 20,
-        child: foundation.kReleaseMode
+        child: kCustomReleaseMode
             ? const Center(
                 child: RegularText(StringsManager.sorryForInconvenience, fontSize: 18),
               )

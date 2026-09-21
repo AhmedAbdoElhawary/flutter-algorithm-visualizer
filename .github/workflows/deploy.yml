@@ -1,7 +1,9 @@
 name: Deploy
 
-# A pushed TAG -> build that flavor's release APK -> upload to that flavor's
-# own Firebase project via App Distribution. A plain merge/push ships nothing.
+# A version TAG -> build that flavor's release artifact -> upload to that
+# flavor's own Firebase project via App Distribution. Nobody creates these tags
+# by hand; release-on-merge.yml creates one after a PR merges and calls this
+# workflow with it.
 #
 # Tag shapes (one version line, stage as a suffix):
 #   v1.3.0-dev.2   -> environment "development" -> flavor dev        -> algodive-dev
@@ -33,9 +35,20 @@ name: Deploy
 # patch.yml, while dev and staging use plain `flutter build apk` (they ship
 # often enough that a new tag is the simpler fix). A plain `flutter build`
 # artifact can never receive a Shorebird patch, so the production path must
-# always stay on Shorebird — see docs/flavors/RELEASES.md.
+# always stay on Shorebird — see .github/RELEASES.md.
 
 on:
+  # The normal path: release-on-merge.yml creates the tag after a PR merges and
+  # calls this workflow with it. A tag pushed by GITHUB_TOKEN does not fire
+  # `on: push`, so deploy has to be called rather than left to self-trigger.
+  workflow_call:
+    inputs:
+      tag:
+        description: The version tag to build and ship.
+        required: true
+        type: string
+  # Break-glass only. The `v*` tag ruleset blocks humans from creating these,
+  # so in practice nothing reaches this trigger.
   push:
     tags:
       - "v*"
@@ -44,7 +57,7 @@ permissions:
   contents: write # the production job creates a GitHub Release
 
 concurrency:
-  group: deploy-${{ github.ref }}
+  group: deploy-${{ inputs.tag || github.ref }}
   cancel-in-progress: false
 
 jobs:
@@ -52,6 +65,7 @@ jobs:
     name: Resolve target
     runs-on: ubuntu-latest
     outputs:
+      tag: ${{ steps.map.outputs.tag }}
       environment: ${{ steps.map.outputs.environment }}
       flavor: ${{ steps.map.outputs.flavor }}
       target: ${{ steps.map.outputs.target }}
@@ -62,7 +76,7 @@ jobs:
     steps:
       - id: map
         run: |
-          tag="${{ github.ref_name }}"
+          tag="${{ inputs.tag || github.ref_name }}"
           case "$tag" in
             v*-dev.*)
               env=development; flavor=dev;        target=lib/main_dev.dart;     define=dart_define/dev.json;     branch=develop;    prod=false ;;
@@ -78,6 +92,7 @@ jobs:
           version="${tag#v}"
           version="${version%%-*}"
           {
+            echo "tag=$tag"
             echo "environment=$env"
             echo "flavor=$flavor"
             echo "target=$target"
@@ -94,12 +109,13 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
+          ref: ${{ needs.resolve.outputs.tag }}
           fetch-depth: 0
 
       - name: Confirm the tagged commit is reachable from ${{ needs.resolve.outputs.branch }}
         run: |
           branch="${{ needs.resolve.outputs.branch }}"
-          tag="${{ github.ref_name }}"
+          tag="${{ needs.resolve.outputs.tag }}"
           if ! git merge-base --is-ancestor "$tag" "origin/$branch"; then
             echo "::error::tag '$tag' is not on branch '$branch' — refusing to ship a mismatched tag/branch pair"
             exit 1
@@ -112,6 +128,8 @@ jobs:
     timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ needs.resolve.outputs.tag }}
 
       - uses: subosito/flutter-action@v2
         with:
@@ -142,6 +160,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
+          ref: ${{ needs.resolve.outputs.tag }}
           fetch-depth: 0 # need full tag history for the auto commit-list notes
 
       - uses: actions/setup-java@v4
@@ -212,7 +231,7 @@ jobs:
           # The build number on the App Distribution card is github.run_number,
           # which counts deploy runs, not tags — so name the tag here or a
           # tester has no way to tell which one they installed.
-          printf '%s\n\n' "${{ github.ref_name }}" > release-notes.txt
+          printf '%s\n\n' "${{ needs.resolve.outputs.tag }}" > release-notes.txt
           if [ "${{ needs.resolve.outputs.is_production }}" = "true" ]; then
             # Production: the hand-written CHANGELOG.md entry, approved by the
             # user in the /promote flow before this tag was ever pushed.
@@ -220,7 +239,7 @@ jobs:
           else
             # Dev/staging: auto-generated list of commits since the previous
             # tag in this same stage (same -dev./-stag. suffix family).
-            python3 tool/changelog_release_notes.py --auto-since-previous-tag "${{ github.ref_name }}" >> release-notes.txt
+            python3 tool/changelog_release_notes.py --auto-since-previous-tag "${{ needs.resolve.outputs.tag }}" >> release-notes.txt
           fi
           echo "----- release notes -----"; cat release-notes.txt
 
@@ -360,8 +379,8 @@ jobs:
       - name: Create the release
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: ${{ github.ref_name }}
-          name: ${{ github.ref_name }}
+          tag_name: ${{ needs.resolve.outputs.tag }}
+          name: ${{ needs.resolve.outputs.tag }}
           body_path: release-notes.txt
           # Production builds an AAB now, so match both rather than only .apk —
           # otherwise the release is created with no binary attached at all.

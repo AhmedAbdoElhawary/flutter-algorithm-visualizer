@@ -8,6 +8,10 @@ const int kPFStartCol = 5;
 const int kPFEndRow = 12;
 const int kPFEndCol = 25;
 
+/// How many extra cells around the start/end marker still count as a grab,
+/// so a finger does not have to land on the exact tiny cell to pick it up.
+const int kMarkerGrabRadius = 1;
+
 /// A wall popping in under the finger that drew it.
 const double kWallPopMs = 500;
 
@@ -48,14 +52,19 @@ final double kReleaseTotalMs = math.max(
 
 // --- The answer -------------------------------------------------------------
 
-/// How long each successive path cell waits before its own turn, so the path
-/// draws itself out from start to end instead of appearing at once.
-const int kPathStaggerMs = 30;
+/// How long a path cell sits blank — its visited colour erased — before the
+/// path colour pops into it. This is the "next cell goes empty" step that
+/// makes the reveal read as a line being drawn, not a tint painted over what
+/// was already there.
+const double kPathEmptyMs = 120;
 
-/// How long one path cell takes to turn from the colour it already had into
-/// the path colour. It never changes size: the answer is tinted onto the grid
-/// that found it, not popped in over a hole where that grid used to be.
-const double kPathTintMs = 400;
+/// How long one path cell takes to pop from blank into the path colour.
+const double kPathPopMs = 260;
+
+/// One path cell's full turn: blank, then pop in. Cell N+1 does not start
+/// until cell N finishes this whole span, so the path draws itself out one
+/// cell at a time from start to end instead of several cells tinting at once.
+const double kPathCellMs = kPathEmptyMs + kPathPopMs;
 
 /// How small a wall starts before it springs out to full size.
 const double kPopStartScale = 0.1;

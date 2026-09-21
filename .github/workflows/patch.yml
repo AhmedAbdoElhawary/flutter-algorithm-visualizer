@@ -12,7 +12,7 @@ name: Patch (hotfix)
 # This is NOT a substitute for deploy.yml — it can only patch a build that
 # deploy.yml already shipped through `shorebird release`. It cannot change
 # native/Kotlin code, add a plugin with native code, or upgrade the Flutter
-# version; Shorebird refuses those. See docs/flavors/RELEASES.md for the full
+# version; Shorebird refuses those. See .github/RELEASES.md for the full
 # decision rule, or run the /hotfix skill.
 #
 # Manual dispatch on purpose: a patch skips the whole review-and-tag ladder,

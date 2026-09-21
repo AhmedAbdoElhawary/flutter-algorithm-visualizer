@@ -15,7 +15,6 @@ class MainAlgoTab extends ConsumerWidget {
     required this.isSelected,
     required this.addEndPadding,
     this.verticalPadding = 0,
-    this.constrainLabelWidth = false,
     super.key,
   });
   final String label;
@@ -24,18 +23,6 @@ class MainAlgoTab extends ConsumerWidget {
   final IconData? icon;
   final double verticalPadding;
 
-  /// Set this only where the tab's own parent gives it a **bounded** width —
-  /// today, the three searching tabs split evenly across one row via
-  /// `Expanded`.
-  ///
-  /// The sorting tabs are the opposite case: they live in a horizontally
-  /// scrolling `Row` with no width bound at all, and a `Flexible`/`Expanded`
-  /// child there is a hard crash (`RenderFlex` needs a bounded main axis to
-  /// give a flex child a size), not a soft overflow. So the label only gets
-  /// wrapped in `Flexible` — and only then does it need `maxLines` and
-  /// ellipsis — when the caller has confirmed its own layout can supply that
-  /// bound.
-  final bool constrainLabelWidth;
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final textColor = isSelected ? ThemeEnum.inkTitle : ThemeEnum.inkSecondaryTitle;
@@ -52,7 +39,6 @@ class MainAlgoTab extends ConsumerWidget {
         child: _AlgoTabLabel(
           label: label,
           color: textColor,
-          constrainWidth: constrainLabelWidth,
         ),
       ),
     );
@@ -67,7 +53,6 @@ class AlgoTab extends ConsumerWidget {
     required this.isSelected,
     required this.addEndPadding,
     this.verticalPadding = 0,
-    this.constrainLabelWidth = false,
     super.key,
   });
   final String label;
@@ -77,18 +62,6 @@ class AlgoTab extends ConsumerWidget {
   final double verticalPadding;
   final ThemeEnum? borderColorOverride;
 
-  /// Set this only where the tab's own parent gives it a **bounded** width —
-  /// today, the three searching tabs split evenly across one row via
-  /// `Expanded`.
-  ///
-  /// The sorting tabs are the opposite case: they live in a horizontally
-  /// scrolling `Row` with no width bound at all, and a `Flexible`/`Expanded`
-  /// child there is a hard crash (`RenderFlex` needs a bounded main axis to
-  /// give a flex child a size), not a soft overflow. So the label only gets
-  /// wrapped in `Flexible` — and only then does it need `maxLines` and
-  /// ellipsis — when the caller has confirmed its own layout can supply that
-  /// bound.
-  final bool constrainLabelWidth;
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final color = isSelected ? ThemeEnum.ground : ThemeEnum.inkSecondaryTitle;
@@ -107,8 +80,7 @@ class AlgoTab extends ConsumerWidget {
             if (icon != null) ...[CustomIcon(icon!, color: color, size: 20), const RSizedBox(width: 5)],
             _AlgoTabLabel(
               label: label,
-              color: color,
-              constrainWidth: constrainLabelWidth,
+              color: color
             ),
           ],
         ),
@@ -117,15 +89,11 @@ class AlgoTab extends ConsumerWidget {
   }
 }
 
-/// Bare when [constrainWidth] is false (the old, unconstrained-safe shape);
-/// wrapped in [Flexible] with a one-line ellipsis when it is true. See
-/// [AlgoTab.constrainLabelWidth] for which contexts need which.
 class _AlgoTabLabel extends StatelessWidget {
-  const _AlgoTabLabel({required this.label, required this.color, required this.constrainWidth});
+  const _AlgoTabLabel({required this.label, required this.color});
 
   final String label;
   final ThemeEnum color;
-  final bool constrainWidth;
 
   @override
   Widget build(BuildContext context) {
@@ -135,9 +103,8 @@ class _AlgoTabLabel extends StatelessWidget {
       fontFamily: FontConstants.fontFamily,
       color: color,
       fontSize: 12.5,
-      maxLines: constrainWidth ? 1 : 2,
     );
 
-    return constrainWidth ? Flexible(child: text) : text;
+    return text;
   }
 }

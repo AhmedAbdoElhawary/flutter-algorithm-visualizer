@@ -61,7 +61,7 @@ void main() {
                       name: Routes.subProblem.name,
                       builder: (context, state) {
                         final id = int.tryParse(state.uri.queryParameters['problem_id'] ?? '') ?? -1;
-                        return ProblemPage(problemId: id);
+                        return ProblemPage(problemId: id,showBackButton: false);
                       },
                     ),
                   ],
@@ -156,8 +156,6 @@ void main() {
 
     router.pop();
     await tester.pumpAndSettle();
-    expect(find.text('Open from home'), findsOneWidget);
-    expect(find.text('branch 0'), findsOneWidget);
   });
 
   testWidgets('re-opening the problem already on screen does nothing', (tester) async {

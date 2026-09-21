@@ -86,11 +86,19 @@ class PFGridPainter extends CustomPainter {
             final released = visitedAnimations[encoded];
             final elapsed = released != null ? now - released : kReleaseTotalMs;
 
-            final startT = (pathAnimations[encoded] ?? now) + pathIndex[encoded]! * kPathStaggerMs;
-            final tint = Curves.easeOut.transform(((now - startT) / kPathTintMs).clamp(0.0, 1.0));
+            final turnStartT = (pathAnimations[encoded] ?? now) + pathIndex[encoded]! * kPathCellMs;
+            final turnElapsed = now - turnStartT;
 
-            _drawReleasedCell(canvas, rect, elapsed,
-                color: Color.lerp(_releaseColor(elapsed), pathColor, tint)!);
+            if (turnElapsed < 0) {
+              // Not this cell's turn yet — still shows whatever the search left it as.
+              _drawReleasedCell(canvas, rect, elapsed);
+            } else if (turnElapsed < kPathEmptyMs) {
+              // Cleared to empty first, so the path reads as freshly drawn rather
+              // than painted over the visited colour.
+            } else {
+              final popT = ((turnElapsed - kPathEmptyMs) / kPathPopMs).clamp(0.0, 1.0);
+              _drawElasticCell(canvas, rect, popT, pathColor);
+            }
           case SearchRole.visited:
             if (encoded == searcherCell) {
               final at = _searcherRect(rect, cellW, cellH, now);

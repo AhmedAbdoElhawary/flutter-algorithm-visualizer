@@ -47,6 +47,9 @@ Delete this section for non-UI changes.
 - [ ] New behavior is covered by a test
 - [ ] Tested in **both light and dark** mode
 - [ ] This PR targets `develop`
+- [ ] If this PR should ship a dev build, it carries **one** commit whose
+      subject is `release: vX.Y.Z-dev.N` (its body becomes the tag message).
+      Leave it out and the PR merges without shipping anything.
 
 ### Conventions
 

@@ -93,8 +93,13 @@ feature/your-thing  ──►  develop  ──►  staging  ──►  productio
 A `merge-guard` CI job will reject a PR that targets the wrong branch, so if you
 get a red check with that name, this is why.
 
-Releases are cut by pushing a version tag, not by merging. Contributors never
-need to do this.
+All three branches refuse a direct push — `git push origin develop` is rejected
+by a ruleset, not by convention. A pull request whose `ci-ok` check is green is
+the only way in.
+
+Releases are cut by tags, and **nobody creates a tag by hand** — a `v*` tag
+ruleset refuses that too. A tag is created by CI after a PR merges. Contributors
+never need to do any of this; see `.github/RELEASES.md` if you are curious.
 
 ---
 

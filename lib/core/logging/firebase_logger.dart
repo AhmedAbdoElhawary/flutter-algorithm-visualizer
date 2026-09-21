@@ -2,28 +2,18 @@ import 'package:algorithm_visualizer/core/logging/firebase_log_config.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 
-/// Prints one line when a Firebase call starts and one when it settles, so the
-/// console shows what the app asked Firebase for, how long it took and how it
-/// ended.
-///
 /// ```
 /// [FB#7][auth] → login(email: a***@gmail.com)
 /// [FB#7][auth] ✓ login  412ms  uid=x9K2wq
 /// [FB#8][firestore] ✗ deleteProblem(id: 14)  90ms  FirebaseException(permission-denied)
 /// ```
-///
-/// Every entry carries a sequence number, interleaved async calls stay pairable
-/// that way. Nothing is printed while [FirebaseLogConfig.enabled] is false.
+
 abstract final class FirebaseLogger {
   static int _sequence = 0;
 
   /// Placeholder for values that are never printed, whatever the config says.
   static const String secret = '***';
 
-  /// Times [action] and logs its start and outcome.
-  ///
-  /// [args] is rendered inside the parentheses of the call, [describeResult]
-  /// turns the returned value into the short summary of the success line.
   static Future<T> trace<T>(
     String scope,
     String method,
@@ -49,9 +39,6 @@ abstract final class FirebaseLogger {
     }
   }
 
-  /// [trace] for the synchronous reads, `isSignedIn` and `getCurrentUser`.
-  ///
-  /// A single line is enough here, there is no waiting to report.
   static T traceSync<T>(
     String scope,
     String method,
@@ -72,8 +59,6 @@ abstract final class FirebaseLogger {
     }
   }
 
-  /// Logs a call that is deliberately not awaited, so there is no outcome to
-  /// report later.
   static void traceDetached(String scope, String method, {Map<String, Object?>? args}) {
     if (!FirebaseLogConfig.enabled) return;
     _print(++_sequence, scope, '→ ${_signature(method, args)}  (fire and forget)');
@@ -96,14 +81,10 @@ abstract final class FirebaseLogger {
     return '$method($rendered)';
   }
 
-  /// Renders an error with its Firebase code when it carries one, that code is
-  /// the part worth reading.
   static String describe(Object error) {
     if (error is FirebaseException) return '${error.runtimeType}(${error.code})';
     return '$error';
   }
-
-  // --- redaction -----------------------------------------------------------
 
   /// `ahmed@gmail.com` → `a***@gmail.com`.
   static String email(String? value) {
@@ -115,11 +96,7 @@ abstract final class FirebaseLogger {
     return '${value[0]}$secret${value.substring(at)}';
   }
 
-  /// `Ahmed Abdo` → `A*** A***`.
-  ///
-  /// A display name identifies a person as squarely as an email does, so it
-  /// gets the same treatment. The initials are kept because that is enough to
-  /// tell two test accounts apart while reading a log.
+  /// Ahmed Abdo => A*** A***
   static String name(String? value) {
     if (value == null || value.isEmpty) return 'null';
     if (FirebaseLogConfig.payloads) return value;
@@ -131,15 +108,12 @@ abstract final class FirebaseLogger {
         .join(' ');
   }
 
-  /// Shortens uids and document ids, they are noise at full length.
   static String id(String? value) {
     if (value == null || value.isEmpty) return 'null';
     if (FirebaseLogConfig.payloads || value.length <= 6) return value;
     return '${value.substring(0, 6)}…';
   }
 
-  /// A document payload: its size only, unless [FirebaseLogConfig.payloads] is
-  /// on and the actual shape is what is being debugged.
   static String document(Map<String, dynamic> json) {
     if (FirebaseLogConfig.payloads) return '$json';
     return 'fields=${json.length}';
