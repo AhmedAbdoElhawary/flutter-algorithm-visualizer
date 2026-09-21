@@ -1,4 +1,3 @@
-import 'package:algorithm_visualizer/core/extensions/navigators.dart';
 import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
 import 'package:algorithm_visualizer/core/widgets/adaptive/text/adaptive_text.dart';
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/difficulty_chip.dart';
@@ -61,14 +60,11 @@ class _SecondaryProblemCardState extends State<SecondaryProblemCard> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  GestureDetector(
-                    onTap: () => context.pushProblem(widget.problemId.toString()),
-                    child: SemiBoldText(
-                      widget.problemName,
-                      color: ThemeEnum.inkPrimary,
-                      fontSize: 12.5,
-                      maxLines: 2,
-                    ),
+                  SemiBoldText(
+                    widget.problemName,
+                    color: ThemeEnum.inkPrimary,
+                    fontSize: 12.5,
+                    maxLines: 2,
                   ),
                   const RSizedBox(height: 3),
                   widget.subTitle,
