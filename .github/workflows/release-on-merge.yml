@@ -1,0 +1,135 @@
+name: Release on merge
+
+# Tags are made here and nowhere else. A `v*` tag ruleset stops anyone pushing
+# one by hand, and the branch rulesets stop anyone pushing to develop, staging
+# or production at all — so the only way to ship is: open a PR, pass ci-ok,
+# merge. This workflow then decides whether that merge earns a tag.
+#
+#   PR -> develop     ships only if the PR carries a commit whose subject is
+#                     "release: v1.0.1-dev.16". Its body becomes the tag message.
+#   PR -> staging     always ships. The version line comes from the newest dev
+#                     tag on the merge commit; the -stag.N counter is bumped.
+#   PR -> production  always ships. The version comes from the top CHANGELOG.md
+#                     entry, so the release PR must bump it first.
+#
+# deploy.yml is *called*, not left to trigger itself: a tag pushed with
+# GITHUB_TOKEN deliberately does not fire another workflow's `on: push`.
+
+on:
+  pull_request:
+    types: [closed]
+    branches:
+      - develop
+      - staging
+      - production
+
+permissions:
+  contents: write # creates the tag
+  pull-requests: read
+
+concurrency:
+  group: release-on-merge-${{ github.base_ref }}
+  cancel-in-progress: false
+
+jobs:
+  tag:
+    name: Create the tag
+    if: github.event.pull_request.merged == true
+    runs-on: ubuntu-latest
+    outputs:
+      tag: ${{ steps.decide.outputs.tag }}
+    steps:
+      # merge_commit_sha is the commit that ended up on the base branch, for a
+      # merge, a squash and a rebase alike — so this works whichever button was
+      # pressed on the PR.
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.merge_commit_sha }}
+          fetch-depth: 0
+
+      - name: Work out the tag and its message
+        id: decide
+        env:
+          GH_TOKEN: ${{ github.token }}
+          BASE: ${{ github.base_ref }}
+          PR_TITLE: ${{ github.event.pull_request.title }}
+        run: |
+          set -euo pipefail
+          git fetch --tags --force --quiet
+
+          case "$BASE" in
+            develop)
+              # The marker is read from the PR's own commits, not from the
+              # merged history, so a squash merge cannot lose it.
+              marker="$(gh api "repos/${{ github.repository }}/pulls/${{ github.event.number }}/commits" \
+                --paginate --jq '.[].commit.message | select(startswith("release: "))')"
+              if [ -z "$marker" ]; then
+                echo "No 'release:' commit in this PR — nothing to ship."
+                exit 0
+              fi
+              # First line is the tag, the rest is the tag message. ci.yml has
+              # already refused a PR carrying more than one of these.
+              tag="$(printf '%s' "$marker" | sed -n '1s/^release: //p')"
+              printf '%s' "$marker" | tail -n +2 > notes.txt
+              ;;
+
+            staging)
+              # staging inherits develop's version line: whatever dev build this
+              # merge is carrying decides which x.y.z we are on.
+              dev_tag="$(git describe --tags --match 'v*-dev.*' --abbrev=0 HEAD 2>/dev/null || true)"
+              if [ -z "$dev_tag" ]; then
+                echo "::error::no v*-dev.* tag is reachable from this merge, so there is no version line to promote. Ship a dev build first."
+                exit 1
+              fi
+              version="${dev_tag#v}"; version="${version%%-*}"
+              last="$(git tag --list "v${version}-stag.*" --sort=-v:refname | head -1)"
+              # Not `[ ... ] && n=...`: under `set -e` that whole line would
+              # return 1 on the first ever stag tag and kill the step.
+              n=1
+              if [ -n "$last" ]; then n=$(( ${last##*.} + 1 )); fi
+              tag="v${version}-stag.${n}"
+              prev="${last:-$dev_tag}"
+              { printf '%s\n\n' "$PR_TITLE"
+                git log "${prev}..HEAD" --no-merges --pretty='- %s'
+              } > notes.txt
+              ;;
+
+            production)
+              # The version is whatever the release PR wrote into CHANGELOG.md,
+              # so a production merge without a CHANGELOG bump fails below as a
+              # duplicate tag rather than silently re-shipping.
+              version="$(python3 tool/changelog_release_notes.py --field version)"
+              tag="v${version}"
+              python3 tool/changelog_release_notes.py > notes.txt
+              ;;
+          esac
+
+          if git rev-parse -q --verify "refs/tags/$tag" >/dev/null; then
+            echo "::error::tag '$tag' already exists. For production, bump CHANGELOG.md (and pubspec.yaml) in the release PR before merging."
+            exit 1
+          fi
+          test -s notes.txt || printf '%s\n' "$PR_TITLE" > notes.txt
+          # Firebase App Distribution rejects release notes over 16384 bytes,
+          # and deploy.yml prepends the tag name to whatever this says.
+          truncate -s '<16000' notes.txt
+
+          echo "tag=$tag" >> "$GITHUB_OUTPUT"
+          echo "----- $tag -----"; cat notes.txt
+
+      - name: Push the tag
+        if: steps.decide.outputs.tag != ''
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git tag -a "${{ steps.decide.outputs.tag }}" -F notes.txt
+          git push origin "${{ steps.decide.outputs.tag }}"
+
+  deploy:
+    name: Deploy
+    needs: tag
+    if: needs.tag.outputs.tag != ''
+    uses: ./.github/workflows/deploy.yml
+    with:
+      tag: ${{ needs.tag.outputs.tag }}
+    secrets: inherit
