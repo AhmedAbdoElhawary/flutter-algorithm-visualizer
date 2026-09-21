@@ -1,7 +1,13 @@
 name: Flutter V_0.1.0
 
-# PR quality gate only. Pushes/merges to develop, staging and production are
-# built and shipped by .github/workflows/deploy.yml.
+# PR quality gate only. Nothing is pushed straight to develop, staging or
+# production — the branch rulesets refuse it — so every change arrives here
+# first. Once the PR is merged, .github/workflows/release-on-merge.yml creates
+# the tag and calls deploy.yml.
+#
+# The single required status check on all three branches is `ci-ok` at the
+# bottom of this file, not the individual jobs: build-android's check name
+# contains the target branch, so it cannot be named in a ruleset.
 on:
   pull_request:
     branches:
@@ -11,6 +17,7 @@ on:
 
 permissions:
   contents: read
+  pull-requests: read # release-commit-guard reads the PR's own commit list
 
 concurrency:
   group: ci-${{ github.workflow }}-${{ github.ref }}
@@ -43,6 +50,83 @@ jobs:
             *)
               exit 0 ;; # any other target branch (e.g. a feature branch) is unrestricted
           esac
+
+  # A PR asks for a dev build by carrying one commit whose SUBJECT is
+  # "release: v1.0.1-dev.16" and whose body is the tag message. The tag itself
+  # is created by release-on-merge.yml after the merge — this job only checks
+  # the request is well formed, so a typo fails the PR instead of failing after
+  # it has already landed on develop.
+  release-commit-guard:
+    name: Release marker check
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Validate the "release:" commit, if the PR has one
+        env:
+          GH_TOKEN: ${{ github.token }}
+          BASE: ${{ github.base_ref }}
+        run: |
+          set -euo pipefail
+
+          # Read the PR's commits from the API rather than the local history:
+          # this has to agree with release-on-merge.yml, which reads the same
+          # list so that a squash merge cannot lose the marker.
+          commits="$(gh api "repos/${{ github.repository }}/pulls/${{ github.event.number }}/commits" \
+            --paginate \
+            --jq '.[] | (.commit.message | split("\n")) as $l
+                  | [$l[0], (($l[1:] | join("")) | gsub("\\s"; "") | length | tostring)]
+                  | @tsv')"
+
+          markers=0
+          tag=""
+          body_len=0
+          while IFS=$'\t' read -r subject len; do
+            case "$subject" in
+              release:*) ;;
+              *) continue ;;
+            esac
+            markers=$((markers + 1))
+            tag="${subject#release: }"
+            body_len="$len"
+          done <<< "$commits"
+
+          if [ "$markers" -eq 0 ]; then
+            if [ "$BASE" = "develop" ]; then
+              echo "No 'release:' commit — this PR merges without shipping anything."
+              exit 0
+            fi
+            echo "No 'release:' commit — '$BASE' derives its own tag after the merge."
+            exit 0
+          fi
+
+          if [ "$BASE" != "develop" ]; then
+            echo "::error::a 'release:' commit is only for PRs into develop. The '$BASE' tag is derived automatically after the merge — remove '$tag'."
+            exit 1
+          fi
+
+          if [ "$markers" -gt 1 ]; then
+            echo "::error::this PR has $markers 'release:' commits. A PR may ship at most one tag."
+            exit 1
+          fi
+
+          if ! printf '%s' "$tag" | grep -Eq '^v[0-9]+\.[0-9]+\.[0-9]+-dev\.[0-9]+$'; then
+            echo "::error::'$tag' is not a dev tag. A PR into develop must use v<x.y.z>-dev.<n>, e.g. v1.0.1-dev.16."
+            exit 1
+          fi
+
+          if [ "$body_len" -eq 0 ]; then
+            echo "::error::the 'release: $tag' commit has an empty body. Its body becomes the tag message — write what this build contains."
+            exit 1
+          fi
+
+          if [ -n "$(git ls-remote --tags origin "refs/tags/$tag")" ]; then
+            echo "::error::tag '$tag' already exists. Pick the next free number."
+            exit 1
+          fi
+
+          echo "OK — merging this PR will create '$tag' and ship a dev build."
 
   quality:
     name: Quality Checks
@@ -135,7 +219,7 @@ jobs:
 
   # Schemeless iOS smoke build — same for every target branch. Per-flavor iOS
   # builds need the Xcode schemes + per-config baseConfigurationReference wiring
-  # done properly in Xcode (a later phase, see docs/flavors/CICD.md). Until then
+  # done properly in Xcode (a later phase). Until then
   # a plain production-entry build is the reliable check. No environment: it
   # reads the repo-level iOS plist secret.
   build-ios:
@@ -172,3 +256,23 @@ jobs:
           flutter build ios --debug --no-codesign
           -t lib/main_prod.dart
           --dart-define-from-file=dart_define/prod.json
+
+  # The one required status check on develop, staging and production. Every job
+  # above must succeed for this to pass, so adding a job later automatically
+  # tightens the gate without touching the ruleset.
+  ci-ok:
+    name: ci-ok
+    if: always()
+    needs: [merge-guard, release-commit-guard, quality, build-android, build-ios]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Fail unless every check passed
+        run: |
+          results='${{ toJSON(needs) }}'
+          echo "$results"
+          failed="$(printf '%s' "$results" | jq -r 'to_entries | map(select(.value.result != "success") | .key) | join(" ")')"
+          if [ -n "$failed" ]; then
+            echo "::error::these checks did not pass: $failed"
+            exit 1
+          fi
+          echo "All checks passed."
