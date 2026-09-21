@@ -1,7 +1,7 @@
 import 'package:algorithm_visualizer/bootstrap.dart';
 import 'package:algorithm_visualizer/core/flavor/flavor_config.dart';
 
-/// Staging entry point.
+/// stagging entry point.
 ///
-/// Run: `flutter run --flavor staging -t lib/main_staging.dart --dart-define-from-file=dart_define/staging.json`
+/// run: `flutter run --flavor staging -t lib/main_staging.dart --dart-define-from-file=dart_define/staging.json`
 Future<void> main() => bootstrap(FlavorConfig.fromEnvironment());
