@@ -1,6 +1,6 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="dev" type="FlutterRunConfigurationType" factoryName="Flutter">
-    <option name="additionalArgs" value="--flavor dev --dart-define-from-file=dart_define/dev.json" />
+    <option name="additionalArgs" value="--flavor dev --dart-define-from-file=dart_define/dev.json --dart-define-from-file=dart_define/dev.secret.json" />
     <option name="filePath" value="$PROJECT_DIR$/lib/main_dev.dart" />
     <method />
   </configuration>
