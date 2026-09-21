@@ -24,39 +24,6 @@ extension Navigators on BuildContext {
     }
   }
 
-  Future pushTo(
-    RouteConfig path, {
-    Object? arguments,
-    String pathParameters = "",
-    Map<String, String>? pathParametersRaw,
-    String queryParameters = "",
-    bool pauseVideo = true,
-  }) async {
-    unFocusKeyboard();
-
-    if (pathParameters.isNotEmpty && arguments == null) {
-      arguments = pathParameters;
-
-      final currentValue = currentRouteSettings.$2;
-
-      if (currentValue is Map &&
-          currentRoute == path.name &&
-          arguments == currentValue[path.pathParamsName]) {
-        return;
-      }
-    }
-
-    return GoRouter.of(this).goNamed(
-      path.name,
-      extra: arguments,
-      pathParameters:
-          pathParametersRaw ?? (pathParameters.isNotEmpty ? {path.pathParamsName: pathParameters} : {}),
-      queryParameters: queryParameters.isNotEmpty ? {path.queryParamsName: queryParameters} : {},
-    );
-  }
-
-  /// Opens a problem inside the problem branch's stack, whatever tab the tap
-  /// came from, so problems are never spread across several tab stacks.
   Future<void> pushProblem(String problemId) async {
     if (GoRouterState.of(this).uri.queryParameters[Routes.problem.queryParamsName] == problemId) {
       return;
@@ -64,21 +31,14 @@ extension Navigators on BuildContext {
 
     final shell = StatefulNavigationShell.maybeOf(this);
     if (shell == null || shell.currentIndex == Routes.problemBranchIndex) {
-      return pushRoute(Routes.subProblem, queryParameters: problemId);
+      return pushTo(Routes.subProblem, queryParameters: problemId);
     }
 
-    final origin = shell.currentIndex;
     shell.goBranch(Routes.problemBranchIndex);
-    await pushRoute(Routes.subProblem, queryParameters: problemId);
-
-    // The problem opened from another tab was popped, so hand the user back to
-    // the tab they started from rather than leaving them on an empty branch.
-    if (shell.mounted && shell.currentIndex == Routes.problemBranchIndex) {
-      shell.goBranch(origin);
-    }
+    await pushTo(Routes.subProblem, queryParameters: problemId);
   }
 
-  Future pushRoute(
+  Future pushTo(
     RouteConfig path, {
     Object? arguments,
     String pathParameters = "",
@@ -95,31 +55,6 @@ extension Navigators on BuildContext {
           pathParametersRaw ?? (pathParameters.isNotEmpty ? {path.pathParamsName: pathParameters} : {}),
       queryParameters: queryParameters.isNotEmpty ? {path.queryParamsName: queryParameters} : {},
     );
-  }
-
-  Future goTo(
-    RouteConfig path, {
-    Object? arguments,
-    String pathParameters = "",
-    Map<String, String>? pathParametersRaw,
-    String queryParameters = "",
-    bool pauseVideo = true,
-  }) async {
-    unFocusKeyboard();
-
-    if (pathParameters.isNotEmpty && arguments == null) {
-      arguments = pathParameters;
-
-      final currentValue = currentRouteSettings.$2;
-
-      if (currentValue is Map &&
-          currentRoute == path.name &&
-          arguments == currentValue[path.pathParamsName]) {
-        return;
-      }
-    }
-
-    return go(path.path, extra: arguments);
   }
 
   Future pushAndRemoveCurrent(
