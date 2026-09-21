@@ -1,18 +1,10 @@
+import 'package:algorithm_visualizer/core/resources/constants.dart';
 import 'package:flutter/foundation.dart';
+import 'package:sentry_flutter/sentry_flutter.dart';
 
-/// Vendor-agnostic front door for crash and error reporting.
-///
-/// App code calls [CrashReporter.instance], never a Sentry type directly —
-/// that keeps the vendor swappable and the app testable without a real
-/// Sentry DSN. [bootstrap] installs the real implementation
-/// ([SentryCrashReporter]) once `SentryFlutter.init` has run; until then (and
-/// in `flutter test`, which never boots Sentry) [instance] is a no-op that
-/// only prints in debug mode, via [DebugCrashReporter].
 abstract class CrashReporter {
   static CrashReporter instance = const DebugCrashReporter();
 
-  /// Reports a caught error. [fatal] marks it as a crash rather than a
-  /// recovered/non-fatal error in the dashboard.
   Future<void> recordError(
     Object error,
     StackTrace? stackTrace, {
@@ -20,17 +12,55 @@ abstract class CrashReporter {
     Map<String, Object?>? context,
   });
 
-  /// Leaves a breadcrumb — one line of "what the user was doing" that shows
-  /// up in the trail leading up to the next reported error.
   void addBreadcrumb(String message, {String? category});
 
-  /// Tags reported errors with who hit them, once auth exists. No email/PII —
-  /// an opaque id only.
   void setUserId(String? id);
 }
 
-/// Default implementation: prints through [FirebaseLogger]'s conventions
-/// instead of vanishing. Used before Sentry is initialized and in tests.
+class SentryCrashReporter implements CrashReporter {
+  const SentryCrashReporter();
+
+  @override
+  Future<void> recordError(
+      Object error,
+      StackTrace? stackTrace, {
+        bool fatal = false,
+        Map<String, Object?>? context,
+      }) async {
+    await Sentry.captureException(
+      error,
+      stackTrace: stackTrace,
+      withScope: context == null ? null : (scope) => scope.setContexts('error_context', context),
+    );
+  }
+
+  @override
+  void addBreadcrumb(String message, {String? category}) {
+    Sentry.addBreadcrumb(Breadcrumb(message: message, category: category));
+  }
+
+  @override
+  void setUserId(String? id) {
+    Sentry.configureScope((scope) {
+      scope.setUser(id == null ? null : SentryUser(id: id));
+    });
+  }
+}
+
+class SentryEventCap {
+  SentryEventCap({this.maxPerErrorType = 3});
+
+  final int maxPerErrorType;
+  final Map<String, int> _seen = {};
+
+  SentryEvent? call(SentryEvent event, Hint hint) {
+    final key = event.throwable?.runtimeType.toString() ?? event.exceptions?.firstOrNull?.type ?? 'unknown';
+    final count = (_seen[key] ?? 0) + 1;
+    _seen[key] = count;
+    return count > maxPerErrorType ? null : event;
+  }
+}
+
 class DebugCrashReporter implements CrashReporter {
   const DebugCrashReporter();
 
@@ -41,7 +71,7 @@ class DebugCrashReporter implements CrashReporter {
     bool fatal = false,
     Map<String, Object?>? context,
   }) async {
-    if (!kDebugMode) return;
+    if (!kCustomDebugMode) return;
     debugPrint('[Crash]${fatal ? '[FATAL]' : ''} $error');
     if (context != null && context.isNotEmpty) debugPrint('[Crash] context: $context');
     if (stackTrace != null) debugPrint('$stackTrace');
@@ -49,13 +79,13 @@ class DebugCrashReporter implements CrashReporter {
 
   @override
   void addBreadcrumb(String message, {String? category}) {
-    if (!kDebugMode) return;
+    if (!kCustomDebugMode) return;
     debugPrint('[Crash][breadcrumb]${category != null ? '[$category]' : ''} $message');
   }
 
   @override
   void setUserId(String? id) {
-    if (!kDebugMode) return;
+    if (!kCustomDebugMode) return;
     debugPrint('[Crash] user set to ${id ?? 'null'}');
   }
 }
