@@ -131,7 +131,7 @@ Future<void> pumpProblemPage(
         path: '/',
         builder: (context, state) => MediaQuery(
           data: MediaQuery.of(context).copyWith(disableAnimations: disableAnimations),
-          child: ProblemPage(problemId: problemId ?? problem.getProblemId),
+          child: ProblemPage(problemId: problemId ?? problem.getProblemId,showBackButton: false),
         ),
       ),
     ],
@@ -185,7 +185,7 @@ Future<GoRouter> pumpProblemPageChain(
         name: Routes.problem.name,
         builder: (context, state) {
           final id = int.tryParse(state.uri.queryParameters['problem_id'] ?? '') ?? -1;
-          return ProblemPage(problemId: id);
+          return ProblemPage(problemId: id,showBackButton: true);
         },
         routes: [
           GoRoute(
@@ -193,7 +193,7 @@ Future<GoRouter> pumpProblemPageChain(
             name: Routes.subProblem.name,
             builder: (context, state) {
               final id = int.tryParse(state.uri.queryParameters['problem_id'] ?? '') ?? -1;
-              return ProblemPage(problemId: id);
+              return ProblemPage(problemId: id,showBackButton: false);
             },
           ),
         ],
@@ -313,7 +313,7 @@ Future<GoRouter> pumpProblemToEditorChain(
         name: Routes.problem.name,
         builder: (context, state) {
           final id = int.tryParse(state.uri.queryParameters['problem_id'] ?? '') ?? -1;
-          return ProblemPage(problemId: id);
+          return ProblemPage(problemId: id,showBackButton: true);
         },
         routes: [
           GoRoute(
@@ -321,7 +321,7 @@ Future<GoRouter> pumpProblemToEditorChain(
             name: Routes.subProblem.name,
             builder: (context, state) {
               final id = int.tryParse(state.uri.queryParameters['problem_id'] ?? '') ?? -1;
-              return ProblemPage(problemId: id);
+              return ProblemPage(problemId: id,showBackButton: false);
             },
             routes: [
               GoRoute(
