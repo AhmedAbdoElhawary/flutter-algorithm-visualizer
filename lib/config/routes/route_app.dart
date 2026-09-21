@@ -33,8 +33,6 @@ final _tabDKey = GlobalKey<NavigatorState>();
 final _tabEKey = GlobalKey<NavigatorState>();
 
 class Routes {
-  // Position of the problem branch in the bottom bar; every problem push is
-  // routed into this branch so the highlighted icon matches what is on screen.
   static const int problemBranchIndex = 2;
 
   static const RouteConfig onboarding = RouteConfig(
@@ -139,11 +137,6 @@ class AppRoutes {
 
     initialLocation: OnboardingStore.standalone().isSeen ? Routes.home.path : Routes.onboarding.path,
     errorBuilder: (context, state) => const _UnknownPage(),
-    // Screen tracking with no per-page code: Firebase logs each route
-    // change as a `screen_view`, Sentry times how long the screen took to
-    // render. Monitoring owns the list — it is empty in debug/profile
-    // builds and whenever an SDK did not start, so the router never holds
-    // an observer backed by an uninitialized SDK.
     observers: Monitoring.navigatorObservers,
     routes: [
       GoRoute(
@@ -221,7 +214,7 @@ class AppRoutes {
                 name: Routes.problem.name,
                 builder: (context, state) {
                   final id = int.tryParse(state.uri.queryParameters["problem_id"] ?? "") ?? -1;
-                  return ProblemPage(problemId: id);
+                  return ProblemPage(problemId: id,showBackButton: false);
                 },
                 routes: [
                   GoRoute(
@@ -229,7 +222,7 @@ class AppRoutes {
                     name: Routes.subProblem.name,
                     builder: (context, state) {
                       final id = int.tryParse(state.uri.queryParameters["problem_id"] ?? "") ?? -1;
-                      return ProblemPage(problemId: id);
+                      return ProblemPage(problemId: id,showBackButton: true);
                     },
                     routes: [
                       GoRoute(
