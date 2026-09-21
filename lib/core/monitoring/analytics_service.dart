@@ -1,14 +1,7 @@
+import 'package:algorithm_visualizer/core/resources/constants.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/foundation.dart';
 
-/// Vendor-agnostic front door for product analytics, same shape as
-/// [CrashReporter]: app code calls [AnalyticsService.instance], never
-/// `FirebaseAnalytics` directly, and every event AlgoDive sends is declared
-/// once here rather than as magic strings scattered through the UI.
-///
-/// Deliberately small to start — screens are tracked automatically by
-/// [FirebaseAnalyticsObserver] in the router; these are the events that
-/// screen views alone cannot tell you.
 abstract class AnalyticsService {
   static AnalyticsService instance = const DebugAnalyticsService();
 
@@ -23,13 +16,12 @@ abstract class AnalyticsService {
   Future<void> speedChanged({required double speed});
 }
 
-/// Default implementation, active until `bootstrap.dart` swaps in
-/// [FirebaseAnalyticsService] — and permanently active in `flutter test`.
+/// flutter testing only
 class DebugAnalyticsService implements AnalyticsService {
   const DebugAnalyticsService();
 
   void _log(String name, Map<String, Object?> params) {
-    if (!kDebugMode) return;
+    if (!kCustomDebugMode) return;
     debugPrint('[Analytics] $name $params');
   }
 
@@ -53,10 +45,7 @@ class DebugAnalyticsService implements AnalyticsService {
   Future<void> speedChanged({required double speed}) async => _log('speed_changed', {'speed': speed});
 }
 
-/// Real [AnalyticsService], backed by `firebase_analytics`. Constructed once
-/// `Firebase.initializeApp()` has succeeded — if it failed, `bootstrap.dart`
-/// leaves [AnalyticsService.instance] on [DebugAnalyticsService] since there
-/// is no Firebase project to send events to.
+
 class FirebaseAnalyticsService implements AnalyticsService {
   const FirebaseAnalyticsService(this._analytics);
 
