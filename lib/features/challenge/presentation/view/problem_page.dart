@@ -30,10 +30,10 @@ import 'package:go_router/go_router.dart';
 enum _ProblemTab { problem, hints, similar }
 
 class ProblemPage extends ConsumerStatefulWidget {
-  const ProblemPage({super.key, required this.problemId});
+  const ProblemPage({super.key, required this.problemId, required this.showBackButton});
 
   final int problemId;
-
+  final bool showBackButton;
   @override
   ConsumerState<ProblemPage> createState() => _ProblemPageState();
 }
@@ -79,7 +79,8 @@ class _ProblemPageState extends ConsumerState<ProblemPage> with SingleTickerProv
           children: [
             NestedScrollView(
               headerSliverBuilder: (context, innerBoxIsScrolled) => [
-                SliverToBoxAdapter(child: _CollapsingHeaderTags(problem: problem)),
+                SliverToBoxAdapter(
+                    child: _CollapsingHeaderTags(problem: problem, showBackButton: widget.showBackButton)),
                 SliverAppBar(
                   floating: true,
                   snap: true,
@@ -111,7 +112,7 @@ class _ProblemPageState extends ConsumerState<ProblemPage> with SingleTickerProv
             _PinnedCta(
               onSolve: () {
                 final isSubProblem = GoRouterState.of(context).name == Routes.subProblem.name;
-                context.pushRoute(
+                context.pushTo(
                   isSubProblem ? Routes.subCodeEditor : Routes.codeEditor,
                   queryParameters: "${problem.getProblemId}",
                 );
@@ -125,9 +126,10 @@ class _ProblemPageState extends ConsumerState<ProblemPage> with SingleTickerProv
 }
 
 class _CollapsingHeaderTags extends StatelessWidget {
-  const _CollapsingHeaderTags({required this.problem});
+  const _CollapsingHeaderTags({required this.problem, required this.showBackButton});
 
   final CodingProblem problem;
+  final bool showBackButton;
 
   @override
   Widget build(BuildContext context) {
@@ -138,7 +140,7 @@ class _CollapsingHeaderTags extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          const CustomBackButton(),
+          if (showBackButton) const CustomBackButton(),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
