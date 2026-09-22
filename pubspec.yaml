@@ -3,7 +3,7 @@ description: "AlgoDive — watch algorithms think, then solve 100 interview prob
 
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 
-version: 1.0.0+1
+version: 1.0.1+1
 
 environment:
   sdk: '>=3.5.0 <4.0.0'
@@ -20,10 +20,8 @@ dependencies:
   riverpod: ^3.4.2
   flutter_riverpod: ^3.4.2
   get_storage: ^2.1.1
-  animations: ^2.2.0
   collection: ^1.19.1
   async: ^2.13.1
-  fl_chart: ^1.2.0
 
   cupertino_icons: ^1.0.9
   json_annotation: ^4.9.0
@@ -34,6 +32,9 @@ dependencies:
   firebase_analytics: ^12.5.0
   url_launcher: ^6.3.2
   firebase_app_check: ^0.4.8
+  # Already present transitively via sentry_flutter; declared directly so
+  # AppInfo can read the version the build was actually stamped with.
+  package_info_plus: ^9.0.1
 
 dev_dependencies:
   flutter_test:
@@ -64,7 +65,6 @@ flutter:
         # stay in font_manager.dart — re-add the assets here if a design ever
         # calls for them.
         #
-        # TODO(ahmed): Light (300) is kept only because the `LightText` widget
         # and `GetLightStyle` still exist. Neither has a single call site — if
         # you are happy to delete them, this asset saves another ~233 KB.
         - asset: assets/fonts/ibm_plex_sans_arabic/IBMPlexSansArabic-Light.ttf
@@ -87,6 +87,7 @@ flutter:
   assets:
     - assets/problems.json
     - assets/logo/svg/
+    - shorebird.yaml
 # firebase_auth 6.7.0 calls FirebaseAuthPlatform.setSettings(migrateCurrentUser:
 # ...), but its own pubspec only requires firebase_auth_platform_interface
 # ^9.0.7 — that parameter was added in 9.1.0. Pub resolves to the lowest
