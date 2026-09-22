@@ -114,3 +114,15 @@ app.*.map.json
 /assets/logo/README.md
 /tool/flavor_icons/custom/README.md
 /assets/screenshots/README.md
+
+# Design-tool exports. The finished PNGs under assets/exports/ are committed —
+# they are the store listing and worth versioning — but the raw project dumps
+# the design tool drops beside them are not.
+*.zip
+/assets/exports/**/*.fig
+/assets/exports/**/*.sketch
+
+# One-shot maintenance script. It only ever needs to run once, on one machine,
+# and committing it would publicly narrate a leak whose key is already dead.
+/tool/purge_leaked_keystore.sh
+/.github/PLAY_LAUNCH.md
