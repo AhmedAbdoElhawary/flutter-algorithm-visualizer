@@ -1,4 +1,5 @@
 import 'package:algorithm_visualizer/core/flavor/flavor_config.dart';
+import 'package:algorithm_visualizer/core/helpers/app_info.dart';
 import 'package:algorithm_visualizer/core/logging/firebase_log_config.dart';
 import 'package:algorithm_visualizer/core/logging/firebase_logger.dart';
 import 'package:algorithm_visualizer/core/material_app/splash_gate.dart';
@@ -32,6 +33,9 @@ Future<void> _boot(FlavorConfig config) async {
   FlavorConfig.initialize(config);
   Monitoring.installErrorHandlers();
 
+  /// Before `runApp`, so Settings never renders the empty default.
+  await AppInfo.load();
+
   bool firebaseReady = false;
   try {
     await Future.wait([
@@ -56,7 +60,8 @@ Future<void> _boot(FlavorConfig config) async {
 Future<void> _activateAppCheck() async {
   try {
     await FirebaseAppCheck.instance.activate(
-      providerAndroid: kCustomReleaseMode ? const AndroidPlayIntegrityProvider() : const AndroidDebugProvider(),
+      providerAndroid:
+          kCustomReleaseMode ? const AndroidPlayIntegrityProvider() : const AndroidDebugProvider(),
       providerApple: kCustomReleaseMode ? const AppleDeviceCheckProvider() : const AppleDebugProvider(),
     );
   } catch (error, stackTrace) {
