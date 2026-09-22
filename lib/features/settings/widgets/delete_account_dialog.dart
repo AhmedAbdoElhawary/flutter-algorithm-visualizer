@@ -1,4 +1,5 @@
 import 'package:algorithm_visualizer/config/routes/route_app.dart';
+import 'package:algorithm_visualizer/core/extensions/navigators.dart';
 import 'package:algorithm_visualizer/core/helpers/constants.dart';
 import 'package:algorithm_visualizer/core/helpers/link_launcher.dart';
 import 'package:algorithm_visualizer/core/resources/dimensions_manager.dart';
@@ -16,7 +17,6 @@ import 'package:algorithm_visualizer/features/auth/presentation/delete_account/v
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:go_router/go_router.dart';
 
 /// Step two of the deletion flow: prove it is really you.
 ///
@@ -45,7 +45,7 @@ class _DeleteAccountDialogState extends ConsumerState<DeleteAccountDialog> {
         message: StringsManager.deleteAccountSuccess,
         type: CustomSnackBarType.success,
       );
-      context.go(Routes.login.path);
+      context.pushAndRemoveAll(Routes.login);
       return;
     }
 

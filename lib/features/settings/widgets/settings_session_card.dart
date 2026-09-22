@@ -1,4 +1,5 @@
 import 'package:algorithm_visualizer/config/routes/route_app.dart';
+import 'package:algorithm_visualizer/core/extensions/navigators.dart';
 import 'package:algorithm_visualizer/core/resources/font_manager.dart';
 import 'package:algorithm_visualizer/core/resources/strings_manager.dart';
 import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
@@ -13,7 +14,6 @@ import 'package:algorithm_visualizer/features/profile/presentation/view_model/us
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:go_router/go_router.dart';
 
 /// The last card on the Settings page: the way out of the account, or the way
 /// into one.
@@ -51,7 +51,7 @@ class _LogoutCard extends StatelessWidget {
           onConfirm: () async {
             removeOverlay();
             await ref.read(authLoginProvider.notifier).logout();
-            if (context.mounted) context.go(Routes.login.path);
+            if (context.mounted) context.pushAndRemoveAll(Routes.login);
           },
         ),
       ),
@@ -73,7 +73,7 @@ class _GuestSignInCard extends StatelessWidget {
       /// `go`, not `push` — see [MainNavigationShell]. Pushing login over the
       /// live shell keeps Settings open behind it, so signing in as someone
       /// else lands back on Settings when the profile tab is next tapped.
-      onTap: () => context.go(Routes.login.path),
+      onTap: () => context.pushAndRemoveAll(Routes.login),
       child: const _AccountCardBody(
         icon: Icons.login_rounded,
         title: StringsManager.guestAccountTitle,

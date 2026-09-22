@@ -1,4 +1,5 @@
 import 'package:algorithm_visualizer/config/routes/route_app.dart';
+import 'package:algorithm_visualizer/core/extensions/navigators.dart';
 import 'package:algorithm_visualizer/core/resources/dimensions_manager.dart';
 import 'package:algorithm_visualizer/core/resources/strings_manager.dart';
 import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
@@ -38,7 +39,7 @@ class _ForgotPasswordPageState extends ConsumerState<ConfirmationPasswordPage> {
       children: [
         AuthEyebrowRow(
           StringsManager.accountRecovery,
-          onBack: () => context.canPop() ? context.pop() : context.go(Routes.login.path),
+          onBack: () => context.canPop() ? context.back() : context.pushTo(Routes.login),
         ),
         const RSizedBox(height: CdSpace.x8),
         const Align(

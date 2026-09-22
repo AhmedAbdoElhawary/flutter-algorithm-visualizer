@@ -17,41 +17,39 @@ class RecentSubmissionsPage extends ConsumerWidget {
     final all = ref.watch(profileStatisticsProvider.select((value) => value.practiceHistory));
 
     return Material(
-      child: SafeArea(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Padding(
-              padding: REdgeInsets.fromLTRB(16, 4, 16, 16),
-              child: const Row(
-                children: [
-                  CustomBackButton(),
-                  BoldText(StringsManager.practiceHistory, color: ThemeEnum.inkTitle, fontSize: 17),
-                ],
-              ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: REdgeInsets.fromLTRB(16, 4, 16, 16),
+            child: const Row(
+              children: [
+                CustomBackButton(),
+                BoldText(StringsManager.practiceHistory, color: ThemeEnum.inkTitle, fontSize: 17),
+              ],
             ),
-            Expanded(
-              child: all.isEmpty
-                  ? const Center(
-                      child: MediumText(StringsManager.noProblemsFound, color: ThemeEnum.inkSecondaryTitle),
-                    )
-                  : ListView.separated(
-                      padding: REdgeInsets.fromLTRB(16, 0, 16, 16),
-                      itemCount: all.length + 1,
-                      separatorBuilder: (_, __) => const RSizedBox(height: 10),
-                      itemBuilder: (context, i) {
-                        if (i == all.length) {
-                          return const EmptyStateQuiet(
-                            title: StringsManager.historyEndTitle,
-                            caption: StringsManager.longPressExplain,
-                          );
-                        }
-                        return HistoryRow(entry: all[i]);
-                      },
-                    ),
-            ),
-          ],
-        ),
+          ),
+          Expanded(
+            child: all.isEmpty
+                ? const Center(
+                    child: MediumText(StringsManager.noProblemsFound, color: ThemeEnum.inkSecondaryTitle),
+                  )
+                : ListView.separated(
+                    padding: REdgeInsets.fromLTRB(16, 0, 16, 16),
+                    itemCount: all.length + 1,
+                    separatorBuilder: (_, __) => const RSizedBox(height: 10),
+                    itemBuilder: (context, i) {
+                      if (i == all.length) {
+                        return const EmptyStateQuiet(
+                          title: StringsManager.historyEndTitle,
+                          caption: StringsManager.longPressExplain,
+                        );
+                      }
+                      return HistoryRow(entry: all[i]);
+                    },
+                  ),
+          ),
+        ],
       ),
     );
   }

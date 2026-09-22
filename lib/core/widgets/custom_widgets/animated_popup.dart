@@ -198,5 +198,6 @@ class _PixelGridPainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(_PixelGridPainter old) => old.opacity != opacity || old.color != color || old.cell != cell;
+  bool shouldRepaint(_PixelGridPainter old) =>
+      old.opacity != opacity || old.color != color || old.cell != cell;
 }

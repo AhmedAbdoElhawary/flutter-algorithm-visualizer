@@ -1,5 +1,7 @@
 import 'dart:math' as math;
 
+import 'package:algorithm_visualizer/features/visualize/helper/playback_speed.dart';
+
 const int kPFCols = 30;
 const int kPFRows = 24;
 
@@ -53,18 +55,28 @@ final double kReleaseTotalMs = math.max(
 // --- The answer -------------------------------------------------------------
 
 /// How long a path cell sits blank — its visited colour erased — before the
-/// path colour pops into it. This is the "next cell goes empty" step that
-/// makes the reveal read as a line being drawn, not a tint painted over what
-/// was already there.
-const double kPathEmptyMs = 120;
+/// path colour pops into it, at [PlaybackSpeed.normal]. This is the "next
+/// cell goes empty" step that makes the reveal read as a line being drawn,
+/// not a tint painted over what was already there.
+const double kBasePathEmptyMs = 120;
 
-/// How long one path cell takes to pop from blank into the path colour.
-const double kPathPopMs = 260;
+/// How long one path cell takes to pop from blank into the path colour, at
+/// [PlaybackSpeed.normal].
+const double kBasePathPopMs = 260;
+
+/// Scales the path-reveal timings to the chosen playback speed, so a faster
+/// run draws its answer faster too instead of always taking the same time
+/// regardless of how fast the search itself just played.
+double _pathSpeedScale(PlaybackSpeed speed) => PlaybackSpeed.normal.level / speed.level;
+
+double pathEmptyMs(PlaybackSpeed speed) => kBasePathEmptyMs * _pathSpeedScale(speed);
+
+double pathPopMs(PlaybackSpeed speed) => kBasePathPopMs * _pathSpeedScale(speed);
 
 /// One path cell's full turn: blank, then pop in. Cell N+1 does not start
 /// until cell N finishes this whole span, so the path draws itself out one
 /// cell at a time from start to end instead of several cells tinting at once.
-const double kPathCellMs = kPathEmptyMs + kPathPopMs;
+double pathCellMs(PlaybackSpeed speed) => pathEmptyMs(speed) + pathPopMs(speed);
 
 /// How small a wall starts before it springs out to full size.
 const double kPopStartScale = 0.1;

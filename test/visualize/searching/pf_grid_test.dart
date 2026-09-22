@@ -343,7 +343,7 @@ void main() {
 
       final painter = _painter(tester);
       expect(painter.visitedAnimations, isEmpty);
-      expect(painter.pathAnimations, isEmpty);
+      expect(painter.pathStartAt, isNull);
     });
   });
 }

@@ -35,7 +35,14 @@ class _PFGridState extends ConsumerState<PFGrid> with SingleTickerProviderStateM
 
   final Map<int, double> _wallAnimations = {};
   final Map<int, double> _visitedAnimations = {};
-  final Map<int, double> _pathAnimations = {};
+
+  /// When cell 0 of the current path began its turn. The whole reveal is one
+  /// timeline hanging off this: cell N starts N cell-spans after it.
+  double? _pathStartAt;
+
+  /// The cell span [_pathStartAt] is measured in. Kept so a speed change can
+  /// rebase the origin instead of re-timing a reveal that is already running.
+  double _pathCellMs = 0;
 
   _DragMode _dragMode = _DragMode.none;
 
@@ -137,15 +144,6 @@ class _PFGridState extends ConsumerState<PFGrid> with SingleTickerProviderStateM
     _dragMode = _DragMode.none;
   }
 
-  int _syncStamps(Map<int, double> stamps, Set<int> previous, Set<int> next, double now) {
-    stamps.removeWhere((id, _) => !next.contains(id));
-    final added = next.difference(previous);
-    for (final id in added) {
-      stamps[id] = now;
-    }
-    return added.length;
-  }
-
   Widget _markerSlot({
     required _DragMode mode,
     required int row,
@@ -180,15 +178,17 @@ class _PFGridState extends ConsumerState<PFGrid> with SingleTickerProviderStateM
     // leave a cell it has not reached yet.
     final stepMs = state.speed.stepSearchingDuration.inMilliseconds.toDouble();
     final jumpMs = stepMs < kSearcherJumpMs ? stepMs : kSearcherJumpMs;
+    final pathEmptyDurationMs = pathEmptyMs(state.speed);
+    final pathPopDurationMs = pathPopMs(state.speed);
+    final pathCellDurationMs = pathCellMs(state.speed);
 
     ref.listen(widget.instance, (prev, next) {
       final now = DateTime.now().millisecondsSinceEpoch.toDouble();
+      final cellMs = pathCellMs(next.speed);
 
       // A stamp is only worth keeping while its animation is still running.
       _wallAnimations.removeWhere((_, v) => now - v > kWallPopMs);
       _visitedAnimations.removeWhere((_, v) => now - v > kReleaseTotalMs);
-      final prevPathLength = prev?.currentStep?.path?.length ?? 0;
-      _pathAnimations.removeWhere((_, v) => now - v > prevPathLength * kPathCellMs);
 
       var wallsAdded = false;
       for (int r = 0; r < kPFRows; r++) {
@@ -225,14 +225,21 @@ class _PFGridState extends ConsumerState<PFGrid> with SingleTickerProviderStateM
       if (searcher != null) _visitedAnimations.remove(searcher);
 
       final nextPath = next.currentStep?.path;
-      final pathAdded = _syncStamps(
-        _pathAnimations,
-        prev?.currentStep?.path?.toSet() ?? {},
-        nextPath?.toSet() ?? {},
-        now,
-      );
-      if (pathAdded > 0) {
-        _keepTickingUntil(now + (nextPath?.length ?? 0) * kPathCellMs);
+      if (nextPath == null) {
+        _pathStartAt = null;
+      } else {
+        final startedAt = _pathStartAt;
+        if (startedAt == null) {
+          _pathStartAt = now;
+        } else if (cellMs != _pathCellMs) {
+          // Hold the frame the reveal is on and only change its rate from here.
+          // Re-timing it from the original origin would rescale the part that
+          // already played, snapping the line forward or dragging it back.
+          final revealed = (now - startedAt) / _pathCellMs;
+          _pathStartAt = now - revealed * cellMs;
+        }
+        _pathCellMs = cellMs;
+        _keepTickingUntil(_pathStartAt! + nextPath.length * cellMs);
       }
     });
 
@@ -276,6 +283,9 @@ class _PFGridState extends ConsumerState<PFGrid> with SingleTickerProviderStateM
                         searcherFrom: _searcherFrom,
                         searcherMoveAt: _searcherMoveAt,
                         searcherJumpMs: jumpMs,
+                        pathEmptyMs: pathEmptyDurationMs,
+                        pathPopMs: pathPopDurationMs,
+                        pathCellMs: pathCellDurationMs,
                         wallColor: context.getColor(searchRoleColor(SearchRole.wall)),
                         pathColor: context.getColor(searchRoleColor(SearchRole.path)),
                         searcherColor: context.getColor(searchRoleColor(SearchRole.searcher)),
@@ -285,7 +295,7 @@ class _PFGridState extends ConsumerState<PFGrid> with SingleTickerProviderStateM
                         gridLineColor: context.getColor(ThemeEnum.hairline),
                         wallAnimations: _wallAnimations,
                         visitedAnimations: _visitedAnimations,
-                        pathAnimations: _pathAnimations,
+                        pathStartAt: _pathStartAt,
                         repaint: _frame,
                       ),
                     ),

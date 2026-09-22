@@ -78,10 +78,7 @@ class AlgoTab extends ConsumerWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             if (icon != null) ...[CustomIcon(icon!, color: color, size: 20), const RSizedBox(width: 5)],
-            _AlgoTabLabel(
-              label: label,
-              color: color
-            ),
+            _AlgoTabLabel(label: label, color: color),
           ],
         ),
       ),

@@ -1,4 +1,5 @@
 import 'package:algorithm_visualizer/config/routes/route_app.dart';
+import 'package:algorithm_visualizer/core/extensions/navigators.dart';
 import 'package:algorithm_visualizer/core/resources/styles_manager.dart';
 import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
 import 'package:algorithm_visualizer/core/widgets/adaptive/text/adaptive_text.dart';
@@ -122,7 +123,7 @@ class AuthReturnLink extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => context.canPop() ? context.pop() : context.go(Routes.login.path),
+      onTap: () => context.canPop() ? context.back() : context.pushTo(Routes.login),
       child: Center(
         child: MediumText(text, color: color, fontSize: size, maxLines: 1),
       ),

@@ -9,11 +9,12 @@ What they enforce:
 - `develop.json`, `staging.json`, `production.json` — no direct push, no force
   push, no deletion. The only way in is a pull request whose `ci-ok` check
   passed. `bypass_actors` is empty, so this applies to the repo owner too.
-- `version-tags.json` — nobody may create, move or delete a `v*` tag. The only
-  exception is the GitHub Actions app, which is how
-  `.github/workflows/release-on-merge.yml` pushes the tag after a merge.
+- `version-tags.json` — nobody may move or delete a `v*` tag. Creating one is
+  not blocked: on a personal repo GitHub refuses the GitHub Actions app as a
+  bypass actor, so blocking creation would also block
+  `.github/workflows/release-on-merge.yml`.
 
-TODO(ahmed): these are NOT applied yet, on purpose — see "Order" below.
+All four are applied.
 
 ## Order
 

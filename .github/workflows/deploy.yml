@@ -47,8 +47,9 @@ on:
         description: The version tag to build and ship.
         required: true
         type: string
-  # Break-glass only. The `v*` tag ruleset blocks humans from creating these,
-  # so in practice nothing reaches this trigger.
+  # Break-glass only. A hand-pushed `v*` tag lands here. The ruleset cannot
+  # block creating one on a personal repo, but the guard job still refuses a
+  # tag that is not on its branch, and production still waits for approval.
   push:
     tags:
       - "v*"
@@ -131,7 +132,7 @@ jobs:
         with:
           ref: ${{ needs.resolve.outputs.tag }}
 
-      - uses: subosito/flutter-action@v2
+      - uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2 # v2.23.0
         with:
           channel: stable
           flutter-version: 3.44.7 # keep in sync with the team's local toolchain
@@ -168,7 +169,7 @@ jobs:
           distribution: temurin
           java-version: "17"
 
-      - uses: subosito/flutter-action@v2
+      - uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2 # v2.23.0
         with:
           channel: stable
           flutter-version: 3.44.7 # keep in sync with the team's local toolchain
@@ -179,7 +180,7 @@ jobs:
       # the free patch-install allowance for the builds that actually need it.
       - name: Setup Shorebird
         if: needs.resolve.outputs.is_production == 'true'
-        uses: shorebirdtech/setup-shorebird@v1
+        uses: shorebirdtech/setup-shorebird@4dd9d7dc2d7930bfeadb053b6e94b5110779d1e5 # v1.0.1
         with:
           cache: true
 
@@ -256,12 +257,20 @@ jobs:
       # symbols out of the shipped binary and writes them to build/symbols —
       # without it the release carries its own symbol table, and the AAB is
       # both bigger and trivially readable.
+      #
+      # `--flutter-version` is pinned because `shorebird release` ignores the
+      # Flutter that setup-flutter just installed and uses its own, which
+      # defaults to the latest stable. Left unpinned, production would ship on
+      # a Flutter the verify job never tested, and every later `shorebird
+      # patch` would have to match this exact version or be refused — so the
+      # pin has to equal the flutter-version above and the one in patch.yml.
       - name: Build release bundle (Shorebird — production)
         if: needs.resolve.outputs.is_production == 'true'
         run: |
           shorebird release android \
             --artifact aab \
             --flavor "$FLAVOR" \
+            --flutter-version 3.44.7 \
             -t "$TARGET" \
             --build-name "$VERSION" \
             --build-number "${{ github.run_number }}" \
@@ -310,42 +319,115 @@ jobs:
 
       # Sentry needs the symbol files that --split-debug-info just stripped
       # out, or every production stack trace arrives as bare hex addresses.
+      #
+      # This fails the release rather than warning past it. A production build
+      # whose crashes cannot be read is not worth shipping — the whole reason
+      # monitoring exists is the one case you cannot reproduce locally.
+      #
+      # Needs two things set. Either the production Environment or the repo
+      # works — the job selects the production Environment, so it sees both.
+      #   SENTRY_AUTH_TOKEN  secret. Sentry -> Settings -> Auth Tokens ->
+      #                      Create. Prefer an ORGANIZATION token (sntrys_...)
+      #                      over a personal one: it carries its own org, which
+      #                      is why SENTRY_ORG below is optional.
+      #   SENTRY_PROJECT     secret or variable, the PRODUCTION project's slug — the
+      #                      one behind dart_define/prod.secret.json's DSN, not
+      #                      dev's. Sentry -> Projects -> the project -> its
+      #                      slug is the last part of the browser URL.
+      #
+      # SENTRY_URL defaults to the EU instance because this account is on the
+      # EU data region — the DSNs read `o<id>.ingest.de.sentry.io`. Pointed at
+      # the default https://sentry.io/ instead, sentry-cli authenticates
+      # against the US instance and a perfectly valid token is rejected as
+      # unauthorized. Set a SENTRY_URL secret or variable if that ever moves.
       - name: Upload debug symbols to Sentry
         if: needs.resolve.outputs.is_production == 'true'
-        continue-on-error: true
         env:
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
-          SENTRY_ORG: ${{ vars.SENTRY_ORG }}
-          SENTRY_PROJECT: ${{ vars.SENTRY_PROJECT }}
+          # Read from either namespace. A slug is not a secret, so a variable is
+          # the tidier home for it, but GitHub keeps vars and secrets entirely
+          # separate — set one as the other and it silently reads as empty.
+          # Accepting both means that mistake costs nothing.
+          SENTRY_ORG: ${{ vars.SENTRY_ORG || secrets.SENTRY_ORG }}
+          SENTRY_PROJECT: ${{ vars.SENTRY_PROJECT || secrets.SENTRY_PROJECT }}
+          SENTRY_URL: ${{ vars.SENTRY_URL || secrets.SENTRY_URL || 'https://de.sentry.io/' }}
         run: |
-          # TODO(ahmed): add SENTRY_AUTH_TOKEN as a repo secret and SENTRY_ORG /
-          # SENTRY_PROJECT as repo variables, then drop `continue-on-error`
-          # above so a failed symbol upload fails the release.
-          if [ -z "$SENTRY_AUTH_TOKEN" ]; then
-            echo "::warning::SENTRY_AUTH_TOKEN not set — skipping symbol upload. Production stack traces will not be symbolicated."
-            exit 0
+          missing=""
+          [ -n "$SENTRY_AUTH_TOKEN" ] || missing="$missing SENTRY_AUTH_TOKEN"
+          [ -n "$SENTRY_PROJECT" ]    || missing="$missing SENTRY_PROJECT"
+          if [ -n "$missing" ]; then
+            echo "::error::cannot symbolicate production crashes — not set:$missing. See the TODO in deploy.yml."
+            exit 1
           fi
-          curl -sL https://sentry.io/get-cli/ | bash
+          # Only an organization token knows its own org. A personal token does
+          # not, so that is the one case SENTRY_ORG has to be filled in.
+          case "$SENTRY_AUTH_TOKEN" in
+            sntrys_*) ;;
+            *) [ -n "$SENTRY_ORG" ] || {
+                 echo "::error::SENTRY_AUTH_TOKEN is not an organization token (sntrys_...), so SENTRY_ORG must be set. Either set the SENTRY_ORG variable to your org slug, or replace the secret with an organization token."
+                 exit 1
+               } ;;
+          esac
+          test -d build/symbols || { echo "::error::build/symbols is missing — did the release step keep --split-debug-info?"; exit 1; }
+          # A pinned, checksummed binary rather than `curl get-cli | bash`: this
+          # job has the release keystore on disk, so it must not run whatever
+          # script a URL happens to serve today.
+          curl -sSfL -o "$RUNNER_TEMP/sentry-cli" \
+            https://github.com/getsentry/sentry-cli/releases/download/3.8.0/sentry-cli-Linux-x86_64
+          echo "13f8cb34ae01a6a272d7d7c22e277a105286615b4020de900ea95a8de47cdbb6  $RUNNER_TEMP/sentry-cli" | sha256sum -c -
+          chmod +x "$RUNNER_TEMP/sentry-cli"
+          export PATH="$RUNNER_TEMP:$PATH"
+          # Prove the token reaches the right instance before spending minutes
+          # uploading. A token pointed at the wrong data region fails here with
+          # a plain auth error instead of a confusing mid-upload one.
+          sentry-cli info || { echo "::error::sentry-cli could not authenticate against $SENTRY_URL — check SENTRY_AUTH_TOKEN and the data region."; exit 1; }
           sentry-cli debug-files upload --include-sources build/symbols
 
-      # Dev and staging only. Production now builds an AAB, and App
-      # Distribution installs a file straight onto a tester's device, so it
-      # wants an APK. Production testers come through the Play internal
-      # testing track instead — which is where a release candidate should be
-      # tested anyway, because that is the artifact Play actually re-signs
-      # and serves.
+      # Play takes the AAB, but App Distribution installs a file straight onto
+      # a tester's phone, so it needs an APK. bundletool turns the same AAB
+      # into one universal APK signed with the same upload key — same code,
+      # same Shorebird release, so a patch reaches these testers too.
       #
-      # TODO(ahmed): if you want production builds on App Distribution too,
-      # add a bundletool step to extract a universal APK from the AAB and
-      # upload that — do not switch the Play artifact back to APK.
+      # TODO(ahmed): App Check uses Play Integrity in release, and a sideloaded
+      # APK is not Play-recognized. Once enforcement is on in the production
+      # Firebase project, these testers' Firestore/Auth calls get rejected —
+      # test production through the Play internal track from then on.
+      - name: Extract a universal APK for App Distribution (production)
+        if: needs.resolve.outputs.is_production == 'true'
+        env:
+          KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+          KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+        run: |
+          jar="$RUNNER_TEMP/bundletool.jar"
+          curl -sSfL -o "$jar" \
+            https://github.com/google/bundletool/releases/download/1.18.3/bundletool-all-1.18.3.jar
+          echo "a099cfa1543f55593bc2ed16a70a7c67fe54b1747bb7301f37fdfd6d91028e29  $jar" | sha256sum -c -
+          java -jar "$jar" build-apks \
+            --bundle="$ARTIFACT" \
+            --output="$RUNNER_TEMP/universal.apks" \
+            --mode=universal \
+            --ks="${GITHUB_WORKSPACE}/android/app/release.jks" \
+            --ks-pass="pass:$KEYSTORE_PASSWORD" \
+            --ks-key-alias="$KEY_ALIAS" \
+            --key-pass="pass:$KEY_PASSWORD"
+          unzip -p "$RUNNER_TEMP/universal.apks" universal.apk > "build/app-${FLAVOR}-universal.apk"
+          echo "DIST_ARTIFACT=build/app-${FLAVOR}-universal.apk" >> "$GITHUB_ENV"
+
+      # Every flavor goes to its own Firebase project's testers. Dev and
+      # staging upload the APK they built; production uploads the universal
+      # APK from the step above.
+      #
+      # TODO(ahmed): the production Firebase project needs a tester group
+      # named "testers" (App Distribution -> Testers & Groups), or set
+      # FIREBASE_TESTER_GROUPS as a variable on the production environment.
       - name: Upload to Firebase App Distribution
-        if: needs.resolve.outputs.is_production != 'true'
-        uses: wzieba/Firebase-Distribution-Github-Action@v1
+        uses: wzieba/Firebase-Distribution-Github-Action@bd494989dd4bec0343f78adee87fe66e48279ad6 # v1.7.1
         with:
           appId: ${{ secrets.FIREBASE_ANDROID_APP_ID }}
           token: ${{ secrets.FIREBASE_TOKEN }}
           groups: ${{ vars.FIREBASE_TESTER_GROUPS || 'testers' }}
-          file: ${{ env.ARTIFACT }}
+          file: ${{ env.DIST_ARTIFACT || env.ARTIFACT }}
           releaseNotesFile: release-notes.txt
 
       - name: Upload release notes + bundle for the release job
@@ -377,7 +459,7 @@ jobs:
           name: release-assets
 
       - name: Create the release
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@3bb12739c298aeb8a4eeaf626c5b8d85266b0e65 # v2.6.2
         with:
           tag_name: ${{ needs.resolve.outputs.tag }}
           name: ${{ needs.resolve.outputs.tag }}

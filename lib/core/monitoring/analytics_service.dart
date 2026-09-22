@@ -45,7 +45,6 @@ class DebugAnalyticsService implements AnalyticsService {
   Future<void> speedChanged({required double speed}) async => _log('speed_changed', {'speed': speed});
 }
 
-
 class FirebaseAnalyticsService implements AnalyticsService {
   const FirebaseAnalyticsService(this._analytics);
 

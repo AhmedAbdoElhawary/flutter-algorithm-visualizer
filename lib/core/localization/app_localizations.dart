@@ -1,4 +1,3 @@
-import 'package:algorithm_visualizer/core/localization/translations/ar_translations.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
@@ -74,7 +73,9 @@ class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> 
   /// simply there on the next frame.
   @override
   Future<AppLocalizations> load(Locale locale) {
-    final table = locale.languageCode == 'ar' ? kArTranslations : const <String, String>{};
+    ///TODO: handle arabic overlay
+    // final table = locale.languageCode == 'ar' ? kArTranslations : const <String, String>{};
+    const table = <String, String>{};
     return SynchronousFuture<AppLocalizations>(AppLocalizations(locale, table));
   }
 
