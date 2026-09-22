@@ -1,4 +1,5 @@
 import 'package:algorithm_visualizer/config/routes/route_app.dart';
+import 'package:algorithm_visualizer/core/extensions/navigators.dart';
 import 'package:algorithm_visualizer/core/localization/app_localizations.dart';
 import 'package:algorithm_visualizer/core/resources/dimensions_manager.dart';
 import 'package:algorithm_visualizer/core/resources/font_manager.dart';
@@ -142,7 +143,7 @@ class _CelebrationPageState extends State<CelebrationPage> with TickerProviderSt
                   children: [
                     PrimaryButtonQuiet(
                       label: StringsManager.nextProblem,
-                      onPressed: () => context.go(Routes.practice.path),
+                      onPressed: () => context.pushTo(Routes.practice),
                     ),
                     const RSizedBox(height: 10),
                     SecondaryButtonQuiet(
