@@ -190,7 +190,8 @@ class _CodeEditorState extends State<CodeEditor> implements TextSelectionGesture
           borderRadius: borderRadius == null
               ? null
               : borderRadius.bottomEnd != Radius.zero && borderRadius.topEnd != Radius.zero
-                  ? BorderRadiusDirectional.only(bottomEnd: borderRadius.bottomEnd, topEnd: borderRadius.topEnd)
+                  ? BorderRadiusDirectional.only(
+                      bottomEnd: borderRadius.bottomEnd, topEnd: borderRadius.topEnd)
                   : borderRadius.bottomEnd != Radius.zero
                       ? BorderRadiusDirectional.only(bottomEnd: borderRadius.bottomEnd)
                       : borderRadius.topEnd != Radius.zero

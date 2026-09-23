@@ -2,10 +2,6 @@ const double kIOSTopPageSpacing = 5;
 const double kAndroidTopPageSpacing = 10;
 const double kBottomPageSpacing = 20;
 
-/// Shown on the settings screen. Kept in step with `version:` in `pubspec.yaml`
-/// by hand — the alternative is a `package_info_plus` dependency for one label.
-const String kAppVersion = '1.0.0';
-
 /// Public pages served from `docs/` (GitHub Pages). The Play Console listing
 /// points at the same two URLs, so they must not drift.
 const String kPrivacyPolicyUrl =
@@ -17,7 +13,7 @@ const String kTermsOfServiceUrl =
 const String kSourceCodeUrl = 'https://github.com/AhmedAbdoElhawary/flutter-algorithm-visualizer';
 
 /// The legal documents carry their **own** version, deliberately separate from
-/// [kAppVersion].
+/// the app version in `AppInfo.version`.
 ///
 /// They change on a different clock: a policy can be corrected without shipping
 /// a build, and a build ships constantly without touching the policy. Tying

@@ -1,4 +1,5 @@
 import 'package:algorithm_visualizer/config/routes/route_app.dart';
+import 'package:algorithm_visualizer/core/extensions/navigators.dart';
 import 'package:algorithm_visualizer/core/resources/dimensions_manager.dart';
 import 'package:algorithm_visualizer/core/resources/strings_manager.dart';
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/auth_text_field.dart';
@@ -67,7 +68,7 @@ class _SignUpPageState extends ConsumerState<SignUpPage> {
 
   void _onRegister() async {
     final success = await ref.read(authSignupProvider.notifier).register();
-    if (success && mounted) context.go(Routes.home.path);
+    if (success && mounted) context.pushTo(Routes.home);
   }
 
   @override
@@ -131,7 +132,7 @@ class _SignUpPageState extends ConsumerState<SignUpPage> {
         AuthFooterPrompt(
           prompt: StringsManager.alreadyHaveAccount,
           action: StringsManager.signIn,
-          onTap: () => context.canPop() ? context.pop() : context.go(Routes.login.path),
+          onTap: () => context.canPop() ? context.back() : context.pushTo(Routes.login),
         ),
       ],
     );

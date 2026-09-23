@@ -1,8 +1,8 @@
 name: Release on merge
 
-# Tags are made here and nowhere else. A `v*` tag ruleset stops anyone pushing
-# one by hand, and the branch rulesets stop anyone pushing to develop, staging
-# or production at all — so the only way to ship is: open a PR, pass ci-ok,
+# Tags are made here and nowhere else. The branch rulesets stop anyone pushing
+# to develop, staging or production at all, and the `v*` tag ruleset stops a
+# shipped tag being moved or deleted — so the only way to ship is: open a PR, pass ci-ok,
 # merge. This workflow then decides whether that merge earns a tag.
 #
 #   PR -> develop     ships only if the PR carries a commit whose subject is

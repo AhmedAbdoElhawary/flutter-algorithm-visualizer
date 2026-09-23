@@ -1,4 +1,5 @@
 import 'package:algorithm_visualizer/config/routes/route_app.dart';
+import 'package:algorithm_visualizer/core/extensions/navigators.dart';
 import 'package:algorithm_visualizer/core/resources/strings_manager.dart';
 import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
 import 'package:algorithm_visualizer/core/widgets/adaptive/padding/adaptive_padding.dart';
@@ -9,7 +10,6 @@ import 'package:algorithm_visualizer/features/profile/presentation/view_model/us
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:go_router/go_router.dart';
 
 class HomeHeader extends ConsumerWidget {
   const HomeHeader({super.key});
@@ -55,7 +55,7 @@ class HomeHeader extends ConsumerWidget {
                 // navigation stack, including every shell branch's saved page. A
                 // pushed login would sit on top of a live shell, and the next
                 // account would inherit the previous one's open tabs.
-                onTap: () => context.go(Routes.login.path),
+                onTap: () => context.pushTo(Routes.login),
                 child: const Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [

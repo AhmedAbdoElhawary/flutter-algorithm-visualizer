@@ -73,7 +73,7 @@ class _SignInButton extends ConsumerWidget {
 
   Future<void> _login(BuildContext context, WidgetRef ref) async {
     final success = await ref.read(authLoginProvider.notifier).login();
-    if (success && context.mounted) context.go(Routes.home.path);
+    if (success && context.mounted) context.pushTo(Routes.home);
   }
 
   @override

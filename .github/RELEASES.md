@@ -4,22 +4,26 @@ Everything AlgoDive ships comes from a tag, and every tag is made by CI after a
 pull request merges. Nothing here is a convention you are trusted to follow —
 rulesets refuse the shortcuts outright.
 
+Publishing to the store for the **first** time is a separate, one-time list:
+see `PLAY_LAUNCH.md`.
+
 ## The two locks
 
 | What | Enforced by |
 | --- | --- |
 | No direct push to `develop`, `staging` or `production` | one branch ruleset per branch, `bypass_actors` empty |
-| No hand-made `v*` tag — no create, no move, no delete | the `version-tags` ruleset, bypassed only by the GitHub Actions app |
+| No moving or deleting a `v*` tag | the `version-tags` ruleset, `bypass_actors` empty |
 
 The definitions live in `.github/rulesets/`; `.github/rulesets/apply.sh` pushes
 them to GitHub.
 
-So this no longer works, and is not supposed to:
+So don't do this. GitHub cannot block it on a personal repo, but it skips the
+PR and `ci-ok`, and a dev or staging tag ships to testers with no review:
 
 ```bash
 git checkout develop
 git tag -a v1.0.1-dev.16 -m "..."
-git push origin v1.0.1-dev.16   # rejected
+git push origin v1.0.1-dev.16   # not blocked, but never do it
 ```
 
 ## The ladder
@@ -89,8 +93,11 @@ outcome, not a bug.
 
 `deploy.yml` then pauses at the `production` environment's **Required
 reviewers** prompt. Approve it under the run's "Review deployments" and it
-builds through Shorebird, uploads symbols to Sentry, creates the GitHub Release
-with the `.aab` attached, and ships.
+builds through Shorebird, uploads symbols to Sentry, and creates the GitHub
+Release with the `.aab` attached.
+
+It stops there. Nothing uploads to Google Play — you download that `.aab` and
+upload it yourself. `PLAY_LAUNCH.md` covers the first one.
 
 ## Why deploy is *called*, not triggered
 

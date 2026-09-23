@@ -134,7 +134,6 @@ class AppRoutes {
   final routerProvider = GoRouter(
     debugLogDiagnostics: true,
     navigatorKey: _rootKey,
-
     initialLocation: OnboardingStore.standalone().isSeen ? Routes.home.path : Routes.onboarding.path,
     errorBuilder: (context, state) => const _UnknownPage(),
     observers: Monitoring.navigatorObservers,
@@ -214,7 +213,7 @@ class AppRoutes {
                 name: Routes.problem.name,
                 builder: (context, state) {
                   final id = int.tryParse(state.uri.queryParameters["problem_id"] ?? "") ?? -1;
-                  return ProblemPage(problemId: id,showBackButton: false);
+                  return ProblemPage(problemId: id, showBackButton: false);
                 },
                 routes: [
                   GoRoute(
@@ -222,7 +221,7 @@ class AppRoutes {
                     name: Routes.subProblem.name,
                     builder: (context, state) {
                       final id = int.tryParse(state.uri.queryParameters["problem_id"] ?? "") ?? -1;
-                      return ProblemPage(problemId: id,showBackButton: true);
+                      return ProblemPage(problemId: id, showBackButton: true);
                     },
                     routes: [
                       GoRoute(

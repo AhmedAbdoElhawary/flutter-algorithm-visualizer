@@ -1,3 +1,4 @@
+import 'package:algorithm_visualizer/core/helpers/app_info.dart';
 import 'package:algorithm_visualizer/core/helpers/constants.dart';
 import 'package:algorithm_visualizer/core/helpers/current_device.dart';
 import 'package:algorithm_visualizer/core/helpers/link_launcher.dart';
@@ -168,10 +169,10 @@ class _AboutSection extends StatelessWidget {
             onTap: () => context.openLink(kSourceCodeUrl, target: LinkTarget.external),
           ),
           const SettingsRowDivider(),
-          const SettingsRow(
+          SettingsRow(
             icon: Icons.info_outline_rounded,
             title: StringsManager.appVersionLabel,
-            subtitle: kAppVersion,
+            subtitle: AppInfo.version,
             showChevron: false,
           ),
         ],

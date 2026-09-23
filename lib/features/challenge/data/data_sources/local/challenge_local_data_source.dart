@@ -17,7 +17,8 @@ const _problemsAssetsPath = 'assets/problems.json';
 /// answers against exactly the same bytes in either language, which is the
 /// whole reason the translation lives in its own file instead of as extra
 /// columns in the original.
-const _problemsArabicAssetsPath = 'assets/problems.ar.json';
+/// TODO: add arabic overlay
+const _problemsArabicAssetsPath = 'assets/problems.json';
 
 const String _problemsKey = 'problems';
 

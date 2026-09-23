@@ -22,11 +22,11 @@ class SentryCrashReporter implements CrashReporter {
 
   @override
   Future<void> recordError(
-      Object error,
-      StackTrace? stackTrace, {
-        bool fatal = false,
-        Map<String, Object?>? context,
-      }) async {
+    Object error,
+    StackTrace? stackTrace, {
+    bool fatal = false,
+    Map<String, Object?>? context,
+  }) async {
     await Sentry.captureException(
       error,
       stackTrace: stackTrace,
