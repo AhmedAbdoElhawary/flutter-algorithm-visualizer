@@ -75,6 +75,14 @@ jobs:
         run: |
           set -euo pipefail
 
+          # A promotion PR carries every commit from the branch below it,
+          # including release: markers that already shipped on develop. Only
+          # develop reads the marker, so there is nothing to check here.
+          if [ "$BASE" != "develop" ]; then
+            echo "Promotion into '$BASE' — its tag is derived after the merge, release: markers are ignored."
+            exit 0
+          fi
+
           # Read the PR's commits from the API rather than the local history:
           # this has to agree with release-on-merge.yml, which reads the same
           # list so that a squash merge cannot lose the marker.
@@ -98,17 +106,8 @@ jobs:
           done <<< "$commits"
 
           if [ "$markers" -eq 0 ]; then
-            if [ "$BASE" = "develop" ]; then
-              echo "No 'release:' commit — this PR merges without shipping anything."
-              exit 0
-            fi
-            echo "No 'release:' commit — '$BASE' derives its own tag after the merge."
+            echo "No 'release:' commit — this PR merges without shipping anything."
             exit 0
-          fi
-
-          if [ "$BASE" != "develop" ]; then
-            echo "::error::a 'release:' commit is only for PRs into develop. The '$BASE' tag is derived automatically after the merge — remove '$tag'."
-            exit 1
           fi
 
           if [ "$markers" -gt 1 ]; then
