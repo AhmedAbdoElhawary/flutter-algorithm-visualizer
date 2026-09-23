@@ -86,7 +86,7 @@ android {
         create("production") {
             dimension = "environment"
             // No suffix: the real applicationId and version.
-            resValue("string", "app_name", "AlgoDive")
+            resValue("string", "app_name", "Algo Dive")
         }
     }
 

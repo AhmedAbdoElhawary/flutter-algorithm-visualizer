@@ -131,7 +131,7 @@ class _AlgoDiveSplashState extends State<AlgoDiveSplash> with SingleTickerProvid
                       Transform.translate(
                         offset: Offset(0, 12 * (1 - word)),
                         child: Text(
-                          StringsManager.algoDive,
+                          StringsManager.appName,
                           style: TextStyle(
                             fontFamily: FontConstants.fontFamily,
                             color: mark.withValues(alpha: word),
