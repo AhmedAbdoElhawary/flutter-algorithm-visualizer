@@ -1,6 +1,6 @@
 # Changelog
 
-## [1.0.1] - 2026-09-22
+## [1.0.2] - 2026-09-23
 
 First public release.
 
@@ -16,6 +16,12 @@ First public release.
   across devices; stay a guest and nothing ever leaves the phone.
 - Delete your account and everything stored with it from inside Settings.
 - Light and dark themes.
+
+## [1.0.1] - 2026-09-22
+
+Internal only — never published to a store.
+
+- Release candidate for the first Play launch, replaced by 1.0.2 before upload.
 
 ## [1.0.0] - 2026-09-08
 
