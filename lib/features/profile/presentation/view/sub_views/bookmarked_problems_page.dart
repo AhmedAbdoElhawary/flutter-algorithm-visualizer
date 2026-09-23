@@ -22,46 +22,43 @@ class BookmarkedProblemsPage extends ConsumerWidget {
     final problems = ref.watch(problemsProvider);
 
     return Material(
-      child: SafeArea(
-        child: problems.when(
-          data: (all) {
-            final bookmarked = all.where((p) => p.getIsBookmarked).toList();
-            return Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                _Header(count: bookmarked.length),
-                Expanded(
-                  child: bookmarked.isEmpty
-                      ? const Center(
-                          child:
-                              MediumText(StringsManager.noProblemsFound, color: ThemeEnum.inkSecondaryTitle),
-                        )
-                      : ListView.separated(
-                          padding: REdgeInsets.fromLTRB(16, 4, 16, 16),
-                          itemCount: bookmarked.length + 1,
-                          separatorBuilder: (_, __) => const RSizedBox(height: 9),
-                          itemBuilder: (context, i) {
-                            if (i == bookmarked.length) {
-                              return const EmptyStateQuiet(
-                                title: StringsManager.bookmarkEndTitle,
-                                caption: StringsManager.swipeToRemoveBookmark,
-                              );
-                            }
-                            final problem = bookmarked[i];
-                            return BookmarkRow(
-                              problem: problem,
-                              onTap: () => context.pushProblem("${problem.getProblemId}"),
+      child: problems.when(
+        data: (all) {
+          final bookmarked = all.where((p) => p.getIsBookmarked).toList();
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _Header(count: bookmarked.length),
+              Expanded(
+                child: bookmarked.isEmpty
+                    ? const Center(
+                        child: MediumText(StringsManager.noProblemsFound, color: ThemeEnum.inkSecondaryTitle),
+                      )
+                    : ListView.separated(
+                        padding: REdgeInsets.fromLTRB(16, 4, 16, 16),
+                        itemCount: bookmarked.length + 1,
+                        separatorBuilder: (_, __) => const RSizedBox(height: 9),
+                        itemBuilder: (context, i) {
+                          if (i == bookmarked.length) {
+                            return const EmptyStateQuiet(
+                              title: StringsManager.bookmarkEndTitle,
+                              caption: StringsManager.swipeToRemoveBookmark,
                             );
-                          },
-                        ),
-                ),
-              ],
-            );
-          },
-          loading: () => Center(child: CircularProgressIndicator(strokeWidth: 2.r)),
-          error: (_, __) => const Center(
-            child: MediumText(StringsManager.notAbleToLoadAnyChallenge, color: ThemeEnum.inkSecondaryTitle),
-          ),
+                          }
+                          final problem = bookmarked[i];
+                          return BookmarkRow(
+                            problem: problem,
+                            onTap: () => context.pushProblem("${problem.getProblemId}"),
+                          );
+                        },
+                      ),
+              ),
+            ],
+          );
+        },
+        loading: () => Center(child: CircularProgressIndicator(strokeWidth: 2.r)),
+        error: (_, __) => const Center(
+          child: MediumText(StringsManager.notAbleToLoadAnyChallenge, color: ThemeEnum.inkSecondaryTitle),
         ),
       ),
     );

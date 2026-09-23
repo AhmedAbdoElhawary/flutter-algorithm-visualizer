@@ -15,6 +15,10 @@ class PFGridPainter extends CustomPainter {
 
   final double searcherJumpMs;
 
+  final double pathEmptyMs;
+  final double pathPopMs;
+  final double pathCellMs;
+
   final Color wallColor;
   final Color pathColor;
   final Color searcherColor;
@@ -25,7 +29,9 @@ class PFGridPainter extends CustomPainter {
 
   final Map<int, double> wallAnimations;
   final Map<int, double> visitedAnimations;
-  final Map<int, double> pathAnimations;
+
+  /// When cell 0 of the path began its turn; null while no path is showing.
+  final double? pathStartAt;
 
   PFGridPainter({
     required this.walls,
@@ -35,6 +41,9 @@ class PFGridPainter extends CustomPainter {
     required this.searcherFrom,
     required this.searcherMoveAt,
     required this.searcherJumpMs,
+    required this.pathEmptyMs,
+    required this.pathPopMs,
+    required this.pathCellMs,
     required this.wallColor,
     required this.pathColor,
     required this.searcherColor,
@@ -44,7 +53,7 @@ class PFGridPainter extends CustomPainter {
     required this.gridLineColor,
     required this.wallAnimations,
     required this.visitedAnimations,
-    required this.pathAnimations,
+    required this.pathStartAt,
     required Listenable repaint,
   }) : super(repaint: repaint);
 
@@ -86,17 +95,17 @@ class PFGridPainter extends CustomPainter {
             final released = visitedAnimations[encoded];
             final elapsed = released != null ? now - released : kReleaseTotalMs;
 
-            final turnStartT = (pathAnimations[encoded] ?? now) + pathIndex[encoded]! * kPathCellMs;
+            final turnStartT = (pathStartAt ?? now) + pathIndex[encoded]! * pathCellMs;
             final turnElapsed = now - turnStartT;
 
             if (turnElapsed < 0) {
               // Not this cell's turn yet — still shows whatever the search left it as.
               _drawReleasedCell(canvas, rect, elapsed);
-            } else if (turnElapsed < kPathEmptyMs) {
+            } else if (turnElapsed < pathEmptyMs) {
               // Cleared to empty first, so the path reads as freshly drawn rather
               // than painted over the visited colour.
             } else {
-              final popT = ((turnElapsed - kPathEmptyMs) / kPathPopMs).clamp(0.0, 1.0);
+              final popT = ((turnElapsed - pathEmptyMs) / pathPopMs).clamp(0.0, 1.0);
               _drawElasticCell(canvas, rect, popT, pathColor);
             }
           case SearchRole.visited:

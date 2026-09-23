@@ -65,7 +65,7 @@ void main() {
                   name: Routes.problem.name,
                   builder: (context, state) {
                     final id = int.tryParse(state.uri.queryParameters['problem_id'] ?? '') ?? -1;
-                    return ProblemPage(problemId: id,showBackButton: true);
+                    return ProblemPage(problemId: id, showBackButton: true);
                   },
                   routes: [
                     GoRoute(
@@ -73,7 +73,7 @@ void main() {
                       name: Routes.subProblem.name,
                       builder: (context, state) {
                         final id = int.tryParse(state.uri.queryParameters['problem_id'] ?? '') ?? -1;
-                        return ProblemPage(problemId: id,showBackButton: false);
+                        return ProblemPage(problemId: id, showBackButton: false);
                       },
                     ),
                   ],

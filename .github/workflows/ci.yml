@@ -29,9 +29,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Verify ${{ github.head_ref }} is allowed to merge into ${{ github.base_ref }}
+        # Passed through env, not ${{ }} in the script: a fork picks its own
+        # branch name, and one like `$(curl ...)` would run as shell.
+        env:
+          BASE: ${{ github.base_ref }}
+          HEAD: ${{ github.head_ref }}
         run: |
-          base="${{ github.base_ref }}"
-          head="${{ github.head_ref }}"
+          base="$BASE"
+          head="$HEAD"
           case "$base" in
             develop)
               exit 0 ;; # anything may merge into develop
@@ -70,6 +75,14 @@ jobs:
         run: |
           set -euo pipefail
 
+          # A promotion PR carries every commit from the branch below it,
+          # including release: markers that already shipped on develop. Only
+          # develop reads the marker, so there is nothing to check here.
+          if [ "$BASE" != "develop" ]; then
+            echo "Promotion into '$BASE' — its tag is derived after the merge, release: markers are ignored."
+            exit 0
+          fi
+
           # Read the PR's commits from the API rather than the local history:
           # this has to agree with release-on-merge.yml, which reads the same
           # list so that a squash merge cannot lose the marker.
@@ -93,17 +106,8 @@ jobs:
           done <<< "$commits"
 
           if [ "$markers" -eq 0 ]; then
-            if [ "$BASE" = "develop" ]; then
-              echo "No 'release:' commit — this PR merges without shipping anything."
-              exit 0
-            fi
-            echo "No 'release:' commit — '$BASE' derives its own tag after the merge."
+            echo "No 'release:' commit — this PR merges without shipping anything."
             exit 0
-          fi
-
-          if [ "$BASE" != "develop" ]; then
-            echo "::error::a 'release:' commit is only for PRs into develop. The '$BASE' tag is derived automatically after the merge — remove '$tag'."
-            exit 1
           fi
 
           if [ "$markers" -gt 1 ]; then
@@ -137,7 +141,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Setup Flutter
-        uses: subosito/flutter-action@v2
+        uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2 # v2.23.0
         with:
           channel: stable
           flutter-version: 3.44.7 # keep in sync with the team's local toolchain
@@ -179,7 +183,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Setup Flutter
-        uses: subosito/flutter-action@v2
+        uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2 # v2.23.0
         with:
           channel: stable
           flutter-version: 3.44.7 # keep in sync with the team's local toolchain
@@ -232,7 +236,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Setup Flutter
-        uses: subosito/flutter-action@v2
+        uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2 # v2.23.0
         with:
           channel: stable
           flutter-version: 3.44.7 # keep in sync with the team's local toolchain
