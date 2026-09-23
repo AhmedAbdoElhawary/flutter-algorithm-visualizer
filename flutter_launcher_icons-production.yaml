@@ -20,6 +20,12 @@ flutter_launcher_icons:
   # instead of us shipping a flat background PNG.
   adaptive_icon_background: "#0B0B0D"
   adaptive_icon_foreground: "assets/logo/png/android-adaptive-foreground-432.png"
+  # The art already pads the mark to 36% of its canvas, so the plugin's
+  # default 16% inset made it look tiny on Android.
+  # The plugin does not write ic_launcher_round.xml, which most launchers use,
+  # so copy ic_launcher.xml over it in production/res/mipmap-anydpi-v26 after
+  # every regenerate.
+  adaptive_icon_foreground_inset: 0
   # Android 13+ "themed icon" layer: the OS tints this to match the user's
   # wallpaper/theme. Only the alpha channel is used, so the mark's own
   # colours don't matter here.

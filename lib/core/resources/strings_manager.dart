@@ -5,11 +5,7 @@ import 'package:algorithm_visualizer/core/localization/app_localizations.dart';
 import 'package:flutter/widgets.dart';
 
 class StringsManager {
-  static const String algoDive = "AlgoDive";
-
-  /// ----------------------------------------------------------------------->
-
-  static const String appName = "Algorithm Visualizer";
+  static const String appName = "Algo Dive";
 
   static const String sorryForInconvenience = "Sorry for inconvenience";
   static const String cancel = "Cancel";

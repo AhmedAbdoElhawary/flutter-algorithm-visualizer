@@ -466,6 +466,8 @@ jobs:
           body_path: release-notes.txt
           # Production builds an AAB now, so match both rather than only .apk —
           # otherwise the release is created with no binary attached at all.
+          # `**/` because download-artifact keeps the build/app/outputs/...
+          # path the file was uploaded from; a bare `*` only looks at the root.
           files: |
-            *-release.aab
-            *-release.apk
+            **/*-release.aab
+            **/*-release.apk
