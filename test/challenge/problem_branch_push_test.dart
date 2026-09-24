@@ -13,6 +13,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
 
+import '../helpers/test_data.dart';
 import 'support/problem_page_test_support.dart';
 
 // `pushProblem` is the single entry point every "open this problem" tap goes

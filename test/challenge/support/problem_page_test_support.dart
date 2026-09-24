@@ -1,13 +1,10 @@
 import 'package:algorithm_visualizer/config/routes/route_app.dart';
 import 'package:algorithm_visualizer/config/themes/app_theme.dart';
 import 'package:algorithm_visualizer/core/resources/strings_manager.dart';
-import 'package:algorithm_visualizer/features/challenge/data/models/example.dart';
 import 'package:algorithm_visualizer/features/challenge/data/models/function_signature.dart';
 import 'package:algorithm_visualizer/features/challenge/data/models/problem_storage.dart';
-import 'package:algorithm_visualizer/features/challenge/data/models/similar_question.dart';
 import 'package:algorithm_visualizer/features/challenge/data/models/test_case.dart';
 import 'package:algorithm_visualizer/features/challenge/domain/entities/coding_problem.dart';
-import 'package:algorithm_visualizer/features/challenge/domain/enums/problem.dart';
 import 'package:algorithm_visualizer/features/challenge/domain/repositories/problem_repository.dart';
 import 'package:algorithm_visualizer/features/challenge/presentation/view/celebration_page.dart';
 import 'package:algorithm_visualizer/features/challenge/presentation/view/editor_page.dart';
@@ -20,72 +17,10 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
 import 'package:riverpod/misc.dart' show Override;
 
-class FakeProblemRepository implements ProblemRepository {
-  final List<CodingProblem> updated = [];
-
-  @override
-  Future<List<CodingProblem>> getAllProblems({bool arabic = false}) async => [];
-
-  @override
-  Future<void> saveProblem(CodingProblem problem) async {}
-
-  @override
-  Future<void> updateProblem(CodingProblem problem) async {
-    updated.add(problem);
-  }
-
-  @override
-  Future<void> deleteProblem(int problemId) async {}
-}
+import '../../helpers/test_data.dart';
 
 const Size problemPageSurfaceSize = Size(430, 932);
 const double problemPageDevicePixelRatio = 3.0;
-
-CodingProblem buildTestProblem({
-  int problemId = 1,
-  String name = 'Two Sum',
-  ProblemDifficulty difficulty = ProblemDifficulty.easy,
-  List<String> tags = const ['Array', 'Hash Map'],
-  String description = 'Given an array of integers, return indices of the two numbers.',
-  List<String> constraints = const ['1 <= n <= 10^4'],
-  List<Example> examples = const [],
-  List<String> hints = const [],
-  List<SimilarQuestion> similarQuestions = const [],
-}) {
-  return CodingProblem(
-    number: problemId,
-    problemId: problemId,
-    name: name,
-    source: 'Test',
-    sourceProblemNumber: problemId,
-    difficulty: difficulty,
-    category: 'Arrays',
-    tags: tags,
-    patterns: const [],
-    description: description,
-    constraints: constraints,
-    functionSignature: null,
-    defaultCode: null,
-    customObjects: null,
-    examples: examples,
-    edgeCases: const [],
-    testCases: const [],
-    hiddenTestCases: const [],
-    hints: hints,
-    solutionApproach: null,
-    expectedTimeComplexity: 'O(n)',
-    expectedSpaceComplexity: 'O(1)',
-    whatYouLearn: 'Testing',
-    keyPattern: 'Test pattern',
-    prerequisites: const [],
-    followUpConcepts: const [],
-    commonMistakes: const [],
-    similarQuestions: similarQuestions,
-    problemStatus: ProblemStatus.none,
-    isBookmarked: false,
-    solutionsStatus: const [],
-  );
-}
 
 const String gradableCorrectCode = 'int add(int a, int b) {\n  return a + b;\n}\n';
 

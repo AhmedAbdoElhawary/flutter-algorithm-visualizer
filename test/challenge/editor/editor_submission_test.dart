@@ -5,6 +5,7 @@ import 'package:algorithm_visualizer/features/challenge/presentation/view/celebr
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 
+import '../../helpers/fakes/fake_problem_repository.dart';
 import '../support/problem_page_test_support.dart';
 
 void main() {

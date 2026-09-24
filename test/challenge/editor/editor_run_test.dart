@@ -5,6 +5,7 @@ import 'package:algorithm_visualizer/features/challenge/presentation/widgets/edi
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
+import '../../helpers/test_data.dart';
 import '../support/problem_page_test_support.dart';
 
 void main() {
