@@ -57,6 +57,15 @@ extension Navigators on BuildContext {
     );
   }
 
+  void goTo(RouteConfig path, {String queryParameters = ""}) {
+    unFocusKeyboard();
+
+    GoRouter.of(this).goNamed(
+      path.name,
+      queryParameters: queryParameters.isNotEmpty ? {path.queryParamsName: queryParameters} : {},
+    );
+  }
+
   Future pushAndRemoveCurrent(
     RouteConfig path, {
     Object? arguments,
