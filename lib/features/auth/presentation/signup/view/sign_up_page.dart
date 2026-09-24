@@ -15,7 +15,6 @@ import 'package:algorithm_visualizer/features/auth/presentation/signup/view_mode
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:go_router/go_router.dart';
 
 class SignUpPage extends ConsumerStatefulWidget {
   const SignUpPage({super.key});
@@ -132,7 +131,7 @@ class _SignUpPageState extends ConsumerState<SignUpPage> {
         AuthFooterPrompt(
           prompt: StringsManager.alreadyHaveAccount,
           action: StringsManager.signIn,
-          onTap: () => context.canPop() ? context.back() : context.pushTo(Routes.login),
+          onTap: () => context.pushAndRemoveAll(Routes.login),
         ),
       ],
     );

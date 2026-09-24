@@ -3,6 +3,7 @@ import 'package:algorithm_visualizer/core/resources/color_manager.dart';
 import 'package:algorithm_visualizer/core/resources/dimensions_manager.dart';
 import 'package:algorithm_visualizer/core/resources/strings_manager.dart';
 import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
+import 'package:algorithm_visualizer/core/widgets/adaptive/padding/adaptive_padding.dart';
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/algo_tab.dart';
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/algorithm_title.dart';
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/complexity_details.dart';
@@ -107,15 +108,18 @@ class _VisualizePageState extends ConsumerState<VisualizePage> {
           pinned: true,
           centerTitle: false,
           titleSpacing: 0,
-          leadingWidth: 16.r,
+          leadingWidth: 0,
           shadowColor: ColorManager.transparent,
           leading: const SizedBox(),
-          title: ValueListenableBuilder(
-            valueListenable: title,
-            builder: (context, titleValue, child) => ValueListenableBuilder(
-              valueListenable: description,
-              builder: (context, descriptionValue, child) =>
-                  AlgorithmTitle(title: titleValue, description: descriptionValue),
+          title: OnlyPadding(
+            startPadding: 16,
+            child: ValueListenableBuilder(
+              valueListenable: title,
+              builder: (context, titleValue, child) => ValueListenableBuilder(
+                valueListenable: description,
+                builder: (context, descriptionValue, child) =>
+                    AlgorithmTitle(title: titleValue, description: descriptionValue),
+              ),
             ),
           ),
         ),
@@ -123,6 +127,8 @@ class _VisualizePageState extends ConsumerState<VisualizePage> {
           snap: true,
           floating: true,
           toolbarHeight: 48.r,
+          leading: const SizedBox(),
+          leadingWidth: 0,
           title: Padding(
             padding: REdgeInsets.only(left: 11, right: 11),
             child: Container(
