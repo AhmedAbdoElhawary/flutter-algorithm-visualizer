@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:algorithm_visualizer/features/visualize/view/sub_view/searching/helper/pf_constants.dart';
 import 'package:algorithm_visualizer/features/visualize/view/sub_view/searching/view_model/searching_notifier.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -330,5 +332,16 @@ void main() {
       expect(steps.first.frontier, {pfEncode(2, 2)});
       expect(steps.last.path!.last, pfEncode(20, 27));
     });
+  });
+
+  test('the same seed gives the same random walls', () {
+    List<List<bool>> randomWalls() {
+      final harness = _Harness(() => BFSSearchingNotifier(random: math.Random(1)));
+      addTearDown(harness.dispose);
+      harness.notifier.randomizeWalls();
+      return harness.state.walls;
+    }
+
+    expect(randomWalls(), randomWalls());
   });
 }

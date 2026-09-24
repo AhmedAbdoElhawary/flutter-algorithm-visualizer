@@ -1,6 +1,8 @@
 part of 'package:algorithm_visualizer/features/visualize/view/sub_view/searching/view_model/searching_notifier.dart';
 
 class AStarSearchingNotifier extends SearchingNotifier {
+  AStarSearchingNotifier({super.random});
+
   @override
   PFRule get rule => PFRule.cheapestFirst;
 
