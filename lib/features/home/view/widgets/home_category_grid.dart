@@ -54,7 +54,7 @@ class HomeCategoryGrid extends ConsumerWidget {
               return InkWell(
                   highlightColor: context.getColor(ThemeEnum.ground),
                   onTap: () {
-                    context.pushTo(Routes.visualize, queryParameters: name);
+                    context.goTo(Routes.visualize, queryParameters: name);
                   },
                   child: child);
             },

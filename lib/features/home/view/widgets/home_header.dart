@@ -55,7 +55,7 @@ class HomeHeader extends ConsumerWidget {
                 // navigation stack, including every shell branch's saved page. A
                 // pushed login would sit on top of a live shell, and the next
                 // account would inherit the previous one's open tabs.
-                onTap: () => context.pushTo(Routes.login),
+                onTap: () => context.pushAndRemoveAll(Routes.login),
                 child: const Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [

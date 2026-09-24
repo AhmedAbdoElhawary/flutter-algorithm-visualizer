@@ -74,6 +74,17 @@ abstract class SortingNotifier extends Notifier<SortingNotifierState>
 
   bool _isPlayingFun = false;
 
+  /// Bumped on every reset, so a play loop or green sweep that is still
+  /// sleeping knows it belongs to an old run and stops writing state.
+  int _run = 0;
+
+  bool _isStale(int run) => _disposed || run != _run;
+
+  void _stopRunning() {
+    _run++;
+    _isPlayingFun = false;
+  }
+
   int _selectedAlgorithmLength = 1;
   int get selectedAlgorithmLength => _selectedAlgorithmLength;
   set selectedAlgorithmLength(int value) {
@@ -194,6 +205,7 @@ abstract class SortingNotifier extends Notifier<SortingNotifierState>
       currentStepIndex: 0,
       isAllSorted: false,
     );
+    _stopRunning();
     _snapshots = [];
     _initializePositions();
   }
@@ -233,6 +245,7 @@ abstract class SortingNotifier extends Notifier<SortingNotifierState>
       currentStepIndex: 0,
       isAllSorted: false,
     );
+    _stopRunning();
     _snapshots = [];
     _initializePositions();
   }
@@ -345,6 +358,7 @@ abstract class SortingNotifier extends Notifier<SortingNotifierState>
     final prev = state.currentStepIndex - 1;
     if (prev < 0) return;
 
+    _stopRunning();
     final snapshot = _snapshots[prev];
     state = state.copyWith(
       list: snapshot.list,
@@ -359,11 +373,12 @@ abstract class SortingNotifier extends Notifier<SortingNotifierState>
 
   @protected
   Future<void> greenSortedItemsAsDone() async {
-    if (_disposed) return;
+    final run = _run;
+    if (_isStale(run)) return;
 
     final rolePerIndex = List<SortRole>.filled(state.list.length, SortRole.idle);
     for (int i = 0; i < rolePerIndex.length; i++) {
-      if (_disposed) return;
+      if (_isStale(run)) return;
       rolePerIndex[i] = SortRole.sorted;
       state = state.copyWith(isAllSorted: true, rolePerIndex: List.of(rolePerIndex));
       await Future.delayed(state.speed.stepSortingDuration);
@@ -382,12 +397,14 @@ abstract class SortingNotifier extends Notifier<SortingNotifierState>
   Future<void> updateVisualizeSorting() async {
     if (_isPlayingFun) return;
     _isPlayingFun = true;
+    final run = _run;
 
     ensureStepsGenerated();
     final steps = state.sortedSteps;
 
     for (int i = state.currentStepIndex; i < steps.length; i++) {
-      if (_disposed || _getOperation != SortingEnum.played) {
+      if (_isStale(run)) return;
+      if (_getOperation != SortingEnum.played) {
         _isPlayingFun = false;
         return;
       }
@@ -403,15 +420,12 @@ abstract class SortingNotifier extends Notifier<SortingNotifierState>
       await Future.delayed(speedDuration);
     }
 
-    if (_disposed) {
-      _isPlayingFun = false;
-      return;
-    }
+    if (_isStale(run)) return;
 
-    state = state.copyWith(clearCurrentStep: true);
+    state = state.copyWith(clearCurrentStep: true, operationStatus: SortingEnum.none);
     await Future.delayed(speedDuration);
     await greenSortedItemsAsDone();
-    _isPlayingFun = false;
+    if (!_isStale(run)) _isPlayingFun = false;
   }
 
   SortingResult buildSorting(List<int> values);
