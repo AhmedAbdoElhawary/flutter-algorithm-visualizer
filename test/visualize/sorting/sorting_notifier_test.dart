@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:algorithm_visualizer/features/visualize/helper/playback_speed.dart';
 import 'package:algorithm_visualizer/features/visualize/view/sub_view/sorting/view_model/sorting_notifier.dart';
 import 'package:algorithm_visualizer/features/visualize/view/sub_view/sorting/view_model/sub_sorting/bubble_sort_notifier.dart';
@@ -210,5 +212,18 @@ void main() {
 
       await Future.delayed(PlaybackSpeed.fast10.stepSortingDuration * 7);
     });
+  });
+
+  test('the same seed gives the same starting list', () {
+    List<int> startingValues() {
+      final provider = NotifierProvider<SortingNotifier, SortingNotifierState>(
+        () => BubbleSortNotifier(random: math.Random(1)),
+      );
+      final container = ProviderContainer();
+      addTearDown(container.dispose);
+      return container.read(provider).list.map((item) => item.value).toList();
+    }
+
+    expect(startingValues(), startingValues());
   });
 }

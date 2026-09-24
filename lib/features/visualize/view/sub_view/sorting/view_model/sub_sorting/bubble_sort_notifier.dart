@@ -4,6 +4,8 @@ import 'package:algorithm_visualizer/features/visualize/view/sub_view/sorting/vi
 import 'package:collection/collection.dart';
 
 class BubbleSortNotifier extends SortingNotifier {
+  BubbleSortNotifier({super.random});
+
   @override
   Set<SortRole> get roles => const {SortRole.sorted, SortRole.compare, SortRole.swap};
 

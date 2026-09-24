@@ -3,6 +3,8 @@ import 'package:algorithm_visualizer/features/visualize/helper/o_notation.dart';
 import 'package:algorithm_visualizer/features/visualize/view/sub_view/sorting/view_model/sorting_notifier.dart';
 
 class MergeSortNotifier extends SortingNotifier {
+  MergeSortNotifier({super.random});
+
   @override
   Set<SortRole> get roles =>
       const {SortRole.sorted, SortRole.leftRun, SortRole.rightRun, SortRole.compare, SortRole.write};
