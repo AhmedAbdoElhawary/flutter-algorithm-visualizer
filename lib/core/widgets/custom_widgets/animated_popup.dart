@@ -64,6 +64,9 @@ class _AnimatedPopupOverlayState extends State<_AnimatedPopupOverlay> with Singl
     vsync: this,
     duration: const Duration(milliseconds: 320),
   );
+  late final CurvedAnimation _curve;
+  late final CurvedAnimation _scaleCurve;
+  late final CurvedAnimation _opacityCurve;
   late final Animation<double> _scale;
   late final Animation<double> _opacity;
   late final Animation<Offset> _offset;
@@ -71,23 +74,26 @@ class _AnimatedPopupOverlayState extends State<_AnimatedPopupOverlay> with Singl
   @override
   void initState() {
     super.initState();
-    final curve = CurvedAnimation(
+    _curve = CurvedAnimation(
       parent: _controller,
       curve: Curves.easeOutCubic,
       reverseCurve: Curves.easeInCubic,
     );
-    _scale = Tween(begin: 0.94, end: 1.0).animate(
-      CurvedAnimation(parent: _controller, curve: Curves.easeOutBack, reverseCurve: Curves.easeInCubic),
-    );
-    _opacity = Tween(begin: 0.0, end: 1.0).animate(
-      CurvedAnimation(parent: _controller, curve: const Interval(0.1, 1.0, curve: Curves.easeOut)),
-    );
-    _offset = Tween(begin: const Offset(0.0, 0.04), end: Offset.zero).animate(curve);
+    _scaleCurve =
+        CurvedAnimation(parent: _controller, curve: Curves.easeOutBack, reverseCurve: Curves.easeInCubic);
+    _opacityCurve =
+        CurvedAnimation(parent: _controller, curve: const Interval(0.1, 1.0, curve: Curves.easeOut));
+    _scale = Tween(begin: 0.94, end: 1.0).animate(_scaleCurve);
+    _opacity = Tween(begin: 0.0, end: 1.0).animate(_opacityCurve);
+    _offset = Tween(begin: const Offset(0.0, 0.04), end: Offset.zero).animate(_curve);
     _controller.forward(from: 0);
   }
 
   @override
   void dispose() {
+    _curve.dispose();
+    _scaleCurve.dispose();
+    _opacityCurve.dispose();
     _controller.dispose();
     super.dispose();
   }
