@@ -90,6 +90,7 @@ void main() {
     tester.view.physicalSize = surfaceSize * problemPageDevicePixelRatio;
     tester.view.devicePixelRatio = problemPageDevicePixelRatio;
     addTearDown(() {
+      router.dispose();
       tester.binding.setSurfaceSize(null);
       tester.view.resetPhysicalSize();
       tester.view.resetDevicePixelRatio();
