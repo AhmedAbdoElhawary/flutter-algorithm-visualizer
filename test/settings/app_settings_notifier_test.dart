@@ -5,38 +5,18 @@
 
 import 'package:algorithm_visualizer/core/enums/app_settings_enum.dart';
 import 'package:algorithm_visualizer/core/helpers/storage/app_settings/app_settings_cubit.dart';
-import 'package:algorithm_visualizer/core/storage/storage.dart';
 import 'package:algorithm_visualizer/core/storage/storage_providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-class _InMemoryStorage implements LocalStorage {
-  _InMemoryStorage([Map<String, Object?>? seed]) : _values = {...?seed};
-
-  final Map<String, Object?> _values;
-
-  @override
-  Future<void> write<T>(String key, T value) async => _values[key] = value;
-
-  @override
-  T? read<T>(String key) => _values[key] as T?;
-
-  @override
-  Future<void> remove(String key) async => _values.remove(key);
-
-  @override
-  Future<void> clear() async => _values.clear();
-
-  @override
-  bool has(String key) => _values.containsKey(key);
-}
+import '../helpers/fakes/in_memory_storage.dart';
 
 /// A container whose settings box starts out holding [seed] — i.e. the state
 /// of a device where the user has already chosen something.
 ProviderContainer _containerWith([Map<String, Object?>? seed]) {
   final container = ProviderContainer(
-    overrides: [appSettingsStorageProvider.overrideWithValue(_InMemoryStorage(seed))],
+    overrides: [appSettingsStorageProvider.overrideWithValue(InMemoryStorage(seed))],
   );
   addTearDown(container.dispose);
   return container;
@@ -87,7 +67,7 @@ void main() {
 
   group('changing the theme', () {
     test('updates the state and writes it where the next launch will look', () async {
-      final storage = _InMemoryStorage();
+      final storage = InMemoryStorage();
       final container = ProviderContainer(
         overrides: [appSettingsStorageProvider.overrideWithValue(storage)],
       );
@@ -110,7 +90,7 @@ void main() {
 
     test('every mode round-trips through storage, system included', () async {
       for (final mode in ThemeMode.values) {
-        final storage = _InMemoryStorage({AppSettingsNotifier.themeModeKey: 'light'});
+        final storage = InMemoryStorage({AppSettingsNotifier.themeModeKey: 'light'});
         final container = ProviderContainer(
           overrides: [appSettingsStorageProvider.overrideWithValue(storage)],
         );
@@ -132,7 +112,7 @@ void main() {
 
   group('changing the language', () {
     test('persists and survives a relaunch', () async {
-      final storage = _InMemoryStorage();
+      final storage = InMemoryStorage();
       final container = ProviderContainer(
         overrides: [appSettingsStorageProvider.overrideWithValue(storage)],
       );
@@ -149,7 +129,7 @@ void main() {
     });
 
     test('theme and language do not overwrite each other', () async {
-      final storage = _InMemoryStorage();
+      final storage = InMemoryStorage();
       final container = ProviderContainer(
         overrides: [appSettingsStorageProvider.overrideWithValue(storage)],
       );
