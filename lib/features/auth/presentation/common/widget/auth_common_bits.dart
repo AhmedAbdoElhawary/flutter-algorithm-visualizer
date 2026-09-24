@@ -6,7 +6,6 @@ import 'package:algorithm_visualizer/core/widgets/adaptive/text/adaptive_text.da
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/custom_back_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:go_router/go_router.dart';
 
 class AuthTitle extends StatelessWidget {
   const AuthTitle(this.text, {super.key, this.large = false});
@@ -123,10 +122,8 @@ class AuthReturnLink extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => context.canPop() ? context.back() : context.pushTo(Routes.login),
-      child: Center(
-        child: MediumText(text, color: color, fontSize: size, maxLines: 1),
-      ),
+      onTap: () => context.pushAndRemoveAll(Routes.login),
+      child: Center(child: MediumText(text, color: color, fontSize: size, maxLines: 1)),
     );
   }
 }
