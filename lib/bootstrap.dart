@@ -9,10 +9,12 @@ import 'package:algorithm_visualizer/core/resources/constants.dart';
 import 'package:algorithm_visualizer/core/storage/storage_providers.dart';
 import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:leak_tracker/leak_tracker.dart';
 
 Future<void> bootstrap(FlavorConfig config) {
   return Monitoring.start(
@@ -29,6 +31,8 @@ Future<void> _boot(FlavorConfig config) async {
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,
   ]);
+
+  _startLeakTracking();
 
   FlavorConfig.initialize(config);
   Monitoring.installErrorHandlers();
@@ -55,6 +59,15 @@ Future<void> _boot(FlavorConfig config) async {
   await FirebaseLogConfig.apply();
 
   runApp(const ProviderScope(child: SplashGate()));
+}
+
+/// Debug only, so leaked controllers and notifiers print to the console while using the app.
+void _startLeakTracking() {
+  if (!kDebugMode) return;
+  LeakTracking.start();
+  FlutterMemoryAllocations.instance.addListener(
+    (event) => LeakTracking.dispatchObjectEvent(event.toMap()),
+  );
 }
 
 Future<void> _activateAppCheck() async {
