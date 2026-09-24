@@ -131,10 +131,15 @@ class AppRoutes {
   AppRoutes._();
   static final instance = AppRoutes._();
 
-  final routerProvider = GoRouter(
+  final routerProvider = buildRouter(
+    OnboardingStore.standalone().isSeen ? Routes.home.path : Routes.onboarding.path,
+  );
+
+  /// Tests build their own router from this, so each one starts clean and can dispose it.
+  static GoRouter buildRouter(String initialLocation) => GoRouter(
     debugLogDiagnostics: true,
     navigatorKey: _rootKey,
-    initialLocation: OnboardingStore.standalone().isSeen ? Routes.home.path : Routes.onboarding.path,
+    initialLocation: initialLocation,
     errorBuilder: (context, state) => const _UnknownPage(),
     observers: Monitoring.navigatorObservers,
     routes: [
