@@ -14,8 +14,12 @@ class HomeCategoryGrid extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    const sortingCardValues = SortingAlgoCards.values;
-    const searchingCardValues = SearchingAlgoCards.values;
+    final tiles = [
+      for (final card in SortingAlgoCards.values.take(3))
+        _TopicTile(card: BaseViewModel.sortingCards(card).card, name: card.name),
+      for (final card in SearchingAlgoCards.values)
+        _TopicTile(card: BaseViewModel.searchingCards(card).card, name: card.name),
+    ];
 
     return OnlyPadding(
       startPadding: 16,
@@ -26,41 +30,39 @@ class HomeCategoryGrid extends ConsumerWidget {
         children: [
           const SectionHeader(title: StringsManager.topics),
           const RSizedBox(height: 12),
-          GridView.builder(
-            itemCount: 6,
-            padding: EdgeInsets.zero,
-            physics: const NeverScrollableScrollPhysics(),
-            shrinkWrap: true,
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2,
-              crossAxisSpacing: 16.r,
-              mainAxisSpacing: 16.r,
-              childAspectRatio: 1.6,
+          // Rows sized by their tallest card, not a fixed tile shape: the title wraps on narrow phones
+          // and grows with the system text, and a fixed shape clipped it.
+          for (var i = 0; i < tiles.length; i += 2) ...[
+            if (i > 0) SizedBox(height: 16.r),
+            IntrinsicHeight(
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Expanded(child: tiles[i]),
+                  SizedBox(width: 16.r),
+                  Expanded(child: tiles[i + 1]),
+                ],
+              ),
             ),
-            itemBuilder: (context, index) {
-              final Widget child;
-              final String name;
-              if (index < 3) {
-                final cardSorting = BaseViewModel.sortingCards(sortingCardValues[index]);
-                child = cardSorting.card;
-                name = cardSorting.page.name;
-              } else {
-                final i = index - 3;
-                final cardSearching = BaseViewModel.searchingCards(searchingCardValues[i]);
-                child = cardSearching.card;
-                name = cardSearching.page.name;
-              }
-
-              return InkWell(
-                  highlightColor: context.getColor(ThemeEnum.ground),
-                  onTap: () {
-                    context.goTo(Routes.visualize, queryParameters: name);
-                  },
-                  child: child);
-            },
-          ),
+          ],
         ],
       ),
+    );
+  }
+}
+
+class _TopicTile extends StatelessWidget {
+  const _TopicTile({required this.card, required this.name});
+
+  final Widget card;
+  final String name;
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      highlightColor: context.getColor(ThemeEnum.ground),
+      onTap: () => context.goTo(Routes.visualize, queryParameters: name),
+      child: card,
     );
   }
 }
