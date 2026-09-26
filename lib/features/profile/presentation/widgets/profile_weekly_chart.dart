@@ -36,45 +36,43 @@ class ProfileWeeklyChart extends ConsumerWidget {
               trailing: '$total ${StringsManager.solvedLabel.tr(context)}',
             ),
             const RSizedBox(height: 6),
-            RSizedBox(
-              height: 90,
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: List.generate(7, (i) {
-                  final val = i < weekly.length ? weekly[i] : 0;
-                  final fraction = val / maxVal;
-                  final isToday = i == (DateTime.now().weekday - 1);
+            // Sized by its content, not a fixed box, so the labels never clip under large text.
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: List.generate(7, (i) {
+                final val = i < weekly.length ? weekly[i] : 0;
+                final fraction = val / maxVal;
+                final isToday = i == (DateTime.now().weekday - 1);
 
-                  return Expanded(
-                    child: Padding(
-                      padding: REdgeInsets.symmetric(horizontal: 3),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          if (val > 0)
-                            MediumText(
-                              '$val',
-                              fontSize: 9,
-                              color: ThemeEnum.inkSecondaryTitle,
-                            ),
-                          const RSizedBox(height: 4),
-                          QuietBar(
-                            width: double.infinity,
-                            height: (50.r * fraction).clamp(4.0, 50.0),
-                            fill: isToday ? ThemeEnum.dataEasy : ThemeEnum.track,
+                return Expanded(
+                  child: Padding(
+                    padding: REdgeInsets.symmetric(horizontal: 3),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        if (val > 0)
+                          MediumText(
+                            '$val',
+                            fontSize: 9,
+                            color: ThemeEnum.inkSecondaryTitle,
                           ),
-                          const RSizedBox(height: 6),
-                          RegularText(
-                            _dayLabels[i],
-                            fontSize: 10,
-                            color: isToday ? ThemeEnum.inkTitle : ThemeEnum.inkSecondaryTitle,
-                          ),
-                        ],
-                      ),
+                        const RSizedBox(height: 4),
+                        QuietBar(
+                          width: double.infinity,
+                          height: (50.r * fraction).clamp(4.0, 50.0),
+                          fill: isToday ? ThemeEnum.dataEasy : ThemeEnum.track,
+                        ),
+                        const RSizedBox(height: 6),
+                        RegularText(
+                          _dayLabels[i],
+                          fontSize: 10,
+                          color: isToday ? ThemeEnum.inkTitle : ThemeEnum.inkSecondaryTitle,
+                        ),
+                      ],
                     ),
-                  );
-                }),
-              ),
+                  ),
+                );
+              }),
             ),
           ],
         ),
