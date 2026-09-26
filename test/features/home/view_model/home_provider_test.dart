@@ -1,3 +1,4 @@
+import 'package:algorithm_visualizer/core/resources/strings_manager.dart';
 import 'package:algorithm_visualizer/features/challenge/data/models/problem_storage.dart';
 import 'package:algorithm_visualizer/features/challenge/domain/entities/coding_problem.dart';
 import 'package:algorithm_visualizer/features/challenge/domain/enums/problem.dart';
@@ -284,6 +285,23 @@ void main() {
 
       expect(result.greeting, computeGreeting());
     });
+  });
+
+  group('computeGreeting', () {
+    final cases = {
+      0: StringsManager.goodMorning,
+      11: StringsManager.goodMorning,
+      12: StringsManager.goodAfternoon,
+      16: StringsManager.goodAfternoon,
+      17: StringsManager.goodEvening,
+      23: StringsManager.goodEvening,
+    };
+
+    for (final entry in cases.entries) {
+      test('at ${entry.key}:00 says ${entry.value}', () {
+        expect(computeGreeting(DateTime(2026, 9, 25, entry.key)), entry.value);
+      });
+    }
   });
 }
 

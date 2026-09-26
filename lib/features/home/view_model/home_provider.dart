@@ -39,8 +39,9 @@ final homeDataProvider = Provider<HomeData>((ref) {
   );
 });
 
-String computeGreeting() {
-  final hour = DateTime.now().hour;
+/// [now] is for tests, so every branch can be checked without waiting for the clock.
+String computeGreeting([DateTime? now]) {
+  final hour = (now ?? DateTime.now()).hour;
   if (hour < 12) return StringsManager.goodMorning;
   if (hour < 17) return StringsManager.goodAfternoon;
   return StringsManager.goodEvening;
