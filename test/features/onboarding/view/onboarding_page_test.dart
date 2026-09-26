@@ -1,7 +1,6 @@
 import 'package:algorithm_visualizer/config/routes/route_app.dart';
 import 'package:algorithm_visualizer/config/themes/app_theme.dart';
 import 'package:algorithm_visualizer/core/resources/strings_manager.dart';
-import 'package:algorithm_visualizer/core/storage/storage.dart';
 import 'package:algorithm_visualizer/core/storage/storage_providers.dart';
 import 'package:algorithm_visualizer/features/onboarding/view_model/onboarding_store.dart';
 import 'package:algorithm_visualizer/features/onboarding/view/onboarding_page.dart';
@@ -12,33 +11,21 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../helpers/fakes/in_memory_storage.dart';
+import '../../../helpers/pump_app.dart';
+import '../../../helpers/screen_matrix.dart';
+
+/// How many times the home route was built, to catch a double navigation.
+int homeBuilds = 0;
+
 /// The smallest screen the spec calls out (§6.1).
 const Size _smallSurface = Size(360, 640);
-
-class _InMemoryStorage implements LocalStorage {
-  final Map<String, Object?> values = {};
-
-  @override
-  Future<void> write<T>(String key, T value) async => values[key] = value;
-
-  @override
-  T? read<T>(String key) => values[key] as T?;
-
-  @override
-  Future<void> remove(String key) async => values.remove(key);
-
-  @override
-  Future<void> clear() async => values.clear();
-
-  @override
-  bool has(String key) => values.containsKey(key);
-}
 
 /// `AppTheme.dark` / `AppTheme.light` call ScreenUtil, so they can only be
 /// built once [ScreenUtilInit] has run — never in a top-level initializer.
 enum _Theme { dark, light }
 
-Future<_InMemoryStorage> _pumpOnboarding(
+Future<InMemoryStorage> _pumpOnboarding(
   WidgetTester tester, {
   required _Theme theme,
   Size surface = _smallSurface,
@@ -56,7 +43,8 @@ Future<_InMemoryStorage> _pumpOnboarding(
     tester.view.resetDevicePixelRatio();
   });
 
-  final storage = _InMemoryStorage();
+  final storage = InMemoryStorage();
+  homeBuilds = 0;
 
   final router = GoRouter(
     initialLocation: Routes.onboarding.path,
@@ -69,7 +57,10 @@ Future<_InMemoryStorage> _pumpOnboarding(
       GoRoute(
         path: Routes.home.path,
         name: Routes.home.name,
-        builder: (context, state) => const Placeholder(key: ValueKey('home')),
+        builder: (context, state) {
+          homeBuilds++;
+          return const Placeholder(key: ValueKey('home'));
+        },
       ),
       GoRoute(
         path: Routes.login.path,
@@ -101,7 +92,8 @@ Future<_InMemoryStorage> _pumpOnboarding(
 /// Swipes to the next page and lets the page-change settle without waiting for
 /// the looping visuals, which never settle by design.
 Future<void> _swipe(WidgetTester tester) async {
-  await tester.drag(find.byType(PageView), const Offset(-400, 0));
+  // A full page width, so the swipe lands on every screen size.
+  await tester.drag(find.byType(PageView), Offset(-tester.getSize(find.byType(PageView)).width, 0));
   await tester.pump();
   await tester.pump(const Duration(milliseconds: 400));
 }
@@ -109,31 +101,70 @@ Future<void> _swipe(WidgetTester tester) async {
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
-  for (final theme in _Theme.values) {
-    testWidgets('renders all four pages at 360x640 with no overflow — ${theme.name} theme', (tester) async {
-      await _pumpOnboarding(tester, theme: theme);
+  testScreenMatrix('renders all four pages with no overflow', (tester, variant) async {
+    await pumpApp(
+      tester,
+      const OnboardingPage(),
+      screen: variant.screen,
+      theme: variant.theme,
+      textScale: variant.textScale,
+    );
 
-      final headlines = [
-        StringsManager.onboardingSeeItHeadline,
-        StringsManager.onboardingExploreHeadline,
-        StringsManager.onboardingWriteHeadline,
-        StringsManager.onboardingTrackHeadline,
-      ];
+    final headlines = [
+      StringsManager.onboardingSeeItHeadline,
+      StringsManager.onboardingExploreHeadline,
+      StringsManager.onboardingWriteHeadline,
+      StringsManager.onboardingTrackHeadline,
+    ];
 
-      for (var page = 0; page < headlines.length; page++) {
-        // Let each visual run a little so its painters are exercised.
-        await tester.pump(const Duration(milliseconds: 500));
-        await tester.pump(const Duration(milliseconds: 900));
+    for (var page = 0; page < headlines.length; page++) {
+      // Let each visual run a little so its painters are exercised.
+      await tester.pump(const Duration(milliseconds: 500));
+      await tester.pump(const Duration(milliseconds: 900));
 
-        expect(find.text(headlines[page]), findsOneWidget, reason: 'page $page headline');
-        expect(find.text(StringsManager.onboardingSkip), findsOneWidget,
-            reason: 'Skip must stay visible on page $page');
-        expect(tester.takeException(), isNull, reason: 'page $page must not overflow');
+      expect(find.text(headlines[page]), findsOneWidget, reason: 'page $page headline');
+      expect(find.text(StringsManager.onboardingSkip), findsOneWidget,
+          reason: 'Skip must stay visible on page $page');
+      expect(tester.takeException(), isNull, reason: 'page $page must not overflow');
 
-        if (page < headlines.length - 1) await _swipe(tester);
-      }
-    });
-  }
+      if (page < headlines.length - 1) await _swipe(tester);
+    }
+  });
+
+  testWidgets('Next moves to the following page', (tester) async {
+    await _pumpOnboarding(tester, theme: _Theme.dark, disableAnimations: true);
+
+    await tester.tap(find.text(StringsManager.onboardingNext));
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 400));
+
+    expect(find.text(StringsManager.onboardingExploreHeadline), findsOneWidget);
+    expect(find.text(StringsManager.onboardingSeeItHeadline), findsNothing);
+  });
+
+  testWidgets('swiping back returns to the previous page', (tester) async {
+    await _pumpOnboarding(tester, theme: _Theme.dark, disableAnimations: true);
+    await _swipe(tester);
+
+    await tester.drag(find.byType(PageView), const Offset(400, 0));
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 400));
+
+    expect(find.text(StringsManager.onboardingSeeItHeadline), findsOneWidget);
+    expect(find.text(StringsManager.onboardingExploreHeadline), findsNothing);
+  });
+
+  testWidgets('a double tap on Skip navigates only once', (tester) async {
+    await _pumpOnboarding(tester, theme: _Theme.dark);
+
+    await tester.tap(find.text(StringsManager.onboardingSkip));
+    await tester.tap(find.text(StringsManager.onboardingSkip));
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 400));
+
+    expect(find.byKey(const ValueKey('home')), findsOneWidget);
+    expect(homeBuilds, 1);
+  });
 
   testWidgets('Skip records onboarding_seen and leaves for home', (tester) async {
     final storage = await _pumpOnboarding(tester, theme: _Theme.dark);
