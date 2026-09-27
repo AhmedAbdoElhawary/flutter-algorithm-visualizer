@@ -18,6 +18,12 @@ class AlgorithmControls extends ConsumerWidget {
     this.endOptionButtons = const [],
     super.key,
   });
+
+  static const resetKey = Key('algorithm-controls-reset');
+  static const backKey = Key('algorithm-controls-back');
+  static const playKey = Key('algorithm-controls-play');
+  static const forwardKey = Key('algorithm-controls-forward');
+
   final AlgorithmControlInterface interface;
   final List<CtrlButton> endOptionButtons;
   final bool expandSpeedEscalator;
@@ -38,18 +44,20 @@ class AlgorithmControls extends ConsumerWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              CtrlButton(icon: Icons.restart_alt_rounded, size: iconSize, onTap: interface.reset),
+              CtrlButton(key: resetKey, icon: Icons.restart_alt_rounded, size: iconSize, onTap: interface.reset),
               RSizedBox(width: width),
               CtrlButton(
+                key: backKey,
                 icon: Icons.skip_previous_rounded,
                 size: iconSize,
                 flipsWithDirection: true,
                 onTap: backwardValidation ? interface.stepBackward : null,
               ),
               RSizedBox(width: width),
-              _PlayButton(playing: isPlaying, onTap: interface.togglePlay),
+              _PlayButton(key: playKey, playing: isPlaying, onTap: interface.togglePlay),
               RSizedBox(width: width),
               CtrlButton(
+                key: forwardKey,
                 icon: Icons.skip_next_rounded,
                 size: iconSize,
                 flipsWithDirection: true,
@@ -75,7 +83,7 @@ class AlgorithmControls extends ConsumerWidget {
 class _PlayButton extends StatelessWidget {
   final bool playing;
   final Future<void> Function() onTap;
-  const _PlayButton({required this.playing, required this.onTap});
+  const _PlayButton({required this.playing, required this.onTap, super.key});
 
   @override
   Widget build(BuildContext context) {
