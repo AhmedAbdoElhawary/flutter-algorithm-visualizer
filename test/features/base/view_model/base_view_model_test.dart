@@ -1,7 +1,6 @@
 import 'package:algorithm_visualizer/features/base/view_model/algorithm_description_interface.dart';
 import 'package:algorithm_visualizer/features/base/view_model/base_view_model.dart';
 import 'package:algorithm_visualizer/features/visualize/view/sub_view/searching/view_model/searching_notifier.dart';
-import 'package:algorithm_visualizer/features/visualize/view/sub_view/sorting/view_model/sorting_notifier.dart';
 import 'package:algorithm_visualizer/features/visualize/view/sub_view/sorting/view_model/sub_sorting/bubble_sort_notifier.dart';
 import 'package:algorithm_visualizer/features/visualize/view/sub_view/sorting/view_model/sub_sorting/insertion_sort_notifier.dart';
 import 'package:algorithm_visualizer/features/visualize/view/sub_view/sorting/view_model/sub_sorting/merge_sort_notifier.dart';
