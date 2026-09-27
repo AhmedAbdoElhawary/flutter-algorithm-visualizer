@@ -31,9 +31,11 @@ class SortingResult {
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
 
-    return other is SortingResult && other.steps == steps && other.sortedValues == sortedValues;
+    return other is SortingResult &&
+        const ListEquality<SortStep>().equals(other.steps, steps) &&
+        const ListEquality<int>().equals(other.sortedValues, sortedValues);
   }
 
   @override
-  int get hashCode => steps.hashCode ^ sortedValues.hashCode;
+  int get hashCode => Object.hash(Object.hashAll(steps), Object.hashAll(sortedValues));
 }
