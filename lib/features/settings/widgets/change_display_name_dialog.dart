@@ -52,6 +52,9 @@ class _ChangeDisplayNameDialogState extends ConsumerState<ChangeDisplayNameDialo
   }
 
   Future<void> _submit() async {
+    // A second tap lands before the rebuild that disables the button.
+    if (_loading) return;
+
     final name = _controller.text.trim();
     final error = _validate(name);
     if (error != null) {

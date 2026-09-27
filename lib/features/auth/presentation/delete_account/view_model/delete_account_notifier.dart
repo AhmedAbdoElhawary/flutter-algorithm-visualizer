@@ -41,7 +41,8 @@ class DeleteAccountNotifier extends Notifier<DeleteAccountState> {
   /// Runs the deletion. Returns whether the account is really gone, so the
   /// caller knows whether to navigate away.
   Future<bool> deleteAccount() async {
-    if (!validate()) return false;
+    // A second tap lands before the rebuild that disables the button.
+    if (state.isLoading || !validate()) return false;
 
     /// Deleting signs the user out, which tears down the settings screen that
     /// keeps this auto-dispose notifier alive. Pin it, or `ref` is disposed
