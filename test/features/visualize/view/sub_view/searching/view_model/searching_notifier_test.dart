@@ -1,6 +1,8 @@
 import 'dart:math' as math;
 
+import 'package:algorithm_visualizer/features/visualize/helper/playback_speed.dart';
 import 'package:algorithm_visualizer/features/visualize/view/sub_view/searching/helper/pf_constants.dart';
+import 'package:algorithm_visualizer/features/visualize/view/sub_view/searching/helper/pf_step.dart';
 import 'package:algorithm_visualizer/features/visualize/view/sub_view/searching/view_model/searching_notifier.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -343,5 +345,121 @@ void main() {
     }
 
     expect(randomWalls(), randomWalls());
+  });
+
+  group('playback', () {
+    final step = PlaybackSpeed.normal.stepSearchingDuration;
+    late _Harness harness;
+
+    setUp(() => harness = _Harness(BFSSearchingNotifier.new));
+
+    // A running timer left behind fails a widget test, so every test ends here.
+    Future<void> finish(WidgetTester tester) async {
+      harness.dispose();
+      await tester.pump(const Duration(minutes: 10));
+    }
+
+    Future<void> playToTheEnd(WidgetTester tester) async {
+      await harness.notifier.togglePlay();
+      await tester.pump(const Duration(minutes: 10));
+    }
+
+    testWidgets('play runs to the end and stops', (tester) async {
+      await playToTheEnd(tester);
+
+      expect(harness.state.isAtEnd, isTrue);
+      expect(harness.state.playing, isFalse);
+      expect(harness.state.currentStep!.phase, PFPhase.found);
+      await finish(tester);
+    });
+
+    testWidgets('pause stops the steps', (tester) async {
+      await harness.notifier.togglePlay();
+      await tester.pump(step * 3);
+      await harness.notifier.togglePlay();
+      final pausedAt = harness.state.stepIndex;
+
+      await tester.pump(step * 10);
+
+      expect(harness.state.playing, isFalse);
+      expect(harness.state.stepIndex, pausedAt);
+      await finish(tester);
+    });
+
+    testWidgets('step forward moves one step and pauses', (tester) async {
+      await harness.notifier.togglePlay();
+      harness.notifier.stepForward();
+
+      expect(harness.state.stepIndex, 1);
+      expect(harness.state.playing, isFalse);
+      await tester.pump(step * 5);
+      expect(harness.state.stepIndex, 1);
+      await finish(tester);
+    });
+
+    testWidgets('a speed change applies from the next step', (tester) async {
+      await harness.notifier.togglePlay();
+      await tester.pump(step ~/ 3);
+
+      // The speed button moves to the next speed, here normal to fast3.
+      harness.notifier.changeSpeed(harness.state.speed);
+      final fast = PlaybackSpeed.fast3.stepSearchingDuration;
+      expect(harness.state.speed, PlaybackSpeed.fast3);
+
+      await tester.pump(fast);
+      expect(harness.state.stepIndex, 1);
+      await tester.pump(fast * 2);
+      expect(harness.state.stepIndex, 3);
+      await finish(tester);
+    });
+
+    testWidgets('reset while playing clears the run, and nothing moves after', (tester) async {
+      await harness.notifier.togglePlay();
+      await tester.pump(step * 3);
+
+      harness.notifier.reset();
+      await tester.pump(step * 10);
+
+      expect(harness.state.hasSteps, isFalse);
+      expect(harness.state.stepIndex, 0);
+      expect(harness.state.playing, isFalse);
+      await finish(tester);
+    });
+
+    testWidgets('play after the end starts again from the first step', (tester) async {
+      await playToTheEnd(tester);
+
+      await harness.notifier.togglePlay();
+      expect(harness.state.stepIndex, 0);
+      expect(harness.state.playing, isTrue);
+
+      await tester.pump(const Duration(minutes: 10));
+      expect(harness.state.isAtEnd, isTrue);
+      await finish(tester);
+    });
+
+    testWidgets('fast play and pause taps still run only one timer', (tester) async {
+      for (var tap = 0; tap < 5; tap++) {
+        await harness.notifier.togglePlay();
+      }
+      expect(harness.state.playing, isTrue);
+
+      await tester.pump(step);
+
+      expect(harness.state.stepIndex, 1, reason: 'two timers would move two steps per tick');
+      await finish(tester);
+    });
+
+    testWidgets('disposing mid-run stops the timer', (tester) async {
+      final notifier = harness.notifier;
+      await notifier.togglePlay();
+      await tester.pump(step * 2);
+
+      harness.dispose();
+
+      expect(notifier.isDisposed, isTrue);
+      await tester.pump(step * 10);
+      expect(tester.takeException(), isNull);
+    });
   });
 }
