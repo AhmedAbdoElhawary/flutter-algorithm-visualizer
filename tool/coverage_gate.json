@@ -19,7 +19,7 @@
     "home":        { "path": "lib/features/home/",        "gated": true },
     "onboarding":  { "path": "lib/features/onboarding/",  "gated": true },
     "profile":     { "path": "lib/features/profile/",     "gated": false },
-    "settings":    { "path": "lib/features/settings/",    "gated": false },
+    "settings":    { "path": "lib/features/settings/",    "gated": true },
     "visualize":   { "path": "lib/features/visualize/",   "gated": true },
     "engine":      { "path": "lib/core/custom_packages/custom_code_editor/src/execution/", "gated": false, "min": 80, "logicMin": 80 },
     "codeEditor":  { "path": "lib/core/custom_packages/", "gated": false },
