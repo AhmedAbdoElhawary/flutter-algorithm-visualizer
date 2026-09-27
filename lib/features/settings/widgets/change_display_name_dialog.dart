@@ -1,6 +1,7 @@
 import 'package:algorithm_visualizer/core/resources/strings_manager.dart';
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/auth_text_field.dart';
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/custom_snack_bar.dart';
+import 'package:algorithm_visualizer/features/profile/presentation/view_model/profile_notifier.dart';
 import 'package:algorithm_visualizer/features/profile/presentation/view_model/user_provider.dart';
 import 'package:algorithm_visualizer/features/settings/widgets/account_dialog_shell.dart';
 import 'package:flutter/material.dart';
@@ -42,11 +43,12 @@ class _ChangeDisplayNameDialogState extends ConsumerState<ChangeDisplayNameDialo
   }
 
   /// Mirrors `ProfileNotifier.validateUpdateDisplayName`, which only reports
-  /// pass/fail. Repeating the two rules here is what lets the field show
+  /// pass/fail. Repeating its rules here is what lets the field show
   /// *which* one failed instead of failing silently.
   String? _validate(String name) {
     if (name.isEmpty) return StringsManager.newDisplayNameRequired;
     if (name.length < 2) return StringsManager.nameMinLength;
+    if (name.length > ProfileNotifier.maxDisplayNameLength) return StringsManager.nameMaxLength;
     if (name == _currentName) return StringsManager.sameDisplayNameAsCurrent;
     return null;
   }
@@ -67,13 +69,13 @@ class _ChangeDisplayNameDialogState extends ConsumerState<ChangeDisplayNameDialo
       _loading = true;
     });
 
-    final updated = await ref.read(profileProvider.notifier).updateDisplayName(name: name);
+    final failure = await ref.read(profileProvider.notifier).updateDisplayName(name: name);
     if (!mounted) return;
 
-    if (!updated) {
+    if (failure != null) {
       setState(() {
         _loading = false;
-        _error = StringsManager.notValidName;
+        _error = failure;
       });
       return;
     }

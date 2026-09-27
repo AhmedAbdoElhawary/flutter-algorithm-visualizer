@@ -284,6 +284,7 @@ class StringsManager {
   // Auth Validation & Status
   static const String nameRequired = "Please enter your name";
   static const String nameMinLength = "Name must be at least 2 characters";
+  static const String nameMaxLength = "Name must be at most 50 characters";
   static const String emailRequired = "Please enter your email";
   static const String invalidEmail = "Please enter a valid email address";
   static const String passwordRequired = "Please enter your password";
