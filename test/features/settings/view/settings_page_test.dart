@@ -9,6 +9,9 @@ import 'package:algorithm_visualizer/core/localization/app_localizations.dart';
 import 'package:algorithm_visualizer/core/resources/strings_manager.dart';
 import 'package:algorithm_visualizer/core/storage/storage.dart';
 import 'package:algorithm_visualizer/core/storage/storage_providers.dart';
+import 'package:algorithm_visualizer/core/widgets/custom_widgets/confirmation_dialog_card.dart';
+import 'package:algorithm_visualizer/core/widgets/custom_widgets/custom_back_button.dart';
+import 'package:algorithm_visualizer/features/auth/presentation/common/view_model/auth_providers.dart';
 import 'package:algorithm_visualizer/features/auth/domain/entities/auth_user.dart';
 import 'package:algorithm_visualizer/features/profile/presentation/view_model/user_provider.dart';
 import 'package:algorithm_visualizer/features/settings/view/settings_page.dart';
@@ -23,6 +26,11 @@ import 'package:go_router/go_router.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 import 'package:url_launcher_platform_interface/link.dart';
 import 'package:url_launcher_platform_interface/url_launcher_platform_interface.dart';
+
+import '../../../helpers/fakes/fake_auth_remote_data_source.dart';
+import '../../../helpers/pump_app.dart';
+import '../../../helpers/screen_matrix.dart';
+import '../../../helpers/test_data.dart';
 
 /// The smallest screen the design targets.
 const Size _smallSurface = Size(360, 640);
@@ -442,4 +450,143 @@ void main() {
       });
     });
   }
+
+  group('in the app', () {
+    final settings = '${Routes.profile.path}/${Routes.settings.path}';
+
+    Future<ProviderContainer> openSettings(
+      WidgetTester tester, {
+      bool signedIn = false,
+      ScreenSize screen = ScreenSize.phone,
+      ThemeMode theme = ThemeMode.light,
+      double textScale = 1.0,
+    }) async {
+      final container = await pumpApp(
+        tester,
+        const SizedBox(),
+        signedInAs: signedIn ? buildTestUser() : null,
+        initialRoute: settings,
+        screen: screen,
+        theme: theme,
+        textScale: textScale,
+      );
+      await tester.pumpAndSettle();
+      return container;
+    }
+
+    String location(WidgetTester tester) =>
+        GoRouter.of(tester.element(find.byType(Navigator).first)).routerDelegate.currentConfiguration.uri.path;
+
+    Future<void> tapText(WidgetTester tester, String text) async {
+      await tester.ensureVisible(find.text(text));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text(text));
+      await tester.pumpAndSettle();
+    }
+
+    testScreenMatrix('a guest and a signed-in user both fit the screen', (tester, variant) async {
+      for (final signedIn in [false, true]) {
+        await openSettings(
+          tester,
+          signedIn: signedIn,
+          screen: variant.screen,
+          theme: variant.theme,
+          textScale: variant.textScale,
+        );
+        await tester.scrollUntilVisible(
+          find.text(signedIn ? StringsManager.logout : StringsManager.guestAccountTitle),
+          200,
+          scrollable: find.byType(Scrollable).last,
+        );
+
+        expect(tester.takeException(), isNull, reason: signedIn ? 'signed in' : 'guest');
+        await tester.pumpWidget(const SizedBox());
+      }
+    });
+
+    testWidgets('each account row opens its dialog', (tester) async {
+      await openSettings(tester, signedIn: true);
+
+      for (final (row, title) in [
+        (StringsManager.displayName, StringsManager.changeDisplayNameTitle),
+        (StringsManager.changeEmail, StringsManager.changeEmailTitle),
+        (StringsManager.changePassword, StringsManager.changePasswordTitle),
+      ]) {
+        await tapText(tester, row);
+        expect(find.text(title), findsOneWidget, reason: row);
+
+        await tapText(tester, StringsManager.cancel);
+        expect(find.text(title), findsNothing, reason: row);
+      }
+    });
+
+    testWidgets('a guest can rename, and the sign-in card goes to login', (tester) async {
+      await openSettings(tester);
+
+      await tapText(tester, StringsManager.displayName);
+      expect(find.text(StringsManager.changeDisplayNameTitle), findsOneWidget);
+      await tapText(tester, StringsManager.cancel);
+
+      await tapText(tester, StringsManager.guestAccountTitle);
+      expect(location(tester), Routes.login.path);
+    });
+
+    testWidgets('log out asks first, then signs out and goes to login', (tester) async {
+      final container = await openSettings(tester, signedIn: true);
+      final auth = container.read(authRemoteDataSourceProvider) as FakeAuthRemoteDataSource;
+
+      await tapText(tester, StringsManager.logout);
+      expect(find.text(StringsManager.logoutConfirmTitle), findsOneWidget);
+      expect(auth.calls, isNot(contains('signOut')));
+
+      // The confirm button reads the same as the card behind the dialog.
+      await tester.tap(
+        find.descendant(of: find.byType(ConfirmationDialogCard), matching: find.text(StringsManager.yesLogout)),
+      );
+      await tester.pumpAndSettle();
+
+      expect(auth.calls, contains('signOut'));
+      expect(location(tester), Routes.login.path);
+    });
+
+    testWidgets('cancelling log out keeps the session', (tester) async {
+      final container = await openSettings(tester, signedIn: true);
+      final auth = container.read(authRemoteDataSourceProvider) as FakeAuthRemoteDataSource;
+
+      await tapText(tester, StringsManager.logout);
+      await tapText(tester, StringsManager.cancel);
+
+      expect(auth.calls, isNot(contains('signOut')));
+      expect(location(tester), settings);
+    });
+
+    testWidgets('a link nothing can open says so instead of failing silently', (tester) async {
+      _launcher.succeed = false;
+      await openSettings(tester);
+
+      await tapText(tester, StringsManager.privacyPolicy);
+
+      expect(find.text(StringsManager.linkCouldNotOpen), findsOneWidget);
+      await tester.pump(const Duration(seconds: 5));
+    });
+
+    testWidgets('a mail app that is missing says so', (tester) async {
+      _launcher.succeed = false;
+      await openSettings(tester);
+
+      await tapText(tester, StringsManager.contactEmail);
+
+      expect(find.text(StringsManager.linkNoMailApp), findsOneWidget);
+      await tester.pump(const Duration(seconds: 5));
+    });
+
+    testWidgets('the back button returns to the profile', (tester) async {
+      await openSettings(tester);
+
+      await tester.tap(find.byType(CustomBackButton));
+      await tester.pumpAndSettle();
+
+      expect(location(tester), Routes.profile.path);
+    });
+  });
 }
