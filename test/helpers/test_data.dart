@@ -1,9 +1,11 @@
+import 'package:algorithm_visualizer/core/exceptions/firebase_exceptions.dart';
 import 'package:algorithm_visualizer/features/auth/domain/entities/auth_user.dart';
 import 'package:algorithm_visualizer/features/challenge/data/models/example.dart';
 import 'package:algorithm_visualizer/features/challenge/data/models/problem_storage.dart';
 import 'package:algorithm_visualizer/features/challenge/data/models/similar_question.dart';
 import 'package:algorithm_visualizer/features/challenge/domain/entities/coding_problem.dart';
 import 'package:algorithm_visualizer/features/challenge/domain/enums/problem.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 CodingProblem buildTestProblem({
   int problemId = 1,
@@ -68,3 +70,6 @@ ProblemStorageDTO buildTestProblemStorage({
     solutionsStatus: solutionsStatus,
   );
 }
+
+/// The same exception the real data sources throw for a Firebase auth error [code].
+Exception authError(String code) => FirebaseExceptions.handleFirebaseAuthException(FirebaseAuthException(code: code));
