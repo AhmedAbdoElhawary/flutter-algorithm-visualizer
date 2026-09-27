@@ -10,6 +10,8 @@ import '../../../../../../../helpers/search_contract.dart';
 List<PFStep> _run(PFGridInput grid) => BFSSearchingNotifier().buildAlgorithm(grid);
 
 void main() {
+  searchingEdgeGridTests(BFSSearchingNotifier().buildAlgorithm);
+
   test('rule is oldestFirst (B1)', () {
     expect(BFSSearchingNotifier().rule, PFRule.oldestFirst);
   });

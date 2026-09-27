@@ -209,3 +209,59 @@ PFGridInput gridCopy(PFGridInput grid) => PFGridInput(
       endRow: grid.endRow,
       endCol: grid.endCol,
     );
+
+/// The grid has one fixed size, so its edges are the border and the corners.
+void searchingEdgeGridTests(List<PFStep> Function(PFGridInput grid) run) {
+  group('edge grids', () {
+    const lastRow = kPFRows - 1;
+    const lastCol = kPFCols - 1;
+    final allCells = {
+      for (var r = 0; r < kPFRows; r++)
+        for (var c = 0; c < kPFCols; c++) pfEncode(r, c),
+    };
+
+    test('a walled-in end has no path', () {
+      final grid = gridOf(['S..#E']);
+      final steps = run(grid);
+
+      expectUniversalClauses(steps, grid, label: 'walled-in end');
+      expect(steps.last.phase, PFPhase.exhausted);
+      expect(steps.last.visited, {for (var c = 0; c < 3; c++) pfEncode(0, c)});
+    });
+
+    test('a grid of walls around the two markers has no path', () {
+      final grid = openGrid(walls: allCells.difference({pfEncode(2, 2), pfEncode(10, 20)}));
+      final steps = run(grid);
+
+      expectUniversalClauses(steps, grid, label: 'all walls');
+      expect(steps.last.phase, PFPhase.exhausted);
+    });
+
+    test('a path can run along the border', () {
+      final border = {
+        for (var c = 0; c < kPFCols; c++) pfEncode(0, c),
+        for (var r = 0; r < kPFRows; r++) pfEncode(r, lastCol),
+      };
+      final grid = openGrid(
+        startRow: 0,
+        startCol: 0,
+        endRow: lastRow,
+        endCol: lastCol,
+        walls: allCells.difference(border),
+      );
+      final steps = run(grid);
+
+      expectUniversalClauses(steps, grid, label: 'border');
+      expect(steps.last.path, hasLength(border.length));
+      expect(border.containsAll(steps.last.path!), isTrue);
+    });
+
+    test('corner to corner on the open grid finds a path', () {
+      final grid = openGrid(startRow: 0, startCol: 0, endRow: lastRow, endCol: lastCol);
+      final steps = run(grid);
+
+      expectUniversalClauses(steps, grid, label: 'corner to corner');
+      expect(steps.last.phase, PFPhase.found);
+    });
+  });
+}

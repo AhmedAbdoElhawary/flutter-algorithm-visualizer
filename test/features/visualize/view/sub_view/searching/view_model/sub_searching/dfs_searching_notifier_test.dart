@@ -12,6 +12,8 @@ List<PFStep> _run(PFGridInput grid) => DFSSearchingNotifier().buildAlgorithm(gri
 List<PFStep> _runBfs(PFGridInput grid) => BFSSearchingNotifier().buildAlgorithm(grid);
 
 void main() {
+  searchingEdgeGridTests(DFSSearchingNotifier().buildAlgorithm);
+
   test('rule is newestFirst (D1)', () {
     expect(DFSSearchingNotifier().rule, PFRule.newestFirst);
   });

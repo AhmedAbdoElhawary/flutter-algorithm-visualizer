@@ -18,6 +18,8 @@ int _manhattan(int cell, PFGridInput grid) =>
 int _expandedAt(List<PFStep> steps, int i) => steps[i].visited.difference(steps[i - 1].visited).single;
 
 void main() {
+  searchingEdgeGridTests(AStarSearchingNotifier().buildAlgorithm);
+
   test('rule is cheapestFirst (S2)', () {
     expect(AStarSearchingNotifier().rule, PFRule.cheapestFirst);
   });
