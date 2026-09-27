@@ -4,7 +4,11 @@ import 'package:algorithm_visualizer/features/visualize/view/sub_view/sorting/vi
 import 'package:algorithm_visualizer/features/visualize/view/sub_view/sorting/view_model/sub_sorting/quick_sort_notifier.dart';
 import 'package:flutter_test/flutter_test.dart';
 
+import '../../../../../../../helpers/sorting_expects.dart' show sortingEdgeInputTests;
+
 void main() {
+  sortingEdgeInputTests(QuickSortNotifier.new);
+
   late QuickSortNotifier notifier;
 
   setUp(() {

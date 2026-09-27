@@ -4,9 +4,11 @@ import 'package:algorithm_visualizer/features/visualize/view/sub_view/sorting/vi
 import 'package:algorithm_visualizer/features/visualize/view/sub_view/sorting/view_model/sub_sorting/bubble_sort_notifier.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import '../../../../../../../helpers/sorting_expects.dart' show expectSortingSteps, expectStepShapes;
+import '../../../../../../../helpers/sorting_expects.dart' show expectSortingSteps, expectStepShapes, sortingEdgeInputTests;
 
 void main() {
+  sortingEdgeInputTests(BubbleSortNotifier.new);
+
   late BubbleSortNotifier notifier;
 
   setUp(() {

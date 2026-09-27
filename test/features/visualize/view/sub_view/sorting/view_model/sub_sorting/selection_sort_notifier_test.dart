@@ -7,6 +7,8 @@ import 'package:flutter_test/flutter_test.dart';
 import '../../../../../../../helpers/sorting_expects.dart';
 
 void main() {
+  sortingEdgeInputTests(SelectionSortNotifier.new);
+
   late SelectionSortNotifier notifier;
 
   setUp(() {
