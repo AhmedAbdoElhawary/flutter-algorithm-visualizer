@@ -100,15 +100,22 @@ class _NavItem extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       behavior: HitTestBehavior.opaque,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          CustomIcon(icon, size: 20, color: color),
-          const RSizedBox(height: 5),
-          active
-              ? MediumText(label, fontSize: 9.5, color: color, maxLines: 1)
-              : RegularText(label, fontSize: 9.5, color: color, maxLines: 1),
-        ],
+      /// The bar has a fixed height, so large system text shrinks the item instead of overflowing it.
+      /// Center keeps the whole cell tappable, as FittedBox alone would shrink to the icon and label.
+      child: Center(
+        child: FittedBox(
+          fit: BoxFit.scaleDown,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              CustomIcon(icon, size: 20, color: color),
+              const RSizedBox(height: 5),
+              active
+                  ? MediumText(label, fontSize: 9.5, color: color, maxLines: 1)
+                  : RegularText(label, fontSize: 9.5, color: color, maxLines: 1),
+            ],
+          ),
+        ),
       ),
     );
   }
