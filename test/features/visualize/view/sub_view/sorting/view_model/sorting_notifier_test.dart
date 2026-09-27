@@ -226,4 +226,146 @@ void main() {
 
     expect(startingValues(), startingValues());
   });
+
+  group('playback', () {
+    const step = Duration(milliseconds: 50);
+    late ProviderContainer container;
+    late NotifierProvider<SortingNotifier, SortingNotifierState> provider;
+    late SortingNotifier notifier;
+    SortingNotifierState read() => container.read(provider);
+
+    setUp(() {
+      provider = NotifierProvider<SortingNotifier, SortingNotifierState>(
+        () => BubbleSortNotifier(random: math.Random(1)),
+      );
+      container = ProviderContainer();
+      notifier = container.read(provider.notifier)..changeSpeed(PlaybackSpeed.fast10);
+    });
+
+    // The play loop sleeps on real timers, so they have to run out before the test ends.
+    Future<void> finish(WidgetTester tester) async {
+      container.dispose();
+      await tester.pump(const Duration(seconds: 30));
+    }
+
+    Future<void> playToTheEnd(WidgetTester tester) async {
+      await notifier.togglePlay();
+      await tester.pump(const Duration(seconds: 30));
+    }
+
+    List<int> values() => read().list.map((item) => item.value).toList();
+
+    testWidgets('play runs to the end and leaves the list sorted', (tester) async {
+      await playToTheEnd(tester);
+
+      expect(values(), [...values()]..sort());
+      expect(read().currentStepIndex, read().totalPlaySteps);
+      expect(read().isPlaying, isFalse);
+      expect(read().isAllSorted, isTrue);
+      expect(read().rolePerIndex, everyElement(SortRole.sorted));
+      await finish(tester);
+    });
+
+    testWidgets('pause stops the steps', (tester) async {
+      await notifier.togglePlay();
+      await tester.pump(step * 3);
+      await notifier.togglePlay();
+      final pausedAt = read().currentStepIndex;
+
+      await tester.pump(const Duration(seconds: 5));
+
+      expect(read().isPlaying, isFalse);
+      expect(read().currentStepIndex, pausedAt);
+      await finish(tester);
+    });
+
+    testWidgets('step forward moves one step, and is ignored while playing', (tester) async {
+      notifier.stepForward();
+      expect(read().currentStepIndex, 1);
+
+      await notifier.togglePlay();
+      final playingAt = read().currentStepIndex;
+      notifier.stepForward();
+      expect(read().currentStepIndex, playingAt);
+      await finish(tester);
+    });
+
+    testWidgets('a speed change applies from the next step', (tester) async {
+      notifier.changeSpeed(PlaybackSpeed.normal);
+      await notifier.togglePlay();
+      expect(read().currentStepIndex, 1);
+
+      notifier.changeSpeed(PlaybackSpeed.fast10);
+      await tester.pump(step);
+      expect(read().currentStepIndex, 1, reason: 'the step already waiting keeps its old 300ms');
+
+      await tester.pump(PlaybackSpeed.normal.stepSortingDuration - step);
+      expect(read().currentStepIndex, 2);
+      await tester.pump(step);
+      expect(read().currentStepIndex, 3);
+      await finish(tester);
+    });
+
+    testWidgets('reset while playing goes back to the start, and the old run writes nothing after', (tester) async {
+      await notifier.togglePlay();
+      await tester.pump(step * 3);
+
+      await notifier.reset();
+      final afterReset = read();
+      await tester.pump(const Duration(seconds: 5));
+
+      expect(read(), same(afterReset));
+      expect(read().currentStepIndex, 0);
+      expect(read().totalPlaySteps, 0);
+      expect(read().currentStep, isNull);
+      expect(read().isPlaying, isFalse);
+      await finish(tester);
+    });
+
+    testWidgets('play after the end starts again on a fresh list', (tester) async {
+      await playToTheEnd(tester);
+      expect(read().isAtLastStep, isTrue);
+
+      await notifier.togglePlay();
+      expect(read().isPlaying, isTrue);
+      expect(read().currentStepIndex, 1);
+
+      await tester.pump(const Duration(seconds: 30));
+      expect(values(), [...values()]..sort());
+      expect(read().isAllSorted, isTrue);
+      await finish(tester);
+    });
+
+    testWidgets('fast play and pause taps still run only one loop', (tester) async {
+      for (var tap = 0; tap < 5; tap++) {
+        await notifier.togglePlay();
+      }
+      expect(read().isPlaying, isTrue);
+      expect(read().currentStepIndex, 1);
+
+      await tester.pump(step);
+
+      expect(read().currentStepIndex, 2, reason: 'two loops would move two steps per tick');
+      await finish(tester);
+    });
+
+    testWidgets('disposing mid-run writes nothing and throws nothing', (tester) async {
+      // The play loop catches its own errors and only prints them, so a late write would be silent.
+      final printed = <String?>[];
+      final originalDebugPrint = debugPrint;
+      debugPrint = (message, {wrapWidth}) => printed.add(message);
+      try {
+        await notifier.togglePlay();
+        await tester.pump(step * 2);
+
+        await finish(tester);
+      } finally {
+        debugPrint = originalDebugPrint;
+      }
+
+      expect(notifier.isDisposed, isTrue);
+      expect(printed, isEmpty);
+      expect(tester.takeException(), isNull);
+    });
+  });
 }
