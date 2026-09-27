@@ -106,9 +106,9 @@ abstract class SortingNotifier extends Notifier<SortingNotifierState>
   @override
   bool get isPlaying => state.isPlaying;
   @override
-  bool get backwardValidation => state.isAtFirstStep;
+  bool get backwardValidation => !state.isAtFirstStep;
   @override
-  bool get forwardValidation => state.isAtLastStep;
+  bool get forwardValidation => !state.isAtLastStep;
 
   static List<SortableItem> _generateList(int size, math.Random random) {
     return List.generate(size, (index) => SortableItem(id: index, value: index + 1))..shuffle(random);

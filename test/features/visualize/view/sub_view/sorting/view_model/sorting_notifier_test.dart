@@ -368,4 +368,84 @@ void main() {
       expect(tester.takeException(), isNull);
     });
   });
+
+  group('the rest of the notifier', () {
+    late ProviderContainer container;
+    late NotifierProvider<SortingNotifier, SortingNotifierState> provider;
+    late SortingNotifier notifier;
+    SortingNotifierState read() => container.read(provider);
+
+    setUp(() {
+      provider = NotifierProvider<SortingNotifier, SortingNotifierState>(
+        () => BubbleSortNotifier(random: math.Random(1)),
+      );
+      container = ProviderContainer();
+      addTearDown(container.dispose);
+      notifier = container.read(provider.notifier);
+    });
+
+    test('back and forward say whether a step that way is possible', () {
+      expect(notifier.backwardValidation, isFalse);
+      expect(notifier.forwardValidation, isTrue);
+
+      notifier.stepForward();
+      expect(notifier.backwardValidation, isTrue);
+      expect(notifier.forwardValidation, isTrue);
+
+      while (!read().isAtLastStep) {
+        notifier.stepForward();
+      }
+      expect(notifier.forwardValidation, isFalse);
+      expect(notifier.getSpeed, PlaybackSpeed.normal);
+    });
+
+    test('changeSize maps the slider onto 5 to 15 bars and starts over', () {
+      notifier.stepForward();
+
+      notifier.changeSize(0);
+      expect(read().size, 5);
+      expect(read().list, hasLength(5));
+      expect(read().currentStepIndex, 0);
+
+      notifier.changeSize(1);
+      expect(read().size, 15);
+      expect(read().list, hasLength(15));
+    });
+
+    testWidgets('changeSize is ignored while playing', (tester) async {
+      await notifier.togglePlay();
+
+      notifier.changeSize(0);
+
+      expect(read().size, 9);
+      container.dispose();
+      await tester.pump(const Duration(seconds: 30));
+    });
+
+    test('cancelSorting starts over on a fresh list', () async {
+      notifier.stepForward();
+
+      await notifier.cancelSorting();
+
+      expect(read().currentStepIndex, 0);
+      expect(read().totalPlaySteps, 0);
+      expect(read().currentStep, isNull);
+      expect(read().rolePerIndex, everyElement(SortRole.idle));
+    });
+
+    test('the bar label is the value, whatever the height', () {
+      notifier.selectedAlgorithmLength = 3;
+
+      expect(notifier.selectedAlgorithmLength, 3);
+      expect(notifier.getWrittenHeight(7), '7');
+    });
+
+    test('bars get shorter as more algorithms share the screen', () {
+      final heights = [for (final shown in [1, 2, 4, 6, 8]) SortingNotifier.calculateItemHeight(5, 9, shown).$1];
+
+      for (var i = 1; i < heights.length; i++) {
+        expect(heights[i], lessThan(heights[i - 1]));
+      }
+    });
+  });
 }
