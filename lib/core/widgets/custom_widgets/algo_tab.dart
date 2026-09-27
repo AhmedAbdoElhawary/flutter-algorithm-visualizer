@@ -74,12 +74,16 @@ class AlgoTab extends ConsumerWidget {
       showBorder: false,
       child: Padding(
         padding: REdgeInsets.symmetric(horizontal: 10, vertical: verticalPadding),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            if (icon != null) ...[CustomIcon(icon!, color: color, size: 20), const RSizedBox(width: 5)],
-            _AlgoTabLabel(label: label, color: color),
-          ],
+        /// Scales down instead of wrapping: the sorting list scrolls sideways, so a tab there has no width to wrap in.
+        child: FittedBox(
+          fit: BoxFit.scaleDown,
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              if (icon != null) ...[CustomIcon(icon!, color: color, size: 20), const RSizedBox(width: 5)],
+              _AlgoTabLabel(label: label, color: color),
+            ],
+          ),
         ),
       ),
     );
