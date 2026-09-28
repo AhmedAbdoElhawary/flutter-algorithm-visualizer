@@ -70,7 +70,8 @@ class CodeController extends TextEditingController {
   /// should clear on the next search). Clear them yourself when done.
   final Map<int, Color> highlightedLines = <int, Color>{};
 
-  /// Highlights [line] (0-indexed) with a translucent [color] background.
+  /// Highlights [line] (1-indexed, as the grader reports it) with a
+  /// translucent [color] background.
   /// Overwrites any existing highlight on that line. Notifies listeners.
   void highlightLine(int line, Color color) {
     if (line < 1) return;
