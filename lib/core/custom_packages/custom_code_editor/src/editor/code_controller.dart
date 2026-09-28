@@ -1,6 +1,5 @@
 import 'package:flutter/widgets.dart';
 
-import '../execution/legacy/runner.dart';
 import '../formatting/formatter.dart';
 import '../models/code_editor_config.dart';
 import '../models/code_editor_theme.dart';
@@ -31,7 +30,6 @@ class CodeController extends TextEditingController {
     Tokenizer? tokenizer,
     this.config = const CodeEditorConfig(),
     this.formatter,
-    this.runner,
     CodeEditorTheme? theme,
   })  : _highlighter = tokenizer != null ? SyntaxHighlighter(tokenizer) : null,
         theme = theme ?? CodeEditorTheme.dark(),
@@ -42,10 +40,6 @@ class CodeController extends TextEditingController {
 
   /// Optional formatter used by [format]. No-op when null.
   CodeFormatter? formatter;
-
-  /// Optional runner used by [execute]. No-op (returns a failed
-  /// [RunResult]) when null.
-  CodeRunner? runner;
 
   /// When set, [runAllTests] grades the current text against this problem's
   /// test cases instead of treating the code as a standalone snippet.
@@ -60,7 +54,7 @@ class CodeController extends TextEditingController {
   SyntaxHighlighter? _highlighter;
 
   /// 0-indexed line currently flagged as having a syntax/runtime error,
-  /// or null when there isn't one. Set by [execute]; cleared automatically
+  /// or null when there isn't one. Set by [runAllTests]; cleared automatically
   /// the next time the text actually changes.
   int? errorLine;
 
@@ -110,31 +104,10 @@ class CodeController extends TextEditingController {
     }
   }
 
-  /// The most recent result from [execute], if any.
-  RunResult? lastRunResult;
-
   /// The most recent result from [runAllTests], if any.
   ProblemRunResult? lastTestRunResult;
 
-  /// Runs [runner] on the current text and updates [errorLine] /
-  /// [lastRunResult] accordingly, notifying listeners so [CodeEditor] and
-  /// [LineNumbers] can repaint. Returns a no-op successful [RunResult]
-  /// with empty output when no [runner] is attached.
-  RunResult execute() {
-    final CodeRunner? r = runner;
-    if (r == null) {
-      const RunResult result = RunResult(stdout: <String>[]);
-      lastRunResult = result;
-      return result;
-    }
-    final RunResult result = r.run(text);
-    errorLine = result.error != null ? result.error!.line - 1 : null;
-    lastRunResult = result;
-    notifyListeners();
-    return result;
-  }
-
-  /// Clears any error-line highlight set by [execute] without re-running
+  /// Clears any error-line highlight set by [runAllTests] without re-running
   /// anything.
   void clearError() {
     if (errorLine != null) {
@@ -147,7 +120,7 @@ class CodeController extends TextEditingController {
   /// hidden) using the on-device interpreter, updating [errorLine] and
   /// [lastTestRunResult] and notifying listeners.
   ///
-  /// Returns null when no [problem] is attached; use [execute] in that case.
+  /// Returns null when no [problem] is attached.
   ProblemRunResult? runAllTests() {
     final ProblemData? p = problem;
     if (p == null) return null;

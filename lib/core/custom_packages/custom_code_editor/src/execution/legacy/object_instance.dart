@@ -1,16 +1,14 @@
-/// A runtime instance of an interpreted custom class (e.g. `ListNode` or
-/// `TreeNode`), created when the interpreter evaluates a constructor call
-/// like `ListNode(1, ListNode(2))`.
+/// A runtime instance of a custom class (e.g. `ListNode` or `TreeNode`),
+/// built from the engine's objects so grading can serialize them.
 ///
 /// Fields are plain Dart values (ints, strings, `List<dynamic>`, nested
 /// [ObjectInstance]s, `null`), which lets the shape-aware serializers walk
 /// an instance graph to produce canonical output for grading.
 class ObjectInstance {
-  ObjectInstance(this.type, this.fields, [this.methods = const <String, ObjectInstanceMethod>{}]);
+  ObjectInstance(this.type, this.fields);
 
   final String type;
   final Map<String, dynamic> fields;
-  final Map<String, ObjectInstanceMethod> methods;
 
   @override
   String toString() => '$type(${_format(fields, 0)})';
@@ -31,14 +29,4 @@ class ObjectInstance {
     }
     return '$v';
   }
-}
-
-/// A bound method on an [ObjectInstance]: the method body plus a
-/// reference to the instance it belongs to, so the interpreter can
-/// set up `this` when the method is called.
-class ObjectInstanceMethod {
-  const ObjectInstanceMethod(this.decl, this.instance);
-
-  final dynamic decl; // FunctionDecl (imported from ast.dart to avoid circular deps)
-  final ObjectInstance instance;
 }

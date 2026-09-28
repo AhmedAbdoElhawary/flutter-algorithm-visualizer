@@ -15,15 +15,7 @@ export 'src/editor/code_editor.dart';
 // Execution ("run this code" support)
 // The languages the editor offers, and the frontend behind each one.
 export 'src/execution/frontend/language_registry.dart';
-// TODO(007): legacy/ is the pre-rewrite tree-walking interpreter, kept only
-// until the new bytecode engine (see plan.md) reaches grading parity; it is
-// deleted in T113.
-export 'src/execution/legacy/ast.dart';
-export 'src/execution/legacy/interpreter.dart';
-export 'src/execution/legacy/lexer.dart';
 export 'src/execution/legacy/object_instance.dart';
-export 'src/execution/legacy/parser.dart';
-export 'src/execution/legacy/runner.dart';
 // Formatting
 export 'src/formatting/formatter.dart';
 // Models
