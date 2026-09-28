@@ -303,7 +303,8 @@ class _CheckmarkState extends State<_Checkmark> with SingleTickerProviderStateMi
   @override
   Widget build(BuildContext context) {
     return ScaleTransition(
-      scale: CurvedAnimation(parent: _pop, curve: CdMotion.easePop),
+      // A tween, not a CurvedAnimation: made in build, that would leak one per rebuild.
+      scale: _pop.drive(CurveTween(curve: CdMotion.easePop)),
       child: SizedBox(
         width: 100.r,
         height: 100.r,
@@ -346,9 +347,9 @@ class _Rise extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (reduceMotion) return child;
-    final anim = CurvedAnimation(
-      parent: controller,
-      curve: Interval(start, (start + 0.43).clamp(0.0, 1.0), curve: Curves.easeOut),
+    // A tween, not a CurvedAnimation: made in build, that would leak one per rebuild.
+    final anim = controller.drive(
+      CurveTween(curve: Interval(start, (start + 0.43).clamp(0.0, 1.0), curve: Curves.easeOut)),
     );
 
     /// [FadeTransition] rather than [Opacity]: it fades at the compositor,
