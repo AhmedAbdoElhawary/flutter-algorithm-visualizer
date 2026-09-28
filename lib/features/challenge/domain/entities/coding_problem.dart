@@ -172,7 +172,7 @@ class CodingProblem {
           category == other.category &&
           problemStatus?.name == other.problemStatus?.name &&
           isBookmarked == other.isBookmarked &&
-          solutionsStatus == other.solutionsStatus;
+          const ListEquality<ProblemSolutionStatusDTO>().equals(solutionsStatus, other.solutionsStatus);
 
   @override
   int get hashCode => Object.hash(
@@ -185,7 +185,7 @@ class CodingProblem {
         category,
         problemStatus?.name,
         isBookmarked,
-        solutionsStatus.hashCode,
+        Object.hashAll(solutionsStatus ?? const []),
       );
 }
 
