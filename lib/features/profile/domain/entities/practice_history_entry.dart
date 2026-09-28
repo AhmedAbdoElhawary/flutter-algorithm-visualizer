@@ -21,5 +21,5 @@ class PracticeHistoryEntry {
 }
 
 extension PracticeHistoryEntryX on PracticeHistoryEntry {
-  bool get isSolved => !attempts.any((element) => !element.isCorrect);
+  bool get isSolved => attempts.any((element) => element.isCorrect);
 }
