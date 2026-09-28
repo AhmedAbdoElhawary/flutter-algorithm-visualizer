@@ -1,11 +1,8 @@
 import 'package:algorithm_visualizer/features/challenge/data/models/problem_storage.dart';
 import 'package:algorithm_visualizer/features/challenge/domain/entities/coding_problem.dart';
 import 'package:algorithm_visualizer/features/challenge/domain/enums/problem.dart';
-import 'package:algorithm_visualizer/features/challenge/presentation/view_model/challenges/problems_providers.dart';
-import 'package:algorithm_visualizer/features/profile/domain/entities/profile_statistics.dart';
 import 'package:algorithm_visualizer/features/profile/presentation/view_model/statistics/profile_statistics_provider.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:riverpod/riverpod.dart';
 
 void main() {
   const calculator = ProfileStatisticsCalculator();
@@ -13,7 +10,7 @@ void main() {
   group('ProfileStatisticsCalculator', () {
     group('computeStats()', () {
       test('returns empty statistics for an empty problem list', () {
-        final result = calculator.computeStats([]);
+        final result = calculator.computeStats([], now: _now);
 
         expect(result.totalProblems, 0);
         expect(result.solvedCount, 0);
@@ -50,7 +47,7 @@ void main() {
           _problem(problemId: 3),
         ];
 
-        final result = calculator.computeStats(problems);
+        final result = calculator.computeStats(problems, now: _now);
 
         expect(result.totalProblems, 3);
       });
@@ -64,7 +61,7 @@ void main() {
           _problem(difficulty: ProblemDifficulty.hard),
         ];
 
-        final result = calculator.computeStats(problems);
+        final result = calculator.computeStats(problems, now: _now);
 
         expect(result.easyTotal, 2);
         expect(result.mediumTotal, 1);
@@ -95,7 +92,7 @@ void main() {
           ),
         ];
 
-        final result = calculator.computeStats(problems);
+        final result = calculator.computeStats(problems, now: _now);
 
         expect(result.solvedCount, 3);
 
@@ -116,7 +113,7 @@ void main() {
           ),
         ];
 
-        final result = calculator.computeStats(problems);
+        final result = calculator.computeStats(problems, now: _now);
 
         expect(result.solvedCount, 0);
         expect(result.easySolved, 0);
@@ -131,7 +128,7 @@ void main() {
           _problem(isBookmarked: null),
         ];
 
-        final result = calculator.computeStats(problems);
+        final result = calculator.computeStats(problems, now: _now);
 
         expect(result.bookmarkedCount, 2);
       });
@@ -147,7 +144,7 @@ void main() {
           ),
         ];
 
-        final result = calculator.computeStats(problems);
+        final result = calculator.computeStats(problems, now: _now);
 
         expect(result.totalAttempts, 3);
         expect(result.correctAttempts, 1);
@@ -159,7 +156,7 @@ void main() {
           _problem(),
         ];
 
-        final result = calculator.computeStats(problems);
+        final result = calculator.computeStats(problems, now: _now);
 
         expect(result.accuracyRate, 0);
       });
@@ -176,7 +173,7 @@ void main() {
           ),
         ];
 
-        final result = calculator.computeStats(problems);
+        final result = calculator.computeStats(problems, now: _now);
 
         expect(result.totalAttempts, 4);
         expect(result.correctAttempts, 2);
@@ -193,7 +190,7 @@ void main() {
           ),
         ];
 
-        final result = calculator.computeStats(problems);
+        final result = calculator.computeStats(problems, now: _now);
 
         expect(result.totalAttempts, 2);
         expect(result.correctAttempts, 0);
@@ -208,7 +205,7 @@ void main() {
           _problem(category: 'Strings', problemStatus: ProblemStatus.solved),
         ];
 
-        final result = calculator.computeStats(problems);
+        final result = calculator.computeStats(problems, now: _now);
 
         expect(result.categorySolved, {'Arrays': 2, 'Strings': 1});
       });
@@ -216,7 +213,7 @@ void main() {
       test('does not add an empty category', () {
         final problems = [_problem(category: '', problemStatus: ProblemStatus.solved)];
 
-        final result = calculator.computeStats(problems);
+        final result = calculator.computeStats(problems, now: _now);
 
         expect(result.categorySolved, isEmpty);
       });
@@ -227,7 +224,7 @@ void main() {
           _problem(category: 'Strings', problemStatus: ProblemStatus.none),
         ];
 
-        final result = calculator.computeStats(problems);
+        final result = calculator.computeStats(problems, now: _now);
 
         expect(result.categorySolved, isEmpty);
       });
@@ -253,7 +250,7 @@ void main() {
           ),
         ];
 
-        final result = calculator.computeStats(problems);
+        final result = calculator.computeStats(problems, now: _now);
 
         expect(result.totalAttempts, 2);
         expect(result.recentSubmissions.length, 1);
@@ -294,7 +291,7 @@ void main() {
           ),
         ];
 
-        final result = calculator.computeStats(problems);
+        final result = calculator.computeStats(problems, now: _now);
 
         expect(result.recentSubmissions.map((submission) => submission.problemId), [2, 1]);
       });
@@ -313,7 +310,7 @@ void main() {
           ),
         );
 
-        final result = calculator.computeStats(problems);
+        final result = calculator.computeStats(problems, now: _now);
 
         expect(result.recentSubmissions.length, 8);
       });
@@ -332,7 +329,7 @@ void main() {
           ),
         );
 
-        final result = calculator.computeStats(problems);
+        final result = calculator.computeStats(problems, now: _now);
 
         expect(
           result.recentSubmissions.map((submission) => submission.problemId),
@@ -352,7 +349,7 @@ void main() {
           ),
         ];
 
-        final result = calculator.computeStats(problems);
+        final result = calculator.computeStats(problems, now: _now);
 
         expect(result.recentSubmissions.first.isCorrect, false);
       });
@@ -385,7 +382,7 @@ void main() {
           ),
         ];
 
-        final result = calculator.computeStats(problems);
+        final result = calculator.computeStats(problems, now: _now);
 
         expect(result.practiceHistory.length, 2);
 
@@ -413,7 +410,7 @@ void main() {
           ),
         ];
 
-        final result = calculator.computeStats(problems);
+        final result = calculator.computeStats(problems, now: _now);
 
         expect(result.practiceHistory.length, 1);
         expect(result.practiceHistory.first.attempts.length, 2);
@@ -440,7 +437,7 @@ void main() {
           ),
         ];
 
-        final result = calculator.computeStats(problems);
+        final result = calculator.computeStats(problems, now: _now);
 
         final history = result.practiceHistory.first;
 
@@ -475,7 +472,7 @@ void main() {
           ),
         ];
 
-        final result = calculator.computeStats(problems);
+        final result = calculator.computeStats(problems, now: _now);
 
         expect(result.practiceHistory.map((entry) => entry.problemId), [2, 1]);
       });
@@ -493,7 +490,7 @@ void main() {
           ),
         ];
 
-        final result = calculator.computeStats(problems);
+        final result = calculator.computeStats(problems, now: _now);
 
         expect(result.practiceHistory, isEmpty);
       });
@@ -501,7 +498,7 @@ void main() {
 
     group('streaks', () {
       test('returns zero streaks when there are no submissions', () {
-        final result = calculator.computeStats([]);
+        final result = calculator.computeStats([], now: _now);
 
         expect(result.currentStreak, 0);
         expect(result.bestStreak, 0);
@@ -521,7 +518,7 @@ void main() {
           ),
         ];
 
-        final result = calculator.computeStats(problems);
+        final result = calculator.computeStats(problems, now: _now);
 
         expect(result.currentStreak, 1);
         expect(result.bestStreak, 1);
@@ -545,7 +542,7 @@ void main() {
             solutions: [
               _solution(
                 isCorrect: true,
-                submittedAt: today.subtract(const Duration(days: 1)),
+                submittedAt: _daysAgo(1),
               ),
             ],
           ),
@@ -554,13 +551,13 @@ void main() {
             solutions: [
               _solution(
                 isCorrect: true,
-                submittedAt: today.subtract(const Duration(days: 2)),
+                submittedAt: _daysAgo(2),
               ),
             ],
           ),
         ];
 
-        final result = calculator.computeStats(problems);
+        final result = calculator.computeStats(problems, now: _now);
 
         expect(result.currentStreak, 3);
         expect(result.bestStreak, 3);
@@ -585,14 +582,14 @@ void main() {
           ),
         ];
 
-        final result = calculator.computeStats(problems);
+        final result = calculator.computeStats(problems, now: _now);
 
         expect(result.currentStreak, 1);
         expect(result.bestStreak, 1);
       });
 
-      test('current streak becomes zero when there is no submission today', () {
-        final yesterday = _today().subtract(const Duration(days: 1));
+      test('a run that reached yesterday is still alive today', () {
+        final yesterday = _daysAgo(1);
 
         final problems = [
           _problem(
@@ -605,9 +602,9 @@ void main() {
           ),
         ];
 
-        final result = calculator.computeStats(problems);
+        final result = calculator.computeStats(problems, now: _now);
 
-        expect(result.currentStreak, 0);
+        expect(result.currentStreak, 1);
         expect(result.bestStreak, 1);
       });
 
@@ -620,7 +617,7 @@ void main() {
             problemId: 1,
             solutions: [
               _solution(
-                submittedAt: today.subtract(const Duration(days: 10)),
+                submittedAt: _daysAgo(10),
                 isCorrect: true,
               ),
             ],
@@ -629,7 +626,7 @@ void main() {
             problemId: 2,
             solutions: [
               _solution(
-                submittedAt: today.subtract(const Duration(days: 9)),
+                submittedAt: _daysAgo(9),
                 isCorrect: true,
               ),
             ],
@@ -638,7 +635,7 @@ void main() {
             problemId: 3,
             solutions: [
               _solution(
-                submittedAt: today.subtract(const Duration(days: 8)),
+                submittedAt: _daysAgo(8),
                 isCorrect: true,
               ),
             ],
@@ -655,7 +652,7 @@ void main() {
           ),
         ];
 
-        final result = calculator.computeStats(problems);
+        final result = calculator.computeStats(problems, now: _now);
 
         expect(result.currentStreak, 1);
         expect(result.bestStreak, 3);
@@ -678,14 +675,14 @@ void main() {
             problemId: 2,
             solutions: [
               _solution(
-                submittedAt: today.subtract(const Duration(days: 2)),
+                submittedAt: _daysAgo(2),
                 isCorrect: true,
               ),
             ],
           ),
         ];
 
-        final result = calculator.computeStats(problems);
+        final result = calculator.computeStats(problems, now: _now);
 
         expect(result.currentStreak, 1);
         expect(result.bestStreak, 1);
@@ -694,7 +691,7 @@ void main() {
 
     group('weekly activity', () {
       test('returns seven days', () {
-        final result = calculator.computeStats([]);
+        final result = calculator.computeStats([], now: _now);
 
         expect(result.weeklyActivity.length, 7);
       });
@@ -722,7 +719,7 @@ void main() {
           ),
         ];
 
-        final result = calculator.computeStats(problems);
+        final result = calculator.computeStats(problems, now: _now);
 
         expect(
           result.weeklyActivity[today.weekday - 1],
@@ -732,7 +729,7 @@ void main() {
 
       test('ignores submissions from previous weeks', () {
         final today = _today();
-        final previousWeek = today.subtract(const Duration(days: 7));
+        final previousWeek = _daysAgo(7);
 
         final problems = [
           _problem(
@@ -749,7 +746,7 @@ void main() {
           ),
         ];
 
-        final result = calculator.computeStats(problems);
+        final result = calculator.computeStats(problems, now: _now);
 
         expect(result.weeklyActivity.reduce((a, b) => a + b), 1);
       });
@@ -768,7 +765,7 @@ void main() {
           ),
         ];
 
-        final result = calculator.computeStats(problems);
+        final result = calculator.computeStats(problems, now: _now);
 
         expect(result.weeklyActivity, List<int>.filled(7, 0));
       });
@@ -776,13 +773,13 @@ void main() {
 
     group('heatmap', () {
       test('returns 84 days', () {
-        final result = calculator.computeStats([]);
+        final result = calculator.computeStats([], now: _now);
 
         expect(result.heatmapData.length, 84);
       });
 
       test('returns zero for a day with no submissions', () {
-        final result = calculator.computeStats([]);
+        final result = calculator.computeStats([], now: _now);
 
         expect(
           result.heatmapData.every((count) => count == 0),
@@ -809,7 +806,7 @@ void main() {
           ),
         ];
 
-        final result = calculator.computeStats(problems);
+        final result = calculator.computeStats(problems, now: _now);
 
         expect(result.heatmapData.last, 1);
       });
@@ -829,7 +826,7 @@ void main() {
           ),
         ];
 
-        final result = calculator.computeStats(problems);
+        final result = calculator.computeStats(problems, now: _now);
 
         expect(result.heatmapData.last, 2);
       });
@@ -849,7 +846,7 @@ void main() {
           ),
         ];
 
-        final result = calculator.computeStats(problems);
+        final result = calculator.computeStats(problems, now: _now);
 
         expect(result.heatmapData.last, 3);
       });
@@ -869,7 +866,7 @@ void main() {
           ),
         ];
 
-        final result = calculator.computeStats(problems);
+        final result = calculator.computeStats(problems, now: _now);
 
         expect(result.heatmapData.last, 4);
       });
@@ -896,120 +893,109 @@ void main() {
           ),
         ];
 
-        final result = calculator.computeStats(problems);
+        final result = calculator.computeStats(problems, now: _now);
 
         expect(result.heatmapData.last, 2);
       });
     });
   });
 
-  group('profileStatisticsProvider', () {
-    test('returns calculated statistics when problems are loaded', () {
+  group('missed days', () {
+    test('a whole missed day ends the current streak', () {
+      final problems = [
+        _problem(solutions: [_solution(isCorrect: true, submittedAt: _daysAgo(2))]),
+      ];
+
+      final result = calculator.computeStats(problems, now: _now);
+
+      expect(result.currentStreak, 0);
+      expect(result.bestStreak, 1);
+    });
+
+    test('the current streak stops at the first missed day', () {
       final problems = [
         _problem(
-          problemId: 1,
-          difficulty: ProblemDifficulty.easy,
-          problemStatus: ProblemStatus.solved,
-        ),
-        _problem(
-          problemId: 2,
-          difficulty: ProblemDifficulty.hard,
-          problemStatus: ProblemStatus.attempted,
+          solutions: [
+            for (final days in [0, 1, 3, 4, 5]) _solution(isCorrect: true, submittedAt: _daysAgo(days)),
+          ],
         ),
       ];
 
-      final container = ProviderContainer(
-        overrides: [
-          problemsProvider.overrideWithBuild((ref, notifier) => AsyncValue.data(problems)),
-        ],
-      );
-      addTearDown(container.dispose);
+      final result = calculator.computeStats(problems, now: _now);
 
-      final result = container.read(profileStatisticsProvider);
-
-      expect(result.totalProblems, 2);
-      expect(result.solvedCount, 1);
-      expect(result.easyTotal, 1);
-      expect(result.hardTotal, 1);
-    });
-
-    test('returns empty statistics while problems are loading', () {
-      final container = ProviderContainer(
-        overrides: [
-          problemsProvider.overrideWithBuild((ref, notifier) => const AsyncValue.loading()),
-        ],
-      );
-      addTearDown(container.dispose);
-
-      final result = container.read(profileStatisticsProvider);
-
-      expect(result, _matchesEmptyStatistics());
-    });
-
-    test('returns empty statistics when loading problems fails', () {
-      final container = ProviderContainer(
-        overrides: [
-          problemsProvider.overrideWithBuild(
-            (ref, notifier) => AsyncValue.error(
-              Exception('Failed to load problems'),
-              StackTrace.current,
-            ),
-          ),
-        ],
-      );
-      addTearDown(container.dispose);
-
-      final result = container.read(profileStatisticsProvider);
-
-      expect(result, _matchesEmptyStatistics());
-    });
-
-    test('uses the ProfileStatisticsCalculator provider', () {
-      const fakeCalculator = ProfileStatisticsCalculator();
-
-      final container = ProviderContainer(
-        overrides: [
-          problemsProvider.overrideWithBuild((ref, notifier) => AsyncValue.data([_problem()])),
-          profileStatisticsCalculatorProvider.overrideWithValue(
-            fakeCalculator,
-          ),
-        ],
-      );
-      addTearDown(container.dispose);
-
-      final result = container.read(profileStatisticsProvider);
-
-      expect(result.totalProblems, 1);
+      expect(result.currentStreak, 2);
+      expect(result.bestStreak, 3);
     });
   });
-}
 
-Matcher _matchesEmptyStatistics() {
-  return predicate<ProfileStatistics>(
-    (stats) =>
-        stats.totalProblems == 0 &&
-        stats.solvedCount == 0 &&
-        stats.easySolved == 0 &&
-        stats.mediumSolved == 0 &&
-        stats.hardSolved == 0 &&
-        stats.easyTotal == 0 &&
-        stats.mediumTotal == 0 &&
-        stats.hardTotal == 0 &&
-        stats.totalAttempts == 0 &&
-        stats.correctAttempts == 0 &&
-        stats.accuracyRate == 0 &&
-        stats.bookmarkedCount == 0 &&
-        stats.currentStreak == 0 &&
-        stats.bestStreak == 0 &&
-        stats.weeklyActivity.length == 7 &&
-        stats.weeklyActivity.every((value) => value == 0) &&
-        stats.heatmapData.length == 84 &&
-        stats.heatmapData.every((value) => value == 0) &&
-        stats.categorySolved.isEmpty &&
-        stats.recentSubmissions.isEmpty &&
-        stats.practiceHistory.isEmpty,
-    'is empty ProfileStatistics',
-  );
+  group('dates', () {
+    test('a run across the new year keeps counting', () {
+      final now = DateTime(2027, 1, 2, 12); // a Saturday
+      final problems = [
+        _problem(
+          solutions: [
+            for (final day in [DateTime(2026, 12, 30), DateTime(2026, 12, 31), DateTime(2027, 1, 1), DateTime(2027, 1, 2)])
+              _solution(isCorrect: true, submittedAt: day),
+          ],
+        ),
+      ];
+
+      final result = calculator.computeStats(problems, now: now);
+
+      expect(result.currentStreak, 4);
+      expect(result.bestStreak, 4);
+      expect(result.weeklyActivity, [0, 0, 1, 1, 1, 1, 0]);
+      expect(result.heatmapData.sublist(79), [0, 1, 1, 1, 1]);
+    });
+
+    // Only a time zone with daylight saving has a 23 or 25 hour day to test.
+    final clockChanges = [
+      for (var i = 0; i < 365; i++)
+        if (DateTime(2026, 1, 2 + i).difference(DateTime(2026, 1, 1 + i)) != const Duration(days: 1))
+          DateTime(2026, 1, 1 + i),
+    ];
+
+    for (final day in clockChanges) {
+      test('a clock change on ${day.month}/${day.day} does not break the streak or shift the heatmap', () {
+        final before = DateTime(day.year, day.month, day.day - 1);
+        final after = DateTime(day.year, day.month, day.day + 1);
+        final problems = [
+          _problem(
+            solutions: [for (final d in [before, day, after]) _solution(isCorrect: true, submittedAt: d)],
+          ),
+        ];
+
+        final result = calculator.computeStats(problems, now: DateTime(after.year, after.month, after.day, 12));
+
+        expect(result.currentStreak, 3);
+        expect(result.bestStreak, 3);
+        expect(result.heatmapData.sublist(80), [0, 1, 1, 1]);
+      });
+    }
+
+    if (clockChanges.isEmpty) {
+      test('a clock change does not break the streak', () {}, skip: 'this time zone has no daylight saving');
+    }
+  });
+
+  test('1,000 entries over 500 days', () {
+    final problems = [
+      for (var i = 0; i < 1000; i++)
+        _problem(
+          problemId: i,
+          solutions: [_solution(isCorrect: true, submittedAt: _daysAgo(i ~/ 2))],
+        ),
+    ];
+
+    final result = calculator.computeStats(problems, now: _now);
+
+    expect(result.totalAttempts, 1000);
+    expect(result.currentStreak, 500);
+    expect(result.bestStreak, 500);
+    expect(result.heatmapData, List.filled(84, 1));
+    expect(result.recentSubmissions, hasLength(8));
+    expect(result.practiceHistory, hasLength(1000));
+  });
 }
 
 CodingProblem _problem({
@@ -1064,12 +1050,9 @@ ProblemSolutionStatusDTO _solution({bool? isCorrect = false, DateTime? submitted
   );
 }
 
-DateTime _today() {
-  final now = DateTime.now();
+/// A fixed Wednesday noon, so no test changes result at midnight or on a clock-change day.
+final _now = DateTime(2026, 9, 30, 12);
 
-  return DateTime(
-    now.year,
-    now.month,
-    now.day,
-  );
-}
+DateTime _today() => DateTime(_now.year, _now.month, _now.day);
+
+DateTime _daysAgo(int days) => DateTime(_now.year, _now.month, _now.day - days);

@@ -17,6 +17,10 @@ CodingProblem buildTestProblem({
   List<Example> examples = const [],
   List<String> hints = const [],
   List<SimilarQuestion> similarQuestions = const [],
+  String category = 'Arrays',
+  ProblemStatus problemStatus = ProblemStatus.none,
+  bool isBookmarked = false,
+  List<ProblemSolutionStatusDTO> solutions = const [],
 }) {
   return CodingProblem(
     number: problemId,
@@ -25,7 +29,7 @@ CodingProblem buildTestProblem({
     source: 'Test',
     sourceProblemNumber: problemId,
     difficulty: difficulty,
-    category: 'Arrays',
+    category: category,
     tags: tags,
     patterns: const [],
     description: description,
@@ -47,9 +51,9 @@ CodingProblem buildTestProblem({
     followUpConcepts: const [],
     commonMistakes: const [],
     similarQuestions: similarQuestions,
-    problemStatus: ProblemStatus.none,
-    isBookmarked: false,
-    solutionsStatus: const [],
+    problemStatus: problemStatus,
+    isBookmarked: isBookmarked,
+    solutionsStatus: solutions,
   );
 }
 
