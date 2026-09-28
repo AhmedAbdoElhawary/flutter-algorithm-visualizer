@@ -157,5 +157,31 @@ void main() {
       expect(state.themeMode, ThemeMode.light);
       expect(state.language, LanguagesEnum.arabic);
     });
+
+    test('re-picking the current language changes nothing', () async {
+      final storage = InMemoryStorage();
+      final container = ProviderContainer(
+        overrides: [appSettingsStorageProvider.overrideWithValue(storage)],
+      );
+      addTearDown(container.dispose);
+
+      final changed = await container.read(appSettingsProvider.notifier).changeLanguage(LanguagesEnum.english);
+
+      expect(changed, isFalse);
+      expect(storage.has(AppSettingsNotifier.languageKey), isFalse);
+    });
+  });
+
+  test('the getters read the current choice', () async {
+    final container = _containerWith();
+    final notifier = container.read(appSettingsProvider.notifier);
+    expect(notifier.isLangEnglish, isTrue);
+
+    await notifier.changeLanguage(LanguagesEnum.arabic);
+    await notifier.changeTheme(ThemeMode.dark);
+
+    expect(notifier.languageSelected, LanguagesEnum.arabic);
+    expect(notifier.isLangEnglish, isFalse);
+    expect(notifier.modeSelected, ThemeMode.dark);
   });
 }
