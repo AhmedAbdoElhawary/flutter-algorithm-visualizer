@@ -198,6 +198,34 @@ void main() {
 
       expect(await sync.sync(), ProblemSyncResult.notSignedIn);
     });
+
+    test('a push that fails halfway keeps every mark, and the retry sends it all once', () async {
+      await repository.updateProblem(problem(firstId));
+      await repository.deleteProblem(secondId);
+      remote.failDeletes = true;
+
+      expect(await sync.sync(), ProblemSyncResult.failure);
+      expect(unsynced.needsToBeUploadedIds, [firstId]);
+      expect(unsynced.needsToBeDeletedIds, [secondId]);
+
+      remote.failDeletes = false;
+      expect(await sync.sync(), ProblemSyncResult.success);
+      expect(remote.deletes, [secondId]);
+      expect(unsynced.hasAny, isFalse);
+
+      // Once flushed, the next sync has nothing left to send.
+      final writes = remote.writes.length;
+      await sync.clearLastSync();
+      expect(await sync.sync(), ProblemSyncResult.success);
+      expect(remote.writes, hasLength(writes));
+    });
+
+    test('a corrupted last-sync time costs no cooldown instead of crashing', () async {
+      await storage.write('last_problems_sync_at', 'yesterday');
+
+      expect(sync.remainingCooldown, Duration.zero);
+      expect(await sync.sync(), ProblemSyncResult.success);
+    });
   });
 
   group('first download', () {
@@ -206,6 +234,16 @@ void main() {
 
       await sync.downloadIfFirstRun();
 
+      expect(local.getProblems().single.problemId, firstId);
+    });
+
+    test('a corrupted done flag means not done yet, so it downloads', () async {
+      await storage.write('problems_first_download_done', 'yes');
+      remote.stored = [_dto(firstId)];
+
+      await sync.downloadIfFirstRun();
+
+      expect(sync.isFirstDownload, isTrue);
       expect(local.getProblems().single.problemId, firstId);
     });
 
@@ -340,6 +378,7 @@ ProblemStorageDTO _dto(int problemId, {bool isBookmarked = true}) {
 class _FakeRemote implements ProblemRemoteDataSource {
   bool signedIn = true;
   bool failWrites = false;
+  bool failDeletes = false;
   bool failReads = false;
 
   List<ProblemStorageDTO> stored = <ProblemStorageDTO>[];
@@ -380,7 +419,7 @@ class _FakeRemote implements ProblemRemoteDataSource {
 
   @override
   Future<void> batchDeleteProblems(List<int> problemIds) async {
-    if (failWrites) throw Exception('network');
+    if (failWrites || failDeletes) throw Exception('network');
     deletes.addAll(problemIds);
     stored = stored.where((s) => !problemIds.contains(s.problemId)).toList();
   }
