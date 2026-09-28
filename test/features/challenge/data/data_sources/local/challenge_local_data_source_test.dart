@@ -422,6 +422,67 @@ void main() {
         );
       });
     });
+
+    group('broken or old storage', () {
+      const key = 'problems';
+
+      test('a value of the wrong type reads as nothing saved', () async {
+        await getStorage.write(key, 'not a list');
+
+        expect(dataSource.getProblems(), isEmpty);
+      });
+
+      test('a broken entry is skipped and the rest still read', () async {
+        await getStorage.write(key, [
+          _createProblem(problemId: 1).toJson(),
+          'not a map',
+          {'problem_id': 'two', 'is_bookmarked': 'yes'},
+          _createProblem(problemId: 3, isBookmarked: true).toJson(),
+        ]);
+
+        expect(dataSource.getProblems().map((problem) => problem.problemId), [1, 3]);
+      });
+
+      test('saving still works next to a broken entry', () async {
+        await getStorage.write(key, ['not a map']);
+
+        await dataSource.saveProblem(_createProblem(problemId: 5));
+
+        expect(dataSource.getProblems().map((problem) => problem.problemId), [5]);
+      });
+
+      test('an entry from an older app with fields missing still reads', () async {
+        await getStorage.write(key, [
+          {
+            'problem_id': 4,
+            'solutions_status': [
+              {'code': 'x', 'is_correct': true},
+            ],
+          },
+        ]);
+
+        final problem = dataSource.getProblem(4)!;
+        expect(problem.problemStatus, isNull);
+        expect(problem.solutionsStatus?.single.languageKey, 'dart');
+      });
+    });
+
+    group('overwriteProblems()', () {
+      test('replaces everything, dropping entries without an id', () async {
+        await dataSource.saveProblem(_createProblem(problemId: 1));
+
+        await dataSource.overwriteProblems([_createProblem(problemId: 2), _createProblem(problemId: null)]);
+
+        expect(dataSource.getProblems().map((problem) => problem.problemId), [2]);
+      });
+    });
+
+    test('asking for Arabic falls back to the English dataset while there is no overlay', () async {
+      final english = await dataSource.loadProblemsAssets();
+      final arabic = await dataSource.loadProblemsAssets(arabic: true);
+
+      expect(arabic.problems?.first.description, english.problems?.first.description);
+    });
   });
 }
 
