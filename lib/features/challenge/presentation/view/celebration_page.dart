@@ -143,7 +143,9 @@ class _CelebrationPageState extends State<CelebrationPage> with TickerProviderSt
                   children: [
                     PrimaryButtonQuiet(
                       label: StringsManager.nextProblem,
-                      onPressed: () => context.pushTo(Routes.practice),
+                      // Go, not push: the challenges tab is already in the stack under this page, and a
+                      // second copy of it crashed on a duplicate page key.
+                      onPressed: () => context.goTo(Routes.practice),
                     ),
                     const RSizedBox(height: 10),
                     SecondaryButtonQuiet(
