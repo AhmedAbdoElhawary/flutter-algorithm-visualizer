@@ -76,4 +76,29 @@ void main() {
     expect(await _backgroundOf(tester, dark: false), nativeLightBackground);
     expect(await _backgroundOf(tester, dark: true), nativeDarkBackground);
   });
+
+  group('the intro', () {
+    testWidgets('plays for a second, then hands over exactly once', (tester) async {
+      var finished = 0;
+      await tester.pumpWidget(AlgoDiveSplash(dark: true, onFinished: () => finished++));
+
+      await tester.pump(const Duration(milliseconds: 900));
+      expect(finished, 0);
+
+      await tester.pump(const Duration(milliseconds: 200));
+      await tester.pumpAndSettle();
+      expect(finished, 1);
+    });
+
+    testWidgets('closed early, it never hands over and leaves nothing running', (tester) async {
+      var finished = 0;
+      await tester.pumpWidget(AlgoDiveSplash(dark: false, onFinished: () => finished++));
+      await tester.pump(const Duration(milliseconds: 300));
+
+      await tester.pumpWidget(const SizedBox());
+      await tester.pump(const Duration(seconds: 2));
+
+      expect(finished, 0);
+    });
+  });
 }
