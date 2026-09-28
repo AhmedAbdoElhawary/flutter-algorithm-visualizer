@@ -134,6 +134,14 @@ void main() {
   test('a Firestore failure aborts before the user is deleted', () async {
     problemRemote.failWith = Exception('network');
     await profileLocal.saveDisplayName('Ahmed');
+    await problemLocal.overwriteProblems(<ProblemStorageDTO>[
+      const ProblemStorageDTO(
+        problemId: 1,
+        problemStatus: ProblemStatus.solved,
+        isBookmarked: false,
+        solutionsStatus: null,
+      ),
+    ]);
 
     await expectLater(
       service.deleteAccount(password: 'correct horse'),
@@ -142,6 +150,7 @@ void main() {
 
     expect(log, <String>['reauthenticate', 'deleteAllProblems']);
     expect(profileLocal.getDisplayName(), 'Ahmed');
+    expect(problemLocal.getProblems(), hasLength(1));
   });
 }
 
