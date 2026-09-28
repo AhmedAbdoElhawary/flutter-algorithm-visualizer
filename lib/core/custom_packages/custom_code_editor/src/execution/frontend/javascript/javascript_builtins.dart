@@ -344,7 +344,12 @@ Value _objectAssign(List<Value> a, InvokeCallback i) {
 Value _isArray(List<Value> a, InvokeCallback i) => BoolValue(a[0] is ListValue);
 
 Value _arrayFrom(List<Value> a, InvokeCallback i) {
-  final items = List<Value>.of(_iter(a[0]));
+  // `Array.from({length: n}, fn)` makes n empty slots, the usual way to start a DP table.
+  final source = a[0];
+  final length = source is MapValue ? source.entries[const StrValue('length')] : null;
+  final items = length is IntValue
+      ? List<Value>.filled(length.value, UndefinedValue.instance)
+      : List<Value>.of(_iter(source));
   if (a.length < 2 || a[1] is NullValue || a[1] is UndefinedValue) return ListValue(items);
   return ListValue(<Value>[
     for (var n = 0; n < items.length; n++) _callback(a[1], <Value>[items[n], IntValue(n)], i),
