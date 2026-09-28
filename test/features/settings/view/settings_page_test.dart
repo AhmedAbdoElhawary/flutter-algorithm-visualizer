@@ -546,6 +546,7 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(auth.calls, contains('signOut'));
+      expect(container.read(isSignedInProvider), isFalse, reason: 'back to a guest');
       expect(location(tester), Routes.login.path);
     });
 

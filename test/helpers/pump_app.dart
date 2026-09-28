@@ -58,12 +58,15 @@ Future<ProviderContainer> pumpApp(
       ? null
       : FakeUser(uid: signedInAs.id, displayName: signedInAs.name, email: signedInAs.email);
 
+  final profileRemote = FakeProfileRemoteDataSource(user: user);
+  final authRemote = FakeAuthRemoteDataSource()..onSignedOut = () => profileRemote.user = null;
+
   final container = ProviderContainer(
     overrides: [
       localStorageProvider.overrideWithValue(InMemoryStorage()),
       appSettingsStorageProvider.overrideWithValue(InMemoryStorage()),
-      authRemoteDataSourceProvider.overrideWithValue(FakeAuthRemoteDataSource()),
-      profileRemoteDataSourceProvider.overrideWithValue(FakeProfileRemoteDataSource(user: user)),
+      authRemoteDataSourceProvider.overrideWithValue(authRemote),
+      profileRemoteDataSourceProvider.overrideWithValue(profileRemote),
       problemRemoteDataSourceProvider
           .overrideWithValue(FakeProblemRemoteDataSource(isSignedIn: user != null)),
       ...overrides,

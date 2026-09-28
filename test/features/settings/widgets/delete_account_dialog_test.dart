@@ -4,6 +4,7 @@ import 'package:algorithm_visualizer/core/widgets/custom_widgets/auth_text_field
 import 'package:algorithm_visualizer/features/auth/data/models/auth_user_dto.dart';
 import 'package:algorithm_visualizer/features/auth/presentation/common/view_model/auth_providers.dart';
 import 'package:algorithm_visualizer/features/challenge/presentation/view_model/challenges/problems_providers.dart';
+import 'package:algorithm_visualizer/features/profile/presentation/view_model/user_provider.dart';
 import 'package:algorithm_visualizer/features/settings/widgets/delete_account_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -136,6 +137,7 @@ void main() {
 
     expect(harness.auth.accounts, isEmpty);
     expect(harness.auth.signedIn, isNull);
+    expect(harness.container.read(isSignedInProvider), isFalse, reason: 'back to a guest');
     expect(harness.problems.calls, contains('deleteAllProblems'));
     expect(harness.location, Routes.login.path);
     expect(find.text(StringsManager.deleteAccountSuccess), findsOneWidget);

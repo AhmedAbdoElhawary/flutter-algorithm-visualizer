@@ -15,6 +15,9 @@ class FakeAuthRemoteDataSource with FakeRemote implements AuthRemoteDataSource {
 
   AuthUserDTO? signedIn;
 
+  /// Firebase has one current user, so signing out here also clears it for the profile fake.
+  void Function()? onSignedOut;
+
   @override
   Future<AuthUserDTO> login({required String email, required String password}) async {
     await answer('login');
@@ -47,6 +50,7 @@ class FakeAuthRemoteDataSource with FakeRemote implements AuthRemoteDataSource {
   Future<void> signOut() async {
     await answer('signOut');
     signedIn = null;
+    onSignedOut?.call();
   }
 
   @override
@@ -65,6 +69,7 @@ class FakeAuthRemoteDataSource with FakeRemote implements AuthRemoteDataSource {
 
     accounts.remove(user.email);
     signedIn = null;
+    onSignedOut?.call();
   }
 
   Exception _error(String code) => FirebaseExceptions.handleFirebaseAuthException(
