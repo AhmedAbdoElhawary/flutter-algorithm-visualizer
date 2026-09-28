@@ -28,20 +28,24 @@ void main() {
     expect(FlavorConfig.checkInitialization, isTrue);
   });
 
-  group('fromEnvironment, with no --dart-define as in tests', () {
-    test('uses the fallback flavor and the default app name', () {
-      final config = FlavorConfig.fromEnvironment();
+  group('fromEnvironment', () {
+    // CI and the run scripts pass dart_define/<flavor>.json, a bare `flutter test` passes nothing.
+    const definedFlavor = String.fromEnvironment('FLAVOR');
 
-      expect(config.flavor, Flavor.dev);
-      expect(config.appName, 'AlgoDive');
-      expect(config.apiBaseUrl, isEmpty);
-      expect(config.sentryDsn, isEmpty, reason: 'no DSN means Sentry stays off');
+    test('the FLAVOR define wins, and without one the fallback is used', () {
+      for (final fallback in Flavor.values) {
+        final flavor = FlavorConfig.fromEnvironment(fallbackFlavor: fallback).flavor;
+
+        expect(flavor, definedFlavor.isEmpty ? fallback : Flavor.values.byName(definedFlavor));
+      }
     });
 
-    for (final flavor in Flavor.values) {
-      test('a ${flavor.name} fallback is honoured', () {
-        expect(FlavorConfig.fromEnvironment(fallbackFlavor: flavor).flavor, flavor);
-      });
-    }
+    test('the app name falls back to AlgoDive, the rest come from the defines', () {
+      final config = FlavorConfig.fromEnvironment();
+
+      expect(config.appName, const String.fromEnvironment('APP_NAME', defaultValue: 'AlgoDive'));
+      expect(config.apiBaseUrl, const String.fromEnvironment('API_BASE_URL'));
+      expect(config.sentryDsn, const String.fromEnvironment('SENTRY_DSN'));
+    });
   });
 }
