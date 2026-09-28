@@ -141,6 +141,13 @@ void main() {
 
         expect(result, '');
       });
+
+      test('a value of another type throws, so callers that can meet old data read Object and check', () async {
+        await storage.write('age', 'twenty');
+
+        expect(() => storageService.read<int>('age'), throwsA(isA<TypeError>()));
+        expect(storageService.read<Object>('age'), 'twenty');
+      });
     });
 
     group('remove()', () {
