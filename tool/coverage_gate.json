@@ -13,7 +13,7 @@
     "lib/features/profile/data/data_sources/remote/profile_remote_data_source.dart"
   ],
   "areas": {
-    "auth":        { "path": "lib/features/auth/",        "gated": false },
+    "auth":        { "path": "lib/features/auth/",        "gated": true },
     "base":        { "path": "lib/features/base/",        "gated": true },
     "challenge":   { "path": "lib/features/challenge/",   "gated": false },
     "home":        { "path": "lib/features/home/",        "gated": true },
