@@ -99,7 +99,8 @@ void main() {
   });
 
   test('Object.assign copies fields, Object.freeze hands back the same object', () {
-    expect(_js('const a = {x: 1}; Object.assign(a, {y: 2}); return Object.keys(Object.freeze(a));'), ['x', 'y']);
+    const code = 'const a = {x: 1}; Object.assign(a, {y: 2}); return Object.keys(Object.freeze(a));';
+    expect(_js(code), ['x', 'y']);
   });
 
   test('a DP table from Array.from with a length', () {
