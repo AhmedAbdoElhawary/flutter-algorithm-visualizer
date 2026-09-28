@@ -158,7 +158,7 @@ class _AttemptTable extends StatelessWidget {
             Row(
               children: [
                 Expanded(
-                  child: SemiBoldText(_formatDate(attempt.submittedAt),
+                  child: SemiBoldText(_formatDate(context, attempt.submittedAt),
                       color: ThemeEnum.inkSecondaryTitle, fontSize: 12),
                 ),
                 SemiBoldText(
@@ -175,10 +175,10 @@ class _AttemptTable extends StatelessWidget {
     );
   }
 
-  String _formatDate(DateTime dt) {
-    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-    final hh = dt.hour.toString().padLeft(2, '0');
-    final mm = dt.minute.toString().padLeft(2, '0');
-    return '${months[dt.month - 1]} ${dt.day}, ${dt.year}  $hh:$mm';
+  /// Flutter's own formatter, so the month follows the app language.
+  String _formatDate(BuildContext context, DateTime dt) {
+    final localizations = MaterialLocalizations.of(context);
+    final time = localizations.formatTimeOfDay(TimeOfDay.fromDateTime(dt), alwaysUse24HourFormat: true);
+    return '${localizations.formatShortDate(dt)}  $time';
   }
 }
