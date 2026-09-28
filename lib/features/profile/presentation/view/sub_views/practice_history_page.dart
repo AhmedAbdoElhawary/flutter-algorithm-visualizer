@@ -25,7 +25,7 @@ class RecentSubmissionsPage extends ConsumerWidget {
             child: const Row(
               children: [
                 CustomBackButton(),
-                BoldText(StringsManager.practiceHistory, color: ThemeEnum.inkTitle, fontSize: 17),
+                Expanded(child: BoldText(StringsManager.practiceHistory, color: ThemeEnum.inkTitle, fontSize: 17)),
               ],
             ),
           ),

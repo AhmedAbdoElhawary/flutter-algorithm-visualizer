@@ -79,8 +79,8 @@ class _Header extends StatelessWidget {
       child: Row(
         children: [
           const CustomBackButton(),
-          BoldText(StringsManager.bookmarked.trim(), color: ThemeEnum.inkTitle, fontSize: 17),
-          const Spacer(),
+          // Takes the leftover room, so a large text size wraps the title instead of overflowing.
+          Expanded(child: BoldText(StringsManager.bookmarked.trim(), color: ThemeEnum.inkTitle, fontSize: 17)),
           RegularText('$count ${unit.tr(context).toLowerCase()}',
               color: ThemeEnum.inkSecondaryTitle, fontSize: 11),
         ],
