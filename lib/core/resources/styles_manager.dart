@@ -24,19 +24,6 @@ class GetTextStyle extends TextStyle {
   }) : super(fontSize: fontSize);
 }
 
-class GetLightStyle extends GetTextStyle {
-  const GetLightStyle({
-    super.fontSize = 16,
-    super.height,
-    super.color,
-    super.fontStyle = FontStyle.normal,
-    super.decoration = TextDecoration.none,
-    super.decorationThickness,
-    super.letterSpacing,
-    super.shadows,
-  }) : super(fontWeight: FontWeightManager.light);
-}
-
 class GetRegularStyle extends GetTextStyle {
   const GetRegularStyle({
     super.fontSize = 16,
@@ -74,17 +61,4 @@ class GetSemiBoldStyle extends GetTextStyle {
     super.letterSpacing,
     super.shadows,
   }) : super(fontWeight: FontWeightManager.semiBold);
-}
-
-class GetBoldStyle extends GetTextStyle {
-  const GetBoldStyle({
-    super.fontSize = 16,
-    super.height,
-    super.color,
-    super.fontStyle = FontStyle.normal,
-    super.decoration = TextDecoration.none,
-    super.decorationThickness,
-    super.letterSpacing,
-    super.shadows,
-  }) : super(fontWeight: FontWeightManager.bold);
 }

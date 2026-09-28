@@ -3,9 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 extension Navigators on BuildContext {
-  String? get currentRoute => ModalRoute.of(this)?.settings.name;
-  (String?, Object?) get currentRouteSettings =>
-      (ModalRoute.of(this)?.settings.name, ModalRoute.of(this)?.settings.arguments);
   void unFocusKeyboard() {
     try {
       if (mounted) FocusScope.of(this).unfocus();
@@ -66,23 +63,6 @@ extension Navigators on BuildContext {
     );
   }
 
-  Future pushAndRemoveCurrent(
-    RouteConfig path, {
-    Object? arguments,
-    String pathParameters = "",
-  }) async {
-    return await GoRouter.of(this)
-        .pushReplacementNamed(
-      path.name,
-      extra: arguments,
-      pathParameters: pathParameters.isEmpty ? {} : {path.pathParamsName: pathParameters},
-    )
-        .then((value) {
-      unFocusKeyboard();
-      return value;
-    });
-  }
-
   Future<void> pushAndRemoveAll(
     RouteConfig path, {
     String pathParameters = "",
@@ -95,28 +75,6 @@ extension Navigators on BuildContext {
     }
     await GoRouter.of(this)
         .pushReplacementNamed(
-      path.name,
-      extra: arguments,
-      pathParameters: pathParameters.isEmpty ? {} : {path.pathParamsName: pathParameters},
-    )
-        .then((value) {
-      unFocusKeyboard();
-      return value;
-    });
-  }
-
-  Future<void> pushAndRemoveAllUntilBase(
-    RouteConfig path, {
-    String pathParameters = "",
-    Object? arguments,
-  }) async {
-    unFocusKeyboard();
-
-    while (GoRouter.of(this).canPop()) {
-      GoRouter.of(this).pop();
-    }
-    await GoRouter.of(this)
-        .pushNamed(
       path.name,
       extra: arguments,
       pathParameters: pathParameters.isEmpty ? {} : {path.pathParamsName: pathParameters},
