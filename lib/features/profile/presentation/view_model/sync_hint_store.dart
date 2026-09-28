@@ -9,7 +9,8 @@ final class SyncHintStore {
 
   final LocalStorage _storage;
 
-  bool get isSeen => _storage.read<bool>(seenKey) ?? false;
+  /// Read as `Object`, so a corrupted value means "not seen" instead of a cast error.
+  bool get isSeen => _storage.read<Object>(seenKey) == true;
 
   Future<void> markSeen() => _storage.write<bool>(seenKey, true);
 }
