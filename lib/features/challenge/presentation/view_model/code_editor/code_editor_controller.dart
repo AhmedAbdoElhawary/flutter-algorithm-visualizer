@@ -30,12 +30,17 @@ class CodeEditorController extends Notifier<CodeEditorState> {
 
   CodeController? _codeController;
   Timer? _highlightTimer;
+  Completer<void>? _highlightDone;
 
   final _gradeCodeUseCase = const GradeCodeUseCase();
 
   @override
   CodeEditorState build() {
-    ref.onDispose(() => _highlightTimer?.cancel());
+    ref.onDispose(() {
+      _highlightTimer?.cancel();
+      // The timer won't finish the run now, so finish it here instead of leaving it waiting forever.
+      if (_highlightDone?.isCompleted == false) _highlightDone!.complete();
+    });
     return CodeEditorState.initial(language: initialLanguage);
   }
 
@@ -107,22 +112,13 @@ class CodeEditorController extends Notifier<CodeEditorState> {
     state = state.copyWith(grade: null, highlightedLine: null);
   }
 
-  CodeController get _getCodeController {
-    final con = _codeController;
-    if (con == null) {
-      /// todo: test this
-
-      throw StateError('CodeControllerRunnerRepository: no CodeController attached yet.');
-    }
-    return con;
-  }
-
   Future<void> runCode(void Function(CodeGradeResult? result) result) async {
     final codingProblem = this.codingProblem;
-    if (state.isRunning || codingProblem == null) return result.call(null);
+    final controller = _codeController;
+    // Checked before marking it running, so a missing editor can't leave it stuck running.
+    if (state.isRunning || codingProblem == null || controller == null) return result.call(null);
     state = state.copyWith(isRunning: true, grade: null);
 
-    final controller = _getCodeController;
     _captureCurrentDraft();
     final resultGrade = _gradeCodeUseCase.grade(
       problem: codingProblem,
@@ -132,12 +128,13 @@ class CodeEditorController extends Notifier<CodeEditorState> {
 
     result.call(resultGrade);
     await _animateLineByLine(controller.text.split('\n').length);
+    if (!ref.mounted) return;
 
     state = state.copyWith(isRunning: false, grade: resultGrade);
   }
 
   Future<void> _animateLineByLine(int totalLines) {
-    final completer = Completer<void>();
+    final completer = _highlightDone = Completer<void>();
     int line = 0;
     _highlightTimer?.cancel();
     _highlightTimer = Timer.periodic(const Duration(milliseconds: 100), (timer) {
