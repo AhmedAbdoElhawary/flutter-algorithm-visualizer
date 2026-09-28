@@ -58,8 +58,10 @@ void main() {
   testWidgets('one row per practised problem, newest first', (tester) async {
     await openHistory(tester, fullProfile());
 
-    final names = tester.widgetList<HistoryRow>(find.byType(HistoryRow)).map((row) => row.entry.problemName);
-    expect(names, ['Valid Parentheses', longProblemName, 'Two Sum']);
+    final names = tester.widgetList<HistoryRow>(find.byType(HistoryRow)).map((row) => row.entry.problemName).toList();
+    // The first two were both last tried today, so either may come first.
+    expect(names.take(2), unorderedEquals(['Valid Parentheses', longProblemName]));
+    expect(names.last, 'Two Sum');
   });
 
   testWidgets('tapping a row shows each attempt, tapping again hides them', (tester) async {
