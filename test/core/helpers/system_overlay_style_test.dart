@@ -5,8 +5,9 @@ import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  SystemUiOverlayStyle styleOf(WidgetTester tester) =>
-      tester.widget<AnnotatedRegion<SystemUiOverlayStyle>>(find.byType(AnnotatedRegion<SystemUiOverlayStyle>)).value;
+  SystemUiOverlayStyle styleOf(WidgetTester tester) => tester
+      .widget<AnnotatedRegion<SystemUiOverlayStyle>>(find.byType(AnnotatedRegion<SystemUiOverlayStyle>))
+      .value;
 
   testWidgets('dark: the bars match the dark page, with light icons', (tester) async {
     await tester.pumpWidget(const SystemOverlay(child: SizedBox()));
