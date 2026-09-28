@@ -1,6 +1,6 @@
 {
   "overallMin": 80,
-  "overallGated": false,
+  "overallGated": true,
   "logicMin": 90,
   "areaMin": 80,
   "logicFolders": ["data", "domain", "view_model", "helper", "helpers", "storage", "exceptions", "extensions", "enums"],
@@ -21,9 +21,9 @@
     "profile":     { "path": "lib/features/profile/",     "gated": true },
     "settings":    { "path": "lib/features/settings/",    "gated": true },
     "visualize":   { "path": "lib/features/visualize/",   "gated": true },
-    "engine":      { "path": "lib/core/custom_packages/custom_code_editor/src/execution/", "gated": false, "min": 80, "logicMin": 80 },
-    "codeEditor":  { "path": "lib/core/custom_packages/", "gated": false },
-    "core":        { "path": "lib/core/",                 "gated": false },
-    "config":      { "path": "lib/config/",               "gated": false }
+    "engine":      { "path": "lib/core/custom_packages/custom_code_editor/src/execution/", "gated": true, "min": 80, "logicMin": 80 },
+    "codeEditor":  { "path": "lib/core/custom_packages/", "gated": true },
+    "core":        { "path": "lib/core/",                 "gated": true },
+    "config":      { "path": "lib/config/",               "gated": true }
   }
 }
