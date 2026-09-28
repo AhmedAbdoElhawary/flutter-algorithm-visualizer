@@ -289,6 +289,7 @@ class StringsManager {
   static const String invalidEmail = "Please enter a valid email address";
   static const String passwordRequired = "Please enter your password";
   static const String passwordMinLength = "Password must be at least 6 characters";
+  static const String tooManyAttempts = "Too many attempts. Please try again later";
   static const String confirmPasswordRequired = "Please confirm your password";
   static const String passwordsDoNotMatch = "Passwords do not match";
   static const String invalidCode = "Verification code must be 6 digits";
