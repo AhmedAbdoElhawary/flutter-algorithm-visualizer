@@ -83,8 +83,10 @@ class AuthEyebrowRow extends StatelessWidget {
     return Row(
       children: [
         const CustomBackButton(),
-        SemiBoldText(label,
-            color: ThemeEnum.inkSecondaryTitle, fontSize: 12, letterSpacing: 1.2, maxLines: 1),
+        Flexible(
+          child: SemiBoldText(label,
+              color: ThemeEnum.inkSecondaryTitle, fontSize: 12, letterSpacing: 1.2, maxLines: 2),
+        ),
       ],
     );
   }
@@ -101,11 +103,13 @@ class AuthFooterPrompt extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: onTap,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
+      // Wraps the action under the prompt when large text leaves no room beside it.
+      child: Wrap(
+        alignment: WrapAlignment.center,
+        crossAxisAlignment: WrapCrossAlignment.center,
+        spacing: 4.w,
         children: [
           RegularText(prompt, color: ThemeEnum.inkSecondaryTitle, fontSize: 12, maxLines: 1),
-          SizedBox(width: 4.w),
           SemiBoldText(action, color: ThemeEnum.inkTitle, fontSize: 12, maxLines: 1),
         ],
       ),

@@ -90,7 +90,7 @@ class _SignUpPageState extends ConsumerState<SignUpPage> {
           mainAxisSize: MainAxisSize.min,
           children: [
             CustomBackButton(),
-            AuthTitle(StringsManager.createAccount),
+            Flexible(child: AuthTitle(StringsManager.createAccount)),
           ],
         ),
         SizedBox(height: CdSpace.x2.h),
