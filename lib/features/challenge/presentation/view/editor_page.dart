@@ -10,7 +10,6 @@ import 'package:algorithm_visualizer/core/widgets/custom_widgets/loading_state.d
 import 'package:algorithm_visualizer/features/challenge/domain/entities/coding_problem.dart';
 import 'package:algorithm_visualizer/features/challenge/domain/usecases/grade_code_usecase.dart';
 import 'package:algorithm_visualizer/features/challenge/presentation/view/celebration_page.dart';
-import 'package:algorithm_visualizer/features/challenge/presentation/view_model/challenges/challenges_providers.dart';
 import 'package:algorithm_visualizer/features/challenge/presentation/view_model/challenges/problems_providers.dart';
 import 'package:algorithm_visualizer/features/challenge/presentation/view_model/code_editor/code_editor_providers.dart';
 import 'package:algorithm_visualizer/features/challenge/presentation/widgets/challenges/error_state.dart';
@@ -73,7 +72,7 @@ class _EditorPageState extends ConsumerState<CodeEditorPage> {
       if (result == null) return;
       finalResult = result;
       if (!problem.isThereAnyCorrectCodeSaved) {
-        await ref.read(challengesProvider.notifier).updateProblemSubmission(problem, result);
+        await ref.read(problemsProvider.notifier).updateProblemSubmission(problem, result);
       }
     });
 

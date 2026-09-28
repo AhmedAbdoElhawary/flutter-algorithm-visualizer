@@ -1,9 +1,4 @@
-import 'package:algorithm_visualizer/features/challenge/domain/entities/coding_problem.dart';
 import 'package:algorithm_visualizer/features/challenge/domain/enums/problem.dart';
-import 'package:algorithm_visualizer/features/challenge/domain/repositories/problem_repository.dart';
-import 'package:algorithm_visualizer/features/challenge/domain/usecases/grade_code_usecase.dart';
-import 'package:algorithm_visualizer/features/challenge/domain/usecases/update_problem_solution_usecase.dart';
-import 'package:algorithm_visualizer/features/challenge/presentation/view_model/challenges/problems_providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -21,10 +16,6 @@ class ChallengesNotifier extends Notifier<ChallengesState> {
     return ChallengesState.initial();
   }
 
-  ProblemRepository get _problemRepository => ref.read(problemRepositoryProvider);
-  UpdateProblemSolutionUseCase get _updateProblemSolutionUseCase =>
-      UpdateProblemSolutionUseCase(_problemRepository);
-
   void setFilter(ProblemDifficulty filter) => state = state.copyWith(filter: filter, expandedId: 0);
 
   void setSearch(String query) => state = state.copyWith(search: query, expandedId: 0);
@@ -38,29 +29,4 @@ class ChallengesNotifier extends Notifier<ChallengesState> {
       state = state.copyWith(expandedId: problemId);
     }
   }
-
-  Future<void> updateProblemSubmission(CodingProblem problem, CodeGradeResult result) async {
-    final updatedProblem = await _updateProblemSolutionUseCase.call(problem, result);
-    if (!ref.mounted) return;
-    ref.read(problemsProvider.notifier).updateProblem(updatedProblem);
-    _markUnsyncedChanged();
-  }
-
-  Future<void> toggleBookmark(CodingProblem problem) async {
-    final updated = problem.copyWith(isBookmarked: !problem.getIsBookmarked);
-    await _problemRepository.updateProblem(updated);
-    if (!ref.mounted) return;
-
-    ref.read(problemsProvider.notifier).updateProblem(updated);
-    _markUnsyncedChanged();
-  }
-
-  Future<void> deleteProblem(int problemId) async {
-    await _problemRepository.deleteProblem(problemId);
-    if (!ref.mounted) return;
-    ref.read(problemsProvider.notifier).deleteProblem(problemId);
-    _markUnsyncedChanged();
-  }
-
-  void _markUnsyncedChanged() => ref.read(problemSyncProvider.notifier).refreshUnsyncedFlag();
 }

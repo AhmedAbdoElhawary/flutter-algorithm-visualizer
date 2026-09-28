@@ -1,6 +1,8 @@
 import 'package:algorithm_visualizer/core/enums/app_settings_enum.dart';
 import 'package:algorithm_visualizer/core/helpers/storage/app_settings/app_settings_cubit.dart';
+import 'package:algorithm_visualizer/features/challenge/data/models/test_case.dart';
 import 'package:algorithm_visualizer/features/challenge/domain/entities/coding_problem.dart';
+import 'package:algorithm_visualizer/features/challenge/domain/usecases/grade_code_usecase.dart';
 import 'package:algorithm_visualizer/features/challenge/presentation/view_model/challenges/problems_providers.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -88,11 +90,51 @@ void main() {
     expect(problems.last.getIsBookmarked, isTrue);
   });
 
-  test('deleting removes it', () async {
-    await settle();
+  group('saving', () {
+    CodingProblem inList(int id) =>
+        container.read(problemsProvider).value!.firstWhere((problem) => problem.problemId == id);
 
-    container.read(problemsProvider.notifier).deleteProblem(1);
+    setUp(settle);
 
-    expect(container.read(problemsProvider).value!.map((problem) => problem.problemId), [2]);
+    test('a bookmark is saved, shown, and flagged for sync', () async {
+      await container.read(unsyncedProblemsProvider).needsToBeUploaded(1);
+
+      await container.read(problemsProvider.notifier).toggleBookmark(inList(1));
+
+      expect(repository.updated.single.getIsBookmarked, isTrue);
+      expect(inList(1).getIsBookmarked, isTrue);
+      expect(container.read(problemSyncProvider).hasUnsyncedChanges, isTrue);
+
+      await container.read(problemsProvider.notifier).toggleBookmark(inList(1));
+      expect(inList(1).getIsBookmarked, isFalse);
+    });
+
+    test('a graded run is saved onto the problem and shown', () async {
+      const result = CodeGradeResult(
+        allTestCaseResults: [TestCaseResult(input: '', expectedOutput: '', actualOutput: '', passed: true)],
+        totalCount: 1,
+        code: 'mine',
+      );
+
+      await container.read(problemsProvider.notifier).updateProblemSubmission(inList(1), result);
+
+      expect(inList(1).isSolved, isTrue);
+      expect(inList(1).getSolutionsStatus.single.code, 'mine');
+      expect(repository.updated.single.isSolved, isTrue);
+    });
+
+    test('deleting removes it from storage and the list', () async {
+      await container.read(problemsProvider.notifier).deleteProblem(1);
+
+      expect(container.read(problemsProvider).value!.map((problem) => problem.problemId), [2]);
+    });
+
+    test('a save that finishes after the app closed changes nothing and does not throw', () async {
+      final notifier = container.read(problemsProvider.notifier);
+      final saving = notifier.toggleBookmark(inList(1));
+      container.dispose();
+
+      await expectLater(saving, completes);
+    });
   });
 }
