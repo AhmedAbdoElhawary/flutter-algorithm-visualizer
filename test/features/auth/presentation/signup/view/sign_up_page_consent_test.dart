@@ -13,9 +13,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
-import 'package:plugin_platform_interface/plugin_platform_interface.dart';
-import 'package:url_launcher_platform_interface/link.dart';
 import 'package:url_launcher_platform_interface/url_launcher_platform_interface.dart';
+
+import '../../../../../helpers/fakes/fake_url_launcher.dart';
 
 /// Wider than a real phone on purpose. `flutter_test` renders every glyph as a
 /// full em square, so text measures roughly twice its real width, and the auth
@@ -24,28 +24,6 @@ import 'package:url_launcher_platform_interface/url_launcher_platform_interface.
 /// about what the screen says and where the link goes, so it steps around that
 /// rather than asserting layout it does not own.
 const Size _surface = Size(640, 900);
-
-class _FakeUrlLauncher extends UrlLauncherPlatform with MockPlatformInterfaceMixin {
-  final List<String> urls = <String>[];
-
-  @override
-  Future<bool> launchUrl(String url, LaunchOptions options) async {
-    urls.add(url);
-    return true;
-  }
-
-  @override
-  Future<bool> canLaunch(String url) async => true;
-
-  @override
-  Future<bool> supportsMode(PreferredLaunchMode mode) async => true;
-
-  @override
-  Future<bool> supportsCloseForMode(PreferredLaunchMode mode) async => true;
-
-  @override
-  LinkDelegate? get linkDelegate => null;
-}
 
 class _InMemoryStorage implements LocalStorage {
   final Map<String, Object?> _values = <String, Object?>{};
@@ -66,7 +44,7 @@ class _InMemoryStorage implements LocalStorage {
   bool has(String key) => _values.containsKey(key);
 }
 
-late _FakeUrlLauncher _launcher;
+late FakeUrlLauncher _launcher;
 
 Future<void> _pumpSignUp(WidgetTester tester) async {
   const devicePixelRatio = 3.0;
@@ -101,7 +79,7 @@ Future<void> _pumpSignUp(WidgetTester tester) async {
 
 void main() {
   setUp(() {
-    _launcher = _FakeUrlLauncher();
+    _launcher = FakeUrlLauncher();
     UrlLauncherPlatform.instance = _launcher;
   });
 

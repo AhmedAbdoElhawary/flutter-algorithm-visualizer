@@ -3,45 +3,17 @@ import 'package:algorithm_visualizer/core/resources/strings_manager.dart';
 import 'package:algorithm_visualizer/features/settings/widgets/settings_contact_section.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:plugin_platform_interface/plugin_platform_interface.dart';
-import 'package:url_launcher_platform_interface/link.dart';
 import 'package:url_launcher_platform_interface/url_launcher_platform_interface.dart';
 
+import '../../../helpers/fakes/fake_url_launcher.dart';
 import '../../../helpers/pump_app.dart';
 
 /// Records what the app asked the platform to open, instead of opening it.
-class _FakeUrlLauncher extends UrlLauncherPlatform with MockPlatformInterfaceMixin {
-  final urls = <String>[];
-  final modes = <PreferredLaunchMode>[];
-  bool succeed = true;
-  bool throws = false;
-
-  @override
-  Future<bool> launchUrl(String url, LaunchOptions options) async {
-    if (throws) throw Exception('no app can open this');
-    urls.add(url);
-    modes.add(options.mode);
-    return succeed;
-  }
-
-  @override
-  Future<bool> canLaunch(String url) async => true;
-
-  @override
-  Future<bool> supportsMode(PreferredLaunchMode mode) async => true;
-
-  @override
-  Future<bool> supportsCloseForMode(PreferredLaunchMode mode) async => true;
-
-  @override
-  LinkDelegate? get linkDelegate => null;
-}
-
 void main() {
-  late _FakeUrlLauncher launcher;
+  late FakeUrlLauncher launcher;
 
   setUp(() {
-    launcher = _FakeUrlLauncher();
+    launcher = FakeUrlLauncher();
     UrlLauncherPlatform.instance = launcher;
   });
 

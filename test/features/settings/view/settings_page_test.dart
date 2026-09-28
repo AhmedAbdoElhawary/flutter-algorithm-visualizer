@@ -23,10 +23,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
-import 'package:plugin_platform_interface/plugin_platform_interface.dart';
-import 'package:url_launcher_platform_interface/link.dart';
 import 'package:url_launcher_platform_interface/url_launcher_platform_interface.dart';
 
+import '../../../helpers/fakes/fake_url_launcher.dart';
 import '../../../helpers/fakes/fake_auth_remote_data_source.dart';
 import '../../../helpers/pump_app.dart';
 import '../../../helpers/screen_matrix.dart';
@@ -40,32 +39,7 @@ const Size _smallSurface = Size(360, 640);
 const String _testVersion = '9.8.7';
 
 /// Records what the app asked the platform to open, instead of opening it.
-class _FakeUrlLauncher extends UrlLauncherPlatform with MockPlatformInterfaceMixin {
-  final List<String> urls = <String>[];
-  final List<PreferredLaunchMode> modes = <PreferredLaunchMode>[];
-  bool succeed = true;
-
-  @override
-  Future<bool> launchUrl(String url, LaunchOptions options) async {
-    urls.add(url);
-    modes.add(options.mode);
-    return succeed;
-  }
-
-  @override
-  Future<bool> canLaunch(String url) async => true;
-
-  @override
-  Future<bool> supportsMode(PreferredLaunchMode mode) async => true;
-
-  @override
-  Future<bool> supportsCloseForMode(PreferredLaunchMode mode) async => true;
-
-  @override
-  LinkDelegate? get linkDelegate => null;
-}
-
-late _FakeUrlLauncher _launcher;
+late FakeUrlLauncher _launcher;
 
 Future<void> _pumpSettings(
   WidgetTester tester, {
@@ -166,7 +140,7 @@ Future<void> _tapRow(WidgetTester tester, String title) async {
 
 void main() {
   setUp(() {
-    _launcher = _FakeUrlLauncher();
+    _launcher = FakeUrlLauncher();
     UrlLauncherPlatform.instance = _launcher;
 
     /// `bootstrap` normally fills this from the platform, and these tests pump
