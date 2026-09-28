@@ -63,6 +63,16 @@ void main() {
 
       expect(container.read(appSettingsProvider).themeMode, ThemeMode.system);
     });
+
+    test('a value of the wrong type falls back instead of crashing the launch', () {
+      final container = _containerWith({
+        AppSettingsNotifier.themeModeKey: 2,
+        AppSettingsNotifier.languageKey: true,
+      });
+
+      expect(container.read(appSettingsProvider).themeMode, ThemeMode.system);
+      expect(container.read(appSettingsProvider).language, LanguagesEnum.english);
+    });
   });
 
   group('changing the theme', () {
