@@ -6,7 +6,9 @@ import '../models/code_editor_config.dart';
 class Indentation {
   const Indentation._();
 
-  static const String _openBrackets = '({[';
+  /// `:` too, so Python's `def f():` and `if x:` indent the next line, as do
+  /// Dart and JavaScript's `case 1:`.
+  static const String _indentAfter = '({[:';
   static const String _closeBrackets = ')}]';
 
   /// Returns the leading whitespace of [line] (its current indentation).
@@ -21,7 +23,7 @@ class Indentation {
   /// Rules:
   /// - Start from the current line's indentation.
   /// - If the last non-whitespace character before the cursor is an
-  ///   opening bracket, increase indentation by one level.
+  ///   opening bracket or a `:`, increase indentation by one level.
   /// - If the cursor sits between a just-typed opening bracket and its
   ///   matching closing bracket (e.g. `{|}`), the closing bracket is
   ///   pushed to its own de-indented line and the returned "between"
@@ -36,7 +38,7 @@ class Indentation {
     final String base = leadingWhitespaceOf(currentLine);
     final String trimmedBefore = before.trimRight();
 
-    if (trimmedBefore.isNotEmpty && _openBrackets.contains(trimmedBefore[trimmedBefore.length - 1])) {
+    if (trimmedBefore.isNotEmpty && _indentAfter.contains(trimmedBefore[trimmedBefore.length - 1])) {
       return base + config.indentUnit;
     }
     return base;
@@ -63,7 +65,7 @@ class Indentation {
     final String trimmedAfter = after.trimLeft();
 
     final bool beforeEndsWithOpen =
-        trimmedBefore.isNotEmpty && _openBrackets.contains(trimmedBefore[trimmedBefore.length - 1]);
+        trimmedBefore.isNotEmpty && _indentAfter.contains(trimmedBefore[trimmedBefore.length - 1]);
     final bool afterStartsWithMatchingClose = trimmedAfter.isNotEmpty &&
         _closeBrackets.contains(trimmedAfter[0]) &&
         beforeEndsWithOpen &&
