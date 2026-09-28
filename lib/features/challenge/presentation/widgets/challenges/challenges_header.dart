@@ -34,15 +34,28 @@ class ChallengesHeader extends ConsumerWidget {
                 fontSize: 20,
               ),
               const Spacer(),
-              if (isLoaded) ...[
-                const CustomIcon(Icons.local_fire_department_rounded, size: 14, color: ThemeEnum.dataHard),
-                const RSizedBox(width: 3),
-                BoldText(solvedText, color: ThemeEnum.dataHard, fontSize: 13),
-                const SemiBoldText(' / ', color: ThemeEnum.inkSecondaryTitle, fontSize: 13),
-                RegularText(totalText, color: ThemeEnum.inkSecondaryTitle, fontSize: 13),
-                const RSizedBox(width: 2),
-                const RegularText(StringsManager.solved, color: ThemeEnum.inkSecondaryTitle, fontSize: 13),
-              ],
+              if (isLoaded)
+                // Shrinks rather than overflow when large text leaves no room beside the title.
+                Flexible(
+                  child: FittedBox(
+                    fit: BoxFit.scaleDown,
+                    alignment: AlignmentDirectional.centerEnd,
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const CustomIcon(Icons.local_fire_department_rounded,
+                            size: 14, color: ThemeEnum.dataHard),
+                        const RSizedBox(width: 3),
+                        BoldText(solvedText, color: ThemeEnum.dataHard, fontSize: 13),
+                        const SemiBoldText(' / ', color: ThemeEnum.inkSecondaryTitle, fontSize: 13),
+                        RegularText(totalText, color: ThemeEnum.inkSecondaryTitle, fontSize: 13),
+                        const RSizedBox(width: 2),
+                        const RegularText(StringsManager.solved,
+                            color: ThemeEnum.inkSecondaryTitle, fontSize: 13),
+                      ],
+                    ),
+                  ),
+                ),
             ],
           ),
           const RSizedBox(height: 10),

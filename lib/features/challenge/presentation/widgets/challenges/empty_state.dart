@@ -16,8 +16,9 @@ class ChallengesEmptyState extends StatelessWidget {
   final bool showIcon;
   @override
   Widget build(BuildContext context) {
+    // Scrolls when large text leaves it less room than it needs under the header.
     return Center(
-      child: Padding(
+      child: SingleChildScrollView(
         padding: REdgeInsets.all(40),
         child: Column(
           mainAxisSize: MainAxisSize.min,

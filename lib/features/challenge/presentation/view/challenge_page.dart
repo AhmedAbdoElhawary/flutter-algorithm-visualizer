@@ -92,7 +92,8 @@ class _SliverAppBar extends StatelessWidget {
       leadingWidth: 16.r,
       leading: const SizedBox(),
       bottom: PreferredSize(
-        preferredSize: Size.fromHeight(115.r),
+        // Only the ~65 of text grows with the text size; a fixed 115 overflowed onto the list at large text.
+        preferredSize: Size.fromHeight(50.r + MediaQuery.textScalerOf(context).scale(65.r)),
         child: const SingleChildScrollView(
           child: Column(
             mainAxisSize: MainAxisSize.min,
