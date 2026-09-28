@@ -59,7 +59,7 @@ void main() {
     }
   });
 
-  group('replaying every step reproduces the correctly sorted array (FR-033, SC-006, C6.5)', () {
+  group('every algorithm returns the correctly sorted array (FR-033, SC-006, C6.5)', () {
     for (final entry in _algorithms.entries) {
       test('${entry.key}: random, duplicate-heavy, and already-sorted arrays', () {
         final inputs = [
