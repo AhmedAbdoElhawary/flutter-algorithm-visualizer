@@ -28,7 +28,7 @@ class ParsedFunctionSignature {
 ParsedFunctionSignature parseFunctionSignature(String signature) {
   final s = signature.trim();
   final open = topLevelOpenParen(s);
-  final close = matchingParen(s, open);
+  final close = open == -1 ? -1 : matchingParen(s, open);
   if (open == -1 || close == -1) {
     throw FormatException('Invalid function signature: $signature');
   }
