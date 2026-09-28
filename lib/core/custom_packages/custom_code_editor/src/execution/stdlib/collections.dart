@@ -92,6 +92,8 @@ Value callListMethod(
       for (final e in items) {
         if (isTruthy(invoke(f, <Value>[e]), dialect)) return e;
       }
+      // `orElse:` arrives as the second argument.
+      if (args.length > 1) return invoke(_fn(args, 1), const <Value>[]);
       throw const VmRuntimeError(
           'runtime', <String, Object?>{'message': 'no element satisfies the predicate'});
     case 'indexWhere':
