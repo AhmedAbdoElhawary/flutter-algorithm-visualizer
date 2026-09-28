@@ -48,6 +48,7 @@ class ProblemDTO {
   final String? name;
   final String? source;
   final int? sourceProblemNumber;
+  @JsonKey(unknownEnumValue: JsonKey.nullForUndefinedEnumValue)
   final ProblemDifficulty? difficulty;
   final String? category;
   final List<String>? tags;

@@ -13,6 +13,9 @@ class ProblemStorageDTO {
   });
 
   final int? problemId;
+
+  /// An unknown status, say from a newer app version, reads as none instead of failing the whole list.
+  @JsonKey(unknownEnumValue: JsonKey.nullForUndefinedEnumValue)
   final ProblemStatus? problemStatus;
   final bool? isBookmarked;
   final List<ProblemSolutionStatusDTO>? solutionsStatus;

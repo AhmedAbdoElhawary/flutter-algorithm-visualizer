@@ -8,7 +8,8 @@ part of 'problem_storage.dart';
 
 ProblemStorageDTO _$ProblemStorageDTOFromJson(Map<String, dynamic> json) => ProblemStorageDTO(
       problemId: (json['problem_id'] as num?)?.toInt(),
-      problemStatus: $enumDecodeNullable(_$ProblemStatusEnumMap, json['problem_status']),
+      problemStatus: $enumDecodeNullable(_$ProblemStatusEnumMap, json['problem_status'],
+          unknownValue: JsonKey.nullForUndefinedEnumValue),
       isBookmarked: json['is_bookmarked'] as bool?,
       solutionsStatus: (json['solutions_status'] as List<dynamic>?)
           ?.map((e) => ProblemSolutionStatusDTO.fromJson(e as Map<String, dynamic>))
