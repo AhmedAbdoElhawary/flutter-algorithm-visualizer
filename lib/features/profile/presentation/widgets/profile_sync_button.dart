@@ -69,7 +69,7 @@ class _SyncActionState extends ConsumerState<_SyncAction> {
       if (!mounted) return;
 
       setState(() => _tagVisible = false);
-      // The tag had its five seconds, so the hint counts as delivered even if
+      // The tag had its time on screen, so the hint counts as delivered even if
       // the spinning border keeps running until the button is tapped.
       ref.read(syncHintStoreProvider).markSeen();
     });
