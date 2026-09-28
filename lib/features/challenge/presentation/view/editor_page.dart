@@ -1,6 +1,7 @@
 import 'package:algorithm_visualizer/config/routes/route_app.dart';
 import 'package:algorithm_visualizer/core/custom_packages/custom_code_editor/code_editor.dart'
-    show CodeController;
+    show CodeController, EditorLanguageX;
+import 'package:algorithm_visualizer/core/extensions/string.dart';
 import 'package:algorithm_visualizer/core/helpers/constants.dart';
 import 'package:algorithm_visualizer/core/helpers/current_device.dart';
 import 'package:algorithm_visualizer/core/resources/dimensions_manager.dart';
@@ -184,7 +185,7 @@ class _EditorContentState extends ConsumerState<_EditorContent> {
                     final language = ref.watch(provider.select((s) => s.language));
 
                     return EditorCodeCard(
-                      fileName: problem.getNameWithLanguageName,
+                      fileName: problem.getName.toFileName(language.fileExtension),
                       initialCode: notifier.initialCode,
                       highlightedLine: highlightedLine,
                       running: isRunning,

@@ -129,8 +129,4 @@ void main() {
       expect(problem.copyWith(problemStatus: ProblemStatus.solved), isNot(problem));
     });
   });
-
-  test('the name with the language name in it', () {
-    expect(buildTestProblem(name: 'Two Sum').getNameWithLanguageName, isA<String>());
-  });
 }

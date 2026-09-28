@@ -184,6 +184,7 @@ void main() {
       await choose(tester, '.py');
 
       expect(tester.widget<EditorCodeCard>(find.byType(EditorCodeCard)).language, EditorLanguage.python);
+      expect(tester.widget<EditorCodeCard>(find.byType(EditorCodeCard)).fileName, endsWith('.py'));
       // No confirmation of any kind stood between the two.
       expect(find.byType(AlertDialog), findsNothing);
     });
