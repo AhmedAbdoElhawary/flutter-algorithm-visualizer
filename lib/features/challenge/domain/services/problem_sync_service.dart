@@ -49,7 +49,8 @@ class ProblemSyncService {
     return DateTime.fromMillisecondsSinceEpoch(millis);
   }
 
-  bool get isFirstDownload => _storage.read<bool>(_firstDownloadKey) == true;
+  // Both flags are read as `Object`, so a corrupted value means unset instead of a cast error.
+  bool get isFirstDownload => _storage.read<Object>(_firstDownloadKey) == true;
 
   /// for testing only
   bool? get isFirstDownloadNull => _storage.read<bool>(_firstDownloadKey);
@@ -59,7 +60,11 @@ class ProblemSyncService {
     if (isFirstDownload != true) await _storage.write(_firstDownloadKey, true);
   }
 
-  int? get lastSync => _storage.read<int>(_lastSyncKey);
+  int? get lastSync {
+    final millis = _storage.read<Object>(_lastSyncKey);
+    return millis is int ? millis : null;
+  }
+
   Future<void> clearLastSync() async => await _storage.remove(_lastSyncKey);
   Future<void> setCurrentSync() async =>
       await _storage.write(_lastSyncKey, DateTime.now().millisecondsSinceEpoch);
