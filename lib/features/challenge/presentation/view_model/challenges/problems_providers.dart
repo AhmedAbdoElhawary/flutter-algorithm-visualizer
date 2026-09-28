@@ -63,14 +63,6 @@ final getProblemProvider = Provider.family<AsyncValue<CodingProblem?>, int>((ref
   );
 });
 
-final solvedCountProvider = Provider<AsyncValue<int>>((ref) {
-  return ref.watch(
-    problemsProvider.select(
-      (async) => async.whenData((problems) => problems.where((problem) => problem.isSolved).length),
-    ),
-  );
-});
-
 final similarProblemIdsProvider = Provider.family<List<int>, CodingProblem>((ref, problem) {
   final problems = ref.read(problemsProvider).value ?? const [];
   final knownIds = problems.map((p) => p.problemId).whereType<int>().toSet();

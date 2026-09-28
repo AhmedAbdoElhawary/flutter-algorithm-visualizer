@@ -3,7 +3,6 @@ import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
 import 'package:algorithm_visualizer/core/widgets/adaptive/text/adaptive_text.dart';
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/custom_icon.dart';
 import 'package:algorithm_visualizer/features/challenge/presentation/view_model/challenges/challenges_providers.dart';
-import 'package:algorithm_visualizer/features/challenge/presentation/view_model/challenges/problems_providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -17,7 +16,7 @@ class ChallengesHeader extends ConsumerWidget {
         ref.watch(filteredProblemIdsProvider).maybeWhen(data: (data) => data.ids.length, orElse: () => -1);
     final totalText = total == -1 ? StringsManager.nan : "$total";
 
-    final solved = ref.watch(solvedCountProvider).maybeWhen(data: (data) => data, orElse: () => -1);
+    final solved = ref.watch(filteredSolvedCountProvider).maybeWhen(data: (data) => data, orElse: () => -1);
     final solvedText = solved == -1 ? StringsManager.nan : "$solved";
 
     final isLoaded = solved != -1 && total != -1;
