@@ -3,7 +3,8 @@ part of 'profile_statistics_provider.dart';
 class ProfileStatisticsCalculator {
   const ProfileStatisticsCalculator();
 
-  ProfileStatistics computeStats(List<CodingProblem> problems) {
+  /// [now] is only passed by tests, so the day can't change under them.
+  ProfileStatistics computeStats(List<CodingProblem> problems, {DateTime? now}) {
     var solvedCount = 0;
     var easySolved = 0;
     var mediumSolved = 0;
@@ -70,9 +71,12 @@ class ProfileStatisticsCalculator {
 
     final accuracyRate = totalAttempts == 0 ? 0.0 : correctAttempts / totalAttempts;
 
-    final (currentStreak, bestStreak) = _computeStreaks(submissions);
-    final weeklyActivity = _computeWeekly(submissions);
-    final heatmapData = _computeHeatmap(submissions);
+    final clock = now ?? DateTime.now();
+    final today = DateTime(clock.year, clock.month, clock.day);
+
+    final (currentStreak, bestStreak) = _computeStreaks(submissions, today);
+    final weeklyActivity = _computeWeekly(submissions, today);
+    final heatmapData = _computeHeatmap(submissions, today);
 
     return ProfileStatistics(
       totalProblems: problems.length,
@@ -97,7 +101,8 @@ class ProfileStatisticsCalculator {
     );
   }
 
-  (int current, int best) _computeStreaks(List<RecentSubmission> submissions) {
+  /// Days move by calendar date, never by 24 hours: a day with a clock change is 23 or 25 hours long.
+  (int current, int best) _computeStreaks(List<RecentSubmission> submissions, DateTime today) {
     if (submissions.isEmpty) return (0, 0);
 
     final daysWithSubmissions = <String>{};
@@ -112,14 +117,16 @@ class ProfileStatisticsCalculator {
       daysWithSubmissions.add('${d.year}-${d.month}-${d.day}');
     }
 
-    final now = DateTime.now();
-
     var currentStreak = 0;
-    var day = DateTime(now.year, now.month, now.day);
+
+    // Today isn't over yet, so a run that reached yesterday is still alive.
+    var day = daysWithSubmissions.contains('${today.year}-${today.month}-${today.day}')
+        ? today
+        : DateTime(today.year, today.month, today.day - 1);
 
     while (daysWithSubmissions.contains('${day.year}-${day.month}-${day.day}')) {
       currentStreak++;
-      day = day.subtract(const Duration(days: 1));
+      day = DateTime(day.year, day.month, day.day - 1);
     }
 
     var bestStreak = currentStreak;
@@ -134,7 +141,7 @@ class ProfileStatisticsCalculator {
         final prev = _parseDate(allDays[i - 1]);
         final curr = _parseDate(allDays[i]);
 
-        if (curr.difference(prev).inDays == 1) {
+        if (curr == DateTime(prev.year, prev.month, prev.day + 1)) {
           streak++;
         } else {
           streak = 1;
@@ -159,18 +166,8 @@ class ProfileStatisticsCalculator {
     );
   }
 
-  List<int> _computeWeekly(List<RecentSubmission> submissions) {
-    final now = DateTime.now();
-
-    final startOfWeek = now.subtract(
-      Duration(days: now.weekday - 1),
-    );
-
-    final start = DateTime(
-      startOfWeek.year,
-      startOfWeek.month,
-      startOfWeek.day,
-    );
+  List<int> _computeWeekly(List<RecentSubmission> submissions, DateTime today) {
+    final start = DateTime(today.year, today.month, today.day - (today.weekday - 1));
 
     final counts = List<int>.filled(7, 0);
 
@@ -195,15 +192,7 @@ class ProfileStatisticsCalculator {
     return counts;
   }
 
-  List<int> _computeHeatmap(List<RecentSubmission> submissions) {
-    final now = DateTime.now();
-
-    final today = DateTime(
-      now.year,
-      now.month,
-      now.day,
-    );
-
+  List<int> _computeHeatmap(List<RecentSubmission> submissions, DateTime today) {
     final dayCounts = <String, int>{};
 
     for (final s in submissions) {
@@ -221,9 +210,7 @@ class ProfileStatisticsCalculator {
     final data = List<int>.filled(84, 0);
 
     for (var i = 0; i < 84; i++) {
-      final day = today.subtract(
-        Duration(days: 83 - i),
-      );
+      final day = DateTime(today.year, today.month, today.day - (83 - i));
 
       final key = '${day.year}-${day.month}-${day.day}';
       final count = dayCounts[key] ?? 0;
