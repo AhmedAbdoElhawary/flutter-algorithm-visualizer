@@ -237,7 +237,6 @@ class StringsManager {
   static const String signIn = "Sign in";
   static const String noAccountYet = "Not have account yet?";
   static const String signUp = "Sign up";
-  static const String orDivider = "or";
 
   static const String createAccount = "Create account";
   static const String signUpSubtitle = "Track every problem you solve and build a streak worth keeping.";
