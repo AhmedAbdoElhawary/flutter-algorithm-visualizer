@@ -52,8 +52,9 @@ class UnsyncedProblems {
   }
 
   List<int> _readIds(String key) {
-    final data = _storage.read<List<dynamic>>(key);
-    if (data == null) return [];
+    // Read as `Object`, so a corrupted value means nothing unsynced instead of a cast error.
+    final data = _storage.read<Object>(key);
+    if (data is! List) return [];
 
     return data.whereType<num>().map((id) => id.toInt()).toList();
   }
