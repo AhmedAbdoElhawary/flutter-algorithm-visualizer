@@ -15,7 +15,7 @@
   "areas": {
     "auth":        { "path": "lib/features/auth/",        "gated": true },
     "base":        { "path": "lib/features/base/",        "gated": true },
-    "challenge":   { "path": "lib/features/challenge/",   "gated": false },
+    "challenge":   { "path": "lib/features/challenge/",   "gated": true },
     "home":        { "path": "lib/features/home/",        "gated": true },
     "onboarding":  { "path": "lib/features/onboarding/",  "gated": true },
     "profile":     { "path": "lib/features/profile/",     "gated": true },
