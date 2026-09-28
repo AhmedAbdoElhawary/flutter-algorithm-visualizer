@@ -1,4 +1,5 @@
 import 'package:algorithm_visualizer/features/challenge/domain/enums/problem.dart';
+import 'package:collection/collection.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'problem_storage.g.dart';
@@ -30,11 +31,12 @@ class ProblemStorageDTO {
       other is ProblemStorageDTO &&
           problemId == other.problemId &&
           problemStatus == other.problemStatus &&
-          isBookmarked == other.isBookmarked;
+          isBookmarked == other.isBookmarked &&
+          const ListEquality<ProblemSolutionStatusDTO>().equals(solutionsStatus, other.solutionsStatus);
 
   @override
   int get hashCode {
-    return Object.hash(problemId, problemStatus?.name, isBookmarked, solutionsStatus);
+    return Object.hash(problemId, problemStatus?.name, isBookmarked, Object.hashAll(solutionsStatus ?? const []));
   }
 }
 
