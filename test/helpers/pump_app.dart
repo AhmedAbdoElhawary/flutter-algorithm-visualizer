@@ -1,11 +1,7 @@
 import 'package:algorithm_visualizer/config/routes/route_app.dart';
 import 'package:algorithm_visualizer/config/themes/app_theme.dart';
 import 'package:algorithm_visualizer/core/resources/strings_manager.dart';
-import 'package:algorithm_visualizer/core/storage/storage_providers.dart';
 import 'package:algorithm_visualizer/features/auth/domain/entities/auth_user.dart';
-import 'package:algorithm_visualizer/features/auth/presentation/common/view_model/auth_providers.dart';
-import 'package:algorithm_visualizer/features/challenge/presentation/view_model/challenges/problems_providers.dart';
-import 'package:algorithm_visualizer/features/profile/presentation/view_model/user_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -13,10 +9,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:riverpod/misc.dart' show Override;
 
-import 'fakes/fake_auth_remote_data_source.dart';
-import 'fakes/fake_problem_remote_data_source.dart';
-import 'fakes/fake_profile_remote_data_source.dart';
-import 'fakes/in_memory_storage.dart';
+import 'test_container.dart';
 
 enum ScreenSize {
   smallPhone(320, 568),
@@ -54,25 +47,7 @@ Future<ProviderContainer> pumpApp(
     tester.platformDispatcher.clearTextScaleFactorTestValue();
   });
 
-  final user = signedInAs == null
-      ? null
-      : FakeUser(uid: signedInAs.id, displayName: signedInAs.name, email: signedInAs.email);
-
-  final profileRemote = FakeProfileRemoteDataSource(user: user);
-  final authRemote = FakeAuthRemoteDataSource()..onSignedOut = () => profileRemote.user = null;
-
-  final container = ProviderContainer(
-    overrides: [
-      localStorageProvider.overrideWithValue(InMemoryStorage()),
-      appSettingsStorageProvider.overrideWithValue(InMemoryStorage()),
-      authRemoteDataSourceProvider.overrideWithValue(authRemote),
-      profileRemoteDataSourceProvider.overrideWithValue(profileRemote),
-      problemRemoteDataSourceProvider
-          .overrideWithValue(FakeProblemRemoteDataSource(isSignedIn: user != null)),
-      ...overrides,
-    ],
-  );
-  addTearDown(container.dispose);
+  final container = createTestContainer(signedInAs: signedInAs, overrides: overrides);
 
   final router = initialRoute == null ? null : AppRoutes.buildRouter(initialRoute);
   if (router != null) addTearDown(router.dispose);

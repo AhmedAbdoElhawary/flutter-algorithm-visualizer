@@ -63,7 +63,8 @@ class AuthLoginNotifier extends Notifier<AuthLoginState> {
 
   // Auth Operations
   Future<bool> login() async {
-    if (!validateLogin()) return false;
+    // A second tap lands before the rebuild that disables the button.
+    if (state.isLoading || !validateLogin()) return false;
 
     state = state.copyWith(
       status: NotifierStatus.loading,

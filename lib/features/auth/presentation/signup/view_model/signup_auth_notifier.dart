@@ -109,7 +109,8 @@ class AuthSignUpNotifier extends Notifier<AuthSignUpState> {
   }
 
   Future<bool> register() async {
-    if (!validateSignUp()) return false;
+    // A second tap lands before the rebuild that disables the button.
+    if (state.isLoading || !validateSignUp()) return false;
 
     state = state.copyWith(
       status: NotifierStatus.loading,

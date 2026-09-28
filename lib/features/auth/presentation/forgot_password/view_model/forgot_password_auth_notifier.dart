@@ -61,7 +61,8 @@ class AuthForgotPasswordNotifier extends Notifier<AuthForgotPasswordState> {
   }
 
   Future<bool> forgotPassword() async {
-    if (!validateForgotPassword()) return false;
+    // The keyboard's done key reaches here too, so it has to respect the cooldown the button does.
+    if (state.isLoading || !state.canResend || !validateForgotPassword()) return false;
 
     state = state.copyWith(
       status: NotifierStatus.loading,
