@@ -50,7 +50,9 @@ class _EditorLanguageMenuState extends ConsumerState<EditorLanguageMenu> {
 
   @override
   void dispose() {
-    _entry?.remove();
+    _entry
+      ?..remove()
+      ..dispose();
     _entry = null;
     super.dispose();
   }
@@ -91,7 +93,9 @@ class _EditorLanguageMenuState extends ConsumerState<EditorLanguageMenu> {
   }
 
   void _close() {
-    _entry?.remove();
+    _entry
+      ?..remove()
+      ..dispose();
     _entry = null;
     if (mounted) setState(() => _open = false);
   }

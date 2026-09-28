@@ -26,7 +26,10 @@ class AnimatedPopup extends StatefulWidget {
       builder: (context) => _AnimatedPopupOverlay(
         builder: builder,
         onDismiss: () {
-          if (entry.mounted) entry.remove();
+          if (!entry.mounted) return;
+          entry
+            ..remove()
+            ..dispose();
         },
       ),
     );
