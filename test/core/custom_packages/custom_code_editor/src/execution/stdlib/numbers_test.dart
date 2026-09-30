@@ -27,6 +27,13 @@ void main() {
       test(expression, () => expect(dart('return $expression;'), value));
     }
 
+    test('clamp and pow on ints stay ints, as in dart', () {
+      expect(dart('return 9.clamp(0, 5);'), isA<int>());
+      expect(dart('return 2.pow(10);'), allOf(isA<int>(), 1024));
+      expect(dart('return 2.5.clamp(0, 2);'), allOf(isA<double>(), 2.0));
+      expect(dart('return 2.pow(-1);'), 0.5);
+    });
+
     test('an unknown method stops the run instead of guessing', () {
       expect(dartFailure('return 3.frobnicate();'), 'undefinedFunction');
     });
