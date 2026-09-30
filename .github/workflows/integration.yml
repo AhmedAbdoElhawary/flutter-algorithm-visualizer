@@ -1,0 +1,62 @@
+name: Integration
+
+# The on-device journeys in integration_test/, on an Android emulator against
+# local Firebase emulators for the fake "demo-algodive" project. No secrets:
+# tool/integration_test.sh swaps in a made-up google-services.json.
+#
+# ci.yml calls this for PRs into staging and production. It can also be run by
+# hand on any branch.
+on:
+  workflow_call:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  journeys:
+    name: Integration Journeys
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # firebase-tools needs Java 21 for the emulators.
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "21"
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install firebase-tools
+        run: npm i -g firebase-tools@15.28.2
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2 # v2.23.0
+        with:
+          channel: stable
+          flutter-version: 3.47.5 # keep in sync with ci.yml
+          cache: true
+
+      - name: Get dependencies
+        run: flutter pub get
+
+      # Without this the emulator falls back to software and is too slow to boot.
+      - name: Enable KVM
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+
+      - name: Run journeys
+        uses: reactivecircus/android-emulator-runner@a421e43855164a8197daf9d8d40fe71c6996bb0d # v2.38.0
+        with:
+          api-level: 34
+          arch: x86_64
+          ram-size: 2048M
+          cores: 2
+          script: tool/integration_test.sh
