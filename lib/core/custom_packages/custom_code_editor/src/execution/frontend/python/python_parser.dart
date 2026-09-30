@@ -100,17 +100,6 @@ class PythonParser {
   /// is perfectly valid (FR-002d, SC-009).
   static const Map<String, String> _unsupportedOperators = <String, String>{
     ':=': 'walrus',
-    '&': 'bitwiseOperator',
-    '|': 'bitwiseOperator',
-    '^': 'bitwiseOperator',
-    '~': 'bitwiseOperator',
-    '<<': 'bitwiseOperator',
-    '>>': 'bitwiseOperator',
-    '&=': 'bitwiseOperator',
-    '|=': 'bitwiseOperator',
-    '^=': 'bitwiseOperator',
-    '<<=': 'bitwiseOperator',
-    '>>=': 'bitwiseOperator',
     '@': 'decorator',
   };
 
@@ -414,7 +403,7 @@ class PythonParser {
       return IrExprStmt(line: line, expr: IrAssign(line: line, name: target.name, value: value));
     }
 
-    for (final op in const <String>['+=', '-=', '*=', '/=', '//=', '%=', '**=']) {
+    for (final op in const <String>['+=', '-=', '*=', '/=', '//=', '%=', '**=', '&=', '|=', '^=', '<<=', '>>=']) {
       if (_checkOp(op)) {
         _advance();
         final value = _expressionList();
@@ -514,6 +503,11 @@ class PythonParser {
       '/=' => IrBinaryOp.div,
       '//=' => IrBinaryOp.floorDiv,
       '%=' => IrBinaryOp.mod,
+      '&=' => IrBinaryOp.bitAnd,
+      '|=' => IrBinaryOp.bitOr,
+      '^=' => IrBinaryOp.bitXor,
+      '<<=' => IrBinaryOp.shiftLeft,
+      '>>=' => IrBinaryOp.shiftRight,
       _ => IrBinaryOp.pow,
     };
     final combined = IrBinary(line: line, op: binaryOp, left: target, right: value);
@@ -882,7 +876,7 @@ class PythonParser {
   }
 
   IrExpr _comparison() {
-    var left = _arithmetic();
+    var left = _bitOr();
     IrExpr? chain;
 
     while (true) {
@@ -893,15 +887,15 @@ class PythonParser {
       if (_checkKeyword('not') && _peekAhead(1).lexeme == 'in') {
         _advance();
         _advance();
-        right = _arithmetic();
+        right = _bitOr();
         comparison = IrUnary(line: line, op: IrUnaryOp.not, operand: _containsCall(line, right, left));
       } else if (_matchKeyword('in')) {
-        right = _arithmetic();
+        right = _bitOr();
         comparison = _containsCall(line, right, left);
       } else if (_checkKeyword('is')) {
         _advance();
         final negated = _matchKeyword('not');
-        right = _arithmetic();
+        right = _bitOr();
         // Python's `is` is identity, which for the values this engine models
         // — `None`, `True`, `False` — is the same question as equality.
         comparison =
@@ -918,7 +912,7 @@ class PythonParser {
         };
         if (op == null || !_check(PythonTokenType.op)) break;
         _advance();
-        right = _arithmetic();
+        right = _bitOr();
         comparison = IrBinary(line: line, op: op, left: left, right: right);
       }
 
@@ -946,6 +940,25 @@ class PythonParser {
       line: line,
       callee: IrIdentifier(line: line, synthetic: true, name: '__contains__'),
       args: <IrExpr>[container, item]);
+
+  IrExpr _bitOr() => _bitLevel(_bitXor, const {'|': IrBinaryOp.bitOr});
+
+  IrExpr _bitXor() => _bitLevel(_bitAnd, const {'^': IrBinaryOp.bitXor});
+
+  IrExpr _bitAnd() => _bitLevel(_shift, const {'&': IrBinaryOp.bitAnd});
+
+  IrExpr _shift() => _bitLevel(_arithmetic, const {'<<': IrBinaryOp.shiftLeft, '>>': IrBinaryOp.shiftRight});
+
+  /// One left-associative level of `|`, `^`, `&` or the shifts, whose
+  /// operands come from the next tighter level.
+  IrExpr _bitLevel(IrExpr Function() operand, Map<String, IrBinaryOp> ops) {
+    var left = operand();
+    while (_check(PythonTokenType.op) && ops.containsKey(_peek.lexeme)) {
+      final op = _advance();
+      left = IrBinary(line: op.line, op: ops[op.lexeme]!, left: left, right: operand());
+    }
+    return left;
+  }
 
   IrExpr _arithmetic() {
     var left = _term();
@@ -981,13 +994,9 @@ class PythonParser {
       _advance();
       return _factor();
     }
-    if (_checkOp('~') ||
-        _checkOp('&') ||
-        _checkOp('|') ||
-        _checkOp('^') ||
-        _checkOp('<<') ||
-        _checkOp('>>')) {
-      throw _unsupported('bitwiseOperator');
+    if (_checkOp('~')) {
+      final line = _advance().line;
+      return IrUnary(line: line, op: IrUnaryOp.bitNot, operand: _factor());
     }
     return _power();
   }

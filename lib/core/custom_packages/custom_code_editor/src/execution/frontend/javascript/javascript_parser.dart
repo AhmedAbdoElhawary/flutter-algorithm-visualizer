@@ -61,19 +61,6 @@ class JavascriptParser {
   /// "you typed it wrong" is the wrong thing to tell someone whose code is
   /// perfectly valid (FR-002d, SC-009).
   static const Map<String, String> _unsupportedOperators = <String, String>{
-    '&': 'bitwiseOperator',
-    '|': 'bitwiseOperator',
-    '^': 'bitwiseOperator',
-    '~': 'bitwiseOperator',
-    '<<': 'bitwiseOperator',
-    '>>': 'bitwiseOperator',
-    '>>>': 'bitwiseOperator',
-    '&=': 'bitwiseOperator',
-    '|=': 'bitwiseOperator',
-    '^=': 'bitwiseOperator',
-    '<<=': 'bitwiseOperator',
-    '>>=': 'bitwiseOperator',
-    '>>>=': 'bitwiseOperator',
     '??=': 'logicalAssignment',
     '&&=': 'logicalAssignment',
     '||=': 'logicalAssignment',
@@ -600,7 +587,9 @@ class JavascriptParser {
     final line = _peek.line;
     final target = _conditional();
 
-    for (final op in const <String>['=', '+=', '-=', '*=', '/=', '%=', '**=']) {
+    for (final op in const <String>[
+      '=', '+=', '-=', '*=', '/=', '%=', '**=', '&=', '|=', '^=', '<<=', '>>=', '>>>=', //
+    ]) {
       if (!_checkOp(op)) continue;
       _advance();
       final value = _assignment();
@@ -619,6 +608,12 @@ class JavascriptParser {
         '*=' => IrBinaryOp.mul,
         '/=' => IrBinaryOp.div,
         '%=' => IrBinaryOp.mod,
+        '&=' => IrBinaryOp.bitAnd,
+        '|=' => IrBinaryOp.bitOr,
+        '^=' => IrBinaryOp.bitXor,
+        '<<=' => IrBinaryOp.shiftLeft,
+        '>>=' => IrBinaryOp.shiftRight,
+        '>>>=' => IrBinaryOp.unsignedShiftRight,
         _ => IrBinaryOp.pow,
       };
       return _assignBack(line, target, IrBinary(line: line, op: binaryOp, left: target, right: value));
@@ -676,10 +671,33 @@ class JavascriptParser {
   }
 
   IrExpr _logicalAnd() {
-    var left = _equality();
+    var left = _bitOr();
     while (_checkOp('&&')) {
       final line = _advance().line;
-      left = IrBinary(line: line, op: IrBinaryOp.and, left: left, right: _equality());
+      left = IrBinary(line: line, op: IrBinaryOp.and, left: left, right: _bitOr());
+    }
+    return left;
+  }
+
+  IrExpr _bitOr() => _level(_bitXor, const {'|': IrBinaryOp.bitOr});
+
+  IrExpr _bitXor() => _level(_bitAnd, const {'^': IrBinaryOp.bitXor});
+
+  IrExpr _bitAnd() => _level(_equality, const {'&': IrBinaryOp.bitAnd});
+
+  IrExpr _shift() => _level(_additive, const {
+        '<<': IrBinaryOp.shiftLeft,
+        '>>': IrBinaryOp.shiftRight,
+        '>>>': IrBinaryOp.unsignedShiftRight,
+      });
+
+  /// One left-associative level of `|`, `^`, `&` or the shifts, whose
+  /// operands come from the next tighter level.
+  IrExpr _level(IrExpr Function() operand, Map<String, IrBinaryOp> ops) {
+    var left = operand();
+    while (_check(JsTokenType.op) && ops.containsKey(_peek.lexeme)) {
+      final op = _advance();
+      left = IrBinary(line: op.line, op: ops[op.lexeme]!, left: left, right: operand());
     }
     return left;
   }
@@ -712,7 +730,7 @@ class JavascriptParser {
       );
 
   IrExpr _relational() {
-    var left = _additive();
+    var left = _shift();
     while (true) {
       if (_checkKeyword('instanceof')) throw _unsupported('instanceof');
       if (_checkKeyword('in')) {
@@ -720,7 +738,7 @@ class JavascriptParser {
         left = IrCall(
           line: line,
           callee: IrIdentifier(line: line, synthetic: true, name: '__has'),
-          args: <IrExpr>[_additive(), left],
+          args: <IrExpr>[_shift(), left],
         );
         continue;
       }
@@ -733,7 +751,7 @@ class JavascriptParser {
       };
       if (op == null || !_check(JsTokenType.op)) return left;
       final line = _advance().line;
-      left = IrBinary(line: line, op: op, left: left, right: _additive());
+      left = IrBinary(line: line, op: op, left: left, right: _shift());
     }
   }
 
@@ -769,10 +787,7 @@ class JavascriptParser {
     if (_matchOp('!')) return IrUnary(line: line, op: IrUnaryOp.not, operand: _unary());
     if (_matchOp('-')) return IrUnary(line: line, op: IrUnaryOp.negate, operand: _unary());
     if (_matchOp('+')) return _unary();
-    if (_matchOp('~')) throw _unsupported('bitwiseOperator', line);
-    if (_checkOp('&') || _checkOp('|') || _checkOp('^') || _checkOp('<<') || _checkOp('>>')) {
-      throw _unsupported('bitwiseOperator', line);
-    }
+    if (_matchOp('~')) return IrUnary(line: line, op: IrUnaryOp.bitNot, operand: _unary());
     if (_matchKeyword('typeof')) {
       return IrCall(
         line: line,

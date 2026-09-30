@@ -324,6 +324,13 @@ class Vm {
         });
       case OpCode.power:
         _binaryPower(frame);
+      case OpCode.bitAnd || OpCode.bitOr || OpCode.bitXor:
+        _binaryBitwise(frame, op);
+      case OpCode.shiftLeft || OpCode.shiftRight || OpCode.unsignedShiftRight:
+        _binaryShift(frame, op);
+      case OpCode.bitNot:
+        final v = frame.stack.removeLast();
+        frame.stack.add(IntValue(dialect.singleNumberType ? ~_toInt32(v) : ~_requireInt(v)));
       case OpCode.negate:
         final v = frame.stack.removeLast();
         if (v is IntValue) {
@@ -565,6 +572,80 @@ class Vm {
     final bd = _asDouble(b);
     if (bd == 0) throw const VmRuntimeError('divisionByZero');
     frame.stack.add(NumValue(_asDouble(a) / bd));
+  }
+
+  void _binaryBitwise(_Frame frame, int op) {
+    final b = frame.stack.removeLast();
+    final a = frame.stack.removeLast();
+    if (a is SetValue && b is SetValue) {
+      final items = switch (op) {
+        OpCode.bitAnd => a.items.where(b.items.contains),
+        OpCode.bitOr => <Value>[...a.items, ...b.items],
+        _ => <Value>[...a.items.where((v) => !b.items.contains(v)), ...b.items.where((v) => !a.items.contains(v))],
+      };
+      frame.stack.add(SetValue(LinkedHashSet<Value>.of(items)));
+      return;
+    }
+    if (a is BoolValue && b is BoolValue && !dialect.singleNumberType) {
+      frame.stack.add(BoolValue(switch (op) {
+        OpCode.bitAnd => a.value & b.value,
+        OpCode.bitOr => a.value | b.value,
+        _ => a.value ^ b.value,
+      }));
+      return;
+    }
+    // JavaScript works on 32-bit ints; the others on the whole 64-bit value.
+    final x = dialect.singleNumberType ? _toInt32(a) : _requireInt(a);
+    final y = dialect.singleNumberType ? _toInt32(b) : _requireInt(b);
+    final result = switch (op) {
+      OpCode.bitAnd => x & y,
+      OpCode.bitOr => x | y,
+      _ => x ^ y,
+    };
+    frame.stack.add(IntValue(dialect.singleNumberType ? result.toSigned(32) : result));
+  }
+
+  void _binaryShift(_Frame frame, int op) {
+    final b = frame.stack.removeLast();
+    final a = frame.stack.removeLast();
+    if (dialect.singleNumberType) {
+      // JavaScript only looks at the low five bits of the count.
+      final count = _toInt32(b) & 31;
+      final value = _toInt32(a);
+      frame.stack.add(IntValue(switch (op) {
+        OpCode.shiftLeft => (value << count).toSigned(32),
+        OpCode.shiftRight => value >> count,
+        _ => value.toUnsigned(32) >> count,
+      }));
+      return;
+    }
+    final value = _requireInt(a);
+    final count = _requireInt(b);
+    if (count < 0) {
+      throw VmRuntimeError(
+          'typeMismatch', <String, Object?>{'expected': 'a shift count of 0 or more', 'actual': count});
+    }
+    if (op == OpCode.shiftRight) {
+      frame.stack.add(IntValue(value >> count));
+      return;
+    }
+    final shifted = count >= 64 ? 0 : value << count;
+    frame.stack.add(IntValue(_checkedInt(shifted, value != 0 && (count >= 64 || shifted >> count != value))));
+  }
+
+  int _requireInt(Value v) {
+    if (v is IntValue) return v.value;
+    throw const VmRuntimeError('typeMismatch', <String, Object?>{'expected': 'an integer'});
+  }
+
+  /// JavaScript's ToInt32: whole part, wrapped into a signed 32-bit int.
+  int _toInt32(Value v) {
+    if (v is IntValue) return v.value.toSigned(32);
+    if (v is BoolValue) return v.value ? 1 : 0;
+    if (v is NumValue && v.value.isFinite) {
+      return (v.value.truncateToDouble() % 4294967296).toInt().toSigned(32);
+    }
+    return 0;
   }
 
   double _asDouble(Value v) {

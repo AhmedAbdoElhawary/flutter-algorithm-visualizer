@@ -164,6 +164,8 @@ class DartParser {
         depth++;
       } else if (_check(DartTokenType.greater)) {
         depth--;
+      } else if (_check(DartTokenType.greaterGreater)) {
+        depth -= 2;
       } else if (_check(DartTokenType.comma) && depth == 1) {
         argCount++;
       }
@@ -625,6 +627,11 @@ class DartParser {
     DartTokenType.slashEqual: IrBinaryOp.div,
     DartTokenType.tildeSlashEqual: IrBinaryOp.truncDiv,
     DartTokenType.percentEqual: IrBinaryOp.mod,
+    DartTokenType.ampEqual: IrBinaryOp.bitAnd,
+    DartTokenType.pipeEqual: IrBinaryOp.bitOr,
+    DartTokenType.caretEqual: IrBinaryOp.bitXor,
+    DartTokenType.lessLessEqual: IrBinaryOp.shiftLeft,
+    DartTokenType.greaterGreaterEqual: IrBinaryOp.shiftRight,
   };
 
   IrExpr _assignment() {
@@ -709,7 +716,7 @@ class DartParser {
   }
 
   IrExpr _relational() {
-    var expr = _additive();
+    var expr = _bitOr();
     while (_check(DartTokenType.less) ||
         _check(DartTokenType.lessEqual) ||
         _check(DartTokenType.greater) ||
@@ -722,7 +729,29 @@ class DartParser {
         DartTokenType.greaterEqual => IrBinaryOp.gte,
         _ => throw StateError('unreachable'),
       };
-      expr = IrBinary(line: opTok.line, op: op, left: expr, right: _additive());
+      expr = IrBinary(line: opTok.line, op: op, left: expr, right: _bitOr());
+    }
+    return expr;
+  }
+
+  IrExpr _bitOr() => _level(_bitXor, const {DartTokenType.pipe: IrBinaryOp.bitOr});
+
+  IrExpr _bitXor() => _level(_bitAnd, const {DartTokenType.caret: IrBinaryOp.bitXor});
+
+  IrExpr _bitAnd() => _level(_shift, const {DartTokenType.amp: IrBinaryOp.bitAnd});
+
+  IrExpr _shift() => _level(_additive, const {
+        DartTokenType.lessLess: IrBinaryOp.shiftLeft,
+        DartTokenType.greaterGreater: IrBinaryOp.shiftRight,
+      });
+
+  /// One left-associative level of `|`, `^`, `&` or the shifts, whose
+  /// operands come from the next tighter level.
+  IrExpr _level(IrExpr Function() operand, Map<DartTokenType, IrBinaryOp> ops) {
+    var expr = operand();
+    while (!_isAtEnd && ops.containsKey(_peek.type)) {
+      final opTok = _advance();
+      expr = IrBinary(line: opTok.line, op: ops[opTok.type]!, left: expr, right: operand());
     }
     return expr;
   }
@@ -764,6 +793,7 @@ class DartParser {
     if (_checkId('await')) throw _unsupported('await', line);
     if (_match(DartTokenType.bang)) return IrUnary(line: line, op: IrUnaryOp.not, operand: _unary());
     if (_match(DartTokenType.minus)) return IrUnary(line: line, op: IrUnaryOp.negate, operand: _unary());
+    if (_match(DartTokenType.tilde)) return IrUnary(line: line, op: IrUnaryOp.bitNot, operand: _unary());
     if (_check(DartTokenType.plusPlus) || _check(DartTokenType.minusMinus)) {
       final opTok = _advance();
       final operand = _unary();

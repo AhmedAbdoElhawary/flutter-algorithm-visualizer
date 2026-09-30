@@ -101,9 +101,6 @@ void main() {
 
   test('a character Dart does not have here is a clear syntax error', () {
     expect(failureOf('a @ b'), 'unexpectedCharacter');
-    expect(failureOf('a & b'), 'unexpectedCharacter');
-    expect(failureOf('a | b'), 'unexpectedCharacter');
-    expect(failureOf('~a'), 'unexpectedCharacter');
   });
 
   test('a token prints its type, value and line', () {

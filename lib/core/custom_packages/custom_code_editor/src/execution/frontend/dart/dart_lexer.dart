@@ -45,6 +45,17 @@ enum DartTokenType {
   greaterEqual,
   ampAmp,
   pipePipe,
+  amp,
+  pipe,
+  caret,
+  tilde,
+  lessLess,
+  greaterGreater,
+  ampEqual,
+  pipeEqual,
+  caretEqual,
+  lessLessEqual,
+  greaterGreaterEqual,
   arrow,
   identifier,
   intLiteral,
@@ -228,11 +239,7 @@ class DartLexer {
           } else if (_peek(source, i, '~/')) {
             addSimple(DartTokenType.tildeSlash, '~/', 2);
           } else {
-            throw FrontendFailure(
-                kind: FailureKind.syntax,
-                code: 'unexpectedCharacter',
-                data: <String, Object?>{'char': c},
-                line: line);
+            addSimple(DartTokenType.tilde, c, 1);
           }
         case '/':
           if (_peek(source, i, '/=')) {
@@ -261,13 +268,23 @@ class DartLexer {
             addSimple(DartTokenType.bang, c, 1);
           }
         case '<':
-          if (_peek(source, i, '<=')) {
+          if (_peek(source, i, '<<=')) {
+            addSimple(DartTokenType.lessLessEqual, '<<=', 3);
+          } else if (_peek(source, i, '<<')) {
+            addSimple(DartTokenType.lessLess, '<<', 2);
+          } else if (_peek(source, i, '<=')) {
             addSimple(DartTokenType.lessEqual, '<=', 2);
           } else {
             addSimple(DartTokenType.less, c, 1);
           }
         case '>':
-          if (_peek(source, i, '>=')) {
+          // `>>` is one token even closing `List<List<int>>`; the parser's
+          // generic skipper counts it as two closers.
+          if (_peek(source, i, '>>=')) {
+            addSimple(DartTokenType.greaterGreaterEqual, '>>=', 3);
+          } else if (_peek(source, i, '>>')) {
+            addSimple(DartTokenType.greaterGreater, '>>', 2);
+          } else if (_peek(source, i, '>=')) {
             addSimple(DartTokenType.greaterEqual, '>=', 2);
           } else {
             addSimple(DartTokenType.greater, c, 1);
@@ -275,22 +292,24 @@ class DartLexer {
         case '&':
           if (_peek(source, i, '&&')) {
             addSimple(DartTokenType.ampAmp, '&&', 2);
+          } else if (_peek(source, i, '&=')) {
+            addSimple(DartTokenType.ampEqual, '&=', 2);
           } else {
-            throw FrontendFailure(
-                kind: FailureKind.syntax,
-                code: 'unexpectedCharacter',
-                data: <String, Object?>{'char': c},
-                line: line);
+            addSimple(DartTokenType.amp, c, 1);
           }
         case '|':
           if (_peek(source, i, '||')) {
             addSimple(DartTokenType.pipePipe, '||', 2);
+          } else if (_peek(source, i, '|=')) {
+            addSimple(DartTokenType.pipeEqual, '|=', 2);
           } else {
-            throw FrontendFailure(
-                kind: FailureKind.syntax,
-                code: 'unexpectedCharacter',
-                data: <String, Object?>{'char': c},
-                line: line);
+            addSimple(DartTokenType.pipe, c, 1);
+          }
+        case '^':
+          if (_peek(source, i, '^=')) {
+            addSimple(DartTokenType.caretEqual, '^=', 2);
+          } else {
+            addSimple(DartTokenType.caret, c, 1);
           }
         default:
           throw FrontendFailure(

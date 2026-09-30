@@ -81,6 +81,14 @@ enum IrBinaryOp {
   and,
   or,
   ifNull,
+  bitAnd,
+  bitOr,
+  bitXor,
+  shiftLeft,
+  shiftRight,
+
+  /// JavaScript's `>>>`.
+  unsignedShiftRight,
 }
 
 class IrBinary extends IrExpr {
@@ -91,7 +99,7 @@ class IrBinary extends IrExpr {
   final IrExpr right;
 }
 
-enum IrUnaryOp { negate, not }
+enum IrUnaryOp { negate, not, bitNot }
 
 class IrUnary extends IrExpr {
   const IrUnary({required super.line, super.synthetic, required this.op, required this.operand});

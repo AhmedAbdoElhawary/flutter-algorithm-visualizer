@@ -650,8 +650,12 @@ class Compiler {
         _compileBinary(fc, expr.line, expr.synthetic, op, left, right);
       case IrUnary(:final op, :final operand):
         _compileExpr(fc, operand);
-        fc.builder.emitOp(op == IrUnaryOp.negate ? OpCode.negate : OpCode.not,
-            line: expr.line, synthetic: expr.synthetic);
+        final opcode = switch (op) {
+          IrUnaryOp.negate => OpCode.negate,
+          IrUnaryOp.not => OpCode.not,
+          IrUnaryOp.bitNot => OpCode.bitNot,
+        };
+        fc.builder.emitOp(opcode, line: expr.line, synthetic: expr.synthetic);
       case IrConditional(:final condition, :final thenExpr, :final elseExpr):
         _compileExpr(fc, condition);
         final elseJump = fc.builder.emitJump(OpCode.jumpIfFalse, line: expr.line, synthetic: expr.synthetic);
@@ -886,6 +890,12 @@ class Compiler {
       IrBinaryOp.lte => OpCode.lessEqual,
       IrBinaryOp.gt => OpCode.greater,
       IrBinaryOp.gte => OpCode.greaterEqual,
+      IrBinaryOp.bitAnd => OpCode.bitAnd,
+      IrBinaryOp.bitOr => OpCode.bitOr,
+      IrBinaryOp.bitXor => OpCode.bitXor,
+      IrBinaryOp.shiftLeft => OpCode.shiftLeft,
+      IrBinaryOp.shiftRight => OpCode.shiftRight,
+      IrBinaryOp.unsignedShiftRight => OpCode.unsignedShiftRight,
       IrBinaryOp.and || IrBinaryOp.or || IrBinaryOp.ifNull => throw StateError('handled above'),
     };
     fc.builder.emitOp(opcode, line: line, synthetic: synthetic);
