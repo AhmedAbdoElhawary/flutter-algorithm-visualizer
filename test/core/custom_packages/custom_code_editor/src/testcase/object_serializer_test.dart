@@ -20,13 +20,20 @@ void main() {
       (2.0, '2'),
       (2.5, '2.5'),
       (true, 'true'),
-      ('a', 'a'),
+      ('a', '"a"'),
       ([1, [2, null]], '[1,[2,null]]'),
-      ({'a': 1}, '{a:1}'),
+      ({'a': 1}, '{"a":1}'),
       (double.infinity, 'Infinity'),
     ]) {
       test('$value', () => expect(canonicalString(value), canonical));
     }
+  });
+
+  test('text never reads the same as the number, bool or null it spells', () {
+    expect(canonicalString('1'), isNot(canonicalString(1)));
+    expect(canonicalString('true'), isNot(canonicalString(true)));
+    expect(canonicalString('null'), isNot(canonicalString(null)));
+    expect(canonicalString(['1']), isNot(canonicalString([1])));
   });
 
   test('a whole double reads the same in every language, a fraction does not round', () {
