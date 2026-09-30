@@ -27,8 +27,11 @@ class ProblemsNotifier extends Notifier<AsyncValue<List<CodingProblem>>> {
   Future<void> _load({required bool arabic}) async {
     /// only does work on the first launch of an account on this device
     await ref.read(problemSyncServiceProvider).downloadIfFirstRun();
+    if (!ref.mounted) return;
 
-    state = await AsyncValue.guard(() => _repository.getAllProblems(arabic: arabic));
+    final problems = await AsyncValue.guard(() => _repository.getAllProblems(arabic: arabic));
+    if (!ref.mounted) return;
+    state = problems;
   }
 
   // Saving lives here, not on the challenges page's notifier: that one is gone whenever its page is

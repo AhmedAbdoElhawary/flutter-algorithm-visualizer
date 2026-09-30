@@ -52,6 +52,14 @@ void main() {
     expect(repository.loads, [false]);
   });
 
+  test('closing the app before the load finishes is quiet', () async {
+    container.dispose();
+
+    await settle();
+
+    expect(repository.loads, isEmpty);
+  });
+
   test('a failed load is an error, not a crash', () async {
     repository.failWith = Exception('broken asset');
     container.invalidate(problemsProvider);
