@@ -121,6 +121,20 @@ void main() {
     await _unmount(tester);
   });
 
+  testWidgets('a run that ends frame by frame says the array is sorted', (tester) async {
+    final harness = await _pumpView(tester);
+    await harness.tap(AlgorithmControls.playKey);
+
+    // Small pumps, like a real screen: one big pump lands every change before a single rebuild.
+    for (var ms = 0; ms < endOfRun.inMilliseconds; ms += 100) {
+      await tester.pump(const Duration(milliseconds: 100));
+    }
+
+    expect(harness.state.isAllSorted, isTrue);
+    expect(find.text(StringsManager.arrayFullySorted), findsOneWidget);
+    await _unmount(tester);
+  });
+
   testWidgets('reset goes back to the start', (tester) async {
     final harness = await _pumpView(tester);
     await harness.tap(AlgorithmControls.playKey);
