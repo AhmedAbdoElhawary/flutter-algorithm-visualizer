@@ -390,6 +390,10 @@ class _Scanner {
         if (i >= source.length) {
           throw FrontendFailure(kind: FailureKind.syntax, code: 'unterminatedString', line: startLine);
         }
+        if (source[i] == '\n' || source[i] == '\r') {
+          _consumeNewline();
+          continue;
+        }
         buffer.write(_unescape(source[i]));
         i++;
         continue;
@@ -397,7 +401,10 @@ class _Scanner {
       if (c == '\\' && isRaw) {
         buffer.write(c);
         i++;
-        if (i < source.length) {
+        if (i < source.length && (source[i] == '\n' || source[i] == '\r')) {
+          buffer.write('\n');
+          _consumeNewline();
+        } else if (i < source.length) {
           buffer.write(source[i]);
           i++;
         }
@@ -485,7 +492,6 @@ class _Scanner {
         '\\' => '\\',
         "'" => "'",
         '"' => '"',
-        '\n' => '',
         _ => c,
       };
 

@@ -62,6 +62,15 @@ void main() {
       expect(_str('"ab\\\ncd"'), 'abcd');
     });
 
+    test('a line joined inside a string still counts as a line', () {
+      expect(_lex('"ab\\\ncd"\nx').map((t) => t.line), [1, 2, 3, 3, 3]);
+      expect(_lex('r"ab\\\ncd"\nx').map((t) => t.line), [1, 2, 3, 3, 3]);
+    });
+
+    test('a raw string keeps a joined line as written', () {
+      expect(_str('r"ab\\\ncd"'), 'ab\\\ncd');
+    });
+
     test('a raw string keeps its backslashes', () {
       expect(_str(r'r"\n\d"'), r'\n\d');
     });
