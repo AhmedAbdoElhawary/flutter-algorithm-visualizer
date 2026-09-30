@@ -20,6 +20,8 @@ swapped=(
 backup=$(mktemp -d)
 
 restore() {
+  # A second run would find the backups gone and delete the restored files.
+  trap - EXIT
   adb shell cmd connectivity airplane-mode disable >/dev/null 2>&1 || true
   for pair in "${swapped[@]}"; do
     target=${pair%%:*}
@@ -32,7 +34,9 @@ restore() {
   rm -rf "$backup"
   echo "restored"
 }
-trap restore EXIT INT TERM
+trap restore EXIT
+# Exiting runs the EXIT trap, so a stop restores once, not twice.
+trap 'exit 130' INT TERM
 
 for pair in "${swapped[@]}"; do
   target=${pair%%:*}
@@ -40,7 +44,8 @@ for pair in "${swapped[@]}"; do
   cp "${pair#*:}" "$target"
 done
 
-flags="--flavor dev --dart-define-from-file=dart_define/dev.json --dart-define=USE_FIREBASE_EMULATOR=true"
+# Flutter also lists desktop and web targets, so name the adb device.
+flags="-d $(adb get-serialno) --flavor dev --dart-define-from-file=dart_define/dev.json --dart-define=USE_FIREBASE_EMULATOR=true"
 
 firebase emulators:exec --project demo-algodive --only auth,firestore \
   "flutter test integration_test/app_test.dart $flags"
