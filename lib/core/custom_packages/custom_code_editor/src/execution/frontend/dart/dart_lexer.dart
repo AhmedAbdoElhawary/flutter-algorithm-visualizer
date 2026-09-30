@@ -123,6 +123,9 @@ class DartLexer {
           if (source[i] == '\n') line++;
           i++;
         }
+        if (depth > 0) {
+          throw FrontendFailure(kind: FailureKind.syntax, code: 'unterminatedComment', line: line);
+        }
         continue;
       }
 

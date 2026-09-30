@@ -94,6 +94,11 @@ void main() {
     expect(tokens[1].line, 3);
   });
 
+  test('a block comment that never closes is a syntax error', () {
+    expect(failureOf('a /* note'), 'unterminatedComment');
+    expect(failureOf('a /* outer /* inner */'), 'unterminatedComment');
+  });
+
   test('a character Dart does not have here is a clear syntax error', () {
     expect(failureOf('a @ b'), 'unexpectedCharacter');
     expect(failureOf('a & b'), 'unexpectedCharacter');
