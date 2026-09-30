@@ -268,20 +268,28 @@ jobs:
           -t lib/main_prod.dart
           --dart-define-from-file=dart_define/prod.json
 
+  # The on-device journeys take far longer than the rest, so they run only on PRs into staging and
+  # production. On develop PRs this is skipped, and ci-ok counts that as a pass.
+  integration:
+    name: Integration
+    needs: quality
+    if: github.base_ref != 'develop'
+    uses: ./.github/workflows/integration.yml
+
   # The one required status check on develop, staging and production. Every job
   # above must succeed for this to pass, so adding a job later automatically
   # tightens the gate without touching the ruleset.
   ci-ok:
     name: ci-ok
     if: always()
-    needs: [merge-guard, release-commit-guard, quality, build-android, build-ios]
+    needs: [merge-guard, release-commit-guard, quality, build-android, build-ios, integration]
     runs-on: ubuntu-latest
     steps:
       - name: Fail unless every check passed
         run: |
           results='${{ toJSON(needs) }}'
           echo "$results"
-          failed="$(printf '%s' "$results" | jq -r 'to_entries | map(select(.value.result != "success") | .key) | join(" ")')"
+          failed="$(printf '%s' "$results" | jq -r 'to_entries | map(select(.value.result != "success" and (.key != "integration" or .value.result != "skipped")) | .key) | join(" ")')"
           if [ -n "$failed" ]; then
             echo "::error::these checks did not pass: $failed"
             exit 1
