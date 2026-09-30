@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:algorithm_visualizer/core/storage/get_storage_service.dart';
 import 'package:algorithm_visualizer/features/challenge/data/data_sources/local/challenge_local_data_source.dart';
 import 'package:algorithm_visualizer/features/challenge/data/models/problem_storage.dart';
@@ -6,10 +8,14 @@ import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_storage/get_storage.dart';
 
+import '../../../../../helpers/storage_folder.dart';
+
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
   const pathProviderChannel = MethodChannel('plugins.flutter.io/path_provider');
+  // A fresh folder each run, so no box is left over from an earlier one.
+  final folder = Directory.systemTemp.createTempSync('problem_local_data_source_test');
 
   setUpAll(() {
     TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger.setMockMethodCallHandler(
@@ -17,7 +23,7 @@ void main() {
       (call) async {
         switch (call.method) {
           case 'getApplicationDocumentsDirectory':
-            return '/tmp/algorithm_visualizer_problem_local_data_source_test';
+            return folder.path;
 
           default:
             return null;
@@ -26,11 +32,12 @@ void main() {
     );
   });
 
-  tearDownAll(() {
+  tearDownAll(() async {
     TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger.setMockMethodCallHandler(
       pathProviderChannel,
       null,
     );
+    await deleteStorageFolder(folder);
   });
 
   late GetStorage getStorage;

@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:algorithm_visualizer/core/storage/get_storage_service.dart';
 import 'package:algorithm_visualizer/core/storage/storage_providers.dart';
 import 'package:flutter/services.dart';
@@ -5,15 +7,20 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_storage/get_storage.dart';
 
+import '../../helpers/storage_folder.dart';
+
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
   const pathProviderChannel = MethodChannel('plugins.flutter.io/path_provider');
+  late Directory folder;
 
   setUpAll(() async {
+    // A fresh folder each run: erase only queues its write, so a fixed one kept the last run's boxes.
+    folder = Directory.systemTemp.createTempSync('storage_providers_test');
     TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger.setMockMethodCallHandler(
       pathProviderChannel,
-      (call) async => '/tmp/algorithm_visualizer_storage_providers_test',
+      (call) async => folder.path,
     );
     await GetStorage.init();
     await GetStorage.init(appSettingsContainer);
@@ -22,6 +29,7 @@ void main() {
   tearDownAll(() async {
     await GetStorage().erase();
     await GetStorage(appSettingsContainer).erase();
+    await deleteStorageFolder(folder);
     TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger.setMockMethodCallHandler(
       pathProviderChannel,
       null,
