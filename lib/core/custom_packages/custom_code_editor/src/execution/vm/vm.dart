@@ -302,7 +302,7 @@ class Vm {
       case OpCode.add:
         _binaryAdd(frame);
       case OpCode.subtract:
-        _binaryArith(frame, (a, b) => a - b);
+        _binaryArith(frame, (a, b) => a - b, _subtractInts);
       case OpCode.multiply:
         _binaryMultiply(frame);
       case OpCode.divide:
@@ -450,7 +450,7 @@ class Vm {
       return;
     }
     if (a is IntValue && b is IntValue) {
-      frame.stack.add(IntValue(a.value + b.value));
+      frame.stack.add(IntValue(_addInts(a.value, b.value)));
       return;
     }
     if ((a is IntValue || a is NumValue) && (b is IntValue || b is NumValue)) {
@@ -484,17 +484,45 @@ class Vm {
         return;
       }
     }
-    _binaryArith(frame, (a, b) => a * b);
+    _binaryArith(frame, (a, b) => a * b, _multiplyInts);
   }
 
-  void _binaryArith(_Frame frame, double Function(double, double) op) {
+  void _binaryArith(_Frame frame, double Function(double, double) op, int Function(int, int) intOp) {
     final b = frame.stack.removeLast();
     final a = frame.stack.removeLast();
     if (a is IntValue && b is IntValue) {
-      frame.stack.add(IntValue(op(a.value.toDouble(), b.value.toDouble()).toInt()));
+      // JavaScript only has doubles, so past 2^53 it rounds just like the real thing.
+      frame.stack.add(IntValue(dialect.singleNumberType
+          ? op(a.value.toDouble(), b.value.toDouble()).toInt()
+          : intOp(a.value, b.value)));
       return;
     }
     frame.stack.add(NumValue(op(_asDouble(a), _asDouble(b))));
+  }
+
+  int _addInts(int a, int b) {
+    final r = a + b;
+    return _checkedInt(r, ((a ^ r) & (b ^ r)) < 0);
+  }
+
+  int _subtractInts(int a, int b) {
+    final r = a - b;
+    return _checkedInt(r, ((a ^ b) & (a ^ r)) < 0);
+  }
+
+  int _multiplyInts(int a, int b) {
+    final r = a * b;
+    return _checkedInt(r, a != 0 && (r ~/ a != b || (a == -1 && b == _minInt)));
+  }
+
+  static const int _minInt = -1 << 63;
+
+  /// Dart wraps at 64 bits like the real thing. Python's ints never wrap but
+  /// this engine's do, so a Python result that wrapped stops the run instead
+  /// of grading a wrong number.
+  int _checkedInt(int result, bool wrapped) {
+    if (wrapped && dialect.arbitraryPrecisionInts) throw const VmRuntimeError('integerTooLarge');
+    return result;
   }
 
   void _binaryIntArith(_Frame frame, int Function(int, int) op) {
@@ -518,10 +546,12 @@ class Vm {
       var result = 1;
       var base = a.value;
       var exp = b.value;
-      while (exp > 0) {
-        if (exp & 1 == 1) result *= base;
-        base *= base;
+      while (true) {
+        if (exp & 1 == 1) result = _multiplyInts(result, base);
         exp >>= 1;
+        // Stops before the last squaring, which the answer never uses and which could wrap.
+        if (exp == 0) break;
+        base = _multiplyInts(base, base);
       }
       frame.stack.add(IntValue(result));
       return;

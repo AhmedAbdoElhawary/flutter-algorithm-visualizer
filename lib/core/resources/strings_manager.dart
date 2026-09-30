@@ -520,6 +520,7 @@ class Solution {
   static const String failureIndexOutOfRange = "Index {index} is out of range for a list of length {length}";
   static const String failureKeyNotFound = "Key '{key}' was not found";
   static const String failureDivisionByZero = "Division by zero";
+  static const String failureIntegerTooLarge = "This number is too large for this editor (over 64 bits)";
   static const String failureTypeMismatch = "Expected {expected} but got {actual}";
   static const String failureWrongArgumentCount = "Expected {expected} argument(s) but got {actual}";
   static const String failureUncaughtThrow = "Uncaught error: {message}";
@@ -561,6 +562,7 @@ class Solution {
       'indexOutOfRange' => failureIndexOutOfRange,
       'keyNotFound' => failureKeyNotFound,
       'divisionByZero' => failureDivisionByZero,
+      'integerTooLarge' => failureIntegerTooLarge,
       'typeMismatch' => failureTypeMismatch,
       'wrongArgumentCount' => failureWrongArgumentCount,
       'uncaughtThrow' => failureUncaughtThrow,
