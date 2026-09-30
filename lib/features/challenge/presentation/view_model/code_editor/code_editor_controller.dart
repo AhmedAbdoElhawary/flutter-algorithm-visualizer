@@ -120,11 +120,12 @@ class CodeEditorController extends Notifier<CodeEditorState> {
     state = state.copyWith(isRunning: true, grade: null);
 
     _captureCurrentDraft();
-    final resultGrade = _gradeCodeUseCase.grade(
+    final resultGrade = await _gradeCodeUseCase.gradeInBackground(
       problem: codingProblem,
       userCode: controller.text,
       language: state.language,
     );
+    if (!ref.mounted) return result.call(null);
 
     result.call(resultGrade);
     await _animateLineByLine(controller.text.split('\n').length);

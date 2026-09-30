@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:algorithm_visualizer/core/custom_packages/custom_code_editor/code_editor.dart' show EditorLanguage;
 import 'package:algorithm_visualizer/features/challenge/data/models/test_case.dart';
 import 'package:algorithm_visualizer/features/challenge/domain/entities/coding_problem.dart';
@@ -120,6 +122,39 @@ def twoSum(nums, target):
     expect(result.totalCount, 0);
     expect(result.allTestCaseResults, isEmpty);
     expect(result.allPassed, isFalse);
+  });
+
+  group('in the background', () {
+    setUp(() {
+      GradeCodeUseCase.debugGradeInline = false;
+      addTearDown(() => GradeCodeUseCase.debugGradeInline = true);
+    });
+
+    test('grades the same as inline', () async {
+      final result = await grader.gradeInBackground(problem: twoSum, userCode: _twoSum);
+
+      expect(result.allPassed, isTrue);
+      expect(result.passedCount, grader.grade(problem: twoSum, userCode: _twoSum).passedCount);
+    });
+
+    test('code that never ends leaves this isolate free while it waits out its limit', () async {
+      final oneCase = twoSum.copyWith(testCases: [twoSum.getTestCases.first], hiddenTestCases: []);
+      const endless = 'List<int> twoSum(List<int> nums, int target) { while (true) {} }';
+      var ticks = 0;
+      final timer = Timer.periodic(const Duration(milliseconds: 50), (_) => ticks++);
+
+      final result = await grader.gradeInBackground(problem: oneCase, userCode: endless);
+      timer.cancel();
+
+      expect(result.allPassed, isFalse);
+      expect(ticks, greaterThan(10));
+    });
+
+    test('a problem with no test cases never starts an isolate', () async {
+      final result = await grader.gradeInBackground(problem: buildTestProblem(), userCode: _twoSum);
+
+      expect(result.totalCount, 0);
+    });
   });
 
   group('CodeGradeResult', () {

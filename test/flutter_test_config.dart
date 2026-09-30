@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:algorithm_visualizer/features/challenge/domain/usecases/grade_code_usecase.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:leak_tracker_flutter_testing/leak_tracker_flutter_testing.dart';
@@ -8,6 +9,7 @@ import 'package:leak_tracker_flutter_testing/leak_tracker_flutter_testing.dart';
 /// Runs before every test file, so any widget test that leaks a disposable fails.
 FutureOr<void> testExecutable(FutureOr<void> Function() testMain) async {
   LeakTesting.enable();
+  GradeCodeUseCase.debugGradeInline = true;
   LeakTesting.settings = LeakTesting.settings.withIgnored(createdByTestHelpers: true);
   await _loadAppFonts();
   await testMain();
