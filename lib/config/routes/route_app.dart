@@ -131,9 +131,18 @@ class AppRoutes {
   AppRoutes._();
   static final instance = AppRoutes._();
 
-  final routerProvider = buildRouter(
+  GoRouter routerProvider = _buildStartRouter();
+
+  static GoRouter _buildStartRouter() => buildRouter(
     OnboardingStore.standalone().isSeen ? Routes.home.path : Routes.onboarding.path,
   );
+
+  /// Integration tests relaunch the app in one process, so the start page has to be picked again.
+  @visibleForTesting
+  static void debugReset() {
+    instance.routerProvider.dispose();
+    instance.routerProvider = _buildStartRouter();
+  }
 
   /// Tests build their own router from this, so each one starts clean and can dispose it.
   static GoRouter buildRouter(String initialLocation) => GoRouter(
