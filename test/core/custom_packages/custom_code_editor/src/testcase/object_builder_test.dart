@@ -13,6 +13,7 @@ void main() {
       ('true', 'true'),
       ('"it\'s"', r"'it\'s'"),
       ('[1, "a"]', "[1, 'a']"),
+      ('{"a": 1}', "{'a': 1}"),
     ]) {
       test(input, () => expect(testValueToSource(parseValue(input)), source));
     }

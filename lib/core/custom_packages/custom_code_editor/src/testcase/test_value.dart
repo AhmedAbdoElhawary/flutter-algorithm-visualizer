@@ -41,8 +41,14 @@ final class ListTestValue extends TestValue {
   final List<TestValue> items;
 }
 
+final class MapTestValue extends TestValue {
+  const MapTestValue(this.entries);
+
+  final List<MapEntry<TestValue, TestValue>> entries;
+}
+
 /// Converts a [TestValue] into its plain Dart equivalent (ints, bools,
-/// strings, nested lists and null). Useful so both the expected output and the
+/// strings, nested lists, maps and null). Useful so both the expected output and the
 /// actual interpreted result can be serialized through the same code path.
 dynamic testValueToRaw(TestValue value) {
   return switch (value) {
@@ -52,5 +58,6 @@ dynamic testValueToRaw(TestValue value) {
     BoolTestValue(:final value) => value,
     StringTestValue(:final value) => value,
     ListTestValue(:final items) => items.map(testValueToRaw).toList(),
+    MapTestValue(:final entries) => {for (final e in entries) testValueToRaw(e.key): testValueToRaw(e.value)},
   };
 }

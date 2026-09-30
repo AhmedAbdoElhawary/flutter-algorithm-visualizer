@@ -17,6 +17,10 @@ void main() {
       ('[]', <Object?>[]),
       ('[1, [2, 3], "a,b", null]', [1, [2, 3], 'a,b', null]),
       ('bare', 'bare'),
+      ('{}', <Object?, Object?>{}),
+      ('{"a": 1, b: [2, 3]}', {'a': 1, 'b': [2, 3]}),
+      ('{"k:v": 1}', {'k:v': 1}),
+      ('{1, 2}', '{1, 2}'),
     ]) {
       test(input, () => expect(testValueToRaw(parseValue(input)), raw));
     }
