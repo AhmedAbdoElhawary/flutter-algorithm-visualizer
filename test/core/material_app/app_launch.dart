@@ -10,6 +10,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_storage/get_storage.dart';
 
+import '../../helpers/storage_folder.dart';
 import '../../helpers/test_container.dart';
 
 /// The app's router is built once per test file and reads the real default box, as it does on a phone.
@@ -36,16 +37,7 @@ void setUpLaunch({required bool onboardingSeen}) {
     // The router lives as long as the app, so only the end of the file can let it go.
     AppRoutes.instance.routerProvider.dispose();
     await GetStorage().erase();
-    // GetStorage writes its backup file in the background with nothing to await, so a delete can race it.
-    for (var tries = 1; ; tries++) {
-      try {
-        folder.deleteSync(recursive: true);
-        break;
-      } on FileSystemException {
-        if (tries == 5) rethrow;
-        await Future<void>.delayed(const Duration(milliseconds: 100));
-      }
-    }
+    await deleteStorageFolder(folder);
     TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger.setMockMethodCallHandler(
       pathProvider,
       null,
