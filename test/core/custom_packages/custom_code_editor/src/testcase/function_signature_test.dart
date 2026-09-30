@@ -16,6 +16,12 @@ void main() {
     expect(parseFunctionSignature('int answer()').params, isEmpty);
   });
 
+  test('a comma inside a generic type does not split the parameter', () {
+    final signature = parseFunctionSignature('int f(Map<String, int> counts, int k)');
+
+    expect(signature.params.map((p) => (p.type, p.name)), [('Map<String, int>', 'counts'), ('int', 'k')]);
+  });
+
   test('a void function is known as void', () {
     expect(parseFunctionSignature('void rotate(List<int> nums, int k)').isVoid, isTrue);
   });

@@ -15,7 +15,12 @@ void main() {
     });
 
     test('a different delimiter', () {
-      expect(splitTopLevel('a -> [b -> c] -> d', '->'), ['a', '[b -> c]', 'd']);
+      expect(splitTopLevel('a -> [b -> c] -> d', delimiter: '->'), ['a', '[b -> c]', 'd']);
+    });
+
+    test('angle brackets only group when asked, a value may hold a bare <', () {
+      expect(splitTopLevel('Map<String, int> a, int b', generics: true), ['Map<String, int> a', 'int b']);
+      expect(splitTopLevel('a<b, c>d'), ['a<b', 'c>d']);
     });
 
     test('empty input gives nothing, one value gives one part', () {

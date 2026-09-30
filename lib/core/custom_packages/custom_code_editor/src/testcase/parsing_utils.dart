@@ -34,11 +34,13 @@ int matchingParen(String s, int openIndex) {
 }
 
 /// Splits [s] on [delimiter] ignoring any that appear inside brackets `()[]{}`
-/// or inside quoted strings.
+/// or inside quoted strings. With [generics], `<>` count as brackets too, for
+/// signatures like `Map<String, int> counts` where a value's `<` would not.
 List<String> splitTopLevel(
-  String s, [
+  String s, {
   String delimiter = ',',
-]) {
+  bool generics = false,
+}) {
   if (s.isEmpty) return const [];
 
   final parts = <String>[];
@@ -70,6 +72,10 @@ List<String> splitTopLevel(
       case '(' || '[' || '{':
         depth++;
       case ')' || ']' || '}':
+        depth--;
+      case '<' when generics:
+        depth++;
+      case '>' when generics:
         depth--;
       default:
         if (depth == 0 && s.startsWith(delimiter, i)) {

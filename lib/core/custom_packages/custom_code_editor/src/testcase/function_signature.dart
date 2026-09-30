@@ -42,7 +42,7 @@ ParsedFunctionSignature parseFunctionSignature(String signature) {
 
   final params = <ParsedFunctionParam>[];
   if (between.isNotEmpty) {
-    for (final raw in splitTopLevel(between)) {
+    for (final raw in splitTopLevel(between, generics: true)) {
       final p = raw.trim();
       if (p.isEmpty) continue;
       final typeMatch = RegExp(r'([A-Za-z_]\w*)\s*$').firstMatch(p);
