@@ -26,6 +26,15 @@ void main() {
       });
     }
 
+    test('an instance keeps its class name and fields', () {
+      final node = InstanceValue(ClassValue(name: 'ListNode'), <String, Value>{'val': const IntValue(1)});
+
+      final back = decodeValue(encodeValue(node)) as InstanceValue;
+
+      expect(back.klass.name, 'ListNode');
+      expect(back.fields, <String, Value>{'val': const IntValue(1)});
+    });
+
     test('no value at all reads back as null', () {
       expect(decodeValue(null), NullValue.instance);
     });
@@ -50,8 +59,9 @@ void main() {
   });
 
   group('a request run straight through the worker code', () {
-    Map<String, Object?> request(String source, {String functionName = 'main'}) => <String, Object?>{
-          'language': 'dart',
+    Map<String, Object?> request(String source, {String functionName = 'main', String language = 'dart'}) =>
+        <String, Object?>{
+          'language': language,
           'source': source,
           'functionName': functionName,
           'arguments': <Object?>[],
@@ -70,6 +80,15 @@ void main() {
       final result = executeEncodedRequest(request('int f() => 7;', functionName: 'f'), () => false);
 
       expect(plain(decodeValue(result['returned'])), 7);
+    });
+
+    test('python and javascript run too, with their own builtins', () {
+      final python = request('def f():\n    return len([1, 2])\n', functionName: 'f', language: 'python');
+      const source = 'function f() { return Math.max(1, 5) }';
+      final javascript = request(source, functionName: 'f', language: 'javascript');
+
+      expect(plain(decodeValue(executeEncodedRequest(python, () => false)['returned'])), 2);
+      expect(plain(decodeValue(executeEncodedRequest(javascript, () => false)['returned'])), 5);
     });
 
     test('a syntax error is reported, not thrown', () {
