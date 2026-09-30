@@ -45,6 +45,12 @@ void main() {
     await harness.drain();
   });
 
+  testWidgets('the page opens with its own title', (tester) async {
+    await openAuthPage(tester, Routes.login.path);
+
+    expect(find.text(StringsManager.welcome), findsOneWidget);
+  });
+
   testWidgets('empty fields say what is missing', (tester) async {
     final harness = await openAuthPage(tester, Routes.login.path);
 
