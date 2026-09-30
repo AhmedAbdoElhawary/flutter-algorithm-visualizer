@@ -133,9 +133,15 @@ void main() {
   });
 
   group('isTruthy', () {
-    test('dart only accepts a real bool', () {
+    test('dart only accepts a real bool, anything else is a type mismatch', () {
       expect(isTruthy(BoolValue.trueValue, dartDialect), isTrue);
-      expect(isTruthy(const IntValue(1), dartDialect), isFalse);
+      expect(isTruthy(BoolValue.falseValue, dartDialect), isFalse);
+      expect(
+        () => isTruthy(const IntValue(0), dartDialect),
+        throwsA(isA<VmRuntimeError>()
+            .having((e) => e.code, 'code', 'typeMismatch')
+            .having((e) => e.data['actual'], 'actual', '0')),
+      );
     });
 
     test('python treats zero and empty things as false', () {
