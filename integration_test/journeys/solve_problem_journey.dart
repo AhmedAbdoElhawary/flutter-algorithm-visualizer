@@ -25,7 +25,7 @@ void solveProblemJourney() {
 
       // Progress is saved on the device first, and only reaches Firestore through the sync button.
       await tapOn(tester, find.byIcon(Icons.sync_rounded));
-      await pumpUntil(tester, find.text(StringsManager.syncSuccess));
+      await pumpUntil(tester, find.text(StringsManager.syncSuccess), timeout: networkTimeout);
 
       final uid = FirebaseAuth.instance.currentUser!.uid;
       final saved = await FirebaseFirestore.instance

@@ -52,6 +52,9 @@ Future<void> launchApp(WidgetTester tester) async {
   await tester.pumpWidget(const ProviderScope(child: SplashGate()));
 }
 
+/// For waits on a Firebase emulator call, which can take seconds on a busy machine.
+const networkTimeout = Duration(seconds: 30);
+
 /// Some screens keep an animation looping, so `pumpAndSettle` would never return.
 Future<void> pumpUntil(
   WidgetTester tester,

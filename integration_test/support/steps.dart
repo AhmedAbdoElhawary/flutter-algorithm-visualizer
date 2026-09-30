@@ -54,7 +54,7 @@ Future<void> signUp(WidgetTester tester, {String password = testPassword}) async
   await typeInto(tester, StringsManager.createStrongPasswordHint, password);
   await typeInto(tester, StringsManager.reEnterPasswordHint, password);
   await tapOn(tester, find.text(StringsManager.createAccount).last);
-  await pumpUntil(tester, find.byType(HomePage));
+  await pumpUntil(tester, find.byType(HomePage), timeout: networkTimeout);
 }
 
 Future<void> logIn(WidgetTester tester, String password) async {
@@ -66,7 +66,7 @@ Future<void> logIn(WidgetTester tester, String password) async {
   if (find.text(StringsManager.continueToLogin).evaluate().isNotEmpty) {
     await tapOn(tester, find.text(StringsManager.continueToLogin));
   }
-  await pumpUntil(tester, find.byType(HomePage));
+  await pumpUntil(tester, find.byType(HomePage), timeout: networkTimeout);
 }
 
 Future<void> openSettings(WidgetTester tester) async {
@@ -80,7 +80,7 @@ Future<void> logOut(WidgetTester tester) async {
   // The popup's button has the same text, so wait for the popup before taking the last one.
   await pumpUntil(tester, find.text(StringsManager.logoutConfirmTitle));
   await tapOn(tester, find.text(StringsManager.yesLogout).last);
-  await pumpUntil(tester, find.text(StringsManager.welcome));
+  await pumpUntil(tester, find.text(StringsManager.welcome), timeout: networkTimeout);
 }
 
 /// Two Sum is problem 1 in the bundled problem bank.

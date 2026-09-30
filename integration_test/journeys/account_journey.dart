@@ -24,14 +24,14 @@ void accountJourney() {
       await tapOn(tester, find.text(StringsManager.displayName));
       await typeInto(tester, StringsManager.newDisplayNameHint, 'Ada');
       await tapOn(tester, find.text(StringsManager.saveChanges));
-      await pumpUntil(tester, find.text(StringsManager.displayNameUpdated));
+      await pumpUntil(tester, find.text(StringsManager.displayNameUpdated), timeout: networkTimeout);
 
       await tapOn(tester, find.text(StringsManager.changePassword));
       await typeInto(tester, StringsManager.currentPasswordHint, testPassword);
       await typeInto(tester, StringsManager.newPasswordHint, _newPassword);
       await typeInto(tester, StringsManager.confirmNewPasswordHint, _newPassword);
       await tapOn(tester, find.text(StringsManager.saveChanges));
-      await pumpUntil(tester, find.text(StringsManager.passwordUpdated));
+      await pumpUntil(tester, find.text(StringsManager.passwordUpdated), timeout: networkTimeout);
 
       await logOut(tester);
       await logIn(tester, _newPassword);
@@ -43,7 +43,7 @@ void accountJourney() {
       await tapOn(tester, find.text(StringsManager.deleteAccountContinue));
       await typeInto(tester, StringsManager.passwordHint, _newPassword);
       await tapOn(tester, find.text(StringsManager.deleteAccountConfirmButton));
-      await pumpUntil(tester, find.text(StringsManager.deleteAccountSuccess));
+      await pumpUntil(tester, find.text(StringsManager.deleteAccountSuccess), timeout: networkTimeout);
 
       expect(FirebaseAuth.instance.currentUser, isNull);
       final accounts = await emulatorRequest(
