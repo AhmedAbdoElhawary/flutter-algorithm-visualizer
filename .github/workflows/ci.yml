@@ -144,7 +144,7 @@ jobs:
         uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2 # v2.23.0
         with:
           channel: stable
-          flutter-version: 3.44.7 # keep in sync with the team's local toolchain
+          flutter-version: 3.47.5 # keep in sync with the team's local toolchain
           cache: true
 
       - name: Get dependencies
@@ -193,7 +193,7 @@ jobs:
         uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2 # v2.23.0
         with:
           channel: stable
-          flutter-version: 3.44.7 # keep in sync with the team's local toolchain
+          flutter-version: 3.47.5 # keep in sync with the team's local toolchain
           cache: true
 
       - name: Resolve flavor from target branch
@@ -246,7 +246,7 @@ jobs:
         uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2 # v2.23.0
         with:
           channel: stable
-          flutter-version: 3.44.7 # keep in sync with the team's local toolchain
+          flutter-version: 3.47.5 # keep in sync with the team's local toolchain
           cache: true
 
       - name: Get dependencies
