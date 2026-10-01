@@ -73,7 +73,7 @@ void main() {
   group('testScreenMatrix', () {
     final seen = <String>{};
 
-    tearDownAll(() => expect(seen, hasLength(10)));
+    tearDownAll(() => expect(seen, hasLength(12)));
 
     testScreenMatrix('runs once per combination', (tester, variant) async {
       seen.add(variant.toString());
