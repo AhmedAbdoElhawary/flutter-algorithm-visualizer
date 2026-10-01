@@ -6,16 +6,12 @@ import 'package:algorithm_visualizer/features/profile/data/data_sources/local/pr
 
 class GuestDataService {
   GuestDataService({
-    required ProblemLocalDataSource problemLocalDataSource,
-    required ProblemRemoteDataSource problemRemoteDataSource,
-    required UnsyncedProblems unsyncedProblems,
-    required ProblemSyncService problemSyncService,
-    required ProfileLocalDataSource profileLocalDataSource,
-  })  : _problemLocalDataSource = problemLocalDataSource,
-        _problemRemoteDataSource = problemRemoteDataSource,
-        _unsyncedProblems = unsyncedProblems,
-        _problemSyncService = problemSyncService,
-        _profileLocalDataSource = profileLocalDataSource;
+    required this._problemLocalDataSource,
+    required this._problemRemoteDataSource,
+    required this._unsyncedProblems,
+    required this._problemSyncService,
+    required this._profileLocalDataSource,
+  });
 
   final ProblemLocalDataSource _problemLocalDataSource;
   final ProblemRemoteDataSource _problemRemoteDataSource;

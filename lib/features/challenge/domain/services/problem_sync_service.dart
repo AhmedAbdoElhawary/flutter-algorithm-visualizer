@@ -21,14 +21,11 @@ enum ProblemSyncResult {
 /// the only place the problems collection touches firestore
 class ProblemSyncService {
   ProblemSyncService({
-    required ProblemLocalDataSource localDataSource,
+    required this._localDataSource,
     required UnsyncedProblems unsyncedProblems,
-    required ProblemRemoteDataSource remoteDataSource,
-    required LocalStorage storage,
-  })  : _localDataSource = localDataSource,
-        _unsynced = unsyncedProblems,
-        _remoteDataSource = remoteDataSource,
-        _storage = storage;
+    required this._remoteDataSource,
+    required this._storage,
+  }) : _unsynced = unsyncedProblems;
 
   final ProblemLocalDataSource _localDataSource;
   final UnsyncedProblems _unsynced;
