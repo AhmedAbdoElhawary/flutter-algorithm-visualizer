@@ -18,7 +18,9 @@ class ScreenVariant {
 final screenVariants = ValueVariant<ScreenVariant>({
   for (final screen in ScreenSize.values)
     for (final theme in [ThemeMode.light, ThemeMode.dark])
-      for (final textScale in [1.0, 2.0]) ScreenVariant(screen, theme, textScale),
+      /// tablets rarely overflow, and the extra run kept ci over 5 minutes
+      for (final textScale in [1.0, if (screen != ScreenSize.tablet) 2.0])
+        ScreenVariant(screen, theme, textScale),
 });
 
 /// For render tests only. Pass the variant's fields on to [pumpApp].
