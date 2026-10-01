@@ -103,7 +103,19 @@ Future<void> _connectToEmulator() async {
 /// Debug only, so leaked controllers and notifiers print to the console while using the app.
 void _startLeakTracking() {
   if (!kDebugMode) return;
-  LeakTracking.start();
+  var notDisposed = 0;
+  LeakTracking.start(
+    config: LeakTrackingConfig(
+      /// not GCed and GCed late keep growing in a running app since gc is never forced, only not disposed is a real bug.
+      stdoutLeaks: false,
+      onLeaks: (summary) {
+        final count = summary.totals[LeakType.notDisposed] ?? 0;
+        if (count == notDisposed) return;
+        notDisposed = count;
+        debugPrint('leak_tracker: $count not disposed');
+      },
+    ),
+  );
   FlutterMemoryAllocations.instance.addListener(
     (event) => LeakTracking.dispatchObjectEvent(event.toMap()),
   );
