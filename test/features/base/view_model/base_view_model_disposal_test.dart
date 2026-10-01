@@ -29,7 +29,7 @@ void main() {
     addTearDown(container.dispose);
 
     final instance = BaseViewModel.sortingCards(SortingAlgoCards.bubble).instance;
-    final subscription = container.listen(instance, (_, __) {});
+    final subscription = container.listen(instance, (_, _) {});
     final notifier = container.read(instance.notifier);
 
     expect(notifier.isDisposed, isFalse);
@@ -45,7 +45,7 @@ void main() {
     addTearDown(container.dispose);
 
     final instance = BaseViewModel.searchingCards(SearchingAlgoCards.bfs).instance;
-    final subscription = container.listen(instance, (_, __) {});
+    final subscription = container.listen(instance, (_, _) {});
     final notifier = container.read(instance.notifier);
 
     expect(notifier.isDisposed, isFalse);
@@ -64,7 +64,7 @@ void main() {
     addTearDown(container.dispose);
 
     final instance = BaseViewModel.sortingCards(SortingAlgoCards.bubble).instance;
-    final subscription = container.listen(instance, (_, __) {});
+    final subscription = container.listen(instance, (_, _) {});
     final notifier = container.read(instance.notifier);
 
     // `_startSelectedSorting` swallows failures into `debugPrint`, so an

@@ -88,7 +88,7 @@ void main() {
     final container = ProviderContainer();
     addTearDown(container.dispose);
 
-    await _pumpView(tester, SearchingView(onAlgoChanged: (_, __, ___) {}), container);
+    await _pumpView(tester, SearchingView(onAlgoChanged: (_, _, _) {}), container);
 
     final instance = tester.widget<PFGrid>(find.byType(PFGrid)).instance;
     final notifier = container.read(instance.notifier);
@@ -108,7 +108,7 @@ void main() {
     final container = ProviderContainer();
     addTearDown(container.dispose);
 
-    await _pumpView(tester, SortingView(onAlgoChanged: (_, __, ___) {}), container);
+    await _pumpView(tester, SortingView(onAlgoChanged: (_, _, _) {}), container);
 
     final instance = tester
         .widget<SortingControlButtons>(

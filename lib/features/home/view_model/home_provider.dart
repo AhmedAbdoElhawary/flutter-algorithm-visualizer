@@ -32,7 +32,7 @@ final homeDataProvider = Provider<HomeData>((ref) {
       greeting: computeGreeting(),
       continueProblem: null,
     ),
-    error: (_, __) => HomeData(
+    error: (_, _) => HomeData(
       greeting: computeGreeting(),
       continueProblem: null,
     ),

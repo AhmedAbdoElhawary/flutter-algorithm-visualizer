@@ -65,7 +65,7 @@ class ChallengesHeader extends ConsumerWidget {
               tween: Tween(begin: 0, end: total == 0 || !isLoaded ? 0 : solved / total),
               duration: const Duration(milliseconds: 900),
               curve: Curves.easeOut,
-              builder: (_, v, __) => LinearProgressIndicator(
+              builder: (_, v, _) => LinearProgressIndicator(
                 value: v,
                 minHeight: 4.r,
                 backgroundColor: context.getColor(ThemeEnum.surface),

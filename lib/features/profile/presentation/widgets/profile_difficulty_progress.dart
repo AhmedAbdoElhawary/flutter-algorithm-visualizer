@@ -87,7 +87,7 @@ class _DifficultyRow extends StatelessWidget {
             tween: Tween(begin: 0, end: b.total == 0 ? 0 : b.solved / b.total),
             duration: const Duration(milliseconds: 900),
             curve: Curves.easeOut,
-            builder: (_, v, __) => QuietProgressBar(value: v, fill: b.color),
+            builder: (_, v, _) => QuietProgressBar(value: v, fill: b.color),
           ),
         ],
       ),

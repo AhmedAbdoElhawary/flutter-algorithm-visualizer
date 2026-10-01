@@ -37,7 +37,7 @@ class BookmarkedProblemsPage extends ConsumerWidget {
                     : ListView.separated(
                         padding: REdgeInsets.fromLTRB(16, 4, 16, 16),
                         itemCount: bookmarked.length + 1,
-                        separatorBuilder: (_, __) => const RSizedBox(height: 9),
+                        separatorBuilder: (_, _) => const RSizedBox(height: 9),
                         itemBuilder: (context, i) {
                           if (i == bookmarked.length) {
                             return const EmptyStateQuiet(
@@ -57,7 +57,7 @@ class BookmarkedProblemsPage extends ConsumerWidget {
           );
         },
         loading: () => Center(child: CircularProgressIndicator(strokeWidth: 2.r)),
-        error: (_, __) => const Center(
+        error: (_, _) => const Center(
           child: MediumText(StringsManager.notAbleToLoadAnyChallenge, color: ThemeEnum.inkSecondaryTitle),
         ),
       ),

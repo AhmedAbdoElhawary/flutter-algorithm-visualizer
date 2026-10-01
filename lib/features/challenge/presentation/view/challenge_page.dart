@@ -28,7 +28,7 @@ class ChallengePage extends ConsumerWidget {
         ],
         body: problems.when(
           loading: () => const ChallengesLoadingState(),
-          error: (_, __) => const ChallengesErrorState(),
+          error: (_, _) => const ChallengesErrorState(),
           data: (data) {
             if (data.ids.isEmpty) return const ChallengesEmptyState();
             return Padding(
