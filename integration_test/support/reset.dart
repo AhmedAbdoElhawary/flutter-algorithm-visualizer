@@ -47,6 +47,8 @@ Future<String> emulatorRequest(String method, int port, String path) async {
 
 /// Starts the app the way `bootstrap` does. Unmounting first means a second call is a real relaunch.
 Future<void> launchApp(WidgetTester tester) async {
+  // the real keyboard never hears about enterText, and can push its old text back over it.
+  tester.testTextInput.register();
   await tester.pumpWidget(const SizedBox());
   AppRoutes.debugReset();
   await tester.pumpWidget(const ProviderScope(child: SplashGate()));
