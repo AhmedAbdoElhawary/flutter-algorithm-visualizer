@@ -37,11 +37,8 @@ void setUpLaunch({required bool onboardingSeen}) {
     // The router lives as long as the app, so only the end of the file can let it go.
     AppRoutes.instance.routerProvider.dispose();
     await GetStorage().erase();
+    // the fake path stays, getstorage still asks for it to write a backup after a save returns.
     await deleteStorageFolder(folder);
-    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger.setMockMethodCallHandler(
-      pathProvider,
-      null,
-    );
   });
 }
 

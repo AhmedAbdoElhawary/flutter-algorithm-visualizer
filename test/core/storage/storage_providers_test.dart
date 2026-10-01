@@ -29,11 +29,8 @@ void main() {
   tearDownAll(() async {
     await GetStorage().erase();
     await GetStorage(appSettingsContainer).erase();
+    // the fake path stays, getstorage still asks for it to write a backup after a save returns.
     await deleteStorageFolder(folder);
-    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger.setMockMethodCallHandler(
-      pathProviderChannel,
-      null,
-    );
   });
 
   test('the app box and the settings box are two different containers', () async {

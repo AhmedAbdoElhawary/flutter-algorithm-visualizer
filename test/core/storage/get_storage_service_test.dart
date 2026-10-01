@@ -30,10 +30,7 @@ void main() {
   });
 
   tearDownAll(() async {
-    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger.setMockMethodCallHandler(
-      pathProviderChannel,
-      null,
-    );
+    // the fake path stays, getstorage still asks for it to write a backup after a save returns.
     await deleteStorageFolder(folder);
   });
 
