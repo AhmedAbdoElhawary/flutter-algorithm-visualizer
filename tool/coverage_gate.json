@@ -8,6 +8,7 @@
     "**/*.g.dart",
     "lib/main_*.dart",
     "lib/bootstrap.dart",
+    "lib/bootstrap_debug.dart",
     "lib/features/auth/data/data_sources/remote/auth_remote_data_source.dart",
     "lib/features/challenge/data/data_sources/remote/challenge_remote_data_source.dart",
     "lib/features/profile/data/data_sources/remote/profile_remote_data_source.dart"
