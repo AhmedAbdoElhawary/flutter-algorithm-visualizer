@@ -26,8 +26,13 @@ Future<void> typeInto(WidgetTester tester, String hint, String text) async {
   await pumpUntil(tester, fields);
   final field = fields.last;
   await tapOn(tester, field);
-  await tester.enterText(field, text);
-  await tester.pump();
+  // on a slow device the keyboard can still be tied to the last field, and the text is dropped.
+  for (var tries = 1; ; tries++) {
+    await tester.enterText(field, text);
+    await tester.pump(const Duration(milliseconds: 100));
+    if (tester.any(find.descendant(of: field, matching: find.text(text)))) return;
+    if (tries == 3) throw TestFailure('Typing "$text" into "$hint" never showed up');
+  }
 }
 
 /// The bottom bar tabs sit on every top-level page.
