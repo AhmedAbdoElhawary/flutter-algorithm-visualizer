@@ -240,6 +240,8 @@ class _StatusText extends ConsumerWidget {
     final label = ref.watch(instance.select((s) => s.progressLabel));
     final currentStep = ref.watch(instance.select((s) => s.currentStep));
     final list = ref.watch(instance.select((s) => s.list));
+    // statusText reads it; the run ends by setting only this flag.
+    ref.watch(instance.select((s) => s.isAllSorted));
     final inst = ref.read(instance.notifier);
 
     return AlgorithmStatusText(

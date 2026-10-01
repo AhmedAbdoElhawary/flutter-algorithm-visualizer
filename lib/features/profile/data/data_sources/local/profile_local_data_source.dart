@@ -27,8 +27,9 @@ class ProfileLocalDataSourceImpl implements ProfileLocalDataSource {
 
   @override
   String? getDisplayName() {
-    final name = storage.read<String>(guestDisplayNameKey);
-    if (name == null || name.trim().isEmpty) return null;
+    // Read as `Object`, so a corrupted value means no name instead of a cast error on launch.
+    final name = storage.read<Object>(guestDisplayNameKey);
+    if (name is! String || name.trim().isEmpty) return null;
     return name;
   }
 

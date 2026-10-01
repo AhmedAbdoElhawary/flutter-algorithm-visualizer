@@ -57,7 +57,7 @@ jobs:
       - uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2 # v2.23.0
         with:
           channel: stable
-          flutter-version: 3.44.7 # keep in sync with the team's local toolchain
+          flutter-version: 3.47.5 # keep in sync with the team's local toolchain
           cache: true
 
       - name: Setup Shorebird
@@ -91,15 +91,14 @@ jobs:
             python3 -c 'import json,os,sys; json.dump({"SENTRY_DSN": os.environ["SENTRY_DSN"]}, open(sys.argv[1],"w"))' "dart_define/${FLAVOR}.secret.json"
           fi
 
-      # `--flutter-version` must be the exact version deploy.yml built the
-      # release with. Shorebird refuses a patch whose Flutter does not match
-      # the release it is patching, and unpinned it would drift to the latest
-      # stable the moment one is published.
+      # `--release-version=latest` makes Shorebird build the patch with the
+      # exact Flutter the release was built with. Without it, Shorebird first
+      # builds with the latest stable just to find the release version.
       - name: Patch the most recent production release
         run: |
           shorebird patch android \
             --flavor "$FLAVOR" \
-            --flutter-version 3.44.7 \
+            --release-version=latest \
             -t "$TARGET" \
             --no-confirm \
             -- \

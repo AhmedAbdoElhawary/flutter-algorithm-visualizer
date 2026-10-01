@@ -19,6 +19,6 @@ final profileStatisticsProvider = Provider<ProfileStatistics>((ref) {
   return asyncProblems.when(
     data: calculator.computeStats,
     loading: ProfileStatistics.empty,
-    error: (_, __) => ProfileStatistics.empty(),
+    error: (_, _) => ProfileStatistics.empty(),
   );
 });

@@ -34,7 +34,11 @@ class AppSettingsNotifier extends Notifier<AppSettingsState> {
 
   // ---------------------------------------------------------------- language
 
-  LanguagesEnum _readLanguage() => (_storage.read<String>(languageKey) ?? 'en').language;
+  /// Read as `Object`, so a corrupted value falls back instead of a cast error on launch.
+  LanguagesEnum _readLanguage() {
+    final stored = _storage.read<Object>(languageKey);
+    return (stored is String ? stored : 'en').language;
+  }
 
   LanguagesEnum get languageSelected => state.language;
 
@@ -56,7 +60,7 @@ class AppSettingsNotifier extends Notifier<AppSettingsState> {
   /// install should look like the rest of the phone before it looks like
   /// anyone's preference.
   ThemeMode _readThemeMode() {
-    final stored = _storage.read<String>(themeModeKey);
+    final stored = _storage.read<Object>(themeModeKey);
     return ThemeMode.values.firstWhere(
       (mode) => mode.name == stored,
       orElse: () => ThemeMode.system,

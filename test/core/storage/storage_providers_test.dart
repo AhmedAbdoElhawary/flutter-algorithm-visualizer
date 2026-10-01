@@ -1,0 +1,65 @@
+import 'dart:io';
+
+import 'package:algorithm_visualizer/core/storage/get_storage_service.dart';
+import 'package:algorithm_visualizer/core/storage/storage_providers.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:get_storage/get_storage.dart';
+
+import '../../helpers/storage_folder.dart';
+
+void main() {
+  TestWidgetsFlutterBinding.ensureInitialized();
+
+  const pathProviderChannel = MethodChannel('plugins.flutter.io/path_provider');
+  late Directory folder;
+
+  setUpAll(() async {
+    // A fresh folder each run: erase only queues its write, so a fixed one kept the last run's boxes.
+    folder = Directory.systemTemp.createTempSync('storage_providers_test');
+    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger.setMockMethodCallHandler(
+      pathProviderChannel,
+      (call) async => folder.path,
+    );
+    await GetStorage.init();
+    await GetStorage.init(appSettingsContainer);
+  });
+
+  tearDownAll(() async {
+    await GetStorage().erase();
+    await GetStorage(appSettingsContainer).erase();
+    // the fake path stays, getstorage still asks for it to write a backup after a save returns.
+    await deleteStorageFolder(folder);
+  });
+
+  test('the app box and the settings box are two different containers', () async {
+    final container = ProviderContainer();
+    addTearDown(container.dispose);
+    final local = container.read(localStorageProvider);
+    final settings = container.read(appSettingsStorageProvider);
+
+    await local.write('theme', 'dark');
+
+    expect(local, isA<GetStorageService>());
+    expect(settings, isA<GetStorageService>());
+    expect(GetStorage().read<String>('theme'), 'dark');
+    expect(settings.has('theme'), isFalse);
+    expect(GetStorage(appSettingsContainer).hasData('theme'), isFalse);
+  });
+
+  test('clearing the app box leaves the settings alone', () async {
+    final container = ProviderContainer();
+    addTearDown(container.dispose);
+    final local = container.read(localStorageProvider);
+    final settings = container.read(appSettingsStorageProvider);
+
+    await settings.write('language', 'ar');
+    await local.write('problems', <Object>[]);
+    await local.clear();
+
+    expect(local.has('problems'), isFalse);
+    expect(settings.read<String>('language'), 'ar');
+    expect(GetStorage(appSettingsContainer).read<String>('language'), 'ar');
+  });
+}

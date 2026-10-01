@@ -24,6 +24,11 @@ const _kReverseOrthogonalDirs = [(0, -1), (1, 0), (0, 1), (-1, 0)];
 
 abstract class SearchingNotifier extends Notifier<SearchingState>
     implements AlgorithmDescriptionNotifier, AlgorithmControlInterface {
+  /// Tests pass a seeded one so [randomizeWalls] draws the same walls every run.
+  SearchingNotifier({math.Random? random}) : _random = random ?? math.Random();
+
+  final math.Random _random;
+
   Timer? _timer;
 
   bool _erasingGesture = false;
@@ -205,13 +210,12 @@ abstract class SearchingNotifier extends Notifier<SearchingState>
 
   void randomizeWalls() {
     _clearResultBeforeEdit();
-    final rng = math.Random();
     final walls = List.generate(
       kPFRows,
       (r) => List.generate(kPFCols, (c) {
         if (r == state.startRow && c == state.startCol) return false;
         if (r == state.endRow && c == state.endCol) return false;
-        return rng.nextDouble() < 0.30;
+        return _random.nextDouble() < 0.30;
       }),
     );
     state = state.copyWith(walls: walls);

@@ -19,10 +19,10 @@ class CustomIcon extends StatelessWidget {
   /// Set this for an icon that *points* — a chevron into a row, a back
   /// caret, a "next" arrow. In Arabic those all have to point the other way.
   ///
-  /// Material only auto-mirrors a handful of icons, and none of the rounded
-  /// variants this app uses, so the flip is done here with a transform. That
-  /// also means one flag covers every pointing icon instead of each call site
-  /// having to know the name of its own mirror image.
+  /// Material already mirrors some of them (the chevrons and arrows), but not
+  /// others (skip next / previous), so the flip is done here only for an icon
+  /// that does not mirror itself. That way one flag covers every pointing
+  /// icon, and none is flipped twice back to where it started.
   final bool flipsWithDirection;
 
   @override
@@ -38,7 +38,7 @@ class CustomIcon extends StatelessWidget {
       shadows: shadows,
     );
 
-    if (!flipsWithDirection || Directionality.of(context) == TextDirection.ltr) {
+    if (!flipsWithDirection || icon.matchTextDirection || Directionality.of(context) == TextDirection.ltr) {
       return glyph;
     }
     return Transform.flip(flipX: true, child: glyph);

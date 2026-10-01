@@ -38,7 +38,9 @@ final profileProvider = NotifierProvider.autoDispose<ProfileNotifier, AuthUser?>
 final currentUserProvider = Provider<AuthUser?>((ref) => ref.watch(profileProvider));
 
 final currentUserNameProvider = Provider<String>((ref) {
-  return ref.watch(profileProvider.select((state) => (state?.name ?? StringsManager.anonymous)));
+  final name = ref.watch(profileProvider.select((state) => state?.name?.trim()));
+  // An account made outside the app can come back from Firebase with a blank name.
+  return name == null || name.isEmpty ? StringsManager.anonymous : name;
 });
 
 /// Whether the app is backed by a real account rather than a local guest session.

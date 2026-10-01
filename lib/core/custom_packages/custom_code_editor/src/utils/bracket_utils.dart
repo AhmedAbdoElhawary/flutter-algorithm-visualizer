@@ -4,11 +4,13 @@ class BracketUtils {
   const BracketUtils._();
 
   /// Maps an opening character to its matching closing character.
+  ///
+  /// No `<`: in solutions it is almost always less-than, and pairing it left
+  /// a stray `>` after every comparison.
   static const Map<String, String> pairs = <String, String>{
     '(': ')',
     '[': ']',
     '{': '}',
-    '<': '>',
     '"': '"',
     "'": "'",
   };

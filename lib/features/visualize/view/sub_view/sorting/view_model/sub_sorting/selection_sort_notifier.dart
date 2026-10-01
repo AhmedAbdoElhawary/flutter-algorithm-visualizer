@@ -4,6 +4,8 @@ import 'package:algorithm_visualizer/features/visualize/view/sub_view/sorting/vi
 import 'package:collection/collection.dart';
 
 class SelectionSortNotifier extends SortingNotifier {
+  SelectionSortNotifier({super.random});
+
   @override
   Set<SortRole> get roles =>
       const {SortRole.sorted, SortRole.minimum, SortRole.compare, SortRole.target, SortRole.swap};

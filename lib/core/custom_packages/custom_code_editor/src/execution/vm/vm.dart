@@ -302,7 +302,7 @@ class Vm {
       case OpCode.add:
         _binaryAdd(frame);
       case OpCode.subtract:
-        _binaryArith(frame, (a, b) => a - b);
+        _binaryArith(frame, (a, b) => a - b, _subtractInts);
       case OpCode.multiply:
         _binaryMultiply(frame);
       case OpCode.divide:
@@ -324,6 +324,13 @@ class Vm {
         });
       case OpCode.power:
         _binaryPower(frame);
+      case OpCode.bitAnd || OpCode.bitOr || OpCode.bitXor:
+        _binaryBitwise(frame, op);
+      case OpCode.shiftLeft || OpCode.shiftRight || OpCode.unsignedShiftRight:
+        _binaryShift(frame, op);
+      case OpCode.bitNot:
+        final v = frame.stack.removeLast();
+        frame.stack.add(IntValue(dialect.singleNumberType ? ~_toInt32(v) : ~_requireInt(v)));
       case OpCode.negate:
         final v = frame.stack.removeLast();
         if (v is IntValue) {
@@ -450,7 +457,7 @@ class Vm {
       return;
     }
     if (a is IntValue && b is IntValue) {
-      frame.stack.add(IntValue(a.value + b.value));
+      frame.stack.add(IntValue(_addInts(a.value, b.value)));
       return;
     }
     if ((a is IntValue || a is NumValue) && (b is IntValue || b is NumValue)) {
@@ -484,17 +491,45 @@ class Vm {
         return;
       }
     }
-    _binaryArith(frame, (a, b) => a * b);
+    _binaryArith(frame, (a, b) => a * b, _multiplyInts);
   }
 
-  void _binaryArith(_Frame frame, double Function(double, double) op) {
+  void _binaryArith(_Frame frame, double Function(double, double) op, int Function(int, int) intOp) {
     final b = frame.stack.removeLast();
     final a = frame.stack.removeLast();
     if (a is IntValue && b is IntValue) {
-      frame.stack.add(IntValue(op(a.value.toDouble(), b.value.toDouble()).toInt()));
+      // JavaScript only has doubles, so past 2^53 it rounds just like the real thing.
+      frame.stack.add(IntValue(dialect.singleNumberType
+          ? op(a.value.toDouble(), b.value.toDouble()).toInt()
+          : intOp(a.value, b.value)));
       return;
     }
     frame.stack.add(NumValue(op(_asDouble(a), _asDouble(b))));
+  }
+
+  int _addInts(int a, int b) {
+    final r = a + b;
+    return _checkedInt(r, ((a ^ r) & (b ^ r)) < 0);
+  }
+
+  int _subtractInts(int a, int b) {
+    final r = a - b;
+    return _checkedInt(r, ((a ^ b) & (a ^ r)) < 0);
+  }
+
+  int _multiplyInts(int a, int b) {
+    final r = a * b;
+    return _checkedInt(r, a != 0 && (r ~/ a != b || (a == -1 && b == _minInt)));
+  }
+
+  static const int _minInt = -1 << 63;
+
+  /// Dart wraps at 64 bits like the real thing. Python's ints never wrap but
+  /// this engine's do, so a Python result that wrapped stops the run instead
+  /// of grading a wrong number.
+  int _checkedInt(int result, bool wrapped) {
+    if (wrapped && dialect.arbitraryPrecisionInts) throw const VmRuntimeError('integerTooLarge');
+    return result;
   }
 
   void _binaryIntArith(_Frame frame, int Function(int, int) op) {
@@ -518,10 +553,12 @@ class Vm {
       var result = 1;
       var base = a.value;
       var exp = b.value;
-      while (exp > 0) {
-        if (exp & 1 == 1) result *= base;
-        base *= base;
+      while (true) {
+        if (exp & 1 == 1) result = _multiplyInts(result, base);
         exp >>= 1;
+        // Stops before the last squaring, which the answer never uses and which could wrap.
+        if (exp == 0) break;
+        base = _multiplyInts(base, base);
       }
       frame.stack.add(IntValue(result));
       return;
@@ -535,6 +572,80 @@ class Vm {
     final bd = _asDouble(b);
     if (bd == 0) throw const VmRuntimeError('divisionByZero');
     frame.stack.add(NumValue(_asDouble(a) / bd));
+  }
+
+  void _binaryBitwise(_Frame frame, int op) {
+    final b = frame.stack.removeLast();
+    final a = frame.stack.removeLast();
+    if (a is SetValue && b is SetValue) {
+      final items = switch (op) {
+        OpCode.bitAnd => a.items.where(b.items.contains),
+        OpCode.bitOr => <Value>[...a.items, ...b.items],
+        _ => <Value>[...a.items.where((v) => !b.items.contains(v)), ...b.items.where((v) => !a.items.contains(v))],
+      };
+      frame.stack.add(SetValue(LinkedHashSet<Value>.of(items)));
+      return;
+    }
+    if (a is BoolValue && b is BoolValue && !dialect.singleNumberType) {
+      frame.stack.add(BoolValue(switch (op) {
+        OpCode.bitAnd => a.value & b.value,
+        OpCode.bitOr => a.value | b.value,
+        _ => a.value ^ b.value,
+      }));
+      return;
+    }
+    // JavaScript works on 32-bit ints; the others on the whole 64-bit value.
+    final x = dialect.singleNumberType ? _toInt32(a) : _requireInt(a);
+    final y = dialect.singleNumberType ? _toInt32(b) : _requireInt(b);
+    final result = switch (op) {
+      OpCode.bitAnd => x & y,
+      OpCode.bitOr => x | y,
+      _ => x ^ y,
+    };
+    frame.stack.add(IntValue(dialect.singleNumberType ? result.toSigned(32) : result));
+  }
+
+  void _binaryShift(_Frame frame, int op) {
+    final b = frame.stack.removeLast();
+    final a = frame.stack.removeLast();
+    if (dialect.singleNumberType) {
+      // JavaScript only looks at the low five bits of the count.
+      final count = _toInt32(b) & 31;
+      final value = _toInt32(a);
+      frame.stack.add(IntValue(switch (op) {
+        OpCode.shiftLeft => (value << count).toSigned(32),
+        OpCode.shiftRight => value >> count,
+        _ => value.toUnsigned(32) >> count,
+      }));
+      return;
+    }
+    final value = _requireInt(a);
+    final count = _requireInt(b);
+    if (count < 0) {
+      throw VmRuntimeError(
+          'typeMismatch', <String, Object?>{'expected': 'a shift count of 0 or more', 'actual': count});
+    }
+    if (op == OpCode.shiftRight) {
+      frame.stack.add(IntValue(value >> count));
+      return;
+    }
+    final shifted = count >= 64 ? 0 : value << count;
+    frame.stack.add(IntValue(_checkedInt(shifted, value != 0 && (count >= 64 || shifted >> count != value))));
+  }
+
+  int _requireInt(Value v) {
+    if (v is IntValue) return v.value;
+    throw const VmRuntimeError('typeMismatch', <String, Object?>{'expected': 'an integer'});
+  }
+
+  /// JavaScript's ToInt32: whole part, wrapped into a signed 32-bit int.
+  int _toInt32(Value v) {
+    if (v is IntValue) return v.value.toSigned(32);
+    if (v is BoolValue) return v.value ? 1 : 0;
+    if (v is NumValue && v.value.isFinite) {
+      return (v.value.truncateToDouble() % 4294967296).toInt().toSigned(32);
+    }
+    return 0;
   }
 
   double _asDouble(Value v) {

@@ -80,7 +80,8 @@ class ChangePasswordNotifier extends Notifier<ChangePasswordState> {
   /// Returns whether the password really changed, so the caller knows whether
   /// to close the dialog.
   Future<bool> changePassword() async {
-    if (!validate()) return false;
+    // A second tap lands before the rebuild that disables the button.
+    if (state.isLoading || !validate()) return false;
 
     state = state.copyWith(status: NotifierStatus.loading, clearErrorMessage: true);
 

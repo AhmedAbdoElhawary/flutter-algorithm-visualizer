@@ -183,12 +183,21 @@ class ProblemLocalDataSource {
     await _saveProblems(problems);
   }
 
+  /// A broken entry is skipped, so one bad save can't hide every other problem's progress.
   List<ProblemStorageDTO> getProblems() {
-    final data = _storage.read<List<dynamic>>(_problemsKey);
+    final data = _storage.read<Object>(_problemsKey);
+    if (data is! List) return [];
 
-    if (data == null) return [];
+    return data.map(_parseProblem).whereType<ProblemStorageDTO>().toList();
+  }
 
-    return data.map((json) => ProblemStorageDTO.fromJson(Map<String, dynamic>.from(json as Map))).toList();
+  ProblemStorageDTO? _parseProblem(Object? json) {
+    if (json is! Map) return null;
+    try {
+      return ProblemStorageDTO.fromJson(Map<String, dynamic>.from(json));
+    } catch (_) {
+      return null;
+    }
   }
 
   ProblemStorageDTO? getProblem(int problemId) {

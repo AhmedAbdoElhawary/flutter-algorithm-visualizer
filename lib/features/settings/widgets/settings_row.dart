@@ -26,6 +26,8 @@ class SettingsRow extends StatelessWidget {
     this.translateLabels = true,
   });
 
+  static const chevronKey = Key('settings-row-chevron');
+
   final IconData icon;
   final String title;
   final String? subtitle;
@@ -75,7 +77,7 @@ class SettingsRow extends StatelessWidget {
             ),
             if (trailing != null) trailing!,
             if (trailing == null && showChevron)
-              const CustomIcon(Icons.chevron_right_rounded, size: 18, color: ThemeEnum.track),
+              const CustomIcon(Icons.chevron_right_rounded, key: chevronKey, size: 18, color: ThemeEnum.track),
           ],
         ),
       ),

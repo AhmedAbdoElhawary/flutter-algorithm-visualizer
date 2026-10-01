@@ -1,3 +1,4 @@
+import 'package:algorithm_visualizer/bootstrap_debug.dart';
 import 'package:algorithm_visualizer/core/flavor/flavor_config.dart';
 import 'package:algorithm_visualizer/core/helpers/app_info.dart';
 import 'package:algorithm_visualizer/core/logging/firebase_log_config.dart';
@@ -22,6 +23,13 @@ Future<void> bootstrap(FlavorConfig config) {
 }
 
 Future<void> _boot(FlavorConfig config) async {
+  await prepareApp(config);
+  runApp(const ProviderScope(child: SplashGate()));
+}
+
+/// Everything [bootstrap] does before `runApp`, public so integration tests start the app the same way.
+/// Returns whether Firebase came up.
+Future<bool> prepareApp(FlavorConfig config) async {
   WidgetsFlutterBinding.ensureInitialized();
 
   /// TODO: change it after MVP
@@ -30,12 +38,15 @@ Future<void> _boot(FlavorConfig config) async {
     DeviceOrientation.portraitDown,
   ]);
 
+  startLeakTracking();
+
   FlavorConfig.initialize(config);
   Monitoring.installErrorHandlers();
 
   /// Before `runApp`, so Settings never renders the empty default.
   await AppInfo.load();
 
+  final useEmulator = useEmulatorFor(config);
   bool firebaseReady = false;
   try {
     await Future.wait([
@@ -44,17 +55,22 @@ Future<void> _boot(FlavorConfig config) async {
       Firebase.initializeApp(),
     ]);
     firebaseReady = true;
-    await _activateAppCheck();
+    if (useEmulator) {
+      await connectToEmulator();
+    } else {
+      await _activateAppCheck();
+    }
   } catch (error, stackTrace) {
     FirebaseLogger.failure('core', 'initializeApp', error);
     await CrashReporter.instance.recordError(error, stackTrace, context: {'phase': 'Firebase.initializeApp'});
   }
 
-  await Monitoring.activate(config: config, firebaseReady: firebaseReady);
+  /// No Analytics against the emulator, so test runs never reach the real dashboard.
+  await Monitoring.activate(config: config, firebaseReady: firebaseReady && !useEmulator);
 
   await FirebaseLogConfig.apply();
 
-  runApp(const ProviderScope(child: SplashGate()));
+  return firebaseReady;
 }
 
 Future<void> _activateAppCheck() async {

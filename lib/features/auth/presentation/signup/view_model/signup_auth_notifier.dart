@@ -6,6 +6,7 @@ import 'package:algorithm_visualizer/features/auth/presentation/common/extension
 import 'package:algorithm_visualizer/features/auth/presentation/common/view_model/auth_providers.dart';
 import 'package:algorithm_visualizer/features/auth/presentation/signup/view_model/signup_auth_state.dart';
 import 'package:algorithm_visualizer/features/challenge/presentation/view_model/challenges/problems_providers.dart';
+import 'package:algorithm_visualizer/features/profile/presentation/view_model/profile_notifier.dart';
 import 'package:algorithm_visualizer/features/profile/presentation/view_model/user_provider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -69,6 +70,8 @@ class AuthSignUpNotifier extends Notifier<AuthSignUpState> {
       nameError = StringsManager.nameRequired;
     } else if (state.name.trim().length < 2) {
       nameError = StringsManager.nameMinLength;
+    } else if (state.name.trim().length > ProfileNotifier.maxDisplayNameLength) {
+      nameError = StringsManager.nameMaxLength;
     } else if (_looksLikePlaceholderName(state.name)) {
       nameError = StringsManager.notValidName;
     }
@@ -106,7 +109,8 @@ class AuthSignUpNotifier extends Notifier<AuthSignUpState> {
   }
 
   Future<bool> register() async {
-    if (!validateSignUp()) return false;
+    // A second tap lands before the rebuild that disables the button.
+    if (state.isLoading || !validateSignUp()) return false;
 
     state = state.copyWith(
       status: NotifierStatus.loading,

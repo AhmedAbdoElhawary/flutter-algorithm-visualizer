@@ -17,6 +17,8 @@ String testValueToSource(TestValue value) {
       return "'${value.replaceAll("'", r"\'")}'";
     case ListTestValue(:final items):
       return '[${items.map(testValueToSource).join(', ')}]';
+    case MapTestValue(:final entries):
+      return '{${entries.map((e) => '${testValueToSource(e.key)}: ${testValueToSource(e.value)}').join(', ')}}';
   }
 }
 

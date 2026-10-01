@@ -1,6 +1,5 @@
 import 'package:algorithm_visualizer/core/custom_packages/custom_code_editor/code_editor.dart'
     show EditorLanguage, EditorLanguageX, supportedLanguages;
-import 'package:algorithm_visualizer/core/extensions/string.dart';
 import 'package:algorithm_visualizer/features/challenge/data/models/custom_object.dart';
 import 'package:algorithm_visualizer/features/challenge/data/models/example.dart';
 import 'package:algorithm_visualizer/features/challenge/data/models/function_signature.dart';
@@ -172,7 +171,7 @@ class CodingProblem {
           category == other.category &&
           problemStatus?.name == other.problemStatus?.name &&
           isBookmarked == other.isBookmarked &&
-          solutionsStatus == other.solutionsStatus;
+          const ListEquality<ProblemSolutionStatusDTO>().equals(solutionsStatus, other.solutionsStatus);
 
   @override
   int get hashCode => Object.hash(
@@ -185,7 +184,7 @@ class CodingProblem {
         category,
         problemStatus?.name,
         isBookmarked,
-        solutionsStatus.hashCode,
+        Object.hashAll(solutionsStatus ?? const []),
       );
 }
 
@@ -193,8 +192,6 @@ extension CodingProblemX on CodingProblem {
   int get getNumber => number ?? -1;
   int get getProblemId => problemId ?? -1;
   String get getName => name ?? '';
-
-  String get getNameWithLanguageName => getName.getNameWithLanguageName;
 
   String get getSource => source ?? '';
   int get getSourceProblemNumber => sourceProblemNumber ?? -1;

@@ -6,7 +6,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 version: 1.0.4+1
 
 environment:
-  sdk: '>=3.5.0 <4.0.0'
+  sdk: '>=3.13.0 <4.0.0'
 
 dependencies:
   flutter:
@@ -35,6 +35,7 @@ dependencies:
   # Already present transitively via sentry_flutter; declared directly so
   # AppInfo can read the version the build was actually stamped with.
   package_info_plus: ^9.0.1
+  leak_tracker: ^11.0.2
 
 dev_dependencies:
   flutter_test:
@@ -51,6 +52,7 @@ dev_dependencies:
     sdk: flutter
   url_launcher_platform_interface: ^2.3.2
   plugin_platform_interface: ^2.1.8
+  leak_tracker_flutter_testing: ^3.0.10
 
 flutter:
   uses-material-design: true

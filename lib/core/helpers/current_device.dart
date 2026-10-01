@@ -5,9 +5,4 @@ extension CurrentDevice on BuildContext {
     final ThemeData theme = Theme.of(this);
     return theme.platform == TargetPlatform.android;
   }
-
-  bool get isIOS {
-    final ThemeData theme = Theme.of(this);
-    return theme.platform == TargetPlatform.iOS;
-  }
 }

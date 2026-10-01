@@ -22,12 +22,10 @@ import 'package:algorithm_visualizer/features/challenge/data/data_sources/remote
 ///    the next launch starts as a guest regardless.
 class AccountDeletionService {
   AccountDeletionService({
-    required AuthRepository authRepository,
-    required ProblemRemoteDataSource problemRemoteDataSource,
-    required GuestDataService guestDataService,
-  })  : _authRepository = authRepository,
-        _problemRemoteDataSource = problemRemoteDataSource,
-        _guestDataService = guestDataService;
+    required this._authRepository,
+    required this._problemRemoteDataSource,
+    required this._guestDataService,
+  });
 
   final AuthRepository _authRepository;
   final ProblemRemoteDataSource _problemRemoteDataSource;

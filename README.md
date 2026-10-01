@@ -15,7 +15,7 @@ server, no internet.
 
 [![CI](https://github.com/AhmedAbdoElhawary/flutter-algorithm-visualizer/actions/workflows/ci.yml/badge.svg)](https://github.com/AhmedAbdoElhawary/flutter-algorithm-visualizer/actions/workflows/ci.yml)
 [![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](LICENSE)
-[![Flutter](https://img.shields.io/badge/Flutter-3.44.7-02569B?logo=flutter&logoColor=white)](https://flutter.dev)
+[![Flutter](https://img.shields.io/badge/Flutter-3.47.5-02569B?logo=flutter&logoColor=white)](https://flutter.dev)
 [![Dart](https://img.shields.io/badge/Dart-3.5%2B-0175C2?logo=dart&logoColor=white)](https://dart.dev)
 [![Platform](https://img.shields.io/badge/platform-Android%20%7C%20iOS-lightgrey)](#platform-support)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)

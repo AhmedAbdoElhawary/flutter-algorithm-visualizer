@@ -289,25 +289,31 @@ class _HeatLegend extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      children: [
-        const MonoText(StringsManager.onboardingHeatLess),
-        SizedBox(width: 10.w),
-        for (final level in _levels)
-          EndPadding(
-            padding: 4,
-            child: Container(
-              width: 10.r,
-              height: 10.r,
-              decoration: BoxDecoration(
-                color: context.getColor(ThemeEnum.dataEasy).withValues(alpha: level),
-                borderRadius: BorderRadius.circular(2.r),
+    return FittedBox(
+      // Shrinks as one piece instead of overflowing under large system text.
+      fit: BoxFit.scaleDown,
+      alignment: AlignmentDirectional.centerStart,
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          const MonoText(StringsManager.onboardingHeatLess),
+          SizedBox(width: 10.w),
+          for (final level in _levels)
+            EndPadding(
+              padding: 4,
+              child: Container(
+                width: 10.r,
+                height: 10.r,
+                decoration: BoxDecoration(
+                  color: context.getColor(ThemeEnum.dataEasy).withValues(alpha: level),
+                  borderRadius: BorderRadius.circular(2.r),
+                ),
               ),
             ),
-          ),
-        SizedBox(width: 6.w),
-        const MonoText(StringsManager.onboardingHeatMore),
-      ],
+          SizedBox(width: 6.w),
+          const MonoText(StringsManager.onboardingHeatMore),
+        ],
+      ),
     );
   }
 }

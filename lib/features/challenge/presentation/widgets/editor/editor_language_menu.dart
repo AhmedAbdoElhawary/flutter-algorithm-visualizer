@@ -50,7 +50,9 @@ class _EditorLanguageMenuState extends ConsumerState<EditorLanguageMenu> {
 
   @override
   void dispose() {
-    _entry?.remove();
+    _entry
+      ?..remove()
+      ..dispose();
     _entry = null;
     super.dispose();
   }
@@ -91,7 +93,9 @@ class _EditorLanguageMenuState extends ConsumerState<EditorLanguageMenu> {
   }
 
   void _close() {
-    _entry?.remove();
+    _entry
+      ?..remove()
+      ..dispose();
     _entry = null;
     if (mounted) setState(() => _open = false);
   }
@@ -215,7 +219,7 @@ class _LanguageMenuOverlayState extends State<_LanguageMenuOverlay> with SingleT
     vsync: this,
     duration: const Duration(milliseconds: 170),
   );
-  late final Animation<double> _curve = CurvedAnimation(parent: _controller, curve: Curves.easeOutCubic);
+  late final CurvedAnimation _curve = CurvedAnimation(parent: _controller, curve: Curves.easeOutCubic);
 
   @override
   void initState() {
@@ -225,6 +229,7 @@ class _LanguageMenuOverlayState extends State<_LanguageMenuOverlay> with SingleT
 
   @override
   void dispose() {
+    _curve.dispose();
     _controller.dispose();
     super.dispose();
   }

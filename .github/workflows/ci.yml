@@ -144,7 +144,7 @@ jobs:
         uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2 # v2.23.0
         with:
           channel: stable
-          flutter-version: 3.44.7 # keep in sync with the team's local toolchain
+          flutter-version: 3.47.5 # keep in sync with the team's local toolchain
           cache: true
 
       - name: Get dependencies
@@ -162,8 +162,15 @@ jobs:
       - name: Analyze
         run: flutter analyze
 
+      - name: Prepare coverage
+        run: dart run tool/coverage_gate.dart prepare
+
+      # Random order catches tests that quietly depend on each other. The seed is printed, so a failure can be replayed.
       - name: Run tests
-        run: flutter test --dart-define-from-file=dart_define/dev.json
+        run: flutter test --coverage --test-randomize-ordering-seed=random --dart-define-from-file=dart_define/dev.json
+
+      - name: Coverage gate
+        run: dart run tool/coverage_gate.dart check
 
   # One Android build per PR, for the flavor that the PR's target branch ships:
   #   PR -> develop     builds flavor dev
@@ -186,7 +193,7 @@ jobs:
         uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2 # v2.23.0
         with:
           channel: stable
-          flutter-version: 3.44.7 # keep in sync with the team's local toolchain
+          flutter-version: 3.47.5 # keep in sync with the team's local toolchain
           cache: true
 
       - name: Resolve flavor from target branch
@@ -239,7 +246,7 @@ jobs:
         uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2 # v2.23.0
         with:
           channel: stable
-          flutter-version: 3.44.7 # keep in sync with the team's local toolchain
+          flutter-version: 3.47.5 # keep in sync with the team's local toolchain
           cache: true
 
       - name: Get dependencies
@@ -261,20 +268,28 @@ jobs:
           -t lib/main_prod.dart
           --dart-define-from-file=dart_define/prod.json
 
+  # The on-device journeys take far longer than the rest, so they run only on PRs into staging and
+  # production. On develop PRs this is skipped, and ci-ok counts that as a pass.
+  integration:
+    name: Integration
+    needs: quality
+    if: github.base_ref != 'develop'
+    uses: ./.github/workflows/integration.yml
+
   # The one required status check on develop, staging and production. Every job
   # above must succeed for this to pass, so adding a job later automatically
   # tightens the gate without touching the ruleset.
   ci-ok:
     name: ci-ok
     if: always()
-    needs: [merge-guard, release-commit-guard, quality, build-android, build-ios]
+    needs: [merge-guard, release-commit-guard, quality, build-android, build-ios, integration]
     runs-on: ubuntu-latest
     steps:
       - name: Fail unless every check passed
         run: |
           results='${{ toJSON(needs) }}'
           echo "$results"
-          failed="$(printf '%s' "$results" | jq -r 'to_entries | map(select(.value.result != "success") | .key) | join(" ")')"
+          failed="$(printf '%s' "$results" | jq -r 'to_entries | map(select(.value.result != "success" and (.key != "integration" or .value.result != "skipped")) | .key) | join(" ")')"
           if [ -n "$failed" ]; then
             echo "::error::these checks did not pass: $failed"
             exit 1

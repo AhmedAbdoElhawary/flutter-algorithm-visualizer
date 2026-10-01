@@ -5,11 +5,13 @@ import 'package:algorithm_visualizer/core/custom_packages/custom_code_editor/cod
         ExecutionFailureInfo,
         OutputComparison,
         ProblemData,
+        ProblemRunResult,
         ProblemRunner,
         ProblemTestCase;
 import 'package:algorithm_visualizer/features/challenge/data/models/custom_object.dart';
 import 'package:algorithm_visualizer/features/challenge/data/models/test_case.dart';
 import 'package:algorithm_visualizer/features/challenge/domain/entities/coding_problem.dart';
+import 'package:flutter/foundation.dart';
 
 /// Aggregate result of grading user code against every test case
 /// (visible `test_cases` + `hidden_test_cases`).
@@ -69,6 +71,11 @@ class CodeGradeResult {
 class GradeCodeUseCase {
   const GradeCodeUseCase();
 
+  /// Tests grade inline, since a background isolate's reply never arrives on
+  /// a test's fake clock.
+  @visibleForTesting
+  static bool debugGradeInline = false;
+
   /// Grades [userCode] against [problem]'s test cases (visible + hidden) and
   /// returns a detailed [CodeGradeResult].
   CodeGradeResult grade({
@@ -76,13 +83,36 @@ class GradeCodeUseCase {
     required String userCode,
     EditorLanguage language = EditorLanguage.dart,
   }) {
-    final allCases = <TestCase>[...problem.getTestCases, ...problem.getHiddenTestCases];
-    if (allCases.isEmpty) {
-      return CodeGradeResult(
-          allTestCaseResults: <TestCaseResult>[], totalCount: 0, code: userCode, language: language);
-    }
+    final problemData = _problemData(problem, language);
+    if (problemData == null) return _empty(userCode, language);
+    return _gradeResult(const ProblemRunner().runAll(problem: problemData, userCode: userCode), userCode, language);
+  }
 
-    final problemData = ProblemData(
+  /// [grade] with the run itself in a background isolate, so code that never
+  /// ends can't freeze the app while it waits for its time limit.
+  Future<CodeGradeResult> gradeInBackground({
+    required CodingProblem problem,
+    required String userCode,
+    EditorLanguage language = EditorLanguage.dart,
+  }) {
+    // Not `async`: that would wrap this in a Future that completes later.
+    if (debugGradeInline) {
+      return SynchronousFuture(grade(problem: problem, userCode: userCode, language: language));
+    }
+    final problemData = _problemData(problem, language);
+    if (problemData == null) return Future.value(_empty(userCode, language));
+    return compute(_runAll, (problemData, userCode)).then((result) => _gradeResult(result, userCode, language));
+  }
+
+  CodeGradeResult _empty(String userCode, EditorLanguage language) =>
+      CodeGradeResult(allTestCaseResults: <TestCaseResult>[], totalCount: 0, code: userCode, language: language);
+
+  /// Null when the problem has no test cases to grade against.
+  ProblemData? _problemData(CodingProblem problem, EditorLanguage language) {
+    final allCases = <TestCase>[...problem.getTestCases, ...problem.getHiddenTestCases];
+    if (allCases.isEmpty) return null;
+
+    return ProblemData(
       functionSignature: problem.functionSignature?.dart ?? '',
       testCases: allCases
           .map((t) => ProblemTestCase(
@@ -95,9 +125,9 @@ class GradeCodeUseCase {
       comparison: OutputComparison.fromKey(problem.comparison),
       language: language,
     );
+  }
 
-    final result = const ProblemRunner().runAll(problem: problemData, userCode: userCode);
-
+  CodeGradeResult _gradeResult(ProblemRunResult result, String userCode, EditorLanguage language) {
     return CodeGradeResult(
       code: userCode,
       language: language,
@@ -139,3 +169,5 @@ class GradeCodeUseCase {
     return RegExp(r'class\s+(\w+)').firstMatch(source.trim())?.group(1);
   }
 }
+
+ProblemRunResult _runAll((ProblemData, String) job) => const ProblemRunner().runAll(problem: job.$1, userCode: job.$2);

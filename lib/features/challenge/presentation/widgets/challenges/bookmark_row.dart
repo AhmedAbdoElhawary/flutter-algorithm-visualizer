@@ -3,8 +3,8 @@ import 'package:algorithm_visualizer/core/widgets/custom_widgets/custom_icon.dar
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/secondary_problem_card.dart';
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/tag_chip.dart';
 import 'package:algorithm_visualizer/features/challenge/domain/entities/coding_problem.dart';
-import 'package:algorithm_visualizer/features/challenge/presentation/view_model/challenges/challenges_providers.dart'
-    show challengesProvider;
+import 'package:algorithm_visualizer/features/challenge/presentation/view_model/challenges/problems_providers.dart'
+    show problemsProvider;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -17,7 +17,7 @@ class BookmarkRow extends ConsumerWidget {
   final CodingProblem problem;
   final VoidCallback onTap;
 
-  void _unbookmark(WidgetRef ref) => ref.read(challengesProvider.notifier).toggleBookmark(problem);
+  void _unbookmark(WidgetRef ref) => ref.read(problemsProvider.notifier).toggleBookmark(problem);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

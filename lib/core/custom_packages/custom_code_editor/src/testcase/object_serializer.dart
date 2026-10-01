@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import '../execution/legacy/object_instance.dart';
 import 'custom_object_shape.dart';
 
@@ -21,6 +23,8 @@ String canonicalString(dynamic value, {CustomObjectShape? shape}) {
     final parts = value.entries.map((e) => '${canonicalString(e.key)}:${canonicalString(e.value)}').join(',');
     return '{$parts}';
   }
+  // Quoted, so the text "1" never passes for the number 1.
+  if (value is String) return jsonEncode(value);
   return '$value';
 }
 

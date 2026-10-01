@@ -135,7 +135,7 @@ jobs:
       - uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2 # v2.23.0
         with:
           channel: stable
-          flutter-version: 3.44.7 # keep in sync with the team's local toolchain
+          flutter-version: 3.47.5 # keep in sync with the team's local toolchain
           cache: true
 
       - run: flutter pub get
@@ -172,7 +172,7 @@ jobs:
       - uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2 # v2.23.0
         with:
           channel: stable
-          flutter-version: 3.44.7 # keep in sync with the team's local toolchain
+          flutter-version: 3.47.5 # keep in sync with the team's local toolchain
           cache: true
 
       # Shorebird is production-only: dev and staging ship often enough that a
@@ -261,16 +261,15 @@ jobs:
       # `--flutter-version` is pinned because `shorebird release` ignores the
       # Flutter that setup-flutter just installed and uses its own, which
       # defaults to the latest stable. Left unpinned, production would ship on
-      # a Flutter the verify job never tested, and every later `shorebird
-      # patch` would have to match this exact version or be refused — so the
-      # pin has to equal the flutter-version above and the one in patch.yml.
+      # a Flutter the verify job never tested — so the pin has to equal the
+      # flutter-version above.
       - name: Build release bundle (Shorebird — production)
         if: needs.resolve.outputs.is_production == 'true'
         run: |
           shorebird release android \
             --artifact aab \
             --flavor "$FLAVOR" \
-            --flutter-version 3.44.7 \
+            --flutter-version 3.47.5 \
             -t "$TARGET" \
             --build-name "$VERSION" \
             --build-number "${{ github.run_number }}" \

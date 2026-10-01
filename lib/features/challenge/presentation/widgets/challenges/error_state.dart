@@ -9,17 +9,20 @@ class ChallengesErrorState extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Scrolls when large text leaves it less room than it needs under the header.
     return const Center(
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          RegularText('ⓘ', fontSize: 40, color: ThemeEnum.dataHard),
-          RSizedBox(height: 12),
-          SemiBoldText(StringsManager.notAbleToLoadAnyChallenge,
-              color: ThemeEnum.inkSecondaryTitle, fontSize: 15),
-          RSizedBox(height: 4),
-          RegularText(StringsManager.tryInDifferentTime, color: ThemeEnum.track, fontSize: 13),
-        ],
+      child: SingleChildScrollView(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            RegularText('ⓘ', fontSize: 40, color: ThemeEnum.dataHard),
+            RSizedBox(height: 12),
+            SemiBoldText(StringsManager.notAbleToLoadAnyChallenge,
+                color: ThemeEnum.inkSecondaryTitle, fontSize: 15),
+            RSizedBox(height: 4),
+            RegularText(StringsManager.tryInDifferentTime, color: ThemeEnum.track, fontSize: 13),
+          ],
+        ),
       ),
     );
   }

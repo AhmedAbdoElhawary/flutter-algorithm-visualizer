@@ -64,7 +64,8 @@ class ChangeEmailNotifier extends Notifier<ChangeEmailState> {
   /// Requests the change. Returns whether the confirmation link was sent — not
   /// whether the email changed, which only happens once the user opens it.
   Future<bool> requestEmailChange() async {
-    if (!validate()) return false;
+    // A second tap lands before the rebuild that disables the button.
+    if (state.isLoading || !validate()) return false;
 
     state = state.copyWith(status: NotifierStatus.loading, clearErrorMessage: true);
 

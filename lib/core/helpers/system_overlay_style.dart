@@ -37,22 +37,3 @@ class SystemOverlay extends StatelessWidget {
         systemNavigationBarIconBrightness: Brightness.dark);
   }
 }
-
-class TransparentSystemOverlay extends StatelessWidget {
-  const TransparentSystemOverlay({required this.child, super.key});
-  final Widget child;
-  @override
-  Widget build(BuildContext context) {
-    return AnnotatedRegion<SystemUiOverlayStyle>(
-      value: transparentTheme(),
-      child: child,
-    );
-  }
-
-  SystemUiOverlayStyle transparentTheme() {
-    return const SystemUiOverlayStyle(
-        statusBarColor: Colors.transparent,
-        systemNavigationBarColor: Colors.transparent,
-        systemNavigationBarDividerColor: ColorManager.transparent);
-  }
-}

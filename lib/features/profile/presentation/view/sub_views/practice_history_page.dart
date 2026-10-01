@@ -25,7 +25,7 @@ class RecentSubmissionsPage extends ConsumerWidget {
             child: const Row(
               children: [
                 CustomBackButton(),
-                BoldText(StringsManager.practiceHistory, color: ThemeEnum.inkTitle, fontSize: 17),
+                Expanded(child: BoldText(StringsManager.practiceHistory, color: ThemeEnum.inkTitle, fontSize: 17)),
               ],
             ),
           ),
@@ -37,7 +37,7 @@ class RecentSubmissionsPage extends ConsumerWidget {
                 : ListView.separated(
                     padding: REdgeInsets.fromLTRB(16, 0, 16, 16),
                     itemCount: all.length + 1,
-                    separatorBuilder: (_, __) => const RSizedBox(height: 10),
+                    separatorBuilder: (_, _) => const RSizedBox(height: 10),
                     itemBuilder: (context, i) {
                       if (i == all.length) {
                         return const EmptyStateQuiet(

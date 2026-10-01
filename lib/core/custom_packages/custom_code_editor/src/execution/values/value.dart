@@ -361,10 +361,17 @@ class NamespaceValue extends Value {
 /// Truthiness per [Dialect.truthiness] (FR consulted by the shared runtime,
 /// never special-cased inline in a frontend — O5).
 bool isTruthy(Value v, Dialect dialect) => switch (dialect.truthiness) {
-      TruthinessMode.boolOnly => v is BoolValue && v.value,
+      TruthinessMode.boolOnly => _boolOnly(v, dialect),
       TruthinessMode.pythonic => _pythonicTruthy(v),
       TruthinessMode.jsLike => _jsTruthy(v),
     };
+
+// Dart refuses `if (0)`, so treating it as false would pass code that can't compile.
+bool _boolOnly(Value v, Dialect dialect) {
+  if (v is BoolValue) return v.value;
+  throw VmRuntimeError(
+      'typeMismatch', <String, Object?>{'expected': 'a bool', 'actual': _displayString(v, dialect)});
+}
 
 bool _pythonicTruthy(Value v) {
   if (v is BoolValue) return v.value;

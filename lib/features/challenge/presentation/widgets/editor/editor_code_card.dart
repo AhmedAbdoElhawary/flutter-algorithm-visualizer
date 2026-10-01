@@ -157,7 +157,6 @@ class _CodeAreaState extends State<_CodeArea> {
       // `CodeEditorTheme.dark()` only suggested the editor is dark-only, which
       // it is not.
       tokenizer: _tokenizerFor(widget.language),
-      runner: const DartInterpreterRunner(),
       config: CodeEditorConfig(tabSize: _tabSizeFor(widget.language), showLineNumbers: true),
     )..addListener(_onTextChanged);
     widget.onControllerAttached(_controller);

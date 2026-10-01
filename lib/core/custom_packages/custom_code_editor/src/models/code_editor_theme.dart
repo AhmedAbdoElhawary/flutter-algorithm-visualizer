@@ -163,6 +163,11 @@ class CodeEditorTheme {
     Color? errorColor,
     EdgeInsets? gutterPadding,
     EdgeInsets? editorPadding,
+    double? caretWidth,
+    double? caretHeight,
+    BorderRadiusDirectional? borderRadius,
+    Border? border,
+    bool? borderBetweenNumbersAndEditor,
   }) {
     return CodeEditorTheme(
       background: background ?? this.background,
@@ -176,6 +181,11 @@ class CodeEditorTheme {
       errorColor: errorColor ?? this.errorColor,
       gutterPadding: gutterPadding ?? this.gutterPadding,
       editorPadding: editorPadding ?? this.editorPadding,
+      caretWidth: caretWidth ?? this.caretWidth,
+      caretHeight: caretHeight ?? this.caretHeight,
+      borderRadius: borderRadius ?? this.borderRadius,
+      border: border ?? this.border,
+      borderBetweenNumbersAndEditor: borderBetweenNumbersAndEditor ?? this.borderBetweenNumbersAndEditor,
     );
   }
 }

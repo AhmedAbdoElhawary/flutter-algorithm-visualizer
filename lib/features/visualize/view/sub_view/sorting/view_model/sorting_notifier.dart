@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:algorithm_visualizer/core/localization/app_localizations.dart';
 import 'package:algorithm_visualizer/core/resources/strings_manager.dart';
 import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
@@ -26,11 +28,17 @@ class _SortSnapshot {
 
 abstract class SortingNotifier extends Notifier<SortingNotifierState>
     implements AlgorithmDescriptionNotifier, AlgorithmControlInterface {
+  /// Tests pass a seeded one so the shuffled start list is the same every run.
+  SortingNotifier({math.Random? random}) : _random = random ?? math.Random();
+
+  final math.Random _random;
+
   @visibleForTesting
   static List<SortableItem>? debugInitialListOverride;
 
-  static SortingNotifierState initState({List<SortableItem>? initialList}) {
-    final list = initialList ?? debugInitialListOverride ?? _generateList(_defaultSize);
+  static SortingNotifierState initState({List<SortableItem>? initialList, math.Random? random}) {
+    final list =
+        initialList ?? debugInitialListOverride ?? _generateList(_defaultSize, random ?? math.Random());
     final positions = _computeInitialPositions(list, _defaultSize);
     return SortingNotifierState(
         list: list, positions: positions, rolePerIndex: List.filled(list.length, SortRole.idle));
@@ -47,7 +55,7 @@ abstract class SortingNotifier extends Notifier<SortingNotifierState>
     _disposed = false;
     ref.onDispose(() => _disposed = true);
 
-    return initState();
+    return initState(random: _random);
   }
 
   bool _disposed = false;
@@ -98,12 +106,12 @@ abstract class SortingNotifier extends Notifier<SortingNotifierState>
   @override
   bool get isPlaying => state.isPlaying;
   @override
-  bool get backwardValidation => state.isAtFirstStep;
+  bool get backwardValidation => !state.isAtFirstStep;
   @override
-  bool get forwardValidation => state.isAtLastStep;
+  bool get forwardValidation => !state.isAtLastStep;
 
-  static List<SortableItem> _generateList(int size) {
-    return List.generate(size, (index) => SortableItem(id: index, value: index + 1))..shuffle();
+  static List<SortableItem> _generateList(int size, math.Random random) {
+    return List.generate(size, (index) => SortableItem(id: index, value: index + 1))..shuffle(random);
   }
 
   static double calculateItemWidth(int size) {
@@ -197,7 +205,7 @@ abstract class SortingNotifier extends Notifier<SortingNotifierState>
 
   Future<void> cancelSorting() async {
     state = state.copyWith(
-      list: _generateList(_size),
+      list: _generateList(_size, _random),
       operationStatus: SortingEnum.none,
       clearCurrentStep: true,
       totalPlaySteps: 0,
@@ -237,7 +245,7 @@ abstract class SortingNotifier extends Notifier<SortingNotifierState>
   @override
   Future<void> reset() async {
     state = state.copyWith(
-      list: _generateList(_size),
+      list: _generateList(_size, _random),
       operationStatus: SortingEnum.none,
       clearCurrentStep: true,
       totalPlaySteps: 0,

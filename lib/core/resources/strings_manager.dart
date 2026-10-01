@@ -237,7 +237,6 @@ class StringsManager {
   static const String signIn = "Sign in";
   static const String noAccountYet = "Not have account yet?";
   static const String signUp = "Sign up";
-  static const String orDivider = "or";
 
   static const String createAccount = "Create account";
   static const String signUpSubtitle = "Track every problem you solve and build a streak worth keeping.";
@@ -284,10 +283,12 @@ class StringsManager {
   // Auth Validation & Status
   static const String nameRequired = "Please enter your name";
   static const String nameMinLength = "Name must be at least 2 characters";
+  static const String nameMaxLength = "Name must be at most 50 characters";
   static const String emailRequired = "Please enter your email";
   static const String invalidEmail = "Please enter a valid email address";
   static const String passwordRequired = "Please enter your password";
   static const String passwordMinLength = "Password must be at least 6 characters";
+  static const String tooManyAttempts = "Too many attempts. Please try again later";
   static const String confirmPasswordRequired = "Please confirm your password";
   static const String passwordsDoNotMatch = "Passwords do not match";
   static const String invalidCode = "Verification code must be 6 digits";
@@ -519,6 +520,7 @@ class Solution {
   static const String failureIndexOutOfRange = "Index {index} is out of range for a list of length {length}";
   static const String failureKeyNotFound = "Key '{key}' was not found";
   static const String failureDivisionByZero = "Division by zero";
+  static const String failureIntegerTooLarge = "This number is too large for this editor (over 64 bits)";
   static const String failureTypeMismatch = "Expected {expected} but got {actual}";
   static const String failureWrongArgumentCount = "Expected {expected} argument(s) but got {actual}";
   static const String failureUncaughtThrow = "Uncaught error: {message}";
@@ -560,6 +562,7 @@ class Solution {
       'indexOutOfRange' => failureIndexOutOfRange,
       'keyNotFound' => failureKeyNotFound,
       'divisionByZero' => failureDivisionByZero,
+      'integerTooLarge' => failureIntegerTooLarge,
       'typeMismatch' => failureTypeMismatch,
       'wrongArgumentCount' => failureWrongArgumentCount,
       'uncaughtThrow' => failureUncaughtThrow,

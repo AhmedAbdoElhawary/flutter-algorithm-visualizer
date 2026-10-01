@@ -1,37 +1,20 @@
 /// The actual "parse -> compile -> run" pipeline, shared by both drivers
 /// ([IsolateExecutionEngine] runs this inside a spawned isolate,
-/// [SlicedExecutionEngine] runs it directly). Isolates share compiled code
-/// but not memory, so this dispatch table is rebuilt independently in each
-/// isolate via [registerAllFrontends] rather than through any shared mutable
-/// registry — see `frontend/language_registry.dart` (T094) for the version
-/// of this every consumer eventually reads from.
+/// [SlicedExecutionEngine] runs it directly). Each request builds its own
+/// frontend from `frontend/language_registry.dart`, so no builtins are shared
+/// between runs or across isolates.
 library;
 
 import 'dart:collection';
 
 import '../compile/compiler.dart';
 import '../errors/failure.dart';
-import '../frontend/dart/dart_harness.dart';
-import '../frontend/frontend.dart';
+import '../frontend/language_registry.dart';
 import '../ir/ir.dart';
 import '../values/dialect.dart';
 import '../values/value.dart';
 import '../vm/budget.dart';
 import '../vm/vm.dart';
-
-final Map<EditorLanguage, LanguageFrontend> _frontends = <EditorLanguage, LanguageFrontend>{};
-var _registered = false;
-
-/// Populated as each language frontend lands (Dart now, Python in Phase 7,
-/// JavaScript in Phase 8). Safe to call more than once — [executeEncodedRequest]
-/// calls it before every request so a fresh isolate is always ready.
-void registerAllFrontends() {
-  if (_registered) return;
-  _registered = true;
-  registerFrontend(DartFrontend());
-}
-
-void registerFrontend(LanguageFrontend frontend) => _frontends[frontend.language] = frontend;
 
 /// A magic, never-naturally-occurring source string that lets Phase 2's
 /// engine-plumbing tests (cancellation, limits, the isolate protocol itself)
@@ -74,7 +57,6 @@ const Dialect _stubDialect = Dialect(
 /// Runs one request end to end and returns a wire-encoded outcome. Never
 /// throws — every failure path is captured and encoded.
 Map<String, Object?> executeEncodedRequest(Map<String, Object?> encoded, bool Function() isCancelled) {
-  registerAllFrontends();
   final stopwatch = Stopwatch()..start();
   try {
     final language = EditorLanguage.values.byName(encoded['language']! as String);
@@ -86,24 +68,15 @@ Map<String, Object?> executeEncodedRequest(Map<String, Object?> encoded, bool Fu
 
     IrProgram program;
     Dialect dialect;
+    var globals = const <String, Value>{};
     final stub = _stubProgram(source);
     if (stub != null) {
       program = stub;
       dialect = _stubDialect;
     } else {
-      final frontend = _frontends[language];
-      if (frontend == null) {
-        return _encodeOutcome(
-          const VmResult(
-              failure: Failure(
-                  kind: FailureKind.unsupported,
-                  code: 'unsupportedConstruct',
-                  data: {'construct': 'this language'},
-                  line: 0)),
-          stopwatch.elapsed,
-        );
-      }
+      final frontend = frontendFor(language);
       dialect = frontend.dialect;
+      globals = frontend.globals;
       final userProgram = frontend.parse(source);
       program = frontend.buildHarness(
         userProgram: userProgram,
@@ -115,6 +88,7 @@ Map<String, Object?> executeEncodedRequest(Map<String, Object?> encoded, bool Fu
 
     final script = Compiler().compileProgram(program);
     final vm = Vm(dialect: dialect, budget: budget, isCancelled: isCancelled);
+    globals.forEach(vm.defineGlobal);
     final result = vm.run(script, timeout: budget.perTestCaseTimeout);
     return _encodeOutcome(result, stopwatch.elapsed);
   } on FrontendFailure catch (e) {
@@ -231,6 +205,11 @@ Value decodeValue(Object? encoded) {
         mv.entries[decodeValue(p['key'])] = decodeValue(p['value']);
       }
       return mv;
+    case 'instance':
+      // Only its name crosses, which is all grading reads from a result's class.
+      final fields = (m['fields']! as Map<Object?, Object?>)
+          .map((key, value) => MapEntry(key! as String, decodeValue(value)));
+      return InstanceValue(ClassValue(name: m['class']! as String), fields);
     default:
       throw ArgumentError('cannot decode wire value: $encoded');
   }

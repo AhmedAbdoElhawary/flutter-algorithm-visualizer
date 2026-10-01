@@ -4,4 +4,6 @@
          to allow setting breakpoints, to provide hot reload, etc.
     -->
     <uses-permission android:name="android.permission.INTERNET"/>
+    <!-- Lets the integration tests reach the local Firebase emulators over plain HTTP. -->
+    <application android:networkSecurityConfig="@xml/network_security_config"/>
 </manifest>

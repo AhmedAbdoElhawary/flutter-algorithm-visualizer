@@ -126,3 +126,7 @@ app.*.map.json
 # and committing it would publicly narrate a leak whose key is already dead.
 /tool/purge_leaked_keystore.sh
 /.github/PLAY_LAUNCH.md
+
+# Coverage gate: the generated helper test and the lcov report it reads.
+/test/coverage_helper_test.dart
+/coverage/

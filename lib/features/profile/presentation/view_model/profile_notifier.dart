@@ -1,3 +1,4 @@
+import 'package:algorithm_visualizer/core/exceptions/error_handler.dart';
 import 'package:algorithm_visualizer/core/resources/strings_manager.dart';
 import 'package:algorithm_visualizer/features/auth/domain/entities/auth_user.dart';
 import 'package:algorithm_visualizer/features/profile/domain/repositories/profile_repository.dart';
@@ -13,6 +14,8 @@ class ProfileNotifier extends Notifier<AuthUser?> {
     return _profileRepository.getCurrentUser();
   }
 
+  static const int maxDisplayNameLength = 50;
+
   // Profile Update Validations
   bool validateUpdateDisplayName({required String name}) {
     String? newDisplayNameError;
@@ -21,15 +24,18 @@ class ProfileNotifier extends Notifier<AuthUser?> {
       newDisplayNameError = StringsManager.newDisplayNameRequired;
     } else if (name.trim().length < 2) {
       newDisplayNameError = StringsManager.nameMinLength;
+    } else if (name.trim().length > maxDisplayNameLength) {
+      newDisplayNameError = StringsManager.nameMaxLength;
     }
 
     return newDisplayNameError == null;
   }
 
-  Future<bool> updateDisplayName({required String name}) async {
+  /// Returns null once the name is saved, or the message to show when it is not.
+  Future<String?> updateDisplayName({required String name}) async {
     if (!validateUpdateDisplayName(name: name)) {
       // state = AsyncError(StringsManager.notValidName, StackTrace.empty);
-      return false;
+      return StringsManager.notValidName;
     }
 
     try {
@@ -38,15 +44,9 @@ class ProfileNotifier extends Notifier<AuthUser?> {
       /// Reflect the new name straight away: a guest has no Firebase profile to
       /// re-read, and `currentUserNameProvider` reads it off this state.
       state = (state ?? const AuthUser.guest()).copyWith(name: name.trim());
-      return true;
+      return null;
     } catch (e) {
-      // state = state.copyWith(
-      //   status: NotifierStatus.error,
-      //   errorMessage: ErrorHandler.mapErrorMessage(e),
-      //   newDisplayName: preDisplayName,
-      //   user: preUser,
-      // );
-      return false;
+      return ErrorHandler.mapErrorMessage(e);
     }
   }
 }

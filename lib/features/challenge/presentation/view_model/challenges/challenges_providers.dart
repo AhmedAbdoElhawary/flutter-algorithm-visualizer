@@ -24,8 +24,10 @@ class FilteredProblemIds {
   int get hashCode => const ListEquality<int>().hash(ids);
 }
 
+/// Trimmed, since a phone keyboard often leaves a space after an autocompleted word.
 bool _matchesSearch(CodingProblem problem, String search) {
-  return search.isEmpty || problem.getName.toLowerCase().contains(search.toLowerCase());
+  final query = search.trim().toLowerCase();
+  return query.isEmpty || problem.getName.toLowerCase().contains(query);
 }
 
 bool _matchesFilter(CodingProblem problem, ProblemDifficulty? filter, String search) {
@@ -47,6 +49,19 @@ final filteredProblemIdsProvider = Provider.autoDispose<AsyncValue<FilteredProbl
               .whereType<int>()
               .toList(),
         ),
+      ),
+    ),
+  );
+});
+
+/// Solved problems among the ones the filter and search show, so it pairs with their count.
+final filteredSolvedCountProvider = Provider.autoDispose<AsyncValue<int>>((ref) {
+  final (filter, search) = ref.watch(challengesProvider.select((s) => (s.filter, s.search)));
+  return ref.watch(
+    problemsProvider.select(
+      (async) => async.whenData(
+        (problems) =>
+            problems.where((problem) => problem.isSolved && _matchesFilter(problem, filter, search)).length,
       ),
     ),
   );

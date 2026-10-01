@@ -1,0 +1,30 @@
+{
+  "overallMin": 80,
+  "overallGated": true,
+  "logicMin": 90,
+  "areaMin": 80,
+  "logicFolders": ["data", "domain", "view_model", "helper", "helpers", "storage", "exceptions", "extensions", "enums"],
+  "exclude": [
+    "**/*.g.dart",
+    "lib/main_*.dart",
+    "lib/bootstrap.dart",
+    "lib/bootstrap_debug.dart",
+    "lib/features/auth/data/data_sources/remote/auth_remote_data_source.dart",
+    "lib/features/challenge/data/data_sources/remote/challenge_remote_data_source.dart",
+    "lib/features/profile/data/data_sources/remote/profile_remote_data_source.dart"
+  ],
+  "areas": {
+    "auth":        { "path": "lib/features/auth/",        "gated": true },
+    "base":        { "path": "lib/features/base/",        "gated": true },
+    "challenge":   { "path": "lib/features/challenge/",   "gated": true },
+    "home":        { "path": "lib/features/home/",        "gated": true },
+    "onboarding":  { "path": "lib/features/onboarding/",  "gated": true },
+    "profile":     { "path": "lib/features/profile/",     "gated": true },
+    "settings":    { "path": "lib/features/settings/",    "gated": true },
+    "visualize":   { "path": "lib/features/visualize/",   "gated": true },
+    "engine":      { "path": "lib/core/custom_packages/custom_code_editor/src/execution/", "gated": true, "min": 80, "logicMin": 80 },
+    "codeEditor":  { "path": "lib/core/custom_packages/", "gated": true },
+    "core":        { "path": "lib/core/",                 "gated": true },
+    "config":      { "path": "lib/config/",               "gated": true }
+  }
+}

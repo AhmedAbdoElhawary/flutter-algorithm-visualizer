@@ -70,7 +70,7 @@ Run with:
 flutter run --flavor dev -t lib/main_dev.dart --dart-define-from-file=dart_define/dev.json
 ```
 
-**Use Flutter 3.44.7.** CI pins that exact version, so a different one can pass
+**Use Flutter 3.47.5.** CI pins that exact version, so a different one can pass
 locally and fail on your PR.
 
 ---

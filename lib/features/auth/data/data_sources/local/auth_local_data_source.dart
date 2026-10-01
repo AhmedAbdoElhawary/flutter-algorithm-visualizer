@@ -28,8 +28,9 @@ class AuthLocalDataSourceImpl implements AuthLocalDataSource {
 
   @override
   AuthUserDTO? getUser() {
-    final data = storage.read<String>(_userKey);
-    if (data == null || data.isEmpty) return null;
+    // Read as `Object`, so a corrupted value means signed out instead of a cast error on launch.
+    final data = storage.read<Object>(_userKey);
+    if (data is! String || data.isEmpty) return null;
     try {
       final json = jsonDecode(data) as Map<String, dynamic>;
       return AuthUserDTO.fromJson(json);

@@ -50,9 +50,16 @@ Value callNumberMethod(
     case 'compareTo':
       return IntValue(n.compareTo(_num(args[0])));
     case 'clamp':
+      if (receiver is IntValue && args[0] is IntValue && args[1] is IntValue) {
+        return IntValue(receiver.value.clamp((args[0] as IntValue).value, (args[1] as IntValue).value));
+      }
       return NumValue(n.clamp(_num(args[0]), _num(args[1])).toDouble());
     case 'pow':
-      return NumValue(math.pow(n, _num(args[0])).toDouble());
+      final exponent = args[0];
+      if (receiver is IntValue && exponent is IntValue && exponent.value >= 0) {
+        return IntValue(math.pow(receiver.value, exponent.value).toInt());
+      }
+      return NumValue(math.pow(n, _num(exponent)).toDouble());
     default:
       throw VmRuntimeError('undefinedFunction', <String, Object?>{'name': name});
   }

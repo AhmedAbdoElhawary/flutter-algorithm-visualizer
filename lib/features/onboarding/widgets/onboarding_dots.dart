@@ -20,6 +20,9 @@ class OnboardingDots extends StatelessWidget {
   static const double _inactiveWidth = 6;
   static const double _activeWidth = 18;
 
+  /// Tests find a dot by its index, since dots have no text.
+  static Key dotKey(int index) => ValueKey('onboarding-dot-$index');
+
   @override
   Widget build(BuildContext context) {
     final inactive = context.getColor(ThemeEnum.track);
@@ -33,6 +36,7 @@ class OnboardingDots extends StatelessWidget {
         return EndPadding(
           padding: index == accents.length - 1 ? 0 : 7,
           child: Container(
+            key: dotKey(index),
             width: (_inactiveWidth + (_activeWidth - _inactiveWidth) * nearness).w,
             height: 6.h,
             decoration: BoxDecoration(

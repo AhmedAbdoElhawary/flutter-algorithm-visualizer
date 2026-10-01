@@ -83,7 +83,12 @@ class GridSquaresPainter extends CustomPainter {
 
     /// height increased by square size if it's smaller than width,
     /// else height decreased by square size if it's larger than width
-    final finalHeight = tempSizeDy < tempSizeDx ? (height + (finalSquareSize - h)) : (height - h);
+    /// a height already on a square line is already perfect, so it must not grow by a whole square
+    final finalHeight = h == 0
+        ? height
+        : tempSizeDy < tempSizeDx
+            ? (height + (finalSquareSize - h))
+            : (height - h);
 
     return Size(defaultSize.width, finalHeight);
   }

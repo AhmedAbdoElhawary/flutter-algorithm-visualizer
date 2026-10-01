@@ -21,6 +21,12 @@ class ErrorHandler {
     if (msg.contains('log in again') || msg.contains('requires-recent-login')) {
       return StringsManager.reauthenticateRequired;
     }
+    if (msg.contains('too many attempts')) {
+      return StringsManager.tooManyAttempts;
+    }
+    if (msg.contains('at least 6 characters')) {
+      return StringsManager.passwordMinLength;
+    }
     return StringsManager.sorryForInconvenience;
   }
 }

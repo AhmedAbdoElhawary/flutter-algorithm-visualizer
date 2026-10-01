@@ -115,6 +115,18 @@ abstract final class OpCode {
   /// JavaScript `undefined` too. Backs `??`, which fires for both, unlike
   /// `==` which keeps them apart.
   static const int isNullish = 55;
+
+  /// `&`, `|`, `^`: bits of two ints, both halves of two bools, or Python's
+  /// set intersection, union and symmetric difference.
+  static const int bitAnd = 56;
+  static const int bitOr = 57;
+  static const int bitXor = 58;
+  static const int shiftLeft = 59;
+  static const int shiftRight = 60;
+
+  /// JavaScript's `>>>`.
+  static const int unsignedShiftRight = 61;
+  static const int bitNot = 62;
 }
 
 class UpvalueDescriptor {

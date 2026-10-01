@@ -1,6 +1,7 @@
 import 'package:algorithm_visualizer/config/routes/route_app.dart';
 import 'package:algorithm_visualizer/core/custom_packages/custom_code_editor/code_editor.dart'
-    show CodeController;
+    show CodeController, EditorLanguageX;
+import 'package:algorithm_visualizer/core/extensions/string.dart';
 import 'package:algorithm_visualizer/core/helpers/constants.dart';
 import 'package:algorithm_visualizer/core/helpers/current_device.dart';
 import 'package:algorithm_visualizer/core/resources/dimensions_manager.dart';
@@ -10,7 +11,6 @@ import 'package:algorithm_visualizer/core/widgets/custom_widgets/loading_state.d
 import 'package:algorithm_visualizer/features/challenge/domain/entities/coding_problem.dart';
 import 'package:algorithm_visualizer/features/challenge/domain/usecases/grade_code_usecase.dart';
 import 'package:algorithm_visualizer/features/challenge/presentation/view/celebration_page.dart';
-import 'package:algorithm_visualizer/features/challenge/presentation/view_model/challenges/challenges_providers.dart';
 import 'package:algorithm_visualizer/features/challenge/presentation/view_model/challenges/problems_providers.dart';
 import 'package:algorithm_visualizer/features/challenge/presentation/view_model/code_editor/code_editor_providers.dart';
 import 'package:algorithm_visualizer/features/challenge/presentation/widgets/challenges/error_state.dart';
@@ -73,7 +73,7 @@ class _EditorPageState extends ConsumerState<CodeEditorPage> {
       if (result == null) return;
       finalResult = result;
       if (!problem.isThereAnyCorrectCodeSaved) {
-        await ref.read(challengesProvider.notifier).updateProblemSubmission(problem, result);
+        await ref.read(problemsProvider.notifier).updateProblemSubmission(problem, result);
       }
     });
 
@@ -185,7 +185,7 @@ class _EditorContentState extends ConsumerState<_EditorContent> {
                     final language = ref.watch(provider.select((s) => s.language));
 
                     return EditorCodeCard(
-                      fileName: problem.getNameWithLanguageName,
+                      fileName: problem.getName.toFileName(language.fileExtension),
                       initialCode: notifier.initialCode,
                       highlightedLine: highlightedLine,
                       running: isRunning,

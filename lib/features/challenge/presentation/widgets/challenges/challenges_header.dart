@@ -3,7 +3,6 @@ import 'package:algorithm_visualizer/core/resources/theme_manager.dart';
 import 'package:algorithm_visualizer/core/widgets/adaptive/text/adaptive_text.dart';
 import 'package:algorithm_visualizer/core/widgets/custom_widgets/custom_icon.dart';
 import 'package:algorithm_visualizer/features/challenge/presentation/view_model/challenges/challenges_providers.dart';
-import 'package:algorithm_visualizer/features/challenge/presentation/view_model/challenges/problems_providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -17,7 +16,7 @@ class ChallengesHeader extends ConsumerWidget {
         ref.watch(filteredProblemIdsProvider).maybeWhen(data: (data) => data.ids.length, orElse: () => -1);
     final totalText = total == -1 ? StringsManager.nan : "$total";
 
-    final solved = ref.watch(solvedCountProvider).maybeWhen(data: (data) => data, orElse: () => -1);
+    final solved = ref.watch(filteredSolvedCountProvider).maybeWhen(data: (data) => data, orElse: () => -1);
     final solvedText = solved == -1 ? StringsManager.nan : "$solved";
 
     final isLoaded = solved != -1 && total != -1;
@@ -35,15 +34,28 @@ class ChallengesHeader extends ConsumerWidget {
                 fontSize: 20,
               ),
               const Spacer(),
-              if (isLoaded) ...[
-                const CustomIcon(Icons.local_fire_department_rounded, size: 14, color: ThemeEnum.dataHard),
-                const RSizedBox(width: 3),
-                BoldText(solvedText, color: ThemeEnum.dataHard, fontSize: 13),
-                const SemiBoldText(' / ', color: ThemeEnum.inkSecondaryTitle, fontSize: 13),
-                RegularText(totalText, color: ThemeEnum.inkSecondaryTitle, fontSize: 13),
-                const RSizedBox(width: 2),
-                const RegularText(StringsManager.solved, color: ThemeEnum.inkSecondaryTitle, fontSize: 13),
-              ],
+              if (isLoaded)
+                // Shrinks rather than overflow when large text leaves no room beside the title.
+                Flexible(
+                  child: FittedBox(
+                    fit: BoxFit.scaleDown,
+                    alignment: AlignmentDirectional.centerEnd,
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const CustomIcon(Icons.local_fire_department_rounded,
+                            size: 14, color: ThemeEnum.dataHard),
+                        const RSizedBox(width: 3),
+                        BoldText(solvedText, color: ThemeEnum.dataHard, fontSize: 13),
+                        const SemiBoldText(' / ', color: ThemeEnum.inkSecondaryTitle, fontSize: 13),
+                        RegularText(totalText, color: ThemeEnum.inkSecondaryTitle, fontSize: 13),
+                        const RSizedBox(width: 2),
+                        const RegularText(StringsManager.solved,
+                            color: ThemeEnum.inkSecondaryTitle, fontSize: 13),
+                      ],
+                    ),
+                  ),
+                ),
             ],
           ),
           const RSizedBox(height: 10),
@@ -53,7 +65,7 @@ class ChallengesHeader extends ConsumerWidget {
               tween: Tween(begin: 0, end: total == 0 || !isLoaded ? 0 : solved / total),
               duration: const Duration(milliseconds: 900),
               curve: Curves.easeOut,
-              builder: (_, v, __) => LinearProgressIndicator(
+              builder: (_, v, _) => LinearProgressIndicator(
                 value: v,
                 minHeight: 4.r,
                 backgroundColor: context.getColor(ThemeEnum.surface),

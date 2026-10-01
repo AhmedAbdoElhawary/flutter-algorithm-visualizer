@@ -11,6 +11,9 @@ class UpdateProblemSolutionUseCase {
   final ProblemRepository repository;
   UpdateProblemSolutionUseCase(this.repository);
 
+  /// Each run keeps its full code, here and in the Firestore document, which caps out at 1 MB.
+  static const int maxSavedRuns = 50;
+
   Future<CodingProblem> call(CodingProblem problem, CodeGradeResult result) async {
     final dto = ProblemStorageDTO.fromJson(problem.toJson());
 
@@ -21,11 +24,17 @@ class UpdateProblemSolutionUseCase {
       language: result.language.datasetKey,
     );
 
-    final solution = dto.solutionsStatus ?? [];
+    final runs = [status, ...?dto.solutionsStatus];
+    final kept = runs.take(maxSavedRuns).toList();
+
+    // Past the cap, each language still keeps its newest draft for the editor to reopen.
+    for (final run in runs.skip(maxSavedRuns)) {
+      if (!kept.any((k) => k.languageKey == run.languageKey)) kept.add(run);
+    }
 
     final updatedProblem = problem.copyWith(
       problemStatus: result.allPassed ? ProblemStatus.solved : ProblemStatus.attempted,
-      solutionsStatus: [status, ...solution],
+      solutionsStatus: kept,
       isBookmarked: null,
     );
     await repository.updateProblem(updatedProblem);

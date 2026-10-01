@@ -16,6 +16,10 @@ Value? getMapProperty(MapValue receiver, String name) {
       return BoolValue(receiver.entries.isEmpty);
     case 'isNotEmpty':
       return BoolValue(receiver.entries.isNotEmpty);
+    // `entries` hands out {key, value} maps, so `e.key` and `e.value` read them.
+    case 'key':
+    case 'value':
+      return receiver.entries[StrValue(name)];
     case 'keys':
       return ListValue(receiver.entries.keys.toList());
     case 'values':

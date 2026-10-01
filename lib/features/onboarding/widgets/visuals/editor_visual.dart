@@ -143,8 +143,8 @@ class _EditorFileRow extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            MonoText(StringsManager.onboardingEditorFile, translate: false),
-            MonoText(StringsManager.onboardingEditorLanguage, translate: false),
+            Flexible(child: MonoText(StringsManager.onboardingEditorFile, translate: false)),
+            Flexible(child: MonoText(StringsManager.onboardingEditorLanguage, translate: false)),
           ],
         ),
       ),
@@ -175,7 +175,8 @@ class _CodeBlock extends StatelessWidget {
   static const double _caretAllowance = 4;
   static const double _fitSlack = 0.98;
 
-  double _fitFontSize(double available) {
+  /// Measured with the user's text scale too, or large system text overflows the card.
+  double _fitFontSize(double available, TextScaler textScaler) {
     final longest = lines.reduce((a, b) => a.length >= b.length ? a : b);
     final painter = TextPainter(
       text: TextSpan(
@@ -187,6 +188,7 @@ class _CodeBlock extends StatelessWidget {
       ),
       maxLines: 1,
       textDirection: TextDirection.ltr,
+      textScaler: textScaler,
     )..layout();
     final width = painter.width;
     painter.dispose();
@@ -207,7 +209,7 @@ class _CodeBlock extends StatelessWidget {
         padding: 16,
         child: LayoutBuilder(
           builder: (context, constraints) {
-            final fontSize = _fitFontSize(constraints.maxWidth);
+            final fontSize = _fitFontSize(constraints.maxWidth, MediaQuery.textScalerOf(context));
             // Characters already typed are consumed line by line, so a line only
             // starts appearing once the one above it is finished.
             var remaining = typedChars;
@@ -334,21 +336,27 @@ class _TestResults extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 const Flexible(child: MonoText(StringsManager.testCases, letterSpacing: 0.96)),
-                Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    MonoBoldText(
-                      StringsManager.onboardingTestCount(passed, total),
-                      color: ThemeEnum.dataEasy,
+                // Shrinks instead of overflowing under large system text.
+                Flexible(
+                  child: FittedBox(
+                    fit: BoxFit.scaleDown,
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        MonoBoldText(
+                          StringsManager.onboardingTestCount(passed, total),
+                          color: ThemeEnum.dataEasy,
+                        ),
+                        FadeTransition(
+                          opacity: AlwaysStoppedAnimation<double>(verdictOpacity),
+                          child: const MonoBoldText(
+                            StringsManager.onboardingPassedWord,
+                            color: ThemeEnum.dataEasy,
+                          ),
+                        ),
+                      ],
                     ),
-                    FadeTransition(
-                      opacity: AlwaysStoppedAnimation<double>(verdictOpacity),
-                      child: const MonoBoldText(
-                        StringsManager.onboardingPassedWord,
-                        color: ThemeEnum.dataEasy,
-                      ),
-                    ),
-                  ],
+                  ),
                 ),
               ],
             ),

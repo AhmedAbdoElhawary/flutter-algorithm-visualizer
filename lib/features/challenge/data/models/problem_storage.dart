@@ -1,4 +1,5 @@
 import 'package:algorithm_visualizer/features/challenge/domain/enums/problem.dart';
+import 'package:collection/collection.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'problem_storage.g.dart';
@@ -13,6 +14,9 @@ class ProblemStorageDTO {
   });
 
   final int? problemId;
+
+  /// An unknown status, say from a newer app version, reads as none instead of failing the whole list.
+  @JsonKey(unknownEnumValue: JsonKey.nullForUndefinedEnumValue)
   final ProblemStatus? problemStatus;
   final bool? isBookmarked;
   final List<ProblemSolutionStatusDTO>? solutionsStatus;
@@ -27,11 +31,12 @@ class ProblemStorageDTO {
       other is ProblemStorageDTO &&
           problemId == other.problemId &&
           problemStatus == other.problemStatus &&
-          isBookmarked == other.isBookmarked;
+          isBookmarked == other.isBookmarked &&
+          const ListEquality<ProblemSolutionStatusDTO>().equals(solutionsStatus, other.solutionsStatus);
 
   @override
   int get hashCode {
-    return Object.hash(problemId, problemStatus?.name, isBookmarked, solutionsStatus);
+    return Object.hash(problemId, problemStatus?.name, isBookmarked, Object.hashAll(solutionsStatus ?? const []));
   }
 }
 
